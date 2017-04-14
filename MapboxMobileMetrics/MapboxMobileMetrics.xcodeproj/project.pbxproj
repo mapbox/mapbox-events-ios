@@ -1,0 +1,414 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		404807C31EA186D8008A6D50 /* MapboxMobileMetrics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 404807B91EA186D8008A6D50 /* MapboxMobileMetrics.framework */; };
+		404807C81EA186D8008A6D50 /* MapboxMobileMetricsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 404807C71EA186D8008A6D50 /* MapboxMobileMetricsTests.m */; };
+		404807CA1EA186D8008A6D50 /* MapboxMobileMetrics.h in Headers */ = {isa = PBXBuildFile; fileRef = 404807BC1EA186D8008A6D50 /* MapboxMobileMetrics.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		404807D61EA1873E008A6D50 /* MapboxMobileMetrics.m in Sources */ = {isa = PBXBuildFile; fileRef = 404807D41EA1873E008A6D50 /* MapboxMobileMetrics.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		404807C41EA186D8008A6D50 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 404807B01EA186D8008A6D50 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 404807B81EA186D8008A6D50;
+			remoteInfo = MapboxMobileMetrics;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		404807B91EA186D8008A6D50 /* MapboxMobileMetrics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MapboxMobileMetrics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		404807BC1EA186D8008A6D50 /* MapboxMobileMetrics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MapboxMobileMetrics.h; sourceTree = "<group>"; };
+		404807BD1EA186D8008A6D50 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		404807C21EA186D8008A6D50 /* MapboxMobileMetricsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MapboxMobileMetricsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		404807C71EA186D8008A6D50 /* MapboxMobileMetricsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MapboxMobileMetricsTests.m; sourceTree = "<group>"; };
+		404807C91EA186D8008A6D50 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		404807D41EA1873E008A6D50 /* MapboxMobileMetrics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapboxMobileMetrics.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		404807B51EA186D8008A6D50 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		404807BF1EA186D8008A6D50 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				404807C31EA186D8008A6D50 /* MapboxMobileMetrics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		404807AF1EA186D8008A6D50 = {
+			isa = PBXGroup;
+			children = (
+				404807BB1EA186D8008A6D50 /* MapboxMobileMetrics */,
+				404807C61EA186D8008A6D50 /* MapboxMobileMetricsTests */,
+				404807BA1EA186D8008A6D50 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		404807BA1EA186D8008A6D50 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				404807B91EA186D8008A6D50 /* MapboxMobileMetrics.framework */,
+				404807C21EA186D8008A6D50 /* MapboxMobileMetricsTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		404807BB1EA186D8008A6D50 /* MapboxMobileMetrics */ = {
+			isa = PBXGroup;
+			children = (
+				404807BC1EA186D8008A6D50 /* MapboxMobileMetrics.h */,
+				404807D41EA1873E008A6D50 /* MapboxMobileMetrics.m */,
+				404807BD1EA186D8008A6D50 /* Info.plist */,
+			);
+			path = MapboxMobileMetrics;
+			sourceTree = "<group>";
+		};
+		404807C61EA186D8008A6D50 /* MapboxMobileMetricsTests */ = {
+			isa = PBXGroup;
+			children = (
+				404807C71EA186D8008A6D50 /* MapboxMobileMetricsTests.m */,
+				404807C91EA186D8008A6D50 /* Info.plist */,
+			);
+			path = MapboxMobileMetricsTests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		404807B61EA186D8008A6D50 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				404807CA1EA186D8008A6D50 /* MapboxMobileMetrics.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		404807B81EA186D8008A6D50 /* MapboxMobileMetrics */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 404807CD1EA186D8008A6D50 /* Build configuration list for PBXNativeTarget "MapboxMobileMetrics" */;
+			buildPhases = (
+				404807B41EA186D8008A6D50 /* Sources */,
+				404807B51EA186D8008A6D50 /* Frameworks */,
+				404807B61EA186D8008A6D50 /* Headers */,
+				404807B71EA186D8008A6D50 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MapboxMobileMetrics;
+			productName = MapboxMobileMetrics;
+			productReference = 404807B91EA186D8008A6D50 /* MapboxMobileMetrics.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		404807C11EA186D8008A6D50 /* MapboxMobileMetricsTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 404807D01EA186D8008A6D50 /* Build configuration list for PBXNativeTarget "MapboxMobileMetricsTests" */;
+			buildPhases = (
+				404807BE1EA186D8008A6D50 /* Sources */,
+				404807BF1EA186D8008A6D50 /* Frameworks */,
+				404807C01EA186D8008A6D50 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				404807C51EA186D8008A6D50 /* PBXTargetDependency */,
+			);
+			name = MapboxMobileMetricsTests;
+			productName = MapboxMobileMetricsTests;
+			productReference = 404807C21EA186D8008A6D50 /* MapboxMobileMetricsTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		404807B01EA186D8008A6D50 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0830;
+				ORGANIZATIONNAME = Mapbox;
+				TargetAttributes = {
+					404807B81EA186D8008A6D50 = {
+						CreatedOnToolsVersion = 8.3.1;
+						ProvisioningStyle = Manual;
+					};
+					404807C11EA186D8008A6D50 = {
+						CreatedOnToolsVersion = 8.3.1;
+						DevelopmentTeam = U2WTRY45TY;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 404807B31EA186D8008A6D50 /* Build configuration list for PBXProject "MapboxMobileMetrics" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 404807AF1EA186D8008A6D50;
+			productRefGroup = 404807BA1EA186D8008A6D50 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				404807B81EA186D8008A6D50 /* MapboxMobileMetrics */,
+				404807C11EA186D8008A6D50 /* MapboxMobileMetricsTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		404807B71EA186D8008A6D50 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		404807C01EA186D8008A6D50 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		404807B41EA186D8008A6D50 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				404807D61EA1873E008A6D50 /* MapboxMobileMetrics.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		404807BE1EA186D8008A6D50 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				404807C81EA186D8008A6D50 /* MapboxMobileMetricsTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		404807C51EA186D8008A6D50 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 404807B81EA186D8008A6D50 /* MapboxMobileMetrics */;
+			targetProxy = 404807C41EA186D8008A6D50 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		404807CB1EA186D8008A6D50 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		404807CC1EA186D8008A6D50 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		404807CE1EA186D8008A6D50 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = MapboxMobileMetrics/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MapboxMobileMetrics;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		404807CF1EA186D8008A6D50 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = MapboxMobileMetrics/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MapboxMobileMetrics;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		404807D11EA186D8008A6D50 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = U2WTRY45TY;
+				INFOPLIST_FILE = MapboxMobileMetricsTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MapboxMobileMetricsTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		404807D21EA186D8008A6D50 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = U2WTRY45TY;
+				INFOPLIST_FILE = MapboxMobileMetricsTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MapboxMobileMetricsTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		404807B31EA186D8008A6D50 /* Build configuration list for PBXProject "MapboxMobileMetrics" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				404807CB1EA186D8008A6D50 /* Debug */,
+				404807CC1EA186D8008A6D50 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		404807CD1EA186D8008A6D50 /* Build configuration list for PBXNativeTarget "MapboxMobileMetrics" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				404807CE1EA186D8008A6D50 /* Debug */,
+				404807CF1EA186D8008A6D50 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		404807D01EA186D8008A6D50 /* Build configuration list for PBXNativeTarget "MapboxMobileMetricsTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				404807D11EA186D8008A6D50 /* Debug */,
+				404807D21EA186D8008A6D50 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 404807B01EA186D8008A6D50 /* Project object */;
+}
