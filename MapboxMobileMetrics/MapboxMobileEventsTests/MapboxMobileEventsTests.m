@@ -1,18 +1,10 @@
-//
-//  MapboxMobileMetricsTests.m
-//  MapboxMobileMetricsTests
-//
-//  Created by Jesse Bounds on 4/14/17.
-//  Copyright © 2017 Mapbox. All rights reserved.
-//
-
 #import <XCTest/XCTest.h>
 
-@interface MapboxMobileMetricsTests : XCTestCase
+@interface MapboxMobileEventsTests : XCTestCase
 
 @end
 
-@implementation MapboxMobileMetricsTests
+@implementation MapboxMobileEventsTests
 
 - (void)setUp {
     [super setUp];

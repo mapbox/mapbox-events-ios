@@ -1,6 +1,6 @@
-#import "MapboxMobileMetrics.h"
+#import "MapboxMobileEvents.h"
 
-@implementation MapboxMobileMetrics
+@implementation MapboxMobileEvents
 
 - (NSString *)sayHelloTo:(NSString *)name {
     return [NSString stringWithFormat:@"hello %@", name];

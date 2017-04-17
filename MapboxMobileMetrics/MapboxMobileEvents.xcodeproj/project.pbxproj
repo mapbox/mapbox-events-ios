@@ -7,10 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		404807C31EA186D8008A6D50 /* MapboxMobileMetrics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 404807B91EA186D8008A6D50 /* MapboxMobileMetrics.framework */; };
-		404807C81EA186D8008A6D50 /* MapboxMobileMetricsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 404807C71EA186D8008A6D50 /* MapboxMobileMetricsTests.m */; };
-		404807CA1EA186D8008A6D50 /* MapboxMobileMetrics.h in Headers */ = {isa = PBXBuildFile; fileRef = 404807BC1EA186D8008A6D50 /* MapboxMobileMetrics.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		404807D61EA1873E008A6D50 /* MapboxMobileMetrics.m in Sources */ = {isa = PBXBuildFile; fileRef = 404807D41EA1873E008A6D50 /* MapboxMobileMetrics.m */; };
+		404807C31EA186D8008A6D50 /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 404807B91EA186D8008A6D50 /* MapboxMobileEvents.framework */; };
+		404807C81EA186D8008A6D50 /* MapboxMobileEventsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 404807C71EA186D8008A6D50 /* MapboxMobileEventsTests.m */; };
+		404807CA1EA186D8008A6D50 /* MapboxMobileEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = 404807BC1EA186D8008A6D50 /* MapboxMobileEvents.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		404807D61EA1873E008A6D50 /* MapboxMobileEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = 404807D41EA1873E008A6D50 /* MapboxMobileEvents.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -24,13 +24,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		404807B91EA186D8008A6D50 /* MapboxMobileMetrics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MapboxMobileMetrics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		404807BC1EA186D8008A6D50 /* MapboxMobileMetrics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MapboxMobileMetrics.h; sourceTree = "<group>"; };
+		404807B91EA186D8008A6D50 /* MapboxMobileEvents.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MapboxMobileEvents.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		404807BC1EA186D8008A6D50 /* MapboxMobileEvents.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MapboxMobileEvents.h; sourceTree = "<group>"; };
 		404807BD1EA186D8008A6D50 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		404807C21EA186D8008A6D50 /* MapboxMobileMetricsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MapboxMobileMetricsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		404807C71EA186D8008A6D50 /* MapboxMobileMetricsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MapboxMobileMetricsTests.m; sourceTree = "<group>"; };
+		404807C21EA186D8008A6D50 /* MapboxMobileEventsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MapboxMobileEventsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		404807C71EA186D8008A6D50 /* MapboxMobileEventsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MapboxMobileEventsTests.m; sourceTree = "<group>"; };
 		404807C91EA186D8008A6D50 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		404807D41EA1873E008A6D50 /* MapboxMobileMetrics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapboxMobileMetrics.m; sourceTree = "<group>"; };
+		404807D41EA1873E008A6D50 /* MapboxMobileEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapboxMobileEvents.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -45,7 +45,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				404807C31EA186D8008A6D50 /* MapboxMobileMetrics.framework in Frameworks */,
+				404807C31EA186D8008A6D50 /* MapboxMobileEvents.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -55,8 +55,8 @@
 		404807AF1EA186D8008A6D50 = {
 			isa = PBXGroup;
 			children = (
-				404807BB1EA186D8008A6D50 /* MapboxMobileMetrics */,
-				404807C61EA186D8008A6D50 /* MapboxMobileMetricsTests */,
+				404807BB1EA186D8008A6D50 /* MapboxMobileEvents */,
+				404807C61EA186D8008A6D50 /* MapboxMobileEventsTests */,
 				404807BA1EA186D8008A6D50 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -64,29 +64,29 @@
 		404807BA1EA186D8008A6D50 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				404807B91EA186D8008A6D50 /* MapboxMobileMetrics.framework */,
-				404807C21EA186D8008A6D50 /* MapboxMobileMetricsTests.xctest */,
+				404807B91EA186D8008A6D50 /* MapboxMobileEvents.framework */,
+				404807C21EA186D8008A6D50 /* MapboxMobileEventsTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		404807BB1EA186D8008A6D50 /* MapboxMobileMetrics */ = {
+		404807BB1EA186D8008A6D50 /* MapboxMobileEvents */ = {
 			isa = PBXGroup;
 			children = (
-				404807BC1EA186D8008A6D50 /* MapboxMobileMetrics.h */,
-				404807D41EA1873E008A6D50 /* MapboxMobileMetrics.m */,
 				404807BD1EA186D8008A6D50 /* Info.plist */,
+				404807BC1EA186D8008A6D50 /* MapboxMobileEvents.h */,
+				404807D41EA1873E008A6D50 /* MapboxMobileEvents.m */,
 			);
-			path = MapboxMobileMetrics;
+			path = MapboxMobileEvents;
 			sourceTree = "<group>";
 		};
-		404807C61EA186D8008A6D50 /* MapboxMobileMetricsTests */ = {
+		404807C61EA186D8008A6D50 /* MapboxMobileEventsTests */ = {
 			isa = PBXGroup;
 			children = (
-				404807C71EA186D8008A6D50 /* MapboxMobileMetricsTests.m */,
+				404807C71EA186D8008A6D50 /* MapboxMobileEventsTests.m */,
 				404807C91EA186D8008A6D50 /* Info.plist */,
 			);
-			path = MapboxMobileMetricsTests;
+			path = MapboxMobileEventsTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -96,16 +96,16 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				404807CA1EA186D8008A6D50 /* MapboxMobileMetrics.h in Headers */,
+				404807CA1EA186D8008A6D50 /* MapboxMobileEvents.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		404807B81EA186D8008A6D50 /* MapboxMobileMetrics */ = {
+		404807B81EA186D8008A6D50 /* MapboxMobileEvents */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 404807CD1EA186D8008A6D50 /* Build configuration list for PBXNativeTarget "MapboxMobileMetrics" */;
+			buildConfigurationList = 404807CD1EA186D8008A6D50 /* Build configuration list for PBXNativeTarget "MapboxMobileEvents" */;
 			buildPhases = (
 				404807B41EA186D8008A6D50 /* Sources */,
 				404807B51EA186D8008A6D50 /* Frameworks */,
@@ -116,14 +116,14 @@
 			);
 			dependencies = (
 			);
-			name = MapboxMobileMetrics;
-			productName = MapboxMobileMetrics;
-			productReference = 404807B91EA186D8008A6D50 /* MapboxMobileMetrics.framework */;
+			name = MapboxMobileEvents;
+			productName = MapboxMobileEvents;
+			productReference = 404807B91EA186D8008A6D50 /* MapboxMobileEvents.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		404807C11EA186D8008A6D50 /* MapboxMobileMetricsTests */ = {
+		404807C11EA186D8008A6D50 /* MapboxMobileEventsTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 404807D01EA186D8008A6D50 /* Build configuration list for PBXNativeTarget "MapboxMobileMetricsTests" */;
+			buildConfigurationList = 404807D01EA186D8008A6D50 /* Build configuration list for PBXNativeTarget "MapboxMobileEventsTests" */;
 			buildPhases = (
 				404807BE1EA186D8008A6D50 /* Sources */,
 				404807BF1EA186D8008A6D50 /* Frameworks */,
@@ -134,9 +134,9 @@
 			dependencies = (
 				404807C51EA186D8008A6D50 /* PBXTargetDependency */,
 			);
-			name = MapboxMobileMetricsTests;
+			name = MapboxMobileEventsTests;
 			productName = MapboxMobileMetricsTests;
-			productReference = 404807C21EA186D8008A6D50 /* MapboxMobileMetricsTests.xctest */;
+			productReference = 404807C21EA186D8008A6D50 /* MapboxMobileEventsTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -159,7 +159,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 404807B31EA186D8008A6D50 /* Build configuration list for PBXProject "MapboxMobileMetrics" */;
+			buildConfigurationList = 404807B31EA186D8008A6D50 /* Build configuration list for PBXProject "MapboxMobileEvents" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -171,8 +171,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				404807B81EA186D8008A6D50 /* MapboxMobileMetrics */,
-				404807C11EA186D8008A6D50 /* MapboxMobileMetricsTests */,
+				404807B81EA186D8008A6D50 /* MapboxMobileEvents */,
+				404807C11EA186D8008A6D50 /* MapboxMobileEventsTests */,
 			);
 		};
 /* End PBXProject section */
@@ -199,7 +199,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				404807D61EA1873E008A6D50 /* MapboxMobileMetrics.m in Sources */,
+				404807D61EA1873E008A6D50 /* MapboxMobileEvents.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -207,7 +207,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				404807C81EA186D8008A6D50 /* MapboxMobileMetricsTests.m in Sources */,
+				404807C81EA186D8008A6D50 /* MapboxMobileEventsTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -216,7 +216,7 @@
 /* Begin PBXTargetDependency section */
 		404807C51EA186D8008A6D50 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 404807B81EA186D8008A6D50 /* MapboxMobileMetrics */;
+			target = 404807B81EA186D8008A6D50 /* MapboxMobileEvents */;
 			targetProxy = 404807C41EA186D8008A6D50 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -329,10 +329,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = MapboxMobileMetrics/Info.plist;
+				INFOPLIST_FILE = MapboxMobileEvents/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MapboxMobileMetrics;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MapboxMobileEvents;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
@@ -348,10 +348,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = MapboxMobileMetrics/Info.plist;
+				INFOPLIST_FILE = MapboxMobileEvents/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MapboxMobileMetrics;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MapboxMobileEvents;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
@@ -362,7 +362,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				DEVELOPMENT_TEAM = U2WTRY45TY;
-				INFOPLIST_FILE = MapboxMobileMetricsTests/Info.plist;
+				INFOPLIST_FILE = MapboxMobileEventsTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MapboxMobileMetricsTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -373,7 +373,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				DEVELOPMENT_TEAM = U2WTRY45TY;
-				INFOPLIST_FILE = MapboxMobileMetricsTests/Info.plist;
+				INFOPLIST_FILE = MapboxMobileEventsTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MapboxMobileMetricsTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -383,7 +383,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		404807B31EA186D8008A6D50 /* Build configuration list for PBXProject "MapboxMobileMetrics" */ = {
+		404807B31EA186D8008A6D50 /* Build configuration list for PBXProject "MapboxMobileEvents" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				404807CB1EA186D8008A6D50 /* Debug */,
@@ -392,21 +392,23 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		404807CD1EA186D8008A6D50 /* Build configuration list for PBXNativeTarget "MapboxMobileMetrics" */ = {
+		404807CD1EA186D8008A6D50 /* Build configuration list for PBXNativeTarget "MapboxMobileEvents" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				404807CE1EA186D8008A6D50 /* Debug */,
 				404807CF1EA186D8008A6D50 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
-		404807D01EA186D8008A6D50 /* Build configuration list for PBXNativeTarget "MapboxMobileMetricsTests" */ = {
+		404807D01EA186D8008A6D50 /* Build configuration list for PBXNativeTarget "MapboxMobileEventsTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				404807D11EA186D8008A6D50 /* Debug */,
 				404807D21EA186D8008A6D50 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
