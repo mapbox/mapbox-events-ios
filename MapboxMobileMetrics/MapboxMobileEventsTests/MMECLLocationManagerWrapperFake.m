@@ -27,8 +27,16 @@
     self.received_stopMonitoringSignificantLocationChanges = YES;
 }
 
+- (void)startMonitoringForRegion:(CLRegion *)region {
+    self.startMonitoringRegion = region;
+}
+
 - (void)stopMonitoringForRegion:(CLRegion *)region {
     self.stopMonitoringRegion = region;
+}
+
+- (BOOL)received_startMonitoringForRegionWithRegion:(CLRegion *)region {
+    return [region isEqual:self.startMonitoringRegion];
 }
 
 - (BOOL)received_stopMonitoringForRegionWithRegion:(CLRegion *)region {

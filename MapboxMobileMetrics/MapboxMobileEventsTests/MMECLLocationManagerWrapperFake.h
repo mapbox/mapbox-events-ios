@@ -5,6 +5,7 @@
 
 @property (nonatomic, weak) id<MMECLLocationManagerWrapperDelegate> delegate;
 @property (nonatomic, copy, readwrite) NSSet<__kindof CLRegion *> *monitoredRegions;
+@property (nonatomic) CLRegion *startMonitoringRegion;
 @property (nonatomic) CLRegion *stopMonitoringRegion;
 
 // Stubs
@@ -20,5 +21,6 @@
 @property (nonatomic) BOOL received_stopUpdatingLocation;
 
 - (BOOL)received_stopMonitoringForRegionWithRegion:(CLRegion *)region;
+- (BOOL)received_startMonitoringForRegionWithRegion:(CLRegion *)region;
 
 @end

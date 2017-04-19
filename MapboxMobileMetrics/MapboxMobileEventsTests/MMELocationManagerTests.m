@@ -37,9 +37,22 @@
 @property (nonatomic) BOOL received_locationManagerDidStopLocationUpdates;
 @property (nonatomic) BOOL received_locationManagerBackgroundLocationUpdatesDidTimeout;
 
+@property (nonatomic) NSMutableSet *selectors;
+@property (nonatomic) NSMutableDictionary *argumentsBySelector;
+
 @end
 
 @implementation MMELocationManagerDelegateStub
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _selectors = [NSMutableSet set];
+        _argumentsBySelector = [NSMutableDictionary dictionary];
+    }
+    return self;
+}
 
 - (void)locationManagerDidStartLocationUpdates:(MMELocationManager *)locationManager {
     self.received_locationManagerDidStartLocationUpdates = YES;
@@ -51,6 +64,20 @@
 
 - (void)locationManagerBackgroundLocationUpdatesDidTimeout:(MMELocationManager *)locationManager {
     self.received_locationManagerBackgroundLocationUpdatesDidTimeout = YES;
+}
+
+- (void)locationManager:(MMELocationManager *)locationManager didUpdateLocations:(NSArray *)locations {
+    NSValue *method = [NSValue valueWithPointer:_cmd];
+    NSArray *args = @[locations];
+    self.argumentsBySelector[method] = args;
+    [self.selectors addObject:[NSValue valueWithPointer:_cmd]];
+}
+
+- (BOOL)received:(SEL)selector withArguments:(NSArray *)arguments {
+    NSValue *lookup = [NSValue valueWithPointer:selector];
+    BOOL selectorCalled = [self.selectors containsObject:lookup];
+    BOOL argumentsPassed = [self.argumentsBySelector[lookup] isEqualToArray:arguments];
+    return selectorCalled && argumentsPassed;
 }
 
 @end
@@ -205,6 +232,43 @@
     XCTAssert([self.locationManagerWrapper received_startMonitoringForRegionWithRegion:expectedRegion]);
 }
 
+- (void)testAsDelegateForLocationManagerWrapperDidUpdateLocationsLocationSpeeds {
+    XCTAssertNil(self.locationManager.backgroundLocationServiceTimeoutTimer, @"Timer should be stopped");
+
+    [self.locationManager locationManagerWrapper:self.locationManagerWrapper didUpdateLocations:@[[self stationaryLocation]]];
+    XCTAssertNil(self.locationManager.backgroundLocationServiceTimeoutTimer, @"Timer should be stopped");
+
+    [self.locationManager locationManagerWrapper:self.locationManagerWrapper didUpdateLocations:@[[self movingLocation]]];
+    XCTAssertNotNil(self.locationManager.backgroundLocationServiceTimeoutTimer, @"It should start the timer");
+}
+
+- (void)testAsDelegateForLocationManagerWrapperDidUpdateLocationsRegionMonitoring {
+
+    // When there is already a monitored region and an inaccurate location is received
+    self.locationManagerWrapper.monitoredRegions = [NSSet setWithObject:[[CLCircularRegion alloc] init]];
+    [self.locationManager locationManagerWrapper:self.locationManagerWrapper didUpdateLocations:@[[self inaccurateLocation]]];
+    XCTAssertFalse([self.locationManagerWrapper received_startMonitoringForRegionWithRegion:[[CLCircularRegion alloc] init]], @"It should not start monitoring for a region");
+
+    // When there are no monitored regions and an accurate location is received
+    self.locationManagerWrapper.monitoredRegions = [NSSet set];
+    CLRegion *expectedRegion = [[CLCircularRegion alloc] initWithCenter:CLLocationCoordinate2DMake(0, 0) radius:MMELocationManagerHibernationRadius identifier:MMELocationManagerRegionIdentifier];
+    expectedRegion.notifyOnEntry = NO;
+    expectedRegion.notifyOnExit = YES;
+    [self.locationManager locationManagerWrapper:self.locationManagerWrapper didUpdateLocations:@[[self accurateLocation]]];
+    XCTAssertTrue([self.locationManagerWrapper received_startMonitoringForRegionWithRegion:expectedRegion], @"It should start monitoring for a region");
+
+    // When there are no monitored regions and an inaccurate location is received
+    self.locationManagerWrapper.monitoredRegions = [NSSet set];
+    [self.locationManager locationManagerWrapper:self.locationManagerWrapper didUpdateLocations:@[[self inaccurateLocation]]];
+    XCTAssertTrue([self.locationManagerWrapper received_startMonitoringForRegionWithRegion:expectedRegion], @"It should start monitoring for a region");
+}
+
+- (void)testAsDelegateForLocationManagerWrapperDidUpdateLocationsRegionMonitoringDelegation {
+    CLLocation *location = [self accurateLocation];
+    [self.locationManager locationManagerWrapper:self.locationManagerWrapper didUpdateLocations:@[location]];
+    XCTAssertTrue([self.delegateStub received:@selector(locationManager:didUpdateLocations:) withArguments:@[@[location]]], @"It should tell its delegate");
+}
+
 #pragma mark - Common
 
 - (void)assertThatLocationManagerBehavesCorrectlyWhenAuthorizedForWhenInUseOnlyOrWhenItHasNoBackgroundCapability {
@@ -215,6 +279,22 @@
     XCTAssert(self.locationManagerWrapper.received_startUpdatingLocation, @"CL location manager should have been told to start updating location");
     XCTAssert(self.locationManager.isUpdatingLocation, @"MME locationManager should consider itself to be updating location");
     XCTAssert(self.delegateStub.received_locationManagerDidStartLocationUpdates, @"MME location manager should notify its delegate that it started location updates");
+}
+
+- (CLLocation *)stationaryLocation {
+    return [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(0, 0) altitude:0 horizontalAccuracy:0 verticalAccuracy:0 course:0 speed:0.0 timestamp:[NSDate date]];
+}
+
+- (CLLocation *)movingLocation {
+    return [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(0, 0) altitude:0 horizontalAccuracy:0 verticalAccuracy:0 course:0 speed:100.0 timestamp:[NSDate date]];
+}
+
+- (CLLocation *)accurateLocation {
+    return [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(0, 0) altitude:0 horizontalAccuracy:0 verticalAccuracy:0 course:0 speed:0.0 timestamp:[NSDate date]];
+}
+
+- (CLLocation *)inaccurateLocation {
+    return [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(0, 0) altitude:0 horizontalAccuracy:99999 verticalAccuracy:0 course:0 speed:0.0 timestamp:[NSDate date]];
 }
 
 @end

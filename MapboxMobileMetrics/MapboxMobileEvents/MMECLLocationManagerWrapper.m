@@ -36,6 +36,10 @@
     [self.locationManager stopMonitoringSignificantLocationChanges];
 }
 
+- (void)startMonitoringForRegion:(CLRegion *)region {
+    [self.locationManager startMonitoringForRegion:region];
+}
+
 - (void)stopMonitoringForRegion:(CLRegion *)region {
     [self.locationManager stopMonitoringForRegion:region];
 }

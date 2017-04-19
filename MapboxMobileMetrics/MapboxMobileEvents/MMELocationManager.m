@@ -126,7 +126,7 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
     CLCircularRegion *region = [[CLCircularRegion alloc] initWithCenter:location.coordinate radius:MMELocationManagerHibernationRadius identifier:MMELocationManagerRegionIdentifier];
     region.notifyOnEntry = NO;
     region.notifyOnExit = YES;
-    [self.standardLocationManager startMonitoringForRegion:region];
+    [self.locationManager startMonitoringForRegion:region];
 }
 
 #pragma mark - MMECLLocationManagerDelegate
@@ -145,7 +145,7 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
     if (location.speed > 0.0) {
         [self startBackgroundTimeoutTimer];
     }
-    if (self.standardLocationManager.monitoredRegions.count == 0 || location.horizontalAccuracy < MMELocationManagerHibernationRadius) {
+    if ([self.locationManager.monitoredRegions anyObject] == nil || location.horizontalAccuracy < MMELocationManagerHibernationRadius) {
         [self establishRegionMonitoringForLocation:location];
     }
     if ([self.delegate respondsToSelector:@selector(locationManager:didUpdateLocations:)]) {

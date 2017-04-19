@@ -16,6 +16,7 @@
 - (void)stopUpdatingLocation;
 - (void)startMonitoringSignificantLocationChanges;
 - (void)stopMonitoringSignificantLocationChanges;
+- (void)startMonitoringForRegion:(CLRegion *)region;
 - (void)stopMonitoringForRegion:(CLRegion *)region;
 
 @end
