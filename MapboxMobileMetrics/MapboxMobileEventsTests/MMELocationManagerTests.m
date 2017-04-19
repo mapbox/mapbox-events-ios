@@ -4,6 +4,7 @@
 #import "MMELocationManager.h"
 #import "MMECLLocationManagerWrapper.h"
 
+#import "MMETestStub.h"
 #import "MMECLLocationManagerWrapperFake.h"
 #import "MMEUIApplicationWrapperFake.h"
 
@@ -31,24 +32,11 @@
 
 @end
 
-@interface MMELocationManagerDelegateStub : NSObject <MMELocationManagerDelegate>
-
-@property (nonatomic) NSMutableSet *selectors;
-@property (nonatomic) NSMutableDictionary *argumentsBySelector;
+@interface MMELocationManagerDelegateStub : MMETestStub <MMELocationManagerDelegate>
 
 @end
 
 @implementation MMELocationManagerDelegateStub
-
-- (instancetype)init
-{
-    self = [super init];
-    if (self) {
-        _selectors = [NSMutableSet set];
-        _argumentsBySelector = [NSMutableDictionary dictionary];
-    }
-    return self;
-}
 
 - (void)locationManagerDidStartLocationUpdates:(MMELocationManager *)locationManager {
     [self store:_cmd args:@[locationManager]];
@@ -64,19 +52,6 @@
 
 - (void)locationManager:(MMELocationManager *)locationManager didUpdateLocations:(NSArray *)locations {
     [self store:_cmd args:@[locations]];
-}
-
-- (BOOL)received:(SEL)selector withArguments:(NSArray *)arguments {
-    NSValue *lookup = [NSValue valueWithPointer:selector];
-    BOOL selectorCalled = [self.selectors containsObject:lookup];
-    BOOL argumentsPassed = [self.argumentsBySelector[lookup] isEqualToArray:arguments];
-    return selectorCalled && argumentsPassed;
-}
-
-- (void)store:(SEL)sel args:(NSArray *)args {
-    NSValue *method = [NSValue valueWithPointer:sel];
-    self.argumentsBySelector[method] = args;
-    [self.selectors addObject:method];
 }
 
 @end
