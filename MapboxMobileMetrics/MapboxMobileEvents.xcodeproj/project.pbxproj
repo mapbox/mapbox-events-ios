@@ -11,6 +11,9 @@
 		404807C81EA186D8008A6D50 /* MapboxMobileEventsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 404807C71EA186D8008A6D50 /* MapboxMobileEventsTests.m */; };
 		404807CA1EA186D8008A6D50 /* MapboxMobileEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = 404807BC1EA186D8008A6D50 /* MapboxMobileEvents.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		404807D61EA1873E008A6D50 /* MapboxMobileEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = 404807D41EA1873E008A6D50 /* MapboxMobileEvents.m */; };
+		40AE58431EA6C86C0046B437 /* MMEUIApplicationWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 40AE58411EA6C86C0046B437 /* MMEUIApplicationWrapper.h */; };
+		40AE58441EA6C86C0046B437 /* MMEUIApplicationWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AE58421EA6C86C0046B437 /* MMEUIApplicationWrapper.m */; };
+		40AE58471EA6C9F10046B437 /* MMEUIApplicationWrapperFake.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AE58461EA6C9F10046B437 /* MMEUIApplicationWrapperFake.m */; };
 		40C9E27B1EA542BC00744FE7 /* MMEEventsManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 40C9E2791EA542BC00744FE7 /* MMEEventsManager.h */; };
 		40C9E27C1EA542BC00744FE7 /* MMEEventsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C9E27A1EA542BC00744FE7 /* MMEEventsManager.m */; };
 		40C9E27F1EA5473F00744FE7 /* MMELocationManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 40C9E27D1EA5473F00744FE7 /* MMELocationManager.h */; };
@@ -39,6 +42,10 @@
 		404807C71EA186D8008A6D50 /* MapboxMobileEventsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MapboxMobileEventsTests.m; sourceTree = "<group>"; };
 		404807C91EA186D8008A6D50 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		404807D41EA1873E008A6D50 /* MapboxMobileEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapboxMobileEvents.m; sourceTree = "<group>"; };
+		40AE58411EA6C86C0046B437 /* MMEUIApplicationWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEUIApplicationWrapper.h; sourceTree = "<group>"; };
+		40AE58421EA6C86C0046B437 /* MMEUIApplicationWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEUIApplicationWrapper.m; sourceTree = "<group>"; };
+		40AE58451EA6C9F10046B437 /* MMEUIApplicationWrapperFake.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEUIApplicationWrapperFake.h; sourceTree = "<group>"; };
+		40AE58461EA6C9F10046B437 /* MMEUIApplicationWrapperFake.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEUIApplicationWrapperFake.m; sourceTree = "<group>"; };
 		40C9E2791EA542BC00744FE7 /* MMEEventsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEEventsManager.h; sourceTree = "<group>"; };
 		40C9E27A1EA542BC00744FE7 /* MMEEventsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEEventsManager.m; sourceTree = "<group>"; };
 		40C9E27D1EA5473F00744FE7 /* MMELocationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMELocationManager.h; sourceTree = "<group>"; };
@@ -116,6 +123,8 @@
 		40C9E2841EA5615900744FE7 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				40AE58411EA6C86C0046B437 /* MMEUIApplicationWrapper.h */,
+				40AE58421EA6C86C0046B437 /* MMEUIApplicationWrapper.m */,
 				40C9E2851EA56C2D00744FE7 /* MMECLLocationManagerWrapper.h */,
 				40C9E2861EA56C2D00744FE7 /* MMECLLocationManagerWrapper.m */,
 			);
@@ -125,6 +134,8 @@
 		40C9E28B1EA5762F00744FE7 /* Fakes */ = {
 			isa = PBXGroup;
 			children = (
+				40AE58451EA6C9F10046B437 /* MMEUIApplicationWrapperFake.h */,
+				40AE58461EA6C9F10046B437 /* MMEUIApplicationWrapperFake.m */,
 				40C9E28C1EA5765200744FE7 /* MMECLLocationManagerWrapperFake.h */,
 				40C9E28D1EA5765200744FE7 /* MMECLLocationManagerWrapperFake.m */,
 			);
@@ -140,6 +151,7 @@
 			files = (
 				404807CA1EA186D8008A6D50 /* MapboxMobileEvents.h in Headers */,
 				40C9E27F1EA5473F00744FE7 /* MMELocationManager.h in Headers */,
+				40AE58431EA6C86C0046B437 /* MMEUIApplicationWrapper.h in Headers */,
 				40C9E2871EA56C2D00744FE7 /* MMECLLocationManagerWrapper.h in Headers */,
 				40C9E27B1EA542BC00744FE7 /* MMEEventsManager.h in Headers */,
 			);
@@ -246,6 +258,7 @@
 			files = (
 				40C9E27C1EA542BC00744FE7 /* MMEEventsManager.m in Sources */,
 				404807D61EA1873E008A6D50 /* MapboxMobileEvents.m in Sources */,
+				40AE58441EA6C86C0046B437 /* MMEUIApplicationWrapper.m in Sources */,
 				40C9E2801EA5473F00744FE7 /* MMELocationManager.m in Sources */,
 				40C9E2881EA56C2D00744FE7 /* MMECLLocationManagerWrapper.m in Sources */,
 			);
@@ -256,6 +269,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				40C9E28E1EA5765200744FE7 /* MMECLLocationManagerWrapperFake.m in Sources */,
+				40AE58471EA6C9F10046B437 /* MMEUIApplicationWrapperFake.m in Sources */,
 				40C9E28A1EA5733300744FE7 /* MMELocationManagerTests.m in Sources */,
 				404807C81EA186D8008A6D50 /* MapboxMobileEventsTests.m in Sources */,
 			);
@@ -381,6 +395,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = MapboxMobileEvents/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MapboxMobileEvents;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -400,6 +415,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = MapboxMobileEvents/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MapboxMobileEvents;
 				PRODUCT_NAME = "$(TARGET_NAME)";

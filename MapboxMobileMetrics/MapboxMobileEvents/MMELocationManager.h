@@ -1,10 +1,17 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
+#import "MMECLLocationManagerWrapper.h"
 
 @protocol MMELocationManagerDelegate;
 
-@interface MMELocationManager : NSObject <CLLocationManagerDelegate>
+extern const CLLocationDistance MMELocationManagerDistanceFilter;
+extern const CLLocationDistance MMELocationManagerHibernationRadius;
+
+extern NSString * const MMELocationManagerRegionIdentifier;
+
+@interface MMELocationManager : NSObject <CLLocationManagerDelegate,
+                                          MMECLLocationManagerWrapperDelegate>
 
 @property (nonatomic, weak) id<MMELocationManagerDelegate> delegate;
 @property (nonatomic, getter=isUpdatingLocation, readonly) BOOL updatingLocation;
