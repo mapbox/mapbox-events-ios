@@ -153,6 +153,17 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
     }
 }
 
+- (void)locationManagerWrapper:(id<MMECLLocationManagerWrapper>)locationManagerWrapper didExitRegion:(CLRegion *)region {
+    [self startBackgroundTimeoutTimer];
+    [self.locationManager startUpdatingLocation];
+}
+
+- (void)locationManagerWrapperDidPauseLocationUpdates:(id<MMECLLocationManagerWrapper>)locationManagerWrapper {
+    if ([self.delegate respondsToSelector:@selector(locationManagerBackgroundLocationUpdatesDidAutomaticallyPause:)]) {
+        [self.delegate locationManagerBackgroundLocationUpdatesDidAutomaticallyPause:self];
+    }
+}
+
 #pragma mark - CLLocationManagerDelegate
 
 //- (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
@@ -184,17 +195,17 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
 //    }
 //}
 
-- (void)locationManager:(CLLocationManager *)manager didExitRegion:(CLRegion *)region {
-    [self startBackgroundTimeoutTimer];
-    [self.standardLocationManager startUpdatingLocation];
-}
+//- (void)locationManager:(CLLocationManager *)manager didExitRegion:(CLRegion *)region {
+//    [self startBackgroundTimeoutTimer];
+//    [self.standardLocationManager startUpdatingLocation];
+//}
 
-- (void)locationManagerDidPauseLocationUpdates:(CLLocationManager *)manager {
-    if ([UIApplication sharedApplication].applicationState == UIApplicationStateBackground) {
-        if ([self.delegate respondsToSelector:@selector(locationManagerBackgroundLocationUpdatesDidAutomaticallyPause:)]) {
-            [self.delegate locationManagerBackgroundLocationUpdatesDidAutomaticallyPause:self];
-        }
-    }
-}
+//- (void)locationManagerDidPauseLocationUpdates:(CLLocationManager *)manager {
+//    if ([UIApplication sharedApplication].applicationState == UIApplicationStateBackground) {
+//        if ([self.delegate respondsToSelector:@selector(locationManagerBackgroundLocationUpdatesDidAutomaticallyPause:)]) {
+//            [self.delegate locationManagerBackgroundLocationUpdatesDidAutomaticallyPause:self];
+//        }
+//    }
+//}
 
 @end

@@ -3,7 +3,8 @@
 
 @protocol MMECLLocationManagerWrapperDelegate;
 
-@protocol MMECLLocationManagerWrapper <NSObject>
+@protocol MMECLLocationManagerWrapper <NSObject,
+                                       CLLocationManagerDelegate>
 
 @property (nonatomic, weak) id<MMECLLocationManagerWrapperDelegate> delegate;
 @property (nonatomic) BOOL allowsBackgroundLocationUpdates;
@@ -31,5 +32,7 @@
 
 - (void)locationManagerWrapper:(id<MMECLLocationManagerWrapper>)locationManagerWrapper didChangeAuthorizationStatus:(CLAuthorizationStatus)status;
 - (void)locationManagerWrapper:(id<MMECLLocationManagerWrapper>)locationManagerWrapper didUpdateLocations:(NSArray<CLLocation *> *)locations;
+- (void)locationManagerWrapper:(id<MMECLLocationManagerWrapper>)locationManagerWrapper didExitRegion:(CLRegion *)region;
+- (void)locationManagerWrapperDidPauseLocationUpdates:(id<MMECLLocationManagerWrapper>)locationManagerWrapper;
 
 @end

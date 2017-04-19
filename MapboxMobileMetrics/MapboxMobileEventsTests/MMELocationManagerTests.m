@@ -54,6 +54,10 @@
     [self store:_cmd args:@[locations]];
 }
 
+- (void)locationManagerBackgroundLocationUpdatesDidAutomaticallyPause:(MMELocationManager *)locationManager {
+    [self store:_cmd args:@[locationManager]];
+}
+
 @end
 
 @implementation MMELocationManagerTests
@@ -239,6 +243,20 @@
     CLLocation *location = [self accurateLocation];
     [self.locationManager locationManagerWrapper:self.locationManagerWrapper didUpdateLocations:@[location]];
     XCTAssertTrue([self.delegateStub received:@selector(locationManager:didUpdateLocations:) withArguments:@[@[location]]], @"It should tell its delegate");
+}
+
+- (void)testAsDelegateForLocationManagerWrapperDidExitRegion {
+    XCTAssertNil(self.locationManager.backgroundLocationServiceTimeoutTimer, @"background timer should not be started");
+
+    [self.locationManager locationManagerWrapper:self.locationManagerWrapper didExitRegion:nil];
+
+    XCTAssertNotNil(self.locationManager.backgroundLocationServiceTimeoutTimer, @"background timer should be started");
+    XCTAssert([self.locationManagerWrapper received:@selector(startUpdatingLocation) withArguments:nil], @"CL location manager should have been told to start updating location");
+}
+
+- (void)testAsDelegateForLocationManagerWrapperDidPauseLocationUpdates {
+    [self.locationManager locationManagerWrapperDidPauseLocationUpdates:self.locationManagerWrapper];
+    XCTAssert([self.delegateStub received:@selector(locationManagerBackgroundLocationUpdatesDidAutomaticallyPause:) withArguments:@[self.locationManager]], @"It should tell its delegate that updates paused");
 }
 
 #pragma mark - Common

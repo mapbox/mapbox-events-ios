@@ -12,6 +12,7 @@
     self = [super init];
     if (self) {
         _locationManager = [[CLLocationManager alloc] init];
+        _locationManager.delegate = self;
     }
     return self;
 }
@@ -75,6 +76,24 @@
 
 - (NSSet *)monitoredRegions {
     return self.locationManager.monitoredRegions;
+}
+
+#pragma mark - CLLocationManagerDelegate
+
+- (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
+    [self.delegate locationManagerWrapper:self didChangeAuthorizationStatus:status];
+}
+
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations {
+    [self.delegate locationManagerWrapper:self didUpdateLocations:locations];
+}
+
+- (void)locationManager:(CLLocationManager *)manager didExitRegion:(CLRegion *)region {
+    [self.delegate locationManagerWrapper:self didExitRegion:region];
+}
+
+- (void)locationManagerDidPauseLocationUpdates:(CLLocationManager *)manager {
+    [self.delegate locationManagerWrapperDidPauseLocationUpdates:self];
 }
 
 @end
