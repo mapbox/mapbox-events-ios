@@ -10,8 +10,7 @@ extern const CLLocationDistance MMELocationManagerHibernationRadius;
 
 extern NSString * const MMELocationManagerRegionIdentifier;
 
-@interface MMELocationManager : NSObject <CLLocationManagerDelegate,
-                                          MMECLLocationManagerWrapperDelegate>
+@interface MMELocationManager : NSObject <MMECLLocationManagerWrapperDelegate>
 
 @property (nonatomic, weak) id<MMELocationManagerDelegate> delegate;
 @property (nonatomic, getter=isUpdatingLocation, readonly) BOOL updatingLocation;

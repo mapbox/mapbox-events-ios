@@ -13,7 +13,6 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
 
 @property (nonatomic) id<MMEUIApplicationWrapper> application;
 @property (nonatomic) id<MMECLLocationManagerWrapper> locationManager;
-@property (nonatomic) CLLocationManager *standardLocationManager;
 @property (nonatomic) BOOL hostAppHasBackgroundCapability;
 @property (nonatomic, getter=isUpdatingLocation, readwrite) BOOL updatingLocation;
 @property (nonatomic) NSDate *backgroundLocationServiceTimeoutAllowedDate;
@@ -163,49 +162,5 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
         [self.delegate locationManagerBackgroundLocationUpdatesDidAutomaticallyPause:self];
     }
 }
-
-#pragma mark - CLLocationManagerDelegate
-
-//- (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
-//    switch (status) {
-//#if __IPHONE_OS_VERSION_MIN_REQUIRED >= 80000
-//        case kCLAuthorizationStatusAuthorizedAlways:
-//#else
-//        case kCLAuthorizationStatusAuthorized:
-//#endif
-//        case kCLAuthorizationStatusAuthorizedWhenInUse:
-//            [self startUpdatingLocation];
-//            break;
-//        default:
-//            [self stopUpdatingLocation];
-//            break;
-//    }
-//}
-
-//- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations {
-//    CLLocation *location = locations.lastObject;
-//    if (location.speed > 0.0) {
-//        [self startBackgroundTimeoutTimer];
-//    }
-//    if (self.standardLocationManager.monitoredRegions.count == 0 || location.horizontalAccuracy < MMELocationManagerHibernationRadius) {
-//        [self establishRegionMonitoringForLocation:location];
-//    }
-//    if ([self.delegate respondsToSelector:@selector(locationManager:didUpdateLocations:)]) {
-//        [self.delegate locationManager:self didUpdateLocations:locations];
-//    }
-//}
-
-//- (void)locationManager:(CLLocationManager *)manager didExitRegion:(CLRegion *)region {
-//    [self startBackgroundTimeoutTimer];
-//    [self.standardLocationManager startUpdatingLocation];
-//}
-
-//- (void)locationManagerDidPauseLocationUpdates:(CLLocationManager *)manager {
-//    if ([UIApplication sharedApplication].applicationState == UIApplicationStateBackground) {
-//        if ([self.delegate respondsToSelector:@selector(locationManagerBackgroundLocationUpdatesDidAutomaticallyPause:)]) {
-//            [self.delegate locationManagerBackgroundLocationUpdatesDidAutomaticallyPause:self];
-//        }
-//    }
-//}
 
 @end
