@@ -33,10 +33,6 @@
 
 @interface MMELocationManagerDelegateStub : NSObject <MMELocationManagerDelegate>
 
-@property (nonatomic) BOOL received_locationManagerDidStartLocationUpdates;
-@property (nonatomic) BOOL received_locationManagerDidStopLocationUpdates;
-@property (nonatomic) BOOL received_locationManagerBackgroundLocationUpdatesDidTimeout;
-
 @property (nonatomic) NSMutableSet *selectors;
 @property (nonatomic) NSMutableDictionary *argumentsBySelector;
 
@@ -55,22 +51,19 @@
 }
 
 - (void)locationManagerDidStartLocationUpdates:(MMELocationManager *)locationManager {
-    self.received_locationManagerDidStartLocationUpdates = YES;
+    [self store:_cmd args:@[locationManager]];
 }
 
 - (void)locationManagerDidStopLocationUpdates:(MMELocationManager *)locationManager {
-    self.received_locationManagerDidStopLocationUpdates = YES;
+    [self store:_cmd args:@[locationManager]];
 }
 
 - (void)locationManagerBackgroundLocationUpdatesDidTimeout:(MMELocationManager *)locationManager {
-    self.received_locationManagerBackgroundLocationUpdatesDidTimeout = YES;
+    [self store:_cmd args:@[locationManager]];
 }
 
 - (void)locationManager:(MMELocationManager *)locationManager didUpdateLocations:(NSArray *)locations {
-    NSValue *method = [NSValue valueWithPointer:_cmd];
-    NSArray *args = @[locations];
-    self.argumentsBySelector[method] = args;
-    [self.selectors addObject:[NSValue valueWithPointer:_cmd]];
+    [self store:_cmd args:@[locations]];
 }
 
 - (BOOL)received:(SEL)selector withArguments:(NSArray *)arguments {
@@ -78,6 +71,12 @@
     BOOL selectorCalled = [self.selectors containsObject:lookup];
     BOOL argumentsPassed = [self.argumentsBySelector[lookup] isEqualToArray:arguments];
     return selectorCalled && argumentsPassed;
+}
+
+- (void)store:(SEL)sel args:(NSArray *)args {
+    NSValue *method = [NSValue valueWithPointer:sel];
+    self.argumentsBySelector[method] = args;
+    [self.selectors addObject:method];
 }
 
 @end
@@ -113,7 +112,8 @@
     XCTAssert(self.locationManager.isUpdatingLocation, @"MME locationManager should consider itself to be updating location");
     XCTAssert(self.locationManagerWrapper.allowsBackgroundLocationUpdates, @"CL location manager should have been told to allow background location updates");
     XCTAssert(self.locationManagerWrapper.received_startUpdatingLocation, @"CL location manager should have been told to start updating location");
-    XCTAssert(self.delegateStub.received_locationManagerDidStartLocationUpdates, @"MME location manager should notify its delegate that it started location updates");
+
+    XCTAssert([self.delegateStub received:@selector(locationManagerDidStartLocationUpdates:) withArguments:@[self.locationManager]], @"MME location manager should notify its delegate that it started location updates");
 }
 
 - (void)testStartUpdatingLocationWhenHostAppHasNoBackgroundCapabilityAndAlwaysPermissions {
@@ -138,7 +138,7 @@
     XCTAssert(self.locationManagerWrapper.received_stopUpdatingLocation, @"CL location manager should have been told to stop updating location");
     XCTAssert(self.locationManagerWrapper.received_stopMonitoringSignificantLocationChanges, @"CL location manager should have been told to stop monitoring for significant location changes");
     XCTAssertFalse(self.locationManager.isUpdatingLocation, @"MME locationManager should not consider itself to be updating location");
-    XCTAssert(self.delegateStub.received_locationManagerDidStopLocationUpdates, @"MME location manager should tell its delegate that location updates were stopped");
+    XCTAssert([self.delegateStub received:@selector(locationManagerDidStopLocationUpdates:) withArguments:@[self.locationManager]], @"MME location manager should tell its delegate that location updates were stopped");
 }
 
 - (void)testStopUpdatingLocationWhenThereAreMonitoredRegions {
@@ -159,7 +159,8 @@
 
     XCTAssert(self.locationManagerWrapper.received_stopUpdatingLocation, @"CL location manager should have been told to stop updating location");
     XCTAssertNil(self.locationManager.backgroundLocationServiceTimeoutAllowedDate, @"timeout should be reset");
-    XCTAssert(self.delegateStub.received_locationManagerBackgroundLocationUpdatesDidTimeout, @"MME location manager should tell its delegate that location updates timed out");
+
+    XCTAssert([self.delegateStub received:@selector(locationManagerBackgroundLocationUpdatesDidTimeout:) withArguments:@[self.locationManager]], @"MME location manager should tell its delegate that location updates timed out");
 }
 
 - (void)testTimeoutBeforeExpiryInBackground {
@@ -171,7 +172,8 @@
 
     XCTAssertFalse(self.locationManagerWrapper.received_stopUpdatingLocation, @"CL location manager should not have been told to stop updating location");
     XCTAssertNotNil(self.locationManager.backgroundLocationServiceTimeoutAllowedDate, @"timeout should not be reset");
-    XCTAssertFalse(self.delegateStub.received_locationManagerBackgroundLocationUpdatesDidTimeout, @"MME location manager should not tell its delegate that location updates timed out");
+
+    XCTAssertFalse([self.delegateStub received:@selector(locationManagerBackgroundLocationUpdatesDidTimeout:) withArguments:nil], @"MME location manager should tell its delegate that location updates timed out");
 }
 
 - (void)testTimeoutInForeground {
@@ -243,7 +245,6 @@
 }
 
 - (void)testAsDelegateForLocationManagerWrapperDidUpdateLocationsRegionMonitoring {
-
     // When there is already a monitored region and an inaccurate location is received
     self.locationManagerWrapper.monitoredRegions = [NSSet setWithObject:[[CLCircularRegion alloc] init]];
     [self.locationManager locationManagerWrapper:self.locationManagerWrapper didUpdateLocations:@[[self inaccurateLocation]]];
@@ -278,7 +279,9 @@
 
     XCTAssert(self.locationManagerWrapper.received_startUpdatingLocation, @"CL location manager should have been told to start updating location");
     XCTAssert(self.locationManager.isUpdatingLocation, @"MME locationManager should consider itself to be updating location");
-    XCTAssert(self.delegateStub.received_locationManagerDidStartLocationUpdates, @"MME location manager should notify its delegate that it started location updates");
+
+
+    XCTAssert([self.delegateStub received:@selector(locationManagerDidStartLocationUpdates:) withArguments:@[self.locationManager]], @"MME location manager should notify its delegate that it started location updates");
 }
 
 - (CLLocation *)stationaryLocation {
