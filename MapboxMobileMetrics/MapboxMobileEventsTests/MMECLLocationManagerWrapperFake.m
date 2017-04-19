@@ -12,35 +12,27 @@
 }
 
 - (void)startUpdatingLocation {
-    self.received_startUpdatingLocation = YES;
+    [self store:_cmd args:nil];
 }
 
 - (void)stopUpdatingLocation {
-    self.received_stopUpdatingLocation = YES;
+    [self store:_cmd args:nil];
 }
 
 - (void)startMonitoringSignificantLocationChanges {
-    self.received_startMonitoringSignificantLocationChanges = YES;
+    [self store:_cmd args:nil];
 }
 
 - (void)stopMonitoringSignificantLocationChanges {
-    self.received_stopMonitoringSignificantLocationChanges = YES;
+    [self store:_cmd args:nil];
 }
 
 - (void)startMonitoringForRegion:(CLRegion *)region {
-    self.startMonitoringRegion = region;
+    [self store:_cmd args:@[region]];
 }
 
 - (void)stopMonitoringForRegion:(CLRegion *)region {
-    self.stopMonitoringRegion = region;
-}
-
-- (BOOL)received_startMonitoringForRegionWithRegion:(CLRegion *)region {
-    return [region isEqual:self.startMonitoringRegion];
-}
-
-- (BOOL)received_stopMonitoringForRegionWithRegion:(CLRegion *)region {
-    return [region isEqual:self.stopMonitoringRegion];
+    [self store:_cmd args:@[region]];
 }
 
 @end

@@ -81,13 +81,12 @@
     XCTAssert(self.locationManagerWrapper.delegate == self.locationManager, @"MME location manager should set itself as the delegate of the location manager wrapper");
     XCTAssert(self.locationManagerWrapper.desiredAccuracy == kCLLocationAccuracyThreeKilometers, @"MME location manager should correctly set the location manager wrapper's desired accuracy");
     XCTAssert(self.locationManagerWrapper.distanceFilter == MMELocationManagerDistanceFilter, @"MME location manager should correctly set the location manager wrapper's distance filter");
-
-    XCTAssert(self.locationManagerWrapper.received_startMonitoringSignificantLocationChanges, @"CL location manager should have been told to start monitoring significant location changes");
+    XCTAssert([self.locationManagerWrapper received:@selector(startMonitoringSignificantLocationChanges) withArguments:nil], @"CL location manager should have been told to start monitoring significant location changes");
     XCTAssertNotNil(self.locationManager.backgroundLocationServiceTimeoutTimer, @"MME location manager should start its background timer");
     XCTAssert(self.locationManager.isUpdatingLocation, @"MME locationManager should consider itself to be updating location");
     XCTAssert(self.locationManagerWrapper.allowsBackgroundLocationUpdates, @"CL location manager should have been told to allow background location updates");
-    XCTAssert(self.locationManagerWrapper.received_startUpdatingLocation, @"CL location manager should have been told to start updating location");
 
+    XCTAssert([self.locationManagerWrapper received:@selector(startUpdatingLocation) withArguments:nil], @"CL location manager should have been told to start updating location");
     XCTAssert([self.delegateStub received:@selector(locationManagerDidStartLocationUpdates:) withArguments:@[self.locationManager]], @"MME location manager should notify its delegate that it started location updates");
 }
 
@@ -109,9 +108,8 @@
 - (void)testStopUpdatingLocation {
     self.locationManager.updatingLocation = YES;
     [self.locationManager stopUpdatingLocation];
-
-    XCTAssert(self.locationManagerWrapper.received_stopUpdatingLocation, @"CL location manager should have been told to stop updating location");
-    XCTAssert(self.locationManagerWrapper.received_stopMonitoringSignificantLocationChanges, @"CL location manager should have been told to stop monitoring for significant location changes");
+    XCTAssert([self.locationManagerWrapper received:@selector(stopUpdatingLocation) withArguments:nil], @"CL location manager should have been told to stop updating location");
+    XCTAssert([self.locationManagerWrapper received:@selector(stopMonitoringSignificantLocationChanges) withArguments:nil], @"CL location manager should have been told to stop monitoring for significant location changes");
     XCTAssertFalse(self.locationManager.isUpdatingLocation, @"MME locationManager should not consider itself to be updating location");
     XCTAssert([self.delegateStub received:@selector(locationManagerDidStopLocationUpdates:) withArguments:@[self.locationManager]], @"MME location manager should tell its delegate that location updates were stopped");
 }
@@ -122,7 +120,7 @@
     self.locationManager.updatingLocation = YES;
     [self.locationManager stopUpdatingLocation];
 
-    XCTAssert([self.locationManagerWrapper received_stopMonitoringForRegionWithRegion:region], @"CL location manager should have been told to stop monitoring region");
+    XCTAssert([self.locationManagerWrapper received:@selector(stopMonitoringForRegion:) withArguments:@[region]], @"It should tell the CL location manager to start monitoring for region");
 }
 
 - (void)testTimeoutAfterExpiryInBackground {
@@ -132,9 +130,8 @@
 
     [self.locationManager timeoutAllowedCheck];
 
-    XCTAssert(self.locationManagerWrapper.received_stopUpdatingLocation, @"CL location manager should have been told to stop updating location");
+    XCTAssert([self.locationManagerWrapper received:@selector(stopUpdatingLocation) withArguments:nil], @"CL location manager should have been told to stop updating location");
     XCTAssertNil(self.locationManager.backgroundLocationServiceTimeoutAllowedDate, @"timeout should be reset");
-
     XCTAssert([self.delegateStub received:@selector(locationManagerBackgroundLocationUpdatesDidTimeout:) withArguments:@[self.locationManager]], @"MME location manager should tell its delegate that location updates timed out");
 }
 
@@ -145,9 +142,8 @@
 
     [self.locationManager timeoutAllowedCheck];
 
-    XCTAssertFalse(self.locationManagerWrapper.received_stopUpdatingLocation, @"CL location manager should not have been told to stop updating location");
+    XCTAssertFalse([self.locationManagerWrapper received:@selector(stopUpdatingLocation) withArguments:nil], @"CL location manager should not have been told to stop updating location");
     XCTAssertNotNil(self.locationManager.backgroundLocationServiceTimeoutAllowedDate, @"timeout should not be reset");
-
     XCTAssertFalse([self.delegateStub received:@selector(locationManagerBackgroundLocationUpdatesDidTimeout:) withArguments:nil], @"MME location manager should tell its delegate that location updates timed out");
 }
 
@@ -157,7 +153,7 @@
     [self.locationManager timeoutAllowedCheck];
 
     XCTAssertNotNil(self.locationManager.backgroundLocationServiceTimeoutTimer);
-    XCTAssertFalse(self.locationManagerWrapper.received_stopUpdatingLocation, @"CL location manager should not have been told to stop updating location");
+    XCTAssertFalse([self.locationManagerWrapper received:@selector(stopUpdatingLocation) withArguments:nil], @"CL location manager should not have been told to stop updating location");
 }
 
 - (void)testTimeoutWhenNotUpdatingLocation {
@@ -166,7 +162,7 @@
     [self.locationManager timeoutAllowedCheck];
 
     XCTAssertNil(self.locationManager.backgroundLocationServiceTimeoutTimer);
-    XCTAssertFalse(self.locationManagerWrapper.received_stopUpdatingLocation, @"CL location manager should not have been told to stop updating location");
+    XCTAssertFalse([self.locationManagerWrapper received:@selector(stopUpdatingLocation) withArguments:nil], @"CL location manager should not have been told to stop updating location");
 }
 
 - (void)testAsDelegateForLocationManagerWrapperAuthorizationStatusChangeToAlways {
@@ -206,7 +202,7 @@
     expectedRegion.notifyOnEntry = NO;
     expectedRegion.notifyOnExit = YES;
 
-    XCTAssert([self.locationManagerWrapper received_startMonitoringForRegionWithRegion:expectedRegion]);
+    XCTAssert([self.locationManagerWrapper received:@selector(startMonitoringForRegion:) withArguments:@[expectedRegion]], @"It should tell the CL location manager to start monitoring for region");
 }
 
 - (void)testAsDelegateForLocationManagerWrapperDidUpdateLocationsLocationSpeeds {
@@ -223,7 +219,7 @@
     // When there is already a monitored region and an inaccurate location is received
     self.locationManagerWrapper.monitoredRegions = [NSSet setWithObject:[[CLCircularRegion alloc] init]];
     [self.locationManager locationManagerWrapper:self.locationManagerWrapper didUpdateLocations:@[[self inaccurateLocation]]];
-    XCTAssertFalse([self.locationManagerWrapper received_startMonitoringForRegionWithRegion:[[CLCircularRegion alloc] init]], @"It should not start monitoring for a region");
+    XCTAssertFalse([self.locationManagerWrapper received:@selector(startMonitoringForRegion:) withArguments:nil], @"It should tell the CL location manager to start monitoring for region");
 
     // When there are no monitored regions and an accurate location is received
     self.locationManagerWrapper.monitoredRegions = [NSSet set];
@@ -231,12 +227,12 @@
     expectedRegion.notifyOnEntry = NO;
     expectedRegion.notifyOnExit = YES;
     [self.locationManager locationManagerWrapper:self.locationManagerWrapper didUpdateLocations:@[[self accurateLocation]]];
-    XCTAssertTrue([self.locationManagerWrapper received_startMonitoringForRegionWithRegion:expectedRegion], @"It should start monitoring for a region");
+    XCTAssert([self.locationManagerWrapper received:@selector(startMonitoringForRegion:) withArguments:@[expectedRegion]], @"It should tell the CL location manager to start monitoring for region");
 
     // When there are no monitored regions and an inaccurate location is received
     self.locationManagerWrapper.monitoredRegions = [NSSet set];
     [self.locationManager locationManagerWrapper:self.locationManagerWrapper didUpdateLocations:@[[self inaccurateLocation]]];
-    XCTAssertTrue([self.locationManagerWrapper received_startMonitoringForRegionWithRegion:expectedRegion], @"It should start monitoring for a region");
+    XCTAssert([self.locationManagerWrapper received:@selector(startMonitoringForRegion:) withArguments:@[expectedRegion]], @"It should tell the CL location manager to start monitoring for region");
 }
 
 - (void)testAsDelegateForLocationManagerWrapperDidUpdateLocationsRegionMonitoringDelegation {
@@ -248,14 +244,11 @@
 #pragma mark - Common
 
 - (void)assertThatLocationManagerBehavesCorrectlyWhenAuthorizedForWhenInUseOnlyOrWhenItHasNoBackgroundCapability {
-    XCTAssertFalse(self.locationManagerWrapper.received_startMonitoringSignificantLocationChanges, @"CL location manager should not have been told to start monitoring significant location changes");
+    XCTAssertFalse([self.locationManagerWrapper received:@selector(startMonitoringSignificantLocationChanges) withArguments:nil], @"CL location manager should not have been told to start monitoring significant location changes");
     XCTAssertNil(self.locationManager.backgroundLocationServiceTimeoutTimer, @"background timer should not be started");
     XCTAssertFalse(self.locationManagerWrapper.allowsBackgroundLocationUpdates, @"CL location manager should not have been told to allow background location updates");
-
-    XCTAssert(self.locationManagerWrapper.received_startUpdatingLocation, @"CL location manager should have been told to start updating location");
+    XCTAssert([self.locationManagerWrapper received:@selector(startUpdatingLocation) withArguments:nil], @"CL location manager should have been told to start updating location");
     XCTAssert(self.locationManager.isUpdatingLocation, @"MME locationManager should consider itself to be updating location");
-
-
     XCTAssert([self.delegateStub received:@selector(locationManagerDidStartLocationUpdates:) withArguments:@[self.locationManager]], @"MME location manager should notify its delegate that it started location updates");
 }
 
