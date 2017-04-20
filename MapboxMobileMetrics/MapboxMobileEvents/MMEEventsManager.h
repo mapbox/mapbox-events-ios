@@ -1,11 +1,14 @@
 #import <Foundation/Foundation.h>
+#import "MMEEvent.h"
 
 @class MMELocationManager;
 
-@interface MMEEventsManager : NSObject
+NS_ASSUME_NONNULL_BEGIN
 
-@property (nonatomic, readonly) MMELocationManager *locationManager;
+@interface MMEEventsManager : NSObject
 
 + (nullable instancetype)sharedManager;
 
 @end
+
+NS_ASSUME_NONNULL_END

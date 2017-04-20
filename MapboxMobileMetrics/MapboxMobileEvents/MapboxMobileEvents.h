@@ -8,8 +8,5 @@ FOUNDATION_EXPORT const unsigned char MapboxMobileMetricsVersionString[];
 
 // In this header, you should import all the public headers of your framework using statements like #import <MapboxMobileEvents/PublicHeader.h>
 
-@interface MapboxMobileEvents : NSObject
-
-- (NSString *)sayHelloTo:(NSString *)name;
-
-@end
+#import <MapboxMobileEvents/MMEEventsManager.h>
+#import <MapboxMobileEvents/MMEConstants.h>
