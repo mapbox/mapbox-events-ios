@@ -16,6 +16,10 @@
 @property (nonatomic, copy) NSData *testServerCert;
 @property (nonatomic, copy) NSURL *baseURL;
 @property (nonatomic) BOOL usesTestServer;
+@property (nonatomic) NSBundle *applicationBundle;
+@property (nonatomic, copy) NSString *userAgent;
+
+- (void)setupUserAgent;
 
 @end
 
@@ -41,7 +45,7 @@
     XCTAssertEqualObjects([NSURL URLWithString:MMEAPIClientBaseURL], self.apiClient.baseURL);
 }
 
-- (void)testSettingTestBaseURL {
+- (void)testSettingBaseURLWithTestServer {
     NSString *testURLString = @"https://test.com";
     [[NSUserDefaults standardUserDefaults] setObject:testURLString forKey:MMETelemetryTestServerURL];
     self.apiClient = [[MMEAPIClient alloc] init];
@@ -57,6 +61,22 @@
     XCTAssertEqualObjects([NSURL URLWithString:MMEAPIClientBaseURL], self.apiClient.baseURL);
 
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:MMETelemetryTestServerURL];
+}
+
+- (void)testSettingUpUserAgent {
+    NSBundle *fakeApplicationBundle = [NSBundle bundleForClass:[MMEAPIClientTests class]];
+    NSBundle *sdkBundle = [NSBundle bundleForClass:[MMEAPIClient class]];
+
+    self.apiClient.applicationBundle = fakeApplicationBundle;
+    [self.apiClient setupUserAgent];
+
+    NSString *appName = [fakeApplicationBundle objectForInfoDictionaryKey:@"CFBundleIdentifier"];
+    NSString *appVersion = [fakeApplicationBundle objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+    NSString *appBuildNumber = [fakeApplicationBundle objectForInfoDictionaryKey:@"CFBundleVersion"];
+    NSString *shortVersion = [sdkBundle objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+
+    NSString *expectedUserAgent = [NSString stringWithFormat:@"%@/%@/%@ %@/%@", appName, appVersion, appBuildNumber, MMEAPIClientUserAgentBase, shortVersion];
+    XCTAssertEqualObjects(expectedUserAgent, self.apiClient.userAgent);
 }
 
 #pragma mark - Utilities

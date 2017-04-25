@@ -2,6 +2,7 @@
 
 extern NSString * const MMEAPIClientBaseURL;
 extern NSString * const MMETelemetryTestServerURL;
+extern NSString * const MMEAPIClientUserAgentBase;
 
 // Event types
 extern NSString * const MMEEventTypeAppUserTurnstile;

@@ -9,6 +9,9 @@
 @property (nonatomic, copy) NSData *testServerCert;
 @property (nonatomic, copy) NSURL *baseURL;
 @property (nonatomic) BOOL usesTestServer;
+@property (nonatomic) NSBundle *applicationBundle;
+@property (nonatomic) NSBundle *sdkBundle;
+@property (nonatomic, copy) NSString *userAgent;
 
 @end
 
@@ -19,12 +22,15 @@
     self = [super init];
     if (self) {
         _session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+        _applicationBundle = [NSBundle mainBundle];
+        _sdkBundle = [NSBundle bundleForClass:[self class]];
+
         [self loadCertficates];
         [self setupBaseURL];
+        [self setupUserAgent];
     }
     return self;
 }
-
 
 - (void)postEvents:(NS_ARRAY_OF(MMEEvent *) *)events completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
 
@@ -47,8 +53,7 @@
 }
 
 - (void)loadCertificateData:(NSData **)certificateData withName:(NSString *)name {
-    NSBundle *bundle = [NSBundle bundleForClass:[self class]];
-    NSString *certPath = [bundle pathForResource:name ofType:@"der" inDirectory:nil];
+    NSString *certPath = [self.sdkBundle pathForResource:name ofType:@"der" inDirectory:nil];
     *certificateData = [NSData dataWithContentsOfFile:certPath];
 }
 
@@ -61,6 +66,14 @@
     } else {
         self.baseURL = [NSURL URLWithString:MMEAPIClientBaseURL];
     }
+}
+
+- (void)setupUserAgent {
+    NSString *appName = [self.applicationBundle objectForInfoDictionaryKey:@"CFBundleIdentifier"];
+    NSString *appVersion = [self.applicationBundle objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+    NSString *appBuildNumber = [self.applicationBundle objectForInfoDictionaryKey:@"CFBundleVersion"];
+    NSString *shortVersion = [self.sdkBundle objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+    self.userAgent = [NSString stringWithFormat:@"%@/%@/%@ %@/%@", appName, appVersion, appBuildNumber, MMEAPIClientUserAgentBase, shortVersion];
 }
 
 @end

@@ -2,6 +2,7 @@
 
 NSString * const MMEAPIClientBaseURL = @"https://events.mapbox.com";
 NSString * const MMETelemetryTestServerURL = @"MGLTelemetryTestServerURL";
+NSString * const MMEAPIClientUserAgentBase = @"MapboxEventsiOS";
 
 NSString * const MMEEventTypeAppUserTurnstile = @"appUserTurnstile";
 NSString * const MMEEventTypeMapLoad = @"map.load";
