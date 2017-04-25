@@ -1,12 +1,14 @@
 #import <Foundation/Foundation.h>
 
+extern NSString * const MMEAPIClientBaseURL;
+extern NSString * const MMETelemetryTestServerURL;
+
 // Event types
 extern NSString * const MMEEventTypeAppUserTurnstile;
 extern NSString * const MMEEventTypeMapLoad;
 extern NSString * const MMEEventTypeMapTap;
 extern NSString * const MMEEventTypeMapDragEnd;
 extern NSString * const MMEEventTypeLocation;
-
 
 // Gestures
 extern NSString * const MMEEventGestureSingleTap;

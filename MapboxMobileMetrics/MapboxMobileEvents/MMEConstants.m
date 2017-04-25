@@ -1,5 +1,8 @@
 #import "MMEConstants.h"
 
+NSString * const MMEAPIClientBaseURL = @"https://events.mapbox.com";
+NSString * const MMETelemetryTestServerURL = @"MGLTelemetryTestServerURL";
+
 NSString * const MMEEventTypeAppUserTurnstile = @"appUserTurnstile";
 NSString * const MMEEventTypeMapLoad = @"map.load";
 NSString * const MMEEventTypeMapTap = @"map.click";

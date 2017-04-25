@@ -28,6 +28,14 @@
 		40AE586A1EA953970046B437 /* CLLocation+MMEMobileEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AE58681EA953970046B437 /* CLLocation+MMEMobileEvents.m */; };
 		40AE586D1EA95EDD0046B437 /* MMEEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 40AE586B1EA95EDD0046B437 /* MMEEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		40AE586E1EA95EDD0046B437 /* MMEEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AE586C1EA95EDD0046B437 /* MMEEvent.m */; };
+		40AE58711EAA87960046B437 /* MMEAPIClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 40AE586F1EAA87960046B437 /* MMEAPIClient.h */; };
+		40AE58721EAA87960046B437 /* MMEAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AE58701EAA87960046B437 /* MMEAPIClient.m */; };
+		40AE58751EAA8AE30046B437 /* MMENSBundleWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 40AE58731EAA8AE30046B437 /* MMENSBundleWrapper.h */; };
+		40AE58761EAA8AE30046B437 /* MMENSBundleWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AE58741EAA8AE30046B437 /* MMENSBundleWrapper.m */; };
+		40AE587F1EAA8D810046B437 /* api_mapbox_com-digicert.der in Resources */ = {isa = PBXBuildFile; fileRef = 40AE587C1EAA8D810046B437 /* api_mapbox_com-digicert.der */; };
+		40AE58801EAA8D810046B437 /* api_mapbox_com-geotrust.der in Resources */ = {isa = PBXBuildFile; fileRef = 40AE587D1EAA8D810046B437 /* api_mapbox_com-geotrust.der */; };
+		40AE58811EAA8D810046B437 /* api_mapbox_staging.der in Resources */ = {isa = PBXBuildFile; fileRef = 40AE587E1EAA8D810046B437 /* api_mapbox_staging.der */; };
+		40AE58831EAA8E040046B437 /* MMEAPIClientTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AE58821EAA8E040046B437 /* MMEAPIClientTests.m */; };
 		40C9E27B1EA542BC00744FE7 /* MMEEventsManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 40C9E2791EA542BC00744FE7 /* MMEEventsManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		40C9E27C1EA542BC00744FE7 /* MMEEventsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C9E27A1EA542BC00744FE7 /* MMEEventsManager.m */; };
 		40C9E27F1EA5473F00744FE7 /* MMELocationManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 40C9E27D1EA5473F00744FE7 /* MMELocationManager.h */; };
@@ -49,6 +57,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		402F5F641EAEB4AC00F93F90 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		404807B91EA186D8008A6D50 /* MapboxMobileEvents.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MapboxMobileEvents.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		404807BC1EA186D8008A6D50 /* MapboxMobileEvents.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MapboxMobileEvents.h; sourceTree = "<group>"; };
 		404807BD1EA186D8008A6D50 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -75,6 +84,14 @@
 		40AE58681EA953970046B437 /* CLLocation+MMEMobileEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CLLocation+MMEMobileEvents.m"; sourceTree = "<group>"; };
 		40AE586B1EA95EDD0046B437 /* MMEEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEEvent.h; sourceTree = "<group>"; };
 		40AE586C1EA95EDD0046B437 /* MMEEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEEvent.m; sourceTree = "<group>"; };
+		40AE586F1EAA87960046B437 /* MMEAPIClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEAPIClient.h; sourceTree = "<group>"; };
+		40AE58701EAA87960046B437 /* MMEAPIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEAPIClient.m; sourceTree = "<group>"; };
+		40AE58731EAA8AE30046B437 /* MMENSBundleWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMENSBundleWrapper.h; sourceTree = "<group>"; };
+		40AE58741EAA8AE30046B437 /* MMENSBundleWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMENSBundleWrapper.m; sourceTree = "<group>"; };
+		40AE587C1EAA8D810046B437 /* api_mapbox_com-digicert.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = "api_mapbox_com-digicert.der"; sourceTree = "<group>"; };
+		40AE587D1EAA8D810046B437 /* api_mapbox_com-geotrust.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = "api_mapbox_com-geotrust.der"; sourceTree = "<group>"; };
+		40AE587E1EAA8D810046B437 /* api_mapbox_staging.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = api_mapbox_staging.der; sourceTree = "<group>"; };
+		40AE58821EAA8E040046B437 /* MMEAPIClientTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEAPIClientTests.m; sourceTree = "<group>"; };
 		40C9E2791EA542BC00744FE7 /* MMEEventsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEEventsManager.h; sourceTree = "<group>"; };
 		40C9E27A1EA542BC00744FE7 /* MMEEventsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEEventsManager.m; sourceTree = "<group>"; };
 		40C9E27D1EA5473F00744FE7 /* MMELocationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMELocationManager.h; sourceTree = "<group>"; };
@@ -105,11 +122,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		402F5F631EAEB4AC00F93F90 /* MMEResources */ = {
+			isa = PBXGroup;
+			children = (
+				402F5F641EAEB4AC00F93F90 /* Info.plist */,
+			);
+			path = MMEResources;
+			sourceTree = "<group>";
+		};
 		404807AF1EA186D8008A6D50 = {
 			isa = PBXGroup;
 			children = (
 				404807BB1EA186D8008A6D50 /* MapboxMobileEvents */,
 				404807C61EA186D8008A6D50 /* MapboxMobileEventsTests */,
+				402F5F631EAEB4AC00F93F90 /* MMEResources */,
 				404807BA1EA186D8008A6D50 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -126,6 +152,7 @@
 		404807BB1EA186D8008A6D50 /* MapboxMobileEvents */ = {
 			isa = PBXGroup;
 			children = (
+				40AE587B1EAA8D810046B437 /* Resources */,
 				404807BD1EA186D8008A6D50 /* Info.plist */,
 				404807BC1EA186D8008A6D50 /* MapboxMobileEvents.h */,
 				40AE58541EA932DB0046B437 /* MMEConstants.h */,
@@ -138,6 +165,8 @@
 				40C9E27A1EA542BC00744FE7 /* MMEEventsManager.m */,
 				40C9E27D1EA5473F00744FE7 /* MMELocationManager.h */,
 				40C9E27E1EA5473F00744FE7 /* MMELocationManager.m */,
+				40AE586F1EAA87960046B437 /* MMEAPIClient.h */,
+				40AE58701EAA87960046B437 /* MMEAPIClient.m */,
 				40AE58601EA94E4A0046B437 /* Categories */,
 				40C9E2841EA5615900744FE7 /* Utilities */,
 			);
@@ -152,6 +181,7 @@
 				40C9E28B1EA5762F00744FE7 /* Fakes */,
 				40C9E2891EA5733300744FE7 /* MMELocationManagerTests.m */,
 				40AE58501EA9286E0046B437 /* MMEEventsManagerTests.m */,
+				40AE58821EAA8E040046B437 /* MMEAPIClientTests.m */,
 			);
 			path = MapboxMobileEventsTests;
 			sourceTree = "<group>";
@@ -176,6 +206,16 @@
 			name = Categories;
 			sourceTree = "<group>";
 		};
+		40AE587B1EAA8D810046B437 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				40AE587C1EAA8D810046B437 /* api_mapbox_com-digicert.der */,
+				40AE587D1EAA8D810046B437 /* api_mapbox_com-geotrust.der */,
+				40AE587E1EAA8D810046B437 /* api_mapbox_staging.der */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		40C9E2841EA5615900744FE7 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
@@ -187,6 +227,8 @@
 				40AE58591EA9373F0046B437 /* MMEUniqueIdentifier.m */,
 				40AE585C1EA93B3A0046B437 /* MMECommonEventData.h */,
 				40AE585D1EA93B3A0046B437 /* MMECommonEventData.m */,
+				40AE58731EAA8AE30046B437 /* MMENSBundleWrapper.h */,
+				40AE58741EAA8AE30046B437 /* MMENSBundleWrapper.m */,
 			);
 			name = Utilities;
 			sourceTree = "<group>";
@@ -216,7 +258,9 @@
 				40AE585A1EA9373F0046B437 /* MMEUniqueIdentifier.h in Headers */,
 				40AE58561EA932DB0046B437 /* MMEConstants.h in Headers */,
 				40AE585E1EA93B3A0046B437 /* MMECommonEventData.h in Headers */,
+				40AE58711EAA87960046B437 /* MMEAPIClient.h in Headers */,
 				40AE58691EA953970046B437 /* CLLocation+MMEMobileEvents.h in Headers */,
+				40AE58751EAA8AE30046B437 /* MMENSBundleWrapper.h in Headers */,
 				40C9E2871EA56C2D00744FE7 /* MMECLLocationManagerWrapper.h in Headers */,
 				40AE586D1EA95EDD0046B437 /* MMEEvent.h in Headers */,
 				40C9E27B1EA542BC00744FE7 /* MMEEventsManager.h in Headers */,
@@ -306,6 +350,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				40AE58811EAA8D810046B437 /* api_mapbox_staging.der in Resources */,
+				40AE58801EAA8D810046B437 /* api_mapbox_com-geotrust.der in Resources */,
+				40AE587F1EAA8D810046B437 /* api_mapbox_com-digicert.der in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -328,10 +375,12 @@
 				40AE586A1EA953970046B437 /* CLLocation+MMEMobileEvents.m in Sources */,
 				40AE58441EA6C86C0046B437 /* MMEUIApplicationWrapper.m in Sources */,
 				40AE585F1EA93B3A0046B437 /* MMECommonEventData.m in Sources */,
+				40AE58721EAA87960046B437 /* MMEAPIClient.m in Sources */,
 				40C9E2801EA5473F00744FE7 /* MMELocationManager.m in Sources */,
 				40AE586E1EA95EDD0046B437 /* MMEEvent.m in Sources */,
 				40C9E2881EA56C2D00744FE7 /* MMECLLocationManagerWrapper.m in Sources */,
 				40AE58661EA94F2D0046B437 /* NSDateFormatter+MMEMobileEvents.m in Sources */,
+				40AE58761EAA8AE30046B437 /* MMENSBundleWrapper.m in Sources */,
 				40AE585B1EA9373F0046B437 /* MMEUniqueIdentifier.m in Sources */,
 				40AE584F1EA926710046B437 /* MMETypes.m in Sources */,
 			);
@@ -346,6 +395,7 @@
 				40AE58471EA6C9F10046B437 /* MMEUIApplicationWrapperFake.m in Sources */,
 				40AE584B1EA80EA90046B437 /* MMETestStub.m in Sources */,
 				40C9E28A1EA5733300744FE7 /* MMELocationManagerTests.m in Sources */,
+				40AE58831EAA8E040046B437 /* MMEAPIClientTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
