@@ -12,9 +12,14 @@
     return self;
 }
 
+- (BOOL)received:(SEL)selector {
+    NSValue *lookup = [NSValue valueWithPointer:selector];
+    return [self.selectors containsObject:lookup];
+}
+
 - (BOOL)received:(SEL)selector withArguments:(NSArray *)arguments {
     NSValue *lookup = [NSValue valueWithPointer:selector];
-    BOOL selectorCalled = [self.selectors containsObject:lookup];
+    BOOL selectorCalled = [self received:selector];
     arguments = arguments != nil ? arguments : @[];
     BOOL argumentsPassed = [self.argumentsBySelector[lookup] isEqualToArray:arguments];
     return selectorCalled && argumentsPassed;
