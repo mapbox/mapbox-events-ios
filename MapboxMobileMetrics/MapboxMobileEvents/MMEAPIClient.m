@@ -6,11 +6,7 @@
 @interface MMEAPIClient ()
 
 @property (nonatomic) id<MMENSURLSessionWrapper> sessionWrapper;
-@property (nonatomic, copy) NSData *digicertCert;
-@property (nonatomic, copy) NSData *geoTrustCert;
-@property (nonatomic, copy) NSData *testServerCert;
 @property (nonatomic, copy) NSURL *baseURL;
-@property (nonatomic) BOOL usesTestServer;
 @property (nonatomic) NSBundle *applicationBundle;
 @property (nonatomic) NSBundle *sdkBundle;
 @property (nonatomic, copy) NSString *userAgent;
@@ -19,14 +15,13 @@
 
 @implementation MMEAPIClient
 
-- (instancetype)init
-{
+- (instancetype)init {
     self = [super init];
     if (self) {
         _sessionWrapper = [[MMENSURLSessionWrapper alloc] init];
         _applicationBundle = [NSBundle mainBundle];
         _sdkBundle = [NSBundle bundleForClass:[self class]];
-
+        
         [self loadCertficates];
         [self setupBaseURL];
         [self setupUserAgent];
@@ -104,14 +99,15 @@
 - (void)loadCertficates {
     NSData *certificate;
     [self loadCertificateData:&certificate withName:@"api_mapbox_com-digicert"];
-    self.digicertCert = certificate;
+    self.sessionWrapper.digicertCert = certificate;
     [self loadCertificateData:&certificate withName:@"api_mapbox_com-geotrust"];
-    self.geoTrustCert = certificate;
+    self.sessionWrapper.geoTrustCert = certificate;
     [self loadCertificateData:&certificate withName:@"api_mapbox_staging"];
-    self.testServerCert = certificate;
+    self.sessionWrapper.testServerCert = certificate;
 }
 
 - (void)loadCertificateData:(NSData **)certificateData withName:(NSString *)name {
+    *certificateData = nil;
     NSString *certPath = [self.sdkBundle pathForResource:name ofType:@"der" inDirectory:nil];
     *certificateData = [NSData dataWithContentsOfFile:certPath];
 }
@@ -121,7 +117,7 @@
     NSURL *testServerURL = [NSURL URLWithString:testServerURLString];
     if (testServerURL && [testServerURL.scheme isEqualToString:@"https"]) {
         self.baseURL = testServerURL;
-        self.usesTestServer = YES;
+        self.sessionWrapper.usesTestServer = YES;
     } else {
         self.baseURL = [NSURL URLWithString:MMEAPIClientBaseURL];
     }

@@ -70,6 +70,8 @@
 #pragma mark - MMELocationManagerDelegate
 
 - (void)locationManager:(MMELocationManager *)locationManager didUpdateLocations:(NSArray *)locations {
+    NSLog(@"================> %s", __PRETTY_FUNCTION__);
+    
     for (CLLocation *location in locations) {
         MGLMapboxEventAttributes *eventAttributes = @{MMEEventKeyCreated: [self.rfc3339DateFormatter stringFromDate:location.timestamp],
                                                       MMEEventKeyLatitude: @([location latitudeRoundedWithPrecision:7]),

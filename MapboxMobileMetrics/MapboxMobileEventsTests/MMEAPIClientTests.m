@@ -37,9 +37,9 @@
 - (void)testInitialization {
     XCTAssertNotNil(self.apiClient.sessionWrapper);
 
-    [self loadAndCheckCertificateWithName:@"api_mapbox_com-digicert" comparedToAPIClientCertificate:self.apiClient.digicertCert];
-    [self loadAndCheckCertificateWithName:@"api_mapbox_com-geotrust" comparedToAPIClientCertificate:self.apiClient.geoTrustCert];
-    [self loadAndCheckCertificateWithName:@"api_mapbox_staging" comparedToAPIClientCertificate:self.apiClient.testServerCert];
+    [self loadAndCheckCertificateWithName:@"api_mapbox_com-digicert" comparedToAPIClientCertificate:self.apiClient.sessionWrapper.digicertCert];
+    [self loadAndCheckCertificateWithName:@"api_mapbox_com-geotrust" comparedToAPIClientCertificate:self.apiClient.sessionWrapper.geoTrustCert];
+    [self loadAndCheckCertificateWithName:@"api_mapbox_staging" comparedToAPIClientCertificate:self.apiClient.sessionWrapper.testServerCert];
 }
 
 - (void)testSettingUpBaseURL {
@@ -54,14 +54,14 @@
     [[NSUserDefaults standardUserDefaults] setObject:testURLString forKey:MMETelemetryTestServerURL];
     self.apiClient = [[MMEAPIClient alloc] init];
 
-    XCTAssertTrue(self.apiClient.usesTestServer);
+    XCTAssertTrue(self.apiClient.sessionWrapper.usesTestServer);
     XCTAssertEqualObjects(self.apiClient.baseURL, [NSURL URLWithString:testURLString]);
 
     NSString *testURLStringBad = @"http://test.com";
     [[NSUserDefaults standardUserDefaults] setObject:testURLStringBad forKey:MMETelemetryTestServerURL];
     self.apiClient = [[MMEAPIClient alloc] init];
 
-    XCTAssertFalse(self.apiClient.usesTestServer);
+    XCTAssertFalse(self.apiClient.sessionWrapper.usesTestServer);
     XCTAssertEqualObjects([NSURL URLWithString:MMEAPIClientBaseURL], self.apiClient.baseURL);
 
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:MMETelemetryTestServerURL];
