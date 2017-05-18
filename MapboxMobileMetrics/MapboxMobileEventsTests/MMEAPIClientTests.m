@@ -79,7 +79,7 @@
     NSString *appBuildNumber = [fakeApplicationBundle objectForInfoDictionaryKey:@"CFBundleVersion"];
     NSString *shortVersion = [sdkBundle objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
 
-    NSString *expectedUserAgent = [NSString stringWithFormat:@"%@/%@/%@ %@/%@", appName, appVersion, appBuildNumber, MMEAPIClientUserAgentBase, shortVersion];
+    NSString *expectedUserAgent = [NSString stringWithFormat:@"%@/%@/%@ %@/%@", appName, appVersion, appBuildNumber, self.apiClient.userAgentBase, shortVersion];
     XCTAssertEqualObjects(expectedUserAgent, self.apiClient.userAgent);
 }
 

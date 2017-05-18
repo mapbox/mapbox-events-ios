@@ -9,6 +9,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (nullable instancetype)sharedManager;
 
+- (void)initializeWithAccessToken:(NSString *)accessToken userAgentBase:(NSString *)userAgentBase;
+
 @end
 
 NS_ASSUME_NONNULL_END

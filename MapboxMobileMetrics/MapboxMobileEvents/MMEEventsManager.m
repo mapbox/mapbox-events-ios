@@ -4,6 +4,7 @@
 #import "MMEUniqueIdentifier.h"
 #import "MMECommonEventData.h"
 #import "MMEConstants.h"
+#import "MMEAPIClient.h"
 
 #import "NSDateFormatter+MMEMobileEvents.h"
 #import "CLLocation+MMEMobileEvents.h"
@@ -11,6 +12,7 @@
 @interface MMEEventsManager () <MMELocationManagerDelegate>
 
 @property (nonatomic) MMELocationManager *locationManager;
+@property (nonatomic) MMEAPIClient *apiClient;
 @property (nonatomic) NS_MUTABLE_ARRAY_OF(MGLMapboxEventAttributes *) *eventQueue;
 @property (nonatomic) MMEUniqueIdentifier *uniqueIdentifer;
 @property (nonatomic) MMECommonEventData *commonEventData;
@@ -19,10 +21,6 @@
 @end
 
 @implementation MMEEventsManager
-
-+ (void)load {
-    [self sharedManager];
-}
 
 + (nullable instancetype)sharedManager {
 //    if (NSProcessInfo.processInfo.mgl_isInterfaceBuilderDesignablesAgent) {
@@ -42,14 +40,20 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        _locationManager = [[MMELocationManager alloc] init];
-        _locationManager.delegate = self;
         _eventQueue = [NSMutableArray array];
         _uniqueIdentifer = [[MMEUniqueIdentifier alloc] init];
         _commonEventData = [[MMECommonEventData alloc] init];
         _rfc3339DateFormatter = [NSDateFormatter rfc3339DateFormatter];
     }
     return self;
+}
+
+- (void)initializeWithAccessToken:(NSString *)accessToken userAgentBase:(NSString *)userAgentBase {
+    _apiClient = [[MMEAPIClient alloc] init];
+//    _locationManager = [[MMELocationManager alloc] init];
+//    _locationManager.delegate = self;
+    _apiClient.accessToken = accessToken;
+    _apiClient.userAgentBase = userAgentBase;
 }
 
 - (void)pushEvent:(MMEEvent *)event {
