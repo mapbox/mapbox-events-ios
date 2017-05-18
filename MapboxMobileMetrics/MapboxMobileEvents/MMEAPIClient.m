@@ -42,14 +42,24 @@
     NSURLRequest *request = [self requestForEvents:@[event]];
 
     [self.sessionWrapper processRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-
-        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
         NSError *statusError = nil;
+        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
         if (httpResponse.statusCode >= 400) {
-            statusError = [NSError errorWithDomain:@"mapbox.com" code:99 userInfo:nil];
+            
+            NSString *descriptionFormat = [self.sdkBundle localizedStringForKey:@"API_CLIENT_400_DESC" value:@"" table:nil];
+            NSString *reasonFormat = [self.sdkBundle localizedStringForKey:@"API_CLIENT_400_REASON" value:@"" table:nil];
+            
+            NSString *description = [NSString stringWithFormat:descriptionFormat, nil];
+            NSString *reason = [NSString stringWithFormat:reasonFormat, (long)httpResponse.statusCode];
+            
+            NSDictionary *userInfo = @{NSLocalizedDescriptionKey: description,
+                                       NSLocalizedFailureReasonErrorKey: reason};
+            statusError = [NSError errorWithDomain:MMEErrorDomain code:1 userInfo:userInfo];
         }
-
-        completionHandler(statusError);
+        if (completionHandler) {
+            error = error ?: statusError;
+            completionHandler(error);
+        }
     }];
 }
 

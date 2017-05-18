@@ -9,6 +9,7 @@ NSString * const MMEAPIClientHeaderFieldContentTypeKey = @"Content-Type";
 NSString * const MMEAPIClientHeaderFieldContentTypeValue = @"application/json";
 NSString * const MMEAPIClientHeaderFieldContentEncodingKey = @"Content-Encoding";
 NSString * const MMEAPIClientHTTPMethodPost = @"POST";
+NSString * const MMEErrorDomain = @"MGLErrorDomain";
 
 NSString * const MMEEventTypeAppUserTurnstile = @"appUserTurnstile";
 NSString * const MMEEventTypeMapLoad = @"map.load";

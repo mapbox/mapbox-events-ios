@@ -83,19 +83,12 @@
     XCTAssertEqualObjects(expectedUserAgent, self.apiClient.userAgent);
 }
 
-- (void)testPostingAnEventWithNoError {
+- (void)testPostingAnEvent {
     XCTestExpectation *expectation = [self expectationWithDescription:@"It should call the completion handler"];
 
-    MMENSURLSessionWrapperFake *sessionWrapperFake = [[MMENSURLSessionWrapperFake alloc] init];
-    self.apiClient.sessionWrapper = sessionWrapperFake;
+    MMENSURLSessionWrapperFake *sessionWrapperFake = [self setUpAPIClientToTestPosting];
 
-    MMECommonEventData *commonEventData = [[MMECommonEventData alloc] init];
-    commonEventData.vendorId = @"vendor-id";
-    commonEventData.model = @"model";
-    commonEventData.iOSVersion = @"1";
-    commonEventData.scale = 42;
-    MMEEvent *event = [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-1" commonEventData:commonEventData];
-
+    MMEEvent *event = [self locationEvent];
     [self.apiClient postEvent:event completionHandler:^(NSError * _Nullable error) {
         XCTAssertNil(error);
         [expectation fulfill];
@@ -104,15 +97,14 @@
     // It should tell its session wrapper to process a request with a completion handler
     XCTAssertTrue([sessionWrapperFake received:@selector(processRequest:completionHandler:)]);
 
-    // The request should be correct
-    XCTAssertEqualObjects(sessionWrapperFake.request.URL.absoluteString, @"https://events.mapbox.com/events/v2?access_token=(null)");
+    // The request should be created correctly
+    NSString *expectedURLString = [NSString stringWithFormat:@"%@/%@?access_token=%@", MMEAPIClientBaseURL, MMEAPIClientEventsPath, self.apiClient.accessToken];
+    XCTAssertEqualObjects(sessionWrapperFake.request.URL.absoluteString, expectedURLString);
     XCTAssertEqualObjects(sessionWrapperFake.request.allHTTPHeaderFields[MMEAPIClientHeaderFieldUserAgentKey], self.apiClient.userAgent);
     XCTAssertEqualObjects(sessionWrapperFake.request.allHTTPHeaderFields[MMEAPIClientHeaderFieldContentTypeKey], MMEAPIClientHeaderFieldContentTypeValue);
     XCTAssertEqualObjects(sessionWrapperFake.request.HTTPMethod, MMEAPIClientHTTPMethodPost);
-
     XCTAssertNil(sessionWrapperFake.request.allHTTPHeaderFields[MMEAPIClientHeaderFieldContentEncodingKey]);
     XCTAssertEqualObjects(sessionWrapperFake.request.HTTPBody, [self jsonDataForEvents:@[event]]);
-
 
     // When the session wrapper returns with a status code < 400
     NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:[NSURL URLWithString:@"http:test.com"]
@@ -123,8 +115,52 @@
 
     // It should complete the post event with no error
     [self waitForExpectations:@[expectation] timeout:1];
-
 }
+
+- (void)testPostingAnEventWithAnHTTPStatusErrorResponse {
+    XCTestExpectation *expectation = [self expectationWithDescription:@"It should call the completion handler"];
+    
+    MMENSURLSessionWrapperFake *sessionWrapperFake = [self setUpAPIClientToTestPosting];
+    
+    MMEEvent *event = [self locationEvent];
+    [self.apiClient postEvent:event completionHandler:^(NSError * _Nullable error) {
+        XCTAssertNotNil(error);
+        [expectation fulfill];
+    }];
+    
+    // When the session wrapper returns with a status code < 400 and an error
+    NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:[NSURL URLWithString:@"http:test.com"]
+                                                              statusCode:400
+                                                             HTTPVersion:nil
+                                                            headerFields:nil];
+    [sessionWrapperFake completeProcessingWithData:nil response:response error:nil];
+    
+    [self waitForExpectations:@[expectation] timeout:1];
+}
+
+- (void)testPostingAnEventWithALibraryErrorResponse {
+    XCTestExpectation *expectation = [self expectationWithDescription:@"It should call the completion handler"];
+    
+    MMENSURLSessionWrapperFake *sessionWrapperFake = [self setUpAPIClientToTestPosting];
+    
+    MMEEvent *event = [self locationEvent];
+    NSError *postError = [NSError errorWithDomain:@"error.com" code:42 userInfo:nil];
+    [self.apiClient postEvent:event completionHandler:^(NSError * _Nullable error) {
+        XCTAssertEqualObjects(postError, error);
+        [expectation fulfill];
+    }];
+    
+    // When the session wrapper returns with a status code < 400 and an error
+    NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:[NSURL URLWithString:@"http:test.com"]
+                                                              statusCode:200
+                                                             HTTPVersion:nil
+                                                            headerFields:nil];
+    [sessionWrapperFake completeProcessingWithData:nil response:response error:postError];
+    
+    [self waitForExpectations:@[expectation] timeout:1];
+}
+
+// testPostingThreeEventsThatGetCompressed
 
 #pragma mark - Utilities
 
@@ -143,6 +179,22 @@
     NSString *certPath = [bundle pathForResource:name ofType:@"der" inDirectory:nil];
     NSData *certificateData = [NSData dataWithContentsOfFile:certPath];
     XCTAssertEqualObjects(certificateData, APIClientCertificate);
+}
+
+- (MMEEvent *)locationEvent {
+    MMECommonEventData *commonEventData = [[MMECommonEventData alloc] init];
+    commonEventData.vendorId = @"vendor-id";
+    commonEventData.model = @"model";
+    commonEventData.iOSVersion = @"1";
+    commonEventData.scale = 42;
+    return [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-1" commonEventData:commonEventData];
+}
+
+- (MMENSURLSessionWrapperFake *)setUpAPIClientToTestPosting {
+    MMENSURLSessionWrapperFake *sessionWrapperFake = [[MMENSURLSessionWrapperFake alloc] init];
+    self.apiClient.sessionWrapper = sessionWrapperFake;
+    self.apiClient.accessToken = @"an-access-token";
+    return sessionWrapperFake;
 }
 
 @end
