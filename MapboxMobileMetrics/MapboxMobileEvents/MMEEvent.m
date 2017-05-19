@@ -4,6 +4,13 @@
 
 @implementation MMEEvent
 
++ (instancetype)turnstileEventWithAttributes:(MGLMapboxEventAttributes *)attributes {
+    MMEEvent *turnstileEvent = [[MMEEvent alloc] init];
+    turnstileEvent.name = MMEEventTypeAppUserTurnstile;
+    turnstileEvent.attributes = attributes;
+    return turnstileEvent;
+}
+
 + (instancetype)locationEventWithAttributes:(MGLMapboxEventAttributes *)attributes instanceIdentifer:(NSString *)instanceIdentifer commonEventData:(MMECommonEventData *)commonEventData {
 
     MMEEvent *locationEvent = [[MMEEvent alloc] init];

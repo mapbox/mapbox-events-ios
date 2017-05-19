@@ -7,9 +7,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface MMEEventsManager : NSObject
 
+@property (nonatomic, getter=isTelemetryDisabled) BOOL telemetryDisabled;
+
 + (nullable instancetype)sharedManager;
 
 - (void)initializeWithAccessToken:(NSString *)accessToken userAgentBase:(NSString *)userAgentBase;
+
+- (void)sendTurnstileEvent;
 
 @end
 

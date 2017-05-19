@@ -11,6 +11,8 @@ typedef NS_MUTABLE_DICTIONARY_OF(NSString *, id) MGLMutableMapboxEventAttributes
 @property (nonatomic, copy) NSString *name;
 @property (nonatomic, copy) MGLMapboxEventAttributes *attributes;
 
++ (instancetype)turnstileEventWithAttributes:(MGLMapboxEventAttributes *)attributes;
+
 + (instancetype)locationEventWithAttributes:(MGLMapboxEventAttributes *)attributes instanceIdentifer:(NSString *)instanceIdentifer commonEventData:(MMECommonEventData *)commonEventData;
 
 @end

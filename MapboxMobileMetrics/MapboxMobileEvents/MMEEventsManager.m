@@ -49,11 +49,40 @@
 }
 
 - (void)initializeWithAccessToken:(NSString *)accessToken userAgentBase:(NSString *)userAgentBase {
-    _apiClient = [[MMEAPIClient alloc] init];
+    _apiClient = [[MMEAPIClient alloc] initWithAccessToken:accessToken userAgentBase:userAgentBase];
 //    _locationManager = [[MMELocationManager alloc] init];
 //    _locationManager.delegate = self;
-    _apiClient.accessToken = accessToken;
-    _apiClient.userAgentBase = userAgentBase;
+}
+
+- (void)sendTurnstileEvent {
+    if (!self.commonEventData.vendorId) {
+        NSLog(@"================> no vendor id available, cannot can't send turntile event");
+        return;
+    }
+    
+    if (!self.apiClient.userAgentBase) {
+        NSLog(@"================> no user agent base set, cannot can't send turntile event");
+        return;
+    }
+    
+    if (!self.apiClient.accessToken) {
+        NSLog(@"================> no access token sent, cannot can't send turntile event");
+        return;
+    }
+    
+    NSDictionary *turnstileEventAttributes = @{MMEEventKeyEvent: MMEEventTypeAppUserTurnstile,
+                                               MMEEventKeyCreated: [self.rfc3339DateFormatter stringFromDate:[NSDate date]],
+                                               MMEEventKeyVendorID: self.commonEventData.vendorId,
+                                               MMEEventKeyEnabledTelemetry: @([self isTelemetryDisabled])};
+    
+    [self.apiClient postEvent:[MMEEvent turnstileEventWithAttributes:turnstileEventAttributes] completionHandler:^(NSError * _Nullable error) {
+        if (error) {
+            NSLog(@"================> could not send turnstile event: %@", error);
+            return;
+        }
+        
+        NSLog(@"================> sent turnstile event with attributes: %@", turnstileEventAttributes);
+    }];
 }
 
 - (void)pushEvent:(MMEEvent *)event {

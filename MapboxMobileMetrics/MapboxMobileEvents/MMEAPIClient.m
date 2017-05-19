@@ -15,9 +15,11 @@
 
 @implementation MMEAPIClient
 
-- (instancetype)init {
+- (instancetype)initWithAccessToken:(NSString *)accessToken userAgentBase:(NSString *)userAgentBase {
     self = [super init];
     if (self) {
+        _accessToken = accessToken;
+        _userAgentBase = userAgentBase;
         _sessionWrapper = [[MMENSURLSessionWrapper alloc] init];
         _applicationBundle = [NSBundle mainBundle];
         _sdkBundle = [NSBundle bundleForClass:[self class]];
@@ -30,7 +32,7 @@
 }
 
 - (void)postEvents:(NS_ARRAY_OF(MMEEvent *) *)events completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
-
+    // TODO
 }
 
 - (void)postEvent:(MMEEvent *)event completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
