@@ -22,13 +22,22 @@
         _userAgentBase = userAgentBase;
         _sessionWrapper = [[MMENSURLSessionWrapper alloc] init];
         _applicationBundle = [NSBundle mainBundle];
-        _sdkBundle = [NSBundle bundleForClass:[self class]];
+        _sdkBundle = [self resolveAndReturnSDKBundle];
         
         [self loadCertficates];
         [self setupBaseURL];
         [self setupUserAgent];
     }
     return self;
+}
+
+- (NSBundle *)resolveAndReturnSDKBundle {
+    NSBundle *bundle = [NSBundle bundleForClass:[self class]];
+    // If packaged as a static library, look for the resources bundle in the host app's bundle
+    if (![bundle.infoDictionary[@"CFBundlePackageType"] isEqualToString:@"FMWK"]) {
+        bundle = [NSBundle bundleWithPath:[_applicationBundle pathForResource:@"resources" ofType:@"bundle"]];
+    }
+    return bundle;
 }
 
 - (void)postEvents:(NS_ARRAY_OF(MMEEvent *) *)events completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {

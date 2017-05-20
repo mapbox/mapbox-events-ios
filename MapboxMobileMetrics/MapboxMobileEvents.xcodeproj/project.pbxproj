@@ -12,6 +12,30 @@
 		405172DD1EAFFA9400F8CDA1 /* MMENSURLSessionWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 405172DB1EAFFA9400F8CDA1 /* MMENSURLSessionWrapper.h */; };
 		405172DE1EAFFA9400F8CDA1 /* MMENSURLSessionWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 405172DC1EAFFA9400F8CDA1 /* MMENSURLSessionWrapper.m */; };
 		405172E51EB13C6D00F8CDA1 /* MMENSURLSessionWrapperFake.m in Sources */ = {isa = PBXBuildFile; fileRef = 405172E41EB13C6D00F8CDA1 /* MMENSURLSessionWrapperFake.m */; };
+		4085965C1ED086D3003BD29D /* MMEConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AE58551EA932DB0046B437 /* MMEConstants.m */; };
+		4085965D1ED086D6003BD29D /* MMETypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AE584D1EA926710046B437 /* MMETypes.m */; };
+		4085965E1ED086D9003BD29D /* MMEEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AE586C1EA95EDD0046B437 /* MMEEvent.m */; };
+		4085965F1ED086DC003BD29D /* MMEEventsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C9E27A1EA542BC00744FE7 /* MMEEventsManager.m */; };
+		408596601ED086DF003BD29D /* MMELocationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C9E27E1EA5473F00744FE7 /* MMELocationManager.m */; };
+		408596611ED086E2003BD29D /* MMEAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AE58701EAA87960046B437 /* MMEAPIClient.m */; };
+		408596621ED086E6003BD29D /* NSDateFormatter+MMEMobileEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AE58641EA94F2D0046B437 /* NSDateFormatter+MMEMobileEvents.m */; };
+		408596631ED086E8003BD29D /* CLLocation+MMEMobileEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AE58681EA953970046B437 /* CLLocation+MMEMobileEvents.m */; };
+		408596641ED086EB003BD29D /* MMEUIApplicationWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AE58421EA6C86C0046B437 /* MMEUIApplicationWrapper.m */; };
+		408596651ED086EE003BD29D /* MMECLLocationManagerWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C9E2861EA56C2D00744FE7 /* MMECLLocationManagerWrapper.m */; };
+		408596661ED086F1003BD29D /* MMEUniqueIdentifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AE58591EA9373F0046B437 /* MMEUniqueIdentifier.m */; };
+		408596671ED086F4003BD29D /* MMECommonEventData.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AE585D1EA93B3A0046B437 /* MMECommonEventData.m */; };
+		408596681ED086F7003BD29D /* MMENSBundleWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AE58741EAA8AE30046B437 /* MMENSBundleWrapper.m */; };
+		408596691ED086FA003BD29D /* MMENSURLSessionWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 405172DC1EAFFA9400F8CDA1 /* MMENSURLSessionWrapper.m */; };
+		4085966A1ED08FA9003BD29D /* MapboxMobileEvents.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 404807BC1EA186D8008A6D50 /* MapboxMobileEvents.h */; };
+		408596751ED0900A003BD29D /* api_mapbox_com-digicert.der in Resources */ = {isa = PBXBuildFile; fileRef = 40AE587C1EAA8D810046B437 /* api_mapbox_com-digicert.der */; };
+		408596761ED0900A003BD29D /* api_mapbox_com-geotrust.der in Resources */ = {isa = PBXBuildFile; fileRef = 40AE587D1EAA8D810046B437 /* api_mapbox_com-geotrust.der */; };
+		408596771ED0900A003BD29D /* api_mapbox_staging.der in Resources */ = {isa = PBXBuildFile; fileRef = 40AE587E1EAA8D810046B437 /* api_mapbox_staging.der */; };
+		408596781ED0900A003BD29D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 40BE71011EB7C3EC00D690F3 /* Localizable.strings */; };
+		4085967A1ED090A8003BD29D /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 408596711ED08FF7003BD29D /* Info.plist */; };
+		408596D71ED0B1F6003BD29D /* MMETypes.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 40AE584C1EA926710046B437 /* MMETypes.h */; };
+		408596D81ED0B1F6003BD29D /* MMEEvent.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 40AE586B1EA95EDD0046B437 /* MMEEvent.h */; };
+		408596D91ED0B1F6003BD29D /* MMEEventsManager.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 40C9E2791EA542BC00744FE7 /* MMEEventsManager.h */; };
+		408596DA1ED0BF35003BD29D /* MMEConstants.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 40AE58541EA932DB0046B437 /* MMEConstants.h */; };
 		40AE58431EA6C86C0046B437 /* MMEUIApplicationWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 40AE58411EA6C86C0046B437 /* MMEUIApplicationWrapper.h */; };
 		40AE58441EA6C86C0046B437 /* MMEUIApplicationWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AE58421EA6C86C0046B437 /* MMEUIApplicationWrapper.m */; };
 		40AE58471EA6C9F10046B437 /* MMEUIApplicationWrapperFake.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AE58461EA6C9F10046B437 /* MMEUIApplicationWrapperFake.m */; };
@@ -58,10 +82,33 @@
 			remoteGlobalIDString = 404807B81EA186D8008A6D50;
 			remoteInfo = MapboxMobileMetrics;
 		};
+		4085967F1ED09173003BD29D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 404807B01EA186D8008A6D50 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4085966E1ED08FF7003BD29D;
+			remoteInfo = resources;
+		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		408596511ED084C0003BD29D /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = include/MapboxMobileEvents;
+			dstSubfolderSpec = 16;
+			files = (
+				408596DA1ED0BF35003BD29D /* MMEConstants.h in CopyFiles */,
+				408596D71ED0B1F6003BD29D /* MMETypes.h in CopyFiles */,
+				408596D81ED0B1F6003BD29D /* MMEEvent.h in CopyFiles */,
+				408596D91ED0B1F6003BD29D /* MMEEventsManager.h in CopyFiles */,
+				4085966A1ED08FA9003BD29D /* MapboxMobileEvents.h in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
-		402F5F641EAEB4AC00F93F90 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		404807B91EA186D8008A6D50 /* MapboxMobileEvents.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MapboxMobileEvents.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		404807BC1EA186D8008A6D50 /* MapboxMobileEvents.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MapboxMobileEvents.h; sourceTree = "<group>"; };
 		404807BD1EA186D8008A6D50 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -71,6 +118,9 @@
 		405172DC1EAFFA9400F8CDA1 /* MMENSURLSessionWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMENSURLSessionWrapper.m; sourceTree = "<group>"; };
 		405172E31EB13C6D00F8CDA1 /* MMENSURLSessionWrapperFake.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMENSURLSessionWrapperFake.h; sourceTree = "<group>"; };
 		405172E41EB13C6D00F8CDA1 /* MMENSURLSessionWrapperFake.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMENSURLSessionWrapperFake.m; sourceTree = "<group>"; };
+		408596531ED084C0003BD29D /* libMapboxMobileEventsStatic.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libMapboxMobileEventsStatic.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		4085966F1ED08FF7003BD29D /* resources.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = resources.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		408596711ED08FF7003BD29D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		40AE58411EA6C86C0046B437 /* MMEUIApplicationWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEUIApplicationWrapper.h; sourceTree = "<group>"; };
 		40AE58421EA6C86C0046B437 /* MMEUIApplicationWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEUIApplicationWrapper.m; sourceTree = "<group>"; };
 		40AE58451EA6C9F10046B437 /* MMEUIApplicationWrapperFake.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEUIApplicationWrapperFake.h; sourceTree = "<group>"; };
@@ -128,23 +178,29 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		408596501ED084C0003BD29D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4085966C1ED08FF7003BD29D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		402F5F631EAEB4AC00F93F90 /* MMEResources */ = {
-			isa = PBXGroup;
-			children = (
-				402F5F641EAEB4AC00F93F90 /* Info.plist */,
-			);
-			path = MMEResources;
-			sourceTree = "<group>";
-		};
 		404807AF1EA186D8008A6D50 = {
 			isa = PBXGroup;
 			children = (
 				404807BB1EA186D8008A6D50 /* MapboxMobileEvents */,
 				404807C61EA186D8008A6D50 /* MapboxMobileEventsTests */,
-				402F5F631EAEB4AC00F93F90 /* MMEResources */,
+				408596701ED08FF7003BD29D /* resources */,
 				404807BA1EA186D8008A6D50 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -154,6 +210,8 @@
 			children = (
 				404807B91EA186D8008A6D50 /* MapboxMobileEvents.framework */,
 				404807C21EA186D8008A6D50 /* MapboxMobileEventsTests.xctest */,
+				408596531ED084C0003BD29D /* libMapboxMobileEventsStatic.a */,
+				4085966F1ED08FF7003BD29D /* resources.bundle */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -193,6 +251,14 @@
 				40AE58821EAA8E040046B437 /* MMEAPIClientTests.m */,
 			);
 			path = MapboxMobileEventsTests;
+			sourceTree = "<group>";
+		};
+		408596701ED08FF7003BD29D /* resources */ = {
+			isa = PBXGroup;
+			children = (
+				408596711ED08FF7003BD29D /* Info.plist */,
+			);
+			path = resources;
 			sourceTree = "<group>";
 		};
 		40AE58481EA80E5E0046B437 /* Utilities */ = {
@@ -322,6 +388,42 @@
 			productReference = 404807C21EA186D8008A6D50 /* MapboxMobileEventsTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		408596521ED084C0003BD29D /* MapboxMobileEventsStatic */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4085965B1ED084C0003BD29D /* Build configuration list for PBXNativeTarget "MapboxMobileEventsStatic" */;
+			buildPhases = (
+				4085964F1ED084C0003BD29D /* Sources */,
+				408596501ED084C0003BD29D /* Frameworks */,
+				408596511ED084C0003BD29D /* CopyFiles */,
+				4085968B1ED09389003BD29D /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				408596801ED09173003BD29D /* PBXTargetDependency */,
+			);
+			name = MapboxMobileEventsStatic;
+			productName = MapboxMobileEventsStatic;
+			productReference = 408596531ED084C0003BD29D /* libMapboxMobileEventsStatic.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		4085966E1ED08FF7003BD29D /* resources */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 408596721ED08FF7003BD29D /* Build configuration list for PBXNativeTarget "resources" */;
+			buildPhases = (
+				4085966B1ED08FF7003BD29D /* Sources */,
+				4085966C1ED08FF7003BD29D /* Frameworks */,
+				4085966D1ED08FF7003BD29D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = resources;
+			productName = resources;
+			productReference = 4085966F1ED08FF7003BD29D /* resources.bundle */;
+			productType = "com.apple.product-type.bundle";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -340,6 +442,14 @@
 						DevelopmentTeam = U2WTRY45TY;
 						ProvisioningStyle = Automatic;
 					};
+					408596521ED084C0003BD29D = {
+						CreatedOnToolsVersion = 8.3.2;
+						ProvisioningStyle = Automatic;
+					};
+					4085966E1ED08FF7003BD29D = {
+						CreatedOnToolsVersion = 8.3.2;
+						ProvisioningStyle = Automatic;
+					};
 				};
 			};
 			buildConfigurationList = 404807B31EA186D8008A6D50 /* Build configuration list for PBXProject "MapboxMobileEvents" */;
@@ -355,7 +465,9 @@
 			projectRoot = "";
 			targets = (
 				404807B81EA186D8008A6D50 /* MapboxMobileEvents */,
+				408596521ED084C0003BD29D /* MapboxMobileEventsStatic */,
 				404807C11EA186D8008A6D50 /* MapboxMobileEventsTests */,
+				4085966E1ED08FF7003BD29D /* resources */,
 			);
 		};
 /* End PBXProject section */
@@ -379,7 +491,35 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		4085966D1ED08FF7003BD29D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				408596781ED0900A003BD29D /* Localizable.strings in Resources */,
+				408596751ED0900A003BD29D /* api_mapbox_com-digicert.der in Resources */,
+				408596761ED0900A003BD29D /* api_mapbox_com-geotrust.der in Resources */,
+				408596771ED0900A003BD29D /* api_mapbox_staging.der in Resources */,
+				4085967A1ED090A8003BD29D /* Info.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		4085968B1ED09389003BD29D /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cp -R \"${BUILD_DIR}/${CONFIGURATION}/resources.bundle\" \"${BUILD_DIR}/${CONFIGURATION}-iphoneos\"";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		404807B41EA186D8008A6D50 /* Sources */ = {
@@ -417,6 +557,34 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		4085964F1ED084C0003BD29D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				408596601ED086DF003BD29D /* MMELocationManager.m in Sources */,
+				408596641ED086EB003BD29D /* MMEUIApplicationWrapper.m in Sources */,
+				4085965F1ED086DC003BD29D /* MMEEventsManager.m in Sources */,
+				4085965C1ED086D3003BD29D /* MMEConstants.m in Sources */,
+				4085965E1ED086D9003BD29D /* MMEEvent.m in Sources */,
+				408596661ED086F1003BD29D /* MMEUniqueIdentifier.m in Sources */,
+				4085965D1ED086D6003BD29D /* MMETypes.m in Sources */,
+				408596691ED086FA003BD29D /* MMENSURLSessionWrapper.m in Sources */,
+				408596671ED086F4003BD29D /* MMECommonEventData.m in Sources */,
+				408596621ED086E6003BD29D /* NSDateFormatter+MMEMobileEvents.m in Sources */,
+				408596631ED086E8003BD29D /* CLLocation+MMEMobileEvents.m in Sources */,
+				408596681ED086F7003BD29D /* MMENSBundleWrapper.m in Sources */,
+				408596611ED086E2003BD29D /* MMEAPIClient.m in Sources */,
+				408596651ED086EE003BD29D /* MMECLLocationManagerWrapper.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4085966B1ED08FF7003BD29D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -424,6 +592,11 @@
 			isa = PBXTargetDependency;
 			target = 404807B81EA186D8008A6D50 /* MapboxMobileEvents */;
 			targetProxy = 404807C41EA186D8008A6D50 /* PBXContainerItemProxy */;
+		};
+		408596801ED09173003BD29D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4085966E1ED08FF7003BD29D /* resources */;
+			targetProxy = 4085967F1ED09173003BD29D /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -588,6 +761,56 @@
 			};
 			name = Release;
 		};
+		408596591ED084C0003BD29D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		4085965A1ED084C0003BD29D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		408596731ED08FF7003BD29D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = resources/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_BUNDLE_IDENTIFIER = mapbox.com.resources;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Debug;
+		};
+		408596741ED08FF7003BD29D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = resources/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_BUNDLE_IDENTIFIER = mapbox.com.resources;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -617,6 +840,22 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		4085965B1ED084C0003BD29D /* Build configuration list for PBXNativeTarget "MapboxMobileEventsStatic" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				408596591ED084C0003BD29D /* Debug */,
+				4085965A1ED084C0003BD29D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		408596721ED08FF7003BD29D /* Build configuration list for PBXNativeTarget "resources" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				408596731ED08FF7003BD29D /* Debug */,
+				408596741ED08FF7003BD29D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};
