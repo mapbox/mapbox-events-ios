@@ -31,7 +31,7 @@
 
 - (void)setUp {
     [super setUp];
-    self.apiClient = [[MMEAPIClient alloc] init];
+    self.apiClient = [[MMEAPIClient alloc] initWithAccessToken:@"access-token" userAgentBase:@"user-agent-base"];
 }
 
 - (void)testInitialization {
@@ -44,7 +44,7 @@
 
 - (void)testSettingUpBaseURL {
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:MMETelemetryTestServerURL];
-    self.apiClient = [[MMEAPIClient alloc] init];
+    self.apiClient = [[MMEAPIClient alloc] initWithAccessToken:@"access-token" userAgentBase:@"user-agent-base"];
 
     XCTAssertEqualObjects([NSURL URLWithString:MMEAPIClientBaseURL], self.apiClient.baseURL);
 }
@@ -52,14 +52,14 @@
 - (void)testSettingBaseURLWithTestServer {
     NSString *testURLString = @"https://test.com";
     [[NSUserDefaults standardUserDefaults] setObject:testURLString forKey:MMETelemetryTestServerURL];
-    self.apiClient = [[MMEAPIClient alloc] init];
+    self.apiClient = [[MMEAPIClient alloc] initWithAccessToken:@"access-token" userAgentBase:@"user-agent-base"];
 
     XCTAssertTrue(self.apiClient.sessionWrapper.usesTestServer);
     XCTAssertEqualObjects(self.apiClient.baseURL, [NSURL URLWithString:testURLString]);
 
     NSString *testURLStringBad = @"http://test.com";
     [[NSUserDefaults standardUserDefaults] setObject:testURLStringBad forKey:MMETelemetryTestServerURL];
-    self.apiClient = [[MMEAPIClient alloc] init];
+    self.apiClient = [[MMEAPIClient alloc] initWithAccessToken:@"access-token" userAgentBase:@"user-agent-base"];
 
     XCTAssertFalse(self.apiClient.sessionWrapper.usesTestServer);
     XCTAssertEqualObjects([NSURL URLWithString:MMEAPIClientBaseURL], self.apiClient.baseURL);

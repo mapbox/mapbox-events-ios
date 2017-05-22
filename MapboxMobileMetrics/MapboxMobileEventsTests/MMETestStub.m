@@ -12,6 +12,10 @@
     return self;
 }
 
+- (void)resetReceivedSelectors {
+    _selectors = [NSMutableSet set];
+}
+
 - (BOOL)received:(SEL)selector {
     NSValue *lookup = [NSValue valueWithPointer:selector];
     return [self.selectors containsObject:lookup];

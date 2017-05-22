@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4036EFBB1ED36F06009C40BA /* MMEAPIClientFake.m in Sources */ = {isa = PBXBuildFile; fileRef = 4036EFBA1ED36F06009C40BA /* MMEAPIClientFake.m */; };
 		404807C31EA186D8008A6D50 /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 404807B91EA186D8008A6D50 /* MapboxMobileEvents.framework */; };
 		404807CA1EA186D8008A6D50 /* MapboxMobileEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = 404807BC1EA186D8008A6D50 /* MapboxMobileEvents.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		405172DD1EAFFA9400F8CDA1 /* MMENSURLSessionWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 405172DB1EAFFA9400F8CDA1 /* MMENSURLSessionWrapper.h */; };
@@ -109,6 +110,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		4036EFB91ED36F06009C40BA /* MMEAPIClientFake.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEAPIClientFake.h; sourceTree = "<group>"; };
+		4036EFBA1ED36F06009C40BA /* MMEAPIClientFake.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEAPIClientFake.m; sourceTree = "<group>"; };
 		404807B91EA186D8008A6D50 /* MapboxMobileEvents.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MapboxMobileEvents.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		404807BC1EA186D8008A6D50 /* MapboxMobileEvents.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MapboxMobileEvents.h; sourceTree = "<group>"; };
 		404807BD1EA186D8008A6D50 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -320,6 +323,8 @@
 				40C9E28D1EA5765200744FE7 /* MMECLLocationManagerWrapperFake.m */,
 				405172E31EB13C6D00F8CDA1 /* MMENSURLSessionWrapperFake.h */,
 				405172E41EB13C6D00F8CDA1 /* MMENSURLSessionWrapperFake.m */,
+				4036EFB91ED36F06009C40BA /* MMEAPIClientFake.h */,
+				4036EFBA1ED36F06009C40BA /* MMEAPIClientFake.m */,
 			);
 			name = Fakes;
 			sourceTree = "<group>";
@@ -551,6 +556,7 @@
 				40C9E28E1EA5765200744FE7 /* MMECLLocationManagerWrapperFake.m in Sources */,
 				40AE58471EA6C9F10046B437 /* MMEUIApplicationWrapperFake.m in Sources */,
 				40AE584B1EA80EA90046B437 /* MMETestStub.m in Sources */,
+				4036EFBB1ED36F06009C40BA /* MMEAPIClientFake.m in Sources */,
 				40C9E28A1EA5733300744FE7 /* MMELocationManagerTests.m in Sources */,
 				405172E51EB13C6D00F8CDA1 /* MMENSURLSessionWrapperFake.m in Sources */,
 				40AE58831EAA8E040046B437 /* MMEAPIClientTests.m in Sources */,
@@ -848,6 +854,7 @@
 				4085965A1ED084C0003BD29D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		408596721ED08FF7003BD29D /* Build configuration list for PBXNativeTarget "resources" */ = {
 			isa = XCConfigurationList;
@@ -856,6 +863,7 @@
 				408596741ED08FF7003BD29D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

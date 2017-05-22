@@ -7,6 +7,7 @@
 #import "MMEUniqueIdentifier.h"
 #import "MMECommonEventData.h"
 #import "MMEAPIClient.h"
+#import "MMEAPIClientFake.h"
 
 #import "NSDateFormatter+MMEMobileEvents.h"
 #import "CLLocation+MMEMobileEvents.h"
@@ -17,10 +18,11 @@
 @interface MMEEventsManager (Tests) <MMELocationManagerDelegate>
 
 @property (nonatomic) MMELocationManager *locationManager;
-@property (nonatomic) MMEAPIClient *apiClient;
+@property (nonatomic) id<MMEAPIClient> apiClient;
 @property (nonatomic) NS_MUTABLE_ARRAY_OF(MGLMapboxEventAttributes *) *eventQueue;
 @property (nonatomic) MMEUniqueIdentifier *uniqueIdentifer;
 @property (nonatomic) MMECommonEventData *commonEventData;
+@property (nonatomic) NSDate *nextTurnstileSendDate;
 
 @end
 
@@ -40,7 +42,6 @@
 }
 
 - (void)testAsADelegateForLocationManagerDidUpdateLocations {
-    
     NSString *accessToken = @"access-token";
     NSString *userAgentBase = @"UA-base";
     
@@ -48,7 +49,6 @@
     
     XCTAssertEqual([MMEEventsManager sharedManager].apiClient.accessToken, accessToken);
     XCTAssertEqual([MMEEventsManager sharedManager].apiClient.userAgentBase, userAgentBase);
-
 
 //    CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(10, 10);
 //    CLLocationDistance altitude = 100;
@@ -89,8 +89,32 @@
 //    NSDictionary *event = eventsManager.eventQueue.firstObject;
 //    
 //    XCTAssertEqualObjects(event, attributes);
+}
+
+- (void)testSendTurnstileEventWithSuccess {
+    NSString *accessToken = @"access-token";
+    NSString *userAgentBase = @"UA-base";
+    MMEEventsManager *manager = [MMEEventsManager sharedManager];
+    [manager initializeWithAccessToken:accessToken userAgentBase:userAgentBase];
     
+    MMEAPIClientFake *apiClient = [[MMEAPIClientFake alloc] init];
+    apiClient.userAgentBase = @"user-agent-base";
+    apiClient.accessToken = @"access-token";
+    manager.apiClient = apiClient;
     
+    XCTAssertNil(manager.nextTurnstileSendDate);
+    XCTAssertNotNil(manager.commonEventData.vendorId);
+    
+    [manager sendTurnstileEvent];
+    XCTAssertTrue([apiClient received:@selector(postEvent:completionHandler:)]);
+    
+    [apiClient completePostingEventsWithError:nil];
+    XCTAssertNotNil(manager.nextTurnstileSendDate);
+    
+    // Any subsequent calls to send more turnstile events are no-ops
+    [apiClient resetReceivedSelectors];
+    [manager sendTurnstileEvent];
+    XCTAssertFalse([apiClient received:@selector(postEvent:completionHandler:)]);
 }
 
 @end
