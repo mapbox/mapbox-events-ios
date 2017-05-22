@@ -29,4 +29,15 @@
     return locationEvent;
 }
 
++ (instancetype)debugEventWithAttributes:(MGLMapboxEventAttributes *)attributes {
+    MMEEvent *debugEvent = [[MMEEvent alloc] init];
+    debugEvent.name = MMEEventTypeLocalDebug;
+    debugEvent.attributes = [attributes copy];
+    return debugEvent;
+}
+
+- (NSString *)description {
+    return [NSString stringWithFormat:@"<%@ name=%@, attributes=%@>", NSStringFromClass([self class]), self.name, self.attributes];
+}
+
 @end

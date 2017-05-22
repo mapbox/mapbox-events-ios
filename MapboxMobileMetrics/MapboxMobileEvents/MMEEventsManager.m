@@ -5,6 +5,7 @@
 #import "MMECommonEventData.h"
 #import "MMEConstants.h"
 #import "MMEAPIClient.h"
+#import "MMEEventLogger.h"
 
 #import "NSDateFormatter+MMEMobileEvents.h"
 #import "CLLocation+MMEMobileEvents.h"
@@ -59,22 +60,22 @@
 
 - (void)sendTurnstileEvent {
     if (self.nextTurnstileSendDate && [[NSDate date] timeIntervalSinceDate:self.nextTurnstileSendDate] < 0) {
-        NSLog(@"================> turnstile event already sent; waiting until %@ to send another one", self.nextTurnstileSendDate);
+        [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: @"Turnstile event already sent; waiting until %@ to send another one"}];
         return;
     }
     
     if (!self.commonEventData.vendorId) {
-        NSLog(@"================> no vendor id available, cannot can't send turntile event");
+        [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: @"No vendor id available, cannot can't send turntile event"}];
         return;
     }
     
     if (!self.apiClient.userAgentBase) {
-        NSLog(@"================> no user agent base set, cannot can't send turntile event");
+        [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: @"No user agent base set, cannot can't send turntile event"}];
         return;
     }
     
     if (!self.apiClient.accessToken) {
-        NSLog(@"================> no access token sent, cannot can't send turntile event");
+        [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: @"No access token sent, cannot can't send turntile event"}];
         return;
     }
     
@@ -87,26 +88,13 @@
     [self.apiClient postEvent:[MMEEvent turnstileEventWithAttributes:turnstileEventAttributes] completionHandler:^(NSError * _Nullable error) {
         __strong __typeof__(weakSelf) strongSelf = weakSelf;
         if (error) {
-            NSLog(@"================> could not send turnstile event: %@", error);
+            [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Could not send turnstile event: %@", error]}];
             return;
         }
         
         [strongSelf updateNextTurnstileSendDate];
-        NSLog(@"================> sent turnstile event with attributes: %@", turnstileEventAttributes);
+        [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: @"Sent turnstile event"}];
     }];
-}
-
-- (void)pushEvent:(MMEEvent *)event {
-    // TODO: nil event check
-    // TODO: send turnstile as side effect of map load
-    // TODO: don't send if paused
-
-    // TODO: handle all event types
-    [self.eventQueue addObject:event.attributes];
-
-    // TODO: flush if required
-    // TODO: if the first event then start the flush timer
-    // TODO: log if unknown event
 }
 
 - (void)updateNextTurnstileSendDate {
@@ -123,7 +111,28 @@
     [calendar rangeOfUnit:NSCalendarUnitDay startDate:&startOfTomorrow interval:nil forDate:sometimeTomorrow];
     self.nextTurnstileSendDate = startOfTomorrow;
     
-    NSLog(@"================> set next turnstile date to: %@", self.nextTurnstileSendDate);
+    [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Set next turnstile date to: %@", self.nextTurnstileSendDate]}];
+}
+
+- (void)pushEvent:(MMEEvent *)event {
+    // TODO: nil event check
+    // TODO: send turnstile as side effect of map load
+    // TODO: don't send if paused
+    
+    // TODO: handle all event types
+    [self.eventQueue addObject:event.attributes];
+    
+    // TODO: flush if required
+    // TODO: if the first event then start the flush timer
+    // TODO: log if unknown event
+}
+
+- (void)pushDebugEventWithAttributes:(MGLMapboxEventAttributes *)attributes {
+    MGLMutableMapboxEventAttributes *combinedAttributes = [MGLMutableMapboxEventAttributes dictionaryWithDictionary:attributes];
+    [combinedAttributes setObject:[self.rfc3339DateFormatter stringFromDate:[NSDate date]] forKey:@"created"];
+//    [combinedAttributes setObject:self.uniqueIdentifer.rollingInstanceIdentifer forKey:@"instance"];
+    MMEEvent *debugEvent = [MMEEvent debugEventWithAttributes:combinedAttributes];
+    [MMEEventLogger logEvent:debugEvent];
 }
 
 #pragma mark - MMELocationManagerDelegate
