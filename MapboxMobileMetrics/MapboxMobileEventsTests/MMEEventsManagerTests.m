@@ -44,8 +44,9 @@
 - (void)testAsADelegateForLocationManagerDidUpdateLocations {
     NSString *accessToken = @"access-token";
     NSString *userAgentBase = @"UA-base";
+    NSString *hostSDKVersion = @"host-sdk-1";
     
-    [[MMEEventsManager sharedManager] initializeWithAccessToken:accessToken userAgentBase:userAgentBase];
+    [[MMEEventsManager sharedManager] initializeWithAccessToken:accessToken userAgentBase:userAgentBase hostSDKVersion:hostSDKVersion];
     
     XCTAssertEqual([MMEEventsManager sharedManager].apiClient.accessToken, accessToken);
     XCTAssertEqual([MMEEventsManager sharedManager].apiClient.userAgentBase, userAgentBase);
@@ -94,8 +95,9 @@
 - (void)testSendTurnstileEventWithSuccess {
     NSString *accessToken = @"access-token";
     NSString *userAgentBase = @"UA-base";
+    NSString *hostSDKVersion = @"host-sdk-1";
     MMEEventsManager *manager = [MMEEventsManager sharedManager];
-    [manager initializeWithAccessToken:accessToken userAgentBase:userAgentBase];
+    [manager initializeWithAccessToken:accessToken userAgentBase:userAgentBase hostSDKVersion:hostSDKVersion];
     
     MMEAPIClientFake *apiClient = [[MMEAPIClientFake alloc] init];
     apiClient.userAgentBase = @"user-agent-base";

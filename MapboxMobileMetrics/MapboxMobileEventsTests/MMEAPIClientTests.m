@@ -31,7 +31,9 @@
 
 - (void)setUp {
     [super setUp];
-    self.apiClient = [[MMEAPIClient alloc] initWithAccessToken:@"access-token" userAgentBase:@"user-agent-base"];
+    self.apiClient = [[MMEAPIClient alloc] initWithAccessToken:@"access-token"
+                                                 userAgentBase:@"user-agent-base"
+                                                hostSDKVersion:@"host-sdk-1"];
 }
 
 - (void)testInitialization {
@@ -44,7 +46,9 @@
 
 - (void)testSettingUpBaseURL {
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:MMETelemetryTestServerURL];
-    self.apiClient = [[MMEAPIClient alloc] initWithAccessToken:@"access-token" userAgentBase:@"user-agent-base"];
+    self.apiClient = [[MMEAPIClient alloc] initWithAccessToken:@"access-token"
+                                                 userAgentBase:@"user-agent-base"
+                                                hostSDKVersion:@"host-sdk-1"];
 
     XCTAssertEqualObjects([NSURL URLWithString:MMEAPIClientBaseURL], self.apiClient.baseURL);
 }
@@ -52,14 +56,18 @@
 - (void)testSettingBaseURLWithTestServer {
     NSString *testURLString = @"https://test.com";
     [[NSUserDefaults standardUserDefaults] setObject:testURLString forKey:MMETelemetryTestServerURL];
-    self.apiClient = [[MMEAPIClient alloc] initWithAccessToken:@"access-token" userAgentBase:@"user-agent-base"];
+    self.apiClient = [[MMEAPIClient alloc] initWithAccessToken:@"access-token"
+                                                 userAgentBase:@"user-agent-base"
+                                                hostSDKVersion:@"host-sdk-1"];
 
     XCTAssertTrue(self.apiClient.sessionWrapper.usesTestServer);
     XCTAssertEqualObjects(self.apiClient.baseURL, [NSURL URLWithString:testURLString]);
 
     NSString *testURLStringBad = @"http://test.com";
     [[NSUserDefaults standardUserDefaults] setObject:testURLStringBad forKey:MMETelemetryTestServerURL];
-    self.apiClient = [[MMEAPIClient alloc] initWithAccessToken:@"access-token" userAgentBase:@"user-agent-base"];
+    self.apiClient = [[MMEAPIClient alloc] initWithAccessToken:@"access-token"
+                                                 userAgentBase:@"user-agent-base"
+                                                hostSDKVersion:@"host-sdk-1"];
 
     XCTAssertFalse(self.apiClient.sessionWrapper.usesTestServer);
     XCTAssertEqualObjects([NSURL URLWithString:MMEAPIClientBaseURL], self.apiClient.baseURL);
@@ -69,17 +77,14 @@
 
 - (void)testSettingUpUserAgent {
     NSBundle *fakeApplicationBundle = [NSBundle bundleForClass:[MMEAPIClientTests class]];
-    NSBundle *sdkBundle = [NSBundle bundleForClass:[MMEAPIClient class]];
-
     self.apiClient.applicationBundle = fakeApplicationBundle;
     [self.apiClient setupUserAgent];
 
     NSString *appName = [fakeApplicationBundle objectForInfoDictionaryKey:@"CFBundleIdentifier"];
     NSString *appVersion = [fakeApplicationBundle objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
     NSString *appBuildNumber = [fakeApplicationBundle objectForInfoDictionaryKey:@"CFBundleVersion"];
-    NSString *shortVersion = [sdkBundle objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
 
-    NSString *expectedUserAgent = [NSString stringWithFormat:@"%@/%@/%@ %@/%@", appName, appVersion, appBuildNumber, self.apiClient.userAgentBase, shortVersion];
+    NSString *expectedUserAgent = [NSString stringWithFormat:@"%@/%@/%@ %@/%@", appName, appVersion, appBuildNumber, self.apiClient.userAgentBase, self.apiClient.hostSDKVersion];
     XCTAssertEqualObjects(expectedUserAgent, self.apiClient.userAgent);
 }
 

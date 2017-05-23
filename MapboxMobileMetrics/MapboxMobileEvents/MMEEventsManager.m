@@ -50,8 +50,8 @@
     return self;
 }
 
-- (void)initializeWithAccessToken:(NSString *)accessToken userAgentBase:(NSString *)userAgentBase {
-    _apiClient = [[MMEAPIClient alloc] initWithAccessToken:accessToken userAgentBase:userAgentBase];
+- (void)initializeWithAccessToken:(NSString *)accessToken userAgentBase:(NSString *)userAgentBase hostSDKVersion:(NSString *)hostSDKVersion {
+    _apiClient = [[MMEAPIClient alloc] initWithAccessToken:accessToken userAgentBase:userAgentBase hostSDKVersion:hostSDKVersion];
     
     // TODO: uncomment (and enable test) when we are ready to start collecting location data in this lib
 //    _locationManager = [[MMELocationManager alloc] init];
