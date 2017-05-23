@@ -20,6 +20,9 @@
     #endif
 #endif
 
+typedef NS_DICTIONARY_OF(NSString *, id) MGLMapboxEventAttributes;
+typedef NS_MUTABLE_DICTIONARY_OF(NSString *, id) MGLMutableMapboxEventAttributes;
+
 @interface MMETypes : NSObject
 
 @end

@@ -4,18 +4,18 @@
 
 @implementation MMEEvent
 
-+ (instancetype)turnstileEventWithAttributes:(MGLMapboxEventAttributes *)attributes {
++ (instancetype)turnstileEventWithAttributes:(NSDictionary *)attributes {
     MMEEvent *turnstileEvent = [[MMEEvent alloc] init];
     turnstileEvent.name = MMEEventTypeAppUserTurnstile;
     turnstileEvent.attributes = attributes;
     return turnstileEvent;
 }
 
-+ (instancetype)locationEventWithAttributes:(MGLMapboxEventAttributes *)attributes instanceIdentifer:(NSString *)instanceIdentifer commonEventData:(MMECommonEventData *)commonEventData {
++ (instancetype)locationEventWithAttributes:(NSDictionary *)attributes instanceIdentifer:(NSString *)instanceIdentifer commonEventData:(MMECommonEventData *)commonEventData {
 
     MMEEvent *locationEvent = [[MMEEvent alloc] init];
     locationEvent.name = MMEEventTypeLocation;
-    MGLMutableMapboxEventAttributes *commonAttributes = [NSMutableDictionary dictionary];
+    NSMutableDictionary *commonAttributes = [NSMutableDictionary dictionary];
     commonAttributes[MMEEventKeyEvent] = locationEvent.name;
     commonAttributes[MMEEventKeySource] = MMEEventSource;
     commonAttributes[MMEEventKeySessionId] = instanceIdentifer;
@@ -29,7 +29,7 @@
     return locationEvent;
 }
 
-+ (instancetype)debugEventWithAttributes:(MGLMapboxEventAttributes *)attributes {
++ (instancetype)debugEventWithAttributes:(NSDictionary *)attributes {
     MMEEvent *debugEvent = [[MMEEvent alloc] init];
     debugEvent.name = MMEEventTypeLocalDebug;
     debugEvent.attributes = [attributes copy];
