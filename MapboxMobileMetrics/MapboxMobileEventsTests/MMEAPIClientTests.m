@@ -39,8 +39,10 @@
 - (void)testInitialization {
     XCTAssertNotNil(self.apiClient.sessionWrapper);
 
-    [self loadAndCheckCertificateWithName:@"api_mapbox_com-digicert" comparedToAPIClientCertificate:self.apiClient.sessionWrapper.digicertCert];
-    [self loadAndCheckCertificateWithName:@"api_mapbox_com-geotrust" comparedToAPIClientCertificate:self.apiClient.sessionWrapper.geoTrustCert];
+    [self loadAndCheckCertificateWithName:@"api_mapbox_com-digicert_2016" comparedToAPIClientCertificate:self.apiClient.sessionWrapper.digicertCert_2016];
+    [self loadAndCheckCertificateWithName:@"api_mapbox_com-digicert_2017" comparedToAPIClientCertificate:self.apiClient.sessionWrapper.digicertCert_2017];
+    [self loadAndCheckCertificateWithName:@"api_mapbox_com-geotrust_2016" comparedToAPIClientCertificate:self.apiClient.sessionWrapper.geoTrustCert_2016];
+    [self loadAndCheckCertificateWithName:@"api_mapbox_com-geotrust_2017" comparedToAPIClientCertificate:self.apiClient.sessionWrapper.geoTrustCert_2017];
     [self loadAndCheckCertificateWithName:@"api_mapbox_staging" comparedToAPIClientCertificate:self.apiClient.sessionWrapper.testServerCert];
 }
 

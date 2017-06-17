@@ -25,7 +25,7 @@
         _applicationBundle = [NSBundle mainBundle];
         _sdkBundle = [self resolveAndReturnSDKBundle];
         
-        [self loadCertficates];
+        [self loadCertificates];
         [self setupBaseURL];
         [self setupUserAgent];
     }
@@ -108,12 +108,16 @@
     return [request copy];
 }
 
-- (void)loadCertficates {
+- (void)loadCertificates {
     NSData *certificate;
-    [self loadCertificateData:&certificate withName:@"api_mapbox_com-digicert"];
-    self.sessionWrapper.digicertCert = certificate;
-    [self loadCertificateData:&certificate withName:@"api_mapbox_com-geotrust"];
-    self.sessionWrapper.geoTrustCert = certificate;
+    [self loadCertificateData:&certificate withName:@"api_mapbox_com-geotrust_2016"];
+    self.sessionWrapper.geoTrustCert_2016 = certificate;
+    [self loadCertificateData:&certificate withName:@"api_mapbox_com-digicert_2016"];
+    self.sessionWrapper.digicertCert_2016 = certificate;
+    [self loadCertificateData:&certificate withName:@"api_mapbox_com-geotrust_2017"];
+    self.sessionWrapper.geoTrustCert_2017 = certificate;
+    [self loadCertificateData:&certificate withName:@"api_mapbox_com-digicert_2017"];
+    self.sessionWrapper.digicertCert_2017 = certificate;
     [self loadCertificateData:&certificate withName:@"api_mapbox_staging"];
     self.sessionWrapper.testServerCert = certificate;
 }
