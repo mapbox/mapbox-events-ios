@@ -19,7 +19,7 @@
 
 @property (nonatomic) MMELocationManager *locationManager;
 @property (nonatomic) id<MMEAPIClient> apiClient;
-@property (nonatomic) NS_MUTABLE_ARRAY_OF(MGLMapboxEventAttributes *) *eventQueue;
+@property (nonatomic) NS_MUTABLE_ARRAY_OF(MMEEvent *) *eventQueue;
 @property (nonatomic) MMEUniqueIdentifier *uniqueIdentifer;
 @property (nonatomic) MMECommonEventData *commonEventData;
 @property (nonatomic) NSDate *nextTurnstileSendDate;
@@ -47,10 +47,14 @@
     NSString *hostSDKVersion = @"host-sdk-1";
     
     [[MMEEventsManager sharedManager] initializeWithAccessToken:accessToken userAgentBase:userAgentBase hostSDKVersion:hostSDKVersion];
-    
     XCTAssertEqual([MMEEventsManager sharedManager].apiClient.accessToken, accessToken);
     XCTAssertEqual([MMEEventsManager sharedManager].apiClient.userAgentBase, userAgentBase);
-
+    
+    MMEAPIClientFake *apiClient = [[MMEAPIClientFake alloc] init];
+    apiClient.accessToken = accessToken;
+    apiClient.userAgentBase = userAgentBase;
+    [MMEEventsManager sharedManager].apiClient = apiClient;
+    
     CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(10, 10);
     CLLocationDistance altitude = 100;
     CLLocationAccuracy horizontalAccuracy = 42;
@@ -87,9 +91,11 @@
     attributes[MMEEventKeyAltitude] = @([location roundedAltitude]);
     attributes[MMEEventHorizontalAccuracy] = @(horizontalAccuracy);
     
-    NSDictionary *event = [MMEEventsManager sharedManager].eventQueue.firstObject;
+    XCTAssertTrue([apiClient received:@selector(postEvents:completionHandler:)]);
     
-    XCTAssertEqualObjects(event, attributes);
+    NSArray *arguments = [apiClient.argumentsBySelector[[NSValue valueWithPointer:@selector(postEvents:completionHandler:)]] firstObject];
+    MMEEvent *event = arguments.firstObject;
+    XCTAssertEqualObjects(event.attributes, attributes);
 }
 
 - (void)testSendTurnstileEventWithSuccess {

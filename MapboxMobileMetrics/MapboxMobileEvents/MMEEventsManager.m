@@ -14,7 +14,7 @@
 
 @property (nonatomic) MMELocationManager *locationManager;
 @property (nonatomic) id<MMEAPIClient> apiClient;
-@property (nonatomic) NS_MUTABLE_ARRAY_OF(MGLMapboxEventAttributes *) *eventQueue;
+@property (nonatomic) NS_MUTABLE_ARRAY_OF(MMEEvent *) *eventQueue;
 @property (nonatomic) MMEUniqueIdentifier *uniqueIdentifer;
 @property (nonatomic) MMECommonEventData *commonEventData;
 @property (nonatomic) NSDateFormatter *rfc3339DateFormatter;
@@ -122,9 +122,12 @@
     // TODO: don't send if paused
     
     // TODO: handle all event types
-    [self.eventQueue addObject:event.attributes];
+    [self.eventQueue addObject:event];
+    [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Added event to event queue; event queue now has %ld events", (long)self.eventQueue.count]}];
     
-    // TODO: flush if required
+    // TODO: flush based on configuration profile (i.e. every 180 events)
+    [self flush];
+    
     // TODO: if the first event then start the flush timer
     // TODO: log if unknown event
 }
@@ -135,6 +138,39 @@
 //    [combinedAttributes setObject:self.uniqueIdentifer.rollingInstanceIdentifer forKey:@"instance"];
     MMEEvent *debugEvent = [MMEEvent debugEventWithAttributes:combinedAttributes];
     [MMEEventLogger logEvent:debugEvent];
+}
+
+- (void)flush {
+    if (self.apiClient.accessToken == nil) {
+        return;
+    }
+    
+    NSArray *events = [self.eventQueue copy];
+    __weak __typeof__(self) weakSelf = self;
+    [self.apiClient postEvents:events completionHandler:^(NSError * _Nullable error) {
+        __strong __typeof__(weakSelf) strongSelf = weakSelf;
+        if (error) {
+            [strongSelf pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: @"Network error",
+                                                                               @"error": error}];
+        } else {
+            [strongSelf pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: @"post",
+                                                                               @"debug.eventsCount": @(events.count)}];
+        }
+
+        // TODO: implement flush on background
+//        [[UIApplication sharedApplication] endBackgroundTask:_backgroundTaskIdentifier];
+//        _backgroundTaskIdentifier = UIBackgroundTaskInvalid;
+    }];
+    
+    [self.eventQueue removeAllObjects];
+
+    // TODO: invalidate timer
+//    if (self.timer) {
+//        [self.timer invalidate];
+//        self.timer = nil;
+//    }
+    
+//    [self pushDebugEvent:MGLEventTypeLocalDebug withAttributes:@{MGLEventKeyLocalDebugDescription:@"flush"}];
 }
 
 #pragma mark - MMELocationManagerDelegate

@@ -42,12 +42,8 @@
 }
 
 - (void)postEvents:(NS_ARRAY_OF(MMEEvent *) *)events completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
-    // TODO
-}
-
-- (void)postEvent:(MMEEvent *)event completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
-    NSURLRequest *request = [self requestForEvents:@[event]];
-
+    NSURLRequest *request = [self requestForEvents:events];
+    
     [self.sessionWrapper processRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         NSError *statusError = nil;
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
@@ -68,6 +64,10 @@
             completionHandler(error);
         }
     }];
+}
+
+- (void)postEvent:(MMEEvent *)event completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
+    [self postEvents:@[event] completionHandler:completionHandler];
 }
 
 #pragma mark - Utilities
@@ -92,6 +92,8 @@
 
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:eventAttributes options:0 error:nil];
 
+    // TODO: Compression
+    
     //    // Compressing less than 3 events can have a negative impact on the size.
     //    if (events.count > 2) {
     //        NSData *compressedData = [jsonData mgl_compressedData];
