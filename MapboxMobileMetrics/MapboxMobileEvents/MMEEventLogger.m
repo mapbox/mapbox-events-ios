@@ -4,7 +4,7 @@
 
 + (void)logEvent:(MMEEvent *)event {
     
-    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"MGLMapboxMetricsDebugLoggingEnabled"]) {
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"MMEMapboxMetricsDebugLoggingEnabled"]) {
         return;
     }
     

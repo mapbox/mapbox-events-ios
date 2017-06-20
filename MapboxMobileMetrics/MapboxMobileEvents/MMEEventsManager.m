@@ -53,9 +53,8 @@
 - (void)initializeWithAccessToken:(NSString *)accessToken userAgentBase:(NSString *)userAgentBase hostSDKVersion:(NSString *)hostSDKVersion {
     _apiClient = [[MMEAPIClient alloc] initWithAccessToken:accessToken userAgentBase:userAgentBase hostSDKVersion:hostSDKVersion];
     
-    // TODO: uncomment (and enable test) when we are ready to start collecting location data in this lib
-//    _locationManager = [[MMELocationManager alloc] init];
-//    _locationManager.delegate = self;
+    _locationManager = [[MMELocationManager alloc] init];
+    _locationManager.delegate = self;
 }
 
 - (void)sendTurnstileEvent {
@@ -115,8 +114,10 @@
 }
 
 - (void)pushEvent:(MMEEvent *)event {
-    // TODO: nil event check
-    // TODO: send turnstile as side effect of map load
+    if (!event) {
+        return;
+    }
+    
     // TODO: don't send if paused
     
     // TODO: handle all event types

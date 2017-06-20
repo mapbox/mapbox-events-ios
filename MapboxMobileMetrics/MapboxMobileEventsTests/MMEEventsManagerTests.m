@@ -51,45 +51,45 @@
     XCTAssertEqual([MMEEventsManager sharedManager].apiClient.accessToken, accessToken);
     XCTAssertEqual([MMEEventsManager sharedManager].apiClient.userAgentBase, userAgentBase);
 
-//    CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(10, 10);
-//    CLLocationDistance altitude = 100;
-//    CLLocationAccuracy horizontalAccuracy = 42;
-//    CLLocationAccuracy verticalAccuracy = 24;
-//    CLLocationDirection course = 99;
-//    CLLocationSpeed speed = 102;
-//    NSDate *timestamp = [NSDate dateWithTimeIntervalSince1970:0];
-//
-//    CLLocation *location = [[CLLocation alloc] initWithCoordinate:coordinate
-//                                                         altitude:altitude
-//                                               horizontalAccuracy:horizontalAccuracy
-//                                                 verticalAccuracy:verticalAccuracy
-//                                                           course:course
-//                                                            speed:speed
-//                                                        timestamp:timestamp];
-
-//    MMECommonEventData *dataStub = [[MMECommonEventData alloc] init];
-//    dataStub.iOSVersion = @"iOS-version";
-//    eventsManager.commonEventData = dataStub;
-//
-//    NSDateFormatter *dateFormatter = [NSDateFormatter rfc3339DateFormatter];
-//
-//    [eventsManager locationManager:nil didUpdateLocations:@[location]];
-//
-//    MGLMutableMapboxEventAttributes *attributes = [NSMutableDictionary dictionary];
-//    attributes[MMEEventKeyEvent] = MMEEventTypeLocation;
-//    attributes[MMEEventKeySource] = MMEEventSource;
-//    attributes[MMEEventKeySessionId] = [[MMEUniqueIdentifier alloc] init].rollingInstanceIdentifer;
-//    attributes[MMEEventKeyOperatingSystem] = dataStub.iOSVersion;
-//    attributes[MMEEventKeyApplicationState] = [dataStub applicationState];
-//    attributes[MMEEventKeyCreated] = [dateFormatter stringFromDate:timestamp];
-//    attributes[MMEEventKeyLatitude] = @([location latitudeRoundedWithPrecision:7]);
-//    attributes[MMEEventKeyLongitude] = @([location longitudeRoundedWithPrecision:7]);
-//    attributes[MMEEventKeyAltitude] = @([location roundedAltitude]);
-//    attributes[MMEEventHorizontalAccuracy] = @(horizontalAccuracy);
-//
-//    NSDictionary *event = eventsManager.eventQueue.firstObject;
-//    
-//    XCTAssertEqualObjects(event, attributes);
+    CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(10, 10);
+    CLLocationDistance altitude = 100;
+    CLLocationAccuracy horizontalAccuracy = 42;
+    CLLocationAccuracy verticalAccuracy = 24;
+    CLLocationDirection course = 99;
+    CLLocationSpeed speed = 102;
+    NSDate *timestamp = [NSDate dateWithTimeIntervalSince1970:0];
+    
+    CLLocation *location = [[CLLocation alloc] initWithCoordinate:coordinate
+                                                         altitude:altitude
+                                               horizontalAccuracy:horizontalAccuracy
+                                                 verticalAccuracy:verticalAccuracy
+                                                           course:course
+                                                            speed:speed
+                                                        timestamp:timestamp];
+    
+    MMECommonEventData *dataStub = [[MMECommonEventData alloc] init];
+    dataStub.iOSVersion = @"iOS-version";
+    [MMEEventsManager sharedManager].commonEventData = dataStub;
+    
+    NSDateFormatter *dateFormatter = [NSDateFormatter rfc3339DateFormatter];
+    
+    [[MMEEventsManager sharedManager] locationManager:nil didUpdateLocations:@[location]];
+    
+    MGLMutableMapboxEventAttributes *attributes = [NSMutableDictionary dictionary];
+    attributes[MMEEventKeyEvent] = MMEEventTypeLocation;
+    attributes[MMEEventKeySource] = MMEEventSource;
+    attributes[MMEEventKeySessionId] = [[MMEUniqueIdentifier alloc] init].rollingInstanceIdentifer;
+    attributes[MMEEventKeyOperatingSystem] = dataStub.iOSVersion;
+    attributes[MMEEventKeyApplicationState] = [dataStub applicationState];
+    attributes[MMEEventKeyCreated] = [dateFormatter stringFromDate:timestamp];
+    attributes[MMEEventKeyLatitude] = @([location latitudeRoundedWithPrecision:7]);
+    attributes[MMEEventKeyLongitude] = @([location longitudeRoundedWithPrecision:7]);
+    attributes[MMEEventKeyAltitude] = @([location roundedAltitude]);
+    attributes[MMEEventHorizontalAccuracy] = @(horizontalAccuracy);
+    
+    NSDictionary *event = [MMEEventsManager sharedManager].eventQueue.firstObject;
+    
+    XCTAssertEqualObjects(event, attributes);
 }
 
 - (void)testSendTurnstileEventWithSuccess {
