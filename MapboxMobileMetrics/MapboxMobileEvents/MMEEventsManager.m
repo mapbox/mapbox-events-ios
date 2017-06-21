@@ -124,7 +124,7 @@
     
     // TODO: don't push if paused
     
-    // TODO: handle all event types
+    
     [self.eventQueue addObject:event];
     [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Added event to event queue; event queue now has %ld events", (long)self.eventQueue.count]}];
     
@@ -132,8 +132,9 @@
         [self flush];
     }
     
+    
     // TODO: if the first event then start the flush timer
-    // TODO: log if unknown event
+//    start timer!        
 }
 
 - (void)pushDebugEventWithAttributes:(MGLMapboxEventAttributes *)attributes {
