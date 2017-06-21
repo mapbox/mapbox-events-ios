@@ -6,6 +6,7 @@
 #import "MMEConstants.h"
 #import "MMEAPIClient.h"
 #import "MMEEventLogger.h"
+#import "MMEEventsConfiguration.h"
 
 #import "NSDateFormatter+MMEMobileEvents.h"
 #import "CLLocation+MMEMobileEvents.h"
@@ -19,6 +20,7 @@
 @property (nonatomic) MMECommonEventData *commonEventData;
 @property (nonatomic) NSDateFormatter *rfc3339DateFormatter;
 @property (nonatomic) NSDate *nextTurnstileSendDate;
+@property (nonatomic) MMEEventsConfiguration *configuration;
 
 @end
 
@@ -46,6 +48,7 @@
         _uniqueIdentifer = [[MMEUniqueIdentifier alloc] init];
         _commonEventData = [[MMECommonEventData alloc] init];
         _rfc3339DateFormatter = [NSDateFormatter rfc3339DateFormatter];
+        _configuration = [MMEEventsConfiguration defaultEventsConfiguration];
     }
     return self;
 }
@@ -119,14 +122,15 @@
         return;
     }
     
-    // TODO: don't send if paused
+    // TODO: don't push if paused
     
     // TODO: handle all event types
     [self.eventQueue addObject:event];
     [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Added event to event queue; event queue now has %ld events", (long)self.eventQueue.count]}];
     
-    // TODO: flush based on configuration profile (i.e. every 180 events)
-    [self flush];
+    if (self.eventQueue.count >= self.configuration.eventFlushCountThreshold) {
+        [self flush];
+    }
     
     // TODO: if the first event then start the flush timer
     // TODO: log if unknown event
@@ -141,6 +145,9 @@
 }
 
 - (void)flush {
+    
+    // TODO: don't flush if paused
+    
     if (self.apiClient.accessToken == nil) {
         return;
     }
@@ -157,9 +164,11 @@
                                                                                @"debug.eventsCount": @(events.count)}];
         }
 
+        
         // TODO: implement flush on background
 //        [[UIApplication sharedApplication] endBackgroundTask:_backgroundTaskIdentifier];
 //        _backgroundTaskIdentifier = UIBackgroundTaskInvalid;
+        
     }];
     
     [self.eventQueue removeAllObjects];

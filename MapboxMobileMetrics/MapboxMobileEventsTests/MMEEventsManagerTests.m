@@ -8,6 +8,7 @@
 #import "MMECommonEventData.h"
 #import "MMEAPIClient.h"
 #import "MMEAPIClientFake.h"
+#import "MMEEventsConfiguration.h"
 
 #import "NSDateFormatter+MMEMobileEvents.h"
 #import "CLLocation+MMEMobileEvents.h"
@@ -23,6 +24,7 @@
 @property (nonatomic) MMEUniqueIdentifier *uniqueIdentifer;
 @property (nonatomic) MMECommonEventData *commonEventData;
 @property (nonatomic) NSDate *nextTurnstileSendDate;
+@property (nonatomic) MMEEventsConfiguration *configuration;
 
 @end
 
@@ -55,21 +57,9 @@
     apiClient.userAgentBase = userAgentBase;
     [MMEEventsManager sharedManager].apiClient = apiClient;
     
-    CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(10, 10);
-    CLLocationDistance altitude = 100;
-    CLLocationAccuracy horizontalAccuracy = 42;
-    CLLocationAccuracy verticalAccuracy = 24;
-    CLLocationDirection course = 99;
-    CLLocationSpeed speed = 102;
-    NSDate *timestamp = [NSDate dateWithTimeIntervalSince1970:0];
-    
-    CLLocation *location = [[CLLocation alloc] initWithCoordinate:coordinate
-                                                         altitude:altitude
-                                               horizontalAccuracy:horizontalAccuracy
-                                                 verticalAccuracy:verticalAccuracy
-                                                           course:course
-                                                            speed:speed
-                                                        timestamp:timestamp];
+    MMEEventsConfiguration *configuration = [[MMEEventsConfiguration alloc] init];
+    configuration.eventFlushCountThreshold = 1;
+    [MMEEventsManager sharedManager].configuration = configuration;
     
     MMECommonEventData *dataStub = [[MMECommonEventData alloc] init];
     dataStub.iOSVersion = @"iOS-version";
@@ -77,6 +67,7 @@
     
     NSDateFormatter *dateFormatter = [NSDateFormatter rfc3339DateFormatter];
     
+    CLLocation *location = [self location];
     [[MMEEventsManager sharedManager] locationManager:nil didUpdateLocations:@[location]];
     
     MGLMutableMapboxEventAttributes *attributes = [NSMutableDictionary dictionary];
@@ -85,17 +76,44 @@
     attributes[MMEEventKeySessionId] = [[MMEUniqueIdentifier alloc] init].rollingInstanceIdentifer;
     attributes[MMEEventKeyOperatingSystem] = dataStub.iOSVersion;
     attributes[MMEEventKeyApplicationState] = [dataStub applicationState];
-    attributes[MMEEventKeyCreated] = [dateFormatter stringFromDate:timestamp];
+    attributes[MMEEventKeyCreated] = [dateFormatter stringFromDate:location.timestamp];
     attributes[MMEEventKeyLatitude] = @([location latitudeRoundedWithPrecision:7]);
     attributes[MMEEventKeyLongitude] = @([location longitudeRoundedWithPrecision:7]);
     attributes[MMEEventKeyAltitude] = @([location roundedAltitude]);
-    attributes[MMEEventHorizontalAccuracy] = @(horizontalAccuracy);
+    attributes[MMEEventHorizontalAccuracy] = @(location.horizontalAccuracy);
     
     XCTAssertTrue([apiClient received:@selector(postEvents:completionHandler:)]);
     
     NSArray *arguments = [apiClient.argumentsBySelector[[NSValue valueWithPointer:@selector(postEvents:completionHandler:)]] firstObject];
     MMEEvent *event = arguments.firstObject;
     XCTAssertEqualObjects(event.attributes, attributes);
+}
+
+- (void)testAsADelegateForLocationManagerBeforeEventFlushThreshold {
+    NSString *accessToken = @"access-token";
+    NSString *userAgentBase = @"UA-base";
+    NSString *hostSDKVersion = @"host-sdk-1";
+    
+    [[MMEEventsManager sharedManager] initializeWithAccessToken:accessToken userAgentBase:userAgentBase hostSDKVersion:hostSDKVersion];
+    XCTAssertEqual([MMEEventsManager sharedManager].apiClient.accessToken, accessToken);
+    XCTAssertEqual([MMEEventsManager sharedManager].apiClient.userAgentBase, userAgentBase);
+    
+    MMEAPIClientFake *apiClient = [[MMEAPIClientFake alloc] init];
+    apiClient.accessToken = accessToken;
+    apiClient.userAgentBase = userAgentBase;
+    [MMEEventsManager sharedManager].apiClient = apiClient;
+    
+    MMEEventsConfiguration *configuration = [[MMEEventsConfiguration alloc] init];
+    configuration.eventFlushCountThreshold = 2;
+    [MMEEventsManager sharedManager].configuration = configuration;
+    
+    MMECommonEventData *dataStub = [[MMECommonEventData alloc] init];
+    dataStub.iOSVersion = @"iOS-version";
+    [MMEEventsManager sharedManager].commonEventData = dataStub;
+    
+    [[MMEEventsManager sharedManager] locationManager:nil didUpdateLocations:@[[self location]]];
+    
+    XCTAssertFalse([apiClient received:@selector(postEvents:completionHandler:)]);
 }
 
 - (void)testSendTurnstileEventWithSuccess {
@@ -123,6 +141,23 @@
     [apiClient resetReceivedSelectors];
     [manager sendTurnstileEvent];
     XCTAssertFalse([apiClient received:@selector(postEvent:completionHandler:)]);
+}
+
+- (CLLocation *)location {
+    CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(10, 10);
+    CLLocationDistance altitude = 100;
+    CLLocationAccuracy horizontalAccuracy = 42;
+    CLLocationAccuracy verticalAccuracy = 24;
+    CLLocationDirection course = 99;
+    CLLocationSpeed speed = 102;
+    NSDate *timestamp = [NSDate dateWithTimeIntervalSince1970:0];
+    return [[CLLocation alloc] initWithCoordinate:coordinate
+                                         altitude:altitude
+                               horizontalAccuracy:horizontalAccuracy
+                                 verticalAccuracy:verticalAccuracy
+                                           course:course
+                                            speed:speed
+                                        timestamp:timestamp];
 }
 
 @end

@@ -76,6 +76,9 @@
 		40C9E2881EA56C2D00744FE7 /* MMECLLocationManagerWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C9E2861EA56C2D00744FE7 /* MMECLLocationManagerWrapper.m */; };
 		40C9E28A1EA5733300744FE7 /* MMELocationManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C9E2891EA5733300744FE7 /* MMELocationManagerTests.m */; };
 		40C9E28E1EA5765200744FE7 /* MMECLLocationManagerWrapperFake.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C9E28D1EA5765200744FE7 /* MMECLLocationManagerWrapperFake.m */; };
+		40FB43771EF9EA7800EC5BC0 /* MMEEventsConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = 40FB43751EF9EA7800EC5BC0 /* MMEEventsConfiguration.h */; };
+		40FB43781EF9EA7800EC5BC0 /* MMEEventsConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 40FB43761EF9EA7800EC5BC0 /* MMEEventsConfiguration.m */; };
+		40FB43791EF9EA7800EC5BC0 /* MMEEventsConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 40FB43761EF9EA7800EC5BC0 /* MMEEventsConfiguration.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -167,6 +170,8 @@
 		40C9E2891EA5733300744FE7 /* MMELocationManagerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMELocationManagerTests.m; sourceTree = "<group>"; };
 		40C9E28C1EA5765200744FE7 /* MMECLLocationManagerWrapperFake.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMECLLocationManagerWrapperFake.h; sourceTree = "<group>"; };
 		40C9E28D1EA5765200744FE7 /* MMECLLocationManagerWrapperFake.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMECLLocationManagerWrapperFake.m; sourceTree = "<group>"; };
+		40FB43751EF9EA7800EC5BC0 /* MMEEventsConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEEventsConfiguration.h; sourceTree = "<group>"; };
+		40FB43761EF9EA7800EC5BC0 /* MMEEventsConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEEventsConfiguration.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -235,6 +240,8 @@
 				40AE584D1EA926710046B437 /* MMETypes.m */,
 				40AE586B1EA95EDD0046B437 /* MMEEvent.h */,
 				40AE586C1EA95EDD0046B437 /* MMEEvent.m */,
+				40FB43751EF9EA7800EC5BC0 /* MMEEventsConfiguration.h */,
+				40FB43761EF9EA7800EC5BC0 /* MMEEventsConfiguration.m */,
 				40C9E2791EA542BC00744FE7 /* MMEEventsManager.h */,
 				40C9E27A1EA542BC00744FE7 /* MMEEventsManager.m */,
 				40C9E27D1EA5473F00744FE7 /* MMELocationManager.h */,
@@ -352,6 +359,7 @@
 				4036EFBE1ED37D56009C40BA /* MMEEventLogger.h in Headers */,
 				40AE58711EAA87960046B437 /* MMEAPIClient.h in Headers */,
 				405172DD1EAFFA9400F8CDA1 /* MMENSURLSessionWrapper.h in Headers */,
+				40FB43771EF9EA7800EC5BC0 /* MMEEventsConfiguration.h in Headers */,
 				40AE58691EA953970046B437 /* CLLocation+MMEMobileEvents.h in Headers */,
 				40C9E2871EA56C2D00744FE7 /* MMECLLocationManagerWrapper.h in Headers */,
 				40AE586D1EA95EDD0046B437 /* MMEEvent.h in Headers */,
@@ -546,6 +554,7 @@
 				40AE586A1EA953970046B437 /* CLLocation+MMEMobileEvents.m in Sources */,
 				40AE58441EA6C86C0046B437 /* MMEUIApplicationWrapper.m in Sources */,
 				4036EFBF1ED37D56009C40BA /* MMEEventLogger.m in Sources */,
+				40FB43781EF9EA7800EC5BC0 /* MMEEventsConfiguration.m in Sources */,
 				40AE585F1EA93B3A0046B437 /* MMECommonEventData.m in Sources */,
 				40AE58721EAA87960046B437 /* MMEAPIClient.m in Sources */,
 				40C9E2801EA5473F00744FE7 /* MMELocationManager.m in Sources */,
@@ -582,6 +591,7 @@
 				4085965F1ED086DC003BD29D /* MMEEventsManager.m in Sources */,
 				4085965C1ED086D3003BD29D /* MMEConstants.m in Sources */,
 				4036EFC01ED38489009C40BA /* MMEEventLogger.m in Sources */,
+				40FB43791EF9EA7800EC5BC0 /* MMEEventsConfiguration.m in Sources */,
 				4085965E1ED086D9003BD29D /* MMEEvent.m in Sources */,
 				408596661ED086F1003BD29D /* MMEUniqueIdentifier.m in Sources */,
 				4085965D1ED086D6003BD29D /* MMETypes.m in Sources */,
