@@ -7,6 +7,7 @@
 #import "MMEAPIClient.h"
 #import "MMEEventLogger.h"
 #import "MMEEventsConfiguration.h"
+#import "MMETimerManager.h"
 
 #import "NSDateFormatter+MMEMobileEvents.h"
 #import "CLLocation+MMEMobileEvents.h"
@@ -21,6 +22,7 @@
 @property (nonatomic) NSDateFormatter *rfc3339DateFormatter;
 @property (nonatomic) NSDate *nextTurnstileSendDate;
 @property (nonatomic) MMEEventsConfiguration *configuration;
+@property (nonatomic) MMETimerManager *timerManager;
 
 @end
 
@@ -59,6 +61,8 @@
     self.locationManager = [[MMELocationManager alloc] init];
     self.locationManager.delegate = self;
     [self.locationManager startUpdatingLocation];
+    
+    self.timerManager = [[MMETimerManager alloc] initWithTimeInterval:self.configuration.eventFlushSecondsThreshold target:self selector:@selector(flush)];
 }
 
 - (void)sendTurnstileEvent {
@@ -132,9 +136,9 @@
         [self flush];
     }
     
-    
-    // TODO: if the first event then start the flush timer
-//    start timer!        
+    if (self.eventQueue.count == 1) {
+        [self.timerManager start];
+    }
 }
 
 - (void)pushDebugEventWithAttributes:(MGLMapboxEventAttributes *)attributes {
@@ -164,23 +168,16 @@
             [strongSelf pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: @"post",
                                                                                @"debug.eventsCount": @(events.count)}];
         }
-
         
         // TODO: implement flush on background
 //        [[UIApplication sharedApplication] endBackgroundTask:_backgroundTaskIdentifier];
 //        _backgroundTaskIdentifier = UIBackgroundTaskInvalid;
-        
     }];
     
     [self.eventQueue removeAllObjects];
-
-    // TODO: invalidate timer
-//    if (self.timer) {
-//        [self.timer invalidate];
-//        self.timer = nil;
-//    }
+    [self.timerManager cancel];
     
-//    [self pushDebugEvent:MGLEventTypeLocalDebug withAttributes:@{MGLEventKeyLocalDebugDescription:@"flush"}];
+    [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription:@"flush"}];
 }
 
 #pragma mark - MMELocationManagerDelegate

@@ -3,6 +3,7 @@
 @interface MMEEventsConfiguration : NSObject
 
 @property (nonatomic) NSUInteger eventFlushCountThreshold;
+@property (nonatomic) NSUInteger eventFlushSecondsThreshold;
 
 + (instancetype)defaultEventsConfiguration;
 
