@@ -17,7 +17,7 @@
 @property (nonatomic) MMELocationManager *locationManager;
 @property (nonatomic) id<MMEAPIClient> apiClient;
 @property (nonatomic) NS_MUTABLE_ARRAY_OF(MMEEvent *) *eventQueue;
-@property (nonatomic) MMEUniqueIdentifier *uniqueIdentifer;
+@property (nonatomic) id<MMEUniqueIdentifer> uniqueIdentifer;
 @property (nonatomic) MMECommonEventData *commonEventData;
 @property (nonatomic) NSDateFormatter *rfc3339DateFormatter;
 @property (nonatomic) NSDate *nextTurnstileSendDate;
@@ -47,10 +47,10 @@
     self = [super init];
     if (self) {
         _eventQueue = [NSMutableArray array];
-        _uniqueIdentifer = [[MMEUniqueIdentifier alloc] init];
         _commonEventData = [[MMECommonEventData alloc] init];
         _rfc3339DateFormatter = [NSDateFormatter rfc3339DateFormatter];
         _configuration = [MMEEventsConfiguration defaultEventsConfiguration];
+        _uniqueIdentifer = [[MMEUniqueIdentifier alloc] initWithTimeInterval:_configuration.instanceIdentifierRotationTimeInterval];
     }
     return self;
 }

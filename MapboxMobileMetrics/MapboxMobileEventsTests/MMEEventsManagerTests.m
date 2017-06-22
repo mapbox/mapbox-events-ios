@@ -10,6 +10,7 @@
 #import "MMEAPIClientFake.h"
 #import "MMEEventsConfiguration.h"
 #import "MMETimerManagerFake.h"
+#import "MMEUniqueIdentifierFake.h"
 
 #import "NSDateFormatter+MMEMobileEvents.h"
 #import "CLLocation+MMEMobileEvents.h"
@@ -22,7 +23,7 @@
 @property (nonatomic) MMELocationManager *locationManager;
 @property (nonatomic) id<MMEAPIClient> apiClient;
 @property (nonatomic) NS_MUTABLE_ARRAY_OF(MMEEvent *) *eventQueue;
-@property (nonatomic) MMEUniqueIdentifier *uniqueIdentifer;
+@property (nonatomic) id<MMEUniqueIdentifer> uniqueIdentifer;
 @property (nonatomic) MMECommonEventData *commonEventData;
 @property (nonatomic) NSDate *nextTurnstileSendDate;
 @property (nonatomic) MMEEventsConfiguration *configuration;
@@ -42,7 +43,8 @@
 
 - (void)setUp {
     [super setUp];
-    // Put setup code here. This method is called before the invocation of each test method in the class.
+    
+    [MMEEventsManager sharedManager].uniqueIdentifer = [[MMEUniqueIdentifierFake alloc] init];
 }
 
 - (void)testAsADelegateForLocationManagerDidUpdateLocations {
@@ -75,7 +77,7 @@
     MGLMutableMapboxEventAttributes *attributes = [NSMutableDictionary dictionary];
     attributes[MMEEventKeyEvent] = MMEEventTypeLocation;
     attributes[MMEEventKeySource] = MMEEventSource;
-    attributes[MMEEventKeySessionId] = [[MMEUniqueIdentifier alloc] init].rollingInstanceIdentifer;
+    attributes[MMEEventKeySessionId] = [[MMEUniqueIdentifierFake alloc] init].rollingInstanceIdentifer;
     attributes[MMEEventKeyOperatingSystem] = dataStub.iOSVersion;
     attributes[MMEEventKeyApplicationState] = [dataStub applicationState];
     attributes[MMEEventKeyCreated] = [dateFormatter stringFromDate:location.timestamp];
