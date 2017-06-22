@@ -9,6 +9,7 @@
 #import "MMEAPIClient.h"
 #import "MMEAPIClientFake.h"
 #import "MMEEventsConfiguration.h"
+#import "MMETimerManagerFake.h"
 
 #import "NSDateFormatter+MMEMobileEvents.h"
 #import "CLLocation+MMEMobileEvents.h"
@@ -25,6 +26,7 @@
 @property (nonatomic) MMECommonEventData *commonEventData;
 @property (nonatomic) NSDate *nextTurnstileSendDate;
 @property (nonatomic) MMEEventsConfiguration *configuration;
+@property (nonatomic) MMETimerManager *timerManager;
 
 @end
 
@@ -87,6 +89,42 @@
     NSArray *arguments = [apiClient.argumentsBySelector[[NSValue valueWithPointer:@selector(postEvents:completionHandler:)]] firstObject];
     MMEEvent *event = arguments.firstObject;
     XCTAssertEqualObjects(event.attributes, attributes);
+}
+
+- (void)testAsADelegateForLocationManagerAfterTimeThreshold {
+    NSString *accessToken = @"access-token";
+    NSString *userAgentBase = @"UA-base";
+    NSString *hostSDKVersion = @"host-sdk-1";
+    
+    [[MMEEventsManager sharedManager] initializeWithAccessToken:accessToken userAgentBase:userAgentBase hostSDKVersion:hostSDKVersion];
+    XCTAssertEqual([MMEEventsManager sharedManager].apiClient.accessToken, accessToken);
+    XCTAssertEqual([MMEEventsManager sharedManager].apiClient.userAgentBase, userAgentBase);
+    
+    MMEAPIClientFake *apiClient = [[MMEAPIClientFake alloc] init];
+    apiClient.accessToken = accessToken;
+    apiClient.userAgentBase = userAgentBase;
+    [MMEEventsManager sharedManager].apiClient = apiClient;
+    
+    MMEEventsConfiguration *configuration = [[MMEEventsConfiguration alloc] init];
+    configuration.eventFlushCountThreshold = 100;
+    configuration.eventFlushSecondsThreshold = 1;
+    [MMEEventsManager sharedManager].configuration = configuration;
+    
+    MMETimerManagerFake *timerManager = [[MMETimerManagerFake alloc] init];
+    timerManager.target = [MMEEventsManager sharedManager];
+    timerManager.selector = @selector(flush);
+    [MMEEventsManager sharedManager].timerManager = timerManager;
+    
+    MMECommonEventData *dataStub = [[MMECommonEventData alloc] init];
+    dataStub.iOSVersion = @"iOS-version";
+    [MMEEventsManager sharedManager].commonEventData = dataStub;
+    
+    CLLocation *location = [self location];
+    [[MMEEventsManager sharedManager] locationManager:nil didUpdateLocations:@[location]];
+    
+    [timerManager triggerTimer];
+    
+    XCTAssertTrue([apiClient received:@selector(postEvents:completionHandler:)]);
 }
 
 - (void)testAsADelegateForLocationManagerBeforeEventFlushThreshold {

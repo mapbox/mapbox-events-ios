@@ -5,7 +5,7 @@
 + (instancetype)defaultEventsConfiguration {
     MMEEventsConfiguration *configuration = [[MMEEventsConfiguration alloc] init];
     configuration.eventFlushCountThreshold = 180;
-    configuration.eventFlushSecondsThreshold = 5;
+    configuration.eventFlushSecondsThreshold = 180;
     return configuration;
 }
 

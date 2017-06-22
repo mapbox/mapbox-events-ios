@@ -151,7 +151,7 @@
 
 - (void)flush {
     
-    // TODO: don't flush if paused
+    // TODO: don't flush if paused    
     
     if (self.apiClient.accessToken == nil) {
         return;
