@@ -46,6 +46,8 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
+        _metricsEnabled = YES;
+        _accountTypeNumber = 0;
         _eventQueue = [NSMutableArray array];
         _commonEventData = [[MMECommonEventData alloc] init];
         _rfc3339DateFormatter = [NSDateFormatter rfc3339DateFormatter];
@@ -64,6 +66,8 @@
     
     self.timerManager = [[MMETimerManager alloc] initWithTimeInterval:self.configuration.eventFlushSecondsThreshold target:self selector:@selector(flush)];
 }
+
+# pragma mark - Public API
 
 - (void)sendTurnstileEvent {
     if (self.nextTurnstileSendDate && [[NSDate date] timeIntervalSinceDate:self.nextTurnstileSendDate] < 0) {
@@ -89,7 +93,11 @@
     NSDictionary *turnstileEventAttributes = @{MMEEventKeyEvent: MMEEventTypeAppUserTurnstile,
                                                MMEEventKeyCreated: [self.rfc3339DateFormatter stringFromDate:[NSDate date]],
                                                MMEEventKeyVendorID: self.commonEventData.vendorId,
-                                               MMEEventKeyEnabledTelemetry: @([self isTelemetryDisabled])};
+                                               
+                                               // TODO: set this value correctly
+                                               MMEEventKeyEnabledTelemetry: @(NO) /*@([self isTelemetryDisabled])*/
+                                               
+                                               };
     
     __weak __typeof__(self) weakSelf = self;
     [self.apiClient postEvent:[MMEEvent turnstileEventWithAttributes:turnstileEventAttributes] completionHandler:^(NSError * _Nullable error) {
@@ -102,6 +110,19 @@
         [strongSelf updateNextTurnstileSendDate];
         [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: @"Sent turnstile event"}];
     }];
+}
+
+#pragma mark - Internal API
+
+- (BOOL)isEnabled {
+#if TARGET_OS_SIMULATOR
+    return [[NSUserDefaults standardUserDefaults] boolForKey:@"MMEMapboxMetricsEnabledInSimulator"];
+#else
+    if ([NSProcessInfo instancesRespondToSelector:@selector(isLowPowerModeEnabled)]) {
+        return ![[NSProcessInfo processInfo] isLowPowerModeEnabled];
+    }
+    return self.isMetricsEnabled && self.accountTypeNumber == 0;
+#endif
 }
 
 - (void)updateNextTurnstileSendDate {

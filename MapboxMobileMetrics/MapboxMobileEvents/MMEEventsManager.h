@@ -7,7 +7,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface MMEEventsManager : NSObject
 
-@property (nonatomic, getter=isTelemetryDisabled) BOOL telemetryDisabled;
+@property (nonatomic, getter=isMetricsEnabled) BOOL metricsEnabled;
+@property (nonatomic) NSNumber *accountTypeNumber;
 
 + (nullable instancetype)sharedManager;
 
