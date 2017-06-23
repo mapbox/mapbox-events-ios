@@ -126,7 +126,7 @@
 
 - (BOOL)isEnabled {
 #if TARGET_OS_SIMULATOR
-    return [[NSUserDefaults standardUserDefaults] boolForKey:@"MMEMapboxMetricsEnabledInSimulator"];
+    return self.metricsEnabledInSimulator;
 #else
     if ([NSProcessInfo instancesRespondToSelector:@selector(isLowPowerModeEnabled)]) {
         return ![[NSProcessInfo processInfo] isLowPowerModeEnabled];
