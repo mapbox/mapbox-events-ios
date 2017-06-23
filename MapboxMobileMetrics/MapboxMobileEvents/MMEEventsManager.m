@@ -23,6 +23,7 @@
 @property (nonatomic) NSDate *nextTurnstileSendDate;
 @property (nonatomic) MMEEventsConfiguration *configuration;
 @property (nonatomic) MMETimerManager *timerManager;
+@property (nonatomic, getter=isPaused) BOOL paused;
 
 @end
 
@@ -57,6 +58,13 @@
     return self;
 }
 
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
+    // TODO: Pause on dealloc
+//    [self pauseMetricsCollection];
+}
+
 - (void)initializeWithAccessToken:(NSString *)accessToken userAgentBase:(NSString *)userAgentBase hostSDKVersion:(NSString *)hostSDKVersion {
     self.apiClient = [[MMEAPIClient alloc] initWithAccessToken:accessToken userAgentBase:userAgentBase hostSDKVersion:hostSDKVersion];
     
@@ -65,6 +73,12 @@
     [self.locationManager startUpdatingLocation];
     
     self.timerManager = [[MMETimerManager alloc] initWithTimeInterval:self.configuration.eventFlushSecondsThreshold target:self selector:@selector(flush)];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pauseOrResumeMetricsCollectionIfRequired) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pauseOrResumeMetricsCollectionIfRequired) name:UIApplicationDidBecomeActiveNotification object:nil];
+    if (&NSProcessInfoPowerStateDidChangeNotification != NULL) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pauseOrResumeMetricsCollectionIfRequired) name:NSProcessInfoPowerStateDidChangeNotification object:nil];
+    }
 }
 
 # pragma mark - Public API
@@ -93,11 +107,7 @@
     NSDictionary *turnstileEventAttributes = @{MMEEventKeyEvent: MMEEventTypeAppUserTurnstile,
                                                MMEEventKeyCreated: [self.rfc3339DateFormatter stringFromDate:[NSDate date]],
                                                MMEEventKeyVendorID: self.commonEventData.vendorId,
-                                               
-                                               // TODO: set this value correctly
-                                               MMEEventKeyEnabledTelemetry: @(NO) /*@([self isTelemetryDisabled])*/
-                                               
-                                               };
+                                               MMEEventKeyEnabledTelemetry: @([self isEnabled])};
     
     __weak __typeof__(self) weakSelf = self;
     [self.apiClient postEvent:[MMEEvent turnstileEventWithAttributes:turnstileEventAttributes] completionHandler:^(NSError * _Nullable error) {
@@ -123,6 +133,48 @@
     }
     return self.isMetricsEnabled && self.accountTypeNumber == 0;
 #endif
+}
+
+- (void)pauseOrResumeMetricsCollectionIfRequired {
+    // TODO: Prevent blue status bar when host app has `when in use`
+    
+    // Toggle pause based on current pause state, user opt-out state, and low-power state.
+    if (self.paused && [self isEnabled]) {
+        [self resumeMetricsCollection];
+    } else if (!self.paused && ![self isEnabled]) {
+        [self flush];
+        [self pauseMetricsCollection];
+    }
+}
+
+- (void)pauseMetricsCollection {
+    [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: @"Pausing metrics collection..."}];
+    if (self.isPaused) {
+        [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: @"Already paused"}];
+        return;
+    }
+    
+    self.paused = YES;
+    [self.timerManager cancel];
+    [self.eventQueue removeAllObjects];
+    self.commonEventData = nil;
+    
+    [self.locationManager stopUpdatingLocation];
+    [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: @"Paused and location manager stopped"}];
+}
+
+- (void)resumeMetricsCollection {
+    [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: @"Resuming metrics collection..."}];
+    if (!self.isPaused || ![self isEnabled]) {
+        [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: @"Already running"}];
+        return;
+    }
+    
+    self.paused = NO;
+    self.commonEventData = [[MMECommonEventData alloc] init];
+    
+    [self.locationManager startUpdatingLocation];
+    [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: @"Resumed and location manager started"}];
 }
 
 - (void)updateNextTurnstileSendDate {
@@ -165,7 +217,7 @@
 - (void)pushDebugEventWithAttributes:(MGLMapboxEventAttributes *)attributes {
     MGLMutableMapboxEventAttributes *combinedAttributes = [MGLMutableMapboxEventAttributes dictionaryWithDictionary:attributes];
     [combinedAttributes setObject:[self.rfc3339DateFormatter stringFromDate:[NSDate date]] forKey:@"created"];
-//    [combinedAttributes setObject:self.uniqueIdentifer.rollingInstanceIdentifer forKey:@"instance"];
+    [combinedAttributes setObject:self.uniqueIdentifer.rollingInstanceIdentifer forKey:@"instance"];
     MMEEvent *debugEvent = [MMEEvent debugEventWithAttributes:combinedAttributes];
     [MMEEventLogger logEvent:debugEvent];
 }
@@ -204,7 +256,7 @@
 #pragma mark - MMELocationManagerDelegate
 
 - (void)locationManager:(MMELocationManager *)locationManager didUpdateLocations:(NSArray *)locations {
-    NSLog(@"================> %s", __PRETTY_FUNCTION__);
+    [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Location manager sent %ld locations", (long)locations.count]}];
     
     for (CLLocation *location in locations) {
         MGLMapboxEventAttributes *eventAttributes = @{MMEEventKeyCreated: [self.rfc3339DateFormatter stringFromDate:location.timestamp],
@@ -219,19 +271,19 @@
 }
 
 - (void)locationManagerDidStartLocationUpdates:(MMELocationManager *)locationManager {
-    NSLog(@"================> %s", __PRETTY_FUNCTION__);
+    [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: @"Location manager started location updates"}];
 }
 
 - (void)locationManagerBackgroundLocationUpdatesDidTimeout:(MMELocationManager *)locationManager {
-    NSLog(@"================> %s", __PRETTY_FUNCTION__);
+    [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: @"Location manager timed out"}];
 }
 
 - (void)locationManagerBackgroundLocationUpdatesDidAutomaticallyPause:(MMELocationManager *)locationManager {
-    NSLog(@"================> %s", __PRETTY_FUNCTION__);
+    [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: @"Location manager automatically paused"}];
 }
 
 - (void)locationManagerDidStopLocationUpdates:(MMELocationManager *)locationManager {
-    NSLog(@"================> %s", __PRETTY_FUNCTION__);
+    [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: @"Location manager stopped location updates"}];
 }
 
 @end
