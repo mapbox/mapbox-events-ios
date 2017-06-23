@@ -2,13 +2,20 @@
 
 @implementation MMEEventLogger
 
-+ (void)logEvent:(MMEEvent *)event {
-    
-    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"MMEMapboxMetricsDebugLoggingEnabled"]) {
-        return;
+static BOOL _enabled;
+
++ (void)logEvent:(MMEEvent *)event {    
+    if (_enabled) {
+        NSLog(@"%@", [NSString stringWithFormat:@"Mapbox Telemetry event %@", event]);
     }
-    
-    NSLog(@"%@", [NSString stringWithFormat:@"Mapbox Telemetry event %@", event]);
+}
+
++ (BOOL)isEnabled {
+    return _enabled;
+}
+
++ (void)setEnabled:(BOOL)enabled {
+    _enabled = enabled;
 }
 
 @end

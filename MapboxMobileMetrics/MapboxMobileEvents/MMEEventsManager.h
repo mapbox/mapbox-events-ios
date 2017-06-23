@@ -9,6 +9,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, getter=isMetricsEnabled) BOOL metricsEnabled;
 @property (nonatomic, getter=isMetricsEnabledInSimulator) BOOL metricsEnabledInSimulator;
+@property (nonatomic, getter=isDebugLoggingEnabled) BOOL debugLoggingEnabled;
 @property (nonatomic) NSNumber *accountTypeNumber;
 
 + (nullable instancetype)sharedManager;

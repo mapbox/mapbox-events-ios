@@ -124,6 +124,14 @@
     }];
 }
 
+- (void)setDebugLoggingEnabled:(BOOL)debugLoggingEnabled {
+    [[MMEEventLogger class] setEnabled:debugLoggingEnabled];
+}
+
+- (BOOL)isDebugLoggingEnabled {
+    return [[MMEEventLogger class] isEnabled];
+}
+
 #pragma mark - Internal API
 
 - (BOOL)isEnabled {
