@@ -14,7 +14,7 @@
         _iso8601DateFormatter = [[NSDateFormatter alloc] init];
         NSLocale *enUSPOSIXLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
         [_iso8601DateFormatter setLocale:enUSPOSIXLocale];
-        [_iso8601DateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss:SSSZ"];
+        [_iso8601DateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSSZ"];
         [_iso8601DateFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
     }
     return self;

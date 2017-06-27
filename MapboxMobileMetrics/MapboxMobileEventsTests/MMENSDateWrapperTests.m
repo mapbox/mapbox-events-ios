@@ -7,11 +7,11 @@
 
 @implementation MMENSDateWrapperTests
 
-- (void)testExample {
+- (void)testFormattedDateStringForDate {
     MMENSDateWrapper *dateWrapper = [[MMENSDateWrapper alloc] init];
     NSDate *date = [NSDate dateWithTimeIntervalSince1970:213242];
     NSString *dateString = [dateWrapper formattedDateStringForDate:date];    
-    XCTAssertEqualObjects(dateString, @"1970-01-03T11:14:02:000+0000");
+    XCTAssertEqualObjects(dateString, @"1970-01-03T11:14:02.000+0000");
 }
 
 @end

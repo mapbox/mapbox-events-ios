@@ -270,7 +270,7 @@
     NSArray *args = apiClient.argumentsBySelector[lookup];
     MMEEvent *event = args.firstObject;
     XCTAssertTrue(event.name == MMEEventTypeAppUserTurnstile);
-    XCTAssertEqualObjects(event.attributes[MMEEventKeyCreated], @"1970-01-01T00:16:40:000+0000");
+    XCTAssertEqualObjects(event.attributes[MMEEventKeyCreated], @"1970-01-01T00:16:40.000+0000");
     XCTAssertEqualObjects(event.attributes[MMEEventKeyEnabledTelemetry], @(1));
     XCTAssertEqualObjects(event.attributes[MMEEventKeyEvent], MMEEventTypeAppUserTurnstile);
     XCTAssertNotNil(event.attributes[MMEEventKeyVendorID]);
