@@ -11,6 +11,11 @@
 #import "MMEEventsConfiguration.h"
 #import "MMETimerManagerFake.h"
 #import "MMEUniqueIdentifierFake.h"
+#import "MMEUIApplicationWrapper.h"
+#import "MMEUIApplicationWrapperFake.h"
+#import "MMECLLocationManagerWrapper.h"
+#import "MMECLLocationManagerWrapperFake.h"
+#import "MMELocationManagerFake.h"
 
 #import "NSDateFormatter+MMEMobileEvents.h"
 #import "CLLocation+MMEMobileEvents.h"
@@ -20,7 +25,7 @@
 
 @interface MMEEventsManager (Tests) <MMELocationManagerDelegate>
 
-@property (nonatomic) MMELocationManager *locationManager;
+@property (nonatomic) id<MMELocationManager> locationManager;
 @property (nonatomic) id<MMEAPIClient> apiClient;
 @property (nonatomic) NS_MUTABLE_ARRAY_OF(MMEEvent *) *eventQueue;
 @property (nonatomic) id<MMEUniqueIdentifer> uniqueIdentifer;
@@ -28,6 +33,12 @@
 @property (nonatomic) NSDate *nextTurnstileSendDate;
 @property (nonatomic) MMEEventsConfiguration *configuration;
 @property (nonatomic) MMETimerManager *timerManager;
+@property (nonatomic) id<MMECLLocationManagerWrapper> locationManagerWrapper;
+@property (nonatomic) id<MMEUIApplicationWrapper> application;\
+@property (nonatomic, getter=isPaused) BOOL paused;
+
+- (void)pauseMetricsCollection;
+- (void)resumeMetricsCollection;
 
 @end
 
@@ -45,6 +56,76 @@
     [super setUp];
     
     [MMEEventsManager sharedManager].uniqueIdentifer = [[MMEUniqueIdentifierFake alloc] init];
+}
+
+- (void)testPauseOrResumeMetricsCollectionIfRequiredPausedToResumed {
+    MMELocationManagerFake *locationManager = [[MMELocationManagerFake alloc] init];
+    [MMEEventsManager sharedManager].locationManager = locationManager;
+    
+    // When metrics are enabled
+    [MMEEventsManager sharedManager].metricsEnabledInSimulator = YES;
+    
+    // When metrics are paused and pause or resume is called
+    [MMEEventsManager sharedManager].commonEventData = nil;
+    [MMEEventsManager sharedManager].paused = YES;
+    [[MMEEventsManager sharedManager] pauseOrResumeMetricsCollectionIfRequired];
+    
+    // Metrics are resumed
+    XCTAssertFalse([MMEEventsManager sharedManager].paused);
+    XCTAssertNotNil([MMEEventsManager sharedManager].commonEventData);
+    XCTAssertTrue([locationManager received:@selector(startUpdatingLocation)]);
+    
+    // When metrics are **not** enabled
+    [locationManager resetReceivedSelectors];
+    [MMEEventsManager sharedManager].metricsEnabledInSimulator = NO;
+    
+    // When metrics are paused and pause or resume is called
+    [MMEEventsManager sharedManager].commonEventData = nil;
+    [MMEEventsManager sharedManager].paused = YES;
+    [[MMEEventsManager sharedManager] pauseOrResumeMetricsCollectionIfRequired];
+    
+    // Metrics are **not** resumed
+    XCTAssertTrue([MMEEventsManager sharedManager].paused);
+    XCTAssertNil([MMEEventsManager sharedManager].commonEventData);
+    XCTAssertFalse([locationManager received:@selector(startUpdatingLocation)]);
+}
+
+- (void)testPauseOrResumeMetricsCollectionIfRequiredResumedToPaused {
+    MMELocationManagerFake *locationManager = [[MMELocationManagerFake alloc] init];
+    [MMEEventsManager sharedManager].locationManager = locationManager;
+    
+    NSString *accessToken = @"access-token";
+    NSString *userAgentBase = @"UA-base";
+    MMEAPIClientFake *apiClient = [[MMEAPIClientFake alloc] init];
+    apiClient.accessToken = accessToken;
+    apiClient.userAgentBase = userAgentBase;
+    [MMEEventsManager sharedManager].apiClient = apiClient;
+    
+    // When metrics are **not** enabled
+    [MMEEventsManager sharedManager].metricsEnabledInSimulator = NO;
+    
+    // When metrics are resumed and pause or resume is called
+    [MMEEventsManager sharedManager].paused = NO;
+    [[MMEEventsManager sharedManager] pauseOrResumeMetricsCollectionIfRequired];
+    
+    // Metrics are paused
+    XCTAssertTrue([MMEEventsManager sharedManager].paused);
+    
+    // Metrics are flushed
+    XCTAssertTrue([apiClient received:@selector(postEvents:completionHandler:)]);
+    XCTAssertNil([MMEEventsManager sharedManager].commonEventData);
+    XCTAssertTrue([locationManager received:@selector(stopUpdatingLocation)]);
+    
+    // When metrics are **not** enabled
+    [locationManager resetReceivedSelectors];
+    [MMEEventsManager sharedManager].metricsEnabledInSimulator = YES;
+    
+    // When metrics are resumed and pause or resume is called
+    [MMEEventsManager sharedManager].paused = NO;
+    [[MMEEventsManager sharedManager] pauseOrResumeMetricsCollectionIfRequired];
+    
+    // Metrics are **not** paused
+    XCTAssertFalse([MMEEventsManager sharedManager].paused);
 }
 
 - (void)testAsADelegateForLocationManagerDidUpdateLocations {

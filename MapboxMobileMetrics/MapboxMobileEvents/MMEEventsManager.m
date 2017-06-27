@@ -8,13 +8,15 @@
 #import "MMEEventLogger.h"
 #import "MMEEventsConfiguration.h"
 #import "MMETimerManager.h"
+#import "MMEUIApplicationWrapper.h"
 
 #import "NSDateFormatter+MMEMobileEvents.h"
 #import "CLLocation+MMEMobileEvents.h"
 
 @interface MMEEventsManager () <MMELocationManagerDelegate>
 
-@property (nonatomic) MMELocationManager *locationManager;
+@property (nonatomic) id<MMELocationManager> locationManager;
+@property (nonatomic) id<MMECLLocationManagerWrapper> locationManagerWrapper;
 @property (nonatomic) id<MMEAPIClient> apiClient;
 @property (nonatomic) NS_MUTABLE_ARRAY_OF(MMEEvent *) *eventQueue;
 @property (nonatomic) id<MMEUniqueIdentifer> uniqueIdentifer;
@@ -24,6 +26,7 @@
 @property (nonatomic) MMEEventsConfiguration *configuration;
 @property (nonatomic) MMETimerManager *timerManager;
 @property (nonatomic, getter=isPaused) BOOL paused;
+@property (nonatomic) id<MMEUIApplicationWrapper> application;
 
 @end
 
@@ -54,6 +57,8 @@
         _rfc3339DateFormatter = [NSDateFormatter rfc3339DateFormatter];
         _configuration = [MMEEventsConfiguration defaultEventsConfiguration];
         _uniqueIdentifer = [[MMEUniqueIdentifier alloc] initWithTimeInterval:_configuration.instanceIdentifierRotationTimeInterval];
+        _application = [[MMEUIApplicationWrapper alloc] init];
+        _locationManagerWrapper = [[MMECLLocationManagerWrapper alloc] init];
     }
     return self;
 }
@@ -146,7 +151,22 @@
 }
 
 - (void)pauseOrResumeMetricsCollectionIfRequired {
-    // TODO: Prevent blue status bar when host app has `when in use`
+    // Prevent blue status bar when host app has `when in use` permission only and it is not in foreground
+    if ([self.locationManagerWrapper authorizationStatus] == kCLAuthorizationStatusAuthorizedWhenInUse &&
+        self.application.applicationState == UIApplicationStateBackground) {
+
+        // TODO: implement flush on background
+//        if (_backgroundTaskIdentifier == UIBackgroundTaskInvalid) {
+//            _backgroundTaskIdentifier = [application beginBackgroundTaskWithExpirationHandler:^{
+//                [application endBackgroundTask:_backgroundTaskIdentifier];
+//                _backgroundTaskIdentifier = UIBackgroundTaskInvalid;
+//            }];
+//            [self flush];
+//        }
+        
+        [self pauseMetricsCollection];
+        return;
+    }
     
     // Toggle pause based on current pause state, user opt-out state, and low-power state.
     if (self.paused && [self isEnabled]) {

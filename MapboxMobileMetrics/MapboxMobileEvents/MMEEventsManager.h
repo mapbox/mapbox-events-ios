@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)initializeWithAccessToken:(NSString *)accessToken userAgentBase:(NSString *)userAgentBase hostSDKVersion:(NSString *)hostSDKVersion;
 
 - (void)sendTurnstileEvent;
+- (void)pauseOrResumeMetricsCollectionIfRequired;
 
 @end
 
