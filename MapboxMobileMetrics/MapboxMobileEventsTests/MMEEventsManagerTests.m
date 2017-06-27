@@ -16,8 +16,9 @@
 #import "MMECLLocationManagerWrapper.h"
 #import "MMECLLocationManagerWrapperFake.h"
 #import "MMELocationManagerFake.h"
+#import "MMENSDateWrapper.h"
+#import "MMENSDateWrapperFake.h"
 
-#import "NSDateFormatter+MMEMobileEvents.h"
 #import "CLLocation+MMEMobileEvents.h"
 
 @interface MMEEventsManagerTests : XCTestCase
@@ -36,6 +37,7 @@
 @property (nonatomic) id<MMECLLocationManagerWrapper> locationManagerWrapper;
 @property (nonatomic) id<MMEUIApplicationWrapper> application;\
 @property (nonatomic, getter=isPaused) BOOL paused;
+@property (nonatomic) MMENSDateWrapper *dateWrapper;
 
 - (void)pauseMetricsCollection;
 - (void)resumeMetricsCollection;
@@ -56,6 +58,7 @@
     [super setUp];
     
     [MMEEventsManager sharedManager].uniqueIdentifer = [[MMEUniqueIdentifierFake alloc] init];
+    [[[MMEEventsManager sharedManager] eventQueue] removeAllObjects];
 }
 
 - (void)testPauseOrResumeMetricsCollectionIfRequiredPausedToResumed {
@@ -150,7 +153,9 @@
     dataStub.iOSVersion = @"iOS-version";
     [MMEEventsManager sharedManager].commonEventData = dataStub;
     
-    NSDateFormatter *dateFormatter = [NSDateFormatter rfc3339DateFormatter];
+    MMENSDateWrapperFake *dateWrapper = [[MMENSDateWrapperFake alloc] init];
+    dateWrapper.testDate = [NSDate dateWithTimeIntervalSince1970:2000];
+    [MMEEventsManager sharedManager].dateWrapper = dateWrapper;
     
     CLLocation *location = [self location];
     [[MMEEventsManager sharedManager] locationManager:nil didUpdateLocations:@[location]];
@@ -161,7 +166,7 @@
     attributes[MMEEventKeySessionId] = [[MMEUniqueIdentifierFake alloc] init].rollingInstanceIdentifer;
     attributes[MMEEventKeyOperatingSystem] = dataStub.iOSVersion;
     attributes[MMEEventKeyApplicationState] = [dataStub applicationState];
-    attributes[MMEEventKeyCreated] = [dateFormatter stringFromDate:location.timestamp];
+    attributes[MMEEventKeyCreated] =  [dateWrapper formattedDateStringForDate:[dateWrapper date]];    
     attributes[MMEEventKeyLatitude] = @([location latitudeRoundedWithPrecision:7]);
     attributes[MMEEventKeyLongitude] = @([location longitudeRoundedWithPrecision:7]);
     attributes[MMEEventKeyAltitude] = @([location roundedAltitude]);
@@ -170,6 +175,7 @@
     XCTAssertTrue([apiClient received:@selector(postEvents:completionHandler:)]);
     
     NSArray *arguments = [apiClient.argumentsBySelector[[NSValue valueWithPointer:@selector(postEvents:completionHandler:)]] firstObject];
+    XCTAssertTrue(arguments.count == 1);
     MMEEvent *event = arguments.firstObject;
     XCTAssertEqualObjects(event.attributes, attributes);
 }
@@ -243,17 +249,31 @@
     NSString *hostSDKVersion = @"host-sdk-1";
     MMEEventsManager *manager = [MMEEventsManager sharedManager];
     [manager initializeWithAccessToken:accessToken userAgentBase:userAgentBase hostSDKVersion:hostSDKVersion];
+    MMENSDateWrapperFake *dateWrapperFake = [[MMENSDateWrapperFake alloc] init];
+    dateWrapperFake.testDate = [NSDate dateWithTimeIntervalSince1970:1000];
+    manager.dateWrapper = dateWrapperFake;
     
     MMEAPIClientFake *apiClient = [[MMEAPIClientFake alloc] init];
     apiClient.userAgentBase = @"user-agent-base";
     apiClient.accessToken = @"access-token";
     manager.apiClient = apiClient;
     
+    manager.metricsEnabledInSimulator = YES;
+    
     XCTAssertNil(manager.nextTurnstileSendDate);
     XCTAssertNotNil(manager.commonEventData.vendorId);
     
     [manager sendTurnstileEvent];
     XCTAssertTrue([apiClient received:@selector(postEvent:completionHandler:)]);
+    
+    NSValue *lookup = [NSValue valueWithPointer:@selector(postEvent:completionHandler:)];
+    NSArray *args = apiClient.argumentsBySelector[lookup];
+    MMEEvent *event = args.firstObject;
+    XCTAssertTrue(event.name == MMEEventTypeAppUserTurnstile);
+    XCTAssertEqualObjects(event.attributes[MMEEventKeyCreated], @"1970-01-01T00:16:40:000+0000");
+    XCTAssertEqualObjects(event.attributes[MMEEventKeyEnabledTelemetry], @(1));
+    XCTAssertEqualObjects(event.attributes[MMEEventKeyEvent], MMEEventTypeAppUserTurnstile);
+    XCTAssertNotNil(event.attributes[MMEEventKeyVendorID]);
     
     [apiClient completePostingEventsWithError:nil];
     XCTAssertNotNil(manager.nextTurnstileSendDate);

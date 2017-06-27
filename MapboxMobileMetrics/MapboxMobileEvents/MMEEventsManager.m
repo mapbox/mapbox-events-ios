@@ -9,8 +9,8 @@
 #import "MMEEventsConfiguration.h"
 #import "MMETimerManager.h"
 #import "MMEUIApplicationWrapper.h"
+#import "MMENSDateWrapper.h"
 
-#import "NSDateFormatter+MMEMobileEvents.h"
 #import "CLLocation+MMEMobileEvents.h"
 
 @interface MMEEventsManager () <MMELocationManagerDelegate>
@@ -21,12 +21,12 @@
 @property (nonatomic) NS_MUTABLE_ARRAY_OF(MMEEvent *) *eventQueue;
 @property (nonatomic) id<MMEUniqueIdentifer> uniqueIdentifer;
 @property (nonatomic) MMECommonEventData *commonEventData;
-@property (nonatomic) NSDateFormatter *rfc3339DateFormatter;
 @property (nonatomic) NSDate *nextTurnstileSendDate;
 @property (nonatomic) MMEEventsConfiguration *configuration;
 @property (nonatomic) MMETimerManager *timerManager;
 @property (nonatomic, getter=isPaused) BOOL paused;
 @property (nonatomic) id<MMEUIApplicationWrapper> application;
+@property (nonatomic) MMENSDateWrapper *dateWrapper;
 
 @end
 
@@ -54,11 +54,11 @@
         _accountTypeNumber = 0;
         _eventQueue = [NSMutableArray array];
         _commonEventData = [[MMECommonEventData alloc] init];
-        _rfc3339DateFormatter = [NSDateFormatter rfc3339DateFormatter];
         _configuration = [MMEEventsConfiguration defaultEventsConfiguration];
         _uniqueIdentifer = [[MMEUniqueIdentifier alloc] initWithTimeInterval:_configuration.instanceIdentifierRotationTimeInterval];
         _application = [[MMEUIApplicationWrapper alloc] init];
         _locationManagerWrapper = [[MMECLLocationManagerWrapper alloc] init];
+        _dateWrapper = [[MMENSDateWrapper alloc] init];
     }
     return self;
 }
@@ -91,7 +91,7 @@
 # pragma mark - Public API
 
 - (void)sendTurnstileEvent {
-    if (self.nextTurnstileSendDate && [[NSDate date] timeIntervalSinceDate:self.nextTurnstileSendDate] < 0) {
+    if (self.nextTurnstileSendDate && [[self.dateWrapper date] timeIntervalSinceDate:self.nextTurnstileSendDate] < 0) {
         [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: @"Turnstile event already sent; waiting until %@ to send another one"}];
         return;
     }
@@ -112,7 +112,7 @@
     }
     
     NSDictionary *turnstileEventAttributes = @{MMEEventKeyEvent: MMEEventTypeAppUserTurnstile,
-                                               MMEEventKeyCreated: [self.rfc3339DateFormatter stringFromDate:[NSDate date]],
+                                               MMEEventKeyCreated: [self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]],
                                                MMEEventKeyVendorID: self.commonEventData.vendorId,
                                                MMEEventKeyEnabledTelemetry: @([self isEnabled])};
     
@@ -212,7 +212,7 @@
     NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *dayComponent = [[NSDateComponents alloc] init];
     dayComponent.day = 1;
-    NSDate *sometimeTomorrow = [calendar dateByAddingComponents:dayComponent toDate:[NSDate date] options:0];
+    NSDate *sometimeTomorrow = [calendar dateByAddingComponents:dayComponent toDate:[self.dateWrapper date] options:0];
     
     // Find the start of tomorrow and use that as the next turnstile send date. The effect of this is that
     // turnstile events can be sent as much as once per calendar day and always at the start of a session
@@ -246,7 +246,7 @@
 
 - (void)pushDebugEventWithAttributes:(MGLMapboxEventAttributes *)attributes {
     MGLMutableMapboxEventAttributes *combinedAttributes = [MGLMutableMapboxEventAttributes dictionaryWithDictionary:attributes];
-    [combinedAttributes setObject:[self.rfc3339DateFormatter stringFromDate:[NSDate date]] forKey:@"created"];
+    [combinedAttributes setObject:[self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]] forKey:@"created"];
     [combinedAttributes setObject:self.uniqueIdentifer.rollingInstanceIdentifer forKey:@"instance"];
     MMEEvent *debugEvent = [MMEEvent debugEventWithAttributes:combinedAttributes];
     [MMEEventLogger logEvent:debugEvent];
@@ -289,7 +289,7 @@
     [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Location manager sent %ld locations", (long)locations.count]}];
     
     for (CLLocation *location in locations) {
-        MGLMapboxEventAttributes *eventAttributes = @{MMEEventKeyCreated: [self.rfc3339DateFormatter stringFromDate:location.timestamp],
+        MGLMapboxEventAttributes *eventAttributes = @{MMEEventKeyCreated: [self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]],
                                                       MMEEventKeyLatitude: @([location latitudeRoundedWithPrecision:7]),
                                                       MMEEventKeyLongitude: @([location longitudeRoundedWithPrecision:7]),
                                                       MMEEventKeyAltitude: @([location roundedAltitude]),
