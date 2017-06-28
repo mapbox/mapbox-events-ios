@@ -130,16 +130,15 @@
 }
 
 - (void)enqueueEventWithName:(NSString *)name {
-    MMEEvent *mapLoadEvent = [MMEEvent mapLoadEventWithDateString:[self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]] commonEventData:self.commonEventData];
+    MMEEvent *mapLoadEvent = [MMEEvent mapLoadEventWithDateString:[self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]]
+                                                  commonEventData:self.commonEventData];
     [self pushEvent:mapLoadEvent];
 }
 
 - (void)enqueueEventWithName:(NSString *)name attributes:(MMEMapboxEventAttributes *)attributes {
-    
-//    [self pushEvent:[MMEEvent locationEventWithAttributes:eventAttributes
-//                                        instanceIdentifer:self.uniqueIdentifer.rollingInstanceIdentifer
-//                                          commonEventData:self.commonEventData]];
-    
+    MMEEvent *mapTapEvent = [MMEEvent mapTapEventWithDateString:[self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]]
+                                                                                                  attributes:attributes];
+    [self pushEvent:mapTapEvent];
 }
 
 - (void)setDebugLoggingEnabled:(BOOL)debugLoggingEnabled {

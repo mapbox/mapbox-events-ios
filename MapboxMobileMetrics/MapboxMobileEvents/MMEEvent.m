@@ -42,9 +42,22 @@
     attributes[MMEEventKeyResolution] = @(commonEventData.scale);
     attributes[MMEEventKeyAccessibilityFontScale] = @([self contentSizeScale]);
     attributes[MMEEventKeyOrientation] = [self deviceOrientation];
-    attributes[MMEEventKeyWifi] = @([[MMEReachability reachabilityForLocalWiFi] isReachableViaWiFi]);    
+    attributes[MMEEventKeyWifi] = @([[MMEReachability reachabilityForLocalWiFi] isReachableViaWiFi]);
     mapLoadEvent.attributes = attributes;
     return mapLoadEvent;
+}
+
++ (instancetype)mapTapEventWithDateString:(NSString *)dateString attributes:(NSDictionary *)attributes {
+    MMEEvent *mapTapEvent = [[MMEEvent alloc] init];
+    mapTapEvent.name = MMEEventTypeMapTap;
+    NSMutableDictionary *commonAttributes = [NSMutableDictionary dictionary];
+    commonAttributes[MMEEventKeyEvent] = mapTapEvent.name;
+    commonAttributes[MMEEventKeyCreated] = dateString;
+    commonAttributes[MMEEventKeyOrientation] = [self deviceOrientation];
+    commonAttributes[MMEEventKeyWifi] = @([[MMEReachability reachabilityForLocalWiFi] isReachableViaWiFi]);
+    [commonAttributes addEntriesFromDictionary:attributes];
+    mapTapEvent.attributes = commonAttributes;
+    return mapTapEvent;
 }
 
 + (instancetype)debugEventWithAttributes:(NSDictionary *)attributes {

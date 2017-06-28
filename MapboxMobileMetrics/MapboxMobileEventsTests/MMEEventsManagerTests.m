@@ -331,6 +331,32 @@
     XCTAssertTrue(eventsManager.eventQueue.count == 0);
 }
 
+- (void)testEnqueueMapTapEventWithAttributes {
+    MMEEventsManager *eventsManager = [MMEEventsManager sharedManager];
+    MMENSDateWrapperFake *dateWrapperFake = [[MMENSDateWrapperFake alloc] init];
+    dateWrapperFake.testDate = [NSDate dateWithTimeIntervalSince1970:3000];
+    eventsManager.dateWrapper = dateWrapperFake;
+    eventsManager.metricsEnabledInSimulator = YES;
+    [eventsManager resumeMetricsCollection];
+    
+    NSDictionary *eventAttributes = @{MMEEventKeyLatitude: @(10),
+                                      MMEEventKeyLongitude: @(-10),
+                                      MMEEventKeyZoomLevel: @(42),
+                                      MMEEventKeyGestureID: MMEEventGestureSingleTap};
+    [eventsManager enqueueEventWithName:MMEEventTypeMapTap attributes:eventAttributes];
+    
+    MMEEvent *event = eventsManager.eventQueue.firstObject;
+    XCTAssertEqualObjects(event.name, MMEEventTypeMapTap);
+    XCTAssertEqualObjects(event.attributes[MMEEventKeyEvent], MMEEventTypeMapTap);
+    XCTAssertEqualObjects(event.attributes[MMEEventKeyCreated], @"1970-01-01T00:50:00.000+0000");
+    XCTAssertNotNil(event.attributes[MMEEventKeyOrientation]);
+    XCTAssertTrue([event.attributes.allKeys containsObject:MMEEventKeyWifi]);
+    XCTAssertEqualObjects(event.attributes[MMEEventKeyLatitude], eventAttributes[MMEEventKeyLatitude]);
+    XCTAssertEqualObjects(event.attributes[MMEEventKeyLongitude], eventAttributes[MMEEventKeyLongitude]);
+    XCTAssertEqualObjects(event.attributes[MMEEventKeyZoomLevel], eventAttributes[MMEEventKeyZoomLevel]);
+    XCTAssertEqualObjects(event.attributes[MMEEventKeyGestureID], eventAttributes[MMEEventKeyGestureID]);    
+}
+
 - (CLLocation *)location {
     CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(10, 10);
     CLLocationDistance altitude = 100;
