@@ -1,5 +1,6 @@
 #import <Foundation/Foundation.h>
 #import "MMEEvent.h"
+#import "MMETypes.h"
 
 @class MMELocationManager;
 
@@ -17,6 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)initializeWithAccessToken:(NSString *)accessToken userAgentBase:(NSString *)userAgentBase hostSDKVersion:(NSString *)hostSDKVersion;
 
 - (void)sendTurnstileEvent;
+- (void)enqueueEventWithName:(NSString *)name;
+- (void)enqueueEventWithName:(NSString *)name attributes:(MMEMapboxEventAttributes *)attributes;
 - (void)pauseOrResumeMetricsCollectionIfRequired;
 
 @end

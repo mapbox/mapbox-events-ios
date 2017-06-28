@@ -50,7 +50,7 @@
 		40AE58441EA6C86C0046B437 /* MMEUIApplicationWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AE58421EA6C86C0046B437 /* MMEUIApplicationWrapper.m */; };
 		40AE58471EA6C9F10046B437 /* MMEUIApplicationWrapperFake.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AE58461EA6C9F10046B437 /* MMEUIApplicationWrapperFake.m */; };
 		40AE584B1EA80EA90046B437 /* MMETestStub.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AE584A1EA80EA90046B437 /* MMETestStub.m */; };
-		40AE584E1EA926710046B437 /* MMETypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 40AE584C1EA926710046B437 /* MMETypes.h */; };
+		40AE584E1EA926710046B437 /* MMETypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 40AE584C1EA926710046B437 /* MMETypes.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		40AE584F1EA926710046B437 /* MMETypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AE584D1EA926710046B437 /* MMETypes.m */; };
 		40AE58511EA9286E0046B437 /* MMEEventsManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AE58501EA9286E0046B437 /* MMEEventsManagerTests.m */; };
 		40AE58561EA932DB0046B437 /* MMEConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 40AE58541EA932DB0046B437 /* MMEConstants.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -82,6 +82,7 @@
 		40F16C831F02DA9F00DF338D /* MMENSDateWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 40F16C801F02DA9F00DF338D /* MMENSDateWrapper.m */; };
 		40F16C861F02DB6300DF338D /* MMENSDateWrapperFake.m in Sources */ = {isa = PBXBuildFile; fileRef = 40F16C851F02DB6300DF338D /* MMENSDateWrapperFake.m */; };
 		40F16C8D1F02DF8C00DF338D /* MMENSDateWrapperTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 40F16C8C1F02DF8C00DF338D /* MMENSDateWrapperTests.m */; };
+		40F16C901F042F2A00DF338D /* MMETypes.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 40AE584C1EA926710046B437 /* MMETypes.h */; };
 		40FB43771EF9EA7800EC5BC0 /* MMEEventsConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = 40FB43751EF9EA7800EC5BC0 /* MMEEventsConfiguration.h */; };
 		40FB43781EF9EA7800EC5BC0 /* MMEEventsConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 40FB43761EF9EA7800EC5BC0 /* MMEEventsConfiguration.m */; };
 		40FB43791EF9EA7800EC5BC0 /* MMEEventsConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 40FB43761EF9EA7800EC5BC0 /* MMEEventsConfiguration.m */; };
@@ -115,6 +116,7 @@
 			dstPath = include/MapboxMobileEvents;
 			dstSubfolderSpec = 16;
 			files = (
+				40F16C901F042F2A00DF338D /* MMETypes.h in CopyFiles */,
 				408596DA1ED0BF35003BD29D /* MMEConstants.h in CopyFiles */,
 				408596D81ED0B1F6003BD29D /* MMEEvent.h in CopyFiles */,
 				408596D91ED0B1F6003BD29D /* MMEEventsManager.h in CopyFiles */,

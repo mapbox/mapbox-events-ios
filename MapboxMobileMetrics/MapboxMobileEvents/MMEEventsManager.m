@@ -129,6 +129,19 @@
     }];
 }
 
+- (void)enqueueEventWithName:(NSString *)name {
+    MMEEvent *mapLoadEvent = [MMEEvent mapLoadEventWithDateString:[self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]] commonEventData:self.commonEventData];
+    [self pushEvent:mapLoadEvent];
+}
+
+- (void)enqueueEventWithName:(NSString *)name attributes:(MMEMapboxEventAttributes *)attributes {
+    
+//    [self pushEvent:[MMEEvent locationEventWithAttributes:eventAttributes
+//                                        instanceIdentifer:self.uniqueIdentifer.rollingInstanceIdentifer
+//                                          commonEventData:self.commonEventData]];
+    
+}
+
 - (void)setDebugLoggingEnabled:(BOOL)debugLoggingEnabled {
     [[MMEEventLogger class] setEnabled:debugLoggingEnabled];
 }
@@ -229,8 +242,9 @@
         return;
     }
     
-    // TODO: don't push if paused
-    
+    if (self.paused) {
+        return;
+    }
     
     [self.eventQueue addObject:event];
     [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Added event to event queue; event queue now has %ld events", (long)self.eventQueue.count]}];
@@ -244,8 +258,8 @@
     }
 }
 
-- (void)pushDebugEventWithAttributes:(MGLMapboxEventAttributes *)attributes {
-    MGLMutableMapboxEventAttributes *combinedAttributes = [MGLMutableMapboxEventAttributes dictionaryWithDictionary:attributes];
+- (void)pushDebugEventWithAttributes:(MMEMapboxEventAttributes *)attributes {
+    MMEMutableMapboxEventAttributes *combinedAttributes = [MMEMutableMapboxEventAttributes dictionaryWithDictionary:attributes];
     [combinedAttributes setObject:[self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]] forKey:@"created"];
     [combinedAttributes setObject:self.uniqueIdentifer.rollingInstanceIdentifer forKey:@"instance"];
     MMEEvent *debugEvent = [MMEEvent debugEventWithAttributes:combinedAttributes];
@@ -289,7 +303,9 @@
     [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Location manager sent %ld locations", (long)locations.count]}];
     
     for (CLLocation *location in locations) {
-        MGLMapboxEventAttributes *eventAttributes = @{MMEEventKeyCreated: [self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]],
+        
+        // TODO: This should use location's date not date wrapper
+        MMEMapboxEventAttributes *eventAttributes = @{MMEEventKeyCreated: [self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]],
                                                       MMEEventKeyLatitude: @([location latitudeRoundedWithPrecision:7]),
                                                       MMEEventKeyLongitude: @([location longitudeRoundedWithPrecision:7]),
                                                       MMEEventKeyAltitude: @([location roundedAltitude]),

@@ -41,7 +41,7 @@
     return bundle;
 }
 
-- (void)postEvents:(NS_ARRAY_OF(MMEEvent *) *)events completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
+- (void)postEvents:(NSArray *)events completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
     NSURLRequest *request = [self requestForEvents:events];
     
     [self.sessionWrapper processRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
@@ -72,7 +72,7 @@
 
 #pragma mark - Utilities
 
-- (NSURLRequest *)requestForEvents:(NS_ARRAY_OF(MMEEvent *) *)events {
+- (NSURLRequest *)requestForEvents:(NSArray *)events {
 
     NSString *path = [NSString stringWithFormat:@"%@?access_token=%@", MMEAPIClientEventsPath, [self accessToken]];
 

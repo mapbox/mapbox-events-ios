@@ -29,11 +29,95 @@
     return locationEvent;
 }
 
++ (instancetype)mapLoadEventWithDateString:(NSString *)dateString commonEventData:(MMECommonEventData *)commonEventData; {
+    MMEEvent *mapLoadEvent = [[MMEEvent alloc] init];
+    mapLoadEvent.name = MMEEventTypeMapLoad;
+    NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
+    attributes[MMEEventKeyEvent] = mapLoadEvent.name;
+    attributes[MMEEventKeyCreated] = dateString;
+    attributes[MMEEventKeyVendorID] = commonEventData.vendorId;
+    attributes[MMEEventKeyModel] = commonEventData.model;
+    attributes[MMEEventKeyOperatingSystem] = commonEventData.iOSVersion;
+    attributes[MMEEventKeyResolution] = @(commonEventData.scale);
+    attributes[MMEEventKeyAccessibilityFontScale] = @([self contentSizeScale]);
+    attributes[MMEEventKeyOrientation] = [self deviceOrientation];
+    
+    // TODO: MMEReachability
+    
+    mapLoadEvent.attributes = attributes;
+    return mapLoadEvent;
+}
+
 + (instancetype)debugEventWithAttributes:(NSDictionary *)attributes {
     MMEEvent *debugEvent = [[MMEEvent alloc] init];
     debugEvent.name = MMEEventTypeLocalDebug;
     debugEvent.attributes = [attributes copy];
     return debugEvent;
+}
+
++ (NSInteger)contentSizeScale {
+    NSInteger result = -9999;
+    
+    NSString *sc = [UIApplication sharedApplication].preferredContentSizeCategory;
+    
+    if ([sc isEqualToString:UIContentSizeCategoryExtraSmall]) {
+        result = -3;
+    } else if ([sc isEqualToString:UIContentSizeCategorySmall]) {
+        result = -2;
+    } else if ([sc isEqualToString:UIContentSizeCategoryMedium]) {
+        result = -1;
+    } else if ([sc isEqualToString:UIContentSizeCategoryLarge]) {
+        result = 0;
+    } else if ([sc isEqualToString:UIContentSizeCategoryExtraLarge]) {
+        result = 1;
+    } else if ([sc isEqualToString:UIContentSizeCategoryExtraExtraLarge]) {
+        result = 2;
+    } else if ([sc isEqualToString:UIContentSizeCategoryExtraExtraExtraLarge]) {
+        result = 3;
+    } else if ([sc isEqualToString:UIContentSizeCategoryAccessibilityMedium]) {
+        result = -11;
+    } else if ([sc isEqualToString:UIContentSizeCategoryAccessibilityLarge]) {
+        result = 10;
+    } else if ([sc isEqualToString:UIContentSizeCategoryAccessibilityExtraLarge]) {
+        result = 11;
+    } else if ([sc isEqualToString:UIContentSizeCategoryAccessibilityExtraExtraLarge]) {
+        result = 12;
+    } else if ([sc isEqualToString:UIContentSizeCategoryAccessibilityExtraExtraExtraLarge]) {
+        result = 13;
+    }
+    
+    return result;
+}
+
++ (NSString *)deviceOrientation {
+    NSString *result;
+    switch ([UIDevice currentDevice].orientation) {
+        case UIDeviceOrientationUnknown:
+            result = @"Unknown";
+            break;
+        case UIDeviceOrientationPortrait:
+            result = @"Portrait";
+            break;
+        case UIDeviceOrientationPortraitUpsideDown:
+            result = @"PortraitUpsideDown";
+            break;
+        case UIDeviceOrientationLandscapeLeft:
+            result = @"LandscapeLeft";
+            break;
+        case UIDeviceOrientationLandscapeRight:
+            result = @"LandscapeRight";
+            break;
+        case UIDeviceOrientationFaceUp:
+            result = @"FaceUp";
+            break;
+        case UIDeviceOrientationFaceDown:
+            result = @"FaceDown";
+            break;
+        default:
+            result = @"Default - Unknown";
+            break;
+    }
+    return result;
 }
 
 - (NSString *)description {

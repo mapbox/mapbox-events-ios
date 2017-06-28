@@ -59,6 +59,10 @@
     
     [MMEEventsManager sharedManager].uniqueIdentifer = [[MMEUniqueIdentifierFake alloc] init];
     [[[MMEEventsManager sharedManager] eventQueue] removeAllObjects];
+    
+    MMEEventsConfiguration *configuration = [[MMEEventsConfiguration alloc] init];
+    configuration.eventFlushCountThreshold = 1000;
+    [MMEEventsManager sharedManager].configuration = configuration;
 }
 
 - (void)testPauseOrResumeMetricsCollectionIfRequiredPausedToResumed {
@@ -140,6 +144,9 @@
     XCTAssertEqual([MMEEventsManager sharedManager].apiClient.accessToken, accessToken);
     XCTAssertEqual([MMEEventsManager sharedManager].apiClient.userAgentBase, userAgentBase);
     
+    [MMEEventsManager sharedManager].metricsEnabledInSimulator = YES;
+    [[MMEEventsManager sharedManager] resumeMetricsCollection];
+    
     MMEAPIClientFake *apiClient = [[MMEAPIClientFake alloc] init];
     apiClient.accessToken = accessToken;
     apiClient.userAgentBase = userAgentBase;
@@ -160,13 +167,16 @@
     CLLocation *location = [self location];
     [[MMEEventsManager sharedManager] locationManager:nil didUpdateLocations:@[location]];
     
-    MGLMutableMapboxEventAttributes *attributes = [NSMutableDictionary dictionary];
+    MMEMutableMapboxEventAttributes *attributes = [NSMutableDictionary dictionary];
     attributes[MMEEventKeyEvent] = MMEEventTypeLocation;
     attributes[MMEEventKeySource] = MMEEventSource;
     attributes[MMEEventKeySessionId] = [[MMEUniqueIdentifierFake alloc] init].rollingInstanceIdentifer;
     attributes[MMEEventKeyOperatingSystem] = dataStub.iOSVersion;
     attributes[MMEEventKeyApplicationState] = [dataStub applicationState];
-    attributes[MMEEventKeyCreated] =  [dateWrapper formattedDateStringForDate:[dateWrapper date]];    
+    
+    // TODO: This should use location's date
+    attributes[MMEEventKeyCreated] =  [dateWrapper formattedDateStringForDate:[dateWrapper date]];
+    
     attributes[MMEEventKeyLatitude] = @([location latitudeRoundedWithPrecision:7]);
     attributes[MMEEventKeyLongitude] = @([location longitudeRoundedWithPrecision:7]);
     attributes[MMEEventKeyAltitude] = @([location roundedAltitude]);
@@ -282,6 +292,43 @@
     [apiClient resetReceivedSelectors];
     [manager sendTurnstileEvent];
     XCTAssertFalse([apiClient received:@selector(postEvent:completionHandler:)]);
+}
+
+- (void)testEnqueueMapLoadEventWithAttributes {
+    MMEEventsManager *eventsManager = [MMEEventsManager sharedManager];
+    MMENSDateWrapperFake *dateWrapperFake = [[MMENSDateWrapperFake alloc] init];
+    dateWrapperFake.testDate = [NSDate dateWithTimeIntervalSince1970:2000];
+    eventsManager.dateWrapper = dateWrapperFake;
+    eventsManager.metricsEnabledInSimulator = YES;
+    [eventsManager resumeMetricsCollection];
+    
+    MMECommonEventData *commonEventData = [[MMECommonEventData alloc] init];
+    commonEventData.iOSVersion = @"iOS-version";
+    commonEventData.vendorId = @"vendor-id";
+    commonEventData.model = @"model";
+    commonEventData.scale = 42;
+    eventsManager.commonEventData = commonEventData;
+    
+    [eventsManager enqueueEventWithName:MMEEventTypeMapLoad];
+    MMEEvent *event = eventsManager.eventQueue.firstObject;
+    
+    XCTAssertEqualObjects(event.name, MMEEventTypeMapLoad);
+    XCTAssertEqualObjects(event.attributes[MMEEventKeyEvent], MMEEventTypeMapLoad);
+    XCTAssertEqualObjects(event.attributes[MMEEventKeyCreated], @"1970-01-01T00:33:20.000+0000");
+    XCTAssertEqualObjects(event.attributes[MMEEventKeyVendorID], commonEventData.vendorId);
+    XCTAssertEqualObjects(event.attributes[MMEEventKeyModel], commonEventData.model);
+    XCTAssertEqualObjects(event.attributes[MMEEventKeyOperatingSystem], commonEventData.iOSVersion);
+    XCTAssertEqualObjects(event.attributes[MMEEventKeyResolution], @(commonEventData.scale));
+    XCTAssertTrue([event.attributes.allKeys containsObject:MMEEventKeyAccessibilityFontScale]);
+    XCTAssertEqualObjects(event.attributes[MMEEventKeyResolution], @(commonEventData.scale));
+    XCTAssertNotNil(event.attributes[MMEEventKeyOrientation]);
+    // TODO: Test MMEReachability when it is added
+    
+    // When the events manager is paused
+    
+    [eventsManager pauseMetricsCollection];
+    [eventsManager enqueueEventWithName:MMEEventTypeMapLoad];
+    XCTAssertTrue(eventsManager.eventQueue.count == 0);
 }
 
 - (CLLocation *)location {

@@ -1,5 +1,4 @@
 #import <Foundation/Foundation.h>
-#import "MMETypes.h"
 
 @class MMEEvent;
 
@@ -11,7 +10,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *userAgentBase;
 @property (nonatomic, copy) NSString *hostSDKVersion;
 
-- (void)postEvents:(NS_ARRAY_OF(MMEEvent *) *)events completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler;
+- (void)postEvents:(NSArray *)events completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler;
 - (void)postEvent:(MMEEvent *)event completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler;
 
 @end
@@ -24,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithAccessToken:(NSString *)accessToken userAgentBase:(NSString *)userAgentBase hostSDKVersion:(NSString *)hostSDKVersion;
 
-- (void)postEvents:(NS_ARRAY_OF(MMEEvent *) *)events completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler;
+- (void)postEvents:(NSArray *)events completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler;
 - (void)postEvent:(MMEEvent *)event completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler;
 
 @end

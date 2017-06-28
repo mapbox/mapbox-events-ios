@@ -1,10 +1,9 @@
 #import "MMEAPIClientFake.h"
-#import "MMETypes.h"
 #import "MMEEvent.h"
 
 @implementation MMEAPIClientFake
 
-- (void)postEvents:(NS_ARRAY_OF(MMEEvent *) *)events completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
+- (void)postEvents:(NSArray *)events completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
     [self store:_cmd args:@[events, completionHandler]];
     self.callingCompletionHandler = completionHandler;
 }
