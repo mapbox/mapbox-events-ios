@@ -322,7 +322,7 @@
     XCTAssertTrue([event.attributes.allKeys containsObject:MMEEventKeyAccessibilityFontScale]);
     XCTAssertEqualObjects(event.attributes[MMEEventKeyResolution], @(commonEventData.scale));
     XCTAssertNotNil(event.attributes[MMEEventKeyOrientation]);
-    // TODO: Test MMEReachability when it is added
+    XCTAssertTrue([event.attributes.allKeys containsObject:MMEEventKeyWifi]);
     
     // When the events manager is paused
     

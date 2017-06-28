@@ -1,6 +1,7 @@
 #import "MMEEvent.h"
 #import "MMEConstants.h"
 #import "MMECommonEventData.h"
+#import "reachability.h"
 
 @implementation MMEEvent
 
@@ -41,9 +42,7 @@
     attributes[MMEEventKeyResolution] = @(commonEventData.scale);
     attributes[MMEEventKeyAccessibilityFontScale] = @([self contentSizeScale]);
     attributes[MMEEventKeyOrientation] = [self deviceOrientation];
-    
-    // TODO: MMEReachability
-    
+    attributes[MMEEventKeyWifi] = @([[MMEReachability reachabilityForLocalWiFi] isReachableViaWiFi]);    
     mapLoadEvent.attributes = attributes;
     return mapLoadEvent;
 }
