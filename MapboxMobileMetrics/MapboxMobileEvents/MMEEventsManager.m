@@ -227,7 +227,7 @@
 
 - (BOOL)isEnabled {
 #if TARGET_OS_SIMULATOR
-    return self.metricsEnabledInSimulator;
+    return self.isMetricsEnabled && self.accountType == 0 && self.metricsEnabledInSimulator;
 #else
     if ([NSProcessInfo instancesRespondToSelector:@selector(isLowPowerModeEnabled)]) {
         return ![[NSProcessInfo processInfo] isLowPowerModeEnabled];
