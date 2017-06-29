@@ -51,7 +51,7 @@
     self = [super init];
     if (self) {
         _metricsEnabled = YES;
-        _accountTypeNumber = 0;
+        _accountType = 0;
         _eventQueue = [NSMutableArray array];
         _commonEventData = [[MMECommonEventData alloc] init];
         _configuration = [MMEEventsConfiguration defaultEventsConfiguration];
@@ -232,7 +232,7 @@
     if ([NSProcessInfo instancesRespondToSelector:@selector(isLowPowerModeEnabled)]) {
         return ![[NSProcessInfo processInfo] isLowPowerModeEnabled];
     }
-    return self.isMetricsEnabled && self.accountTypeNumber == 0;
+    return self.isMetricsEnabled && self.accountType == 0;
 #endif
 }
 
