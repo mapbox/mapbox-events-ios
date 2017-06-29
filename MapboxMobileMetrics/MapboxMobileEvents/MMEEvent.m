@@ -60,6 +60,19 @@
     return mapTapEvent;
 }
 
++ (instancetype)mapDragEndEventWithDateString:(NSString *)dateString attributes:(NSDictionary *)attributes {
+    MMEEvent *mapTapEvent = [[MMEEvent alloc] init];
+    mapTapEvent.name = MMEEventTypeMapDragEnd;
+    NSMutableDictionary *commonAttributes = [NSMutableDictionary dictionary];
+    commonAttributes[MMEEventKeyEvent] = mapTapEvent.name;
+    commonAttributes[MMEEventKeyCreated] = dateString;
+    commonAttributes[MMEEventKeyOrientation] = [self deviceOrientation];
+    commonAttributes[MMEEventKeyWifi] = @([[MMEReachability reachabilityForLocalWiFi] isReachableViaWiFi]);
+    [commonAttributes addEntriesFromDictionary:attributes];
+    mapTapEvent.attributes = commonAttributes;
+    return mapTapEvent;
+}
+
 + (instancetype)debugEventWithAttributes:(NSDictionary *)attributes {
     MMEEvent *debugEvent = [[MMEEvent alloc] init];
     debugEvent.name = MMEEventTypeLocalDebug;

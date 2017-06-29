@@ -130,15 +130,31 @@
 }
 
 - (void)enqueueEventWithName:(NSString *)name {
-    MMEEvent *mapLoadEvent = [MMEEvent mapLoadEventWithDateString:[self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]]
-                                                  commonEventData:self.commonEventData];
-    [self pushEvent:mapLoadEvent];
+    [self createAndPushEventBasedOnName:name attributes:nil];
 }
 
 - (void)enqueueEventWithName:(NSString *)name attributes:(MMEMapboxEventAttributes *)attributes {
-    MMEEvent *mapTapEvent = [MMEEvent mapTapEventWithDateString:[self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]]
-                                                                                                  attributes:attributes];
-    [self pushEvent:mapTapEvent];
+    [self createAndPushEventBasedOnName:name attributes:attributes];
+}
+
+- (void)createAndPushEventBasedOnName:(NSString *)name attributes:(NSDictionary *)attributes {
+    MMEEvent *event = nil;
+    if ([name isEqualToString:MMEEventTypeMapLoad]) {
+        event = [MMEEvent mapLoadEventWithDateString:[self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]]
+                                     commonEventData:self.commonEventData];
+    } else if ([name isEqualToString:MMEEventTypeMapTap]) {
+        event = [MMEEvent mapTapEventWithDateString:[self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]]
+                                         attributes:attributes];
+    } else if ([name isEqualToString:MMEEventTypeMapDragEnd]) {
+        event = [MMEEvent mapDragEndEventWithDateString:[self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]]
+                                             attributes:attributes];
+    }
+    if (event) {
+        [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Pushing event: %@", event]}];
+        [self pushEvent:event];
+    } else {
+        [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Unknown event: %@", event]}];
+    }
 }
 
 - (void)setDebugLoggingEnabled:(BOOL)debugLoggingEnabled {
