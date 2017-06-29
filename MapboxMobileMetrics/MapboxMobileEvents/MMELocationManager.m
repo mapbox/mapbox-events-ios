@@ -27,7 +27,6 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
     if (self) {
         NSArray *backgroundModes = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UIBackgroundModes"];
         _hostAppHasBackgroundCapability = [backgroundModes containsObject:@"location"];
-        _locationManager = [[MMECLLocationManagerWrapper alloc] init];
         _application = [[MMEUIApplicationWrapper alloc] init];
     }
     return self;
@@ -38,6 +37,7 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
         return;
     }
 
+    self.locationManager = [[MMECLLocationManagerWrapper alloc] init];
     [self configurePassiveLocationManager];
     [self startLocationServices];
 }
@@ -51,6 +51,7 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
             [self.delegate locationManagerDidStopLocationUpdates:self];
         }
         [self stopMonitoringRegions];
+        self.locationManager = nil;
     }
 }
 
