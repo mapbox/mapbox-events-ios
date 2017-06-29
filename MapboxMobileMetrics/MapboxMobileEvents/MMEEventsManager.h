@@ -17,10 +17,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)initializeWithAccessToken:(NSString *)accessToken userAgentBase:(NSString *)userAgentBase hostSDKVersion:(NSString *)hostSDKVersion;
 
+- (void)pauseOrResumeMetricsCollectionIfRequired;
+- (void)flush;
 - (void)sendTurnstileEvent;
 - (void)enqueueEventWithName:(NSString *)name;
 - (void)enqueueEventWithName:(NSString *)name attributes:(MMEMapboxEventAttributes *)attributes;
-- (void)pauseOrResumeMetricsCollectionIfRequired;
 
 @end
 

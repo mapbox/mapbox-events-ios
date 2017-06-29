@@ -90,6 +90,64 @@
 
 # pragma mark - Public API
 
+- (void)pauseOrResumeMetricsCollectionIfRequired {
+    // Prevent blue status bar when host app has `when in use` permission only and it is not in foreground
+    if ([self.locationManagerWrapper authorizationStatus] == kCLAuthorizationStatusAuthorizedWhenInUse &&
+        self.application.applicationState == UIApplicationStateBackground) {
+        
+        // TODO: implement flush on background
+        //        if (_backgroundTaskIdentifier == UIBackgroundTaskInvalid) {
+        //            _backgroundTaskIdentifier = [application beginBackgroundTaskWithExpirationHandler:^{
+        //                [application endBackgroundTask:_backgroundTaskIdentifier];
+        //                _backgroundTaskIdentifier = UIBackgroundTaskInvalid;
+        //            }];
+        //            [self flush];
+        //        }
+        
+        [self pauseMetricsCollection];
+        return;
+    }
+    
+    // Toggle pause based on current pause state, user opt-out state, and low-power state.
+    if (self.paused && [self isEnabled]) {
+        [self resumeMetricsCollection];
+    } else if (!self.paused && ![self isEnabled]) {
+        [self flush];
+        [self pauseMetricsCollection];
+    }
+}
+
+- (void)flush {
+    
+    // TODO: don't flush if paused
+    
+    if (self.apiClient.accessToken == nil) {
+        return;
+    }
+    
+    NSArray *events = [self.eventQueue copy];
+    __weak __typeof__(self) weakSelf = self;
+    [self.apiClient postEvents:events completionHandler:^(NSError * _Nullable error) {
+        __strong __typeof__(weakSelf) strongSelf = weakSelf;
+        if (error) {
+            [strongSelf pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: @"Network error",
+                                                       @"error": error}];
+        } else {
+            [strongSelf pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: @"post",
+                                                       @"debug.eventsCount": @(events.count)}];
+        }
+        
+        // TODO: implement flush on background
+        //        [[UIApplication sharedApplication] endBackgroundTask:_backgroundTaskIdentifier];
+        //        _backgroundTaskIdentifier = UIBackgroundTaskInvalid;
+    }];
+    
+    [self.eventQueue removeAllObjects];
+    [self.timerManager cancel];
+    
+    [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription:@"flush"}];
+}
+
 - (void)sendTurnstileEvent {
     if (self.nextTurnstileSendDate && [[self.dateWrapper date] timeIntervalSinceDate:self.nextTurnstileSendDate] < 0) {
         [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: @"Turnstile event already sent; waiting until %@ to send another one"}];
@@ -178,33 +236,6 @@
 #endif
 }
 
-- (void)pauseOrResumeMetricsCollectionIfRequired {
-    // Prevent blue status bar when host app has `when in use` permission only and it is not in foreground
-    if ([self.locationManagerWrapper authorizationStatus] == kCLAuthorizationStatusAuthorizedWhenInUse &&
-        self.application.applicationState == UIApplicationStateBackground) {
-
-        // TODO: implement flush on background
-//        if (_backgroundTaskIdentifier == UIBackgroundTaskInvalid) {
-//            _backgroundTaskIdentifier = [application beginBackgroundTaskWithExpirationHandler:^{
-//                [application endBackgroundTask:_backgroundTaskIdentifier];
-//                _backgroundTaskIdentifier = UIBackgroundTaskInvalid;
-//            }];
-//            [self flush];
-//        }
-        
-        [self pauseMetricsCollection];
-        return;
-    }
-    
-    // Toggle pause based on current pause state, user opt-out state, and low-power state.
-    if (self.paused && [self isEnabled]) {
-        [self resumeMetricsCollection];
-    } else if (!self.paused && ![self isEnabled]) {
-        [self flush];
-        [self pauseMetricsCollection];
-    }
-}
-
 - (void)pauseMetricsCollection {
     [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: @"Pausing metrics collection..."}];
     if (self.isPaused) {
@@ -279,37 +310,6 @@
     [combinedAttributes setObject:self.uniqueIdentifer.rollingInstanceIdentifer forKey:@"instance"];
     MMEEvent *debugEvent = [MMEEvent debugEventWithAttributes:combinedAttributes];
     [MMEEventLogger logEvent:debugEvent];
-}
-
-- (void)flush {
-    
-    // TODO: don't flush if paused    
-    
-    if (self.apiClient.accessToken == nil) {
-        return;
-    }
-    
-    NSArray *events = [self.eventQueue copy];
-    __weak __typeof__(self) weakSelf = self;
-    [self.apiClient postEvents:events completionHandler:^(NSError * _Nullable error) {
-        __strong __typeof__(weakSelf) strongSelf = weakSelf;
-        if (error) {
-            [strongSelf pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: @"Network error",
-                                                                               @"error": error}];
-        } else {
-            [strongSelf pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: @"post",
-                                                                               @"debug.eventsCount": @(events.count)}];
-        }
-        
-        // TODO: implement flush on background
-//        [[UIApplication sharedApplication] endBackgroundTask:_backgroundTaskIdentifier];
-//        _backgroundTaskIdentifier = UIBackgroundTaskInvalid;
-    }];
-    
-    [self.eventQueue removeAllObjects];
-    [self.timerManager cancel];
-    
-    [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription:@"flush"}];
 }
 
 #pragma mark - MMELocationManagerDelegate
