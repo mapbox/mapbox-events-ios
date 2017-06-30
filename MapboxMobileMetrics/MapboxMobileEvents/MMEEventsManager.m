@@ -246,7 +246,6 @@
     self.paused = YES;
     [self.timerManager cancel];
     [self.eventQueue removeAllObjects];
-    self.commonEventData = nil;
     
     [self.locationManager stopUpdatingLocation];
     [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: @"Paused and location manager stopped"}];
@@ -260,7 +259,6 @@
     }
     
     self.paused = NO;
-    self.commonEventData = [[MMECommonEventData alloc] init];
     
     [self.locationManager startUpdatingLocation];
     [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: @"Resumed and location manager started"}];
@@ -289,6 +287,7 @@
     }
     
     if (self.paused) {
+        [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: @"Aborting pushing event because collection is paused."}];
         return;
     }
     
