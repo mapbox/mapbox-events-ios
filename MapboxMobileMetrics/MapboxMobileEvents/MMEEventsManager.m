@@ -32,11 +32,7 @@
 
 @implementation MMEEventsManager
 
-+ (nullable instancetype)sharedManager {
-//    if (NSProcessInfo.processInfo.mgl_isInterfaceBuilderDesignablesAgent) {
-//        return nil;
-//    }
-
++ (instancetype)sharedManager {
     static MMEEventsManager *_sharedManager;
     static dispatch_once_t onceToken;
 

@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, getter=isDebugLoggingEnabled) BOOL debugLoggingEnabled;
 @property (nonatomic) NSInteger accountType;
 
-+ (nullable instancetype)sharedManager;
++ (instancetype)sharedManager;
 
 - (void)initializeWithAccessToken:(NSString *)accessToken userAgentBase:(NSString *)userAgentBase hostSDKVersion:(NSString *)hostSDKVersion;
 
