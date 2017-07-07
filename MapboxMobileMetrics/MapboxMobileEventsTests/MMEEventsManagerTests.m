@@ -266,6 +266,7 @@
     MMEAPIClientFake *apiClient = [[MMEAPIClientFake alloc] init];
     apiClient.userAgentBase = @"user-agent-base";
     apiClient.accessToken = @"access-token";
+    apiClient.hostSDKVersion = @"42";
     manager.apiClient = apiClient;
     
     manager.metricsEnabledInSimulator = YES;
@@ -284,6 +285,10 @@
     XCTAssertEqualObjects(event.attributes[MMEEventKeyEnabledTelemetry], @(1));
     XCTAssertEqualObjects(event.attributes[MMEEventKeyEvent], MMEEventTypeAppUserTurnstile);
     XCTAssertNotNil(event.attributes[MMEEventKeyVendorID]);
+    XCTAssertNotNil(event.attributes[MMEEventKeyOperatingSystem]);
+    XCTAssertNotNil(event.attributes[MMEEventKeyEnabledTelemetry]);
+    XCTAssertEqualObjects(event.attributes[MMEEventSDKIdentifier], apiClient.userAgentBase);
+    XCTAssertEqualObjects(event.attributes[MMEEventSDKVersion], apiClient.hostSDKVersion);
     
     [apiClient completePostingEventsWithError:nil];
     XCTAssertNotNil(manager.nextTurnstileSendDate);

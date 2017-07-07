@@ -165,9 +165,23 @@
         return;
     }
     
+    if (!self.apiClient.userAgentBase) {
+        [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: @"No user agent base set, cannot can't send turntile event"}];
+        return;
+    }
+    
+    if (!self.apiClient.hostSDKVersion) {
+        [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: @"No host SDK version set, cannot can't send turntile event"}];
+        return;
+    }
+    
     NSDictionary *turnstileEventAttributes = @{MMEEventKeyEvent: MMEEventTypeAppUserTurnstile,
                                                MMEEventKeyCreated: [self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]],
                                                MMEEventKeyVendorID: self.commonEventData.vendorId,
+                                               MMEEventKeyModel: self.commonEventData.model,
+                                               MMEEventKeyOperatingSystem: self.commonEventData.iOSVersion,
+                                               MMEEventSDKIdentifier: self.apiClient.userAgentBase,
+                                               MMEEventSDKVersion: self.apiClient.hostSDKVersion,
                                                MMEEventKeyEnabledTelemetry: @([self isEnabled])};
     
     __weak __typeof__(self) weakSelf = self;
