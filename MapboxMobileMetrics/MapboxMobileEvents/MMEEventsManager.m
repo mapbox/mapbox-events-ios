@@ -150,18 +150,23 @@
         return;
     }
     
+    if (!self.apiClient.accessToken) {
+        [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: @"No access token sent, cannot can't send turntile event"}];
+        return;
+    }
+    
     if (!self.commonEventData.vendorId) {
         [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: @"No vendor id available, cannot can't send turntile event"}];
         return;
     }
     
-    if (!self.apiClient.userAgentBase) {
-        [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: @"No user agent base set, cannot can't send turntile event"}];
+    if (!self.commonEventData.model) {
+        [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: @"No model available, cannot can't send turntile event"}];
         return;
     }
     
-    if (!self.apiClient.accessToken) {
-        [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: @"No access token sent, cannot can't send turntile event"}];
+    if (!self.commonEventData.iOSVersion) {
+        [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: @"No iOS version available, cannot can't send turntile event"}];
         return;
     }
     
@@ -184,8 +189,11 @@
                                                MMEEventSDKVersion: self.apiClient.hostSDKVersion,
                                                MMEEventKeyEnabledTelemetry: @([self isEnabled])};
     
+    MMEEvent *turnstileEvent = [MMEEvent turnstileEventWithAttributes:turnstileEventAttributes];
+    [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Sending event event: %@", turnstileEvent]}];
+    
     __weak __typeof__(self) weakSelf = self;
-    [self.apiClient postEvent:[MMEEvent turnstileEventWithAttributes:turnstileEventAttributes] completionHandler:^(NSError * _Nullable error) {
+    [self.apiClient postEvent:turnstileEvent completionHandler:^(NSError * _Nullable error) {
         __strong __typeof__(weakSelf) strongSelf = weakSelf;
         if (error) {
             [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Could not send turnstile event: %@", error]}];
