@@ -202,7 +202,16 @@
     } else if ([name isEqualToString:MMEEventTypeMapDragEnd]) {
         event = [MMEEvent mapDragEndEventWithDateString:[self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]]
                                              attributes:attributes];
+    } else if ([name isEqualToString:MMEEventTypeNavigationArrive]) {
+        event = [MMEEvent navigationArriveEventWithAttributes:attributes];
+    } else if ([name isEqualToString:MMEEventTypeNavigationCancel]) {
+        event = [MMEEvent navigationCancelEventWithAttributes:attributes];
+    } else if ([name isEqualToString:MMEEventTypeNavigationDepart]) {
+        event = [MMEEvent navigationDepartEventWithAttributes:attributes];
+    } else if ([name isEqualToString:MMEEventTypeNavigationFeedback]) {
+        event = [MMEEvent navigationFeedbackEventWithAttributes:attributes];
     }
+    
     if (event) {
         [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Pushing event: %@", event]}];
         [self pushEvent:event];

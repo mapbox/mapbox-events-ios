@@ -73,6 +73,34 @@
     return mapTapEvent;
 }
 
++ (instancetype)navigationArriveEventWithAttributes:(NSDictionary *)attributes {
+    MMEEvent *navigationArriveEvent = [[MMEEvent alloc] init];
+    navigationArriveEvent.name = MMEEventTypeNavigationArrive;
+    navigationArriveEvent.attributes = attributes;
+    return navigationArriveEvent;
+}
+
++ (instancetype)navigationCancelEventWithAttributes:(NSDictionary *)attributes {
+    MMEEvent *navigationCancelEvent = [[MMEEvent alloc] init];
+    navigationCancelEvent.name = MMEEventTypeNavigationCancel;
+    navigationCancelEvent.attributes = attributes;
+    return navigationCancelEvent;
+}
+
++ (instancetype)navigationDepartEventWithAttributes:(NSDictionary *)attributes {
+    MMEEvent *navigationDepartEvent = [[MMEEvent alloc] init];
+    navigationDepartEvent.name = MMEEventTypeNavigationDepart;
+    navigationDepartEvent.attributes = attributes;
+    return navigationDepartEvent;
+}
+
++ (instancetype)navigationFeedbackEventWithAttributes:(NSDictionary *)attributes {
+    MMEEvent *navigationFeedbackEvent = [[MMEEvent alloc] init];
+    navigationFeedbackEvent.name = MMEEventTypeNavigationFeedback;
+    navigationFeedbackEvent.attributes = attributes;
+    return navigationFeedbackEvent;
+}
+
 + (instancetype)debugEventWithAttributes:(NSDictionary *)attributes {
     MMEEvent *debugEvent = [[MMEEvent alloc] init];
     debugEvent.name = MMEEventTypeLocalDebug;

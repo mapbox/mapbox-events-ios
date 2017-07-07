@@ -49,6 +49,10 @@ NSString * const MMEEventKeySource = @"source";
 NSString * const MMEEventKeySessionId = @"sessionId";
 NSString * const MMEEventKeyApplicationState = @"applicationState";
 NSString * const MMEEventKeyAltitude = @"altitude";
+NSString * const MMEEventTypeNavigationDepart = @"navigation.depart";
+NSString * const MMEEventTypeNavigationArrive = @"navigation.arrive";
+NSString * const MMEEventTypeNavigationCancel = @"navigation.cancel";
+NSString * const MMEEventTypeNavigationFeedback = @"navigation.feedback";
 
 NSString * const MMEEventSource = @"mapbox";
 
