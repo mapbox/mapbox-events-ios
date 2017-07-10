@@ -190,7 +190,7 @@
                                                MMEEventKeyEnabledTelemetry: @([self isEnabled])};
     
     MMEEvent *turnstileEvent = [MMEEvent turnstileEventWithAttributes:turnstileEventAttributes];
-    [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Sending event event: %@", turnstileEvent]}];
+    [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Sending turnstile event: %@", turnstileEvent]}];
     
     __weak __typeof__(self) weakSelf = self;
     [self.apiClient postEvent:turnstileEvent completionHandler:^(NSError * _Nullable error) {
