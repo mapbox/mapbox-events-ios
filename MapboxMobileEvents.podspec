@@ -26,7 +26,7 @@ Pod::Spec.new do |s|
 
   # ――― Source Location ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
-  s.source = { :git => 'https://github.com/mapbox/mapbox-telemetry-ios.git', :tag => 'v#{s.version.to_s}' }
+  s.source = { :git => 'https://github.com/mapbox/mapbox-events-ios.git', :tag => 'v#{s.version.to_s}' }
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
