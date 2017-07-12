@@ -13,6 +13,7 @@
     self = [super init];
     if (self) {
         _session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:nil];
+        [self configureCertificatePinningValidation];
     }
     return self;
 }
