@@ -15,9 +15,6 @@
 @interface MMEAPIClient (Tests)
 
 @property (nonatomic) id<MMENSURLSessionWrapper> sessionWrapper;
-@property (nonatomic, copy) NSData *digicertCert;
-@property (nonatomic, copy) NSData *geoTrustCert;
-@property (nonatomic, copy) NSData *testServerCert;
 @property (nonatomic, copy) NSURL *baseURL;
 @property (nonatomic) BOOL usesTestServer;
 @property (nonatomic) NSBundle *applicationBundle;
@@ -38,12 +35,6 @@
 
 - (void)testInitialization {
     XCTAssertNotNil(self.apiClient.sessionWrapper);
-
-    [self loadAndCheckCertificateWithName:@"api_mapbox_com-digicert_2016" comparedToAPIClientCertificate:self.apiClient.sessionWrapper.digicertCert_2016];
-    [self loadAndCheckCertificateWithName:@"api_mapbox_com-digicert_2017" comparedToAPIClientCertificate:self.apiClient.sessionWrapper.digicertCert_2017];
-    [self loadAndCheckCertificateWithName:@"api_mapbox_com-geotrust_2016" comparedToAPIClientCertificate:self.apiClient.sessionWrapper.geoTrustCert_2016];
-    [self loadAndCheckCertificateWithName:@"api_mapbox_com-geotrust_2017" comparedToAPIClientCertificate:self.apiClient.sessionWrapper.geoTrustCert_2017];
-    [self loadAndCheckCertificateWithName:@"api_mapbox_staging" comparedToAPIClientCertificate:self.apiClient.sessionWrapper.testServerCert];
 }
 
 - (void)testSettingUpBaseURL {
@@ -51,7 +42,6 @@
     self.apiClient = [[MMEAPIClient alloc] initWithAccessToken:@"access-token"
                                                  userAgentBase:@"user-agent-base"
                                                 hostSDKVersion:@"host-sdk-1"];
-
     XCTAssertEqualObjects([NSURL URLWithString:MMEAPIClientBaseURL], self.apiClient.baseURL);
 }
 
@@ -179,13 +169,6 @@
         }
     }];
     return [NSJSONSerialization dataWithJSONObject:eventAttributes options:0 error:nil];
-}
-
-- (void)loadAndCheckCertificateWithName:(NSString *)name comparedToAPIClientCertificate:(NSData *)APIClientCertificate {
-    NSBundle *bundle = [NSBundle bundleForClass:[MMEAPIClient class]];
-    NSString *certPath = [bundle pathForResource:name ofType:@"der" inDirectory:nil];
-    NSData *certificateData = [NSData dataWithContentsOfFile:certPath];
-    XCTAssertEqualObjects(certificateData, APIClientCertificate);
 }
 
 - (MMEEvent *)locationEvent {

@@ -5,10 +5,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface MMENSURLSessionWrapperFake : MMETestStub <MMENSURLSessionWrapper>
 
-@property (nonatomic, copy) NSData *digicertCert_2016;
-@property (nonatomic, copy) NSData *geoTrustCert_2016;
-@property (nonatomic, copy) NSData *digicertCert_2017;
-@property (nonatomic, copy) NSData *geoTrustCert_2017;
 @property (nonatomic, copy) NSData *testServerCert;
 @property (nonatomic) BOOL usesTestServer;
 
