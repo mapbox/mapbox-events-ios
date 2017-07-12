@@ -1,0 +1,632 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		053A9710138A7D7635139169FA9DD653 /* TrustKit-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 40DD68852D13EA5A69581E27AF20D599 /* TrustKit-dummy.m */; };
+		063511796EC649747DE8F4868076FEA5 /* TSKPinningValidator.h in Headers */ = {isa = PBXBuildFile; fileRef = BF7059137502E5E40C793A0CABA42740 /* TSKPinningValidator.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		06B6FCBA3B17D0EDA860B11AF46D85D5 /* TSKBackgroundReporter.h in Headers */ = {isa = PBXBuildFile; fileRef = 08B8AF760B505692FA7DCFA73710E5DE /* TSKBackgroundReporter.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		143605F02AC23FB7B9825207573CC137 /* TSKNSURLConnectionDelegateProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = 8F13C455F5F00D155696954C834CBDE3 /* TSKNSURLConnectionDelegateProxy.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		1A7380CEB5D7A1E3D4CDB55019E57187 /* Pods-MapboxMobileEvents-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = E1933795BA309760FA529E12F4DA279E /* Pods-MapboxMobileEvents-dummy.m */; };
+		281E7846E976D0EEEE2F682CDCBA8558 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 11C10A31CD5CFA3EFE266394471B152E /* Foundation.framework */; };
+		32632E1B022F7FAEE30E52636054C617 /* TSKPinFailureReport.h in Headers */ = {isa = PBXBuildFile; fileRef = 8017D709F15614AF39948EF73652ECAE /* TSKPinFailureReport.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		3734DFC7F13C0FB58A0F5DA30729B91C /* TSKPinningValidator.m in Sources */ = {isa = PBXBuildFile; fileRef = CF1F7EB991ECA173181DACDD6555213C /* TSKPinningValidator.m */; };
+		37C98281CC28F1AA0394788196D34FB0 /* TSKBackgroundReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BE6551FB385598EB2786F0C5C35F4CB /* TSKBackgroundReporter.m */; };
+		3C51BF80AF25468CAA0C77155145C575 /* public_key_utils.h in Headers */ = {isa = PBXBuildFile; fileRef = CB872F348B3816E56FF648A2F3E69D4A /* public_key_utils.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		3CD8A2A250ED28A2B8734A734D2A4DE2 /* registry_types.h in Headers */ = {isa = PBXBuildFile; fileRef = B7501A569B8FF10C6F414C7A022ED91C /* registry_types.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		48959D2609B126E15E0582C2B65229EB /* TrustKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DA1CFCEE60DEC442B57896FDAA48ED8 /* TrustKit.m */; };
+		536D879049CCD872F648CBE7B3525D55 /* trie_node.h in Headers */ = {isa = PBXBuildFile; fileRef = 42682FB27EEB67D64C832227247219E1 /* trie_node.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		59F83974ED69E336FCF2C722A96F9508 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C085E02FF89804F50ADDA04F5A586E94 /* Security.framework */; };
+		5BBEB8A1C5F690DB6F4A66F8CD5450AA /* TrustKit+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = C06E954B6F581E721E92A30F42071290 /* TrustKit+Private.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		68970CA9B0525FF0E3973DFA37613BCE /* domain_registry.h in Headers */ = {isa = PBXBuildFile; fileRef = 8F7E1AC1E6658A384D67E39F075AE797 /* domain_registry.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		78F6785101D057BE1B0D9C0A64088D0F /* reporting_utils.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B390546ECA7EE98562AF503B4179639 /* reporting_utils.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		835B8FFD4378BA7E5A24696B153E2DEE /* assert.c in Sources */ = {isa = PBXBuildFile; fileRef = C8C34E015A79D85349BEE20CA2A0C36C /* assert.c */; };
+		84C7C374B24531CFDFC98BFF18AD99E3 /* assert.h in Headers */ = {isa = PBXBuildFile; fileRef = 98213886646CDD6185D625F312FD7E6E /* assert.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		8D1A376B74A3E0435A92B6C8B14D667D /* string_util.h in Headers */ = {isa = PBXBuildFile; fileRef = 27348369FD9A35C30EDD56ACDBCAF354 /* string_util.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		8D703E14AC8513D9065BEF497767E314 /* RSSwizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = 69F0FFA9B5C86ADC08808A7F68EE588C /* RSSwizzle.m */; };
+		8FC7DF63BAB33B0A190582C536FF6B52 /* configuration_utils.h in Headers */ = {isa = PBXBuildFile; fileRef = 50249B727890E2011038FA032E66D656 /* configuration_utils.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		9644CBA5EDF098649B007DE2F36F74EF /* TSKReportsRateLimiter.h in Headers */ = {isa = PBXBuildFile; fileRef = A30D9CD38932BAA6B7287277A6273F79 /* TSKReportsRateLimiter.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		98A2E7E1C4F4E99AFB487BBEFF453EA9 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 11C10A31CD5CFA3EFE266394471B152E /* Foundation.framework */; };
+		9AE43FA1C9C2871C7C40588FF30A756D /* TSKPinFailureReport.m in Sources */ = {isa = PBXBuildFile; fileRef = 451ED2AF08CFF4EFB8B2E55D334DB93D /* TSKPinFailureReport.m */; };
+		A49A6EDA7F4116187C480A5CA04560EF /* reporting_utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ACC438E0E338FCE030F848A20FF590A /* reporting_utils.m */; };
+		AD0EA0B799B2F7A561FDA4DE0FB455A4 /* public_key_utils.m in Sources */ = {isa = PBXBuildFile; fileRef = D04D3E62BAF0EEB0AD734CFE7870FA1B /* public_key_utils.m */; };
+		BA4098685D5F46B5448301948F0A9165 /* vendor_identifier.h in Headers */ = {isa = PBXBuildFile; fileRef = 24E1CE34E0C85CA44011624EBA47B536 /* vendor_identifier.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		BBA35B41CF8667BE14D7B3B978DE9333 /* TSKNSURLSessionDelegateProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = 2358CAA26C2E62A3460F0194DDF34538 /* TSKNSURLSessionDelegateProxy.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		BFEB454A8895AB910CFCD9E6086D0B4B /* TrustKit.h in Headers */ = {isa = PBXBuildFile; fileRef = D21DA7CDD0FCC3C265CB90F2529E4675 /* TrustKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C83E1185B50A5CA15FD36CE05AFB0C7C /* RSSwizzle.h in Headers */ = {isa = PBXBuildFile; fileRef = 88C8D1BF1692FED4B7000E62FD1B7673 /* RSSwizzle.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		CA3E6A4BF6FB6000545CD8D065A0F746 /* vendor_identifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 3EB113278CE8B2978595E0E136E39876 /* vendor_identifier.m */; };
+		D011DFE482BC0FD54D2825C39BDDAFEF /* TSKReportsRateLimiter.m in Sources */ = {isa = PBXBuildFile; fileRef = 80B0522E84A8C8AB89572769D8549D9D /* TSKReportsRateLimiter.m */; };
+		D04C37C74CC4158D89D6CB79CDB121FA /* ssl_pin_verifier.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BAE7CDB31D4C68358005B97628E9514 /* ssl_pin_verifier.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		D8AB4B07CE65ACE730B1373D3407FDE3 /* registry_search.c in Sources */ = {isa = PBXBuildFile; fileRef = 0A8FB9393446C256BB73C615B9FDEAD4 /* registry_search.c */; };
+		DBEE03814683037BA655EF5DF65B5BA7 /* init_registry_tables.c in Sources */ = {isa = PBXBuildFile; fileRef = 4DCCDF72D512E20663003A3A3633F8A0 /* init_registry_tables.c */; };
+		DD9336B694F36EF1EF07DC9A8615D99A /* TSKNSURLConnectionDelegateProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 061827102896C66C70AD72E1C5981567 /* TSKNSURLConnectionDelegateProxy.m */; };
+		DF5650D1CCB524C6350A3F7BBFEC784B /* trie_search.c in Sources */ = {isa = PBXBuildFile; fileRef = D623100DF2D6B2B31C258F160BADF02F /* trie_search.c */; };
+		E81A1713095BA60329F4A35DE9F24CF8 /* TSKNSURLSessionDelegateProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C7E1B80FA126D422D1C9ECCDE782D8A /* TSKNSURLSessionDelegateProxy.m */; };
+		EB25211C5297498FAA1613A858F6C6EC /* parse_configuration.h in Headers */ = {isa = PBXBuildFile; fileRef = 2BD2416373BDBB707785F2EF51AA473C /* parse_configuration.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		EEB42C9AEF0515A040F6BACFF491531A /* registry_tables.h in Headers */ = {isa = PBXBuildFile; fileRef = CE68E6D2B705424B43AB7A1BF11A2C79 /* registry_tables.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		F29D06E285D7FE2D385FEC8D5F2170B7 /* configuration_utils.m in Sources */ = {isa = PBXBuildFile; fileRef = B045CCF448346CF4056590D802911034 /* configuration_utils.m */; };
+		F8B9C023780250387980C97A8B476AEE /* ssl_pin_verifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A644B8945FDA0FC77304885DA024900 /* ssl_pin_verifier.m */; };
+		FAF3341C122EB20C8DFEFD595BD576CE /* parse_configuration.m in Sources */ = {isa = PBXBuildFile; fileRef = 738324480E09713CDA4B372EDF6631D7 /* parse_configuration.m */; };
+		FD40DD251410378F27B1F335A1540DF7 /* trie_search.h in Headers */ = {isa = PBXBuildFile; fileRef = 69C35E58E88C134E8C7AD0C69D1083BD /* trie_search.h */; settings = {ATTRIBUTES = (Project, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		C1D3BD87B926CAA3C56D48AB0B8E162C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 33DD32B70B16AFF3FF1546713A353BBC;
+			remoteInfo = TrustKit;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		061827102896C66C70AD72E1C5981567 /* TSKNSURLConnectionDelegateProxy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = TSKNSURLConnectionDelegateProxy.m; path = TrustKit/Swizzling/TSKNSURLConnectionDelegateProxy.m; sourceTree = "<group>"; };
+		08B8AF760B505692FA7DCFA73710E5DE /* TSKBackgroundReporter.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = TSKBackgroundReporter.h; path = TrustKit/Reporting/TSKBackgroundReporter.h; sourceTree = "<group>"; };
+		0A8FB9393446C256BB73C615B9FDEAD4 /* registry_search.c */ = {isa = PBXFileReference; includeInIndex = 1; name = registry_search.c; path = TrustKit/Dependencies/domain_registry/private/registry_search.c; sourceTree = "<group>"; };
+		11C10A31CD5CFA3EFE266394471B152E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.3.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		1B1A794954C91394487E010A94106357 /* TrustKit.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = TrustKit.xcconfig; sourceTree = "<group>"; };
+		1C7E1B80FA126D422D1C9ECCDE782D8A /* TSKNSURLSessionDelegateProxy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = TSKNSURLSessionDelegateProxy.m; path = TrustKit/Swizzling/TSKNSURLSessionDelegateProxy.m; sourceTree = "<group>"; };
+		2358CAA26C2E62A3460F0194DDF34538 /* TSKNSURLSessionDelegateProxy.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = TSKNSURLSessionDelegateProxy.h; path = TrustKit/Swizzling/TSKNSURLSessionDelegateProxy.h; sourceTree = "<group>"; };
+		24E1CE34E0C85CA44011624EBA47B536 /* vendor_identifier.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = vendor_identifier.h; path = TrustKit/Reporting/vendor_identifier.h; sourceTree = "<group>"; };
+		27348369FD9A35C30EDD56ACDBCAF354 /* string_util.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = string_util.h; path = TrustKit/Dependencies/domain_registry/private/string_util.h; sourceTree = "<group>"; };
+		2ACC438E0E338FCE030F848A20FF590A /* reporting_utils.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = reporting_utils.m; path = TrustKit/Reporting/reporting_utils.m; sourceTree = "<group>"; };
+		2BD2416373BDBB707785F2EF51AA473C /* parse_configuration.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = parse_configuration.h; path = TrustKit/parse_configuration.h; sourceTree = "<group>"; };
+		36D17A043668CF759C8EA1AC69E02BDD /* libTrustKit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libTrustKit.a; path = libTrustKit.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		3BE6551FB385598EB2786F0C5C35F4CB /* TSKBackgroundReporter.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = TSKBackgroundReporter.m; path = TrustKit/Reporting/TSKBackgroundReporter.m; sourceTree = "<group>"; };
+		3EB113278CE8B2978595E0E136E39876 /* vendor_identifier.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = vendor_identifier.m; path = TrustKit/Reporting/vendor_identifier.m; sourceTree = "<group>"; };
+		40DD68852D13EA5A69581E27AF20D599 /* TrustKit-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "TrustKit-dummy.m"; sourceTree = "<group>"; };
+		42682FB27EEB67D64C832227247219E1 /* trie_node.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = trie_node.h; path = TrustKit/Dependencies/domain_registry/private/trie_node.h; sourceTree = "<group>"; };
+		451ED2AF08CFF4EFB8B2E55D334DB93D /* TSKPinFailureReport.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = TSKPinFailureReport.m; path = TrustKit/Reporting/TSKPinFailureReport.m; sourceTree = "<group>"; };
+		4DCCDF72D512E20663003A3A3633F8A0 /* init_registry_tables.c */ = {isa = PBXFileReference; includeInIndex = 1; name = init_registry_tables.c; path = TrustKit/Dependencies/domain_registry/private/init_registry_tables.c; sourceTree = "<group>"; };
+		50249B727890E2011038FA032E66D656 /* configuration_utils.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = configuration_utils.h; path = TrustKit/configuration_utils.h; sourceTree = "<group>"; };
+		5940235D2DDFCE149D05B9B68F1C15B8 /* Pods-MapboxMobileEvents-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-MapboxMobileEvents-acknowledgements.markdown"; sourceTree = "<group>"; };
+		5DA1CFCEE60DEC442B57896FDAA48ED8 /* TrustKit.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = TrustKit.m; path = TrustKit/TrustKit.m; sourceTree = "<group>"; };
+		69C35E58E88C134E8C7AD0C69D1083BD /* trie_search.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = trie_search.h; path = TrustKit/Dependencies/domain_registry/private/trie_search.h; sourceTree = "<group>"; };
+		69F0FFA9B5C86ADC08808A7F68EE588C /* RSSwizzle.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RSSwizzle.m; path = TrustKit/Dependencies/RSSwizzle/RSSwizzle.m; sourceTree = "<group>"; };
+		6B390546ECA7EE98562AF503B4179639 /* reporting_utils.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = reporting_utils.h; path = TrustKit/Reporting/reporting_utils.h; sourceTree = "<group>"; };
+		6C8B8EDEE0EE36B3883BE477F86B0D51 /* libPods-MapboxMobileEvents.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libPods-MapboxMobileEvents.a"; path = "libPods-MapboxMobileEvents.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7254CEF9DB20F5A9286FDAC66BB64379 /* TrustKit-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "TrustKit-prefix.pch"; sourceTree = "<group>"; };
+		738324480E09713CDA4B372EDF6631D7 /* parse_configuration.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = parse_configuration.m; path = TrustKit/parse_configuration.m; sourceTree = "<group>"; };
+		7A644B8945FDA0FC77304885DA024900 /* ssl_pin_verifier.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = ssl_pin_verifier.m; path = TrustKit/Pinning/ssl_pin_verifier.m; sourceTree = "<group>"; };
+		7BAE7CDB31D4C68358005B97628E9514 /* ssl_pin_verifier.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ssl_pin_verifier.h; path = TrustKit/Pinning/ssl_pin_verifier.h; sourceTree = "<group>"; };
+		8017D709F15614AF39948EF73652ECAE /* TSKPinFailureReport.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = TSKPinFailureReport.h; path = TrustKit/Reporting/TSKPinFailureReport.h; sourceTree = "<group>"; };
+		80B0522E84A8C8AB89572769D8549D9D /* TSKReportsRateLimiter.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = TSKReportsRateLimiter.m; path = TrustKit/Reporting/TSKReportsRateLimiter.m; sourceTree = "<group>"; };
+		88C8D1BF1692FED4B7000E62FD1B7673 /* RSSwizzle.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RSSwizzle.h; path = TrustKit/Dependencies/RSSwizzle/RSSwizzle.h; sourceTree = "<group>"; };
+		8F13C455F5F00D155696954C834CBDE3 /* TSKNSURLConnectionDelegateProxy.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = TSKNSURLConnectionDelegateProxy.h; path = TrustKit/Swizzling/TSKNSURLConnectionDelegateProxy.h; sourceTree = "<group>"; };
+		8F7E1AC1E6658A384D67E39F075AE797 /* domain_registry.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = domain_registry.h; path = TrustKit/Dependencies/domain_registry/domain_registry.h; sourceTree = "<group>"; };
+		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		98213886646CDD6185D625F312FD7E6E /* assert.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = assert.h; path = TrustKit/Dependencies/domain_registry/private/assert.h; sourceTree = "<group>"; };
+		A1A775E1DFFD311AE177A1E4FAD0F5A7 /* Pods-MapboxMobileEvents.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-MapboxMobileEvents.debug.xcconfig"; sourceTree = "<group>"; };
+		A30D9CD38932BAA6B7287277A6273F79 /* TSKReportsRateLimiter.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = TSKReportsRateLimiter.h; path = TrustKit/Reporting/TSKReportsRateLimiter.h; sourceTree = "<group>"; };
+		B045CCF448346CF4056590D802911034 /* configuration_utils.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = configuration_utils.m; path = TrustKit/configuration_utils.m; sourceTree = "<group>"; };
+		B7501A569B8FF10C6F414C7A022ED91C /* registry_types.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = registry_types.h; path = TrustKit/Dependencies/domain_registry/private/registry_types.h; sourceTree = "<group>"; };
+		BBE80C42F36DE2BC009815AB66146AE9 /* Pods-MapboxMobileEvents-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-MapboxMobileEvents-acknowledgements.plist"; sourceTree = "<group>"; };
+		BF7059137502E5E40C793A0CABA42740 /* TSKPinningValidator.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = TSKPinningValidator.h; path = TrustKit/TSKPinningValidator.h; sourceTree = "<group>"; };
+		C06E954B6F581E721E92A30F42071290 /* TrustKit+Private.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "TrustKit+Private.h"; path = "TrustKit/TrustKit+Private.h"; sourceTree = "<group>"; };
+		C085E02FF89804F50ADDA04F5A586E94 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.3.sdk/System/Library/Frameworks/Security.framework; sourceTree = DEVELOPER_DIR; };
+		C8C34E015A79D85349BEE20CA2A0C36C /* assert.c */ = {isa = PBXFileReference; includeInIndex = 1; name = assert.c; path = TrustKit/Dependencies/domain_registry/private/assert.c; sourceTree = "<group>"; };
+		CB872F348B3816E56FF648A2F3E69D4A /* public_key_utils.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = public_key_utils.h; path = TrustKit/Pinning/public_key_utils.h; sourceTree = "<group>"; };
+		CE68E6D2B705424B43AB7A1BF11A2C79 /* registry_tables.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = registry_tables.h; path = TrustKit/Dependencies/domain_registry/registry_tables_genfiles/registry_tables.h; sourceTree = "<group>"; };
+		CF1F7EB991ECA173181DACDD6555213C /* TSKPinningValidator.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = TSKPinningValidator.m; path = TrustKit/TSKPinningValidator.m; sourceTree = "<group>"; };
+		D04D3E62BAF0EEB0AD734CFE7870FA1B /* public_key_utils.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = public_key_utils.m; path = TrustKit/Pinning/public_key_utils.m; sourceTree = "<group>"; };
+		D21DA7CDD0FCC3C265CB90F2529E4675 /* TrustKit.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = TrustKit.h; path = TrustKit/TrustKit.h; sourceTree = "<group>"; };
+		D623100DF2D6B2B31C258F160BADF02F /* trie_search.c */ = {isa = PBXFileReference; includeInIndex = 1; name = trie_search.c; path = TrustKit/Dependencies/domain_registry/private/trie_search.c; sourceTree = "<group>"; };
+		E16D3B90DD895E224FBF0F2B805451DB /* Pods-MapboxMobileEvents-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-MapboxMobileEvents-resources.sh"; sourceTree = "<group>"; };
+		E1933795BA309760FA529E12F4DA279E /* Pods-MapboxMobileEvents-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-MapboxMobileEvents-dummy.m"; sourceTree = "<group>"; };
+		EAEC82F2F4165A3F771D5AF2CA265ACC /* Pods-MapboxMobileEvents.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-MapboxMobileEvents.release.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		CCD973E602D18612BB0FB70FECE75EAB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				281E7846E976D0EEEE2F682CDCBA8558 /* Foundation.framework in Frameworks */,
+				59F83974ED69E336FCF2C722A96F9508 /* Security.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DE3AB6AB9C6F75E0F33155F75DFDD5C5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				98A2E7E1C4F4E99AFB487BBEFF453EA9 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		10BC2389D8BA05513B3610750B3CB71D /* TrustKit */ = {
+			isa = PBXGroup;
+			children = (
+				C8C34E015A79D85349BEE20CA2A0C36C /* assert.c */,
+				98213886646CDD6185D625F312FD7E6E /* assert.h */,
+				50249B727890E2011038FA032E66D656 /* configuration_utils.h */,
+				B045CCF448346CF4056590D802911034 /* configuration_utils.m */,
+				8F7E1AC1E6658A384D67E39F075AE797 /* domain_registry.h */,
+				4DCCDF72D512E20663003A3A3633F8A0 /* init_registry_tables.c */,
+				2BD2416373BDBB707785F2EF51AA473C /* parse_configuration.h */,
+				738324480E09713CDA4B372EDF6631D7 /* parse_configuration.m */,
+				CB872F348B3816E56FF648A2F3E69D4A /* public_key_utils.h */,
+				D04D3E62BAF0EEB0AD734CFE7870FA1B /* public_key_utils.m */,
+				0A8FB9393446C256BB73C615B9FDEAD4 /* registry_search.c */,
+				CE68E6D2B705424B43AB7A1BF11A2C79 /* registry_tables.h */,
+				B7501A569B8FF10C6F414C7A022ED91C /* registry_types.h */,
+				6B390546ECA7EE98562AF503B4179639 /* reporting_utils.h */,
+				2ACC438E0E338FCE030F848A20FF590A /* reporting_utils.m */,
+				88C8D1BF1692FED4B7000E62FD1B7673 /* RSSwizzle.h */,
+				69F0FFA9B5C86ADC08808A7F68EE588C /* RSSwizzle.m */,
+				7BAE7CDB31D4C68358005B97628E9514 /* ssl_pin_verifier.h */,
+				7A644B8945FDA0FC77304885DA024900 /* ssl_pin_verifier.m */,
+				27348369FD9A35C30EDD56ACDBCAF354 /* string_util.h */,
+				42682FB27EEB67D64C832227247219E1 /* trie_node.h */,
+				D623100DF2D6B2B31C258F160BADF02F /* trie_search.c */,
+				69C35E58E88C134E8C7AD0C69D1083BD /* trie_search.h */,
+				D21DA7CDD0FCC3C265CB90F2529E4675 /* TrustKit.h */,
+				5DA1CFCEE60DEC442B57896FDAA48ED8 /* TrustKit.m */,
+				C06E954B6F581E721E92A30F42071290 /* TrustKit+Private.h */,
+				08B8AF760B505692FA7DCFA73710E5DE /* TSKBackgroundReporter.h */,
+				3BE6551FB385598EB2786F0C5C35F4CB /* TSKBackgroundReporter.m */,
+				8F13C455F5F00D155696954C834CBDE3 /* TSKNSURLConnectionDelegateProxy.h */,
+				061827102896C66C70AD72E1C5981567 /* TSKNSURLConnectionDelegateProxy.m */,
+				2358CAA26C2E62A3460F0194DDF34538 /* TSKNSURLSessionDelegateProxy.h */,
+				1C7E1B80FA126D422D1C9ECCDE782D8A /* TSKNSURLSessionDelegateProxy.m */,
+				8017D709F15614AF39948EF73652ECAE /* TSKPinFailureReport.h */,
+				451ED2AF08CFF4EFB8B2E55D334DB93D /* TSKPinFailureReport.m */,
+				BF7059137502E5E40C793A0CABA42740 /* TSKPinningValidator.h */,
+				CF1F7EB991ECA173181DACDD6555213C /* TSKPinningValidator.m */,
+				A30D9CD38932BAA6B7287277A6273F79 /* TSKReportsRateLimiter.h */,
+				80B0522E84A8C8AB89572769D8549D9D /* TSKReportsRateLimiter.m */,
+				24E1CE34E0C85CA44011624EBA47B536 /* vendor_identifier.h */,
+				3EB113278CE8B2978595E0E136E39876 /* vendor_identifier.m */,
+				864FD856837A6A6815E32AE86D4F1A81 /* Support Files */,
+			);
+			name = TrustKit;
+			path = TrustKit;
+			sourceTree = "<group>";
+		};
+		145A9C4E2D51397D088ABB84F5540617 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6C8B8EDEE0EE36B3883BE477F86B0D51 /* libPods-MapboxMobileEvents.a */,
+				36D17A043668CF759C8EA1AC69E02BDD /* libTrustKit.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		20A5D768A45404E40CE593EFFB04FA51 /* Pods-MapboxMobileEvents */ = {
+			isa = PBXGroup;
+			children = (
+				5940235D2DDFCE149D05B9B68F1C15B8 /* Pods-MapboxMobileEvents-acknowledgements.markdown */,
+				BBE80C42F36DE2BC009815AB66146AE9 /* Pods-MapboxMobileEvents-acknowledgements.plist */,
+				E1933795BA309760FA529E12F4DA279E /* Pods-MapboxMobileEvents-dummy.m */,
+				E16D3B90DD895E224FBF0F2B805451DB /* Pods-MapboxMobileEvents-resources.sh */,
+				A1A775E1DFFD311AE177A1E4FAD0F5A7 /* Pods-MapboxMobileEvents.debug.xcconfig */,
+				EAEC82F2F4165A3F771D5AF2CA265ACC /* Pods-MapboxMobileEvents.release.xcconfig */,
+			);
+			name = "Pods-MapboxMobileEvents";
+			path = "Target Support Files/Pods-MapboxMobileEvents";
+			sourceTree = "<group>";
+		};
+		3580EF94C7BCE841981EB7E4752C26DF /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				10BC2389D8BA05513B3610750B3CB71D /* TrustKit */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		433CD3331B6C3787F473C941B61FC68F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4F990579C2E52276FD3C28227B49D60B /* iOS */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		4F990579C2E52276FD3C28227B49D60B /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				11C10A31CD5CFA3EFE266394471B152E /* Foundation.framework */,
+				C085E02FF89804F50ADDA04F5A586E94 /* Security.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+		7DB346D0F39D3F0E887471402A8071AB = {
+			isa = PBXGroup;
+			children = (
+				93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */,
+				433CD3331B6C3787F473C941B61FC68F /* Frameworks */,
+				3580EF94C7BCE841981EB7E4752C26DF /* Pods */,
+				145A9C4E2D51397D088ABB84F5540617 /* Products */,
+				86C7980F13F8DDCC1273931BD1F9F2BE /* Targets Support Files */,
+			);
+			sourceTree = "<group>";
+		};
+		864FD856837A6A6815E32AE86D4F1A81 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				1B1A794954C91394487E010A94106357 /* TrustKit.xcconfig */,
+				40DD68852D13EA5A69581E27AF20D599 /* TrustKit-dummy.m */,
+				7254CEF9DB20F5A9286FDAC66BB64379 /* TrustKit-prefix.pch */,
+			);
+			name = "Support Files";
+			path = "../Target Support Files/TrustKit";
+			sourceTree = "<group>";
+		};
+		86C7980F13F8DDCC1273931BD1F9F2BE /* Targets Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				20A5D768A45404E40CE593EFFB04FA51 /* Pods-MapboxMobileEvents */,
+			);
+			name = "Targets Support Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		A1360E768713F86AD212EC8E806EF1FF /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				84C7C374B24531CFDFC98BFF18AD99E3 /* assert.h in Headers */,
+				8FC7DF63BAB33B0A190582C536FF6B52 /* configuration_utils.h in Headers */,
+				68970CA9B0525FF0E3973DFA37613BCE /* domain_registry.h in Headers */,
+				EB25211C5297498FAA1613A858F6C6EC /* parse_configuration.h in Headers */,
+				3C51BF80AF25468CAA0C77155145C575 /* public_key_utils.h in Headers */,
+				EEB42C9AEF0515A040F6BACFF491531A /* registry_tables.h in Headers */,
+				3CD8A2A250ED28A2B8734A734D2A4DE2 /* registry_types.h in Headers */,
+				78F6785101D057BE1B0D9C0A64088D0F /* reporting_utils.h in Headers */,
+				C83E1185B50A5CA15FD36CE05AFB0C7C /* RSSwizzle.h in Headers */,
+				D04C37C74CC4158D89D6CB79CDB121FA /* ssl_pin_verifier.h in Headers */,
+				8D1A376B74A3E0435A92B6C8B14D667D /* string_util.h in Headers */,
+				536D879049CCD872F648CBE7B3525D55 /* trie_node.h in Headers */,
+				FD40DD251410378F27B1F335A1540DF7 /* trie_search.h in Headers */,
+				5BBEB8A1C5F690DB6F4A66F8CD5450AA /* TrustKit+Private.h in Headers */,
+				BFEB454A8895AB910CFCD9E6086D0B4B /* TrustKit.h in Headers */,
+				06B6FCBA3B17D0EDA860B11AF46D85D5 /* TSKBackgroundReporter.h in Headers */,
+				143605F02AC23FB7B9825207573CC137 /* TSKNSURLConnectionDelegateProxy.h in Headers */,
+				BBA35B41CF8667BE14D7B3B978DE9333 /* TSKNSURLSessionDelegateProxy.h in Headers */,
+				32632E1B022F7FAEE30E52636054C617 /* TSKPinFailureReport.h in Headers */,
+				063511796EC649747DE8F4868076FEA5 /* TSKPinningValidator.h in Headers */,
+				9644CBA5EDF098649B007DE2F36F74EF /* TSKReportsRateLimiter.h in Headers */,
+				BA4098685D5F46B5448301948F0A9165 /* vendor_identifier.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		33DD32B70B16AFF3FF1546713A353BBC /* TrustKit */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C7681C745ED4322C6FC0EE6DE54E7624 /* Build configuration list for PBXNativeTarget "TrustKit" */;
+			buildPhases = (
+				590F829F49A0449CBFD08DDCC426336B /* Sources */,
+				CCD973E602D18612BB0FB70FECE75EAB /* Frameworks */,
+				A1360E768713F86AD212EC8E806EF1FF /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TrustKit;
+			productName = TrustKit;
+			productReference = 36D17A043668CF759C8EA1AC69E02BDD /* libTrustKit.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		D4E3982D90FFDB2EB19B348D2AB9F240 /* Pods-MapboxMobileEvents */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5E5FBB213861D82DD4E030397A9E0010 /* Build configuration list for PBXNativeTarget "Pods-MapboxMobileEvents" */;
+			buildPhases = (
+				6B401F802B50F484811EA9B1B68AFCDD /* Sources */,
+				DE3AB6AB9C6F75E0F33155F75DFDD5C5 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				48B12C03B57DB2859A1C3E9F912B8C58 /* PBXTargetDependency */,
+			);
+			name = "Pods-MapboxMobileEvents";
+			productName = "Pods-MapboxMobileEvents";
+			productReference = 6C8B8EDEE0EE36B3883BE477F86B0D51 /* libPods-MapboxMobileEvents.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D41D8CD98F00B204E9800998ECF8427E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0830;
+				LastUpgradeCheck = 0700;
+			};
+			buildConfigurationList = 2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "Pods" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 7DB346D0F39D3F0E887471402A8071AB;
+			productRefGroup = 145A9C4E2D51397D088ABB84F5540617 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D4E3982D90FFDB2EB19B348D2AB9F240 /* Pods-MapboxMobileEvents */,
+				33DD32B70B16AFF3FF1546713A353BBC /* TrustKit */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		590F829F49A0449CBFD08DDCC426336B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				835B8FFD4378BA7E5A24696B153E2DEE /* assert.c in Sources */,
+				F29D06E285D7FE2D385FEC8D5F2170B7 /* configuration_utils.m in Sources */,
+				DBEE03814683037BA655EF5DF65B5BA7 /* init_registry_tables.c in Sources */,
+				FAF3341C122EB20C8DFEFD595BD576CE /* parse_configuration.m in Sources */,
+				AD0EA0B799B2F7A561FDA4DE0FB455A4 /* public_key_utils.m in Sources */,
+				D8AB4B07CE65ACE730B1373D3407FDE3 /* registry_search.c in Sources */,
+				A49A6EDA7F4116187C480A5CA04560EF /* reporting_utils.m in Sources */,
+				8D703E14AC8513D9065BEF497767E314 /* RSSwizzle.m in Sources */,
+				F8B9C023780250387980C97A8B476AEE /* ssl_pin_verifier.m in Sources */,
+				DF5650D1CCB524C6350A3F7BBFEC784B /* trie_search.c in Sources */,
+				053A9710138A7D7635139169FA9DD653 /* TrustKit-dummy.m in Sources */,
+				48959D2609B126E15E0582C2B65229EB /* TrustKit.m in Sources */,
+				37C98281CC28F1AA0394788196D34FB0 /* TSKBackgroundReporter.m in Sources */,
+				DD9336B694F36EF1EF07DC9A8615D99A /* TSKNSURLConnectionDelegateProxy.m in Sources */,
+				E81A1713095BA60329F4A35DE9F24CF8 /* TSKNSURLSessionDelegateProxy.m in Sources */,
+				9AE43FA1C9C2871C7C40588FF30A756D /* TSKPinFailureReport.m in Sources */,
+				3734DFC7F13C0FB58A0F5DA30729B91C /* TSKPinningValidator.m in Sources */,
+				D011DFE482BC0FD54D2825C39BDDAFEF /* TSKReportsRateLimiter.m in Sources */,
+				CA3E6A4BF6FB6000545CD8D065A0F746 /* vendor_identifier.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6B401F802B50F484811EA9B1B68AFCDD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1A7380CEB5D7A1E3D4CDB55019E57187 /* Pods-MapboxMobileEvents-dummy.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		48B12C03B57DB2859A1C3E9F912B8C58 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = TrustKit;
+			target = 33DD32B70B16AFF3FF1546713A353BBC /* TrustKit */;
+			targetProxy = C1D3BD87B926CAA3C56D48AB0B8E162C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		34FE9531DA9AF2820790339988D5FF41 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGNING_REQUIRED = NO;
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_RELEASE=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				PROVISIONING_PROFILE_SPECIFIER = NO_SIGNING/;
+				STRIP_INSTALLED_PRODUCT = NO;
+				SYMROOT = "${SRCROOT}/../build";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		442ABBD25736611960B08DCA2C5BADE3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A1A775E1DFFD311AE177A1E4FAD0F5A7 /* Pods-MapboxMobileEvents.debug.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				MACH_O_TYPE = staticlib;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		534D2AD1DD453C81C4F1BDAA940215EC /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1B1A794954C91394487E010A94106357 /* TrustKit.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREFIX_HEADER = "Target Support Files/TrustKit/TrustKit-prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PRIVATE_HEADERS_FOLDER_PATH = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PUBLIC_HEADERS_FOLDER_PATH = "";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		6AFB585816203F339793BCAB7C35C3DE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1B1A794954C91394487E010A94106357 /* TrustKit.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREFIX_HEADER = "Target Support Files/TrustKit/TrustKit-prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PRIVATE_HEADERS_FOLDER_PATH = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PUBLIC_HEADERS_FOLDER_PATH = "";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		709D3024C5D648C05D4F38E771F28A53 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = EAEC82F2F4165A3F771D5AF2CA265ACC /* Pods-MapboxMobileEvents.release.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				MACH_O_TYPE = staticlib;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		C104F7F091290C3D1E248192F07FE689 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGNING_REQUIRED = NO;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_DEBUG=1",
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				ONLY_ACTIVE_ARCH = YES;
+				PROVISIONING_PROFILE_SPECIFIER = NO_SIGNING/;
+				STRIP_INSTALLED_PRODUCT = NO;
+				SYMROOT = "${SRCROOT}/../build";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "Pods" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C104F7F091290C3D1E248192F07FE689 /* Debug */,
+				34FE9531DA9AF2820790339988D5FF41 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5E5FBB213861D82DD4E030397A9E0010 /* Build configuration list for PBXNativeTarget "Pods-MapboxMobileEvents" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				442ABBD25736611960B08DCA2C5BADE3 /* Debug */,
+				709D3024C5D648C05D4F38E771F28A53 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C7681C745ED4322C6FC0EE6DE54E7624 /* Build configuration list for PBXNativeTarget "TrustKit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6AFB585816203F339793BCAB7C35C3DE /* Debug */,
+				534D2AD1DD453C81C4F1BDAA940215EC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
+}

@@ -1,4 +1,5 @@
 #import "MMENSURLSessionWrapper.h"
+#import <TrustKit/TrustKit.h>
 
 @interface MMENSURLSessionWrapper ()
 
@@ -8,13 +9,39 @@
 
 @implementation MMENSURLSessionWrapper
 
-- (instancetype)init
-{
+- (instancetype)init {
     self = [super init];
     if (self) {
         _session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:nil];
     }
     return self;
+}
+
+- (void)configureCertificatePinningValidation {
+    
+    // Override TrustKit's logger method
+    void (^loggerBlock)(NSString *) = ^void(NSString *message)
+    {
+        NSLog(@"TrustKit log: %@", message);
+        
+    };
+    [TrustKit setLoggerBlock:loggerBlock];
+    
+    NSDictionary *trustKitConfig =
+    @{
+      kTSKSwizzleNetworkDelegates: @NO,
+      kTSKPinnedDomains: @{
+              @"events.mapbox.com" : @{
+                      kTSKEnforcePinning:@YES,
+                      kTSKPublicKeyAlgorithms : @[kTSKAlgorithmRsa2048],
+                      kTSKPublicKeyHashes : @[
+                              // Geotrust, 2016, SHA1 Fingerprint=1A:62:1C:B8:1F:05:DD:02:A9:24:77:94:6C:B4:1B:53:BF:1D:73:6C
+                              @"BhynraKizavqoC5U26qgYuxLZst6pCu9J5stfL6RSYY=",
+                              // Geotrust, 2017, SHA1 Fingerprint=20:CE:AB:72:3C:51:08:B2:8A:AA:AB:B9:EE:9A:9B:E8:FD:C5:7C:F6
+                              @"yJLOJQLNTPNSOh3Btyg9UA1icIoZZssWzG0UmVEJFfA=",
+                              ]
+                      }}};
+    [TrustKit initializeWithConfiguration:trustKitConfig];
 }
 
 #pragma mark NSURLSessionDelegate
@@ -31,55 +58,12 @@
 
 #pragma mark NSURLSessionDelegate
 
-- (BOOL)evaluateCertificateWithCertificateData:(NSData *)certificateData keyCount:(CFIndex)keyCount serverTrust:(SecTrustRef)serverTrust challenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^) (NSURLSessionAuthChallengeDisposition disposition, NSURLCredential *credential))completionHandler {
-    for (int lc = 0; lc < keyCount; lc++) {
-        SecCertificateRef certificate = SecTrustGetCertificateAtIndex(serverTrust, lc);
-        NSData *remoteCertificateData = CFBridgingRelease(SecCertificateCopyData(certificate));
-        if ([remoteCertificateData isEqualToData:certificateData]) {
-            completionHandler(NSURLSessionAuthChallengeUseCredential, [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust]);
-            return YES;
-        }
-    }
-    return NO;
-}
-
-- (void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^) (NSURLSessionAuthChallengeDisposition disposition, NSURLCredential *credential))completionHandler {
-    
-    if([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
-        SecTrustRef serverTrust = [[challenge protectionSpace] serverTrust];
-        SecTrustResultType trustResult;
-        
-        // Validate the certificate chain with the device's trust store anyway this *might* give use revocation checking
-        SecTrustEvaluate(serverTrust, &trustResult);
-        
-        BOOL found = NO; // For clarity; we start in a state where the challange has not been completed and no certificate has been found
-        
-        if (trustResult == kSecTrustResultUnspecified) {
-            // Look for a pinned certificate in the server's certificate chain
-            CFIndex numKeys = SecTrustGetCertificateCount(serverTrust);
-            
-            // Check certs in the following order: digicert 2016, digicert 2017, geotrust 2016, geotrust 2017
-            found = [self evaluateCertificateWithCertificateData:self.digicertCert_2016 keyCount:numKeys serverTrust:serverTrust challenge:challenge completionHandler:completionHandler];
-            if (!found) {
-                found = [self evaluateCertificateWithCertificateData:self.digicertCert_2017 keyCount:numKeys serverTrust:serverTrust challenge:challenge completionHandler:completionHandler];
-            }
-            if (!found) {
-                found = [self evaluateCertificateWithCertificateData:self.geoTrustCert_2016 keyCount:numKeys serverTrust:serverTrust challenge:challenge completionHandler:completionHandler];
-            }
-            if (!found) {
-                found = [self evaluateCertificateWithCertificateData:self.geoTrustCert_2017 keyCount:numKeys serverTrust:serverTrust challenge:challenge completionHandler:completionHandler];
-            }
-            
-            // If challenge can't be completed with any of the above certs, then try the test server if the app is configured to use the test server
-            if (!found && _usesTestServer) {
-                found = [self evaluateCertificateWithCertificateData:self.testServerCert keyCount:numKeys serverTrust:serverTrust challenge:challenge completionHandler:completionHandler];
-            }
-        }
-        
-        if (!found) {
-            // No certificate was found so cancel the connection.
-            completionHandler(NSURLSessionAuthChallengeCancelAuthenticationChallenge, [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust]);
-        }
+- (void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable))completionHandler {
+    // Call into TrustKit here to do pinning validation
+    if (![TSKPinningValidator handleChallenge:challenge completionHandler:completionHandler]) {
+        // TrustKit did not handle this challenge: perhaps it was not for server trust
+        // or the domain was not pinned. Fall back to the default behavior
+        completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
     }
 }
 
