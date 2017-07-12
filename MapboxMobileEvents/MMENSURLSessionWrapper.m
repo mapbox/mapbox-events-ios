@@ -55,7 +55,7 @@
                               // Digicert, SHA1 Fingerprint=C6:1B:FE:8C:59:8F:29:F0:36:2E:88:BB:A2:CD:08:3B:F6:59:08:22
                               @"3euxrJOrEZI15R4104UsiAkDqe007EPyZ6eTL/XxdAY=",
                               // Stub: TrustKit requires 2 hashes for every endpoint
-                              @"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                              @"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
                               ]
                       }
               }
