@@ -11,6 +11,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, getter=isMetricsEnabled) BOOL metricsEnabled;
 @property (nonatomic, getter=isMetricsEnabledInSimulator) BOOL metricsEnabledInSimulator;
 @property (nonatomic, getter=isDebugLoggingEnabled) BOOL debugLoggingEnabled;
+@property (nonatomic, readonly) NSString *accessToken;
+@property (nonatomic, readonly) NSString *userAgentBase;
+@property (nonatomic, readonly) NSString *hostSDKVersion;
 @property (nonatomic) NSInteger accountType;
 
 + (instancetype)sharedManager;

@@ -86,6 +86,18 @@
 
 # pragma mark - Public API
 
+- (NSString *)accessToken {
+    return self.apiClient.accessToken;
+}
+
+- (NSString *)userAgentBase {
+    return self.apiClient.userAgentBase;
+}
+
+- (NSString *)hostSDKVersion {
+    return self.apiClient.hostSDKVersion;
+}
+
 - (void)pauseOrResumeMetricsCollectionIfRequired {
     // Prevent blue status bar when host app has `when in use` permission only and it is not in foreground
     if ([self.locationManagerWrapper authorizationStatus] == kCLAuthorizationStatusAuthorizedWhenInUse &&
