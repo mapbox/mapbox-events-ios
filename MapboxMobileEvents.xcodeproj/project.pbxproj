@@ -93,6 +93,7 @@
 		40FB437D1EFAFAE900EC5BC0 /* MMETimerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 40FB437B1EFAFAE900EC5BC0 /* MMETimerManager.m */; };
 		40FB437E1EFAFAE900EC5BC0 /* MMETimerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 40FB437B1EFAFAE900EC5BC0 /* MMETimerManager.m */; };
 		40FB43801EFAFDCF00EC5BC0 /* MMETimerManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 40FB437F1EFAFDCF00EC5BC0 /* MMETimerManagerTests.m */; };
+		BCC9039AC736352111FD0D68 /* libPods-MapboxMobileEvents.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B77906B66EB455432E9B395B /* libPods-MapboxMobileEvents.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -130,6 +131,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1B12A52F0A1697DEAF58F97E /* Pods-MapboxMobileEvents.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MapboxMobileEvents.release.xcconfig"; path = "Pods/Target Support Files/Pods-MapboxMobileEvents/Pods-MapboxMobileEvents.release.xcconfig"; sourceTree = "<group>"; };
 		40031E5C1EFC5CA1009EAB33 /* MMEUniqueIdentifierFake.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEUniqueIdentifierFake.h; sourceTree = "<group>"; };
 		40031E5D1EFC5CA1009EAB33 /* MMEUniqueIdentifierFake.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEUniqueIdentifierFake.m; sourceTree = "<group>"; };
 		40031E5F1EFC62D6009EAB33 /* MMEUniqueIdentifierTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEUniqueIdentifierTests.m; sourceTree = "<group>"; };
@@ -202,6 +204,8 @@
 		40FB437A1EFAFAE900EC5BC0 /* MMETimerManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMETimerManager.h; sourceTree = "<group>"; };
 		40FB437B1EFAFAE900EC5BC0 /* MMETimerManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMETimerManager.m; sourceTree = "<group>"; };
 		40FB437F1EFAFDCF00EC5BC0 /* MMETimerManagerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMETimerManagerTests.m; sourceTree = "<group>"; };
+		B77906B66EB455432E9B395B /* libPods-MapboxMobileEvents.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MapboxMobileEvents.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C95D5032B9B4DAD61EF74EA0 /* Pods-MapboxMobileEvents.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MapboxMobileEvents.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MapboxMobileEvents/Pods-MapboxMobileEvents.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -209,6 +213,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BCC9039AC736352111FD0D68 /* libPods-MapboxMobileEvents.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -244,6 +249,8 @@
 				404807C61EA186D8008A6D50 /* MapboxMobileEventsTests */,
 				408596701ED08FF7003BD29D /* resources */,
 				404807BA1EA186D8008A6D50 /* Products */,
+				6E833B43D0D79B6B0E6E3B51 /* Pods */,
+				7294C1F4CEC7A19B02B21125 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -395,6 +402,23 @@
 			path = Reachability;
 			sourceTree = "<group>";
 		};
+		6E833B43D0D79B6B0E6E3B51 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				C95D5032B9B4DAD61EF74EA0 /* Pods-MapboxMobileEvents.debug.xcconfig */,
+				1B12A52F0A1697DEAF58F97E /* Pods-MapboxMobileEvents.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		7294C1F4CEC7A19B02B21125 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				B77906B66EB455432E9B395B /* libPods-MapboxMobileEvents.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -430,10 +454,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 404807CD1EA186D8008A6D50 /* Build configuration list for PBXNativeTarget "MapboxMobileEvents" */;
 			buildPhases = (
+				E2A6B4C53DEA2C312C42231B /* [CP] Check Pods Manifest.lock */,
 				404807B41EA186D8008A6D50 /* Sources */,
 				404807B51EA186D8008A6D50 /* Frameworks */,
 				404807B61EA186D8008A6D50 /* Headers */,
 				404807B71EA186D8008A6D50 /* Resources */,
+				E5F4CD524BFC83DB845CD657 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -596,6 +622,36 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "cp -R \"${BUILD_DIR}/${CONFIGURATION}/resources.bundle\" \"${BUILD_DIR}/${CONFIGURATION}-iphoneos\"";
+		};
+		E2A6B4C53DEA2C312C42231B /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		E5F4CD524BFC83DB845CD657 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MapboxMobileEvents/Pods-MapboxMobileEvents-resources.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -797,6 +853,7 @@
 		};
 		404807CE1EA186D8008A6D50 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C95D5032B9B4DAD61EF74EA0 /* Pods-MapboxMobileEvents.debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				DEFINES_MODULE = YES;
@@ -817,6 +874,7 @@
 		};
 		404807CF1EA186D8008A6D50 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1B12A52F0A1697DEAF58F97E /* Pods-MapboxMobileEvents.release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				DEFINES_MODULE = YES;
@@ -837,6 +895,7 @@
 		};
 		404807D11EA186D8008A6D50 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C95D5032B9B4DAD61EF74EA0 /* Pods-MapboxMobileEvents.debug.xcconfig */;
 			buildSettings = {
 				DEVELOPMENT_TEAM = U2WTRY45TY;
 				INFOPLIST_FILE = MapboxMobileEventsTests/Info.plist;
@@ -848,6 +907,7 @@
 		};
 		404807D21EA186D8008A6D50 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1B12A52F0A1697DEAF58F97E /* Pods-MapboxMobileEvents.release.xcconfig */;
 			buildSettings = {
 				DEVELOPMENT_TEAM = U2WTRY45TY;
 				INFOPLIST_FILE = MapboxMobileEventsTests/Info.plist;
@@ -859,6 +919,7 @@
 		};
 		408596591ED084C0003BD29D /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C95D5032B9B4DAD61EF74EA0 /* Pods-MapboxMobileEvents.debug.xcconfig */;
 			buildSettings = {
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				OTHER_LDFLAGS = "-ObjC";
@@ -869,6 +930,7 @@
 		};
 		4085965A1ED084C0003BD29D /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1B12A52F0A1697DEAF58F97E /* Pods-MapboxMobileEvents.release.xcconfig */;
 			buildSettings = {
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				OTHER_LDFLAGS = "-ObjC";
