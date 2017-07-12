@@ -69,6 +69,14 @@
     [self postEvents:@[event] completionHandler:completionHandler];
 }
 
+- (NSString *)accessToken {
+    NSString *stagingAccessToken = [[NSUserDefaults standardUserDefaults] objectForKey:MMETelemetryStagingAccessToken];
+    if (stagingAccessToken) {
+        return stagingAccessToken;
+    }
+    return _accessToken;
+}
+
 #pragma mark - Utilities
 
 - (NSURLRequest *)requestForEvents:(NSArray *)events {

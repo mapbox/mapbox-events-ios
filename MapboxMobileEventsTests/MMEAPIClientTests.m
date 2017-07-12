@@ -157,6 +157,23 @@
     [self waitForExpectations:@[expectation] timeout:1];
 }
 
+- (void)testPostingAnEventWithAStagingAccessToken {
+    NSString *stagingAccessToken = @"staging-access-token";
+    [[NSUserDefaults standardUserDefaults] setObject:stagingAccessToken forKey:MMETelemetryStagingAccessToken];
+    
+    MMENSURLSessionWrapperFake *sessionWrapperFake = [self setUpAPIClientToTestPosting];
+    [self.apiClient postEvent:[self locationEvent] completionHandler:nil];
+    
+    // It should tell its session wrapper to process a request with a completion handler
+    XCTAssertTrue([sessionWrapperFake received:@selector(processRequest:completionHandler:)]);
+    
+    // The request should be created correctly
+    NSString *expectedURLString = [NSString stringWithFormat:@"%@/%@?access_token=%@", MMEAPIClientBaseURL, MMEAPIClientEventsPath, stagingAccessToken];
+    XCTAssertEqualObjects(sessionWrapperFake.request.URL.absoluteString, expectedURLString);
+    
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:MMETelemetryStagingAccessToken];
+}
+
 // testPostingThreeEventsThatGetCompressed
 
 #pragma mark - Utilities

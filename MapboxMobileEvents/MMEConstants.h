@@ -2,6 +2,7 @@
 
 extern NSString * const MMEAPIClientBaseURL;
 extern NSString * const MMETelemetryTestServerURL;
+extern NSString * const MMETelemetryStagingAccessToken;
 extern NSString * const MMEAPIClientEventsPath;
 extern NSString * const MMEAPIClientHeaderFieldUserAgentKey;
 extern NSString * const MMEAPIClientHeaderFieldContentTypeKey;
