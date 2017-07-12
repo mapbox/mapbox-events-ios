@@ -27,7 +27,7 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
     if (self) {
         NSArray *backgroundModes = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UIBackgroundModes"];
         _hostAppHasBackgroundCapability = [backgroundModes containsObject:@"location"];
-        _application = [[MMEUIApplicationWrapper alloc] init];
+        _application = [[MMEUIApplicationWrapper alloc] init];        
     }
     return self;
 }

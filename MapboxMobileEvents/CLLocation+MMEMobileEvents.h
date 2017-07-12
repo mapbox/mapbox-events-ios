@@ -2,9 +2,11 @@
 
 @interface CLLocation (MMEMobileEvents)
 
-- (CLLocationDistance)roundedAltitude;
-- (CLLocationAccuracy)roundedHorizontalAccuracy;
-- (CLLocationDegrees)latitudeRoundedWithPrecision:(NSUInteger)precision;
-- (CLLocationDegrees)longitudeRoundedWithPrecision:(NSUInteger)precision;
+void mme_linkCLLocationCategory();
+
+- (CLLocationDistance)mme_roundedAltitude;
+- (CLLocationAccuracy)mme_roundedHorizontalAccuracy;
+- (CLLocationDegrees)mme_latitudeRoundedWithPrecision:(NSUInteger)precision;
+- (CLLocationDegrees)mme_longitudeRoundedWithPrecision:(NSUInteger)precision;
 
 @end

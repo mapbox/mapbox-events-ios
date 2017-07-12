@@ -2,19 +2,21 @@
 
 @implementation CLLocation (MMEMobileEvents)
 
-- (CLLocationDistance)roundedAltitude {
+void mme_linkCLLocationCategory(){}
+
+- (CLLocationDistance)mme_roundedAltitude {
     return round(self.altitude);
 }
 
-- (CLLocationAccuracy)roundedHorizontalAccuracy {
+- (CLLocationAccuracy)mme_roundedHorizontalAccuracy {
     return round(self.horizontalAccuracy);
 }
 
-- (CLLocationDegrees)latitudeRoundedWithPrecision:(NSUInteger)precision {
+- (CLLocationDegrees)mme_latitudeRoundedWithPrecision:(NSUInteger)precision {
     return [self value:self.coordinate.latitude withPrecision:precision];
 }
 
-- (CLLocationDegrees)longitudeRoundedWithPrecision:(NSUInteger)precision {
+- (CLLocationDegrees)mme_longitudeRoundedWithPrecision:(NSUInteger)precision {
     return [self value:self.coordinate.longitude withPrecision:precision];
 }
 

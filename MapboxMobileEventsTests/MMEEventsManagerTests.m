@@ -177,9 +177,9 @@
     // TODO: This should use location's date
     attributes[MMEEventKeyCreated] =  [dateWrapper formattedDateStringForDate:[dateWrapper date]];
     
-    attributes[MMEEventKeyLatitude] = @([location latitudeRoundedWithPrecision:7]);
-    attributes[MMEEventKeyLongitude] = @([location longitudeRoundedWithPrecision:7]);
-    attributes[MMEEventKeyAltitude] = @([location roundedAltitude]);
+    attributes[MMEEventKeyLatitude] = @([location mme_latitudeRoundedWithPrecision:7]);
+    attributes[MMEEventKeyLongitude] = @([location mme_longitudeRoundedWithPrecision:7]);
+    attributes[MMEEventKeyAltitude] = @([location mme_roundedAltitude]);
     attributes[MMEEventHorizontalAccuracy] = @(location.horizontalAccuracy);
     
     XCTAssertTrue([apiClient received:@selector(postEvents:completionHandler:)]);

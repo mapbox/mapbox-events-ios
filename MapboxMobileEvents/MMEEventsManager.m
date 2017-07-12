@@ -10,6 +10,7 @@
 #import "MMETimerManager.h"
 #import "MMEUIApplicationWrapper.h"
 #import "MMENSDateWrapper.h"
+#import "MMECategoryLoader.h"
 
 #import "CLLocation+MMEMobileEvents.h"
 
@@ -37,6 +38,7 @@
     static dispatch_once_t onceToken;
 
     dispatch_once(&onceToken, ^{
+        [MMECategoryLoader loadCategories];
         _sharedManager = [[MMEEventsManager alloc] init];
     });
 
@@ -359,10 +361,10 @@
         
         // TODO: This should use location's date not date wrapper
         MMEMapboxEventAttributes *eventAttributes = @{MMEEventKeyCreated: [self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]],
-                                                      MMEEventKeyLatitude: @([location latitudeRoundedWithPrecision:7]),
-                                                      MMEEventKeyLongitude: @([location longitudeRoundedWithPrecision:7]),
-                                                      MMEEventKeyAltitude: @([location roundedAltitude]),
-                                                      MMEEventHorizontalAccuracy: @([location roundedHorizontalAccuracy])};
+                                                      MMEEventKeyLatitude: @([location mme_latitudeRoundedWithPrecision:7]),
+                                                      MMEEventKeyLongitude: @([location mme_longitudeRoundedWithPrecision:7]),
+                                                      MMEEventKeyAltitude: @([location mme_roundedAltitude]),
+                                                      MMEEventHorizontalAccuracy: @([location mme_roundedHorizontalAccuracy])};
         [self pushEvent:[MMEEvent locationEventWithAttributes:eventAttributes
                                             instanceIdentifer:self.uniqueIdentifer.rollingInstanceIdentifer
                                               commonEventData:self.commonEventData]];
