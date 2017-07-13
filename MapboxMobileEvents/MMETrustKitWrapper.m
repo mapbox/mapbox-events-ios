@@ -60,7 +60,7 @@ static BOOL _initialized;
                       }
               }
       };
-    [TrustKit initializeWithConfiguration:trustKitConfig];
+    [TrustKit initSharedInstanceWithConfiguration:trustKitConfig];
     _initialized = YES;
 }
 
