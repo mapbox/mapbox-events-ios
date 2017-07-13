@@ -1,0 +1,3 @@
+[submodule "vendor/TrustKit"]
+	path = vendor/TrustKit
+	url = https://github.com/datatheorem/TrustKit.git

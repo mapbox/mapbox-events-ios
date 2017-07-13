@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		40031E5E1EFC5CA1009EAB33 /* MMEUniqueIdentifierFake.m in Sources */ = {isa = PBXBuildFile; fileRef = 40031E5D1EFC5CA1009EAB33 /* MMEUniqueIdentifierFake.m */; };
 		40031E601EFC62D6009EAB33 /* MMEUniqueIdentifierTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 40031E5F1EFC62D6009EAB33 /* MMEUniqueIdentifierTests.m */; };
+		401379821F16F29A00567137 /* libTrustKit_Static.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 401379751F16F27F00567137 /* libTrustKit_Static.a */; };
+		401379831F16F29E00567137 /* libTrustKit_Static.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 401379751F16F27F00567137 /* libTrustKit_Static.a */; };
 		4036EFBB1ED36F06009C40BA /* MMEAPIClientFake.m in Sources */ = {isa = PBXBuildFile; fileRef = 4036EFBA1ED36F06009C40BA /* MMEAPIClientFake.m */; };
 		4036EFBE1ED37D56009C40BA /* MMEEventLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 4036EFBC1ED37D56009C40BA /* MMEEventLogger.h */; };
 		4036EFBF1ED37D56009C40BA /* MMEEventLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 4036EFBD1ED37D56009C40BA /* MMEEventLogger.m */; };
@@ -33,7 +35,6 @@
 		408596691ED086FA003BD29D /* MMENSURLSessionWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 405172DC1EAFFA9400F8CDA1 /* MMENSURLSessionWrapper.m */; };
 		4085966A1ED08FA9003BD29D /* MapboxMobileEvents.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 404807BC1EA186D8008A6D50 /* MapboxMobileEvents.h */; };
 		408596781ED0900A003BD29D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 40BE71011EB7C3EC00D690F3 /* Localizable.strings */; };
-		4085967A1ED090A8003BD29D /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 408596711ED08FF7003BD29D /* Info.plist */; };
 		408596D81ED0B1F6003BD29D /* MMEEvent.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 40AE586B1EA95EDD0046B437 /* MMEEvent.h */; };
 		408596D91ED0B1F6003BD29D /* MMEEventsManager.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 40C9E2791EA542BC00744FE7 /* MMEEventsManager.h */; };
 		408596DA1ED0BF35003BD29D /* MMEConstants.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 40AE58541EA932DB0046B437 /* MMEConstants.h */; };
@@ -89,10 +90,65 @@
 		40FB437D1EFAFAE900EC5BC0 /* MMETimerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 40FB437B1EFAFAE900EC5BC0 /* MMETimerManager.m */; };
 		40FB437E1EFAFAE900EC5BC0 /* MMETimerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 40FB437B1EFAFAE900EC5BC0 /* MMETimerManager.m */; };
 		40FB43801EFAFDCF00EC5BC0 /* MMETimerManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 40FB437F1EFAFDCF00EC5BC0 /* MMETimerManagerTests.m */; };
-		BCC9039AC736352111FD0D68 /* libPods-MapboxMobileEvents.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B77906B66EB455432E9B395B /* libPods-MapboxMobileEvents.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		401379721F16F27F00567137 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 401379671F16F27F00567137 /* TrustKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8C8480471A896EE30017C155;
+			remoteInfo = TrustKit;
+		};
+		401379741F16F27F00567137 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 401379671F16F27F00567137 /* TrustKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8C8716961B23A91D00267E1D;
+			remoteInfo = TrustKit_Static;
+		};
+		401379761F16F27F00567137 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 401379671F16F27F00567137 /* TrustKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8C8480521A896EE30017C155;
+			remoteInfo = TrustKitTests;
+		};
+		401379781F16F27F00567137 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 401379671F16F27F00567137 /* TrustKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8CA6CBFD1BAE2ADD00BDA419;
+			remoteInfo = "TrustKit OS X";
+		};
+		4013797A1F16F27F00567137 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 401379671F16F27F00567137 /* TrustKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8CA6CC061BAE2ADD00BDA419;
+			remoteInfo = "TrustKit OS XTests";
+		};
+		4013797C1F16F27F00567137 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 401379671F16F27F00567137 /* TrustKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8C84CBB21D6E0981009B3E7D;
+			remoteInfo = "TrustKit tvOS";
+		};
+		4013797E1F16F27F00567137 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 401379671F16F27F00567137 /* TrustKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8C84CBDD1D6E1718009B3E7D;
+			remoteInfo = "TrustKit tvOS Tests";
+		};
+		401379801F16F27F00567137 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 401379671F16F27F00567137 /* TrustKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8CC5D24E1D6E64D10074F515;
+			remoteInfo = "TrustKit watchOS";
+		};
 		404807C41EA186D8008A6D50 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 404807B01EA186D8008A6D50 /* Project object */;
@@ -127,10 +183,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		1B12A52F0A1697DEAF58F97E /* Pods-MapboxMobileEvents.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MapboxMobileEvents.release.xcconfig"; path = "Pods/Target Support Files/Pods-MapboxMobileEvents/Pods-MapboxMobileEvents.release.xcconfig"; sourceTree = "<group>"; };
 		40031E5C1EFC5CA1009EAB33 /* MMEUniqueIdentifierFake.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEUniqueIdentifierFake.h; sourceTree = "<group>"; };
 		40031E5D1EFC5CA1009EAB33 /* MMEUniqueIdentifierFake.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEUniqueIdentifierFake.m; sourceTree = "<group>"; };
 		40031E5F1EFC62D6009EAB33 /* MMEUniqueIdentifierTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEUniqueIdentifierTests.m; sourceTree = "<group>"; };
+		401379671F16F27F00567137 /* TrustKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = TrustKit.xcodeproj; path = vendor/TrustKit/TrustKit.xcodeproj; sourceTree = SOURCE_ROOT; };
 		4036EFB91ED36F06009C40BA /* MMEAPIClientFake.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEAPIClientFake.h; sourceTree = "<group>"; };
 		4036EFBA1ED36F06009C40BA /* MMEAPIClientFake.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEAPIClientFake.m; sourceTree = "<group>"; };
 		4036EFBC1ED37D56009C40BA /* MMEEventLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEEventLogger.h; sourceTree = "<group>"; };
@@ -199,8 +255,6 @@
 		40FB437A1EFAFAE900EC5BC0 /* MMETimerManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMETimerManager.h; sourceTree = "<group>"; };
 		40FB437B1EFAFAE900EC5BC0 /* MMETimerManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMETimerManager.m; sourceTree = "<group>"; };
 		40FB437F1EFAFDCF00EC5BC0 /* MMETimerManagerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMETimerManagerTests.m; sourceTree = "<group>"; };
-		B77906B66EB455432E9B395B /* libPods-MapboxMobileEvents.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MapboxMobileEvents.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		C95D5032B9B4DAD61EF74EA0 /* Pods-MapboxMobileEvents.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MapboxMobileEvents.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MapboxMobileEvents/Pods-MapboxMobileEvents.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -208,7 +262,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BCC9039AC736352111FD0D68 /* libPods-MapboxMobileEvents.a in Frameworks */,
+				401379821F16F29A00567137 /* libTrustKit_Static.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -224,6 +278,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				401379831F16F29E00567137 /* libTrustKit_Static.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -237,6 +292,29 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		401379661F16F26E00567137 /* Vendor */ = {
+			isa = PBXGroup;
+			children = (
+				401379671F16F27F00567137 /* TrustKit.xcodeproj */,
+			);
+			name = Vendor;
+			sourceTree = "<group>";
+		};
+		401379681F16F27F00567137 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				401379731F16F27F00567137 /* TrustKit.framework */,
+				401379751F16F27F00567137 /* libTrustKit_Static.a */,
+				401379771F16F27F00567137 /* TrustKitTests.xctest */,
+				401379791F16F27F00567137 /* TrustKit.framework */,
+				4013797B1F16F27F00567137 /* TrustKit OS XTests.xctest */,
+				4013797D1F16F27F00567137 /* TrustKit.framework */,
+				4013797F1F16F27F00567137 /* TrustKit tvOS Tests.xctest */,
+				401379811F16F27F00567137 /* TrustKit.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		404807AF1EA186D8008A6D50 = {
 			isa = PBXGroup;
 			children = (
@@ -244,8 +322,6 @@
 				404807C61EA186D8008A6D50 /* MapboxMobileEventsTests */,
 				408596701ED08FF7003BD29D /* resources */,
 				404807BA1EA186D8008A6D50 /* Products */,
-				6E833B43D0D79B6B0E6E3B51 /* Pods */,
-				7294C1F4CEC7A19B02B21125 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -287,6 +363,7 @@
 				40F16C931F04514100DF338D /* Reachability */,
 				40AE587B1EAA8D810046B437 /* Resources */,
 				40C9E2841EA5615900744FE7 /* Utilities */,
+				401379661F16F26E00567137 /* Vendor */,
 			);
 			path = MapboxMobileEvents;
 			sourceTree = "<group>";
@@ -396,23 +473,6 @@
 			path = Reachability;
 			sourceTree = "<group>";
 		};
-		6E833B43D0D79B6B0E6E3B51 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				C95D5032B9B4DAD61EF74EA0 /* Pods-MapboxMobileEvents.debug.xcconfig */,
-				1B12A52F0A1697DEAF58F97E /* Pods-MapboxMobileEvents.release.xcconfig */,
-			);
-			name = Pods;
-			sourceTree = "<group>";
-		};
-		7294C1F4CEC7A19B02B21125 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				B77906B66EB455432E9B395B /* libPods-MapboxMobileEvents.a */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -450,12 +510,10 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 404807CD1EA186D8008A6D50 /* Build configuration list for PBXNativeTarget "MapboxMobileEvents" */;
 			buildPhases = (
-				E2A6B4C53DEA2C312C42231B /* [CP] Check Pods Manifest.lock */,
 				404807B41EA186D8008A6D50 /* Sources */,
 				404807B51EA186D8008A6D50 /* Frameworks */,
 				404807B61EA186D8008A6D50 /* Headers */,
 				404807B71EA186D8008A6D50 /* Resources */,
-				E5F4CD524BFC83DB845CD657 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -558,6 +616,12 @@
 			mainGroup = 404807AF1EA186D8008A6D50;
 			productRefGroup = 404807BA1EA186D8008A6D50 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 401379681F16F27F00567137 /* Products */;
+					ProjectRef = 401379671F16F27F00567137 /* TrustKit.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				404807B81EA186D8008A6D50 /* MapboxMobileEvents */,
@@ -567,6 +631,65 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		401379731F16F27F00567137 /* TrustKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = TrustKit.framework;
+			remoteRef = 401379721F16F27F00567137 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		401379751F16F27F00567137 /* libTrustKit_Static.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libTrustKit_Static.a;
+			remoteRef = 401379741F16F27F00567137 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		401379771F16F27F00567137 /* TrustKitTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = TrustKitTests.xctest;
+			remoteRef = 401379761F16F27F00567137 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		401379791F16F27F00567137 /* TrustKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = TrustKit.framework;
+			remoteRef = 401379781F16F27F00567137 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4013797B1F16F27F00567137 /* TrustKit OS XTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "TrustKit OS XTests.xctest";
+			remoteRef = 4013797A1F16F27F00567137 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4013797D1F16F27F00567137 /* TrustKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = TrustKit.framework;
+			remoteRef = 4013797C1F16F27F00567137 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4013797F1F16F27F00567137 /* TrustKit tvOS Tests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "TrustKit tvOS Tests.xctest";
+			remoteRef = 4013797E1F16F27F00567137 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		401379811F16F27F00567137 /* TrustKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = TrustKit.framework;
+			remoteRef = 401379801F16F27F00567137 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		404807B71EA186D8008A6D50 /* Resources */ = {
@@ -589,7 +712,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				408596781ED0900A003BD29D /* Localizable.strings in Resources */,
-				4085967A1ED090A8003BD29D /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -608,36 +730,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "cp -R \"${BUILD_DIR}/${CONFIGURATION}/resources.bundle\" \"${BUILD_DIR}/${CONFIGURATION}-iphoneos\"";
-		};
-		E2A6B4C53DEA2C312C42231B /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		E5F4CD524BFC83DB845CD657 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MapboxMobileEvents/Pods-MapboxMobileEvents-resources.sh\"\n";
-			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -843,7 +935,6 @@
 		};
 		404807CE1EA186D8008A6D50 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C95D5032B9B4DAD61EF74EA0 /* Pods-MapboxMobileEvents.debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				DEFINES_MODULE = YES;
@@ -851,6 +942,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/vendor/TrustKit";
 				INFOPLIST_FILE = MapboxMobileEvents/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -864,7 +956,6 @@
 		};
 		404807CF1EA186D8008A6D50 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1B12A52F0A1697DEAF58F97E /* Pods-MapboxMobileEvents.release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				DEFINES_MODULE = YES;
@@ -872,6 +963,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/vendor/TrustKit";
 				INFOPLIST_FILE = MapboxMobileEvents/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -885,7 +977,6 @@
 		};
 		404807D11EA186D8008A6D50 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C95D5032B9B4DAD61EF74EA0 /* Pods-MapboxMobileEvents.debug.xcconfig */;
 			buildSettings = {
 				DEVELOPMENT_TEAM = U2WTRY45TY;
 				INFOPLIST_FILE = MapboxMobileEventsTests/Info.plist;
@@ -897,7 +988,6 @@
 		};
 		404807D21EA186D8008A6D50 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1B12A52F0A1697DEAF58F97E /* Pods-MapboxMobileEvents.release.xcconfig */;
 			buildSettings = {
 				DEVELOPMENT_TEAM = U2WTRY45TY;
 				INFOPLIST_FILE = MapboxMobileEventsTests/Info.plist;
@@ -909,10 +999,10 @@
 		};
 		408596591ED084C0003BD29D /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C95D5032B9B4DAD61EF74EA0 /* Pods-MapboxMobileEvents.debug.xcconfig */;
 			buildSettings = {
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/vendor/TrustKit";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				OTHER_LDFLAGS = "-ObjC";
+				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};
@@ -920,10 +1010,10 @@
 		};
 		4085965A1ED084C0003BD29D /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1B12A52F0A1697DEAF58F97E /* Pods-MapboxMobileEvents.release.xcconfig */;
 			buildSettings = {
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/vendor/TrustKit";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				OTHER_LDFLAGS = "-ObjC";
+				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};

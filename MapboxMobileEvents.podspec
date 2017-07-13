@@ -38,6 +38,6 @@ Pod::Spec.new do |s|
   s.requires_arc = true
   s.module_name = "MapboxMobileEvents"
 
-  s.dependency "TrustKit", "1.4.2"
+  s.dependency "TrustKit", "1.4.2" 
 
 end
