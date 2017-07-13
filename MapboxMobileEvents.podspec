@@ -30,14 +30,12 @@ Pod::Spec.new do |s|
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
-  s.source_files = ["MapboxMobileEvents/**/*.{h,m}"]
+  s.source_files = ["MapboxMobileEvents/**/*.{h,m}", 'vendor/TrustKit/**/*.{h,m,c}']
   s.resources = "MapboxMobileEvents/Resources/*"
 
   # ――― Project Settings ――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
   s.requires_arc = true
   s.module_name = "MapboxMobileEvents"
-
-  s.dependency "TrustKit", "1.4.2" 
 
 end

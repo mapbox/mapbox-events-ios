@@ -1,6 +1,6 @@
 #import "MMENSURLSessionWrapper.h"
 #import "MMETrustKitWrapper.h"
-#import <TrustKit/TrustKit.h>
+#import "TrustKit.h"
 
 
 @interface MMENSURLSessionWrapper ()
