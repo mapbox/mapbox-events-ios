@@ -381,7 +381,7 @@
     for (CLLocation *location in locations) {
         
         // TODO: This should use location's date not date wrapper
-        MMEMapboxEventAttributes *eventAttributes = @{MMEEventKeyCreated: [self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]],
+        MMEMapboxEventAttributes *eventAttributes = @{MMEEventKeyCreated: [self.dateWrapper formattedDateStringForDate:[location timestamp]],
                                                       MMEEventKeyLatitude: @([location mme_latitudeRoundedWithPrecision:7]),
                                                       MMEEventKeyLongitude: @([location mme_longitudeRoundedWithPrecision:7]),
                                                       MMEEventKeyAltitude: @([location mme_roundedAltitude]),

@@ -188,10 +188,7 @@
     attributes[MMEEventKeySessionId] = [[MMEUniqueIdentifierFake alloc] init].rollingInstanceIdentifer;
     attributes[MMEEventKeyOperatingSystem] = dataStub.iOSVersion;
     attributes[MMEEventKeyApplicationState] = [dataStub applicationState];
-    
-    // TODO: This should use location's date
-    attributes[MMEEventKeyCreated] =  [dateWrapper formattedDateStringForDate:[dateWrapper date]];
-    
+    attributes[MMEEventKeyCreated] =  [dateWrapper formattedDateStringForDate:[location timestamp]];
     attributes[MMEEventKeyLatitude] = @([location mme_latitudeRoundedWithPrecision:7]);
     attributes[MMEEventKeyLongitude] = @([location mme_longitudeRoundedWithPrecision:7]);
     attributes[MMEEventKeyAltitude] = @([location mme_roundedAltitude]);
