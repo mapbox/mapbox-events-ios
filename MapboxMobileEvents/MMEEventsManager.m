@@ -67,13 +67,10 @@
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    
-    // TODO: Pause on dealloc
-//    [self pauseMetricsCollection];
+    [self pauseMetricsCollection];
 }
 
-- (void)initializeWithAccessToken:(NSString *)accessToken userAgentBase:(NSString *)userAgentBase hostSDKVersion:(NSString *)hostSDKVersion {
-    
+- (void)initializeWithAccessToken:(NSString *)accessToken userAgentBase:(NSString *)userAgentBase hostSDKVersion:(NSString *)hostSDKVersion {    
     self.apiClient = [[MMEAPIClient alloc] initWithAccessToken:accessToken userAgentBase:userAgentBase hostSDKVersion:hostSDKVersion];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pauseOrResumeMetricsCollectionIfRequired) name:UIApplicationDidEnterBackgroundNotification object:nil];
@@ -145,8 +142,9 @@
 }
 
 - (void)flush {
-    
-    // TODO: don't flush if paused
+    if (self.paused) {
+        return;
+    }
     
     if (self.apiClient.accessToken == nil) {
         return;

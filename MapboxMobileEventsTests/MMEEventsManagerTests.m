@@ -232,6 +232,7 @@
     MMECommonEventData *dataStub = [[MMECommonEventData alloc] init];
     dataStub.iOSVersion = @"iOS-version";
     [MMEEventsManager sharedManager].commonEventData = dataStub;
+    [MMEEventsManager sharedManager].paused = NO;
     
     CLLocation *location = [self location];
     [[MMEEventsManager sharedManager] locationManager:nil didUpdateLocations:@[location]];
