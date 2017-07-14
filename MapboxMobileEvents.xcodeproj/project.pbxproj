@@ -81,9 +81,6 @@
 		40C611561F18319000E30A6C /* trie_search.c in Sources */ = {isa = PBXBuildFile; fileRef = 40C611171F18319000E30A6C /* trie_search.c */; };
 		40C611571F18319000E30A6C /* trie_search.h in Headers */ = {isa = PBXBuildFile; fileRef = 40C611181F18319000E30A6C /* trie_search.h */; };
 		40C611581F18319000E30A6C /* registry_tables.h in Headers */ = {isa = PBXBuildFile; fileRef = 40C6111A1F18319000E30A6C /* registry_tables.h */; };
-		40C6115B1F18319000E30A6C /* RSSwizzle.h in Headers */ = {isa = PBXBuildFile; fileRef = 40C6111D1F18319000E30A6C /* RSSwizzle.h */; };
-		40C6115C1F18319000E30A6C /* RSSwizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C6111E1F18319000E30A6C /* RSSwizzle.m */; };
-		40C6115D1F18319000E30A6C /* RSSwizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C6111E1F18319000E30A6C /* RSSwizzle.m */; };
 		40C611601F18319000E30A6C /* parse_configuration.h in Headers */ = {isa = PBXBuildFile; fileRef = 40C611231F18319000E30A6C /* parse_configuration.h */; };
 		40C611611F18319000E30A6C /* parse_configuration.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C611241F18319000E30A6C /* parse_configuration.m */; };
 		40C611621F18319000E30A6C /* parse_configuration.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C611241F18319000E30A6C /* parse_configuration.m */; };
@@ -129,7 +126,6 @@
 		40C9E27C1EA542BC00744FE7 /* MMEEventsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C9E27A1EA542BC00744FE7 /* MMEEventsManager.m */; };
 		40C9E27F1EA5473F00744FE7 /* MMELocationManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 40C9E27D1EA5473F00744FE7 /* MMELocationManager.h */; };
 		40C9E2801EA5473F00744FE7 /* MMELocationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C9E27E1EA5473F00744FE7 /* MMELocationManager.m */; };
-		40C9E2871EA56C2D00744FE7 /* MMECLLocationManagerWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 40C9E2851EA56C2D00744FE7 /* MMECLLocationManagerWrapper.h */; };
 		40C9E2881EA56C2D00744FE7 /* MMECLLocationManagerWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C9E2861EA56C2D00744FE7 /* MMECLLocationManagerWrapper.m */; };
 		40C9E28A1EA5733300744FE7 /* MMELocationManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C9E2891EA5733300744FE7 /* MMELocationManagerTests.m */; };
 		40C9E28E1EA5765200744FE7 /* MMECLLocationManagerWrapperFake.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C9E28D1EA5765200744FE7 /* MMECLLocationManagerWrapperFake.m */; };
@@ -248,8 +244,6 @@
 		40C611171F18319000E30A6C /* trie_search.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = trie_search.c; sourceTree = "<group>"; };
 		40C611181F18319000E30A6C /* trie_search.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = trie_search.h; sourceTree = "<group>"; };
 		40C6111A1F18319000E30A6C /* registry_tables.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = registry_tables.h; sourceTree = "<group>"; };
-		40C6111D1F18319000E30A6C /* RSSwizzle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSSwizzle.h; sourceTree = "<group>"; };
-		40C6111E1F18319000E30A6C /* RSSwizzle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSSwizzle.m; sourceTree = "<group>"; };
 		40C611231F18319000E30A6C /* parse_configuration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = parse_configuration.h; sourceTree = "<group>"; };
 		40C611241F18319000E30A6C /* parse_configuration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = parse_configuration.m; sourceTree = "<group>"; };
 		40C611261F18319000E30A6C /* ssl_pin_verifier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ssl_pin_verifier.h; sourceTree = "<group>"; };
@@ -481,7 +475,6 @@
 			isa = PBXGroup;
 			children = (
 				40C6110D1F18319000E30A6C /* domain_registry */,
-				40C6111C1F18319000E30A6C /* RSSwizzle */,
 			);
 			path = Dependencies;
 			sourceTree = "<group>";
@@ -518,15 +511,6 @@
 				40C6111A1F18319000E30A6C /* registry_tables.h */,
 			);
 			path = registry_tables_genfiles;
-			sourceTree = "<group>";
-		};
-		40C6111C1F18319000E30A6C /* RSSwizzle */ = {
-			isa = PBXGroup;
-			children = (
-				40C6111D1F18319000E30A6C /* RSSwizzle.h */,
-				40C6111E1F18319000E30A6C /* RSSwizzle.m */,
-			);
-			path = RSSwizzle;
 			sourceTree = "<group>";
 		};
 		40C611251F18319000E30A6C /* Pinning */ = {
@@ -645,10 +629,8 @@
 				40C611661F18319000E30A6C /* TSKPublicKeyAlgorithm.h in Headers */,
 				40AE58691EA953970046B437 /* CLLocation+MMEMobileEvents.h in Headers */,
 				40C6118B1F18319000E30A6C /* TSKTrustDecision.h in Headers */,
-				40C6115B1F18319000E30A6C /* RSSwizzle.h in Headers */,
 				40F16C811F02DA9F00DF338D /* MMENSDateWrapper.h in Headers */,
 				40C611601F18319000E30A6C /* parse_configuration.h in Headers */,
-				40C9E2871EA56C2D00744FE7 /* MMECLLocationManagerWrapper.h in Headers */,
 				40C6114A1F18319000E30A6C /* domain_registry.h in Headers */,
 				40C611571F18319000E30A6C /* trie_search.h in Headers */,
 				40C6116A1F18319000E30A6C /* reporting_utils.h in Headers */,
@@ -871,7 +853,6 @@
 				40AE586E1EA95EDD0046B437 /* MMEEvent.m in Sources */,
 				40C9E2881EA56C2D00744FE7 /* MMECLLocationManagerWrapper.m in Sources */,
 				40C611771F18319000E30A6C /* vendor_identifier.m in Sources */,
-				40C6115C1F18319000E30A6C /* RSSwizzle.m in Sources */,
 				40AE585B1EA9373F0046B437 /* MMEUniqueIdentifier.m in Sources */,
 				40AE584F1EA926710046B437 /* MMETypes.m in Sources */,
 			);
@@ -937,7 +918,6 @@
 				408596671ED086F4003BD29D /* MMECommonEventData.m in Sources */,
 				408596631ED086E8003BD29D /* CLLocation+MMEMobileEvents.m in Sources */,
 				40C611781F18319000E30A6C /* vendor_identifier.m in Sources */,
-				40C6115D1F18319000E30A6C /* RSSwizzle.m in Sources */,
 				408596611ED086E2003BD29D /* MMEAPIClient.m in Sources */,
 				408596651ED086EE003BD29D /* MMECLLocationManagerWrapper.m in Sources */,
 			);
