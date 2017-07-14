@@ -1,4 +1,5 @@
 #import "MMETrustKitWrapper.h"
+#import "MMEEventLogger.h"
 #import "TrustKit.h"
 
 @implementation MMETrustKitWrapper
@@ -14,19 +15,14 @@ static BOOL _initialized;
 }
 
 + (void)configureCertificatePinningValidation {
-    
     if (_initialized) {
         return;
     }
-    
-    // TODO: Only do this if loggin is on
-    // Override TrustKit's logger method
-    void (^loggerBlock)(NSString *) = ^void(NSString *message)
-    {
-        NSLog(@"TrustKit log: %@", message);
-        
-    };
-    [TrustKit setLoggerBlock:loggerBlock];
+
+    if (![MMEEventLogger isEnabled]) {
+        void (^loggerBlock)(NSString *) = ^void(NSString *message){};
+        [TrustKit setLoggerBlock:loggerBlock];
+    }
     
     NSDictionary *trustKitConfig =
     @{
