@@ -41,19 +41,15 @@
 }
 
 - (void)postEvents:(NSArray *)events completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
-    NSURLRequest *request = [self requestForEvents:events];
-    
+    NSURLRequest *request = [self requestForEvents:events];    
     [self.sessionWrapper processRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         NSError *statusError = nil;
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
         if (httpResponse.statusCode >= 400) {
-            
             NSString *descriptionFormat = [self.sdkBundle localizedStringForKey:@"API_CLIENT_400_DESC" value:@"" table:nil];
             NSString *reasonFormat = [self.sdkBundle localizedStringForKey:@"API_CLIENT_400_REASON" value:@"" table:nil];
-            
-            NSString *description = [NSString stringWithFormat:descriptionFormat, nil];
+            NSString *description = [NSString stringWithFormat:descriptionFormat, request];
             NSString *reason = [NSString stringWithFormat:reasonFormat, (long)httpResponse.statusCode];
-            
             NSDictionary *userInfo = @{NSLocalizedDescriptionKey: description,
                                        NSLocalizedFailureReasonErrorKey: reason};
             statusError = [NSError errorWithDomain:MMEErrorDomain code:1 userInfo:userInfo];
