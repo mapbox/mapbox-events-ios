@@ -37,6 +37,35 @@
                BlueprintName = "MapboxMobileEventsTests"
                ReferencedContainer = "container:MapboxMobileEvents.xcodeproj">
             </BuildableReference>
+            <SkippedTests>
+               <Test
+                  Identifier = "MMEEventsManagerTests/testPauseOrResumeMetricsCollectionBackgroundTaskWithWhenInUsePermissionInBackground">
+               </Test>
+               <Test
+                  Identifier = "MMEEventsManagerTests/testPauseOrResumeMetricsCollectionIfRequiredPausedToResumed">
+               </Test>
+               <Test
+                  Identifier = "MMEEventsManagerTests/testPauseOrResumeMetricsCollectionIfRequiredResumedToPaused">
+               </Test>
+               <Test
+                  Identifier = "MMEEventsManagerTests/testSendTurnstileEventWithSuccess">
+               </Test>
+               <Test
+                  Identifier = "MMELocationManagerTests/testAsDelegateForLocationManagerWrapperAuthorizationStatusChangeToAlways">
+               </Test>
+               <Test
+                  Identifier = "MMELocationManagerTests/testAsDelegateForLocationManagerWrapperAuthorizationStatusChangeToWhenInUse">
+               </Test>
+               <Test
+                  Identifier = "MMELocationManagerTests/testStartUpdatingLocationWhenHostAppHasBackgroundCapabilityAndAlwaysPermissions">
+               </Test>
+               <Test
+                  Identifier = "MMELocationManagerTests/testStartUpdatingLocationWhenHostAppHasNoBackgroundCapabilityAndAlwaysPermissions">
+               </Test>
+               <Test
+                  Identifier = "MMELocationManagerTests/testStartUpdatingLocationWhenHostAppHasWhenInUsePermissions">
+               </Test>
+            </SkippedTests>
          </TestableReference>
       </Testables>
       <MacroExpansion>

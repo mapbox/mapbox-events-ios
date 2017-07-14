@@ -4,6 +4,9 @@
 
 @property(nonatomic, readonly) UIApplicationState applicationState;
 
+- (UIBackgroundTaskIdentifier)beginBackgroundTaskWithExpirationHandler:(void(^ __nullable)(void))handler;
+- (void)endBackgroundTask:(UIBackgroundTaskIdentifier)identifier;
+
 @end
 
 @interface MMEUIApplicationWrapper : NSObject <MMEUIApplicationWrapper>

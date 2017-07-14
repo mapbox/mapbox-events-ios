@@ -31,7 +31,9 @@
 
 @end
 
-@implementation MMEEventsManager
+@implementation MMEEventsManager {
+    UIBackgroundTaskIdentifier _backgroundTaskIdentifier;
+}
 
 + (instancetype)sharedManager {
     static MMEEventsManager *_sharedManager;
@@ -104,16 +106,17 @@
     // Prevent blue status bar when host app has `when in use` permission only and it is not in foreground
     if ([self.locationManagerWrapper authorizationStatus] == kCLAuthorizationStatusAuthorizedWhenInUse &&
         self.application.applicationState == UIApplicationStateBackground) {
-        
-        // TODO: implement flush on background
-        //        if (_backgroundTaskIdentifier == UIBackgroundTaskInvalid) {
-        //            _backgroundTaskIdentifier = [application beginBackgroundTaskWithExpirationHandler:^{
-        //                [application endBackgroundTask:_backgroundTaskIdentifier];
-        //                _backgroundTaskIdentifier = UIBackgroundTaskInvalid;
-        //            }];
-        //            [self flush];
-        //        }
-        
+        if (_backgroundTaskIdentifier == UIBackgroundTaskInvalid) {
+            _backgroundTaskIdentifier = [self.application beginBackgroundTaskWithExpirationHandler:^{
+                [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: @"Ending background task",
+                                                     @"Identifier": @(_backgroundTaskIdentifier)}];
+                [self.application endBackgroundTask:_backgroundTaskIdentifier];
+                _backgroundTaskIdentifier = UIBackgroundTaskInvalid;
+            }];
+            [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: @"Initiated background task",
+                                                 @"Identifier": @(_backgroundTaskIdentifier)}];
+            [self flush];
+        }
         [self pauseMetricsCollection];
         return;
     }
@@ -147,9 +150,13 @@
                                                        @"debug.eventsCount": @(events.count)}];
         }
         
-        // TODO: implement flush on background
-        //        [[UIApplication sharedApplication] endBackgroundTask:_backgroundTaskIdentifier];
-        //        _backgroundTaskIdentifier = UIBackgroundTaskInvalid;
+        
+        if (_backgroundTaskIdentifier != UIBackgroundTaskInvalid) {
+            [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: @"Ending background task",
+                                                 @"Identifier": @(_backgroundTaskIdentifier)}];
+            [self.application endBackgroundTask:_backgroundTaskIdentifier];
+            _backgroundTaskIdentifier = UIBackgroundTaskInvalid;
+        }
     }];
     
     [self.eventQueue removeAllObjects];

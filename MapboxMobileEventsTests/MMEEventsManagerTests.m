@@ -65,6 +65,11 @@
     [MMEEventsManager sharedManager].configuration = configuration;
 }
 
+// TODO: Add test for background task
+- (void)testPauseOrResumeMetricsCollectionBackgroundTaskWithWhenInUsePermissionInBackground {
+    XCTAssertTrue(NO);
+}
+
 - (void)testPauseOrResumeMetricsCollectionIfRequiredPausedToResumed {
     MMELocationManagerFake *locationManager = [[MMELocationManagerFake alloc] init];
     [MMEEventsManager sharedManager].locationManager = locationManager;
