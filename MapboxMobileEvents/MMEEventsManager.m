@@ -216,7 +216,8 @@
     NSDictionary *turnstileEventAttributes = @{MMEEventKeyEvent: MMEEventTypeAppUserTurnstile,
                                                MMEEventKeyCreated: [self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]],
                                                MMEEventKeyVendorID: self.commonEventData.vendorId,
-                                               MMEEventKeyModel: self.commonEventData.model,
+                                               // MMEEventKeyDevice is synonomous with MMEEventKeyModel but the server will only accept "device" in turnstile events
+                                               MMEEventKeyDevice: self.commonEventData.model,
                                                MMEEventKeyOperatingSystem: self.commonEventData.iOSVersion,
                                                MMEEventSDKIdentifier: self.apiClient.userAgentBase,
                                                MMEEventSDKVersion: self.apiClient.hostSDKVersion,
@@ -378,9 +379,7 @@
 - (void)locationManager:(MMELocationManager *)locationManager didUpdateLocations:(NSArray *)locations {
     [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Location manager sent %ld locations", (long)locations.count]}];
     
-    for (CLLocation *location in locations) {
-        
-        // TODO: This should use location's date not date wrapper
+    for (CLLocation *location in locations) {        
         MMEMapboxEventAttributes *eventAttributes = @{MMEEventKeyCreated: [self.dateWrapper formattedDateStringForDate:[location timestamp]],
                                                       MMEEventKeyLatitude: @([location mme_latitudeRoundedWithPrecision:7]),
                                                       MMEEventKeyLongitude: @([location mme_longitudeRoundedWithPrecision:7]),

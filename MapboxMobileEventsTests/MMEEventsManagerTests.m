@@ -300,6 +300,7 @@
     XCTAssertNotNil(event.attributes[MMEEventKeyVendorID]);
     XCTAssertNotNil(event.attributes[MMEEventKeyOperatingSystem]);
     XCTAssertNotNil(event.attributes[MMEEventKeyEnabledTelemetry]);
+    XCTAssertNotNil(event.attributes[MMEEventKeyDevice]);
     XCTAssertEqualObjects(event.attributes[MMEEventSDKIdentifier], apiClient.userAgentBase);
     XCTAssertEqualObjects(event.attributes[MMEEventSDKVersion], apiClient.hostSDKVersion);
     
