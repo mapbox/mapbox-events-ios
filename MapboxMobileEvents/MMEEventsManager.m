@@ -83,6 +83,7 @@
     self.paused = YES;
     self.locationManager = [[MMELocationManager alloc] init];
     self.locationManager.delegate = self;
+    self.locationManager.metricsEnabledForInUsePermissions = self.metricsEnabledForInUsePermissions;
     [self resumeMetricsCollection];
     
     self.timerManager = [[MMETimerManager alloc] initWithTimeInterval:self.configuration.eventFlushSecondsThreshold target:self selector:@selector(flush)];
@@ -102,10 +103,16 @@
     return self.apiClient.hostSDKVersion;
 }
 
+- (void)setMetricsEnabledForInUsePermissions:(BOOL)metricsEnabledForInUsePermissions {
+    _metricsEnabledForInUsePermissions = metricsEnabledForInUsePermissions;
+    self.locationManager.metricsEnabledForInUsePermissions = metricsEnabledForInUsePermissions;
+}
+
 - (void)pauseOrResumeMetricsCollectionIfRequired {
     // Prevent blue status bar when host app has `when in use` permission only and it is not in foreground
     if ([self.locationManagerWrapper authorizationStatus] == kCLAuthorizationStatusAuthorizedWhenInUse &&
-        self.application.applicationState == UIApplicationStateBackground) {
+        self.application.applicationState == UIApplicationStateBackground &&
+        !self.isMetricsEnabledForInUsePermissions) {
         if (_backgroundTaskIdentifier == UIBackgroundTaskInvalid) {
             _backgroundTaskIdentifier = [self.application beginBackgroundTaskWithExpirationHandler:^{
                 [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: @"Ending background task",

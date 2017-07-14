@@ -48,6 +48,9 @@
                   Identifier = "MMEEventsManagerTests/testPauseOrResumeMetricsCollectionIfRequiredResumedToPaused">
                </Test>
                <Test
+                  Identifier = "MMEEventsManagerTests/testPauseOrResumeMetricsCollectionWhenMetricsCanBeCollectedInBackgroundWithInUsePermissionsOnly">
+               </Test>
+               <Test
                   Identifier = "MMEEventsManagerTests/testSendTurnstileEventWithSuccess">
                </Test>
                <Test

@@ -63,6 +63,15 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
     }
 }
 
+- (void)setMetricsEnabledForInUsePermissions:(BOOL)metricsEnabledForInUsePermissions {
+    _metricsEnabledForInUsePermissions = metricsEnabledForInUsePermissions;
+    
+    CLAuthorizationStatus authorizationStatus = [self.locationManager authorizationStatus];
+    if (authorizationStatus == kCLAuthorizationStatusAuthorizedWhenInUse) {
+        self.locationManager.allowsBackgroundLocationUpdates = self.isMetricsEnabledForInUsePermissions;
+    }
+}
+
 #pragma mark - Utilities
 
 - (void)configurePassiveLocationManager {
@@ -84,6 +93,15 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
             [self.locationManager startMonitoringSignificantLocationChanges];
             [self startBackgroundTimeoutTimer];
             self.locationManager.allowsBackgroundLocationUpdates = YES;
+        }
+        
+        // If authorization status is when in use specifically, allow background location updates based on
+        // if the library is configured to do so. Don't worry about significant location change and the
+        // background timer (just above) since all use cases for background collection with in use only
+        // permissions involve navigation where a user would want and expect the app to be running / navigating
+        // even if it is not in the foreground
+        if (authorizationStatus == kCLAuthorizationStatusAuthorizedWhenInUse) {
+            self.locationManager.allowsBackgroundLocationUpdates = self.isMetricsEnabledForInUsePermissions;
         }
 
         [self.locationManager startUpdatingLocation];
