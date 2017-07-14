@@ -39,6 +39,9 @@
             </BuildableReference>
             <SkippedTests>
                <Test
+                  Identifier = "MMEEventsManagerTests/testDisableLocationMetrics">
+               </Test>
+               <Test
                   Identifier = "MMEEventsManagerTests/testPauseOrResumeMetricsCollectionBackgroundTaskWithWhenInUsePermissionInBackground">
                </Test>
                <Test

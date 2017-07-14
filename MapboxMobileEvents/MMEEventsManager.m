@@ -28,6 +28,7 @@
 @property (nonatomic, getter=isPaused) BOOL paused;
 @property (nonatomic) id<MMEUIApplicationWrapper> application;
 @property (nonatomic) MMENSDateWrapper *dateWrapper;
+@property (nonatomic, getter=isLocationMetricsEnabled) BOOL locationMetricsEnabled;
 
 @end
 
@@ -51,6 +52,7 @@
     self = [super init];
     if (self) {
         _metricsEnabled = YES;
+        _locationMetricsEnabled = YES;
         _accountType = 0;
         _eventQueue = [NSMutableArray array];
         _commonEventData = [[MMECommonEventData alloc] init];
@@ -106,6 +108,11 @@
 - (void)setMetricsEnabledForInUsePermissions:(BOOL)metricsEnabledForInUsePermissions {
     _metricsEnabledForInUsePermissions = metricsEnabledForInUsePermissions;
     self.locationManager.metricsEnabledForInUsePermissions = metricsEnabledForInUsePermissions;
+}
+
+- (void)disableLocationMetrics {
+    self.locationMetricsEnabled = NO;
+    [self.locationManager stopUpdatingLocation];
 }
 
 - (void)pauseOrResumeMetricsCollectionIfRequired {
@@ -315,7 +322,9 @@
     
     self.paused = NO;
     
-    [self.locationManager startUpdatingLocation];
+    if (self.locationMetricsEnabled) {
+        [self.locationManager startUpdatingLocation];
+    }
     [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: @"Resumed and location manager started"}];
 }
 

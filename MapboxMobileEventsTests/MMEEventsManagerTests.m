@@ -66,6 +66,11 @@
 }
 
 // TODO: Add test for background task
+- (void)testDisableLocationMetrics {
+    XCTAssertTrue(NO);
+}
+
+// TODO: Add test for background task
 - (void)testPauseOrResumeMetricsCollectionBackgroundTaskWithWhenInUsePermissionInBackground {
     XCTAssertTrue(NO);
 }

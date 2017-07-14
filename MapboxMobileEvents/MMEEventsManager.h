@@ -26,6 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)sendTurnstileEvent;
 - (void)enqueueEventWithName:(NSString *)name;
 - (void)enqueueEventWithName:(NSString *)name attributes:(MMEMapboxEventAttributes *)attributes;
+- (void)disableLocationMetrics;
 
 @end
 
