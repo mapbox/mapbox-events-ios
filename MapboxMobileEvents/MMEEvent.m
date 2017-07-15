@@ -101,6 +101,13 @@
     return navigationFeedbackEvent;
 }
 
++ (instancetype)navigationRerouteEventWithAttributes:(NSDictionary *)attributes {
+    MMEEvent *navigationRerouteEvent = [[MMEEvent alloc] init];
+    navigationRerouteEvent.name = MMEEventTypeNavigationReroute;
+    navigationRerouteEvent.attributes = attributes;
+    return navigationRerouteEvent;
+}
+
 + (instancetype)debugEventWithAttributes:(NSDictionary *)attributes {
     MMEEvent *debugEvent = [[MMEEvent alloc] init];
     debugEvent.name = MMEEventTypeLocalDebug;
