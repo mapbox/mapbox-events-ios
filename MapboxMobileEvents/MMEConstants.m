@@ -57,6 +57,7 @@ NSString * const MMEEventTypeNavigationDepart = @"navigation.depart";
 NSString * const MMEEventTypeNavigationArrive = @"navigation.arrive";
 NSString * const MMEEventTypeNavigationCancel = @"navigation.cancel";
 NSString * const MMEEventTypeNavigationFeedback = @"navigation.feedback";
+NSString * const MMEEventTypeNavigationReroute = @"navigation.reroute";
 
 NSString * const MMEEventSource = @"mapbox";
 

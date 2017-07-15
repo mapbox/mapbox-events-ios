@@ -16,6 +16,7 @@
 + (instancetype)navigationCancelEventWithAttributes:(NSDictionary *)attributes;
 + (instancetype)navigationDepartEventWithAttributes:(NSDictionary *)attributes;
 + (instancetype)navigationFeedbackEventWithAttributes:(NSDictionary *)attributes;
++ (instancetype)navigationRerouteEventWithAttributes:(NSDictionary *)attributes;
 + (instancetype)debugEventWithAttributes:(NSDictionary *)attributes;
 
 @end

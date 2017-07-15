@@ -266,6 +266,8 @@
         event = [MMEEvent navigationDepartEventWithAttributes:attributes];
     } else if ([name isEqualToString:MMEEventTypeNavigationFeedback]) {
         event = [MMEEvent navigationFeedbackEventWithAttributes:attributes];
+    } else if ([name isEqualToString:MMEEventTypeNavigationReroute]) {
+        event = [MMEEvent navigationRerouteEventWithAttributes:attributes];
     }
     
     if (event) {
