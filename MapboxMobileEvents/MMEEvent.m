@@ -73,39 +73,11 @@
     return mapTapEvent;
 }
 
-+ (instancetype)navigationArriveEventWithAttributes:(NSDictionary *)attributes {
-    MMEEvent *navigationArriveEvent = [[MMEEvent alloc] init];
-    navigationArriveEvent.name = MMEEventTypeNavigationArrive;
-    navigationArriveEvent.attributes = attributes;
-    return navigationArriveEvent;
-}
-
-+ (instancetype)navigationCancelEventWithAttributes:(NSDictionary *)attributes {
-    MMEEvent *navigationCancelEvent = [[MMEEvent alloc] init];
-    navigationCancelEvent.name = MMEEventTypeNavigationCancel;
-    navigationCancelEvent.attributes = attributes;
-    return navigationCancelEvent;
-}
-
-+ (instancetype)navigationDepartEventWithAttributes:(NSDictionary *)attributes {
-    MMEEvent *navigationDepartEvent = [[MMEEvent alloc] init];
-    navigationDepartEvent.name = MMEEventTypeNavigationDepart;
-    navigationDepartEvent.attributes = attributes;
-    return navigationDepartEvent;
-}
-
-+ (instancetype)navigationFeedbackEventWithAttributes:(NSDictionary *)attributes {
-    MMEEvent *navigationFeedbackEvent = [[MMEEvent alloc] init];
-    navigationFeedbackEvent.name = MMEEventTypeNavigationFeedback;
-    navigationFeedbackEvent.attributes = attributes;
-    return navigationFeedbackEvent;
-}
-
-+ (instancetype)navigationRerouteEventWithAttributes:(NSDictionary *)attributes {
-    MMEEvent *navigationRerouteEvent = [[MMEEvent alloc] init];
-    navigationRerouteEvent.name = MMEEventTypeNavigationReroute;
-    navigationRerouteEvent.attributes = attributes;
-    return navigationRerouteEvent;
++ (instancetype)navigationEventWithName:(NSString *)name attributes:(NSDictionary *)attributes {
+    MMEEvent *navigationEvent = [[MMEEvent alloc] init];
+    navigationEvent.name = name;
+    navigationEvent.attributes = attributes;
+    return navigationEvent;
 }
 
 + (instancetype)debugEventWithAttributes:(NSDictionary *)attributes {

@@ -150,6 +150,10 @@
         return;
     }
     
+    if (self.eventQueue.count == 0) {
+        return;
+    }
+    
     NSArray *events = [self.eventQueue copy];
     __weak __typeof__(self) weakSelf = self;
     [self.apiClient postEvents:events completionHandler:^(NSError * _Nullable error) {
@@ -258,16 +262,10 @@
     } else if ([name isEqualToString:MMEEventTypeMapDragEnd]) {
         event = [MMEEvent mapDragEndEventWithDateString:[self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]]
                                              attributes:attributes];
-    } else if ([name isEqualToString:MMEEventTypeNavigationArrive]) {
-        event = [MMEEvent navigationArriveEventWithAttributes:attributes];
-    } else if ([name isEqualToString:MMEEventTypeNavigationCancel]) {
-        event = [MMEEvent navigationCancelEventWithAttributes:attributes];
-    } else if ([name isEqualToString:MMEEventTypeNavigationDepart]) {
-        event = [MMEEvent navigationDepartEventWithAttributes:attributes];
-    } else if ([name isEqualToString:MMEEventTypeNavigationFeedback]) {
-        event = [MMEEvent navigationFeedbackEventWithAttributes:attributes];
-    } else if ([name isEqualToString:MMEEventTypeNavigationReroute]) {
-        event = [MMEEvent navigationRerouteEventWithAttributes:attributes];
+    }
+    
+    if ([name hasPrefix:MMENavigationEventPrefix]) {
+        event = [MMEEvent navigationEventWithName:name attributes:attributes];
     }
     
     if (event) {

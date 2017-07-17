@@ -266,6 +266,15 @@
     XCTAssertFalse([apiClient received:@selector(postEvents:completionHandler:)]);
 }
 
+- (void)testFlushWithNoEvents {
+    MMEAPIClientFake *apiClient = [[MMEAPIClientFake alloc] init];
+    apiClient.accessToken = @"access-token";
+    apiClient.userAgentBase = @"user-agent";
+    [MMEEventsManager sharedManager].apiClient = apiClient;
+    [[MMEEventsManager sharedManager] flush];
+    XCTAssertFalse([apiClient received:@selector(postEvents:completionHandler:)]);
+}
+
 - (void)testSendTurnstileEventWithSuccess {
     NSString *accessToken = @"access-token";
     NSString *userAgentBase = @"UA-base";
@@ -398,6 +407,23 @@
     XCTAssertEqualObjects(event.attributes[MMEEventKeyLatitude], eventAttributes[MMEEventKeyLatitude]);
     XCTAssertEqualObjects(event.attributes[MMEEventKeyLongitude], eventAttributes[MMEEventKeyLongitude]);
     XCTAssertEqualObjects(event.attributes[MMEEventKeyZoomLevel], eventAttributes[MMEEventKeyZoomLevel]);
+}
+
+- (void)testUnknownEvent {
+    MMEEventsManager *eventsManager = [MMEEventsManager sharedManager];
+    [eventsManager enqueueEventWithName:@"unkonwn" attributes:@{}];
+    XCTAssertEqual(eventsManager.eventQueue.count, 0);
+}
+
+- (void)testNavigationEvents {
+    MMEEventsManager *eventsManager = [MMEEventsManager sharedManager];
+    [eventsManager enqueueEventWithName:MMEEventTypeNavigationArrive attributes:@{}];
+    [eventsManager enqueueEventWithName:MMEEventTypeNavigationDepart attributes:@{}];
+    [eventsManager enqueueEventWithName:MMEEventTypeNavigationCancel attributes:@{}];
+    [eventsManager enqueueEventWithName:MMEEventTypeNavigationFeedback attributes:@{}];
+    [eventsManager enqueueEventWithName:MMEEventTypeNavigationReroute attributes:@{}];
+    [eventsManager enqueueEventWithName:[NSString stringWithFormat:@"%@.anything", MMENavigationEventPrefix] attributes:@{}];
+    XCTAssertEqual(eventsManager.eventQueue.count, 6);
 }
 
 - (CLLocation *)location {

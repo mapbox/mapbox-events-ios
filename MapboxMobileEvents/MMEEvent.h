@@ -12,11 +12,7 @@
 + (instancetype)mapLoadEventWithDateString:(NSString *)dateString commonEventData:(MMECommonEventData *)commonEventData;
 + (instancetype)mapTapEventWithDateString:(NSString *)dateString attributes:(NSDictionary *)attributes;
 + (instancetype)mapDragEndEventWithDateString:(NSString *)dateString attributes:(NSDictionary *)attributes;
-+ (instancetype)navigationArriveEventWithAttributes:(NSDictionary *)attributes;
-+ (instancetype)navigationCancelEventWithAttributes:(NSDictionary *)attributes;
-+ (instancetype)navigationDepartEventWithAttributes:(NSDictionary *)attributes;
-+ (instancetype)navigationFeedbackEventWithAttributes:(NSDictionary *)attributes;
-+ (instancetype)navigationRerouteEventWithAttributes:(NSDictionary *)attributes;
++ (instancetype)navigationEventWithName:(NSString *)name attributes:(NSDictionary *)attributes;
 + (instancetype)debugEventWithAttributes:(NSDictionary *)attributes;
 
 @end

@@ -54,6 +54,7 @@ extern NSString * const MMEEventHorizontalAccuracy;
 extern NSString * const MMEEventSDKIdentifier;
 extern NSString * const MMEEventSDKVersion;
 extern NSString * const MMEEventKeyLocalDebugDescription;
+extern NSString * const MMENavigationEventPrefix;
 extern NSString * const MMEEventTypeNavigationDepart;
 extern NSString * const MMEEventTypeNavigationArrive;
 extern NSString * const MMEEventTypeNavigationCancel;
