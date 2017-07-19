@@ -1,7 +1,7 @@
 #import "MMEConstants.h"
 
 NSString * const MMEAPIClientBaseURL = @"https://events.mapbox.com";
-NSString * const MMETelemetryTestServerURL = @"MGLTelemetryTestServerURL";
+NSString * const MMETelemetryTestServerURL = @"MMETelemetryTestServerURL";
 NSString * const MMETelemetryStagingAccessToken = @"MMETelemetryStagingAccessToken";
 NSString * const MMEAPIClientEventsPath = @"events/v2";
 NSString * const MMEAPIClientHeaderFieldUserAgentKey = @"User-Agent";
@@ -9,7 +9,7 @@ NSString * const MMEAPIClientHeaderFieldContentTypeKey = @"Content-Type";
 NSString * const MMEAPIClientHeaderFieldContentTypeValue = @"application/json";
 NSString * const MMEAPIClientHeaderFieldContentEncodingKey = @"Content-Encoding";
 NSString * const MMEAPIClientHTTPMethodPost = @"POST";
-NSString * const MMEErrorDomain = @"MGLErrorDomain";
+NSString * const MMEErrorDomain = @"MMEErrorDomain";
 
 NSString * const MMEEventTypeAppUserTurnstile = @"appUserTurnstile";
 NSString * const MMEEventTypeMapLoad = @"map.load";
