@@ -44,7 +44,7 @@ static BOOL _initialized;
                               ]
                       },
               /* Staging */
-              @"*.tilestream.net" : @{
+              @"api-events-staging.tilestream.net" : @{
                       kTSKEnforcePinning:@YES,
                       kTSKPublicKeyAlgorithms : @[kTSKAlgorithmRsa2048],
                       kTSKPublicKeyHashes : @[

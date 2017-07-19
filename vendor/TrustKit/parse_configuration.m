@@ -10,12 +10,10 @@
  */
 
 #import "TSKTrustKitConfig.h"
-#import "Dependencies/domain_registry/domain_registry.h"
 #import "parse_configuration.h"
 #import "Pinning/TSKPublicKeyAlgorithm.h"
 #import <CommonCrypto/CommonDigest.h>
 #import "configuration_utils.h"
-
 
 static SecCertificateRef certificateFromPEM(NSString *pem)
 {
@@ -52,9 +50,6 @@ NSDictionary *parseTrustKitConfiguration(NSDictionary *trustKitArguments)
     // Convert settings supplied by the user to a configuration dictionary that can be used by TrustKit
     // This includes checking the sanity of the settings and converting public key hashes/pins from an
     // NSSArray of NSStrings (as provided by the user) to an NSSet of NSData (as needed by TrustKit)
-    
-    // Initialize domain registry library
-    InitializeDomainRegistry();
     
     NSMutableDictionary *finalConfiguration = [[NSMutableDictionary alloc]init];
     finalConfiguration[kTSKPinnedDomains] = [[NSMutableDictionary alloc]init];
@@ -99,14 +94,6 @@ NSDictionary *parseTrustKitConfiguration(NSDictionary *trustKitArguments)
     
     for (NSString *domainName in trustKitArguments[kTSKPinnedDomains])
     {
-        // Sanity checks on the domain name
-        if (GetRegistryLength([domainName UTF8String]) == 0)
-        {
-            [NSException raise:@"TrustKit configuration invalid"
-                        format:@"TrustKit was initialized with an invalid domain %@", domainName];
-        }
-        
-        
         // Retrieve the supplied arguments for this domain
         NSDictionary *domainPinningPolicy = trustKitArguments[kTSKPinnedDomains][domainName];
         NSMutableDictionary *domainFinalConfiguration = [[NSMutableDictionary alloc]init];
@@ -133,31 +120,9 @@ NSDictionary *parseTrustKitConfiguration(NSDictionary *trustKitArguments)
             // Default setting is NO
             domainFinalConfiguration[kTSKExcludeSubdomainFromParentPolicy] = @(NO);
         }
-        
-        
-        // Extract the optional includeSubdomains setting
-        NSNumber *shouldIncludeSubdomains = domainPinningPolicy[kTSKIncludeSubdomains];
-        if (shouldIncludeSubdomains == nil)
-        {
-            // Default setting is NO
-            domainFinalConfiguration[kTSKIncludeSubdomains] = @(NO);
-        }
-        else
-        {
-            if ([shouldIncludeSubdomains boolValue] == YES)
-            {
-                // Prevent pinning on *.com
-                // Ran into this issue with *.appspot.com which is part of the public suffix list
-                if (GetRegistryLength([domainName UTF8String]) == [domainName length])
-                {
-                    [NSException raise:@"TrustKit configuration invalid"
-                                format:@"TrustKit was initialized with includeSubdomains for a domain suffix %@", domainName];
-                }
-            }
-            
-            domainFinalConfiguration[kTSKIncludeSubdomains] = shouldIncludeSubdomains;
-        }
-        
+
+        // Default setting is NO
+        domainFinalConfiguration[kTSKIncludeSubdomains] = @(NO);            
         
         // Extract the optional expiration date setting
         NSString *expirationDateStr = domainPinningPolicy[kTSKExpirationDate];

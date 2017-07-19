@@ -66,21 +66,6 @@
 		40C611471F18319000E30A6C /* configuration_utils.h in Headers */ = {isa = PBXBuildFile; fileRef = 40C6110A1F18319000E30A6C /* configuration_utils.h */; };
 		40C611481F18319000E30A6C /* configuration_utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C6110B1F18319000E30A6C /* configuration_utils.m */; };
 		40C611491F18319000E30A6C /* configuration_utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C6110B1F18319000E30A6C /* configuration_utils.m */; };
-		40C6114A1F18319000E30A6C /* domain_registry.h in Headers */ = {isa = PBXBuildFile; fileRef = 40C6110E1F18319000E30A6C /* domain_registry.h */; };
-		40C6114B1F18319000E30A6C /* assert.c in Sources */ = {isa = PBXBuildFile; fileRef = 40C611101F18319000E30A6C /* assert.c */; };
-		40C6114C1F18319000E30A6C /* assert.c in Sources */ = {isa = PBXBuildFile; fileRef = 40C611101F18319000E30A6C /* assert.c */; };
-		40C6114D1F18319000E30A6C /* assert.h in Headers */ = {isa = PBXBuildFile; fileRef = 40C611111F18319000E30A6C /* assert.h */; };
-		40C6114E1F18319000E30A6C /* init_registry_tables.c in Sources */ = {isa = PBXBuildFile; fileRef = 40C611121F18319000E30A6C /* init_registry_tables.c */; };
-		40C6114F1F18319000E30A6C /* init_registry_tables.c in Sources */ = {isa = PBXBuildFile; fileRef = 40C611121F18319000E30A6C /* init_registry_tables.c */; };
-		40C611501F18319000E30A6C /* registry_search.c in Sources */ = {isa = PBXBuildFile; fileRef = 40C611131F18319000E30A6C /* registry_search.c */; };
-		40C611511F18319000E30A6C /* registry_search.c in Sources */ = {isa = PBXBuildFile; fileRef = 40C611131F18319000E30A6C /* registry_search.c */; };
-		40C611521F18319000E30A6C /* registry_types.h in Headers */ = {isa = PBXBuildFile; fileRef = 40C611141F18319000E30A6C /* registry_types.h */; };
-		40C611531F18319000E30A6C /* string_util.h in Headers */ = {isa = PBXBuildFile; fileRef = 40C611151F18319000E30A6C /* string_util.h */; };
-		40C611541F18319000E30A6C /* trie_node.h in Headers */ = {isa = PBXBuildFile; fileRef = 40C611161F18319000E30A6C /* trie_node.h */; };
-		40C611551F18319000E30A6C /* trie_search.c in Sources */ = {isa = PBXBuildFile; fileRef = 40C611171F18319000E30A6C /* trie_search.c */; };
-		40C611561F18319000E30A6C /* trie_search.c in Sources */ = {isa = PBXBuildFile; fileRef = 40C611171F18319000E30A6C /* trie_search.c */; };
-		40C611571F18319000E30A6C /* trie_search.h in Headers */ = {isa = PBXBuildFile; fileRef = 40C611181F18319000E30A6C /* trie_search.h */; };
-		40C611581F18319000E30A6C /* registry_tables.h in Headers */ = {isa = PBXBuildFile; fileRef = 40C6111A1F18319000E30A6C /* registry_tables.h */; };
 		40C611601F18319000E30A6C /* parse_configuration.h in Headers */ = {isa = PBXBuildFile; fileRef = 40C611231F18319000E30A6C /* parse_configuration.h */; };
 		40C611611F18319000E30A6C /* parse_configuration.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C611241F18319000E30A6C /* parse_configuration.m */; };
 		40C611621F18319000E30A6C /* parse_configuration.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C611241F18319000E30A6C /* parse_configuration.m */; };
@@ -233,17 +218,6 @@
 		40BE71011EB7C3EC00D690F3 /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		40C6110A1F18319000E30A6C /* configuration_utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = configuration_utils.h; sourceTree = "<group>"; };
 		40C6110B1F18319000E30A6C /* configuration_utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = configuration_utils.m; sourceTree = "<group>"; };
-		40C6110E1F18319000E30A6C /* domain_registry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = domain_registry.h; sourceTree = "<group>"; };
-		40C611101F18319000E30A6C /* assert.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = assert.c; sourceTree = "<group>"; };
-		40C611111F18319000E30A6C /* assert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = assert.h; sourceTree = "<group>"; };
-		40C611121F18319000E30A6C /* init_registry_tables.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = init_registry_tables.c; sourceTree = "<group>"; };
-		40C611131F18319000E30A6C /* registry_search.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = registry_search.c; sourceTree = "<group>"; };
-		40C611141F18319000E30A6C /* registry_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = registry_types.h; sourceTree = "<group>"; };
-		40C611151F18319000E30A6C /* string_util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = string_util.h; sourceTree = "<group>"; };
-		40C611161F18319000E30A6C /* trie_node.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = trie_node.h; sourceTree = "<group>"; };
-		40C611171F18319000E30A6C /* trie_search.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = trie_search.c; sourceTree = "<group>"; };
-		40C611181F18319000E30A6C /* trie_search.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = trie_search.h; sourceTree = "<group>"; };
-		40C6111A1F18319000E30A6C /* registry_tables.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = registry_tables.h; sourceTree = "<group>"; };
 		40C611231F18319000E30A6C /* parse_configuration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = parse_configuration.h; sourceTree = "<group>"; };
 		40C611241F18319000E30A6C /* parse_configuration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = parse_configuration.m; sourceTree = "<group>"; };
 		40C611261F18319000E30A6C /* ssl_pin_verifier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ssl_pin_verifier.h; sourceTree = "<group>"; };
@@ -449,7 +423,6 @@
 			children = (
 				40C6110A1F18319000E30A6C /* configuration_utils.h */,
 				40C6110B1F18319000E30A6C /* configuration_utils.m */,
-				40C6110C1F18319000E30A6C /* Dependencies */,
 				40C611231F18319000E30A6C /* parse_configuration.h */,
 				40C611241F18319000E30A6C /* parse_configuration.m */,
 				40C611251F18319000E30A6C /* Pinning */,
@@ -470,48 +443,6 @@
 			name = TrustKit;
 			path = vendor/TrustKit;
 			sourceTree = SOURCE_ROOT;
-		};
-		40C6110C1F18319000E30A6C /* Dependencies */ = {
-			isa = PBXGroup;
-			children = (
-				40C6110D1F18319000E30A6C /* domain_registry */,
-			);
-			path = Dependencies;
-			sourceTree = "<group>";
-		};
-		40C6110D1F18319000E30A6C /* domain_registry */ = {
-			isa = PBXGroup;
-			children = (
-				40C6110E1F18319000E30A6C /* domain_registry.h */,
-				40C6110F1F18319000E30A6C /* private */,
-				40C611191F18319000E30A6C /* registry_tables_genfiles */,
-			);
-			path = domain_registry;
-			sourceTree = "<group>";
-		};
-		40C6110F1F18319000E30A6C /* private */ = {
-			isa = PBXGroup;
-			children = (
-				40C611101F18319000E30A6C /* assert.c */,
-				40C611111F18319000E30A6C /* assert.h */,
-				40C611121F18319000E30A6C /* init_registry_tables.c */,
-				40C611131F18319000E30A6C /* registry_search.c */,
-				40C611141F18319000E30A6C /* registry_types.h */,
-				40C611151F18319000E30A6C /* string_util.h */,
-				40C611161F18319000E30A6C /* trie_node.h */,
-				40C611171F18319000E30A6C /* trie_search.c */,
-				40C611181F18319000E30A6C /* trie_search.h */,
-			);
-			path = private;
-			sourceTree = "<group>";
-		};
-		40C611191F18319000E30A6C /* registry_tables_genfiles */ = {
-			isa = PBXGroup;
-			children = (
-				40C6111A1F18319000E30A6C /* registry_tables.h */,
-			);
-			path = registry_tables_genfiles;
-			sourceTree = "<group>";
 		};
 		40C611251F18319000E30A6C /* Pinning */ = {
 			isa = PBXGroup;
@@ -607,12 +538,9 @@
 				404807CA1EA186D8008A6D50 /* MapboxMobileEvents.h in Headers */,
 				40C9E27F1EA5473F00744FE7 /* MMELocationManager.h in Headers */,
 				40AE584E1EA926710046B437 /* MMETypes.h in Headers */,
-				40C611521F18319000E30A6C /* registry_types.h in Headers */,
 				40AE58431EA6C86C0046B437 /* MMEUIApplicationWrapper.h in Headers */,
 				40C611871F18319000E30A6C /* TSKPinningValidatorCallback.h in Headers */,
 				40C611471F18319000E30A6C /* configuration_utils.h in Headers */,
-				40C611581F18319000E30A6C /* registry_tables.h in Headers */,
-				40C611541F18319000E30A6C /* trie_node.h in Headers */,
 				40AE585A1EA9373F0046B437 /* MMEUniqueIdentifier.h in Headers */,
 				409115351F16BCD200F4250B /* MMECategoryLoader.h in Headers */,
 				40AE58561EA932DB0046B437 /* MMEConstants.h in Headers */,
@@ -622,7 +550,6 @@
 				4036EFBE1ED37D56009C40BA /* MMEEventLogger.h in Headers */,
 				40AE58711EAA87960046B437 /* MMEAPIClient.h in Headers */,
 				405172DD1EAFFA9400F8CDA1 /* MMENSURLSessionWrapper.h in Headers */,
-				40C611531F18319000E30A6C /* string_util.h in Headers */,
 				40FB43771EF9EA7800EC5BC0 /* MMEEventsConfiguration.h in Headers */,
 				40C6116D1F18319000E30A6C /* TSKBackgroundReporter.h in Headers */,
 				40C611761F18319000E30A6C /* vendor_identifier.h in Headers */,
@@ -631,8 +558,6 @@
 				40C6118B1F18319000E30A6C /* TSKTrustDecision.h in Headers */,
 				40F16C811F02DA9F00DF338D /* MMENSDateWrapper.h in Headers */,
 				40C611601F18319000E30A6C /* parse_configuration.h in Headers */,
-				40C6114A1F18319000E30A6C /* domain_registry.h in Headers */,
-				40C611571F18319000E30A6C /* trie_search.h in Headers */,
 				40C6116A1F18319000E30A6C /* reporting_utils.h in Headers */,
 				40AE586D1EA95EDD0046B437 /* MMEEvent.h in Headers */,
 				40C611631F18319000E30A6C /* ssl_pin_verifier.h in Headers */,
@@ -644,7 +569,6 @@
 				40C9E27B1EA542BC00744FE7 /* MMEEventsManager.h in Headers */,
 				40C611731F18319000E30A6C /* TSKReportsRateLimiter.h in Headers */,
 				40F16C961F04514100DF338D /* reachability.h in Headers */,
-				40C6114D1F18319000E30A6C /* assert.h in Headers */,
 				40C611671F18319000E30A6C /* TSKSPKIHashCache.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -695,7 +619,6 @@
 				4085964F1ED084C0003BD29D /* Sources */,
 				408596501ED084C0003BD29D /* Frameworks */,
 				408596511ED084C0003BD29D /* CopyFiles */,
-				4085968B1ED09389003BD29D /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -798,29 +721,12 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
-/* Begin PBXShellScriptBuildPhase section */
-		4085968B1ED09389003BD29D /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "cp -R \"${BUILD_DIR}/${CONFIGURATION}/resources.bundle\" \"${BUILD_DIR}/${CONFIGURATION}-iphoneos\"";
-		};
-/* End PBXShellScriptBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
 		404807B41EA186D8008A6D50 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				40C6118D1F18319000E30A6C /* TSKTrustKitConfig.m in Sources */,
-				40C6114B1F18319000E30A6C /* assert.c in Sources */,
 				40C611741F18319000E30A6C /* TSKReportsRateLimiter.m in Sources */,
 				40C611481F18319000E30A6C /* configuration_utils.m in Sources */,
 				40C6116B1F18319000E30A6C /* reporting_utils.m in Sources */,
@@ -831,7 +737,6 @@
 				40C9E27C1EA542BC00744FE7 /* MMEEventsManager.m in Sources */,
 				40AE58571EA932DB0046B437 /* MMEConstants.m in Sources */,
 				40AE586A1EA953970046B437 /* CLLocation+MMEMobileEvents.m in Sources */,
-				40C611501F18319000E30A6C /* registry_search.c in Sources */,
 				40AE58441EA6C86C0046B437 /* MMEUIApplicationWrapper.m in Sources */,
 				4036EFBF1ED37D56009C40BA /* MMEEventLogger.m in Sources */,
 				40FB43781EF9EA7800EC5BC0 /* MMEEventsConfiguration.m in Sources */,
@@ -841,9 +746,7 @@
 				40C611891F18319000E30A6C /* TSKPinningValidatorResult.m in Sources */,
 				40FB437D1EFAFAE900EC5BC0 /* MMETimerManager.m in Sources */,
 				40AE58721EAA87960046B437 /* MMEAPIClient.m in Sources */,
-				40C6114E1F18319000E30A6C /* init_registry_tables.c in Sources */,
 				40C611681F18319000E30A6C /* TSKSPKIHashCache.m in Sources */,
-				40C611551F18319000E30A6C /* trie_search.c in Sources */,
 				40F16C971F04514100DF338D /* reachability.m in Sources */,
 				40C9E2801EA5473F00744FE7 /* MMELocationManager.m in Sources */,
 				40C611841F18319000E30A6C /* TSKPinningValidator.m in Sources */,
@@ -885,7 +788,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				40C6118E1F18319000E30A6C /* TSKTrustKitConfig.m in Sources */,
-				40C6114C1F18319000E30A6C /* assert.c in Sources */,
 				40C611751F18319000E30A6C /* TSKReportsRateLimiter.m in Sources */,
 				40C611491F18319000E30A6C /* configuration_utils.m in Sources */,
 				40C6116C1F18319000E30A6C /* reporting_utils.m in Sources */,
@@ -896,7 +798,6 @@
 				408596601ED086DF003BD29D /* MMELocationManager.m in Sources */,
 				408596641ED086EB003BD29D /* MMEUIApplicationWrapper.m in Sources */,
 				4085965F1ED086DC003BD29D /* MMEEventsManager.m in Sources */,
-				40C611511F18319000E30A6C /* registry_search.c in Sources */,
 				4085965C1ED086D3003BD29D /* MMEConstants.m in Sources */,
 				4036EFC01ED38489009C40BA /* MMEEventLogger.m in Sources */,
 				40FB43791EF9EA7800EC5BC0 /* MMEEventsConfiguration.m in Sources */,
@@ -906,9 +807,7 @@
 				40C6118A1F18319000E30A6C /* TSKPinningValidatorResult.m in Sources */,
 				40FB437E1EFAFAE900EC5BC0 /* MMETimerManager.m in Sources */,
 				408596661ED086F1003BD29D /* MMEUniqueIdentifier.m in Sources */,
-				40C6114F1F18319000E30A6C /* init_registry_tables.c in Sources */,
 				40C611691F18319000E30A6C /* TSKSPKIHashCache.m in Sources */,
-				40C611561F18319000E30A6C /* trie_search.c in Sources */,
 				40F16C981F04514100DF338D /* reachability.m in Sources */,
 				4085965D1ED086D6003BD29D /* MMETypes.m in Sources */,
 				40C611851F18319000E30A6C /* TSKPinningValidator.m in Sources */,
