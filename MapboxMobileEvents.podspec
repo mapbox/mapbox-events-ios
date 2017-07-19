@@ -36,6 +36,7 @@ Pod::Spec.new do |s|
   # ――― Project Settings ――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
   s.requires_arc = true
-  s.module_name = "MapboxMobileEvents"
+  s.module_name = 'MapboxMobileEvents'
+  s.library = 'z'
 
 end

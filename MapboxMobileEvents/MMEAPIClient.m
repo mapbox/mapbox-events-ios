@@ -2,6 +2,7 @@
 #import "MMEConstants.h"
 #import "MMENSURLSessionWrapper.h"
 #import "MMEEvent.h"
+#import "NSData+MMEGZIP.h"
 
 @interface MMEAPIClient ()
 
@@ -94,15 +95,13 @@
     }];
 
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:eventAttributes options:0 error:nil];
-
-    // TODO: Compression
     
-    //    // Compressing less than 3 events can have a negative impact on the size.
-    //    if (events.count > 2) {
-    //        NSData *compressedData = [jsonData mgl_compressedData];
-    //        [request setValue:@"deflate" forHTTPHeaderField:MGLAPIClientHeaderFieldContentEncodingKey];
-    //        [request setHTTPBody:compressedData];
-    //    }
+    // Compressing less than 2 events can have a negative impact on the size.
+    if (events.count > 1) {
+        NSData *compressedData = [jsonData mme_gzippedData];
+        [request setValue:@"gzip" forHTTPHeaderField:MMEAPIClientHeaderFieldContentEncodingKey];
+        [request setHTTPBody:compressedData];
+    }
 
     // Set JSON data if events.count were less than 3 or something went wrong with compressing HTTP body data.
     if (!request.HTTPBody) {
