@@ -114,6 +114,33 @@
     [self waitForExpectations:@[expectation] timeout:1];
 }
 
+- (void)testPostingTwoEvents {
+    XCTestExpectation *expectation = [self expectationWithDescription:@"It should call the completion handler"];
+    
+    MMENSURLSessionWrapperFake *sessionWrapperFake = [self setUpAPIClientToTestPosting];
+    
+    MMEEvent *eventOne = [self locationEvent];
+    MMEEvent *eventTwo = [self locationEvent];
+    
+    [self.apiClient postEvents:@[eventOne, eventTwo] completionHandler:^(NSError * _Nullable error) {
+        [expectation fulfill];
+    }];
+    
+    // It should tell its session wrapper to process a request with a completion handler
+    XCTAssertTrue([sessionWrapperFake received:@selector(processRequest:completionHandler:)]);
+    XCTAssertEqualObjects(sessionWrapperFake.request.allHTTPHeaderFields[MMEAPIClientHeaderFieldContentEncodingKey], @"gzip");
+    
+    // When the session wrapper returns with a status code < 400
+    NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:[NSURL URLWithString:@"http:test.com"]
+                                                              statusCode:200
+                                                             HTTPVersion:nil
+                                                            headerFields:nil];
+    [sessionWrapperFake completeProcessingWithData:nil response:response error:nil];
+    
+    // It should complete the post event with no error
+    [self waitForExpectations:@[expectation] timeout:1];
+}
+
 - (void)testPostingAnEventWithAnHTTPStatusErrorResponse {
     XCTestExpectation *expectation = [self expectationWithDescription:@"It should call the completion handler"];
     
