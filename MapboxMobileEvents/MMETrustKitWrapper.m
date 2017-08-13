@@ -31,6 +31,7 @@ static BOOL _initialized;
               /* Production */
               @"events.mapbox.com" : @{
                       kTSKEnforcePinning:@YES,
+                      kTSKDisableDefaultReportUri:@YES,
                       kTSKPublicKeyAlgorithms : @[kTSKAlgorithmRsa2048],
                       kTSKPublicKeyHashes : @[
                               // Digicert, 2016, SHA1 Fingerprint=0A:80:27:6E:1C:A6:5D:ED:1D:C2:24:E7:7D:0C:A7:24:0B:51:C8:54
