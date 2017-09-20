@@ -1,4 +1,5 @@
 #import "MMECLLocationManagerWrapper.h"
+#import "NSBundle+MMEAdditions.h"
 
 @interface MMECLLocationManagerWrapper ()
 
@@ -47,13 +48,15 @@
 
 - (void)setAllowsBackgroundLocationUpdates:(BOOL)allowsBackgroundLocationUpdates {
     if ([self.locationManager respondsToSelector:@selector(allowsBackgroundLocationUpdates)]) {
-        self.locationManager.allowsBackgroundLocationUpdates = allowsBackgroundLocationUpdates;
+        if ([[NSBundle mainBundle] allowsBackgroundLocationMode]) {
+            self.locationManager.allowsBackgroundLocationUpdates = allowsBackgroundLocationUpdates;
+        }
     }
 }
 
 - (BOOL)allowsBackgroundLocationUpdates {
     if ([self.locationManager respondsToSelector:@selector(allowsBackgroundLocationUpdates)]) {
-        return self.locationManager.allowsBackgroundLocationUpdates;
+        return [[NSBundle mainBundle] allowsBackgroundLocationMode] ? self.locationManager.allowsBackgroundLocationUpdates : NO;
     }
     return NO;
 }

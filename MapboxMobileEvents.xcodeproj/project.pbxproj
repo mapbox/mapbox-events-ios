@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3540512B1F72D1D200ED572D /* NSBundle+MMEAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 354051291F72D1D200ED572D /* NSBundle+MMEAdditions.h */; };
+		3540512C1F72D1D200ED572D /* NSBundle+MMEAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3540512A1F72D1D200ED572D /* NSBundle+MMEAdditions.m */; };
+		3540512D1F72D1D200ED572D /* NSBundle+MMEAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3540512A1F72D1D200ED572D /* NSBundle+MMEAdditions.m */; };
 		40031E5E1EFC5CA1009EAB33 /* MMEUniqueIdentifierFake.m in Sources */ = {isa = PBXBuildFile; fileRef = 40031E5D1EFC5CA1009EAB33 /* MMEUniqueIdentifierFake.m */; };
 		40031E601EFC62D6009EAB33 /* MMEUniqueIdentifierTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 40031E5F1EFC62D6009EAB33 /* MMEUniqueIdentifierTests.m */; };
 		4036EFBB1ED36F06009C40BA /* MMEAPIClientFake.m in Sources */ = {isa = PBXBuildFile; fileRef = 4036EFBA1ED36F06009C40BA /* MMEAPIClientFake.m */; };
@@ -171,6 +174,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		354051291F72D1D200ED572D /* NSBundle+MMEAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSBundle+MMEAdditions.h"; sourceTree = "<group>"; };
+		3540512A1F72D1D200ED572D /* NSBundle+MMEAdditions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+MMEAdditions.m"; sourceTree = "<group>"; };
 		40031E5C1EFC5CA1009EAB33 /* MMEUniqueIdentifierFake.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEUniqueIdentifierFake.h; sourceTree = "<group>"; };
 		40031E5D1EFC5CA1009EAB33 /* MMEUniqueIdentifierFake.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEUniqueIdentifierFake.m; sourceTree = "<group>"; };
 		40031E5F1EFC62D6009EAB33 /* MMEUniqueIdentifierTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEUniqueIdentifierTests.m; sourceTree = "<group>"; };
@@ -423,6 +428,8 @@
 				409115341F16BCD200F4250B /* MMECategoryLoader.m */,
 				40AE58671EA953970046B437 /* CLLocation+MMEMobileEvents.h */,
 				40AE58681EA953970046B437 /* CLLocation+MMEMobileEvents.m */,
+				354051291F72D1D200ED572D /* NSBundle+MMEAdditions.h */,
+				3540512A1F72D1D200ED572D /* NSBundle+MMEAdditions.m */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -553,6 +560,7 @@
 				40C611881F18319000E30A6C /* TSKPinningValidatorResult.h in Headers */,
 				40C611821F18319000E30A6C /* TSKLog.h in Headers */,
 				404807CA1EA186D8008A6D50 /* MapboxMobileEvents.h in Headers */,
+				3540512B1F72D1D200ED572D /* NSBundle+MMEAdditions.h in Headers */,
 				40C9E27F1EA5473F00744FE7 /* MMELocationManager.h in Headers */,
 				40AE584E1EA926710046B437 /* MMETypes.h in Headers */,
 				40F133541F20051E007B4096 /* NSData+MMEGZIP.h in Headers */,
@@ -764,6 +772,7 @@
 				40C611891F18319000E30A6C /* TSKPinningValidatorResult.m in Sources */,
 				40F133531F20051E007B4096 /* NSData+MMEGZIP.m in Sources */,
 				40FB437D1EFAFAE900EC5BC0 /* MMETimerManager.m in Sources */,
+				3540512C1F72D1D200ED572D /* NSBundle+MMEAdditions.m in Sources */,
 				40AE58721EAA87960046B437 /* MMEAPIClient.m in Sources */,
 				40C611681F18319000E30A6C /* TSKSPKIHashCache.m in Sources */,
 				40F16C971F04514100DF338D /* reachability.m in Sources */,
@@ -826,6 +835,7 @@
 				40C6118A1F18319000E30A6C /* TSKPinningValidatorResult.m in Sources */,
 				40F133551F200524007B4096 /* NSData+MMEGZIP.m in Sources */,
 				40FB437E1EFAFAE900EC5BC0 /* MMETimerManager.m in Sources */,
+				3540512D1F72D1D200ED572D /* NSBundle+MMEAdditions.m in Sources */,
 				408596661ED086F1003BD29D /* MMEUniqueIdentifier.m in Sources */,
 				40C611691F18319000E30A6C /* TSKSPKIHashCache.m in Sources */,
 				40F16C981F04514100DF338D /* reachability.m in Sources */,
