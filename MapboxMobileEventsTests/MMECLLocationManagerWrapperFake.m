@@ -6,6 +6,7 @@
 @synthesize desiredAccuracy;
 @synthesize distanceFilter;
 @synthesize monitoredRegions;
+@synthesize hostAppHasBackgroundCapability;
 
 - (CLAuthorizationStatus)authorizationStatus {
     return self.stub_authorizationStatus;

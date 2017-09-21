@@ -11,6 +11,7 @@
 @property (nonatomic) CLLocationAccuracy desiredAccuracy;
 @property (nonatomic) CLLocationDistance distanceFilter;
 @property (nonatomic, copy, readonly) NSSet<__kindof CLRegion *> *monitoredRegions;
+@property (nonatomic) BOOL hostAppHasBackgroundCapability;
 
 - (CLAuthorizationStatus)authorizationStatus;
 - (void)startUpdatingLocation;
