@@ -26,6 +26,7 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      language = ""
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
          <TestableReference
@@ -39,22 +40,13 @@
             </BuildableReference>
             <SkippedTests>
                <Test
-                  Identifier = "MMEEventsManagerTests/testDisableLocationMetrics">
+                  Identifier = "MMEAPIClientTests">
                </Test>
                <Test
-                  Identifier = "MMEEventsManagerTests/testPauseOrResumeMetricsCollectionBackgroundTaskWithWhenInUsePermissionInBackground">
+                  Identifier = "MMEEventsManagerTests">
                </Test>
                <Test
-                  Identifier = "MMEEventsManagerTests/testPauseOrResumeMetricsCollectionIfRequiredPausedToResumed">
-               </Test>
-               <Test
-                  Identifier = "MMEEventsManagerTests/testPauseOrResumeMetricsCollectionIfRequiredResumedToPaused">
-               </Test>
-               <Test
-                  Identifier = "MMEEventsManagerTests/testPauseOrResumeMetricsCollectionWhenMetricsCanBeCollectedInBackgroundWithInUsePermissionsOnly">
-               </Test>
-               <Test
-                  Identifier = "MMEEventsManagerTests/testSendTurnstileEventWithSuccess">
+                  Identifier = "MMELocationManagerTests">
                </Test>
                <Test
                   Identifier = "MMELocationManagerTests/testAsDelegateForLocationManagerWrapperAuthorizationStatusChangeToAlways">
@@ -70,6 +62,15 @@
                </Test>
                <Test
                   Identifier = "MMELocationManagerTests/testStartUpdatingLocationWhenHostAppHasWhenInUsePermissions">
+               </Test>
+               <Test
+                  Identifier = "MMENSDateWrapperTests">
+               </Test>
+               <Test
+                  Identifier = "MMETimerManagerTests">
+               </Test>
+               <Test
+                  Identifier = "MMEUniqueIdentifierTests">
                </Test>
             </SkippedTests>
          </TestableReference>
@@ -90,6 +91,7 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      language = ""
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
       ignoresPersistentStateOnLaunch = "NO"
