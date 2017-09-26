@@ -83,14 +83,23 @@
     [self.locationManager startUpdatingLocation];
 
     XCTAssert(self.locationManagerWrapper.delegate == self.locationManager, @"MME location manager should set itself as the delegate of the location manager wrapper");
+    
     XCTAssert(self.locationManagerWrapper.desiredAccuracy == kCLLocationAccuracyThreeKilometers, @"MME location manager should correctly set the location manager wrapper's desired accuracy");
+    
     XCTAssert(self.locationManagerWrapper.distanceFilter == MMELocationManagerDistanceFilter, @"MME location manager should correctly set the location manager wrapper's distance filter");
+    
     XCTAssert([self.locationManagerWrapper received:@selector(startMonitoringSignificantLocationChanges) withArguments:nil], @"CL location manager should have been told to start monitoring significant location changes");
+    
     XCTAssertNotNil(self.locationManager.backgroundLocationServiceTimeoutTimer, @"MME location manager should start its background timer");
+    
     XCTAssert(self.locationManager.isUpdatingLocation, @"MME locationManager should consider itself to be updating location");
+    
+    
+    
     XCTAssert(self.locationManagerWrapper.allowsBackgroundLocationUpdates, @"CL location manager should have been told to allow background location updates");
 
     XCTAssert([self.locationManagerWrapper received:@selector(startUpdatingLocation) withArguments:nil], @"CL location manager should have been told to start updating location");
+    
     XCTAssert([self.delegateStub received:@selector(locationManagerDidStartLocationUpdates:) withArguments:@[self.locationManager]], @"MME location manager should notify its delegate that it started location updates");
 }
 

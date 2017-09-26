@@ -1,5 +1,6 @@
 #import "MMELocationManager.h"
 #import "MMEUIApplicationWrapper.h"
+#import "MMEDependencyManager.h"
 
 static const NSTimeInterval MMELocationManagerHibernationTimeout = 300.0;
 static const NSTimeInterval MMELocationManagerHibernationPollInterval = 5.0;
@@ -36,8 +37,7 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
     if ([self isUpdatingLocation]) {
         return;
     }
-
-    self.locationManager = [[MMECLLocationManagerWrapper alloc] init];
+    self.locationManager = [[MMEDependencyManager sharedManager] locationManagerWrapperInstance];
     [self configurePassiveLocationManager];
     [self startLocationServices];
 }
@@ -94,7 +94,7 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
             [self startBackgroundTimeoutTimer];
             self.locationManager.allowsBackgroundLocationUpdates = YES;
         }
-        
+          
         // If authorization status is when in use specifically, allow background location updates based on
         // if the library is configured to do so. Don't worry about significant location change and the
         // background timer (just above) since all use cases for background collection with in use only

@@ -46,6 +46,9 @@
                   Identifier = "MMEEventsManagerTests">
                </Test>
                <Test
+                  Identifier = "MMELocationManagerTests">
+               </Test>
+               <Test
                   Identifier = "MMELocationManagerTests/testAsDelegateForLocationManagerWrapperAuthorizationStatusChangeToAlways">
                </Test>
                <Test
