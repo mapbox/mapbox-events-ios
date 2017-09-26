@@ -46,16 +46,10 @@
                   Identifier = "MMEEventsManagerTests">
                </Test>
                <Test
-                  Identifier = "MMELocationManagerTests">
-               </Test>
-               <Test
                   Identifier = "MMELocationManagerTests/testAsDelegateForLocationManagerWrapperAuthorizationStatusChangeToAlways">
                </Test>
                <Test
                   Identifier = "MMELocationManagerTests/testAsDelegateForLocationManagerWrapperAuthorizationStatusChangeToWhenInUse">
-               </Test>
-               <Test
-                  Identifier = "MMELocationManagerTests/testStartUpdatingLocationWhenHostAppHasBackgroundCapabilityAndAlwaysPermissions">
                </Test>
                <Test
                   Identifier = "MMELocationManagerTests/testStartUpdatingLocationWhenHostAppHasNoBackgroundCapabilityAndAlwaysPermissions">
