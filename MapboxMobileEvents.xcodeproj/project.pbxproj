@@ -13,6 +13,7 @@
 		4036EFBF1ED37D56009C40BA /* MMEEventLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 4036EFBD1ED37D56009C40BA /* MMEEventLogger.m */; };
 		4036EFC01ED38489009C40BA /* MMEEventLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 4036EFBD1ED37D56009C40BA /* MMEEventLogger.m */; };
 		403834FD1F79C2B0004205B9 /* MMELocationManagerTests_cedar.mm in Sources */ = {isa = PBXBuildFile; fileRef = 403834FC1F79C2B0004205B9 /* MMELocationManagerTests_cedar.mm */; };
+		403834FF1F7AC55D004205B9 /* MMENSDateWrapperTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 403834FE1F7AC55D004205B9 /* MMENSDateWrapperTests.mm */; };
 		404807C31EA186D8008A6D50 /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 404807B91EA186D8008A6D50 /* MapboxMobileEvents.framework */; };
 		404807CA1EA186D8008A6D50 /* MapboxMobileEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = 404807BC1EA186D8008A6D50 /* MapboxMobileEvents.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		405172DD1EAFFA9400F8CDA1 /* MMENSURLSessionWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 405172DB1EAFFA9400F8CDA1 /* MMENSURLSessionWrapper.h */; };
@@ -124,7 +125,6 @@
 		40F16C821F02DA9F00DF338D /* MMENSDateWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 40F16C801F02DA9F00DF338D /* MMENSDateWrapper.m */; };
 		40F16C831F02DA9F00DF338D /* MMENSDateWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 40F16C801F02DA9F00DF338D /* MMENSDateWrapper.m */; };
 		40F16C861F02DB6300DF338D /* MMENSDateWrapperFake.m in Sources */ = {isa = PBXBuildFile; fileRef = 40F16C851F02DB6300DF338D /* MMENSDateWrapperFake.m */; };
-		40F16C8D1F02DF8C00DF338D /* MMENSDateWrapperTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 40F16C8C1F02DF8C00DF338D /* MMENSDateWrapperTests.m */; };
 		40F16C901F042F2A00DF338D /* MMETypes.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 40AE584C1EA926710046B437 /* MMETypes.h */; };
 		40F16C961F04514100DF338D /* reachability.h in Headers */ = {isa = PBXBuildFile; fileRef = 40F16C941F04514100DF338D /* reachability.h */; };
 		40F16C971F04514100DF338D /* reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 40F16C951F04514100DF338D /* reachability.m */; };
@@ -181,6 +181,7 @@
 		4036EFBC1ED37D56009C40BA /* MMEEventLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEEventLogger.h; sourceTree = "<group>"; };
 		4036EFBD1ED37D56009C40BA /* MMEEventLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEEventLogger.m; sourceTree = "<group>"; };
 		403834FC1F79C2B0004205B9 /* MMELocationManagerTests_cedar.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MMELocationManagerTests_cedar.mm; sourceTree = "<group>"; };
+		403834FE1F7AC55D004205B9 /* MMENSDateWrapperTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MMENSDateWrapperTests.mm; sourceTree = "<group>"; };
 		404807B91EA186D8008A6D50 /* MapboxMobileEvents.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MapboxMobileEvents.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		404807BC1EA186D8008A6D50 /* MapboxMobileEvents.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MapboxMobileEvents.h; sourceTree = "<group>"; };
 		404807BD1EA186D8008A6D50 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -272,7 +273,6 @@
 		40F16C801F02DA9F00DF338D /* MMENSDateWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMENSDateWrapper.m; sourceTree = "<group>"; };
 		40F16C841F02DB6300DF338D /* MMENSDateWrapperFake.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMENSDateWrapperFake.h; sourceTree = "<group>"; };
 		40F16C851F02DB6300DF338D /* MMENSDateWrapperFake.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMENSDateWrapperFake.m; sourceTree = "<group>"; };
-		40F16C8C1F02DF8C00DF338D /* MMENSDateWrapperTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMENSDateWrapperTests.m; sourceTree = "<group>"; };
 		40F16C941F04514100DF338D /* reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = reachability.h; sourceTree = "<group>"; };
 		40F16C951F04514100DF338D /* reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = reachability.m; sourceTree = "<group>"; };
 		40FB43751EF9EA7800EC5BC0 /* MMEEventsConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEEventsConfiguration.h; sourceTree = "<group>"; };
@@ -399,7 +399,7 @@
 				40AE58821EAA8E040046B437 /* MMEAPIClientTests.m */,
 				40FB437F1EFAFDCF00EC5BC0 /* MMETimerManagerTests.m */,
 				40A7F9951F79A7CA002B931F /* MMEUniqueIdentifierTests.mm */,
-				40F16C8C1F02DF8C00DF338D /* MMENSDateWrapperTests.m */,
+				403834FE1F7AC55D004205B9 /* MMENSDateWrapperTests.mm */,
 			);
 			path = MapboxMobileEventsTests;
 			sourceTree = "<group>";
@@ -811,9 +811,9 @@
 			files = (
 				40031E5E1EFC5CA1009EAB33 /* MMEUniqueIdentifierFake.m in Sources */,
 				40AE58511EA9286E0046B437 /* MMEEventsManagerTests.m in Sources */,
-				40F16C8D1F02DF8C00DF338D /* MMENSDateWrapperTests.m in Sources */,
 				40C9E28E1EA5765200744FE7 /* MMECLLocationManagerWrapperFake.m in Sources */,
 				40AE58471EA6C9F10046B437 /* MMEUIApplicationWrapperFake.m in Sources */,
+				403834FF1F7AC55D004205B9 /* MMENSDateWrapperTests.mm in Sources */,
 				40AE584B1EA80EA90046B437 /* MMETestStub.m in Sources */,
 				40FB43801EFAFDCF00EC5BC0 /* MMETimerManagerTests.m in Sources */,
 				4036EFBB1ED36F06009C40BA /* MMEAPIClientFake.m in Sources */,
