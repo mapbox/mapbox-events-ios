@@ -108,6 +108,7 @@
     self.locationManagerWrapper.stub_authorizationStatus = kCLAuthorizationStatusAuthorizedAlways;
 
     [self.locationManager startUpdatingLocation];
+    
     [self assertThatLocationManagerBehavesCorrectlyWhenAuthorizedForWhenInUseOnlyOrWhenItHasNoBackgroundCapability];
 }
 
@@ -115,6 +116,7 @@
     self.locationManagerWrapper.stub_authorizationStatus = kCLAuthorizationStatusAuthorizedWhenInUse;
 
     [self.locationManager startUpdatingLocation];
+    
     [self assertThatLocationManagerBehavesCorrectlyWhenAuthorizedForWhenInUseOnlyOrWhenItHasNoBackgroundCapability];
 }
 
@@ -272,10 +274,15 @@
 
 - (void)assertThatLocationManagerBehavesCorrectlyWhenAuthorizedForWhenInUseOnlyOrWhenItHasNoBackgroundCapability {
     XCTAssertFalse([self.locationManagerWrapper received:@selector(startMonitoringSignificantLocationChanges) withArguments:nil], @"CL location manager should not have been told to start monitoring significant location changes");
+    
     XCTAssertNil(self.locationManager.backgroundLocationServiceTimeoutTimer, @"background timer should not be started");
+    
     XCTAssertFalse(self.locationManagerWrapper.allowsBackgroundLocationUpdates, @"CL location manager should not have been told to allow background location updates");
+    
     XCTAssert([self.locationManagerWrapper received:@selector(startUpdatingLocation) withArguments:nil], @"CL location manager should have been told to start updating location");
+    
     XCTAssert(self.locationManager.isUpdatingLocation, @"MME locationManager should consider itself to be updating location");
+    
     XCTAssert([self.delegateStub received:@selector(locationManagerDidStartLocationUpdates:) withArguments:@[self.locationManager]], @"MME location manager should notify its delegate that it started location updates");
 }
 

@@ -76,7 +76,7 @@ describe(@"MMELocationManager", ^{
                     locationManager.locationManager.distanceFilter should equal(MMELocationManagerDistanceFilter);
                 });
                 
-                it(@"calls the location manager wrapper's start startMonitoringSignificantLocationChanges method", ^{
+                it(@"calls the location manager wrapper's startMonitoringSignificantLocationChanges method", ^{
                     locationManager.locationManager should have_received(@selector(startMonitoringSignificantLocationChanges));
                 });
                 
@@ -100,11 +100,118 @@ describe(@"MMELocationManager", ^{
                     locationManager.delegate should have_received(@selector(locationManagerDidStartLocationUpdates:)).with(locationManager);
                 });
             });
-            
         });
         
+        context(@"when the host app has NO background capability and always permissions", ^{
+            
+            beforeEach(^{
+
+                MMECLLocationManagerWrapper *locationManagerWrapper = [[MMECLLocationManagerWrapper alloc] init];
+                spy_on(locationManagerWrapper);
+
+                locationManager.hostAppHasBackgroundCapability = NO;
+                locationManagerWrapper stub_method(@selector(authorizationStatus)).and_return(kCLAuthorizationStatusAuthorizedAlways);
+
+                spy_on([MMEDependencyManager sharedManager]);
+                [MMEDependencyManager sharedManager] stub_method(@selector(locationManagerWrapperInstance)).and_return(locationManagerWrapper);
+                
+                locationManager = [[MMELocationManager alloc] init];
+                locationManager.delegate = nice_fake_for(@protocol(MMELocationManagerDelegate));
+                
+                locationManager.backgroundLocationServiceTimeoutTimer should be_nil;
+                
+            });
+            
+            context(@"when startUpdatingLocation is called", ^{
+                
+                beforeEach(^{
+                    // call start updating location on location manager
+                    [locationManager startUpdatingLocation];
+                });
+                
+                it(@"should not tell location manager to startMonitoringSignificantLocationChanges", ^{
+                    locationManager.locationManager should_not have_received(@selector(startMonitoringSignificantLocationChanges));
+                });
+                
+                it(@"then background timer should not be started", ^{
+                    locationManager.backgroundLocationServiceTimeoutTimer should be_nil;
+                });
+                
+                it(@"should not tell location manager to allowsBackgroundLocationUpdates", ^{
+                    locationManager.locationManager.allowsBackgroundLocationUpdates should be_falsy;
+                });
+                
+                it(@"tell location manager to startUpdatingLocation", ^{
+                    locationManager.locationManager should have_received(@selector(startUpdatingLocation));
+                });
+                
+                it(@"checks that location manager considers itself to be updating location", ^{
+                    locationManager.isUpdatingLocation should be_truthy;
+                });
+                
+                it(@"tells the location manager to notify it's delegate that it started location updates", ^{
+                    locationManager.delegate should have_received(@selector(locationManagerDidStartLocationUpdates:)).with(locationManager);
+                });
+            });
+        });
+        
+        context(@"when the host app has when in use permissions", ^{
+            
+            beforeEach(^{
+                
+                MMECLLocationManagerWrapper *locationManagerWrapper = [[MMECLLocationManagerWrapper alloc] init];
+                spy_on(locationManagerWrapper);
+                
+                locationManagerWrapper stub_method(@selector(authorizationStatus)).and_return(kCLAuthorizationStatusAuthorizedWhenInUse);
+                
+                spy_on([MMEDependencyManager sharedManager]);
+                [MMEDependencyManager sharedManager] stub_method(@selector(locationManagerWrapperInstance)).and_return(locationManagerWrapper);
+                
+                locationManager = [[MMELocationManager alloc] init];
+                locationManager.delegate = nice_fake_for(@protocol(MMELocationManagerDelegate));
+                
+                locationManager.backgroundLocationServiceTimeoutTimer should be_nil;
+                
+            });
+            
+            //TODO: This could be a good candidate for Cedar's sharedExamplesFor
+            context(@"when startUpdatingLocation is called", ^{
+                
+                beforeEach(^{
+                    // call start updating location on location manager
+                    [locationManager startUpdatingLocation];
+                });
+                
+                it(@"should not tell location manager to startMonitoringSignificantLocationChanges", ^{
+                    locationManager.locationManager should_not have_received(@selector(startMonitoringSignificantLocationChanges));
+                });
+                
+                it(@"then background timer should not be started", ^{
+                    locationManager.backgroundLocationServiceTimeoutTimer should be_nil;
+                });
+                
+                it(@"should not tell location manager to allowsBackgroundLocationUpdates", ^{
+                    locationManager.locationManager.allowsBackgroundLocationUpdates should be_falsy;
+                });
+                
+                it(@"tell location manager to startUpdatingLocation", ^{
+                    locationManager.locationManager should have_received(@selector(startUpdatingLocation));
+                });
+                
+                it(@"checks that location manager considers itself to be updating location", ^{
+                    locationManager.isUpdatingLocation should be_truthy;
+                });
+                
+                it(@"tells the location manager to notify it's delegate that it started location updates", ^{
+                    locationManager.delegate should have_received(@selector(locationManagerDidStartLocationUpdates:)).with(locationManager);
+                });
+            });
+        });
+        
+        
+        
+        
     });
-    
 });
 
 SPEC_END
