@@ -80,6 +80,7 @@
     }
     
     self.paused = YES;
+    
     self.locationManager = [[MMELocationManager alloc] init];
     self.locationManager.delegate = self;
     self.locationManager.metricsEnabledForInUsePermissions = self.metricsEnabledForInUsePermissions;
