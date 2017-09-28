@@ -8,11 +8,15 @@
 
 @implementation MMECLLocationManagerWrapper
 
+@synthesize hostAppHasBackgroundCapability;
+
 - (instancetype)init {
     self = [super init];
     if (self) {
         _locationManager = [[CLLocationManager alloc] init];
         _locationManager.delegate = self;
+        NSArray *backgroundModes = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UIBackgroundModes"];
+        self.hostAppHasBackgroundCapability = [backgroundModes containsObject:@"location"];
     }
     return self;
 }
@@ -46,14 +50,15 @@
 }
 
 - (void)setAllowsBackgroundLocationUpdates:(BOOL)allowsBackgroundLocationUpdates {
-    if ([self.locationManager respondsToSelector:@selector(allowsBackgroundLocationUpdates)]) {
+    if ([self.locationManager respondsToSelector:@selector(allowsBackgroundLocationUpdates)]
+        && self.hostAppHasBackgroundCapability) {
         self.locationManager.allowsBackgroundLocationUpdates = allowsBackgroundLocationUpdates;
     }
 }
 
 - (BOOL)allowsBackgroundLocationUpdates {
     if ([self.locationManager respondsToSelector:@selector(allowsBackgroundLocationUpdates)]) {
-        return self.locationManager.allowsBackgroundLocationUpdates;
+        return !self.hostAppHasBackgroundCapability ? NO : self.locationManager.allowsBackgroundLocationUpdates;
     }
     return NO;
 }
