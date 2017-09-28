@@ -37,8 +37,27 @@ describe(@"MMELocationManager", ^{
     
     describe(@"- startUpdatingLocation", ^{
         
-        context(@"when the host app has background capability and always permissions", ^{
+        context(@"when the host app has is denied location permissions", ^{
+            beforeEach(^{
+                locationManager = [[MMELocationManager alloc] init];
+                
+                MMECLLocationManagerWrapper *locationManagerWrapper = [[MMECLLocationManagerWrapper alloc] init];
+                spy_on(locationManagerWrapper);
+                
+                locationManagerWrapper stub_method(@selector(authorizationStatus)).and_return(kCLAuthorizationStatusDenied);
+                
+                spy_on([MMEDependencyManager sharedManager]);
+                [MMEDependencyManager sharedManager] stub_method(@selector(locationManagerWrapperInstance)).and_return(locationManagerWrapper);
+                
+                [locationManager startUpdatingLocation];
+            });
             
+            it(@"then the location manager should NOT consider itself to be updating", ^{
+                locationManager.isUpdatingLocation should be_falsy;
+            });
+        });
+        
+        context(@"when the host app has background capability and always permissions", ^{
             beforeEach(^{
                 spy_on([NSBundle mainBundle]);
                 [NSBundle mainBundle] stub_method(@selector(objectForInfoDictionaryKey:)).with(@"UIBackgroundModes").and_return(@[@"location"]);
@@ -61,54 +80,48 @@ describe(@"MMELocationManager", ^{
                 locationManager.delegate = nice_fake_for(@protocol(MMELocationManagerDelegate));
                 
                 locationManager.backgroundLocationServiceTimeoutTimer should be_nil;
+                
+                [locationManager startUpdatingLocation];
             });
             
-            context(@"when startUpdatingLocation is called", ^{
-                
-                beforeEach(^{
-                    [locationManager startUpdatingLocation];
-                });
-                
-                it(@"sets itself of the delegate of the locationManagerWrapper", ^{
-                    locationManager.locationManager.delegate should equal(locationManager);
-                });
-                
-                it(@"sets the desired accuracy correctly", ^{
-                    locationManager.locationManager.desiredAccuracy should equal(kCLLocationAccuracyThreeKilometers);
-                });
-                
-                it(@"sets the distance filter correctly", ^{
-                    locationManager.locationManager.distanceFilter should equal(MMELocationManagerDistanceFilter);
-                });
-                
-                it(@"calls the location manager wrapper's startMonitoringSignificantLocationChanges method", ^{
-                    locationManager.locationManager should have_received(@selector(startMonitoringSignificantLocationChanges));
-                });
-                
-                it(@"starts the background timer", ^{
-                    locationManager.backgroundLocationServiceTimeoutTimer should_not be_nil;
-                });
-                
-                it(@"starts updating location", ^{
-                    locationManager.isUpdatingLocation should be_truthy;
-                });
-                
-                it(@"tells the location manager wrapper to allow background location updates", ^{
-                    locationManager.locationManager should have_received(@selector(setAllowsBackgroundLocationUpdates:)).with(YES);
-                });
-                
-                it(@"tells the location manager wrapper to start updating location", ^{
-                    locationManager.locationManager should have_received(@selector(startUpdatingLocation));
-                });
-                
-                it(@"tells the location manager to notify the delegate that it started location updates", ^{
-                    locationManager.delegate should have_received(@selector(locationManagerDidStartLocationUpdates:)).with(locationManager);
-                });
+            it(@"sets itself of the delegate of the locationManagerWrapper", ^{
+                locationManager.locationManager.delegate should equal(locationManager);
+            });
+            
+            it(@"sets the desired accuracy correctly", ^{
+                locationManager.locationManager.desiredAccuracy should equal(kCLLocationAccuracyThreeKilometers);
+            });
+            
+            it(@"sets the distance filter correctly", ^{
+                locationManager.locationManager.distanceFilter should equal(MMELocationManagerDistanceFilter);
+            });
+            
+            it(@"calls the location manager wrapper's startMonitoringSignificantLocationChanges method", ^{
+                locationManager.locationManager should have_received(@selector(startMonitoringSignificantLocationChanges));
+            });
+            
+            it(@"starts the background timer", ^{
+                locationManager.backgroundLocationServiceTimeoutTimer should_not be_nil;
+            });
+            
+            it(@"starts updating location", ^{
+                locationManager.isUpdatingLocation should be_truthy;
+            });
+            
+            it(@"tells the location manager wrapper to allow background location updates", ^{
+                locationManager.locationManager should have_received(@selector(setAllowsBackgroundLocationUpdates:)).with(YES);
+            });
+            
+            it(@"tells the location manager wrapper to start updating location", ^{
+                locationManager.locationManager should have_received(@selector(startUpdatingLocation));
+            });
+            
+            it(@"tells the location manager to notify the delegate that it started location updates", ^{
+                locationManager.delegate should have_received(@selector(locationManagerDidStartLocationUpdates:)).with(locationManager);
             });
         });
         
         context(@"when the host app has NO background capability and always permissions", ^{
-            
             beforeEach(^{
                 MMECLLocationManagerWrapper *locationManagerWrapper = [[MMECLLocationManagerWrapper alloc] init];
                 spy_on(locationManagerWrapper);
@@ -123,74 +136,46 @@ describe(@"MMELocationManager", ^{
                 locationManager.delegate = nice_fake_for(@protocol(MMELocationManagerDelegate));
 
                 locationManager.backgroundLocationServiceTimeoutTimer should be_nil;
+                
+                [locationManager startUpdatingLocation];
             });
             
-            context(@"when startUpdatingLocation is called", ^{
-                
-                beforeEach(^{
-                    [locationManager startUpdatingLocation];
-                });
-                
-                it(@"should not tell location manager to startMonitoringSignificantLocationChanges", ^{
-                    locationManager.locationManager should_not have_received(@selector(startMonitoringSignificantLocationChanges));
-                });
-                
-                it(@"then background timer should not be started", ^{
-                    locationManager.backgroundLocationServiceTimeoutTimer should be_nil;
-                });
-                
-                it(@"should not tell location manager to allowsBackgroundLocationUpdates", ^{
-                    locationManager.locationManager.allowsBackgroundLocationUpdates should be_falsy;
-                });
-                
-                it(@"tell location manager to startUpdatingLocation", ^{
-                    locationManager.locationManager should have_received(@selector(startUpdatingLocation));
-                });
-                
-                it(@"checks that location manager considers itself to be updating location", ^{
-                    locationManager.isUpdatingLocation should be_truthy;
-                });
-                
-                it(@"tells the location manager to notify it's delegate that it started location updates", ^{
-                    locationManager.delegate should have_received(@selector(locationManagerDidStartLocationUpdates:)).with(locationManager);
-                });
+            it(@"should not tell location manager to startMonitoringSignificantLocationChanges", ^{
+                locationManager.locationManager should_not have_received(@selector(startMonitoringSignificantLocationChanges));
             });
             
-            context(@"when startUpdatingLocation is called and wrapper authStatus changed to kCLAuthorizationStatusAuthorizedWhenInUse", ^{
-                
+            it(@"then background timer should not be started", ^{
+                locationManager.backgroundLocationServiceTimeoutTimer should be_nil;
+            });
+            
+            it(@"should not tell location manager to allowsBackgroundLocationUpdates", ^{
+                locationManager.locationManager.allowsBackgroundLocationUpdates should be_falsy;
+            });
+            
+            it(@"tell location manager to startUpdatingLocation", ^{
+                locationManager.locationManager should have_received(@selector(startUpdatingLocation));
+            });
+            
+            it(@"checks that location manager considers itself to be updating location", ^{
+                locationManager.isUpdatingLocation should be_truthy;
+            });
+            
+            it(@"tells the location manager to notify it's delegate that it started location updates", ^{
+                locationManager.delegate should have_received(@selector(locationManagerDidStartLocationUpdates:)).with(locationManager);
+            });
+            
+            context(@"when authorizatio status changed to kCLAuthorizationStatusAuthorizedWhenInUse", ^{
                 beforeEach(^{
-                    [locationManager.locationManager.delegate locationManagerWrapper:locationManager.locationManager didChangeAuthorizationStatus:kCLAuthorizationStatusAuthorizedWhenInUse];
-                    
-                    [locationManager startUpdatingLocation];
+                    [locationManager locationManagerWrapper:locationManager.locationManager didChangeAuthorizationStatus:kCLAuthorizationStatusAuthorizedWhenInUse];
                 });
                 
                 it(@"then the location manager should consider itself to be updating", ^{
                     locationManager.isUpdatingLocation should be_truthy;
                 });
             });
-            
-            context(@"when startUpdatingLocation is called and wrapper authStatus changed to kCLAuthorizationStatusDenied", ^{
-                
-                beforeEach(^{
-                    MMECLLocationManagerWrapper *locationManagerWrapper = [[MMECLLocationManagerWrapper alloc] init];
-                    spy_on(locationManagerWrapper);
-                    
-                    locationManagerWrapper stub_method(@selector(authorizationStatus)).and_return(kCLAuthorizationStatusDenied);
-                    
-                    spy_on([MMEDependencyManager sharedManager]);
-                    [MMEDependencyManager sharedManager] stub_method(@selector(locationManagerWrapperInstance)).and_return(locationManagerWrapper).again();
-                    
-                    [locationManager startUpdatingLocation];
-                });
-                
-                it(@"then the location manager should NOT consider itself to be updating", ^{
-                    locationManager.isUpdatingLocation should be_falsy;
-                });
-            });
         });
         
         context(@"when the host app has when in use permissions", ^{
-            
             beforeEach(^{
                 MMECLLocationManagerWrapper *locationManagerWrapper = [[MMECLLocationManagerWrapper alloc] init];
                 spy_on(locationManagerWrapper);
@@ -204,46 +189,37 @@ describe(@"MMELocationManager", ^{
                 locationManager.delegate = nice_fake_for(@protocol(MMELocationManagerDelegate));
                 
                 locationManager.backgroundLocationServiceTimeoutTimer should be_nil;
+                
+                [locationManager startUpdatingLocation];
             });
             
-            //TODO: This could be a good candidate for Cedar's sharedExamplesFor
-            context(@"when startUpdatingLocation is called", ^{
-                
-                beforeEach(^{
-                    [locationManager startUpdatingLocation];
-                });
-                
-                it(@"should not tell location manager to startMonitoringSignificantLocationChanges", ^{
-                    locationManager.locationManager should_not have_received(@selector(startMonitoringSignificantLocationChanges));
-                });
-                
-                it(@"then background timer should not be started", ^{
-                    locationManager.backgroundLocationServiceTimeoutTimer should be_nil;
-                });
-                
-                it(@"should not tell location manager to allowsBackgroundLocationUpdates", ^{
-                    locationManager.locationManager.allowsBackgroundLocationUpdates should be_falsy;
-                });
-                
-                it(@"tell location manager to startUpdatingLocation", ^{
-                    locationManager.locationManager should have_received(@selector(startUpdatingLocation));
-                });
-                
-                it(@"checks that location manager considers itself to be updating location", ^{
-                    locationManager.isUpdatingLocation should be_truthy;
-                });
-                
-                it(@"tells the location manager to notify it's delegate that it started location updates", ^{
-                    locationManager.delegate should have_received(@selector(locationManagerDidStartLocationUpdates:)).with(locationManager);
-                });
+            it(@"should not tell location manager to startMonitoringSignificantLocationChanges", ^{
+                locationManager.locationManager should_not have_received(@selector(startMonitoringSignificantLocationChanges));
             });
             
-            context(@"when startUpdatingLocation is called and wrapper authStatus changed to kCLAuthorizationStatusAuthorizedAlways", ^{
-                
+            it(@"then background timer should not be started", ^{
+                locationManager.backgroundLocationServiceTimeoutTimer should be_nil;
+            });
+            
+            it(@"should not tell location manager to allowsBackgroundLocationUpdates", ^{
+                locationManager.locationManager.allowsBackgroundLocationUpdates should be_falsy;
+            });
+            
+            it(@"tell location manager to startUpdatingLocation", ^{
+                locationManager.locationManager should have_received(@selector(startUpdatingLocation));
+            });
+            
+            it(@"checks that location manager considers itself to be updating location", ^{
+                locationManager.isUpdatingLocation should be_truthy;
+            });
+            
+            it(@"tells the location manager to notify it's delegate that it started location updates", ^{
+                locationManager.delegate should have_received(@selector(locationManagerDidStartLocationUpdates:)).with(locationManager);
+            });
+            
+            context(@"when authorization status changed to kCLAuthorizationStatusAuthorizedAlways", ^{
                 beforeEach(^{
-                    [locationManager.locationManager.delegate locationManagerWrapper:locationManager.locationManager didChangeAuthorizationStatus:kCLAuthorizationStatusAuthorizedAlways];
-                    
-                    [locationManager startUpdatingLocation];
+                    [locationManager locationManagerWrapper:locationManager.locationManager didChangeAuthorizationStatus:kCLAuthorizationStatusAuthorizedAlways];
                 });
                 
                 it(@"then the location manager should consider itself to be updating", ^{
@@ -255,9 +231,7 @@ describe(@"MMELocationManager", ^{
     
     describe(@"- stopUpdatingLocation", ^{
         context(@"when the host app is set to updatingLocation", ^{
-            
             beforeEach(^{
-                
                 MMECLLocationManagerWrapper *locationManagerWrapper = [[MMECLLocationManagerWrapper alloc] init];
                 spy_on(locationManagerWrapper);
                 
@@ -277,7 +251,6 @@ describe(@"MMELocationManager", ^{
             });
             
             context(@"when stopUpdatingLocation is called", ^{
-                
                 beforeEach(^{
                     // call stop updating location on location manager
                     [locationManager stopUpdatingLocation];
@@ -290,16 +263,13 @@ describe(@"MMELocationManager", ^{
                 it(@"tells the location manager to stopMonitoringSignificantLocationChanges", ^{
                     locationManager.delegate should have_received(@selector(locationManagerDidStopLocationUpdates:));
                 });
-                
             });
         });
      });
    
     describe(@"- timeout", ^{
         context(@"when the host app is in background state", ^{
-            
             beforeEach(^{
-                
                 MMECLLocationManagerWrapper *locationManagerWrapper = [[MMECLLocationManagerWrapper alloc] init];
                 spy_on(locationManagerWrapper);
                 
@@ -317,14 +287,11 @@ describe(@"MMELocationManager", ^{
                 
                 spy_on(locationManager.application);
                 locationManager.application stub_method(@selector(applicationState)).and_return(UIApplicationStateBackground);
-                
             });
             
             context(@"when timeoutAllowedCheck with allowed date set to now is called", ^{
-                
                 beforeEach(^{
                     locationManager.backgroundLocationServiceTimeoutAllowedDate = [NSDate date];
-                    
                     [locationManager timeoutAllowedCheck];
                 });
                 
@@ -339,14 +306,11 @@ describe(@"MMELocationManager", ^{
                 it(@"tells location manager's delegate that location updates timed out", ^{
                     locationManager.delegate should have_received(@selector(locationManagerBackgroundLocationUpdatesDidTimeout:));
                 });
-                
             });
             
             context(@"when timeoutAllowedCheck with allowed date in distant future is called", ^{
-                
                 beforeEach(^{
                     locationManager.backgroundLocationServiceTimeoutAllowedDate = [NSDate distantFuture];
-                    
                     [locationManager timeoutAllowedCheck];
                 });
                 
@@ -365,9 +329,7 @@ describe(@"MMELocationManager", ^{
         });
         
         context(@"when the host app is in foreground state", ^{
-            
             beforeEach(^{
-                
                 MMECLLocationManagerWrapper *locationManagerWrapper = [[MMECLLocationManagerWrapper alloc] init];
                 spy_on(locationManagerWrapper);
                 
@@ -387,10 +349,8 @@ describe(@"MMELocationManager", ^{
             });
             
             context(@"when timeoutAllowedCheck is called", ^{
-                
                 beforeEach(^{
                     locationManager.updatingLocation = YES;
-                    
                     [locationManager timeoutAllowedCheck];
                 });
                 
@@ -401,14 +361,11 @@ describe(@"MMELocationManager", ^{
                 it(@"then the location manager's backgroundLocationServiceTimeoutTimer should not be nil", ^{
                     locationManager.backgroundLocationServiceTimeoutTimer should_not be_nil;
                 });
-                
             });
             
             context(@"when timeoutAllowedCheck and is not updating location", ^{
-
                 beforeEach(^{
                     locationManager.updatingLocation = NO;
-                    
                     [locationManager timeoutAllowedCheck];
                 });
                 
@@ -419,15 +376,14 @@ describe(@"MMELocationManager", ^{
                 it(@"then location manager's backgroundLocationServiceTimeoutTimer should be nil", ^{
                     locationManager.backgroundLocationServiceTimeoutTimer should be_nil;
                 });
-
             });
         });
     
      });
     
-    describe(@"- check delegate", ^{
-        context(@"when the delegate ", ^{
-            
+    describe(@"MMELocationManagerDelegate interaction", ^{
+        
+        context(@"when the host app has always permissions", ^{
             CLLocation *stationaryLocation = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(0, 0) altitude:0 horizontalAccuracy:0 verticalAccuracy:0 course:0 speed:0.0 timestamp:[NSDate date]];
             CLLocation *accurateLocation = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(0, 0) altitude:0 horizontalAccuracy:0 verticalAccuracy:0 course:0 speed:0.0 timestamp:[NSDate date]];
             CLLocation *inaccurateLocation = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(0, 0) altitude:0 horizontalAccuracy:99999 verticalAccuracy:0 course:0 speed:0.0 timestamp:[NSDate date]];
@@ -452,12 +408,10 @@ describe(@"MMELocationManager", ^{
                 locationManager.backgroundLocationServiceTimeoutTimer should be_nil;
             });
             
-            context(@"didUpdateLocations", ^{
+            context(@"when location data are received", ^{
                 beforeEach(^{
                     [locationManager startUpdatingLocation];
-                    
                     [locationManager locationManagerWrapper:locationManager.locationManager didUpdateLocations:@[movingLocation]];
-                    
                     locationManager.backgroundLocationServiceTimeoutTimer should_not be_nil;
                 });
                 
@@ -469,21 +423,27 @@ describe(@"MMELocationManager", ^{
                 });
             });
             
-            context(@"didUpdateLocations and location speed", ^{
-                it(@"should not start the timer", ^{
+            context(@"when a sationary location is received", ^{
+                beforeEach(^{
                     [locationManager locationManagerWrapper:locationManager.locationManager didUpdateLocations:@[stationaryLocation]];
-                    
+                });
+                
+                it(@"should not start the timer", ^{
                     locationManager.backgroundLocationServiceTimeoutTimer should be_nil;
+                });
+            });
+            
+            context(@"when a moving location is received", ^{
+                beforeEach(^{
+                    [locationManager locationManagerWrapper:locationManager.locationManager didUpdateLocations:@[movingLocation]];
                 });
                 
                 it(@"should start the timer", ^{
-                    [locationManager locationManagerWrapper:locationManager.locationManager didUpdateLocations:@[movingLocation]];
-                    
                     locationManager.backgroundLocationServiceTimeoutTimer should_not be_nil;
                 });
             });
             
-            context(@"didUpdateLocations and region monitoring", ^{
+            describe(@"region monitoring", ^{
                 beforeEach(^{
                     [locationManager startUpdatingLocation];
                 });
@@ -531,7 +491,7 @@ describe(@"MMELocationManager", ^{
                     locationManager.delegate should have_received(@selector(locationManagerBackgroundLocationUpdatesDidAutomaticallyPause:)).with(locationManager);
                 });
                 
-                describe(@"- stop monitoring regions", ^{
+                describe(@"- stopMonitoringRegions", ^{
                     __block CLRegion *region;
                     
                     beforeEach(^{
