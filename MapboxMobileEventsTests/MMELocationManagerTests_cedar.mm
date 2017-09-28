@@ -25,9 +25,9 @@ using namespace Cedar::Doubles;
 @property (nonatomic) id<MMEUIApplicationWrapper> application;
 
 - (void)timeoutAllowedCheck;
+- (void)stopMonitoringRegions;
 
 @end
-
 
 SPEC_BEGIN(MMELocationManagerSpec)
 
@@ -291,51 +291,8 @@ describe(@"MMELocationManager", ^{
                 
             });
         });
-        
-//        context(@"when the host app is monitoring regions", ^{
-//
-//            __block CLRegion *region;
-//
-//            beforeEach(^{
-//
-//                MMECLLocationManagerWrapper *locationManagerWrapper = [[MMECLLocationManagerWrapper alloc] init];
-//                spy_on(locationManagerWrapper);
-//
-//                locationManagerWrapper stub_method(@selector(authorizationStatus)).and_return(kCLAuthorizationStatusAuthorizedAlways);
-//
-//                spy_on([MMEDependencyManager sharedManager]);
-//                [MMEDependencyManager sharedManager] stub_method(@selector(locationManagerWrapperInstance)).and_return(locationManagerWrapper);
-//
-//                locationManager = [[MMELocationManager alloc] init];
-//                spy_on(locationManager);
-//
-//                locationManager.delegate = nice_fake_for(@protocol(MMELocationManagerDelegate));
-//
-//                locationManager.backgroundLocationServiceTimeoutTimer should be_nil;
-//
-//                region = [[CLCircularRegion alloc] initWithCenter:CLLocationCoordinate2DMake(0, 0) radius:10 identifier:MMELocationManagerRegionIdentifier];
-//                locationManager.locationManager stub_method(@selector(monitoredRegions)).with(region);
-//
-//                [locationManager startUpdatingLocation];
-//            });
-//
-//            context(@"when stopUpdatingLocation is called", ^{
-//
-//                beforeEach(^{
-//                    // call stop updating location on location manager
-//                    [locationManager stopUpdatingLocation];
-//                });
-//
-//                it(@"tells location manager to stop updating location", ^{
-//                    locationManager.locationManager should have_received(@selector(stopMonitoringForRegion:)).with(region);
-//                });
-//
-//            });
-//        });
-        
-         });
+     });
    
-    
     describe(@"- timeout", ^{
         context(@"when the host app is in background state", ^{
             
@@ -353,8 +310,6 @@ describe(@"MMELocationManager", ^{
                 spy_on(locationManager);
                 
                 locationManager.delegate = nice_fake_for(@protocol(MMELocationManagerDelegate));
-                
-//                locationManager.backgroundLocationServiceTimeoutTimer should be_nil;
                 
                 [locationManager startUpdatingLocation];
                 
@@ -468,8 +423,131 @@ describe(@"MMELocationManager", ^{
     
      });
     
-    
-    
+    describe(@"- check delegate", ^{
+        context(@"when the delegate ", ^{
+            
+            CLLocation *stationaryLocation = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(0, 0) altitude:0 horizontalAccuracy:0 verticalAccuracy:0 course:0 speed:0.0 timestamp:[NSDate date]];
+            CLLocation *accurateLocation = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(0, 0) altitude:0 horizontalAccuracy:0 verticalAccuracy:0 course:0 speed:0.0 timestamp:[NSDate date]];
+            CLLocation *inaccurateLocation = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(0, 0) altitude:0 horizontalAccuracy:99999 verticalAccuracy:0 course:0 speed:0.0 timestamp:[NSDate date]];
+            CLLocation *movingLocation = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(0, 0) altitude:0 horizontalAccuracy:0 verticalAccuracy:0 course:0 speed:100.0 timestamp:[NSDate date]];
+            
+            CLRegion *expectedRegion = [[CLCircularRegion alloc] initWithCenter:CLLocationCoordinate2DMake(0, 0) radius:MMELocationManagerHibernationRadius identifier:MMELocationManagerRegionIdentifier];
+            
+            beforeEach(^{
+                MMECLLocationManagerWrapper *locationManagerWrapper = [[MMECLLocationManagerWrapper alloc] init];
+                spy_on(locationManagerWrapper);
+                
+                locationManagerWrapper stub_method(@selector(authorizationStatus)).and_return(kCLAuthorizationStatusAuthorizedAlways);
+                
+                spy_on([MMEDependencyManager sharedManager]);
+                [MMEDependencyManager sharedManager] stub_method(@selector(locationManagerWrapperInstance)).and_return(locationManagerWrapper);
+                
+                locationManager = [[MMELocationManager alloc] init];
+                spy_on(locationManager);
+                
+                locationManager.delegate = nice_fake_for(@protocol(MMELocationManagerDelegate));
+                
+                locationManager.backgroundLocationServiceTimeoutTimer should be_nil;
+            });
+            
+            context(@"didUpdateLocations", ^{
+                beforeEach(^{
+                    [locationManager startUpdatingLocation];
+                    
+                    [locationManager locationManagerWrapper:locationManager.locationManager didUpdateLocations:@[movingLocation]];
+                    
+                    locationManager.backgroundLocationServiceTimeoutTimer should_not be_nil;
+                });
+                
+                it(@"tells the location manager to start monitoring for region", ^{
+                    expectedRegion.notifyOnEntry = NO;
+                    expectedRegion.notifyOnExit = YES;
+                    
+                    locationManager.locationManager should have_received(@selector(startMonitoringForRegion:)).with(expectedRegion);
+                });
+            });
+            
+            context(@"didUpdateLocations and location speed", ^{
+                it(@"should not start the timer", ^{
+                    [locationManager locationManagerWrapper:locationManager.locationManager didUpdateLocations:@[stationaryLocation]];
+                    
+                    locationManager.backgroundLocationServiceTimeoutTimer should be_nil;
+                });
+                
+                it(@"should start the timer", ^{
+                    [locationManager locationManagerWrapper:locationManager.locationManager didUpdateLocations:@[movingLocation]];
+                    
+                    locationManager.backgroundLocationServiceTimeoutTimer should_not be_nil;
+                });
+            });
+            
+            context(@"didUpdateLocations and region monitoring", ^{
+                beforeEach(^{
+                    [locationManager startUpdatingLocation];
+                });
+                
+                it(@"tells the location manager to start monitoring when there is already a monitored region and an inaccurate location is received", ^{
+                    NSSet *newSet = [NSSet setWithObject:[[CLCircularRegion alloc] init]];
+                    locationManager.locationManager stub_method(@selector(monitoredRegions)).and_return(newSet);
+                    [locationManager locationManagerWrapper:locationManager.locationManager didUpdateLocations:@[inaccurateLocation]];
+                    
+                    locationManager.locationManager should_not have_received(@selector(startMonitoringForRegion:));
+                });
+                
+                it(@"tells the location manager to start monitoring for region when there are no monitored regions and an accurate location is received", ^{
+                    locationManager.locationManager stub_method(@selector(monitoredRegions)).and_return([NSSet set]);
+                    expectedRegion.notifyOnEntry = NO;
+                    expectedRegion.notifyOnExit = YES;
+                    [locationManager locationManagerWrapper:locationManager.locationManager didUpdateLocations:@[accurateLocation]];
+                    
+                    locationManager.locationManager should have_received(@selector(startMonitoringForRegion:)).with(expectedRegion);
+                });
+                
+                it(@"tells the location manager to start monitoring for region when there are no monitored regions and an inaccurate location is received", ^{
+                    locationManager.locationManager stub_method(@selector(monitoredRegions)).and_return([NSSet set]);
+                    expectedRegion.notifyOnEntry = NO;
+                    expectedRegion.notifyOnExit = YES;
+                    [locationManager locationManagerWrapper:locationManager.locationManager didUpdateLocations:@[inaccurateLocation]];
+                    
+                    locationManager.locationManager should have_received(@selector(startMonitoringForRegion:)).with(expectedRegion);
+                });
+                
+                it(@"informs the location manager's delegate", ^{
+                    [locationManager locationManagerWrapper:locationManager.locationManager didUpdateLocations:@[accurateLocation]];
+                    locationManager.delegate should have_received(@selector(locationManager:didUpdateLocations:)).with(locationManager).and_with(@[accurateLocation]);
+                });
+                
+                it(@"should exit region", ^{
+                    [locationManager locationManagerWrapper:locationManager.locationManager didExitRegion:nil];
+                    
+                    locationManager.backgroundLocationServiceTimeoutTimer should_not be_nil;
+                    locationManager.locationManager should have_received(@selector(startUpdatingLocation));
+                });
+                
+                it(@"informs the delegate that updates are paused", ^{
+                    [locationManager locationManagerWrapperDidPauseLocationUpdates:locationManager.locationManager];
+                    locationManager.delegate should have_received(@selector(locationManagerBackgroundLocationUpdatesDidAutomaticallyPause:)).with(locationManager);
+                });
+                
+                describe(@"- stop monitoring regions", ^{
+                    __block CLRegion *region;
+                    
+                    beforeEach(^{
+                        region = [[CLCircularRegion alloc] initWithCenter:CLLocationCoordinate2DMake(0, 0) radius:10 identifier:MMELocationManagerRegionIdentifier];
+                        NSSet *newSet = [NSSet setWithObject:region];
+                        locationManager.locationManager stub_method(@selector(monitoredRegions)).and_return(newSet);
+                        
+                        locationManager.updatingLocation = YES;
+                        [locationManager stopMonitoringRegions];
+                    });
+                    
+                    it(@"tells the location manager to stop monitoring for region", ^{
+                        locationManager.locationManager should have_received(@selector(stopMonitoringForRegion:)).with(region);
+                    });
+                });
+            });
+        });
+    });
 });
 
 SPEC_END
