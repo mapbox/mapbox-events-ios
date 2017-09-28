@@ -155,6 +155,7 @@ describe(@"MMELocationManager", ^{
                     locationManager.delegate should have_received(@selector(locationManagerDidStartLocationUpdates:)).with(locationManager);
                 });
             });
+            
             context(@"when startUpdatingLocation is called and wrapper authStatus changed to kCLAuthorizationStatusAuthorizedWhenInUse", ^{
                 
                 beforeEach(^{
@@ -167,6 +168,7 @@ describe(@"MMELocationManager", ^{
                     locationManager.isUpdatingLocation should be_truthy;
                 });
             });
+            
             context(@"when startUpdatingLocation is called and wrapper authStatus changed to kCLAuthorizationStatusDenied", ^{
                 
                 beforeEach(^{
