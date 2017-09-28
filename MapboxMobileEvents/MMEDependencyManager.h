@@ -1,11 +1,11 @@
 #import <Foundation/Foundation.h>
 
-@class MMECLLocationManagerWrapper;
+@class CLLocationManager;
 
 @interface MMEDependencyManager : NSObject
 
 + (instancetype)sharedManager;
 
-- (MMECLLocationManagerWrapper *)locationManagerWrapperInstance;
+- (CLLocationManager *)locationManagerInstance;
 
 @end

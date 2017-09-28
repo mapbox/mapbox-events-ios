@@ -11,13 +11,12 @@
 #import "MMEUIApplicationWrapper.h"
 #import "MMENSDateWrapper.h"
 #import "MMECategoryLoader.h"
-
 #import "CLLocation+MMEMobileEvents.h"
+#import <CoreLocation/CoreLocation.h>
 
 @interface MMEEventsManager () <MMELocationManagerDelegate>
 
 @property (nonatomic) id<MMELocationManager> locationManager;
-@property (nonatomic) id<MMECLLocationManagerWrapper> locationManagerWrapper;
 @property (nonatomic) id<MMEAPIClient> apiClient;
 @property (nonatomic) NS_MUTABLE_ARRAY_OF(MMEEvent *) *eventQueue;
 @property (nonatomic) id<MMEUniqueIdentifer> uniqueIdentifer;
@@ -59,7 +58,6 @@
         _configuration = [MMEEventsConfiguration defaultEventsConfiguration];
         _uniqueIdentifer = [[MMEUniqueIdentifier alloc] initWithTimeInterval:_configuration.instanceIdentifierRotationTimeInterval];
         _application = [[MMEUIApplicationWrapper alloc] init];
-        _locationManagerWrapper = [[MMECLLocationManagerWrapper alloc] init];
         _dateWrapper = [[MMENSDateWrapper alloc] init];
     }
     return self;
@@ -115,7 +113,7 @@
 
 - (void)pauseOrResumeMetricsCollectionIfRequired {
     // Prevent blue status bar when host app has `when in use` permission only and it is not in foreground
-    if ([self.locationManagerWrapper authorizationStatus] == kCLAuthorizationStatusAuthorizedWhenInUse &&
+    if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedWhenInUse &&
         self.application.applicationState == UIApplicationStateBackground &&
         !self.isMetricsEnabledForInUsePermissions) {
         if (_backgroundTaskIdentifier == UIBackgroundTaskInvalid) {

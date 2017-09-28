@@ -13,8 +13,6 @@
 #import "MMEUniqueIdentifierFake.h"
 #import "MMEUIApplicationWrapper.h"
 #import "MMEUIApplicationWrapperFake.h"
-#import "MMECLLocationManagerWrapper.h"
-#import "MMECLLocationManagerWrapperFake.h"
 #import "MMELocationManagerFake.h"
 #import "MMENSDateWrapper.h"
 #import "MMENSDateWrapperFake.h"
@@ -34,8 +32,7 @@
 @property (nonatomic) NSDate *nextTurnstileSendDate;
 @property (nonatomic) MMEEventsConfiguration *configuration;
 @property (nonatomic) MMETimerManager *timerManager;
-@property (nonatomic) id<MMECLLocationManagerWrapper> locationManagerWrapper;
-@property (nonatomic) id<MMEUIApplicationWrapper> application;\
+@property (nonatomic) id<MMEUIApplicationWrapper> application;
 @property (nonatomic, getter=isPaused) BOOL paused;
 @property (nonatomic) MMENSDateWrapper *dateWrapper;
 

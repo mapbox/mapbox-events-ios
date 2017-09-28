@@ -1,5 +1,5 @@
 #import "MMEDependencyManager.h"
-#import "MMECLLocationManagerWrapper.h"
+#import <CoreLocation/CoreLocation.h>
 
 static MMEDependencyManager *_sharedInstance;
 
@@ -13,8 +13,8 @@ static MMEDependencyManager *_sharedInstance;
     return _sharedInstance;
 }
 
-- (MMECLLocationManagerWrapper *)locationManagerWrapperInstance {
-    return [[MMECLLocationManagerWrapper alloc] init];
+- (CLLocationManager *)locationManagerInstance; {
+    return [[CLLocationManager alloc] init];
 }
 
 @end
