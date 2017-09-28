@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		40031E5E1EFC5CA1009EAB33 /* MMEUniqueIdentifierFake.m in Sources */ = {isa = PBXBuildFile; fileRef = 40031E5D1EFC5CA1009EAB33 /* MMEUniqueIdentifierFake.m */; };
+		402F02A61F7DA28700E7FF06 /* Cartfile in Resources */ = {isa = PBXBuildFile; fileRef = 402F02A41F7DA28700E7FF06 /* Cartfile */; };
+		402F02A71F7DA28700E7FF06 /* MapboxMobileEvents.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 402F02A51F7DA28700E7FF06 /* MapboxMobileEvents.podspec */; };
 		4036EFBB1ED36F06009C40BA /* MMEAPIClientFake.m in Sources */ = {isa = PBXBuildFile; fileRef = 4036EFBA1ED36F06009C40BA /* MMEAPIClientFake.m */; };
 		4036EFBE1ED37D56009C40BA /* MMEEventLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 4036EFBC1ED37D56009C40BA /* MMEEventLogger.h */; };
 		4036EFBF1ED37D56009C40BA /* MMEEventLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 4036EFBD1ED37D56009C40BA /* MMEEventLogger.m */; };
@@ -178,6 +180,8 @@
 /* Begin PBXFileReference section */
 		40031E5C1EFC5CA1009EAB33 /* MMEUniqueIdentifierFake.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEUniqueIdentifierFake.h; sourceTree = "<group>"; };
 		40031E5D1EFC5CA1009EAB33 /* MMEUniqueIdentifierFake.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEUniqueIdentifierFake.m; sourceTree = "<group>"; };
+		402F02A41F7DA28700E7FF06 /* Cartfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cartfile; sourceTree = "<group>"; };
+		402F02A51F7DA28700E7FF06 /* MapboxMobileEvents.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MapboxMobileEvents.podspec; sourceTree = "<group>"; };
 		4032F47D1F1FEDC6001C1FBD /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		4036EFB91ED36F06009C40BA /* MMEAPIClientFake.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEAPIClientFake.h; sourceTree = "<group>"; };
 		4036EFBA1ED36F06009C40BA /* MMEAPIClientFake.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEAPIClientFake.m; sourceTree = "<group>"; };
@@ -341,6 +345,8 @@
 		404807AF1EA186D8008A6D50 = {
 			isa = PBXGroup;
 			children = (
+				402F02A41F7DA28700E7FF06 /* Cartfile */,
+				402F02A51F7DA28700E7FF06 /* MapboxMobileEvents.podspec */,
 				404807BB1EA186D8008A6D50 /* MapboxMobileEvents */,
 				404807C61EA186D8008A6D50 /* MapboxMobileEventsTests */,
 				408596701ED08FF7003BD29D /* resources */,
@@ -734,6 +740,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				402F02A61F7DA28700E7FF06 /* Cartfile in Resources */,
+				402F02A71F7DA28700E7FF06 /* MapboxMobileEvents.podspec in Resources */,
 				40BE71021EB7C3EC00D690F3 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
