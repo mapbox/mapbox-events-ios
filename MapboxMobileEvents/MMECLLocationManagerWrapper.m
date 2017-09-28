@@ -58,7 +58,7 @@
 
 - (BOOL)allowsBackgroundLocationUpdates {
     if ([self.locationManager respondsToSelector:@selector(allowsBackgroundLocationUpdates)]) {
-        return !self.hostAppHasBackgroundCapability ?: self.locationManager.allowsBackgroundLocationUpdates;
+        return !self.hostAppHasBackgroundCapability ? NO : self.locationManager.allowsBackgroundLocationUpdates;
     }
     return NO;
 }

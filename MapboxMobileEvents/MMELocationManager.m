@@ -25,7 +25,8 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
 - (instancetype)init {
     self = [super init];
     if (self) {
-        _application = [[MMEUIApplicationWrapper alloc] init];    }
+        _application = [[MMEUIApplicationWrapper alloc] init];        
+    }
     return self;
 }
 
@@ -85,7 +86,7 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
 
         // If the host app can run in the background with `always` location permissions then allow background
         // updates and start the significant location change service and background timeout timer
-        if (authorizedAlways) {
+        if (authorizedAlways && self.locationManager.hostAppHasBackgroundCapability) {
             [self.locationManager startMonitoringSignificantLocationChanges];
             [self startBackgroundTimeoutTimer];
             self.locationManager.allowsBackgroundLocationUpdates = YES;
