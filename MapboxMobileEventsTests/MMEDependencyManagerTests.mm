@@ -1,6 +1,6 @@
 #import <Cedar/Cedar.h>
 #import "MMEDependencyManager.h"
-#import "MMECLLocationManagerWrapper.h"
+#import <CoreLocation/CoreLocation.h>
 
 using namespace Cedar::Matchers;
 using namespace Cedar::Doubles;
@@ -15,10 +15,10 @@ describe(@"MMEDependencyManager", ^{
         manager = [MMEDependencyManager sharedManager];
     });
     
-    describe(@"- locationManagerWrapperInstance", ^{
+    describe(@"- locationManagerInstance", ^{
         
         it(@"returns expected instance of locationManager", ^{
-            [manager locationManagerWrapperInstance] should be_instance_of([MMECLLocationManagerWrapper class]);
+            [manager locationManagerInstance] should be_instance_of([CLLocationManager class]);
         });
         
     });

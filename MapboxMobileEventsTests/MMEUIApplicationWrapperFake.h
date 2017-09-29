@@ -6,3 +6,4 @@
 @property(nonatomic, readwrite) UIApplicationState applicationState;
 
 @end
+

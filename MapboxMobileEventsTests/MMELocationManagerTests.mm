@@ -1,8 +1,5 @@
 #import <Cedar/Cedar.h>
-#import <CoreLocation/CoreLocation.h>
-
 #import "MMELocationManager.h"
-#import "MMECLLocationManagerWrapper.h"
 #import "MMEDependencyManager.h"
 #import "MMEUIApplicationWrapper.h"
 #import <CoreLocation/CoreLocation.h>
@@ -10,18 +7,12 @@
 using namespace Cedar::Matchers;
 using namespace Cedar::Doubles;
 
-@interface MMECLLocationManagerWrapper (Spec)
-
-@property (nonatomic) CLLocationManager *locationManager;
-
-@end
-
-@interface MMELocationManager (Spec)
+@interface MMELocationManager (Spec) <CLLocationManagerDelegate>
 
 @property (nonatomic, getter=isUpdatingLocation, readwrite) BOOL updatingLocation;
 @property (nonatomic) NSTimer *backgroundLocationServiceTimeoutTimer;
 @property (nonatomic) NSDate *backgroundLocationServiceTimeoutAllowedDate;
-@property (nonatomic) id<MMECLLocationManagerWrapper> locationManager;
+@property (nonatomic) CLLocationManager *locationManager;
 @property (nonatomic) id<MMEUIApplicationWrapper> application;
 
 - (void)timeoutAllowedCheck;
@@ -32,34 +23,31 @@ using namespace Cedar::Doubles;
 SPEC_BEGIN(MMELocationManagerSpec)
 
 describe(@"MMELocationManager", ^{
- 
+    
     __block MMELocationManager *locationManager;
+    __block CLLocationManager *locationManagerInstance;
+    
+    beforeEach(^{
+        locationManagerInstance = [[CLLocationManager alloc] init];
+        spy_on(locationManagerInstance);
+        // Even with the stub on UIBackgroundModes in test setup below, it is not safe to actually call `setAllowsBackgroundLocationUpdates:` in tests
+        locationManagerInstance stub_method(@selector(setAllowsBackgroundLocationUpdates:)).and_do(^(NSInvocation *) { return; /* Do nothing */ });
+        spy_on([MMEDependencyManager sharedManager]);
+        [MMEDependencyManager sharedManager] stub_method(@selector(locationManagerInstance)).and_return(locationManagerInstance);
+    });
     
     describe(@"- metricsEnabledForInUsePermissions", ^{
-        __block MMECLLocationManagerWrapper *locationManagerWrapper;
         
-        context(@"when the host application has background capability", ^{
+        context(@"when the host app has when in use permissions", ^{
             beforeEach(^{
-                spy_on([NSBundle mainBundle]);
-                [NSBundle mainBundle] stub_method(@selector(objectForInfoDictionaryKey:)).with(@"UIBackgroundModes").and_return(@[@"location"]);
+                spy_on([CLLocationManager class]);
+                [CLLocationManager class] stub_method(@selector(authorizationStatus)).and_return(kCLAuthorizationStatusAuthorizedWhenInUse);
             });
             
-            context(@"when the host app has when in use permissions", ^{
+            context(@"when the host application has background capability", ^{
                 beforeEach(^{
-                    locationManagerWrapper = [[MMECLLocationManagerWrapper alloc] init];
-                    spy_on(locationManagerWrapper);
-                    locationManagerWrapper stub_method(@selector(authorizationStatus)).and_return(kCLAuthorizationStatusAuthorizedWhenInUse);
-                    
-                    // Do nothing
-                    // Stubbing UIBackgroundModes does not actually avoid the `Invalid parameter not satisfying: !stayUp || CLClientIsBackgroundable(internal->fClient)`
-                    // error from iOS. The workaround is to skip the actual underlying call and then test later on that the message was sent with the correct value
-                    spy_on(locationManagerWrapper.locationManager);
-                    locationManagerWrapper.locationManager stub_method(@selector(setAllowsBackgroundLocationUpdates:)).and_do(^(NSInvocation *) {
-                        return;
-                    });
-                    
-                    spy_on([MMEDependencyManager sharedManager]);
-                    [MMEDependencyManager sharedManager] stub_method(@selector(locationManagerWrapperInstance)).and_return(locationManagerWrapper);
+                    spy_on([NSBundle mainBundle]);
+                    [NSBundle mainBundle] stub_method(@selector(objectForInfoDictionaryKey:)).with(@"UIBackgroundModes").and_return(@[@"location"]);
                     
                     locationManager = [[MMELocationManager alloc] init];
                 });
@@ -68,36 +56,17 @@ describe(@"MMELocationManager", ^{
                     [locationManager startUpdatingLocation];
                     
                     locationManager.metricsEnabledForInUsePermissions = YES;
-                    locationManagerWrapper.locationManager should have_received(@selector(setAllowsBackgroundLocationUpdates:)).with(YES);
+                    locationManager.locationManager should have_received(@selector(setAllowsBackgroundLocationUpdates:)).with(YES);
                     
                     locationManager.metricsEnabledForInUsePermissions = NO;
-                    locationManagerWrapper.locationManager should have_received(@selector(setAllowsBackgroundLocationUpdates:)).with(NO);
+                    locationManager.locationManager should have_received(@selector(setAllowsBackgroundLocationUpdates:)).with(NO);
                 });
             });
-        });
-        
-        context(@"when the host application does NOT have background capability", ^{
-            beforeEach(^{
-                spy_on([NSBundle mainBundle]);
-                [NSBundle mainBundle] stub_method(@selector(objectForInfoDictionaryKey:)).with(@"UIBackgroundModes").and_return(@[]);
-            });
             
-            context(@"when the host app has when in use permissions", ^{
+            context(@"when the host application does NOT have background capability", ^{
                 beforeEach(^{
-                    locationManagerWrapper = [[MMECLLocationManagerWrapper alloc] init];
-                    spy_on(locationManagerWrapper);
-                    locationManagerWrapper stub_method(@selector(authorizationStatus)).and_return(kCLAuthorizationStatusAuthorizedWhenInUse);
-                    
-                    // Do nothing
-                    // Stubbing UIBackgroundModes does not actually avoid the `Invalid parameter not satisfying: !stayUp || CLClientIsBackgroundable(internal->fClient)`
-                    // error from iOS. The workaround is to skip the actual underlying call and then test later on that the message was sent with the correct value
-                    spy_on(locationManagerWrapper.locationManager);
-                    locationManagerWrapper.locationManager stub_method(@selector(setAllowsBackgroundLocationUpdates:)).and_do(^(NSInvocation *) {
-                        return;
-                    });
-                    
-                    spy_on([MMEDependencyManager sharedManager]);
-                    [MMEDependencyManager sharedManager] stub_method(@selector(locationManagerWrapperInstance)).and_return(locationManagerWrapper);
+                    spy_on([NSBundle mainBundle]);
+                    [NSBundle mainBundle] stub_method(@selector(objectForInfoDictionaryKey:)).with(@"UIBackgroundModes").and_return(@[]);
                     
                     locationManager = [[MMELocationManager alloc] init];
                 });
@@ -106,9 +75,10 @@ describe(@"MMELocationManager", ^{
                     [locationManager startUpdatingLocation];
                     
                     locationManager.metricsEnabledForInUsePermissions = YES;
-                    locationManagerWrapper.locationManager should_not have_received(@selector(setAllowsBackgroundLocationUpdates:));
+                    locationManager.locationManager should_not have_received(@selector(setAllowsBackgroundLocationUpdates:));
                 });
             });
+            
         });
     });
     
@@ -116,16 +86,10 @@ describe(@"MMELocationManager", ^{
         
         context(@"when the host app has is denied location permissions", ^{
             beforeEach(^{
+                spy_on([CLLocationManager class]);
+                [CLLocationManager class] stub_method(@selector(authorizationStatus)).and_return(kCLAuthorizationStatusDenied);
+                
                 locationManager = [[MMELocationManager alloc] init];
-                
-                MMECLLocationManagerWrapper *locationManagerWrapper = [[MMECLLocationManagerWrapper alloc] init];
-                spy_on(locationManagerWrapper);
-                
-                locationManagerWrapper stub_method(@selector(authorizationStatus)).and_return(kCLAuthorizationStatusDenied);
-                
-                spy_on([MMEDependencyManager sharedManager]);
-                [MMEDependencyManager sharedManager] stub_method(@selector(locationManagerWrapperInstance)).and_return(locationManagerWrapper);
-                
                 [locationManager startUpdatingLocation];
             });
             
@@ -139,31 +103,17 @@ describe(@"MMELocationManager", ^{
                 spy_on([NSBundle mainBundle]);
                 [NSBundle mainBundle] stub_method(@selector(objectForInfoDictionaryKey:)).with(@"UIBackgroundModes").and_return(@[@"location"]);
                 
-                MMECLLocationManagerWrapper *locationManagerWrapper = [[MMECLLocationManagerWrapper alloc] init];
-                spy_on(locationManagerWrapper);
-                
-                // Do nothing
-                // Stubbing UIBackgroundModes does not actually avoid the `Invalid parameter not satisfying: !stayUp || CLClientIsBackgroundable(internal->fClient)`
-                // error from iOS. The workaround is to skip the actual underlying call and then test later on that the message was sent with the correct value
-                spy_on(locationManagerWrapper.locationManager);
-                locationManagerWrapper.locationManager stub_method(@selector(setAllowsBackgroundLocationUpdates:)).and_do(^(NSInvocation *) {
-                    return;
-                });
-                
-                locationManagerWrapper stub_method(@selector(authorizationStatus)).and_return(kCLAuthorizationStatusAuthorizedAlways);
-                
-                spy_on([MMEDependencyManager sharedManager]);
-                [MMEDependencyManager sharedManager] stub_method(@selector(locationManagerWrapperInstance)).and_return(locationManagerWrapper);                
+                spy_on([CLLocationManager class]);
+                [CLLocationManager class] stub_method(@selector(authorizationStatus)).and_return(kCLAuthorizationStatusAuthorizedAlways);
                 
                 locationManager = [[MMELocationManager alloc] init];
                 locationManager.delegate = nice_fake_for(@protocol(MMELocationManagerDelegate));
-                
                 locationManager.backgroundLocationServiceTimeoutTimer should be_nil;
                 
                 [locationManager startUpdatingLocation];
             });
             
-            it(@"sets itself of the delegate of the locationManagerWrapper", ^{
+            it(@"sets itself of the delegate of the location manager", ^{
                 locationManager.locationManager.delegate should equal(locationManager);
             });
             
@@ -201,21 +151,14 @@ describe(@"MMELocationManager", ^{
         });
         
         context(@"when the host app has NO background capability and always permissions", ^{
-            __block MMECLLocationManagerWrapper *locationManagerWrapper;
             
             beforeEach(^{
                 spy_on([NSBundle mainBundle]);
-                // Explictly setting an empty array for UIBackgroundModes to clarify that this simulates NO background capability
                 [NSBundle mainBundle] stub_method(@selector(objectForInfoDictionaryKey:)).with(@"UIBackgroundModes").and_return(@[]);
                 
-                locationManagerWrapper = [[MMECLLocationManagerWrapper alloc] init];
-                spy_on(locationManagerWrapper);
-                spy_on(locationManagerWrapper.locationManager);
-                locationManagerWrapper stub_method(@selector(authorizationStatus)).and_return(kCLAuthorizationStatusAuthorizedAlways);
+                spy_on([CLLocationManager class]);
+                [CLLocationManager class] stub_method(@selector(authorizationStatus)).and_return(kCLAuthorizationStatusAuthorizedAlways);
                 
-                spy_on([MMEDependencyManager sharedManager]);
-                [MMEDependencyManager sharedManager] stub_method(@selector(locationManagerWrapperInstance)).and_return(locationManagerWrapper);
-
                 locationManager = [[MMELocationManager alloc] init];
                 locationManager.delegate = nice_fake_for(@protocol(MMELocationManagerDelegate));
                 locationManager.backgroundLocationServiceTimeoutTimer should be_nil;
@@ -224,7 +167,7 @@ describe(@"MMELocationManager", ^{
             });
             
             it(@"should not tell location manager to startMonitoringSignificantLocationChanges", ^{
-                 locationManagerWrapper.locationManager should_not have_received(@selector(startMonitoringSignificantLocationChanges));
+                locationManagerInstance should_not have_received(@selector(startMonitoringSignificantLocationChanges));
             });
             
             it(@"then background timer should not be started", ^{
@@ -247,9 +190,9 @@ describe(@"MMELocationManager", ^{
                 locationManager.delegate should have_received(@selector(locationManagerDidStartLocationUpdates:)).with(locationManager);
             });
             
-            context(@"when authorizatio status changed to kCLAuthorizationStatusAuthorizedWhenInUse", ^{
+            context(@"when authorization status changes to when in use", ^{
                 beforeEach(^{
-                    [locationManager locationManagerWrapper:locationManager.locationManager didChangeAuthorizationStatus:kCLAuthorizationStatusAuthorizedWhenInUse];
+                    [locationManager locationManager:locationManagerInstance didChangeAuthorizationStatus:kCLAuthorizationStatusAuthorizedWhenInUse];
                 });
                 
                 it(@"then the location manager should consider itself to be updating", ^{
@@ -259,25 +202,16 @@ describe(@"MMELocationManager", ^{
         });
         
         context(@"when the host app has has NO background capability when in use permissions", ^{
-            __block MMECLLocationManagerWrapper *locationManagerWrapper;
-            
             beforeEach(^{
                 spy_on([NSBundle mainBundle]);
-                // Explictly setting an empty array for UIBackgroundModes to clarify that this simulates NO background capability
                 [NSBundle mainBundle] stub_method(@selector(objectForInfoDictionaryKey:)).with(@"UIBackgroundModes").and_return(@[]);
                 
-                locationManagerWrapper = [[MMECLLocationManagerWrapper alloc] init];
-                spy_on(locationManagerWrapper);
-                spy_on(locationManagerWrapper.locationManager);
-                locationManagerWrapper stub_method(@selector(authorizationStatus)).and_return(kCLAuthorizationStatusAuthorizedWhenInUse);
-                
-                spy_on([MMEDependencyManager sharedManager]);
-                [MMEDependencyManager sharedManager] stub_method(@selector(locationManagerWrapperInstance)).and_return(locationManagerWrapper);
+                spy_on([CLLocationManager class]);
+                [CLLocationManager class] stub_method(@selector(authorizationStatus)).and_return(kCLAuthorizationStatusAuthorizedWhenInUse);
                 
                 locationManager = [[MMELocationManager alloc] init];
                 locationManager.delegate = nice_fake_for(@protocol(MMELocationManagerDelegate));
                 locationManager.backgroundLocationServiceTimeoutTimer should be_nil;
-                
                 locationManager.metricsEnabledForInUsePermissions = YES;
                 
                 [locationManager startUpdatingLocation];
@@ -292,7 +226,7 @@ describe(@"MMELocationManager", ^{
             });
             
             it(@"should not tell location manager to allowsBackgroundLocationUpdates", ^{
-                locationManagerWrapper.locationManager should_not have_received(@selector(setAllowsBackgroundLocationUpdates:));
+                locationManager.locationManager should_not have_received(@selector(setAllowsBackgroundLocationUpdates:));
                 locationManager.locationManager.allowsBackgroundLocationUpdates should be_falsy;
             });
             
@@ -310,7 +244,7 @@ describe(@"MMELocationManager", ^{
             
             context(@"when authorization status changed to kCLAuthorizationStatusAuthorizedAlways", ^{
                 beforeEach(^{
-                    [locationManager locationManagerWrapper:locationManager.locationManager didChangeAuthorizationStatus:kCLAuthorizationStatusAuthorizedAlways];
+                    [locationManager locationManager:locationManagerInstance didChangeAuthorizationStatus:kCLAuthorizationStatusAuthorizedAlways];
                 });
                 
                 it(@"then the location manager should consider itself to be updating", ^{
@@ -321,21 +255,18 @@ describe(@"MMELocationManager", ^{
     });
     
     describe(@"- stopUpdatingLocation", ^{
+        
         beforeEach(^{
-            MMECLLocationManagerWrapper *locationManagerWrapper = [[MMECLLocationManagerWrapper alloc] init];
-            spy_on(locationManagerWrapper);
-            locationManagerWrapper stub_method(@selector(authorizationStatus)).and_return(kCLAuthorizationStatusAuthorizedAlways);
-            
-            spy_on([MMEDependencyManager sharedManager]);
-            [MMEDependencyManager sharedManager] stub_method(@selector(locationManagerWrapperInstance)).and_return(locationManagerWrapper);
+            spy_on([CLLocationManager class]);
+            [CLLocationManager class] stub_method(@selector(authorizationStatus)).and_return(kCLAuthorizationStatusAuthorizedAlways);
             
             locationManager = [[MMELocationManager alloc] init];
-            spy_on(locationManager);
             locationManager.delegate = nice_fake_for(@protocol(MMELocationManagerDelegate));
             locationManager.backgroundLocationServiceTimeoutTimer should be_nil;
             
             // Call startUpdatingLocation first since a useful test of stopUpdatingLocation requests `start` to be called previously
             [locationManager startUpdatingLocation];
+            
             [locationManager stopUpdatingLocation];
         });
         
@@ -346,20 +277,17 @@ describe(@"MMELocationManager", ^{
         it(@"tells the location manager to stopMonitoringSignificantLocationChanges", ^{
             locationManager.delegate should have_received(@selector(locationManagerDidStopLocationUpdates:));
         });
+        
     });
-   
+    
     describe(@"- timeoutAllowedCheck", ^{
+        
         context(@"when the host app is in the background, has always location permissions, and after startUpdatingLocation has been called", ^{
             beforeEach(^{
-                MMECLLocationManagerWrapper *locationManagerWrapper = [[MMECLLocationManagerWrapper alloc] init];
-                spy_on(locationManagerWrapper);
-                locationManagerWrapper stub_method(@selector(authorizationStatus)).and_return(kCLAuthorizationStatusAuthorizedAlways);
-                
-                spy_on([MMEDependencyManager sharedManager]);
-                [MMEDependencyManager sharedManager] stub_method(@selector(locationManagerWrapperInstance)).and_return(locationManagerWrapper);
+                spy_on([CLLocationManager class]);
+                [CLLocationManager class] stub_method(@selector(authorizationStatus)).and_return(kCLAuthorizationStatusAuthorizedAlways);
                 
                 locationManager = [[MMELocationManager alloc] init];
-                spy_on(locationManager);
                 locationManager.delegate = nice_fake_for(@protocol(MMELocationManagerDelegate));
                 
                 spy_on(locationManager.application);
@@ -409,17 +337,11 @@ describe(@"MMELocationManager", ^{
         
         context(@"when the host app is in the foreground, has always location permissions, and after startUpdatingLocation has been called", ^{
             beforeEach(^{
-                MMECLLocationManagerWrapper *locationManagerWrapper = [[MMECLLocationManagerWrapper alloc] init];
-                spy_on(locationManagerWrapper);
-                locationManagerWrapper stub_method(@selector(authorizationStatus)).and_return(kCLAuthorizationStatusAuthorizedAlways);
-                
-                spy_on([MMEDependencyManager sharedManager]);
-                [MMEDependencyManager sharedManager] stub_method(@selector(locationManagerWrapperInstance)).and_return(locationManagerWrapper);
+                spy_on([CLLocationManager class]);
+                [CLLocationManager class] stub_method(@selector(authorizationStatus)).and_return(kCLAuthorizationStatusAuthorizedAlways);
                 
                 locationManager = [[MMELocationManager alloc] init];
-                spy_on(locationManager);
                 locationManager.delegate = nice_fake_for(@protocol(MMELocationManagerDelegate));
-                
                 locationManager.backgroundLocationServiceTimeoutTimer should be_nil;
                 
                 [locationManager startUpdatingLocation];
@@ -449,14 +371,14 @@ describe(@"MMELocationManager", ^{
                 it(@"then location manager should have not received stopUpdatingLocation", ^{
                     locationManager.locationManager should_not have_received(@selector(stopUpdatingLocation));
                 });
-
+                
                 it(@"then location manager's backgroundLocationServiceTimeoutTimer should be nil", ^{
                     locationManager.backgroundLocationServiceTimeoutTimer should be_nil;
                 });
             });
         });
-    
-     });
+        
+    });
     
     describe(@"MMELocationManagerDelegate interaction", ^{
         
@@ -465,29 +387,22 @@ describe(@"MMELocationManager", ^{
             CLLocation *accurateLocation = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(0, 0) altitude:0 horizontalAccuracy:0 verticalAccuracy:0 course:0 speed:0.0 timestamp:[NSDate date]];
             CLLocation *inaccurateLocation = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(0, 0) altitude:0 horizontalAccuracy:99999 verticalAccuracy:0 course:0 speed:0.0 timestamp:[NSDate date]];
             CLLocation *movingLocation = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(0, 0) altitude:0 horizontalAccuracy:0 verticalAccuracy:0 course:0 speed:100.0 timestamp:[NSDate date]];
-            
             CLRegion *expectedRegion = [[CLCircularRegion alloc] initWithCenter:CLLocationCoordinate2DMake(0, 0) radius:MMELocationManagerHibernationRadius identifier:MMELocationManagerRegionIdentifier];
             
             beforeEach(^{
-                MMECLLocationManagerWrapper *locationManagerWrapper = [[MMECLLocationManagerWrapper alloc] init];
-                spy_on(locationManagerWrapper);
-                locationManagerWrapper stub_method(@selector(authorizationStatus)).and_return(kCLAuthorizationStatusAuthorizedAlways);
+                spy_on([CLLocationManager class]);
+                [CLLocationManager class] stub_method(@selector(authorizationStatus)).and_return(kCLAuthorizationStatusAuthorizedAlways);
                 
-                spy_on([MMEDependencyManager sharedManager]);
-                [MMEDependencyManager sharedManager] stub_method(@selector(locationManagerWrapperInstance)).and_return(locationManagerWrapper);
                 
                 locationManager = [[MMELocationManager alloc] init];
-                spy_on(locationManager);
-                
                 locationManager.delegate = nice_fake_for(@protocol(MMELocationManagerDelegate));
-                
                 locationManager.backgroundLocationServiceTimeoutTimer should be_nil;
             });
             
             context(@"when location data are received", ^{
                 beforeEach(^{
                     [locationManager startUpdatingLocation];
-                    [locationManager locationManagerWrapper:locationManager.locationManager didUpdateLocations:@[movingLocation]];
+                    [locationManager locationManager:locationManagerInstance didUpdateLocations:@[movingLocation]];
                     locationManager.backgroundLocationServiceTimeoutTimer should_not be_nil;
                 });
                 
@@ -500,7 +415,7 @@ describe(@"MMELocationManager", ^{
             
             context(@"when a sationary location is received", ^{
                 beforeEach(^{
-                    [locationManager locationManagerWrapper:locationManager.locationManager didUpdateLocations:@[stationaryLocation]];
+                    [locationManager locationManager:locationManagerInstance didUpdateLocations:@[stationaryLocation]];
                 });
                 
                 it(@"should not start the timer", ^{
@@ -510,7 +425,7 @@ describe(@"MMELocationManager", ^{
             
             context(@"when a moving location is received", ^{
                 beforeEach(^{
-                    [locationManager locationManagerWrapper:locationManager.locationManager didUpdateLocations:@[movingLocation]];
+                    [locationManager locationManager:locationManagerInstance didUpdateLocations:@[movingLocation]];
                 });
                 
                 it(@"should start the timer", ^{
@@ -526,7 +441,7 @@ describe(@"MMELocationManager", ^{
                 it(@"tells the location manager to start monitoring when there is already a monitored region and an inaccurate location is received", ^{
                     NSSet *newSet = [NSSet setWithObject:[[CLCircularRegion alloc] init]];
                     locationManager.locationManager stub_method(@selector(monitoredRegions)).and_return(newSet);
-                    [locationManager locationManagerWrapper:locationManager.locationManager didUpdateLocations:@[inaccurateLocation]];
+                    [locationManager locationManager:locationManagerInstance didUpdateLocations:@[inaccurateLocation]];
                     
                     locationManager.locationManager should_not have_received(@selector(startMonitoringForRegion:));
                 });
@@ -535,7 +450,7 @@ describe(@"MMELocationManager", ^{
                     locationManager.locationManager stub_method(@selector(monitoredRegions)).and_return([NSSet set]);
                     expectedRegion.notifyOnEntry = NO;
                     expectedRegion.notifyOnExit = YES;
-                    [locationManager locationManagerWrapper:locationManager.locationManager didUpdateLocations:@[accurateLocation]];
+                    [locationManager locationManager:locationManagerInstance didUpdateLocations:@[accurateLocation]];
                     
                     locationManager.locationManager should have_received(@selector(startMonitoringForRegion:)).with(expectedRegion);
                 });
@@ -544,25 +459,25 @@ describe(@"MMELocationManager", ^{
                     locationManager.locationManager stub_method(@selector(monitoredRegions)).and_return([NSSet set]);
                     expectedRegion.notifyOnEntry = NO;
                     expectedRegion.notifyOnExit = YES;
-                    [locationManager locationManagerWrapper:locationManager.locationManager didUpdateLocations:@[inaccurateLocation]];
+                    [locationManager locationManager:locationManagerInstance didUpdateLocations:@[inaccurateLocation]];
                     
                     locationManager.locationManager should have_received(@selector(startMonitoringForRegion:)).with(expectedRegion);
                 });
                 
                 it(@"informs the location manager's delegate", ^{
-                    [locationManager locationManagerWrapper:locationManager.locationManager didUpdateLocations:@[accurateLocation]];
+                    [locationManager locationManager:locationManagerInstance didUpdateLocations:@[accurateLocation]];
                     locationManager.delegate should have_received(@selector(locationManager:didUpdateLocations:)).with(locationManager).and_with(@[accurateLocation]);
                 });
                 
                 it(@"should exit region", ^{
-                    [locationManager locationManagerWrapper:locationManager.locationManager didExitRegion:nil];
+                    [locationManager locationManager:locationManagerInstance didExitRegion:expectedRegion];
                     
                     locationManager.backgroundLocationServiceTimeoutTimer should_not be_nil;
                     locationManager.locationManager should have_received(@selector(startUpdatingLocation));
                 });
                 
                 it(@"informs the delegate that updates are paused", ^{
-                    [locationManager locationManagerWrapperDidPauseLocationUpdates:locationManager.locationManager];
+                    [locationManager locationManagerDidPauseLocationUpdates:locationManagerInstance];
                     locationManager.delegate should have_received(@selector(locationManagerBackgroundLocationUpdatesDidAutomaticallyPause:)).with(locationManager);
                 });
                 
@@ -585,6 +500,7 @@ describe(@"MMELocationManager", ^{
             });
         });
     });
+    
 });
 
 SPEC_END
