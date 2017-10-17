@@ -152,6 +152,33 @@
     return result;
 }
 
+- (BOOL)isEqualToEvent:(MMEEvent *)event {
+    if (!event) {
+        return NO;
+    }
+    
+    BOOL hasEqualName = [self.name isEqualToString:event.name];
+    BOOL hasEqualAttributes = [self.attributes isEqual:event.attributes];
+    
+    return hasEqualName && hasEqualAttributes;
+}
+
+- (BOOL)isEqual:(id)other {
+    if (other == self) {
+        return YES;
+    }
+    
+    if (![other isKindOfClass:[MMEEvent class]]) {
+        return  NO;
+    }
+    
+    return [self isEqualToEvent:other];
+}
+
+- (NSUInteger)hash {
+    return self.name.hash ^ self.attributes.hash;
+}
+
 - (NSString *)description {
     return [NSString stringWithFormat:@"<%@ name=%@, attributes=%@>", NSStringFromClass([self class]), self.name, self.attributes];
 }

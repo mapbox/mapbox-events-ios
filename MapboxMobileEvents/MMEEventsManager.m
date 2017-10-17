@@ -28,12 +28,11 @@
 @property (nonatomic) id<MMEUIApplicationWrapper> application;
 @property (nonatomic) MMENSDateWrapper *dateWrapper;
 @property (nonatomic, getter=isLocationMetricsEnabled) BOOL locationMetricsEnabled;
+@property (nonatomic) UIBackgroundTaskIdentifier backgroundTaskIdentifier;
 
 @end
 
-@implementation MMEEventsManager {
-    UIBackgroundTaskIdentifier _backgroundTaskIdentifier;
-}
+@implementation MMEEventsManager
 
 + (instancetype)sharedManager {
     static MMEEventsManager *_sharedManager;
@@ -191,6 +190,16 @@
         return;
     }
     
+    if (!self.apiClient.userAgentBase) {
+        [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: @"No user agent base set, cannot can't send turntile event"}];
+        return;
+    }
+    
+    if (!self.apiClient.hostSDKVersion) {
+        [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: @"No host SDK version set, cannot can't send turntile event"}];
+        return;
+    }
+    
     if (!self.commonEventData.vendorId) {
         [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: @"No vendor id available, cannot can't send turntile event"}];
         return;
@@ -206,15 +215,6 @@
         return;
     }
     
-    if (!self.apiClient.userAgentBase) {
-        [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: @"No user agent base set, cannot can't send turntile event"}];
-        return;
-    }
-    
-    if (!self.apiClient.hostSDKVersion) {
-        [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: @"No host SDK version set, cannot can't send turntile event"}];
-        return;
-    }
     
     NSDictionary *turnstileEventAttributes = @{MMEEventKeyEvent: MMEEventTypeAppUserTurnstile,
                                                MMEEventKeyCreated: [self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]],
