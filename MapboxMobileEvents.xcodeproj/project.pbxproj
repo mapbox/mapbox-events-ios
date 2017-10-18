@@ -139,6 +139,7 @@
 		40FB437E1EFAFAE900EC5BC0 /* MMETimerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 40FB437B1EFAFAE900EC5BC0 /* MMETimerManager.m */; };
 		40FB43801EFAFDCF00EC5BC0 /* MMETimerManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 40FB437F1EFAFDCF00EC5BC0 /* MMETimerManagerTests.m */; };
 		ACB6F21E1F7BF71B0032A916 /* MMELocationManagerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = ACB6F21D1F7BF71B0032A916 /* MMELocationManagerTests.mm */; };
+		ACD86DA01F96A77700DD2A8D /* MMEAPIClientTests_cedar.mm in Sources */ = {isa = PBXBuildFile; fileRef = ACD86D9F1F96A77700DD2A8D /* MMEAPIClientTests_cedar.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -284,6 +285,7 @@
 		40FB437B1EFAFAE900EC5BC0 /* MMETimerManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMETimerManager.m; sourceTree = "<group>"; };
 		40FB437F1EFAFDCF00EC5BC0 /* MMETimerManagerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMETimerManagerTests.m; sourceTree = "<group>"; };
 		ACB6F21D1F7BF71B0032A916 /* MMELocationManagerTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MMELocationManagerTests.mm; sourceTree = "<group>"; };
+		ACD86D9F1F96A77700DD2A8D /* MMEAPIClientTests_cedar.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MMEAPIClientTests_cedar.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -402,6 +404,7 @@
 				40C9E28B1EA5762F00744FE7 /* Fakes */,
 				4002E6351F83155E0090D724 /* MMEEventsManagerTests.mm */,
 				40AE58821EAA8E040046B437 /* MMEAPIClientTests.m */,
+				ACD86D9F1F96A77700DD2A8D /* MMEAPIClientTests_cedar.mm */,
 				40FB437F1EFAFDCF00EC5BC0 /* MMETimerManagerTests.m */,
 				40A7F9951F79A7CA002B931F /* MMEUniqueIdentifierTests.mm */,
 				403834FE1F7AC55D004205B9 /* MMENSDateWrapperTests.mm */,
@@ -831,6 +834,7 @@
 				405172E51EB13C6D00F8CDA1 /* MMENSURLSessionWrapperFake.m in Sources */,
 				40A7F9961F79A7CA002B931F /* MMEUniqueIdentifierTests.mm in Sources */,
 				40AE58831EAA8E040046B437 /* MMEAPIClientTests.m in Sources */,
+				ACD86DA01F96A77700DD2A8D /* MMEAPIClientTests_cedar.mm in Sources */,
 				403835061F7AF860004205B9 /* MMEDependencyManagerTests.mm in Sources */,
 				40F16C861F02DB6300DF338D /* MMENSDateWrapperFake.m in Sources */,
 			);
