@@ -35,7 +35,7 @@ describe(@"MMEAPIClient", ^{
                                                hostSDKVersion:@"host-sdk-1"];
     });
     
-    describe(@"- testing API setup", ^{
+    describe(@"- creating an api client instance", ^{
         context(@"when MMETelemetryTestServerURL is nil", ^{
             
             beforeEach(^{
@@ -49,12 +49,16 @@ describe(@"MMEAPIClient", ^{
                 apiClient.sessionWrapper should_not be_nil;
             });
             
-            it(@"should equal the BaseURL constant", ^{
-                apiClient.baseURL should equal([NSURL URLWithString:MMEAPIClientBaseURL]);
-            });
-            
             afterEach(^{
                 stop_spying_on([NSUserDefaults standardUserDefaults]);
+            });
+            
+            it(@"should be the correct instance type", ^{
+                apiClient.sessionWrapper should be_instance_of([MMENSURLSessionWrapper class]);
+            });
+            
+            it(@"should set its base URL equal to the the base URL constant value", ^{
+                apiClient.baseURL should equal([NSURL URLWithString:MMEAPIClientBaseURL]);
             });
         });
         
@@ -74,7 +78,7 @@ describe(@"MMEAPIClient", ^{
                 apiClient.sessionWrapper.usesTestServer should be_truthy;
             });
             
-            it(@"should equal the BaseURL constant", ^{
+            it(@"should equal a URL made from the test URL string", ^{
                 apiClient.baseURL should equal([NSURL URLWithString:testURLString]);
             });
             
@@ -83,7 +87,7 @@ describe(@"MMEAPIClient", ^{
             });
         });
         
-        context(@"when a bad URL is added to MMETelemetryTestServerURL", ^{
+        context(@"when a non-secure URL is added to MMETelemetryTestServerURL", ^{
             beforeEach(^{
                 NSString *badTestURLString = @"http://test.com";
                 spy_on([NSUserDefaults standardUserDefaults]);
@@ -151,13 +155,15 @@ describe(@"MMEAPIClient", ^{
             commonEventData.scale = 42;
             
             event = [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-1" commonEventData:commonEventData];
-            
-            [apiClient postEvent:event completionHandler:^(NSError * _Nullable error) {
-                capturedError = error;
-            }];
         });
         
         context(@"when posting a single event", ^{
+            
+            beforeEach(^{
+                [apiClient postEvent:event completionHandler:^(NSError * _Nullable error) {
+                    capturedError = error;
+                }];
+            });
             
             it(@"should have received processRequest:completionHandler:", ^{
                 apiClient.sessionWrapper should have_received(@selector(processRequest:completionHandler:)).with(sessionWrapperFake.request).and_with(Arguments::anything);
@@ -168,7 +174,6 @@ describe(@"MMEAPIClient", ^{
                 
                 beforeEach(^{
                     error = [NSError errorWithDomain:@"test" code:42 userInfo:nil];
-                    
                     [sessionWrapperFake completeProcessingWithData:nil response:nil error:error];
                 });
                 
@@ -177,77 +182,45 @@ describe(@"MMEAPIClient", ^{
                 });
             });
             
-            context(@"when posting an event with a library error response", ^{
-                __block NSError *postError;
-                
-                beforeEach(^{
-                    postError = [NSError errorWithDomain:@"error.com" code:42 userInfo:nil];
-                    
-                    [apiClient postEvent:event completionHandler:^(NSError * _Nullable error) {
-                        capturedError = error;
-                    }];
-                    
-                    NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:[NSURL URLWithString:@"http:test.com"]
-                                                                              statusCode:200
-                                                                             HTTPVersion:nil
-                                                                            headerFields:nil];
-                    
-                    [sessionWrapperFake completeProcessingWithData:nil response:response error:postError];
-                });
-                
-                it(@"should equal the post error", ^{
-                    capturedError should equal(postError);
-                });
-            });
-            
             context(@"when there is a response with an invalid status code", ^{
-                __block NSError *error;
-                
                 beforeEach(^{
-                    error = [NSError errorWithDomain:@"test" code:84 userInfo:nil];
-                    
-                    [apiClient postEvent:event completionHandler:^(NSError * _Nullable error) {
-                        capturedError = error;
-                    }];
-                    
                     NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:[NSURL URLWithString:@"http:test.com"]
                                                                              statusCode:400
                                                                             HTTPVersion:nil
                                                                            headerFields:nil];
-                    
-                    [sessionWrapperFake completeProcessingWithData:nil response:response error:error];
+                    [sessionWrapperFake completeProcessingWithData:nil response:response error:nil];
                 });
                 
                 it(@"should have an error", ^{
                     capturedError should_not be_nil;
                 });
             });
+        });
+        
+        context(@"when posting a single event with a staging access token", ^{
+            __block NSString *expectedURLString;
             
-            context(@"when posting an event with a staging access token", ^{
-                __block NSString *expectedURLString;
+            beforeEach(^{
+                NSString *stagingAccessToken = @"staging-access-token";
+                [[NSUserDefaults standardUserDefaults] setObject:stagingAccessToken forKey:MMETelemetryStagingAccessToken];
+                [[NSUserDefaults standardUserDefaults] synchronize];
                 
-                beforeEach(^{
-                    NSString *stagingAccessToken = @"staging-access-token";
-                    [[NSUserDefaults standardUserDefaults] setObject:stagingAccessToken forKey:MMETelemetryStagingAccessToken];
-                    [[NSUserDefaults standardUserDefaults] synchronize];
-                    
-                    [apiClient postEvent:event completionHandler:nil];
-                    
-                    expectedURLString = [NSString stringWithFormat:@"%@/%@?access_token=%@", MMEAPIClientBaseURL, MMEAPIClientEventsPath, stagingAccessToken];
-                });
+                [apiClient postEvent:event completionHandler:nil];
                 
-                it(@"should receive processRequest:completionHandler", ^{
-                    sessionWrapperFake should have_received(@selector(processRequest:completionHandler:));
-                });
-                
-                it(@"should be created properly", ^{
-                    sessionWrapperFake.request.URL.absoluteString should equal(expectedURLString);
-                });
-                
-                afterEach(^{
-                    [[NSUserDefaults standardUserDefaults] removeObjectForKey:MMETelemetryStagingAccessToken];
-                    [[NSUserDefaults standardUserDefaults] synchronize];
-                }); 
+                expectedURLString = [NSString stringWithFormat:@"%@/%@?access_token=%@", MMEAPIClientBaseURL, MMEAPIClientEventsPath, stagingAccessToken];
+            });
+            
+            afterEach(^{
+                [[NSUserDefaults standardUserDefaults] removeObjectForKey:MMETelemetryStagingAccessToken];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+            });
+            
+            it(@"should receive processRequest:completionHandler", ^{
+                sessionWrapperFake should have_received(@selector(processRequest:completionHandler:));
+            });
+            
+            it(@"should be created properly", ^{
+                sessionWrapperFake.request.URL.absoluteString should equal(expectedURLString);
             });
         });
         
@@ -278,45 +251,11 @@ describe(@"MMEAPIClient", ^{
                 [apiClient postEvents:@[event, eventTwo] completionHandler:nil];
             });
             
-            it(@"should equal gzip for HTTPHeader", ^{
+            it(@"should use gzip for content encoding", ^{
                 sessionWrapperFake.request.allHTTPHeaderFields[MMEAPIClientHeaderFieldContentEncodingKey] should equal(@"gzip");
             });
             
-            it(@"should have compressed", ^{
-                NSData *data = (NSData *)sessionWrapperFake.request.HTTPBody;
-                data.length should be_less_than(uncompressedData.length);
-            });
-        });
-        
-        context(@"when posting three events", ^{
-            __block NSData *uncompressedData;
-            
-            beforeEach(^{
-                MMECommonEventData *commonEventData = [[MMECommonEventData alloc] init];
-                commonEventData.vendorId = @"vendor-id";
-                commonEventData.model = @"model";
-                commonEventData.iOSVersion = @"1";
-                commonEventData.scale = 42;
-                
-                MMEEvent *eventTwo = [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-1" commonEventData:commonEventData];
-                
-                MMEEvent *eventThree = [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-1" commonEventData:commonEventData];
-                
-                NSArray *events = @[event, eventTwo, eventThree];
-                
-                NSMutableArray *eventAttributes = [NSMutableArray arrayWithCapacity:events.count];
-                [events enumerateObjectsUsingBlock:^(MMEEvent * _Nonnull event, NSUInteger idx, BOOL * _Nonnull stop) {
-                    if (event.attributes) {
-                        [eventAttributes addObject:event.attributes];
-                    }
-                }];
-                
-                uncompressedData = [NSJSONSerialization dataWithJSONObject:eventAttributes options:0 error:nil];
-                
-                [apiClient postEvents:@[event, eventTwo, eventThree] completionHandler:nil];
-            });
-            
-            it(@"should have compressed", ^{
+            it(@"should compress the data", ^{
                 NSData *data = (NSData *)sessionWrapperFake.request.HTTPBody;
                 data.length should be_less_than(uncompressedData.length);
             });
