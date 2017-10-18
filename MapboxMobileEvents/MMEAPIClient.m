@@ -97,14 +97,11 @@
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:eventAttributes options:0 error:nil];
     
     // Compressing less than 2 events can have a negative impact on the size.
-    if (events.count > 1) {
+    if (events.count >= 2) {
         NSData *compressedData = [jsonData mme_gzippedData];
         [request setValue:@"gzip" forHTTPHeaderField:MMEAPIClientHeaderFieldContentEncodingKey];
         [request setHTTPBody:compressedData];
-    }
-
-    // Set JSON data if events.count were less than 3 or something went wrong with compressing HTTP body data.
-    if (!request.HTTPBody) {
+    } else {
         [request setValue:nil forHTTPHeaderField:MMEAPIClientHeaderFieldContentEncodingKey];
         [request setHTTPBody:jsonData];
     }
