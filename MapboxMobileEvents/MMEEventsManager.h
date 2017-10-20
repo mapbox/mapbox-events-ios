@@ -2,12 +2,23 @@
 #import "MMEEvent.h"
 #import "MMETypes.h"
 
+
+
 @class MMELocationManager;
 
 NS_ASSUME_NONNULL_BEGIN
 
+@protocol MMEEventsManagerDelegate;
+
+@protocol MMEEventsManagerDelegate <NSObject>
+
+- (void)locationManager:(MMELocationManager *)locationManager didUpdateLocations:(NSArray *)locations;
+
+@end
+
 @interface MMEEventsManager : NSObject
 
+@property (nonatomic, weak) id<MMEEventsManagerDelegate> delegate;
 @property (nonatomic, getter=isMetricsEnabled) BOOL metricsEnabled;
 @property (nonatomic, getter=isMetricsEnabledInSimulator) BOOL metricsEnabledInSimulator;
 @property (nonatomic, getter=isMetricsEnabledForInUsePermissions) BOOL metricsEnabledForInUsePermissions;
@@ -29,5 +40,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)disableLocationMetrics;
 
 @end
+
 
 NS_ASSUME_NONNULL_END
