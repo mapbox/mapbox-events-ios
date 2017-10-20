@@ -388,6 +388,9 @@
                                             instanceIdentifer:self.uniqueIdentifer.rollingInstanceIdentifer
                                               commonEventData:self.commonEventData]];
     }
+    if ([self.delegate respondsToSelector:@selector(locationManager:didUpdateLocations:)]) {
+        [self.delegate locationManager:self.locationManager didUpdateLocations:locations];
+    }
 }
 
 - (void)locationManagerDidStartLocationUpdates:(MMELocationManager *)locationManager {
