@@ -1,7 +1,7 @@
 #import <Foundation/Foundation.h>
 #import "MMEEvent.h"
 #import "MMETypes.h"
-
+#import <CoreLocation/CoreLocation.h>
 
 
 @class MMELocationManager;
@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol MMEEventsManagerDelegate <NSObject>
 
-- (void)locationManager:(MMELocationManager *)locationManager didUpdateLocations:(NSArray *)locations;
+- (void)locationManager:(MMELocationManager *)locationManager didUpdateLocations:(NSArray<CLLocation *> *)locations;
 
 @end
 
