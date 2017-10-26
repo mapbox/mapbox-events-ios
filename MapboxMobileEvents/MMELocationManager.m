@@ -69,7 +69,9 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
     
     CLAuthorizationStatus authorizationStatus = [CLLocationManager authorizationStatus];
     if (authorizationStatus == kCLAuthorizationStatusAuthorizedWhenInUse && self.hostAppHasBackgroundCapability) {
-        self.locationManager.allowsBackgroundLocationUpdates = self.isMetricsEnabledForInUsePermissions;
+        if (@available(iOS 9.0, *)) {
+            self.locationManager.allowsBackgroundLocationUpdates = self.isMetricsEnabledForInUsePermissions;
+        }
     }
 }
 
@@ -93,7 +95,9 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
         if (authorizedAlways && self.hostAppHasBackgroundCapability) {
             [self.locationManager startMonitoringSignificantLocationChanges];
             [self startBackgroundTimeoutTimer];
-            self.locationManager.allowsBackgroundLocationUpdates = YES;
+            if (@available(iOS 9.0, *)) {
+                self.locationManager.allowsBackgroundLocationUpdates = self.isMetricsEnabledForInUsePermissions;
+            }
         }
           
         // If authorization status is when in use specifically, allow background location updates based on
@@ -102,7 +106,9 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
         // permissions involve navigation where a user would want and expect the app to be running / navigating
         // even if it is not in the foreground
         if (authorizationStatus == kCLAuthorizationStatusAuthorizedWhenInUse && self.hostAppHasBackgroundCapability) {
-            self.locationManager.allowsBackgroundLocationUpdates = self.isMetricsEnabledForInUsePermissions;
+            if (@available(iOS 9.0, *)) {
+                self.locationManager.allowsBackgroundLocationUpdates = self.isMetricsEnabledForInUsePermissions;
+            }
         }
 
         [self.locationManager startUpdatingLocation];

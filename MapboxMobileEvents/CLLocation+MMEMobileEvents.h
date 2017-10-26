@@ -2,7 +2,11 @@
 
 @interface CLLocation (MMEMobileEvents)
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wstrict-prototypes"
 void mme_linkCLLocationCategory();
+#pragma clang diagnostic pop
+
 
 - (CLLocationDistance)mme_roundedAltitude;
 - (CLLocationAccuracy)mme_roundedHorizontalAccuracy;
