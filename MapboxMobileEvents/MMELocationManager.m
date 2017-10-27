@@ -69,7 +69,13 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
     
     CLAuthorizationStatus authorizationStatus = [CLLocationManager authorizationStatus];
     if (authorizationStatus == kCLAuthorizationStatusAuthorizedWhenInUse && self.hostAppHasBackgroundCapability) {
-        self.locationManager.allowsBackgroundLocationUpdates = self.isMetricsEnabledForInUsePermissions;
+        // On iOS 9 and above also allow background location updates
+        if ([self.locationManager respondsToSelector:@selector(allowsBackgroundLocationUpdates)]) {
+            #pragma clang diagnostic push
+            #pragma clang diagnostic ignored "-Wunguarded-availability"
+                self.locationManager.allowsBackgroundLocationUpdates = self.isMetricsEnabledForInUsePermissions;
+            #pragma clang diagnostic pop
+        }
     }
 }
 
@@ -94,6 +100,12 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
             [self.locationManager startMonitoringSignificantLocationChanges];
             [self startBackgroundTimeoutTimer];
             self.locationManager.allowsBackgroundLocationUpdates = YES;
+            if ([self.locationManager respondsToSelector:@selector(allowsBackgroundLocationUpdates)]) {
+                #pragma clang diagnostic push
+                #pragma clang diagnostic ignored "-Wunguarded-availability"
+                    self.locationManager.allowsBackgroundLocationUpdates = self.isMetricsEnabledForInUsePermissions;
+                #pragma clang diagnostic pop
+            }
         }
           
         // If authorization status is when in use specifically, allow background location updates based on
@@ -102,7 +114,12 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
         // permissions involve navigation where a user would want and expect the app to be running / navigating
         // even if it is not in the foreground
         if (authorizationStatus == kCLAuthorizationStatusAuthorizedWhenInUse && self.hostAppHasBackgroundCapability) {
-            self.locationManager.allowsBackgroundLocationUpdates = self.isMetricsEnabledForInUsePermissions;
+            if ([self.locationManager respondsToSelector:@selector(allowsBackgroundLocationUpdates)]) {
+                #pragma clang diagnostic push
+                #pragma clang diagnostic ignored "-Wunguarded-availability"
+                    self.locationManager.allowsBackgroundLocationUpdates = self.isMetricsEnabledForInUsePermissions;
+                #pragma clang diagnostic pop
+            }
         }
 
         [self.locationManager startUpdatingLocation];

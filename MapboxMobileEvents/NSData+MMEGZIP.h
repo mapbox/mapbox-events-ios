@@ -38,7 +38,10 @@
 
 @interface NSData (MMEGZIP)
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wstrict-prototypes"
 void mme_linkNSDataCategory();
+#pragma clang diagnostic pop
 
 - (nullable NSData *)mme_gzippedDataWithCompressionLevel:(float)level;
 - (nullable NSData *)mme_gzippedData;
