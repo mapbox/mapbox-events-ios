@@ -99,11 +99,10 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
         if (authorizedAlways && self.hostAppHasBackgroundCapability) {
             [self.locationManager startMonitoringSignificantLocationChanges];
             [self startBackgroundTimeoutTimer];
-            self.locationManager.allowsBackgroundLocationUpdates = YES;
             if ([self.locationManager respondsToSelector:@selector(allowsBackgroundLocationUpdates)]) {
                 #pragma clang diagnostic push
                 #pragma clang diagnostic ignored "-Wunguarded-availability"
-                    self.locationManager.allowsBackgroundLocationUpdates = self.isMetricsEnabledForInUsePermissions;
+                    self.locationManager.allowsBackgroundLocationUpdates = YES;
                 #pragma clang diagnostic pop
             }
         }
