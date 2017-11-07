@@ -29,6 +29,7 @@
 @property (nonatomic) MMENSDateWrapper *dateWrapper;
 @property (nonatomic, getter=isLocationMetricsEnabled) BOOL locationMetricsEnabled;
 @property (nonatomic) UIBackgroundTaskIdentifier backgroundTaskIdentifier;
+@property (nonatomic) MMEEventLogger *logger;
 
 @end
 
@@ -58,6 +59,7 @@
         _uniqueIdentifer = [[MMEUniqueIdentifier alloc] initWithTimeInterval:_configuration.instanceIdentifierRotationTimeInterval];
         _application = [[MMEUIApplicationWrapper alloc] init];
         _dateWrapper = [[MMENSDateWrapper alloc] init];
+        _logger = [[MMEEventLogger alloc] init];
     }
     return self;
 }
@@ -233,6 +235,7 @@
     
     MMEEvent *turnstileEvent = [MMEEvent turnstileEventWithAttributes:turnstileEventAttributes];
     [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Sending turnstile event: %@", turnstileEvent]}];
+    [self.logger writeEventToLocalDebugLog:turnstileEvent];
     
     __weak __typeof__(self) weakSelf = self;
     [self.apiClient postEvent:turnstileEvent completionHandler:^(NSError * _Nullable error) {
@@ -360,6 +363,7 @@
     
     [self.eventQueue addObject:event];
     [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Added event to event queue; event queue now has %ld events", (long)self.eventQueue.count]}];
+    [self.logger writeEventToLocalDebugLog:event];
     
     if (self.eventQueue.count >= self.configuration.eventFlushCountThreshold) {
         [self flush];
