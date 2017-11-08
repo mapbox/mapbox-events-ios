@@ -17,6 +17,8 @@ NSString * const MMEEventTypeMapTap = @"map.click";
 NSString * const MMEEventTypeMapDragEnd = @"map.dragend";
 NSString * const MMEEventTypeLocation = @"location";
 NSString * const MMEEventTypeLocalDebug = @"debug";
+NSString * const MMEEventTypeFlush = @"flush";
+NSString * const MMEEventTypePush = @"push";
 
 NSString * const MMEEventGestureSingleTap = @"SingleTap";
 NSString * const MMEEventGestureDoubleTap = @"DoubleTap";

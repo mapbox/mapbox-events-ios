@@ -10,24 +10,27 @@
 
 @implementation MMEEventLogger
 
-static BOOL _enabled;
++ (instancetype)sharedLogger {
+    static MMEEventLogger *_sharedLogger;
+    static dispatch_once_t onceToken;
+    
+    dispatch_once(&onceToken, ^{
+        _sharedLogger = [[MMEEventLogger alloc] init];
+    });
+    
+    return _sharedLogger;
+}
 
-+ (void)logEvent:(MMEEvent *)event {    
-    if (_enabled) {
+- (void)logEvent:(MMEEvent *)event {
+    if (self.isEnabled) {
         NSLog(@"%@", [NSString stringWithFormat:@"Mapbox Telemetry event %@", event]);
+        
+        [self writeEventToLocalDebugLog:event];
     }
 }
 
-+ (BOOL)isEnabled {
-    return _enabled;
-}
-
-+ (void)setEnabled:(BOOL)enabled {
-    _enabled = enabled;
-}
-
 - (void)writeEventToLocalDebugLog:(MMEEvent *)event {
-    if (!_enabled) {
+    if (!self.isEnabled) {
         return;
     }
     

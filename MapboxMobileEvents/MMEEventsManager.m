@@ -29,7 +29,6 @@
 @property (nonatomic) MMENSDateWrapper *dateWrapper;
 @property (nonatomic, getter=isLocationMetricsEnabled) BOOL locationMetricsEnabled;
 @property (nonatomic) UIBackgroundTaskIdentifier backgroundTaskIdentifier;
-@property (nonatomic) MMEEventLogger *logger;
 
 @end
 
@@ -59,7 +58,6 @@
         _uniqueIdentifer = [[MMEUniqueIdentifier alloc] initWithTimeInterval:_configuration.instanceIdentifierRotationTimeInterval];
         _application = [[MMEUIApplicationWrapper alloc] init];
         _dateWrapper = [[MMENSDateWrapper alloc] init];
-        _logger = [[MMEEventLogger alloc] init];
     }
     return self;
 }
@@ -159,6 +157,12 @@
         return;
     }
     
+    NSDictionary *flushEventAttributes = @{MMEEventKeyEvent: MMEEventTypeFlush,
+                                          MMEEventKeyCreated: [self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]]};
+    MMEEvent *flushEvent = [MMEEvent pushEventWithAttributes:flushEventAttributes];
+    
+    [MMEEventLogger.sharedLogger logEvent:flushEvent];
+    
     NSArray *events = [self.eventQueue copy];
     __weak __typeof__(self) weakSelf = self;
     [self.apiClient postEvents:events completionHandler:^(NSError * _Nullable error) {
@@ -235,7 +239,7 @@
     
     MMEEvent *turnstileEvent = [MMEEvent turnstileEventWithAttributes:turnstileEventAttributes];
     [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Sending turnstile event: %@", turnstileEvent]}];
-    [self.logger writeEventToLocalDebugLog:turnstileEvent];
+    [MMEEventLogger.sharedLogger logEvent:turnstileEvent];
     
     __weak __typeof__(self) weakSelf = self;
     [self.apiClient postEvent:turnstileEvent completionHandler:^(NSError * _Nullable error) {
@@ -284,11 +288,11 @@
 }
 
 - (void)setDebugLoggingEnabled:(BOOL)debugLoggingEnabled {
-    [[MMEEventLogger class] setEnabled:debugLoggingEnabled];
+    MMEEventLogger.sharedLogger.enabled = debugLoggingEnabled;
 }
 
 - (BOOL)isDebugLoggingEnabled {
-    return [[MMEEventLogger class] isEnabled];
+    return [MMEEventLogger.sharedLogger isEnabled];
 }
 
 #pragma mark - Internal API
@@ -363,7 +367,13 @@
     
     [self.eventQueue addObject:event];
     [self pushDebugEventWithAttributes:@{MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Added event to event queue; event queue now has %ld events", (long)self.eventQueue.count]}];
-    [self.logger writeEventToLocalDebugLog:event];
+    
+    NSString *eventName = [NSString stringWithFormat:@"%@.%@",MMEEventTypePush,event.name];
+    NSDictionary *pushEventAttributes = @{MMEEventKeyEvent: eventName,
+                                          MMEEventKeyCreated: [self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]]};
+    MMEEvent *pushEvent = [MMEEvent pushEventWithAttributes:pushEventAttributes];
+    
+    [MMEEventLogger.sharedLogger logEvent:pushEvent];
     
     if (self.eventQueue.count >= self.configuration.eventFlushCountThreshold) {
         [self flush];
@@ -379,7 +389,7 @@
     [combinedAttributes setObject:[self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]] forKey:@"created"];
     [combinedAttributes setObject:self.uniqueIdentifer.rollingInstanceIdentifer forKey:@"instance"];
     MMEEvent *debugEvent = [MMEEvent debugEventWithAttributes:combinedAttributes];
-    [MMEEventLogger logEvent:debugEvent];
+    [MMEEventLogger.sharedLogger logEvent:debugEvent];
 }
 
 #pragma mark - MMELocationManagerDelegate

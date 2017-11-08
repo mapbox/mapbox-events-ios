@@ -6,9 +6,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface MMEEventLogger : NSObject
 
-+ (BOOL)isEnabled;
-+ (void)setEnabled:(BOOL)enabled;
-+ (void)logEvent:(MMEEvent *)event;
+@property (nonatomic, getter=isEnabled) BOOL enabled;
+
++ (instancetype)sharedLogger;
+
+- (void)logEvent:(MMEEvent *)event;
 
 - (void)writeEventToLocalDebugLog:(MMEEvent *)event;
 
