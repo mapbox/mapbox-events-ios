@@ -188,7 +188,13 @@ describe(@"MMEEventsManager", ^{
                             configuration.eventFlushCountThreshold = 2; // set a low value to make it easy to cross threshold in the test
                             eventsManager.configuration = configuration;
                             
+                            eventsManager.delegate = nice_fake_for(@protocol(MMEEventsManagerDelegate));
+                            
                             [eventsManager locationManager:nil didUpdateLocations:locations];
+                        });
+                        
+                        it(@"should tell it's delegate that a location event has been received", ^{
+                            eventsManager.delegate should have_received(@selector(locationManager:didUpdateLocations:)).with(eventsManager.locationManager).and_with(locations);
                         });
                         
                         it(@"tells the timer manager to start", ^{
@@ -714,9 +720,7 @@ describe(@"MMEEventsManager", ^{
                 });
             });
         });
-        
     });
-    
 });
 
 SPEC_END
