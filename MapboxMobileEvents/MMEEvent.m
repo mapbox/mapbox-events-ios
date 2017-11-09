@@ -5,20 +5,6 @@
 
 @implementation MMEEvent
 
-+ (instancetype)pushEventWithAttributes:(NSDictionary *)attributes {
-    MMEEvent *pushEvent = [[MMEEvent alloc] init];
-    pushEvent.name = MMEEventTypePush;
-    pushEvent.attributes = attributes;
-    return pushEvent;
-}
-
-+ (instancetype)flushEventWithAttributes:(NSDictionary *)attributes {
-    MMEEvent *flushEvent = [[MMEEvent alloc] init];
-    flushEvent.name = MMEEventTypeFlush;
-    flushEvent.attributes = attributes;
-    return flushEvent;
-}
-
 + (instancetype)turnstileEventWithAttributes:(NSDictionary *)attributes {
     MMEEvent *turnstileEvent = [[MMEEvent alloc] init];
     turnstileEvent.name = MMEEventTypeAppUserTurnstile;
