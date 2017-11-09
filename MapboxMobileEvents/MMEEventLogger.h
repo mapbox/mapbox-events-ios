@@ -12,8 +12,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)logEvent:(MMEEvent *)event;
 
-- (void)writeEventToLocalDebugLog:(MMEEvent *)event;
-
 @end
 
 NS_ASSUME_NONNULL_END
