@@ -11,6 +11,14 @@ NSString * const MMEAPIClientHeaderFieldContentEncodingKey = @"Content-Encoding"
 NSString * const MMEAPIClientHTTPMethodPost = @"POST";
 NSString * const MMEErrorDomain = @"MMEErrorDomain";
 
+NSString * const MMEDebugEventTypeFlush = @"flush";
+NSString * const MMEDebugEventTypePush = @"push";
+NSString * const MMEDebugEventTypePost = @"post";
+NSString * const MMEDebugEventTypeTurnstile = @"turnstile";
+NSString * const MMEDebugEventTypeBackgroundTask = @"backgroundTask";
+NSString * const MMEDebugEventTypeMetricCollection = @"metricCollection";
+NSString * const MMEDebugEventTypeLocationManager = @"locationManager";
+
 NSString * const MMEEventTypeAppUserTurnstile = @"appUserTurnstile";
 NSString * const MMEEventTypeMapLoad = @"map.load";
 NSString * const MMEEventTypeMapTap = @"map.click";
@@ -59,6 +67,7 @@ NSString * const MMEEventTypeNavigationArrive = @"navigation.arrive";
 NSString * const MMEEventTypeNavigationCancel = @"navigation.cancel";
 NSString * const MMEEventTypeNavigationFeedback = @"navigation.feedback";
 NSString * const MMEEventTypeNavigationReroute = @"navigation.reroute";
+NSString * const MMEDebugEventType = @"debug.type";
 
 NSString * const MMEEventSource = @"mapbox";
 

@@ -11,6 +11,15 @@ extern NSString * const MMEAPIClientHeaderFieldContentEncodingKey;
 extern NSString * const MMEAPIClientHTTPMethodPost;
 extern NSString * const MMEErrorDomain;
 
+// Debug types
+extern NSString * const MMEDebugEventTypeFlush;
+extern NSString * const MMEDebugEventTypePush;
+extern NSString * const MMEDebugEventTypePost;
+extern NSString * const MMEDebugEventTypeTurnstile;
+extern NSString * const MMEDebugEventTypeBackgroundTask;
+extern NSString * const MMEDebugEventTypeMetricCollection;
+extern NSString * const MMEDebugEventTypeLocationManager;
+
 // Event types
 extern NSString * const MMEEventTypeAppUserTurnstile;
 extern NSString * const MMEEventTypeMapLoad;
@@ -60,6 +69,7 @@ extern NSString * const MMEEventTypeNavigationArrive;
 extern NSString * const MMEEventTypeNavigationCancel;
 extern NSString * const MMEEventTypeNavigationFeedback;
 extern NSString * const MMEEventTypeNavigationReroute;
+extern NSString * const MMEDebugEventType;
 
 // SDK event source
 extern NSString * const MMEEventSource;
