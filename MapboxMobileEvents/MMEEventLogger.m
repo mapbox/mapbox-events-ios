@@ -1,4 +1,5 @@
 #import "MMEEventLogger.h"
+#import "MMEEvent.h"
 
 @interface MMEEventLogger()
 
@@ -47,9 +48,11 @@
         self.debugLogSerialQueue = dispatch_queue_create([[NSString stringWithFormat:@"%@.%@.events.debugLog", appBundleID, uniqueID] UTF8String], DISPATCH_QUEUE_SERIAL);
     }
     
+    NSDictionary *eventDict = @{event.name: event.attributes};
+    
     dispatch_async(self.debugLogSerialQueue, ^{
-        if ([NSJSONSerialization isValidJSONObject:event]) {
-            NSData *jsonData = [NSJSONSerialization dataWithJSONObject:event options:NSJSONWritingPrettyPrinted error:nil];
+        if ([NSJSONSerialization isValidJSONObject:eventDict]) {
+            NSData *jsonData = [NSJSONSerialization dataWithJSONObject:eventDict options:NSJSONWritingPrettyPrinted error:nil];
             
             NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
             jsonString = [jsonString stringByAppendingString:@",\n"];
