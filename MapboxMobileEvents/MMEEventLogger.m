@@ -1,5 +1,6 @@
 #import "MMEEventLogger.h"
 #import "MMEEvent.h"
+#import "MMEEventLogReportViewController.h"
 #import <WebKit/WebKit.h>
 
 @interface MMEEventLogger()
@@ -30,6 +31,8 @@
         [self writeEventToLocalDebugLog:event];
     }
 }
+
+#pragma mark - Write to Local File
 
 - (void)writeEventToLocalDebugLog:(MMEEvent *)event {
     if (!self.isEnabled) {
@@ -72,14 +75,16 @@
     });
 }
 
+#pragma mark - HTML Generation
+
 - (void)displayHTMLFromRowsWithDataString:(NSString *)dataString andWebView:(WKWebView *)webView {
     NSString *chartHTML = [NSString stringWithFormat:@"<html><head><script type='text/javascript' src='https://www.gstatic.com/charts/loader.js'></script><script type='text/javascript'>google.charts.load('current', {'packages':['timeline']});google.charts.setOnLoadCallback(drawChart);function drawChart() {var dataTable = new google.visualization.DataTable({cols: [{id: 'eventType', label: 'Event Type', type: 'string'},{id: 'start', label: 'Event Start Time', type: 'datetime'},{id: 'end', label: 'Event End Time', type: 'datetime'}],rows: %@});var options = {'title':'Telemetry Log Data','width':1024,'height':400,'timeline': { groupByRowLabel: true }};var chart = new google.visualization.Timeline(document.getElementById('chart_div'));chart.draw(dataTable, options);}</script></head><body><div id='chart_div'></div></body></html>", dataString];
-                           
     
     [webView loadHTMLString:chartHTML baseURL:nil];
 }
 
-- (void)readAndDisplayLogFileFromDate:(NSDate *)logDate {
+- (void)readAndDisplayLogFileFromDate:(NSDate *)logDate andViewController:(UIViewController *)viewController {
+    MMEEventLogReportViewController *logVC = [[MMEEventLogReportViewController alloc] init];
     
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     dateFormatter.dateFormat = @"yyyy'-'MM'-'dd";
@@ -92,87 +97,67 @@
     
     NSString *jsonString = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
     
-    if (jsonString != nil) {
+    if (jsonString) {
         NSString *contents = [NSString stringWithFormat:@"[%@]", jsonString];
+        NSString *dataString = [self parseJSONFromFileContents:contents];
         
-        //TODO: return a formatted datastring to display
-        [self parseJSONFromFileContents:contents];
-        
-        //TODO: display data on a webview
+        [viewController presentViewController:logVC animated:YES completion:nil];
+        [self displayHTMLFromRowsWithDataString:dataString andWebView:logVC.webView];
     } else {
-        NSLog(@"error reading file: %@", jsonString);
+        if (self.isEnabled) {
+            NSLog(@"error reading file: %@", jsonString);
+        }
     }
 }
 
-- (void)parseJSONFromFileContents:(NSString *)contents {
+- (NSString *)parseJSONFromFileContents:(NSString *)contents {
+    NSMutableArray *timelineDataArray = [[NSMutableArray alloc] init];
     NSArray *JSON = [NSJSONSerialization JSONObjectWithData:[contents dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
     
-    if (JSON != nil) {
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSSSZ";
+    
+    if (JSON) {
         for (NSDictionary *dictionary in JSON) {
-            //TODO: parse it
+            NSDictionary *eventDict = [dictionary valueForKeyPath:@"debug"];
+            
+            if (eventDict) {
+                if ([eventDict valueForKey:@"created"]) {
+                    NSDate *date = [dateFormatter dateFromString:[eventDict valueForKey:@"created"]];
+                    NSDateComponents *components = [[NSCalendar currentCalendar] components:
+                                                    NSCalendarUnitYear |
+                                                    NSCalendarUnitMonth |
+                                                    NSCalendarUnitDay |
+                                                    NSCalendarUnitHour |
+                                                    NSCalendarUnitMinute |
+                                                    NSCalendarUnitSecond fromDate:date];
+                    
+                    NSDictionary *debugDict = [NSDictionary dictionaryWithObject:[eventDict valueForKey:@"debug.type"] forKey:@"v"];
+                    NSDictionary *dateDict = [NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Date(%ld, %ld, %ld, %ld, %ld, %ld)", (long)components.year, (long)components.month, (long)components.day, (long)components.hour, (long)components.minute, (long)components.second] forKey:@"v"];
+                    NSArray *array = @[debugDict, dateDict, dateDict];
+                    NSDictionary *wrapDict = [NSDictionary dictionaryWithObject:array forKey:@"c"];
+                    
+                    [timelineDataArray addObject:wrapDict];
+                }
+            }
+        }
+        if ([NSJSONSerialization isValidJSONObject:timelineDataArray]) {
+            NSData *jsonData = [NSJSONSerialization dataWithJSONObject:timelineDataArray options:NSJSONWritingPrettyPrinted error:nil];
+            if (jsonData) {
+                return [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+            }
+        } else {
+            if (self.isEnabled) {
+               NSLog(@"Invalid JSON Object: %@", timelineDataArray);
+            }
         }
     } else {
-        NSLog(@"error parsing JSON: %@", JSON);
+        if (self.isEnabled) {
+            NSLog(@"error parsing JSON: %@", JSON);
+        }
     }
+    return nil;
 }
-
-//class LogWebViewController: UIViewController, WKUIDelegate {
-//
-//    var webView: WKWebView!
-//
-//    override func loadView() {
-//        let webConfiguration = WKWebViewConfiguration()
-//        webView = WKWebView(frame: .zero, configuration: webConfiguration)
-//        webView.uiDelegate = self
-//        view = webView
-//    }
-//
-//        do {
-//            var timelineData = [Any]()
-//
-//            let file = try String(contentsOfFile: filePath, encoding: String.Encoding.utf8)
-//            let contents = "[\(file)]"
-//
-//            if let json = try JSONSerialization.jsonObject(with: contents.data(using: .utf8)!, options: []) as? [[String: Any]] {
-//                for dictionary in json {
-//                    if let event = dictionary["debug"] as? [String: String] {
-//                        let dateFormatter = DateFormatter()
-//                        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSZ"
-//
-//                        if let date = dateFormatter.date(from: event["created"]!) {
-//                            let calendar = Calendar.current
-//                            let components = calendar.dateComponents([.year, .month, .day, .hour, .second], from: date)
-//
-//                            let debugDict = ["v": event["debug.type"]]
-//                            let dateDict = ["v": "Date(\(components.year!), \(components.month!), \(components.day!), \(components.hour!), \(components.second!))"]
-//                            let array = [debugDict, dateDict, dateDict]
-//                            let wrapDict = ["c": array]
-//
-//                            timelineData.append(wrapDict)
-//                        }
-//                    }
-//                }
-//
-//                if let timelineJSON = try? JSONSerialization.data(withJSONObject: timelineData, options: JSONSerialization.WritingOptions(rawValue: 0)) {
-//                    let timelineJSONString = String(data: timelineJSON, encoding: .utf8)
-//
-//                    displayHTMLFromRows(timelineData: timelineJSONString!, webView: webView)
-//                }
-//
-//            }
-//        } catch {
-//            print("Error: " + error.localizedDescription)
-//        }
-//
-//
-//
-//
-//    }}
-
-
-
-
-
 
 
 @end

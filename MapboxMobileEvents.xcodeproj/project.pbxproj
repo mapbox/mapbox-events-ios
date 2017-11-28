@@ -137,6 +137,8 @@
 		40FB437D1EFAFAE900EC5BC0 /* MMETimerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 40FB437B1EFAFAE900EC5BC0 /* MMETimerManager.m */; };
 		40FB437E1EFAFAE900EC5BC0 /* MMETimerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 40FB437B1EFAFAE900EC5BC0 /* MMETimerManager.m */; };
 		40FB43801EFAFDCF00EC5BC0 /* MMETimerManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 40FB437F1EFAFDCF00EC5BC0 /* MMETimerManagerTests.m */; };
+		AC611F271FCDED2F00ABBF6D /* MMEEventLogReportViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = AC611F251FCDED2F00ABBF6D /* MMEEventLogReportViewController.h */; };
+		AC611F281FCDED2F00ABBF6D /* MMEEventLogReportViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AC611F261FCDED2F00ABBF6D /* MMEEventLogReportViewController.m */; };
 		ACB6F21E1F7BF71B0032A916 /* MMELocationManagerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = ACB6F21D1F7BF71B0032A916 /* MMELocationManagerTests.mm */; };
 		ACD86DA01F96A77700DD2A8D /* MMEAPIClientTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = ACD86D9F1F96A77700DD2A8D /* MMEAPIClientTests.mm */; };
 /* End PBXBuildFile section */
@@ -282,6 +284,8 @@
 		40FB437A1EFAFAE900EC5BC0 /* MMETimerManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMETimerManager.h; sourceTree = "<group>"; };
 		40FB437B1EFAFAE900EC5BC0 /* MMETimerManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMETimerManager.m; sourceTree = "<group>"; };
 		40FB437F1EFAFDCF00EC5BC0 /* MMETimerManagerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMETimerManagerTests.m; sourceTree = "<group>"; };
+		AC611F251FCDED2F00ABBF6D /* MMEEventLogReportViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEEventLogReportViewController.h; sourceTree = "<group>"; };
+		AC611F261FCDED2F00ABBF6D /* MMEEventLogReportViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEEventLogReportViewController.m; sourceTree = "<group>"; };
 		ACB6F21D1F7BF71B0032A916 /* MMELocationManagerTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MMELocationManagerTests.mm; sourceTree = "<group>"; };
 		ACD86D9F1F96A77700DD2A8D /* MMEAPIClientTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MMEAPIClientTests.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -375,6 +379,8 @@
 				40AE586C1EA95EDD0046B437 /* MMEEvent.m */,
 				4036EFBC1ED37D56009C40BA /* MMEEventLogger.h */,
 				4036EFBD1ED37D56009C40BA /* MMEEventLogger.m */,
+				AC611F251FCDED2F00ABBF6D /* MMEEventLogReportViewController.h */,
+				AC611F261FCDED2F00ABBF6D /* MMEEventLogReportViewController.m */,
 				40FB43751EF9EA7800EC5BC0 /* MMEEventsConfiguration.h */,
 				40FB43761EF9EA7800EC5BC0 /* MMEEventsConfiguration.m */,
 				40C9E2791EA542BC00744FE7 /* MMEEventsManager.h */,
@@ -577,6 +583,7 @@
 				40AE585E1EA93B3A0046B437 /* MMECommonEventData.h in Headers */,
 				40FB437C1EFAFAE900EC5BC0 /* MMETimerManager.h in Headers */,
 				40C6118C1F18319000E30A6C /* TSKTrustKitConfig.h in Headers */,
+				AC611F271FCDED2F00ABBF6D /* MMEEventLogReportViewController.h in Headers */,
 				4036EFBE1ED37D56009C40BA /* MMEEventLogger.h in Headers */,
 				40AE58711EAA87960046B437 /* MMEAPIClient.h in Headers */,
 				405172DD1EAFFA9400F8CDA1 /* MMENSURLSessionWrapper.h in Headers */,
@@ -804,6 +811,7 @@
 				40F16C971F04514100DF338D /* reachability.m in Sources */,
 				40C9E2801EA5473F00744FE7 /* MMELocationManager.m in Sources */,
 				40C611841F18319000E30A6C /* TSKPinningValidator.m in Sources */,
+				AC611F281FCDED2F00ABBF6D /* MMEEventLogReportViewController.m in Sources */,
 				40C611641F18319000E30A6C /* ssl_pin_verifier.m in Sources */,
 				405172DE1EAFFA9400F8CDA1 /* MMENSURLSessionWrapper.m in Sources */,
 				409115311F16AE6100F4250B /* MMETrustKitWrapper.m in Sources */,
