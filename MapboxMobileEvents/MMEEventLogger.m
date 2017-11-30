@@ -101,7 +101,9 @@
         NSString *contents = [NSString stringWithFormat:@"[%@]", jsonString];
         NSString *dataString = [self parseJSONFromFileContents:contents];
         
-        [viewController presentViewController:logVC animated:YES completion:nil];
+        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController: logVC];
+        
+        [viewController presentViewController:navController animated:YES completion:nil];
         [self displayHTMLFromRowsWithDataString:dataString andWebView:logVC.webView];
     } else {
         if (self.isEnabled) {

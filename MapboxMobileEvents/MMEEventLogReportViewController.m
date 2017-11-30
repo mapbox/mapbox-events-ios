@@ -11,6 +11,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle:nil style:UIBarButtonItemStylePlain target:self action:@selector(backButtonPressed:)];
+    self.navigationItem.leftBarButtonItem = backButton;
+    
     WKWebViewConfiguration *theConfiguration = [[WKWebViewConfiguration alloc] init];
     self.webView = [[WKWebView alloc] initWithFrame:self.view.frame configuration:theConfiguration];
     self.webView.navigationDelegate = self;
@@ -28,6 +31,10 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         [_spinner stopAnimating];
     });
+}
+
+- (void)backButtonPressed:(id)sender {
+    [self dismissViewControllerAnimated:TRUE completion:nil];
 }
 
 @end
