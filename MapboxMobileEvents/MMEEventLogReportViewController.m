@@ -1,6 +1,6 @@
 #import "MMEEventLogReportViewController.h"
 
-@interface MMEEventLogReportViewController () <WKUIDelegate, WKNavigationDelegate>
+@interface MMEEventLogReportViewController () <WKUIDelegate, WKScriptMessageHandler>
 
 @property UIActivityIndicatorView *spinner;
 
@@ -19,15 +19,19 @@
     UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
     [button addTarget:self action:@selector(doneButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [button setTitle:@"Done" forState:UIControlStateNormal];
-    button.frame = CGRectMake(0, 20, 70.0, 40.0);
+    button.frame = CGRectMake(0, 20.0, 70.0, 40.0);
     [view addSubview:button];
     
-    WKWebViewConfiguration *theConfiguration = [[WKWebViewConfiguration alloc] init];
-    self.webView = [[WKWebView alloc] initWithFrame:CGRectMake(0, view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height - view.frame.size.height) configuration:theConfiguration];
-    self.webView.navigationDelegate = self;
+    WKWebViewConfiguration *configuration = [[WKWebViewConfiguration alloc] init];
+    WKUserContentController *controller = [[WKUserContentController alloc] init];
+    [controller addScriptMessageHandler:self name:@"observe"];
+    configuration.userContentController = controller;
+    self.webView = [[WKWebView alloc] initWithFrame:CGRectMake(0, view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height - view.frame.size.height) configuration:configuration];
+    self.webView.UIDelegate = self;
     [self.view addSubview:self.webView];
     
     _spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    [_spinner setFrame:CGRectMake(self.view.frame.size.width/2 - _spinner.frame.size.width/2, self.view.frame.size.height/2, _spinner.frame.size.width, _spinner.frame.size.height)];
     [self.view addSubview:_spinner];
     
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -35,7 +39,7 @@
     });
 }
 
--(void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
+-(void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message {
     dispatch_async(dispatch_get_main_queue(), ^{
         [_spinner stopAnimating];
     });
@@ -46,3 +50,4 @@
 }
 
 @end
+
