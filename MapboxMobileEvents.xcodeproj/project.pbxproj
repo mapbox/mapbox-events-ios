@@ -141,6 +141,9 @@
 		AC611F281FCDED2F00ABBF6D /* MMEEventLogReportViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AC611F261FCDED2F00ABBF6D /* MMEEventLogReportViewController.m */; };
 		ACB6F21E1F7BF71B0032A916 /* MMELocationManagerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = ACB6F21D1F7BF71B0032A916 /* MMELocationManagerTests.mm */; };
 		ACD86DA01F96A77700DD2A8D /* MMEAPIClientTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = ACD86D9F1F96A77700DD2A8D /* MMEAPIClientTests.mm */; };
+		ACE4F0131FD60DAF00035880 /* logger.html in Resources */ = {isa = PBXBuildFile; fileRef = ACE4F0121FD60DAF00035880 /* logger.html */; };
+		ACE4F01A1FD6102100035880 /* MMEUINavigation.h in Headers */ = {isa = PBXBuildFile; fileRef = ACE4F0181FD6102100035880 /* MMEUINavigation.h */; };
+		ACE4F01B1FD6102100035880 /* MMEUINavigation.m in Sources */ = {isa = PBXBuildFile; fileRef = ACE4F0191FD6102100035880 /* MMEUINavigation.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -288,6 +291,9 @@
 		AC611F261FCDED2F00ABBF6D /* MMEEventLogReportViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEEventLogReportViewController.m; sourceTree = "<group>"; };
 		ACB6F21D1F7BF71B0032A916 /* MMELocationManagerTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MMELocationManagerTests.mm; sourceTree = "<group>"; };
 		ACD86D9F1F96A77700DD2A8D /* MMEAPIClientTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MMEAPIClientTests.mm; sourceTree = "<group>"; };
+		ACE4F0121FD60DAF00035880 /* logger.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = logger.html; sourceTree = "<group>"; };
+		ACE4F0181FD6102100035880 /* MMEUINavigation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEUINavigation.h; sourceTree = "<group>"; };
+		ACE4F0191FD6102100035880 /* MMEUINavigation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEUINavigation.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -369,6 +375,7 @@
 		404807BB1EA186D8008A6D50 /* MapboxMobileEvents */ = {
 			isa = PBXGroup;
 			children = (
+				ACE4F0121FD60DAF00035880 /* logger.html */,
 				404807BD1EA186D8008A6D50 /* Info.plist */,
 				404807BC1EA186D8008A6D50 /* MapboxMobileEvents.h */,
 				40AE586F1EAA87960046B437 /* MMEAPIClient.h */,
@@ -513,6 +520,8 @@
 		40C9E2841EA5615900744FE7 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				ACE4F0181FD6102100035880 /* MMEUINavigation.h */,
+				ACE4F0191FD6102100035880 /* MMEUINavigation.m */,
 				40AE58411EA6C86C0046B437 /* MMEUIApplicationWrapper.h */,
 				40AE58421EA6C86C0046B437 /* MMEUIApplicationWrapper.m */,
 				40AE58581EA9373F0046B437 /* MMEUniqueIdentifier.h */,
@@ -600,6 +609,7 @@
 				40AE586D1EA95EDD0046B437 /* MMEEvent.h in Headers */,
 				40C611631F18319000E30A6C /* ssl_pin_verifier.h in Headers */,
 				40C6117F1F18319000E30A6C /* TrustKit.h in Headers */,
+				ACE4F01A1FD6102100035880 /* MMEUINavigation.h in Headers */,
 				40C611701F18319000E30A6C /* TSKPinFailureReport.h in Headers */,
 				409115301F16AE6100F4250B /* MMETrustKitWrapper.h in Headers */,
 				40C611861F18319000E30A6C /* TSKPinningValidator_Private.h in Headers */,
@@ -739,6 +749,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ACE4F0131FD60DAF00035880 /* logger.html in Resources */,
 				402F02A61F7DA28700E7FF06 /* Cartfile in Resources */,
 				404C5E231F85809400C026DD /* Scanfile in Resources */,
 				402F02A71F7DA28700E7FF06 /* MapboxMobileEvents.podspec in Resources */,
@@ -787,6 +798,7 @@
 			files = (
 				40C6118D1F18319000E30A6C /* TSKTrustKitConfig.m in Sources */,
 				40C611741F18319000E30A6C /* TSKReportsRateLimiter.m in Sources */,
+				ACE4F01B1FD6102100035880 /* MMEUINavigation.m in Sources */,
 				40C611481F18319000E30A6C /* configuration_utils.m in Sources */,
 				40C6116B1F18319000E30A6C /* reporting_utils.m in Sources */,
 				409115361F16BCD200F4250B /* MMECategoryLoader.m in Sources */,

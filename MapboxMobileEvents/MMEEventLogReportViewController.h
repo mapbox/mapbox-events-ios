@@ -5,4 +5,7 @@
 
 @property (nonatomic) WKWebView *webView;
 
+- (void)displayHTMLFromRowsWithDataString:(NSString *)dataString;
+
 @end
+

@@ -406,6 +406,10 @@
     [MMEEventLogger.sharedLogger logEvent:debugEvent];
 }
 
+- (void)displayLogFileFromDate:(NSDate *)logDate {
+    [MMEEventLogger.sharedLogger readAndDisplayLogFileFromDate:logDate];
+}
+
 #pragma mark - MMELocationManagerDelegate
 
 - (void)locationManager:(MMELocationManager *)locationManager didUpdateLocations:(NSArray *)locations {

@@ -1,6 +1,7 @@
 #import "MMEEventLogger.h"
 #import "MMEEvent.h"
 #import "MMEEventLogReportViewController.h"
+#import "MMEUINavigation.h"
 #import <WebKit/WebKit.h>
 
 @interface MMEEventLogger()
@@ -77,13 +78,7 @@
 
 #pragma mark - HTML Generation
 
-- (void)displayHTMLFromRowsWithDataString:(NSString *)dataString andWebView:(WKWebView *)webView {
-    NSString *chartHTML = [NSString stringWithFormat:@"<html><head><script type='text/javascript' src='https://www.gstatic.com/charts/loader.js'></script><script type='text/javascript'>google.charts.load('current', {'packages':['timeline']});google.charts.setOnLoadCallback(drawChart);function drawChart() {var dataTable = new google.visualization.DataTable({cols: [{id: 'eventType', label: 'Event Type', type: 'string'},{id: 'start', label: 'Event Start Time', type: 'datetime'},{id: 'end', label: 'Event End Time', type: 'datetime'}],rows: %@});var options = {'title':'Telemetry Log Data','width':1024,'height':400,'timeline': { groupByRowLabel: true }};var chart = new google.visualization.Timeline(document.getElementById('chart_div'));google.visualization.events.addListener(chart, 'ready', afterDraw);chart.draw(dataTable, options);}function afterDraw(){window.webkit.messageHandlers.observe.postMessage('complete');}</script></head><body><div id='chart_div'></div></body></html>", dataString];
-    
-    [webView loadHTMLString:chartHTML baseURL:nil];
-}
-
-- (void)readAndDisplayLogFileFromDate:(NSDate *)logDate andViewController:(UIViewController *)viewController {
+- (void)readAndDisplayLogFileFromDate:(NSDate *)logDate {
     MMEEventLogReportViewController *logVC = [[MMEEventLogReportViewController alloc] init];
     
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
@@ -101,8 +96,8 @@
         NSString *contents = [NSString stringWithFormat:@"[%@]", jsonString];
         NSString *dataString = [self parseJSONFromFileContents:contents];
         
-        [viewController presentViewController:logVC animated:YES completion:nil];
-        [self displayHTMLFromRowsWithDataString:dataString andWebView:logVC.webView];
+        [[MMEUINavigation topViewController] presentViewController:logVC animated:YES completion:nil];
+        [logVC displayHTMLFromRowsWithDataString:dataString];
     } else {
         if (self.isEnabled) {
             NSLog(@"error reading file: %@", jsonString);
@@ -148,7 +143,7 @@
             }
         } else {
             if (self.isEnabled) {
-               NSLog(@"Invalid JSON Object: %@", timelineDataArray);
+                NSLog(@"Invalid JSON Object: %@", timelineDataArray);
             }
         }
     } else {

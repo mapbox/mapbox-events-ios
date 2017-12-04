@@ -3,6 +3,7 @@
 @interface MMEEventLogReportViewController () <WKUIDelegate, WKScriptMessageHandler>
 
 @property UIActivityIndicatorView *spinner;
+@property NSString *dataString;
 
 @end
 
@@ -24,25 +25,38 @@
     
     WKWebViewConfiguration *configuration = [[WKWebViewConfiguration alloc] init];
     WKUserContentController *controller = [[WKUserContentController alloc] init];
-    [controller addScriptMessageHandler:self name:@"observe"];
+    [controller addScriptMessageHandler:self name:@"complete"];
+    [controller addScriptMessageHandler:self name:@"data"];
     configuration.userContentController = controller;
     self.webView = [[WKWebView alloc] initWithFrame:CGRectMake(0, view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height - view.frame.size.height) configuration:configuration];
     self.webView.UIDelegate = self;
     [self.view addSubview:self.webView];
     
-    _spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-    [_spinner setFrame:CGRectMake(self.view.frame.size.width/2 - _spinner.frame.size.width/2, self.view.frame.size.height/2, _spinner.frame.size.width, _spinner.frame.size.height)];
-    [self.view addSubview:_spinner];
+    self.spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    [self.spinner setFrame:CGRectMake(self.view.frame.size.width/2 - self.spinner.frame.size.width/2, self.view.frame.size.height/2, self.spinner.frame.size.width, self.spinner.frame.size.height)];
+    [self.view addSubview:self.spinner];
     
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [_spinner startAnimating];
-    });
+    [self.spinner startAnimating];
+}
+
+- (void)displayHTMLFromRowsWithDataString:(NSString *)dataString {
+    self.dataString = dataString;
+    NSURLRequest *urlReq = [NSURLRequest requestWithURL:[NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"logger" ofType:@"html"]]];
+    
+    [self.webView loadRequest:urlReq];
 }
 
 -(void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [_spinner stopAnimating];
-    });
+    if ([message.body isEqualToString:@"complete"]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.spinner stopAnimating];
+        });
+    } else {
+        if (self.dataString) {
+            NSString *exec = [NSString stringWithFormat:@"addData(%@)",self.dataString];
+            [self.webView evaluateJavaScript:exec completionHandler:nil];
+        }
+    }
 }
 
 - (void)doneButtonPressed:(id)sender {
