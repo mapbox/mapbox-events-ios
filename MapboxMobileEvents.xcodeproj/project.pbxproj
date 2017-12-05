@@ -375,7 +375,6 @@
 		404807BB1EA186D8008A6D50 /* MapboxMobileEvents */ = {
 			isa = PBXGroup;
 			children = (
-				ACE4F0121FD60DAF00035880 /* logger.html */,
 				404807BD1EA186D8008A6D50 /* Info.plist */,
 				404807BC1EA186D8008A6D50 /* MapboxMobileEvents.h */,
 				40AE586F1EAA87960046B437 /* MMEAPIClient.h */,
@@ -457,6 +456,7 @@
 		40AE587B1EAA8D810046B437 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				ACE4F0121FD60DAF00035880 /* logger.html */,
 				40BE71011EB7C3EC00D690F3 /* Localizable.strings */,
 			);
 			path = Resources;
