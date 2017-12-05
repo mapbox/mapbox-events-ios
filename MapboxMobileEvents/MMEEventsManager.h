@@ -39,6 +39,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)enqueueEventWithName:(NSString *)name attributes:(MMEMapboxEventAttributes *)attributes;
 - (void)disableLocationMetrics;
 
+- (void)displayLogFileFromDate:(NSDate *)logDate;
+
 @end
 
 
