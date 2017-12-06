@@ -1,4 +1,5 @@
 #import "MMEEventLogReportViewController.h"
+#import "MMEConstants.h"
 
 @interface MMEEventLogReportViewController () <WKUIDelegate, WKScriptMessageHandler>
 
@@ -41,9 +42,7 @@
 
 - (void)displayHTMLFromRowsWithDataString:(NSString *)dataString {
     self.dataString = dataString;
-    NSURLRequest *urlReq = [NSURLRequest requestWithURL:[NSURL fileURLWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"logger" ofType:@"html"]]];
-    
-    [self.webView loadRequest:urlReq];
+    [self.webView loadHTMLString:MMELoggerHTML baseURL:nil];
 }
 
 -(void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message {

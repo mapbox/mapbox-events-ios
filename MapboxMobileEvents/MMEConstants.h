@@ -74,6 +74,9 @@ extern NSString * const MMEDebugEventType;
 // SDK event source
 extern NSString * const MMEEventSource;
 
+// Log reporter HTML
+extern NSString * const MMELoggerHTML;
+
 @interface MMEConstants: NSObject
 
 @end
