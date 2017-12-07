@@ -1,7 +1,7 @@
 #import "MMEEvent.h"
 #import "MMEConstants.h"
 #import "MMECommonEventData.h"
-#import "reachability.h"
+#import "MMEReachability.h"
 
 @implementation MMEEvent
 

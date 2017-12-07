@@ -1,0 +1,550 @@
+// Namespaced Header
+
+    #ifndef __NS_SYMBOL
+    // We need to have multiple levels of macros here so that __NAMESPACE_PREFIX_ is
+    // properly replaced by the time we concatenate the namespace prefix.
+    #define __NS_REWRITE(ns, symbol) ns ## _ ## symbol
+    #define __NS_BRIDGE(ns, symbol) __NS_REWRITE(ns, symbol)
+    #define __NS_SYMBOL(symbol) __NS_BRIDGE(MGL, symbol)
+    #endif
+
+    
+// Classes
+#ifndef MMEAPIClient
+#define MMEAPIClient __NS_SYMBOL(MMEAPIClient)
+#endif
+
+#ifndef MMECategoryLoader
+#define MMECategoryLoader __NS_SYMBOL(MMECategoryLoader)
+#endif
+
+#ifndef MMECommonEventData
+#define MMECommonEventData __NS_SYMBOL(MMECommonEventData)
+#endif
+
+#ifndef MMEConstants
+#define MMEConstants __NS_SYMBOL(MMEConstants)
+#endif
+
+#ifndef MMEDependencyManager
+#define MMEDependencyManager __NS_SYMBOL(MMEDependencyManager)
+#endif
+
+#ifndef MMEEvent
+#define MMEEvent __NS_SYMBOL(MMEEvent)
+#endif
+
+#ifndef MMEEventLogger
+#define MMEEventLogger __NS_SYMBOL(MMEEventLogger)
+#endif
+
+#ifndef MMEEventsConfiguration
+#define MMEEventsConfiguration __NS_SYMBOL(MMEEventsConfiguration)
+#endif
+
+#ifndef MMEEventsManager
+#define MMEEventsManager __NS_SYMBOL(MMEEventsManager)
+#endif
+
+#ifndef MMELocationManager
+#define MMELocationManager __NS_SYMBOL(MMELocationManager)
+#endif
+
+#ifndef MMENSDateWrapper
+#define MMENSDateWrapper __NS_SYMBOL(MMENSDateWrapper)
+#endif
+
+#ifndef MMENSURLSessionWrapper
+#define MMENSURLSessionWrapper __NS_SYMBOL(MMENSURLSessionWrapper)
+#endif
+
+#ifndef MMEReachability
+#define MMEReachability __NS_SYMBOL(MMEReachability)
+#endif
+
+#ifndef MMETimerManager
+#define MMETimerManager __NS_SYMBOL(MMETimerManager)
+#endif
+
+#ifndef MMETrustKitWrapper
+#define MMETrustKitWrapper __NS_SYMBOL(MMETrustKitWrapper)
+#endif
+
+#ifndef MMETypes
+#define MMETypes __NS_SYMBOL(MMETypes)
+#endif
+
+#ifndef MMEUIApplicationWrapper
+#define MMEUIApplicationWrapper __NS_SYMBOL(MMEUIApplicationWrapper)
+#endif
+
+#ifndef MMEUniqueIdentifier
+#define MMEUniqueIdentifier __NS_SYMBOL(MMEUniqueIdentifier)
+#endif
+
+#ifndef TSKBackgroundReporter
+#define TSKBackgroundReporter __NS_SYMBOL(TSKBackgroundReporter)
+#endif
+
+#ifndef TSKPinFailureReport
+#define TSKPinFailureReport __NS_SYMBOL(TSKPinFailureReport)
+#endif
+
+#ifndef TSKPinningValidator
+#define TSKPinningValidator __NS_SYMBOL(TSKPinningValidator)
+#endif
+
+#ifndef TSKPinningValidatorResult
+#define TSKPinningValidatorResult __NS_SYMBOL(TSKPinningValidatorResult)
+#endif
+
+#ifndef TSKReportsRateLimiter
+#define TSKReportsRateLimiter __NS_SYMBOL(TSKReportsRateLimiter)
+#endif
+
+#ifndef TSKSPKIHashCache
+#define TSKSPKIHashCache __NS_SYMBOL(TSKSPKIHashCache)
+#endif
+
+#ifndef TrustKit
+#define TrustKit __NS_SYMBOL(TrustKit)
+#endif
+
+// Functions
+#ifndef convertTrustToPemArray
+#define convertTrustToPemArray __NS_SYMBOL(convertTrustToPemArray)
+#endif
+
+#ifndef getPinningConfigurationKeyForDomain
+#define getPinningConfigurationKeyForDomain __NS_SYMBOL(getPinningConfigurationKeyForDomain)
+#endif
+
+#ifndef identifier_for_vendor
+#define identifier_for_vendor __NS_SYMBOL(identifier_for_vendor)
+#endif
+
+#ifndef mme_linkCLLocationCategory
+#define mme_linkCLLocationCategory __NS_SYMBOL(mme_linkCLLocationCategory)
+#endif
+
+#ifndef mme_linkNSDataCategory
+#define mme_linkNSDataCategory __NS_SYMBOL(mme_linkNSDataCategory)
+#endif
+
+#ifndef parseTrustKitConfiguration
+#define parseTrustKitConfiguration __NS_SYMBOL(parseTrustKitConfiguration)
+#endif
+
+#ifndef verifyPublicKeyPin
+#define verifyPublicKeyPin __NS_SYMBOL(verifyPublicKeyPin)
+#endif
+
+#ifndef TSKLog
+#define TSKLog __NS_SYMBOL(TSKLog)
+#endif
+
+#ifndef convertPinsToHpkpPins
+#define convertPinsToHpkpPins __NS_SYMBOL(convertPinsToHpkpPins)
+#endif
+
+// Externs
+l#ifndef OBJC_PROTOCOL_$_MMEUIApplicationWrapper
+#define OBJC_PROTOCOL_$_MMEUIApplicationWrapper __NS_SYMBOL(OBJC_PROTOCOL_$_MMEUIApplicationWrapper)
+#endif
+
+l#ifndef OBJC_PROTOCOL_$_MMEUniqueIdentifer
+#define OBJC_PROTOCOL_$_MMEUniqueIdentifer __NS_SYMBOL(OBJC_PROTOCOL_$_MMEUniqueIdentifer)
+#endif
+
+l#ifndef OBJC_PROTOCOL_$_MMENSURLSessionWrapper
+#define OBJC_PROTOCOL_$_MMENSURLSessionWrapper __NS_SYMBOL(OBJC_PROTOCOL_$_MMENSURLSessionWrapper)
+#endif
+
+#ifndef _loggerBlock
+#define _loggerBlock __NS_SYMBOL(_loggerBlock)
+#endif
+
+l#ifndef OBJC_PROTOCOL_$_MMEAPIClient
+#define OBJC_PROTOCOL_$_MMEAPIClient __NS_SYMBOL(OBJC_PROTOCOL_$_MMEAPIClient)
+#endif
+
+l#ifndef OBJC_PROTOCOL_$_CLLocationManagerDelegate
+#define OBJC_PROTOCOL_$_CLLocationManagerDelegate __NS_SYMBOL(OBJC_PROTOCOL_$_CLLocationManagerDelegate)
+#endif
+
+l#ifndef OBJC_PROTOCOL_$_MMELocationManager
+#define OBJC_PROTOCOL_$_MMELocationManager __NS_SYMBOL(OBJC_PROTOCOL_$_MMELocationManager)
+#endif
+
+l#ifndef OBJC_PROTOCOL_$_MMELocationManagerDelegate
+#define OBJC_PROTOCOL_$_MMELocationManagerDelegate __NS_SYMBOL(OBJC_PROTOCOL_$_MMELocationManagerDelegate)
+#endif
+
+#ifndef MapboxMobileEventsStaticVersionString
+#define MapboxMobileEventsStaticVersionString __NS_SYMBOL(MapboxMobileEventsStaticVersionString)
+#endif
+
+#ifndef MapboxMobileEventsStaticVersionNumber
+#define MapboxMobileEventsStaticVersionNumber __NS_SYMBOL(MapboxMobileEventsStaticVersionNumber)
+#endif
+
+#ifndef TrustKitVersion
+#define TrustKitVersion __NS_SYMBOL(TrustKitVersion)
+#endif
+
+#ifndef kTSKSwizzleNetworkDelegates
+#define kTSKSwizzleNetworkDelegates __NS_SYMBOL(kTSKSwizzleNetworkDelegates)
+#endif
+
+#ifndef kTSKPinnedDomains
+#define kTSKPinnedDomains __NS_SYMBOL(kTSKPinnedDomains)
+#endif
+
+#ifndef kTSKIgnorePinningForUserDefinedTrustAnchors
+#define kTSKIgnorePinningForUserDefinedTrustAnchors __NS_SYMBOL(kTSKIgnorePinningForUserDefinedTrustAnchors)
+#endif
+
+#ifndef kTSKPublicKeyHashes
+#define kTSKPublicKeyHashes __NS_SYMBOL(kTSKPublicKeyHashes)
+#endif
+
+#ifndef kTSKEnforcePinning
+#define kTSKEnforcePinning __NS_SYMBOL(kTSKEnforcePinning)
+#endif
+
+#ifndef kTSKExcludeSubdomainFromParentPolicy
+#define kTSKExcludeSubdomainFromParentPolicy __NS_SYMBOL(kTSKExcludeSubdomainFromParentPolicy)
+#endif
+
+#ifndef kTSKIncludeSubdomains
+#define kTSKIncludeSubdomains __NS_SYMBOL(kTSKIncludeSubdomains)
+#endif
+
+#ifndef kTSKPublicKeyAlgorithms
+#define kTSKPublicKeyAlgorithms __NS_SYMBOL(kTSKPublicKeyAlgorithms)
+#endif
+
+#ifndef kTSKReportUris
+#define kTSKReportUris __NS_SYMBOL(kTSKReportUris)
+#endif
+
+#ifndef kTSKDisableDefaultReportUri
+#define kTSKDisableDefaultReportUri __NS_SYMBOL(kTSKDisableDefaultReportUri)
+#endif
+
+#ifndef kTSKExpirationDate
+#define kTSKExpirationDate __NS_SYMBOL(kTSKExpirationDate)
+#endif
+
+#ifndef kTSKAdditionalTrustAnchors
+#define kTSKAdditionalTrustAnchors __NS_SYMBOL(kTSKAdditionalTrustAnchors)
+#endif
+
+#ifndef kTSKAlgorithmRsa2048
+#define kTSKAlgorithmRsa2048 __NS_SYMBOL(kTSKAlgorithmRsa2048)
+#endif
+
+#ifndef kTSKAlgorithmRsa4096
+#define kTSKAlgorithmRsa4096 __NS_SYMBOL(kTSKAlgorithmRsa4096)
+#endif
+
+#ifndef kTSKAlgorithmEcDsaSecp256r1
+#define kTSKAlgorithmEcDsaSecp256r1 __NS_SYMBOL(kTSKAlgorithmEcDsaSecp256r1)
+#endif
+
+#ifndef kTSKAlgorithmEcDsaSecp384r1
+#define kTSKAlgorithmEcDsaSecp384r1 __NS_SYMBOL(kTSKAlgorithmEcDsaSecp384r1)
+#endif
+
+#ifndef MMEApplicationStateForeground
+#define MMEApplicationStateForeground __NS_SYMBOL(MMEApplicationStateForeground)
+#endif
+
+#ifndef MMEApplicationStateBackground
+#define MMEApplicationStateBackground __NS_SYMBOL(MMEApplicationStateBackground)
+#endif
+
+#ifndef MMEApplicationStateInactive
+#define MMEApplicationStateInactive __NS_SYMBOL(MMEApplicationStateInactive)
+#endif
+
+#ifndef MMEApplicationStateUnknown
+#define MMEApplicationStateUnknown __NS_SYMBOL(MMEApplicationStateUnknown)
+#endif
+
+#ifndef MMEAPIClientBaseURL
+#define MMEAPIClientBaseURL __NS_SYMBOL(MMEAPIClientBaseURL)
+#endif
+
+#ifndef MMETelemetryTestServerURL
+#define MMETelemetryTestServerURL __NS_SYMBOL(MMETelemetryTestServerURL)
+#endif
+
+#ifndef MMETelemetryStagingAccessToken
+#define MMETelemetryStagingAccessToken __NS_SYMBOL(MMETelemetryStagingAccessToken)
+#endif
+
+#ifndef MMEAPIClientEventsPath
+#define MMEAPIClientEventsPath __NS_SYMBOL(MMEAPIClientEventsPath)
+#endif
+
+#ifndef MMEAPIClientHeaderFieldUserAgentKey
+#define MMEAPIClientHeaderFieldUserAgentKey __NS_SYMBOL(MMEAPIClientHeaderFieldUserAgentKey)
+#endif
+
+#ifndef MMEAPIClientHeaderFieldContentTypeKey
+#define MMEAPIClientHeaderFieldContentTypeKey __NS_SYMBOL(MMEAPIClientHeaderFieldContentTypeKey)
+#endif
+
+#ifndef MMEAPIClientHeaderFieldContentTypeValue
+#define MMEAPIClientHeaderFieldContentTypeValue __NS_SYMBOL(MMEAPIClientHeaderFieldContentTypeValue)
+#endif
+
+#ifndef MMEAPIClientHeaderFieldContentEncodingKey
+#define MMEAPIClientHeaderFieldContentEncodingKey __NS_SYMBOL(MMEAPIClientHeaderFieldContentEncodingKey)
+#endif
+
+#ifndef MMEAPIClientHTTPMethodPost
+#define MMEAPIClientHTTPMethodPost __NS_SYMBOL(MMEAPIClientHTTPMethodPost)
+#endif
+
+#ifndef MMEErrorDomain
+#define MMEErrorDomain __NS_SYMBOL(MMEErrorDomain)
+#endif
+
+#ifndef MMEDebugEventTypeFlush
+#define MMEDebugEventTypeFlush __NS_SYMBOL(MMEDebugEventTypeFlush)
+#endif
+
+#ifndef MMEDebugEventTypePush
+#define MMEDebugEventTypePush __NS_SYMBOL(MMEDebugEventTypePush)
+#endif
+
+#ifndef MMEDebugEventTypePost
+#define MMEDebugEventTypePost __NS_SYMBOL(MMEDebugEventTypePost)
+#endif
+
+#ifndef MMEDebugEventTypeTurnstile
+#define MMEDebugEventTypeTurnstile __NS_SYMBOL(MMEDebugEventTypeTurnstile)
+#endif
+
+#ifndef MMEDebugEventTypeBackgroundTask
+#define MMEDebugEventTypeBackgroundTask __NS_SYMBOL(MMEDebugEventTypeBackgroundTask)
+#endif
+
+#ifndef MMEDebugEventTypeMetricCollection
+#define MMEDebugEventTypeMetricCollection __NS_SYMBOL(MMEDebugEventTypeMetricCollection)
+#endif
+
+#ifndef MMEDebugEventTypeLocationManager
+#define MMEDebugEventTypeLocationManager __NS_SYMBOL(MMEDebugEventTypeLocationManager)
+#endif
+
+#ifndef MMEEventTypeAppUserTurnstile
+#define MMEEventTypeAppUserTurnstile __NS_SYMBOL(MMEEventTypeAppUserTurnstile)
+#endif
+
+#ifndef MMEEventTypeMapLoad
+#define MMEEventTypeMapLoad __NS_SYMBOL(MMEEventTypeMapLoad)
+#endif
+
+#ifndef MMEEventTypeMapTap
+#define MMEEventTypeMapTap __NS_SYMBOL(MMEEventTypeMapTap)
+#endif
+
+#ifndef MMEEventTypeMapDragEnd
+#define MMEEventTypeMapDragEnd __NS_SYMBOL(MMEEventTypeMapDragEnd)
+#endif
+
+#ifndef MMEEventTypeLocation
+#define MMEEventTypeLocation __NS_SYMBOL(MMEEventTypeLocation)
+#endif
+
+#ifndef MMEEventTypeLocalDebug
+#define MMEEventTypeLocalDebug __NS_SYMBOL(MMEEventTypeLocalDebug)
+#endif
+
+#ifndef MMEEventGestureSingleTap
+#define MMEEventGestureSingleTap __NS_SYMBOL(MMEEventGestureSingleTap)
+#endif
+
+#ifndef MMEEventGestureDoubleTap
+#define MMEEventGestureDoubleTap __NS_SYMBOL(MMEEventGestureDoubleTap)
+#endif
+
+#ifndef MMEEventGestureTwoFingerSingleTap
+#define MMEEventGestureTwoFingerSingleTap __NS_SYMBOL(MMEEventGestureTwoFingerSingleTap)
+#endif
+
+#ifndef MMEEventGestureQuickZoom
+#define MMEEventGestureQuickZoom __NS_SYMBOL(MMEEventGestureQuickZoom)
+#endif
+
+#ifndef MMEEventGesturePanStart
+#define MMEEventGesturePanStart __NS_SYMBOL(MMEEventGesturePanStart)
+#endif
+
+#ifndef MMEEventGesturePinchStart
+#define MMEEventGesturePinchStart __NS_SYMBOL(MMEEventGesturePinchStart)
+#endif
+
+#ifndef MMEEventGestureRotateStart
+#define MMEEventGestureRotateStart __NS_SYMBOL(MMEEventGestureRotateStart)
+#endif
+
+#ifndef MMEEventGesturePitchStart
+#define MMEEventGesturePitchStart __NS_SYMBOL(MMEEventGesturePitchStart)
+#endif
+
+#ifndef MMEEventKeyLatitude
+#define MMEEventKeyLatitude __NS_SYMBOL(MMEEventKeyLatitude)
+#endif
+
+#ifndef MMEEventKeyLongitude
+#define MMEEventKeyLongitude __NS_SYMBOL(MMEEventKeyLongitude)
+#endif
+
+#ifndef MMEEventKeyZoomLevel
+#define MMEEventKeyZoomLevel __NS_SYMBOL(MMEEventKeyZoomLevel)
+#endif
+
+#ifndef MMEEventKeySpeed
+#define MMEEventKeySpeed __NS_SYMBOL(MMEEventKeySpeed)
+#endif
+
+#ifndef MMEEventKeyCourse
+#define MMEEventKeyCourse __NS_SYMBOL(MMEEventKeyCourse)
+#endif
+
+#ifndef MMEEventKeyGestureID
+#define MMEEventKeyGestureID __NS_SYMBOL(MMEEventKeyGestureID)
+#endif
+
+#ifndef MMEEventHorizontalAccuracy
+#define MMEEventHorizontalAccuracy __NS_SYMBOL(MMEEventHorizontalAccuracy)
+#endif
+
+#ifndef MMEEventKeyLocalDebugDescription
+#define MMEEventKeyLocalDebugDescription __NS_SYMBOL(MMEEventKeyLocalDebugDescription)
+#endif
+
+#ifndef MMEEventKeyEvent
+#define MMEEventKeyEvent __NS_SYMBOL(MMEEventKeyEvent)
+#endif
+
+#ifndef MMEEventKeyCreated
+#define MMEEventKeyCreated __NS_SYMBOL(MMEEventKeyCreated)
+#endif
+
+#ifndef MMEEventKeyVendorID
+#define MMEEventKeyVendorID __NS_SYMBOL(MMEEventKeyVendorID)
+#endif
+
+#ifndef MMEEventKeyModel
+#define MMEEventKeyModel __NS_SYMBOL(MMEEventKeyModel)
+#endif
+
+#ifndef MMEEventKeyDevice
+#define MMEEventKeyDevice __NS_SYMBOL(MMEEventKeyDevice)
+#endif
+
+#ifndef MMEEventKeyEnabledTelemetry
+#define MMEEventKeyEnabledTelemetry __NS_SYMBOL(MMEEventKeyEnabledTelemetry)
+#endif
+
+#ifndef MMEEventKeyOperatingSystem
+#define MMEEventKeyOperatingSystem __NS_SYMBOL(MMEEventKeyOperatingSystem)
+#endif
+
+#ifndef MMEEventKeyResolution
+#define MMEEventKeyResolution __NS_SYMBOL(MMEEventKeyResolution)
+#endif
+
+#ifndef MMEEventKeyAccessibilityFontScale
+#define MMEEventKeyAccessibilityFontScale __NS_SYMBOL(MMEEventKeyAccessibilityFontScale)
+#endif
+
+#ifndef MMEEventKeyOrientation
+#define MMEEventKeyOrientation __NS_SYMBOL(MMEEventKeyOrientation)
+#endif
+
+#ifndef MMEEventKeyPluggedIn
+#define MMEEventKeyPluggedIn __NS_SYMBOL(MMEEventKeyPluggedIn)
+#endif
+
+#ifndef MMEEventKeyWifi
+#define MMEEventKeyWifi __NS_SYMBOL(MMEEventKeyWifi)
+#endif
+
+#ifndef MMEEventKeySource
+#define MMEEventKeySource __NS_SYMBOL(MMEEventKeySource)
+#endif
+
+#ifndef MMEEventKeySessionId
+#define MMEEventKeySessionId __NS_SYMBOL(MMEEventKeySessionId)
+#endif
+
+#ifndef MMEEventKeyApplicationState
+#define MMEEventKeyApplicationState __NS_SYMBOL(MMEEventKeyApplicationState)
+#endif
+
+#ifndef MMEEventKeyAltitude
+#define MMEEventKeyAltitude __NS_SYMBOL(MMEEventKeyAltitude)
+#endif
+
+#ifndef MMEEventSDKIdentifier
+#define MMEEventSDKIdentifier __NS_SYMBOL(MMEEventSDKIdentifier)
+#endif
+
+#ifndef MMEEventSDKVersion
+#define MMEEventSDKVersion __NS_SYMBOL(MMEEventSDKVersion)
+#endif
+
+#ifndef MMENavigationEventPrefix
+#define MMENavigationEventPrefix __NS_SYMBOL(MMENavigationEventPrefix)
+#endif
+
+#ifndef MMEEventTypeNavigationDepart
+#define MMEEventTypeNavigationDepart __NS_SYMBOL(MMEEventTypeNavigationDepart)
+#endif
+
+#ifndef MMEEventTypeNavigationArrive
+#define MMEEventTypeNavigationArrive __NS_SYMBOL(MMEEventTypeNavigationArrive)
+#endif
+
+#ifndef MMEEventTypeNavigationCancel
+#define MMEEventTypeNavigationCancel __NS_SYMBOL(MMEEventTypeNavigationCancel)
+#endif
+
+#ifndef MMEEventTypeNavigationFeedback
+#define MMEEventTypeNavigationFeedback __NS_SYMBOL(MMEEventTypeNavigationFeedback)
+#endif
+
+#ifndef MMEEventTypeNavigationReroute
+#define MMEEventTypeNavigationReroute __NS_SYMBOL(MMEEventTypeNavigationReroute)
+#endif
+
+#ifndef MMEDebugEventType
+#define MMEDebugEventType __NS_SYMBOL(MMEDebugEventType)
+#endif
+
+#ifndef MMEEventSource
+#define MMEEventSource __NS_SYMBOL(MMEEventSource)
+#endif
+
+#ifndef MMELocationManagerHibernationRadius
+#define MMELocationManagerHibernationRadius __NS_SYMBOL(MMELocationManagerHibernationRadius)
+#endif
+
+#ifndef MMELocationManagerDistanceFilter
+#define MMELocationManagerDistanceFilter __NS_SYMBOL(MMELocationManagerDistanceFilter)
+#endif
+
+#ifndef kMMEReachabilityChangedNotification
+#define kMMEReachabilityChangedNotification __NS_SYMBOL(kMMEReachabilityChangedNotification)
+#endif
+
+#ifndef MMELocationManagerRegionIdentifier
+#define MMELocationManagerRegionIdentifier __NS_SYMBOL(MMELocationManagerRegionIdentifier)
+#endif
+
