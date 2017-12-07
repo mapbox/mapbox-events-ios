@@ -1,4 +1,5 @@
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 @class MMEEvent;
 
@@ -11,7 +12,9 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)sharedLogger;
 
 - (void)logEvent:(MMEEvent *)event;
+- (void)readAndDisplayLogFileFromDate:(NSDate *)logDate;
 
 @end
 
 NS_ASSUME_NONNULL_END
+

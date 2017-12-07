@@ -1,5 +1,8 @@
 #import "MMEEventLogger.h"
 #import "MMEEvent.h"
+#import "MMEEventLogReportViewController.h"
+#import "MMEUINavigation.h"
+#import <WebKit/WebKit.h>
 
 @interface MMEEventLogger()
 
@@ -29,6 +32,8 @@
         [self writeEventToLocalDebugLog:event];
     }
 }
+
+#pragma mark - Write to Local File
 
 - (void)writeEventToLocalDebugLog:(MMEEvent *)event {
     if (!self.isEnabled) {
@@ -71,5 +76,84 @@
     });
 }
 
+#pragma mark - HTML Generation
+
+- (void)readAndDisplayLogFileFromDate:(NSDate *)logDate {
+    MMEEventLogReportViewController *logVC = [[MMEEventLogReportViewController alloc] init];
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.dateFormat = @"yyyy'-'MM'-'dd";
+    
+    NSString *dateString = [dateFormatter stringFromDate:logDate];
+    
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *docDirectory = [paths objectAtIndex:0];
+    NSString *path = [docDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"telemetry_log-%@.json", dateString]];
+    
+    NSString *jsonString = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
+    
+    if (jsonString) {
+        NSString *contents = [NSString stringWithFormat:@"[%@]", jsonString];
+        NSString *dataString = [self parseJSONFromFileContents:contents];
+        
+        [[MMEUINavigation topViewController] presentViewController:logVC animated:YES completion:nil];
+        [logVC displayHTMLFromRowsWithDataString:dataString];
+    } else {
+        if (self.isEnabled) {
+            NSLog(@"error reading file: %@", jsonString);
+        }
+    }
+}
+
+- (NSString *)parseJSONFromFileContents:(NSString *)contents {
+    NSMutableArray *timelineDataArray = [[NSMutableArray alloc] init];
+    NSArray *JSON = [NSJSONSerialization JSONObjectWithData:[contents dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSSSZ";
+    
+    if (JSON) {
+        for (NSDictionary *dictionary in JSON) {
+            NSDictionary *eventDict = [dictionary valueForKeyPath:@"debug"];
+            
+            if (eventDict) {
+                if ([eventDict valueForKey:@"created"]) {
+                    NSDate *date = [dateFormatter dateFromString:[eventDict valueForKey:@"created"]];
+                    NSDateComponents *components = [[NSCalendar currentCalendar] components:
+                                                    NSCalendarUnitYear |
+                                                    NSCalendarUnitMonth |
+                                                    NSCalendarUnitDay |
+                                                    NSCalendarUnitHour |
+                                                    NSCalendarUnitMinute |
+                                                    NSCalendarUnitSecond fromDate:date];
+                    
+                    NSDictionary *debugDict = [NSDictionary dictionaryWithObject:[eventDict valueForKey:@"debug.type"] forKey:@"v"];
+                    NSDictionary *dateDict = [NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Date(%ld, %ld, %ld, %ld, %ld, %ld)", (long)components.year, (long)components.month, (long)components.day, (long)components.hour, (long)components.minute, (long)components.second] forKey:@"v"];
+                    NSArray *array = @[debugDict, dateDict, dateDict];
+                    NSDictionary *wrapDict = [NSDictionary dictionaryWithObject:array forKey:@"c"];
+                    
+                    [timelineDataArray addObject:wrapDict];
+                }
+            }
+        }
+        if ([NSJSONSerialization isValidJSONObject:timelineDataArray]) {
+            NSData *jsonData = [NSJSONSerialization dataWithJSONObject:timelineDataArray options:NSJSONWritingPrettyPrinted error:nil];
+            if (jsonData) {
+                return [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+            }
+        } else {
+            if (self.isEnabled) {
+                NSLog(@"Invalid JSON Object: %@", timelineDataArray);
+            }
+        }
+    } else {
+        if (self.isEnabled) {
+            NSLog(@"error parsing JSON: %@", JSON);
+        }
+    }
+    return nil;
+}
+
 
 @end
+
