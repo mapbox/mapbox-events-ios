@@ -168,10 +168,6 @@
 #define MMEAPIClient __NS_SYMBOL(MMEAPIClient)
 #endif
 
-#ifndef CLLocationManagerDelegate
-#define CLLocationManagerDelegate __NS_SYMBOL(CLLocationManagerDelegate)
-#endif
-
 #ifndef MMELocationManager
 #define MMELocationManager __NS_SYMBOL(MMELocationManager)
 #endif
