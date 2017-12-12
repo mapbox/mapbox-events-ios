@@ -10,6 +10,9 @@ OUTPUT=build/namespace/static
 SCHEME='MapboxMobileEventsStatic'
 BUILDTYPE=${BUILDTYPE:-Debug}
 JOBS=`sysctl -n hw.ncpu`
+NAME_PATH=build/namespace/header
+NAME_HEADER=build/namespace/header/MMENamespacedDependencies.h
+PREFIX="MGL"
 
 function step { >&2 echo -e "\033[1m\033[36m* $@\033[0m"; }
 function finish { >&2 echo -en "\033[0m"; }
@@ -17,12 +20,9 @@ trap finish EXIT
 
 # This is a modified version of: https://github.com/jverkoey/nimbus/blob/master/scripts/generate_namespace_header
 function generate_namespace_header {
-    path=build/namespace/header
-    header=${path}/MMENamespacedDependencies.h
-    prefix="MGL"
-    mkdir -p $path && touch $header
+    mkdir -p $NAME_PATH && touch $NAME_HEADER
 
-    echo "Generating $header from $1"
+    echo "Generating $NAME_HEADER from $1"
 
     echo "// Namespaced Header
 
@@ -31,21 +31,21 @@ function generate_namespace_header {
     // properly replaced by the time we concatenate the namespace prefix.
     #define __NS_REWRITE(ns, symbol) ns ## _ ## symbol
     #define __NS_BRIDGE(ns, symbol) __NS_REWRITE(ns, symbol)
-    #define __NS_SYMBOL(symbol) __NS_BRIDGE($prefix, symbol)
+    #define __NS_SYMBOL(symbol) __NS_BRIDGE($PREFIX, symbol)
     #endif
 
-    " > $header
+    " > $NAME_HEADER
 
-    echo "// Classes" >> $header
-    nm $1 -j | sort | uniq | grep "^_OBJC_CLASS_\$_" | grep -v "\$_AGSGT" | grep -v "\$_CL" | grep -v "\$_NS" | grep -v "\$_UI" | sed -e 's/_OBJC_CLASS_\$_\(.*\)/#ifndef \1\'$'\n''#define \1 __NS_SYMBOL(\1)\'$'\n''#endif\'$'\n''/g' >> $header
+    echo "// Classes" >> $NAME_HEADER
+    nm $1 -j | sort | uniq | grep "^_OBJC_CLASS_\$_" | grep -v "\$_AGSGT" | grep -v "\$_CL" | grep -v "\$_NS" | grep -v "\$_UI" | sed -e 's/_OBJC_CLASS_\$_\(.*\)/#ifndef \1\'$'\n''#define \1 __NS_SYMBOL(\1)\'$'\n''#endif\'$'\n''/g' >> $NAME_HEADER
 
-    echo "// Functions" >> $header
-    nm $1 | sort | uniq | grep " T " | cut -d' ' -f3 | grep -v "\$_NS" | grep -v "\$_UI" | sed -e 's/_\(.*\)/#ifndef \1\'$'\n''#define \1 __NS_SYMBOL(\1)\'$'\n''#endif\'$'\n''/g' >> $header
+    echo "// Functions" >> $NAME_HEADER
+    nm $1 | sort | uniq | grep " T " | cut -d' ' -f3 | grep -v "\$_NS" | grep -v "\$_UI" | sed -e 's/_\(.*\)/#ifndef \1\'$'\n''#define \1 __NS_SYMBOL(\1)\'$'\n''#endif\'$'\n''/g' >> $NAME_HEADER
 
 
-    echo "// Externs" >> $header
-    nm $1 | sort | uniq | grep " D " | cut -d' ' -f3 | grep -v "\$_NS" | grep -v "\$_UI" | sed -e 's/_\(.*\)/#ifndef \1\'$'\n''#define \1 __NS_SYMBOL(\1)\'$'\n''#endif\'$'\n''/g' >> $header
-    nm $1 | sort | uniq | grep " S " | cut -d' ' -f3 | grep -v "\$_NS" | grep -v ".eh" | grep -v "\$_UI" | grep -v "OBJC_" | sed -e 's/_\(.*\)/#ifndef \1\'$'\n''#define \1 __NS_SYMBOL(\1)\'$'\n''#endif\'$'\n''/g' >> $header
+    echo "// Externs" >> $NAME_HEADER
+    nm $1 | sort | uniq | grep " D " | cut -d' ' -f3 | grep -v "\$_NS" | grep -v "\$_UI" | sed -e 's/_\(.*\)/#ifndef \1\'$'\n''#define \1 __NS_SYMBOL(\1)\'$'\n''#endif\'$'\n''/g' >> $NAME_HEADER
+    nm $1 | sort | uniq | grep " S " | cut -d' ' -f3 | grep -v "\$_NS" | grep -v ".eh" | grep -v "\$_UI" | grep -v "OBJC_" | sed -e 's/_\(.*\)/#ifndef \1\'$'\n''#define \1 __NS_SYMBOL(\1)\'$'\n''#endif\'$'\n''/g' >> $NAME_HEADER
 }
 
 # Can build iphoneos (device) or iphonesimulator (simulator)
@@ -75,3 +75,6 @@ build iphonesimulator
 
 step "[INFO] Generating namespaced header"
 generate_namespace_header $PRODUCTS/${BUILDTYPE}-iphonesimulator/libMapboxMobileEventsStatic.a
+
+step "[INFO] Copy namespaced header to project"
+cp $NAME_HEADER MapboxMobileEvents/MMENamespacedDependencies.h
