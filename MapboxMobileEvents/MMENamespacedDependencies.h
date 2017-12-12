@@ -1,12 +1,12 @@
 // Namespaced Header
 
-    #ifndef __NS_SYMBOL
-    // We need to have multiple levels of macros here so that __NAMESPACE_PREFIX_ is
-    // properly replaced by the time we concatenate the namespace prefix.
-    #define __NS_REWRITE(ns, symbol) ns ## _ ## symbol
-    #define __NS_BRIDGE(ns, symbol) __NS_REWRITE(ns, symbol)
-    #define __NS_SYMBOL(symbol) __NS_BRIDGE(MGL, symbol)
-    #endif
+#ifndef __NS_SYMBOL
+// We need to have multiple levels of macros here so that __NAMESPACE_PREFIX_ is
+// properly replaced by the time we concatenate the namespace prefix.
+#define __NS_REWRITE(ns, symbol) ns ## _ ## symbol
+#define __NS_BRIDGE(ns, symbol) __NS_REWRITE(ns, symbol)
+#define __NS_SYMBOL(symbol) __NS_BRIDGE(MGL, symbol)
+#endif
 
     
 // Classes
@@ -148,36 +148,36 @@
 #endif
 
 // Externs
-l#ifndef OBJC_PROTOCOL_$_MMEUIApplicationWrapper
-#define OBJC_PROTOCOL_$_MMEUIApplicationWrapper __NS_SYMBOL(OBJC_PROTOCOL_$_MMEUIApplicationWrapper)
-#endif
-
-l#ifndef OBJC_PROTOCOL_$_MMEUniqueIdentifer
-#define OBJC_PROTOCOL_$_MMEUniqueIdentifer __NS_SYMBOL(OBJC_PROTOCOL_$_MMEUniqueIdentifer)
-#endif
-
-l#ifndef OBJC_PROTOCOL_$_MMENSURLSessionWrapper
-#define OBJC_PROTOCOL_$_MMENSURLSessionWrapper __NS_SYMBOL(OBJC_PROTOCOL_$_MMENSURLSessionWrapper)
-#endif
-
 #ifndef _loggerBlock
 #define _loggerBlock __NS_SYMBOL(_loggerBlock)
 #endif
 
-l#ifndef OBJC_PROTOCOL_$_MMEAPIClient
-#define OBJC_PROTOCOL_$_MMEAPIClient __NS_SYMBOL(OBJC_PROTOCOL_$_MMEAPIClient)
+#ifndef MMEUIApplicationWrapper
+#define MMEUIApplicationWrapper __NS_SYMBOL(MMEUIApplicationWrapper)
 #endif
 
-l#ifndef OBJC_PROTOCOL_$_CLLocationManagerDelegate
-#define OBJC_PROTOCOL_$_CLLocationManagerDelegate __NS_SYMBOL(OBJC_PROTOCOL_$_CLLocationManagerDelegate)
+#ifndef MMEUniqueIdentifer
+#define MMEUniqueIdentifer __NS_SYMBOL(MMEUniqueIdentifer)
 #endif
 
-l#ifndef OBJC_PROTOCOL_$_MMELocationManager
-#define OBJC_PROTOCOL_$_MMELocationManager __NS_SYMBOL(OBJC_PROTOCOL_$_MMELocationManager)
+#ifndef MMENSURLSessionWrapper
+#define MMENSURLSessionWrapper __NS_SYMBOL(MMENSURLSessionWrapper)
 #endif
 
-l#ifndef OBJC_PROTOCOL_$_MMELocationManagerDelegate
-#define OBJC_PROTOCOL_$_MMELocationManagerDelegate __NS_SYMBOL(OBJC_PROTOCOL_$_MMELocationManagerDelegate)
+#ifndef MMEAPIClient
+#define MMEAPIClient __NS_SYMBOL(MMEAPIClient)
+#endif
+
+#ifndef CLLocationManagerDelegate
+#define CLLocationManagerDelegate __NS_SYMBOL(CLLocationManagerDelegate)
+#endif
+
+#ifndef MMELocationManager
+#define MMELocationManager __NS_SYMBOL(MMELocationManager)
+#endif
+
+#ifndef MMELocationManagerDelegate
+#define MMELocationManagerDelegate __NS_SYMBOL(MMELocationManagerDelegate)
 #endif
 
 #ifndef MapboxMobileEventsStaticVersionString

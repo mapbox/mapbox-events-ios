@@ -26,13 +26,13 @@ function generate_namespace_header {
 
     echo "// Namespaced Header
 
-    #ifndef __NS_SYMBOL
-    // We need to have multiple levels of macros here so that __NAMESPACE_PREFIX_ is
-    // properly replaced by the time we concatenate the namespace prefix.
-    #define __NS_REWRITE(ns, symbol) ns ## _ ## symbol
-    #define __NS_BRIDGE(ns, symbol) __NS_REWRITE(ns, symbol)
-    #define __NS_SYMBOL(symbol) __NS_BRIDGE($PREFIX, symbol)
-    #endif
+#ifndef __NS_SYMBOL
+// We need to have multiple levels of macros here so that __NAMESPACE_PREFIX_ is
+// properly replaced by the time we concatenate the namespace prefix.
+#define __NS_REWRITE(ns, symbol) ns ## _ ## symbol
+#define __NS_BRIDGE(ns, symbol) __NS_REWRITE(ns, symbol)
+#define __NS_SYMBOL(symbol) __NS_BRIDGE($PREFIX, symbol)
+#endif
 
     " > $NAME_HEADER
 
@@ -44,7 +44,9 @@ function generate_namespace_header {
 
 
     echo "// Externs" >> $NAME_HEADER
-    nm $1 | sort | uniq | grep " D " | cut -d' ' -f3 | grep -v "\$_NS" | grep -v "\$_UI" | sed -e 's/_\(.*\)/#ifndef \1\'$'\n''#define \1 __NS_SYMBOL(\1)\'$'\n''#endif\'$'\n''/g' >> $NAME_HEADER
+    
+    nm $1 | sort | uniq | grep " D " | cut -d' ' -f3 | grep -v "\$_NS" | grep -v "\$_UI" | grep -v "l_OBJC_PROTOCOL" | sed -e 's/_\(.*\)/#ifndef \1\'$'\n''#define \1 __NS_SYMBOL(\1)\'$'\n''#endif\'$'\n''/g' >> $NAME_HEADER
+    nm $1 | sort | uniq | grep " D " | cut -d' ' -f3 | grep -v "\$_NS" | grep -v "\$_UI" | grep "l_OBJC_PROTOCOL" | sed -e 's/l_OBJC_PROTOCOL_\$_\(.*\)/#ifndef \1\'$'\n''#define \1 __NS_SYMBOL(\1)\'$'\n''#endif\'$'\n''/g' >> $NAME_HEADER
     nm $1 | sort | uniq | grep " S " | cut -d' ' -f3 | grep -v "\$_NS" | grep -v ".eh" | grep -v "\$_UI" | grep -v "OBJC_" | sed -e 's/_\(.*\)/#ifndef \1\'$'\n''#define \1 __NS_SYMBOL(\1)\'$'\n''#endif\'$'\n''/g' >> $NAME_HEADER
 }
 
