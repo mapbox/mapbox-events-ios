@@ -40,7 +40,6 @@
 		408596671ED086F4003BD29D /* MMECommonEventData.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AE585D1EA93B3A0046B437 /* MMECommonEventData.m */; };
 		408596691ED086FA003BD29D /* MMENSURLSessionWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 405172DC1EAFFA9400F8CDA1 /* MMENSURLSessionWrapper.m */; };
 		4085966A1ED08FA9003BD29D /* MapboxMobileEvents.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 404807BC1EA186D8008A6D50 /* MapboxMobileEvents.h */; };
-		408596781ED0900A003BD29D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 40BE71011EB7C3EC00D690F3 /* Localizable.strings */; };
 		408596D81ED0B1F6003BD29D /* MMEEvent.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 40AE586B1EA95EDD0046B437 /* MMEEvent.h */; };
 		408596D91ED0B1F6003BD29D /* MMEEventsManager.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 40C9E2791EA542BC00744FE7 /* MMEEventsManager.h */; };
 		408596DA1ED0BF35003BD29D /* MMEConstants.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 40AE58541EA932DB0046B437 /* MMEConstants.h */; };
@@ -70,7 +69,6 @@
 		40AE586E1EA95EDD0046B437 /* MMEEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AE586C1EA95EDD0046B437 /* MMEEvent.m */; };
 		40AE58711EAA87960046B437 /* MMEAPIClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 40AE586F1EAA87960046B437 /* MMEAPIClient.h */; };
 		40AE58721EAA87960046B437 /* MMEAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AE58701EAA87960046B437 /* MMEAPIClient.m */; };
-		40BE71021EB7C3EC00D690F3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 40BE71011EB7C3EC00D690F3 /* Localizable.strings */; };
 		40C611471F18319000E30A6C /* configuration_utils.h in Headers */ = {isa = PBXBuildFile; fileRef = 40C6110A1F18319000E30A6C /* configuration_utils.h */; };
 		40C611481F18319000E30A6C /* configuration_utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C6110B1F18319000E30A6C /* configuration_utils.m */; };
 		40C611491F18319000E30A6C /* configuration_utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C6110B1F18319000E30A6C /* configuration_utils.m */; };
@@ -238,7 +236,6 @@
 		40AE586C1EA95EDD0046B437 /* MMEEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEEvent.m; sourceTree = "<group>"; };
 		40AE586F1EAA87960046B437 /* MMEAPIClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEAPIClient.h; sourceTree = "<group>"; };
 		40AE58701EAA87960046B437 /* MMEAPIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEAPIClient.m; sourceTree = "<group>"; };
-		40BE71011EB7C3EC00D690F3 /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		40C6110A1F18319000E30A6C /* configuration_utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = configuration_utils.h; sourceTree = "<group>"; };
 		40C6110B1F18319000E30A6C /* configuration_utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = configuration_utils.m; sourceTree = "<group>"; };
 		40C611231F18319000E30A6C /* parse_configuration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = parse_configuration.h; sourceTree = "<group>"; };
@@ -378,8 +375,8 @@
 		404807BB1EA186D8008A6D50 /* MapboxMobileEvents */ = {
 			isa = PBXGroup;
 			children = (
-				40834B9E1FDF62C900C1BD0D /* MMENamespacedDependencies.h */,
 				404807BD1EA186D8008A6D50 /* Info.plist */,
+				40834B9E1FDF62C900C1BD0D /* MMENamespacedDependencies.h */,
 				404807BC1EA186D8008A6D50 /* MapboxMobileEvents.h */,
 				40AE586F1EAA87960046B437 /* MMEAPIClient.h */,
 				40AE58701EAA87960046B437 /* MMEAPIClient.m */,
@@ -404,7 +401,6 @@
 				40AE58601EA94E4A0046B437 /* Categories */,
 				40C9E2841EA5615900744FE7 /* Utilities */,
 				401379661F16F26E00567137 /* Vendor */,
-				40AE587B1EAA8D810046B437 /* Resources */,
 			);
 			path = MapboxMobileEvents;
 			sourceTree = "<group>";
@@ -454,15 +450,6 @@
 				40AE58681EA953970046B437 /* CLLocation+MMEMobileEvents.m */,
 			);
 			name = Categories;
-			sourceTree = "<group>";
-		};
-		40AE587B1EAA8D810046B437 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				ACE4F0121FD60DAF00035880 /* logger.html */,
-				40BE71011EB7C3EC00D690F3 /* Localizable.strings */,
-			);
-			path = Resources;
 			sourceTree = "<group>";
 		};
 		40C611091F18319000E30A6C /* TrustKit */ = {
@@ -757,7 +744,6 @@
 				402F02A61F7DA28700E7FF06 /* Cartfile in Resources */,
 				404C5E231F85809400C026DD /* Scanfile in Resources */,
 				402F02A71F7DA28700E7FF06 /* MapboxMobileEvents.podspec in Resources */,
-				40BE71021EB7C3EC00D690F3 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -772,7 +758,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				408596781ED0900A003BD29D /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,5 +1,0 @@
-/* No comment provided by engineer. */
-"API_CLIENT_400_DESC" = "The session data task failed. Original request was: %@";
-
-/* No comment provided by engineer. */
-"API_CLIENT_400_REASON" = "The status code was %ld";

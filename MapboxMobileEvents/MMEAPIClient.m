@@ -9,7 +9,6 @@
 @property (nonatomic) id<MMENSURLSessionWrapper> sessionWrapper;
 @property (nonatomic, copy) NSURL *baseURL;
 @property (nonatomic) NSBundle *applicationBundle;
-@property (nonatomic) NSBundle *sdkBundle;
 @property (nonatomic, copy) NSString *userAgent;
 
 @end
@@ -24,21 +23,11 @@
         _hostSDKVersion = hostSDKVersion;
         _sessionWrapper = [[MMENSURLSessionWrapper alloc] init];
         _applicationBundle = [NSBundle mainBundle];
-        _sdkBundle = [self resolveAndReturnSDKBundle];
         
         [self setupBaseURL];
         [self setupUserAgent];
     }
     return self;
-}
-
-- (NSBundle *)resolveAndReturnSDKBundle {
-    NSBundle *bundle = [NSBundle bundleForClass:[self class]];
-    // If packaged as a static library, look for the resources bundle in the host app's bundle
-    if (![bundle.infoDictionary[@"CFBundlePackageType"] isEqualToString:@"FMWK"]) {
-        bundle = [NSBundle bundleWithPath:[_applicationBundle pathForResource:@"resources" ofType:@"bundle"]];
-    }
-    return bundle;
 }
 
 - (void)postEvents:(NSArray *)events completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
@@ -47,8 +36,8 @@
         NSError *statusError = nil;
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
         if (httpResponse.statusCode >= 400) {
-            NSString *descriptionFormat = [self.sdkBundle localizedStringForKey:@"API_CLIENT_400_DESC" value:@"" table:nil];
-            NSString *reasonFormat = [self.sdkBundle localizedStringForKey:@"API_CLIENT_400_REASON" value:@"" table:nil];
+            NSString *descriptionFormat = @"The session data task failed. Original request was: %@";
+            NSString *reasonFormat = @"The status code was %ld";
             NSString *description = [NSString stringWithFormat:descriptionFormat, request];
             NSString *reason = [NSString stringWithFormat:reasonFormat, (long)httpResponse.statusCode];
             NSDictionary *userInfo = @{NSLocalizedDescriptionKey: description,
