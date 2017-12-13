@@ -310,14 +310,14 @@
 #pragma mark - Internal API
 
 - (BOOL)isEnabled {
-    BOOL disableBecauseOfLowPowerMode = NO;
+    BOOL isPowerModeCompatibleWithCollection = YES;
     if ([NSProcessInfo instancesRespondToSelector:@selector(isLowPowerModeEnabled)]) {
-        disableBecauseOfLowPowerMode = ![[NSProcessInfo processInfo] isLowPowerModeEnabled];
+        isPowerModeCompatibleWithCollection = ![[NSProcessInfo processInfo] isLowPowerModeEnabled];
     }
 #if TARGET_OS_SIMULATOR
-    return self.isMetricsEnabled && self.accountType == 0 && self.metricsEnabledInSimulator && disableBecauseOfLowPowerMode;
+    return self.isMetricsEnabled && self.accountType == 0 && self.metricsEnabledInSimulator && isPowerModeCompatibleWithCollection;
 #else
-    return self.isMetricsEnabled && self.accountType == 0 && disableBecauseOfLowPowerMode;
+    return self.isMetricsEnabled && self.accountType == 0 && isPowerModeCompatibleWithCollection;
 #endif
 }
 
