@@ -334,6 +334,30 @@ describe(@"MMEEventsManager", ^{
                     });
                 });
             });
+            
+            context(@"when metrics low power mode is enabled", ^{
+                beforeEach(^{
+                    eventsManager.metricsEnabledInSimulator = YES;
+                    eventsManager.apiClient = nice_fake_for(@protocol(MMEAPIClient));
+                    eventsManager.apiClient stub_method(@selector(accessToken)).and_return(@"access-token");
+                    [eventsManager enqueueEventWithName:MMEEventTypeMapLoad];
+                    spy_on([NSProcessInfo processInfo]);
+                    [NSProcessInfo processInfo] stub_method(@selector(isLowPowerModeEnabled)).and_return(YES);
+                    [eventsManager pauseOrResumeMetricsCollectionIfRequired];
+                });
+                
+                it(@"changes its state to paused", ^{
+                    eventsManager.paused should be_truthy;
+                });
+                
+                it(@"tells its api client to post events", ^{
+                    eventsManager.apiClient should have_received(@selector(postEvents:completionHandler:));
+                });
+                
+                it(@"tells its location manager to stop updating location", ^{
+                    eventsManager.locationManager should have_received(@selector(stopUpdatingLocation));
+                });
+            });
         });
     });
     
