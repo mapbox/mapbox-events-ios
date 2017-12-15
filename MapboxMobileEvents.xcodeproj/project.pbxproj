@@ -140,7 +140,6 @@
 		AC611F281FCDED2F00ABBF6D /* MMEEventLogReportViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AC611F261FCDED2F00ABBF6D /* MMEEventLogReportViewController.m */; };
 		ACB6F21E1F7BF71B0032A916 /* MMELocationManagerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = ACB6F21D1F7BF71B0032A916 /* MMELocationManagerTests.mm */; };
 		ACD86DA01F96A77700DD2A8D /* MMEAPIClientTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = ACD86D9F1F96A77700DD2A8D /* MMEAPIClientTests.mm */; };
-		ACE4F0131FD60DAF00035880 /* logger.html in Resources */ = {isa = PBXBuildFile; fileRef = ACE4F0121FD60DAF00035880 /* logger.html */; };
 		ACE4F01A1FD6102100035880 /* MMEUINavigation.h in Headers */ = {isa = PBXBuildFile; fileRef = ACE4F0181FD6102100035880 /* MMEUINavigation.h */; };
 		ACE4F01B1FD6102100035880 /* MMEUINavigation.m in Sources */ = {isa = PBXBuildFile; fileRef = ACE4F0191FD6102100035880 /* MMEUINavigation.m */; };
 /* End PBXBuildFile section */
@@ -290,7 +289,6 @@
 		AC611F261FCDED2F00ABBF6D /* MMEEventLogReportViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEEventLogReportViewController.m; sourceTree = "<group>"; };
 		ACB6F21D1F7BF71B0032A916 /* MMELocationManagerTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MMELocationManagerTests.mm; sourceTree = "<group>"; };
 		ACD86D9F1F96A77700DD2A8D /* MMEAPIClientTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MMEAPIClientTests.mm; sourceTree = "<group>"; };
-		ACE4F0121FD60DAF00035880 /* logger.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = logger.html; sourceTree = "<group>"; };
 		ACE4F0181FD6102100035880 /* MMEUINavigation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEUINavigation.h; sourceTree = "<group>"; };
 		ACE4F0191FD6102100035880 /* MMEUINavigation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEUINavigation.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -740,7 +738,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				ACE4F0131FD60DAF00035880 /* logger.html in Resources */,
 				402F02A61F7DA28700E7FF06 /* Cartfile in Resources */,
 				404C5E231F85809400C026DD /* Scanfile in Resources */,
 				402F02A71F7DA28700E7FF06 /* MapboxMobileEvents.podspec in Resources */,
