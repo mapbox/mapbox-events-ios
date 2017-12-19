@@ -8,10 +8,10 @@
 @interface MMEEventLogger()
 
 @property (nonatomic, copy) NSString *dateForDebugLogFile;
-@property (nonatomic) NSFileManager *fileManager;
 @property (nonatomic) dispatch_queue_t debugLogSerialQueue;
 @property (nonatomic) MMENSDateWrapper *dateWrapper;
 @property (nonatomic) NSDate *nextLogFileDate;
+@property (nonatomic) NSDateFormatter *dateFormatter;
 
 @end
 
@@ -28,6 +28,19 @@
     return _sharedLogger;
 }
 
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        self.dateWrapper = [[MMENSDateWrapper alloc] init];
+        self.dateFormatter = [[NSDateFormatter alloc] init];
+        [self.dateFormatter setDateFormat:@"yyyy'-'MM'-'dd"];
+        [self.dateFormatter setTimeZone:[NSTimeZone systemTimeZone]];
+        self.dateForDebugLogFile = [self.dateFormatter stringFromDate:[self.dateWrapper date]];
+        self.nextLogFileDate = [self.dateWrapper startOfTomorrow];
+    }
+    return self;
+}
+
 - (void)logEvent:(MMEEvent *)event {
     if (self.isEnabled) {
         NSLog(@"%@", [NSString stringWithFormat:@"Mapbox Telemetry event %@", event]);
@@ -38,11 +51,8 @@
 
 #pragma mark - Write to Local File
 
-- (void)newDateForLogFile {
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:@"yyyy'-'MM'-'dd"];
-    [dateFormatter setTimeZone:[NSTimeZone systemTimeZone]];
-    self.dateForDebugLogFile = [dateFormatter stringFromDate:[self.dateWrapper date]];
+- (BOOL)isTimeForNewLogFile {
+    return [[self.dateWrapper date] timeIntervalSinceDate:self.nextLogFileDate] > 0;
 }
 
 - (void)writeEventToLocalDebugLog:(MMEEvent *)event {
@@ -50,21 +60,8 @@
         return;
     }
     
-    if (!self.dateWrapper) {
-        self.dateWrapper = [[MMENSDateWrapper alloc] init];
-    }
-    
-    if (!self.nextLogFileDate) {
-        self.nextLogFileDate = [self.dateWrapper startOfTomorrow];
-    }
-    
-    if (!self.dateForDebugLogFile) {
-        [self newDateForLogFile];
-    }
-    
-    if ([[self.dateWrapper date] timeIntervalSinceDate:self.nextLogFileDate] > 0) {
-        [self newDateForLogFile];
-        
+    if ([self isTimeForNewLogFile]) {
+        self.dateForDebugLogFile = [self.dateFormatter stringFromDate:[self.dateWrapper date]];
         self.nextLogFileDate = [self.dateWrapper startOfTomorrow];
     }
     
