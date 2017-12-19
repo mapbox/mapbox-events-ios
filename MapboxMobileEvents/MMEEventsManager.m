@@ -311,9 +311,17 @@
 
 - (BOOL)isEnabled {
     BOOL isPowerModeCompatibleWithCollection = YES;
+    
+// Only check power mode if compiling with the iOS 9+ SDK and, at runtime, if the API exists
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 90000
     if ([NSProcessInfo instancesRespondToSelector:@selector(isLowPowerModeEnabled)]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpartial-availability"
         isPowerModeCompatibleWithCollection = ![[NSProcessInfo processInfo] isLowPowerModeEnabled];
+#pragma clang diagnostic pop
     }
+#endif
+    
 #if TARGET_OS_SIMULATOR
     return self.isMetricsEnabled && self.accountType == 0 && self.metricsEnabledInSimulator && isPowerModeCompatibleWithCollection;
 #else
