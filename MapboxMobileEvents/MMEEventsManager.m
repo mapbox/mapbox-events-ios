@@ -357,18 +357,10 @@
 }
 
 - (void)updateNextTurnstileSendDate {
-    // Find the time a day from now (sometime tomorrow)
-    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    NSDateComponents *dayComponent = [[NSDateComponents alloc] init];
-    dayComponent.day = 1;
-    NSDate *sometimeTomorrow = [calendar dateByAddingComponents:dayComponent toDate:[self.dateWrapper date] options:0];
-    
     // Find the start of tomorrow and use that as the next turnstile send date. The effect of this is that
     // turnstile events can be sent as much as once per calendar day and always at the start of a session
     // when a map load happens.
-    NSDate *startOfTomorrow = nil;
-    [calendar rangeOfUnit:NSCalendarUnitDay startDate:&startOfTomorrow interval:nil forDate:sometimeTomorrow];
-    self.nextTurnstileSendDate = startOfTomorrow;
+    self.nextTurnstileSendDate = [self.dateWrapper startOfTomorrow];
     
     [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstile,
                                          MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Set next turnstile date to: %@", self.nextTurnstileSendDate]}];

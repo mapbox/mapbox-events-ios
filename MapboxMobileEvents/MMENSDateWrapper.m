@@ -28,4 +28,16 @@
     return [self.iso8601DateFormatter stringFromDate:date];
 }
 
+- (NSDate *)startOfTomorrow {
+    // Find the time a day from now (sometime tomorrow)
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    NSDateComponents *dayComponent = [[NSDateComponents alloc] init];
+    dayComponent.day = 1;
+    NSDate *sometimeTomorrow = [calendar dateByAddingComponents:dayComponent toDate:[self date] options:0];
+    
+    NSDate *startOfTomorrow = nil;
+    [calendar rangeOfUnit:NSCalendarUnitDay startDate:&startOfTomorrow interval:nil forDate:sometimeTomorrow];
+    return startOfTomorrow;
+}
+
 @end

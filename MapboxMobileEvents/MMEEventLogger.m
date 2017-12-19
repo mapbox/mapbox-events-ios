@@ -2,6 +2,7 @@
 #import "MMEEvent.h"
 #import "MMEEventLogReportViewController.h"
 #import "MMEUINavigation.h"
+#import "MMENSDateWrapper.h"
 #import <WebKit/WebKit.h>
 
 @interface MMEEventLogger()
@@ -9,6 +10,8 @@
 @property (nonatomic, copy) NSString *dateForDebugLogFile;
 @property (nonatomic) NSFileManager *fileManager;
 @property (nonatomic) dispatch_queue_t debugLogSerialQueue;
+@property (nonatomic) MMENSDateWrapper *dateWrapper;
+@property (nonatomic) NSDate *nextLogFileDate;
 
 @end
 
@@ -35,16 +38,34 @@
 
 #pragma mark - Write to Local File
 
+- (void)newDateForLogFile {
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"yyyy'-'MM'-'dd"];
+    [dateFormatter setTimeZone:[NSTimeZone systemTimeZone]];
+    self.dateForDebugLogFile = [dateFormatter stringFromDate:[self.dateWrapper date]];
+}
+
 - (void)writeEventToLocalDebugLog:(MMEEvent *)event {
     if (!self.isEnabled) {
         return;
     }
     
+    if (!self.dateWrapper) {
+        self.dateWrapper = [[MMENSDateWrapper alloc] init];
+    }
+    
+    if (!self.nextLogFileDate) {
+        self.nextLogFileDate = [self.dateWrapper startOfTomorrow];
+    }
+    
     if (!self.dateForDebugLogFile) {
-        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-        [dateFormatter setDateFormat:@"yyyy'-'MM'-'dd"];
-        [dateFormatter setTimeZone:[NSTimeZone systemTimeZone]];
-        self.dateForDebugLogFile = [dateFormatter stringFromDate:[NSDate date]];
+        [self newDateForLogFile];
+    }
+    
+    if ([[self.dateWrapper date] timeIntervalSinceDate:self.nextLogFileDate] > 0) {
+        [self newDateForLogFile];
+        
+        self.nextLogFileDate = [self.dateWrapper startOfTomorrow];
     }
     
     if (!self.debugLogSerialQueue) {
