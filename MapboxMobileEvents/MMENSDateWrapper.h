@@ -4,5 +4,6 @@
 
 - (NSDate *)date;
 - (NSString *)formattedDateStringForDate:(NSDate *)date;
+- (NSDate *)startOfTomorrow;
 
 @end

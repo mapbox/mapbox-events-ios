@@ -2,13 +2,17 @@
 #import "MMEEvent.h"
 #import "MMEEventLogReportViewController.h"
 #import "MMEUINavigation.h"
+#import "MMENSDateWrapper.h"
 #import <WebKit/WebKit.h>
 
 @interface MMEEventLogger()
 
 @property (nonatomic, copy) NSString *dateForDebugLogFile;
-@property (nonatomic) NSFileManager *fileManager;
 @property (nonatomic) dispatch_queue_t debugLogSerialQueue;
+@property (nonatomic) MMENSDateWrapper *dateWrapper;
+@property (nonatomic) NSDate *nextLogFileDate;
+@property (nonatomic) NSDateFormatter *dateFormatter;
+@property (nonatomic, readonly, getter=isTimeForNewLogFile) BOOL timeForNewLogFile;
 
 @end
 
@@ -25,6 +29,19 @@
     return _sharedLogger;
 }
 
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        self.dateWrapper = [[MMENSDateWrapper alloc] init];
+        self.dateFormatter = [[NSDateFormatter alloc] init];
+        [self.dateFormatter setDateFormat:@"yyyy'-'MM'-'dd"];
+        [self.dateFormatter setTimeZone:[NSTimeZone systemTimeZone]];
+        self.dateForDebugLogFile = [self.dateFormatter stringFromDate:[self.dateWrapper date]];
+        self.nextLogFileDate = [self.dateWrapper startOfTomorrow];
+    }
+    return self;
+}
+
 - (void)logEvent:(MMEEvent *)event {
     if (self.isEnabled) {
         NSLog(@"%@", [NSString stringWithFormat:@"Mapbox Telemetry event %@", event]);
@@ -35,16 +52,18 @@
 
 #pragma mark - Write to Local File
 
+- (BOOL)isTimeForNewLogFile {
+    return [[self.dateWrapper date] timeIntervalSinceDate:self.nextLogFileDate] > 0;
+}
+
 - (void)writeEventToLocalDebugLog:(MMEEvent *)event {
     if (!self.isEnabled) {
         return;
     }
     
-    if (!self.dateForDebugLogFile) {
-        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-        [dateFormatter setDateFormat:@"yyyy'-'MM'-'dd"];
-        [dateFormatter setTimeZone:[NSTimeZone systemTimeZone]];
-        self.dateForDebugLogFile = [dateFormatter stringFromDate:[NSDate date]];
+    if (self.isTimeForNewLogFile) {
+        self.dateForDebugLogFile = [self.dateFormatter stringFromDate:[self.dateWrapper date]];
+        self.nextLogFileDate = [self.dateWrapper startOfTomorrow];
     }
     
     if (!self.debugLogSerialQueue) {
