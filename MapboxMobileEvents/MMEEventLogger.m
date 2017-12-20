@@ -12,6 +12,7 @@
 @property (nonatomic) MMENSDateWrapper *dateWrapper;
 @property (nonatomic) NSDate *nextLogFileDate;
 @property (nonatomic) NSDateFormatter *dateFormatter;
+@property (nonatomic, readonly, getter=isTimeForNewLogFile) BOOL timeForNewLogFile;
 
 @end
 
@@ -60,7 +61,7 @@
         return;
     }
     
-    if ([self isTimeForNewLogFile]) {
+    if (self.isTimeForNewLogFile) {
         self.dateForDebugLogFile = [self.dateFormatter stringFromDate:[self.dateWrapper date]];
         self.nextLogFileDate = [self.dateWrapper startOfTomorrow];
     }
