@@ -12,7 +12,7 @@
 @property (nonatomic) MMENSDateWrapper *dateWrapper;
 @property (nonatomic) NSDate *nextLogFileDate;
 @property (nonatomic) NSDateFormatter *dateFormatter;
-@property (nonatomic, readonly, getter=isTimeForNewLogFile) BOOL timeForNewLogFile;
+@property (nonatomic, getter=isTimeForNewLogFile) BOOL timeForNewLogFile;
 
 @end
 
@@ -147,8 +147,11 @@
                                                     NSCalendarUnitSecond fromDate:date];
                     
                     NSDictionary *debugDict = [NSDictionary dictionaryWithObject:[eventDict valueForKey:@"debug.type"] forKey:@"v"];
+                    NSDictionary *instanceDict = [NSDictionary dictionaryWithObject:[eventDict valueForKey:@"instance"] forKey:@"v"];
+                    NSString *tooltip = [NSString stringWithFormat:@"Description: %@,  Instance: %@",[eventDict valueForKey:@"debug.description"],[eventDict valueForKey:@"instance"]];
+                    NSDictionary *tooltipDict = [NSDictionary dictionaryWithObject:tooltip forKey:@"v"];
                     NSDictionary *dateDict = [NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Date(%ld, %ld, %ld, %ld, %ld, %ld)", (long)components.year, (long)components.month, (long)components.day, (long)components.hour, (long)components.minute, (long)components.second] forKey:@"v"];
-                    NSArray *array = @[debugDict, dateDict, dateDict];
+                    NSArray *array = @[debugDict, instanceDict, tooltipDict, dateDict, dateDict];
                     NSDictionary *wrapDict = [NSDictionary dictionaryWithObject:array forKey:@"c"];
                     
                     [timelineDataArray addObject:wrapDict];
