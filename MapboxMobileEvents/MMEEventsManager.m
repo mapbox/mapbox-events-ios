@@ -101,6 +101,14 @@
     return self.apiClient.accessToken;
 }
 
+- (void)setBaseURL:(NSURL *)baseURL {
+    self.apiClient.baseURL = baseURL;
+}
+
+- (NSURL *)baseURL {
+    return self.apiClient.baseURL;
+}
+
 - (NSString *)userAgentBase {
     return self.apiClient.userAgentBase;
 }

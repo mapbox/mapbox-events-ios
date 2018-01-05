@@ -7,7 +7,6 @@
 @interface MMEAPIClient ()
 
 @property (nonatomic) id<MMENSURLSessionWrapper> sessionWrapper;
-@property (nonatomic, copy) NSURL *baseURL;
 @property (nonatomic) NSBundle *applicationBundle;
 @property (nonatomic, copy) NSString *userAgent;
 
@@ -23,8 +22,8 @@
         _hostSDKVersion = hostSDKVersion;
         _sessionWrapper = [[MMENSURLSessionWrapper alloc] init];
         _applicationBundle = [NSBundle mainBundle];
+        _baseURL = [NSURL URLWithString:MMEAPIClientBaseURL];
         
-        [self setupBaseURL];
         [self setupUserAgent];
     }
     return self;
@@ -63,6 +62,14 @@
     return _accessToken;
 }
 
+- (void)setBaseURL:(NSURL *)baseURL {
+    if (baseURL && [baseURL.scheme isEqualToString:@"https"]) {
+        _baseURL = baseURL;
+    } else {
+        _baseURL = [NSURL URLWithString:MMEAPIClientBaseURL];
+    }
+}
+
 #pragma mark - Utilities
 
 - (NSURLRequest *)requestForEvents:(NSArray *)events {
@@ -96,17 +103,6 @@
     }
     
     return [request copy];
-}
-
-- (void)setupBaseURL {
-    NSString *testServerURLString = [[NSUserDefaults standardUserDefaults] stringForKey:MMETelemetryTestServerURL];
-    NSURL *testServerURL = [NSURL URLWithString:testServerURLString];
-    if (testServerURL && [testServerURL.scheme isEqualToString:@"https"]) {
-        self.baseURL = testServerURL;
-        self.sessionWrapper.usesTestServer = YES;
-    } else {
-        self.baseURL = [NSURL URLWithString:MMEAPIClientBaseURL];
-    }
 }
 
 - (void)setupUserAgent {

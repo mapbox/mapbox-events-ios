@@ -87,6 +87,30 @@ describe(@"MMEEventsManager", ^{
         });
     });
     
+    describe(@"- setBaseURL", ^{
+        __block NSURL *testURL = [NSURL URLWithString:@"https://test.com"];
+        
+        beforeEach(^{
+            [eventsManager initializeWithAccessToken:@"first-access-token" userAgentBase:@"user-agent-base" hostSDKVersion:@"host-version"];
+            eventsManager.baseURL should equal([NSURL URLWithString:MMEAPIClientBaseURL]);
+            eventsManager.baseURL = testURL;
+        });
+        
+        it(@"has the correct API client", ^{
+            eventsManager.baseURL should equal(testURL);
+        });
+        
+        context(@"when the url is reset with a nil value", ^{
+            beforeEach(^{
+                eventsManager.baseURL = nil;
+            });
+            
+            it(@"has the default value", ^{
+               eventsManager.baseURL should equal([NSURL URLWithString:MMEAPIClientBaseURL]);
+            });
+        });
+    });
+    
     describe(@"- pauseOrResumeMetricsCollectionIfRequired", ^{
         
         context(@"when the location manager authorization is set to when in use, metrics enabled is false, and events are queued", ^{

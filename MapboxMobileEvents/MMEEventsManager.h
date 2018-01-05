@@ -25,7 +25,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, getter=isDebugLoggingEnabled) BOOL debugLoggingEnabled;
 @property (nonatomic, readonly) NSString *userAgentBase;
 @property (nonatomic, readonly) NSString *hostSDKVersion;
-@property (nonatomic) NSString *accessToken;
+@property (nonatomic, copy) NSString *accessToken;
+@property (nonatomic, null_resettable) NSURL *baseURL;
 @property (nonatomic) NSInteger accountType;
 
 + (instancetype)sharedManager;
