@@ -74,6 +74,19 @@ describe(@"MMEEventsManager", ^{
         eventsManager.commonEventData should_not be_nil;
     });
     
+    describe(@"- setAccessToken", ^{
+        __block NSString *newAccessToken = @"new-access-token";
+        
+        beforeEach(^{
+            [eventsManager initializeWithAccessToken:@"first-access-token" userAgentBase:@"user-agent-base" hostSDKVersion:@"host-version"];
+            eventsManager.accessToken = newAccessToken;
+        });
+        
+        it(@"sets the access token on the api client", ^{
+            eventsManager.apiClient.accessToken should equal(newAccessToken);
+        });
+    });
+    
     describe(@"- pauseOrResumeMetricsCollectionIfRequired", ^{
         
         context(@"when the location manager authorization is set to when in use, metrics enabled is false, and events are queued", ^{

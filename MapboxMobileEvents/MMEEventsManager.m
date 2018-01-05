@@ -93,6 +93,10 @@
 
 # pragma mark - Public API
 
+- (void)setAccessToken:(NSString *)accessToken {
+    self.apiClient.accessToken = accessToken;
+}
+
 - (NSString *)accessToken {
     return self.apiClient.accessToken;
 }
