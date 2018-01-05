@@ -34,6 +34,10 @@
 #define MMEEvent __NS_SYMBOL(MMEEvent)
 #endif
 
+#ifndef MMEEventLogReportViewController
+#define MMEEventLogReportViewController __NS_SYMBOL(MMEEventLogReportViewController)
+#endif
+
 #ifndef MMEEventLogger
 #define MMEEventLogger __NS_SYMBOL(MMEEventLogger)
 #endif
@@ -76,6 +80,10 @@
 
 #ifndef MMEUIApplicationWrapper
 #define MMEUIApplicationWrapper __NS_SYMBOL(MMEUIApplicationWrapper)
+#endif
+
+#ifndef MMEUINavigation
+#define MMEUINavigation __NS_SYMBOL(MMEUINavigation)
 #endif
 
 #ifndef MMEUniqueIdentifier
@@ -526,6 +534,10 @@
 
 #ifndef MMEEventSource
 #define MMEEventSource __NS_SYMBOL(MMEEventSource)
+#endif
+
+#ifndef MMELoggerHTML
+#define MMELoggerHTML __NS_SYMBOL(MMELoggerHTML)
 #endif
 
 #ifndef MMELocationManagerHibernationRadius
