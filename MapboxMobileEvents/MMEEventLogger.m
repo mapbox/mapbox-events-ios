@@ -148,8 +148,8 @@
                     
                     NSDictionary *debugDict = [NSDictionary dictionaryWithObject:[eventDict valueForKey:@"debug.type"] forKey:@"v"];
                     NSDictionary *instanceDict = [NSDictionary dictionaryWithObject:[eventDict valueForKey:@"instance"] forKey:@"v"];
-                    NSString *tooltip = [NSString stringWithFormat:@"Description: %@,  Instance: %@",[eventDict valueForKey:@"debug.description"],[eventDict valueForKey:@"instance"]];
-                    NSDictionary *tooltipDict = [NSDictionary dictionaryWithObject:tooltip forKey:@"v"];
+                    NSString *htmlTooltip = [NSString stringWithFormat:@"<b>Description:</b> %@<br><b>Instance:</b> %@",[eventDict valueForKey:@"debug.description"],[eventDict valueForKey:@"instance"]];
+                    NSDictionary *tooltipDict = [NSDictionary dictionaryWithObject:htmlTooltip forKey:@"v"];
                     NSDictionary *dateDict = [NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Date(%ld, %ld, %ld, %ld, %ld, %ld)", (long)components.year, (long)components.month, (long)components.day, (long)components.hour, (long)components.minute, (long)components.second] forKey:@"v"];
                     NSArray *array = @[debugDict, instanceDict, tooltipDict, dateDict, dateDict];
                     NSDictionary *wrapDict = [NSDictionary dictionaryWithObject:array forKey:@"c"];
