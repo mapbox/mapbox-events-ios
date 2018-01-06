@@ -1,8 +1,6 @@
 #import "MMEConstants.h"
 
 NSString * const MMEAPIClientBaseURL = @"https://events.mapbox.com";
-NSString * const MMETelemetryTestServerURL = @"MMETelemetryTestServerURL";
-NSString * const MMETelemetryStagingAccessToken = @"MMETelemetryStagingAccessToken";
 NSString * const MMEAPIClientEventsPath = @"events/v2";
 NSString * const MMEAPIClientHeaderFieldUserAgentKey = @"User-Agent";
 NSString * const MMEAPIClientHeaderFieldContentTypeKey = @"Content-Type";

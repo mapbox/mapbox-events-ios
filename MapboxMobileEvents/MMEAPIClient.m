@@ -54,14 +54,6 @@
     [self postEvents:@[event] completionHandler:completionHandler];
 }
 
-- (NSString *)accessToken {
-    NSString *stagingAccessToken = [[NSUserDefaults standardUserDefaults] objectForKey:MMETelemetryStagingAccessToken];
-    if (stagingAccessToken) {
-        return stagingAccessToken;
-    }
-    return _accessToken;
-}
-
 - (void)setBaseURL:(NSURL *)baseURL {
     if (baseURL && [baseURL.scheme isEqualToString:@"https"]) {
         _baseURL = baseURL;

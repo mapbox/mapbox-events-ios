@@ -165,23 +165,16 @@ describe(@"MMEAPIClient", ^{
             });
         });
         
-        context(@"when posting a single event with a staging access token", ^{
+        context(@"when posting a single event after an access token is set", ^{
             __block NSString *expectedURLString;
             
             beforeEach(^{
                 NSString *stagingAccessToken = @"staging-access-token";
-                [[NSUserDefaults standardUserDefaults] setObject:stagingAccessToken forKey:MMETelemetryStagingAccessToken];
-                [[NSUserDefaults standardUserDefaults] synchronize];
-                
+                apiClient.accessToken = stagingAccessToken;
                 [apiClient postEvent:event completionHandler:nil];
                 
                 expectedURLString = [NSString stringWithFormat:@"%@/%@?access_token=%@", MMEAPIClientBaseURL, MMEAPIClientEventsPath, stagingAccessToken];
-            });
-            
-            afterEach(^{
-                [[NSUserDefaults standardUserDefaults] removeObjectForKey:MMETelemetryStagingAccessToken];
-                [[NSUserDefaults standardUserDefaults] synchronize];
-            });
+            });            
             
             it(@"should receive processRequest:completionHandler", ^{
                 sessionWrapperFake should have_received(@selector(processRequest:completionHandler:));

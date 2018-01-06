@@ -280,14 +280,6 @@
 #define MMEAPIClientBaseURL __NS_SYMBOL(MMEAPIClientBaseURL)
 #endif
 
-#ifndef MMETelemetryTestServerURL
-#define MMETelemetryTestServerURL __NS_SYMBOL(MMETelemetryTestServerURL)
-#endif
-
-#ifndef MMETelemetryStagingAccessToken
-#define MMETelemetryStagingAccessToken __NS_SYMBOL(MMETelemetryStagingAccessToken)
-#endif
-
 #ifndef MMEAPIClientEventsPath
 #define MMEAPIClientEventsPath __NS_SYMBOL(MMEAPIClientEventsPath)
 #endif
