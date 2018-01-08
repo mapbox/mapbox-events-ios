@@ -187,10 +187,10 @@
         
         
         if (_backgroundTaskIdentifier != UIBackgroundTaskInvalid) {
-            [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeBackgroundTask,
-                                                 MMEEventKeyLocalDebugDescription: @"Ending background task",
-                                                 @"Identifier": @(_backgroundTaskIdentifier)}];
-            [self.application endBackgroundTask:_backgroundTaskIdentifier];
+            [strongSelf pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeBackgroundTask,
+                                                       MMEEventKeyLocalDebugDescription: @"Ending background task",
+                                                       @"Identifier": @(_backgroundTaskIdentifier)}];
+            [strongSelf.application endBackgroundTask:_backgroundTaskIdentifier];
             _backgroundTaskIdentifier = UIBackgroundTaskInvalid;
         }
     }];
@@ -265,14 +265,14 @@
     [self.apiClient postEvent:turnstileEvent completionHandler:^(NSError * _Nullable error) {
         __strong __typeof__(weakSelf) strongSelf = weakSelf;
         if (error) {
-            [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstileFailed,
+            [strongSelf pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstile,
                                                  MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Could not send turnstile event: %@", error]}];
             return;
         }
         
         [strongSelf updateNextTurnstileSendDate];
-        [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstile,
-                                             MMEEventKeyLocalDebugDescription: @"Sent turnstile event"}];
+        [strongSelf pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstile,
+                                                   MMEEventKeyLocalDebugDescription: @"Sent turnstile event"}];
     }];
 }
 
