@@ -6,6 +6,7 @@
 @interface MMENSURLSessionWrapper ()
 
 @property (nonatomic) NSURLSession *session;
+@property (nonatomic) dispatch_queue_t serialQueue;
 
 @end
 
@@ -15,7 +16,7 @@
     self = [super init];
     if (self) {
         _session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:nil];
-        
+        _serialQueue = dispatch_queue_create([[NSString stringWithFormat:@"%@.events.serial", NSStringFromClass([self class])] UTF8String], DISPATCH_QUEUE_SERIAL);
         [MMETrustKitWrapper configureCertificatePinningValidation];
     }
     return self;
@@ -24,13 +25,15 @@
 #pragma mark MMENSURLSessionWrapper
 
 - (void)processRequest:(NSURLRequest *)request completionHandler:(void (^)(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error))completionHandler {
-    __block NSURLSessionDataTask *dataTask = [self.session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        if (completionHandler) {
-            completionHandler(data, response, error);
-        }
-        dataTask = nil;
-    }];
-    [dataTask resume];
+    dispatch_async(self.serialQueue, ^{
+        __block NSURLSessionDataTask *dataTask = [self.session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+            if (completionHandler) {
+                completionHandler(data, response, error);
+            }
+            dataTask = nil;
+        }];
+        [dataTask resume];
+    });
 }
 
 #pragma mark NSURLSessionDelegate
