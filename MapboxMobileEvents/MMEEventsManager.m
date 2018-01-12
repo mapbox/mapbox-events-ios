@@ -67,7 +67,7 @@
     [self pauseMetricsCollection];
 }
 
-- (void)initializeWithAccessToken:(NSString *)accessToken userAgentBase:(NSString *)userAgentBase hostSDKVersion:(NSString *)hostSDKVersion {    
+- (void)initializeWithAccessToken:(NSString *)accessToken userAgentBase:(NSString *)userAgentBase hostSDKVersion:(NSString *)hostSDKVersion {
     self.apiClient = [[MMEAPIClient alloc] initWithAccessToken:accessToken userAgentBase:userAgentBase hostSDKVersion:hostSDKVersion];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pauseOrResumeMetricsCollectionIfRequired) name:UIApplicationDidEnterBackgroundNotification object:nil];
@@ -164,7 +164,7 @@
     [self.apiClient postEvents:events completionHandler:^(NSError * _Nullable error) {
         __strong __typeof__(weakSelf) strongSelf = weakSelf;
         if (error) {
-            [strongSelf pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypePost,
+            [strongSelf pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypePostFailed,
                                                        MMEEventKeyLocalDebugDescription: @"Network error",
                                                        @"error": error}];
         } else {
@@ -192,44 +192,44 @@
 
 - (void)sendTurnstileEvent {
     if (self.nextTurnstileSendDate && [[self.dateWrapper date] timeIntervalSinceDate:self.nextTurnstileSendDate] < 0) {
-        [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstile,
+        [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstileFailed,
                                              MMEEventKeyLocalDebugDescription: @"Turnstile event already sent; waiting until %@ to send another one"}];
         return;
     }
     
     if (!self.apiClient.accessToken) {
-        [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstile,
-                                             MMEEventKeyLocalDebugDescription: @"No access token sent, cannot can't send turntile event"}];
+        [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstileFailed,
+                                             MMEEventKeyLocalDebugDescription: @"No access token sent, can not send turntile event"}];
         return;
     }
     
     if (!self.apiClient.userAgentBase) {
-        [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstile,
-                                             MMEEventKeyLocalDebugDescription: @"No user agent base set, cannot can't send turntile event"}];
+        [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstileFailed,
+                                             MMEEventKeyLocalDebugDescription: @"No user agent base set, can not send turntile event"}];
         return;
     }
     
     if (!self.apiClient.hostSDKVersion) {
-        [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstile,
-                                             MMEEventKeyLocalDebugDescription: @"No host SDK version set, cannot can't send turntile event"}];
+        [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstileFailed,
+                                             MMEEventKeyLocalDebugDescription: @"No host SDK version set, can not send turntile event"}];
         return;
     }
     
     if (!self.commonEventData.vendorId) {
-        [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstile,
-                                             MMEEventKeyLocalDebugDescription: @"No vendor id available, cannot can't send turntile event"}];
+        [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstileFailed,
+                                             MMEEventKeyLocalDebugDescription: @"No vendor id available, can not send turntile event"}];
         return;
     }
     
     if (!self.commonEventData.model) {
-        [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstile,
-                                             MMEEventKeyLocalDebugDescription: @"No model available, cannot can't send turntile event"}];
+        [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstileFailed,
+                                             MMEEventKeyLocalDebugDescription: @"No model available, can not send turntile event"}];
         return;
     }
     
     if (!self.commonEventData.iOSVersion) {
-        [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstile,
-                                             MMEEventKeyLocalDebugDescription: @"No iOS version available, cannot can't send turntile event"}];
+        [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstileFailed,
+                                             MMEEventKeyLocalDebugDescription: @"No iOS version available, can not send turntile event"}];
         return;
     }
     
@@ -253,7 +253,7 @@
     [self.apiClient postEvent:turnstileEvent completionHandler:^(NSError * _Nullable error) {
         __strong __typeof__(weakSelf) strongSelf = weakSelf;
         if (error) {
-            [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstile,
+            [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstileFailed,
                                                  MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Could not send turnstile event: %@", error]}];
             return;
         }
@@ -444,3 +444,4 @@
 }
 
 @end
+
