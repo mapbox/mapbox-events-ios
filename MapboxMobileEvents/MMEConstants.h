@@ -78,6 +78,7 @@ extern NSString * const MMEEventSource;
 
 // Log reporter HTML
 extern NSString * const MMELoggerHTML;
+extern NSString * const MMELoggerShareableHTML;
 
 @interface MMEConstants: NSObject
 
