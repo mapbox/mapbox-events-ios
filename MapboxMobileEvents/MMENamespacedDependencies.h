@@ -320,8 +320,16 @@
 #define MMEDebugEventTypePost __NS_SYMBOL(MMEDebugEventTypePost)
 #endif
 
+#ifndef MMEDebugEventTypePostFailed
+#define MMEDebugEventTypePostFailed __NS_SYMBOL(MMEDebugEventTypePostFailed)
+#endif
+
 #ifndef MMEDebugEventTypeTurnstile
 #define MMEDebugEventTypeTurnstile __NS_SYMBOL(MMEDebugEventTypeTurnstile)
+#endif
+
+#ifndef MMEDebugEventTypeTurnstileFailed
+#define MMEDebugEventTypeTurnstileFailed __NS_SYMBOL(MMEDebugEventTypeTurnstileFailed)
 #endif
 
 #ifndef MMEDebugEventTypeBackgroundTask
@@ -530,6 +538,10 @@
 
 #ifndef MMELoggerHTML
 #define MMELoggerHTML __NS_SYMBOL(MMELoggerHTML)
+#endif
+
+#ifndef MMELoggerShareableHTML
+#define MMELoggerShareableHTML __NS_SYMBOL(MMELoggerShareableHTML)
 #endif
 
 #ifndef MMELocationManagerHibernationRadius
