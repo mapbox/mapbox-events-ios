@@ -93,8 +93,20 @@
 
 # pragma mark - Public API
 
+- (void)setAccessToken:(NSString *)accessToken {
+    self.apiClient.accessToken = accessToken;
+}
+
 - (NSString *)accessToken {
     return self.apiClient.accessToken;
+}
+
+- (void)setBaseURL:(NSURL *)baseURL {
+    self.apiClient.baseURL = baseURL;
+}
+
+- (NSURL *)baseURL {
+    return self.apiClient.baseURL;
 }
 
 - (NSString *)userAgentBase {
@@ -175,10 +187,10 @@
         
         
         if (_backgroundTaskIdentifier != UIBackgroundTaskInvalid) {
-            [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeBackgroundTask,
-                                                 MMEEventKeyLocalDebugDescription: @"Ending background task",
-                                                 @"Identifier": @(_backgroundTaskIdentifier)}];
-            [self.application endBackgroundTask:_backgroundTaskIdentifier];
+            [strongSelf pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeBackgroundTask,
+                                                       MMEEventKeyLocalDebugDescription: @"Ending background task",
+                                                       @"Identifier": @(_backgroundTaskIdentifier)}];
+            [strongSelf.application endBackgroundTask:_backgroundTaskIdentifier];
             _backgroundTaskIdentifier = UIBackgroundTaskInvalid;
         }
     }];
@@ -192,8 +204,9 @@
 
 - (void)sendTurnstileEvent {
     if (self.nextTurnstileSendDate && [[self.dateWrapper date] timeIntervalSinceDate:self.nextTurnstileSendDate] < 0) {
-        [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstileFailed,
-                                             MMEEventKeyLocalDebugDescription: @"Turnstile event already sent; waiting until %@ to send another one"}];
+        NSString *debugDescription = [NSString stringWithFormat:@"Turnstile event already sent; waiting until %@ to send another one", self.nextTurnstileSendDate];
+        [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstile,
+                                             MMEEventKeyLocalDebugDescription: debugDescription}];
         return;
     }
     
@@ -253,14 +266,14 @@
     [self.apiClient postEvent:turnstileEvent completionHandler:^(NSError * _Nullable error) {
         __strong __typeof__(weakSelf) strongSelf = weakSelf;
         if (error) {
-            [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstileFailed,
+            [strongSelf pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstile,
                                                  MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Could not send turnstile event: %@", error]}];
             return;
         }
         
         [strongSelf updateNextTurnstileSendDate];
-        [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstile,
-                                             MMEEventKeyLocalDebugDescription: @"Sent turnstile event"}];
+        [strongSelf pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstile,
+                                                   MMEEventKeyLocalDebugDescription: @"Sent turnstile event"}];
     }];
 }
 
@@ -310,13 +323,22 @@
 #pragma mark - Internal API
 
 - (BOOL)isEnabled {
-#if TARGET_OS_SIMULATOR
-    return self.isMetricsEnabled && self.accountType == 0 && self.metricsEnabledInSimulator;
-#else
+    BOOL isPowerModeCompatibleWithCollection = YES;
+    
+// Only check power mode if compiling with the iOS 9+ SDK and, at runtime, if the API exists
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 90000
     if ([NSProcessInfo instancesRespondToSelector:@selector(isLowPowerModeEnabled)]) {
-        return ![[NSProcessInfo processInfo] isLowPowerModeEnabled];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpartial-availability"
+        isPowerModeCompatibleWithCollection = ![[NSProcessInfo processInfo] isLowPowerModeEnabled];
+#pragma clang diagnostic pop
     }
-    return self.isMetricsEnabled && self.accountType == 0;
+#endif
+    
+#if TARGET_OS_SIMULATOR
+    return self.isMetricsEnabled && self.accountType == 0 && self.metricsEnabledInSimulator && isPowerModeCompatibleWithCollection;
+#else
+    return self.isMetricsEnabled && self.accountType == 0 && isPowerModeCompatibleWithCollection;
 #endif
 }
 

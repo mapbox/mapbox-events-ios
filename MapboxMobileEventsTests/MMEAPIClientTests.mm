@@ -14,7 +14,6 @@ using namespace Cedar::Doubles;
 @interface MMEAPIClient (Tests)
 
 @property (nonatomic) id<MMENSURLSessionWrapper> sessionWrapper;
-@property (nonatomic, copy) NSURL *baseURL;
 @property (nonatomic) BOOL usesTestServer;
 @property (nonatomic) NSBundle *applicationBundle;
 @property (nonatomic, copy) NSString *userAgent;
@@ -35,79 +34,48 @@ describe(@"MMEAPIClient", ^{
                                                hostSDKVersion:@"host-sdk-1"];
     });
     
-    describe(@"- creating an api client instance", ^{
-        context(@"when MMETelemetryTestServerURL is nil", ^{
-            
-            beforeEach(^{
-                spy_on([NSUserDefaults standardUserDefaults]);
-                [NSUserDefaults standardUserDefaults] stub_method(@selector(objectForKey:)).with(MMETelemetryTestServerURL).and_return(nil);
-                
-                apiClient = [[MMEAPIClient alloc] initWithAccessToken:@"access-token"
-                                                        userAgentBase:@"user-agent-base"
-                                                       hostSDKVersion:@"host-sdk-1"];
-                
-                apiClient.sessionWrapper should_not be_nil;
-            });
-            
-            afterEach(^{
-                stop_spying_on([NSUserDefaults standardUserDefaults]);
-            });
-            
-            it(@"should be the correct instance type", ^{
-                apiClient.sessionWrapper should be_instance_of([MMENSURLSessionWrapper class]);
-            });
-            
-            it(@"should set its base URL equal to the the base URL constant value", ^{
-                apiClient.baseURL should equal([NSURL URLWithString:MMEAPIClientBaseURL]);
-            });
-        });
+    it(@"has the correct type of session wrapper", ^{
+        apiClient.sessionWrapper should_not be_nil;
+        apiClient.sessionWrapper should be_instance_of([MMENSURLSessionWrapper class]);
+    });
+    
+    it(@"uses the default base URL value", ^{
+        apiClient.baseURL should equal([NSURL URLWithString:MMEAPIClientBaseURL]);
+    });
+    
+    describe(@"- setBaseURL", ^{
         
-        context(@"when a good URL is added to MMETelemetryTestServerURL", ^{
+        context(@"when the URL string is secure", ^{
             __block NSString *testURLString = @"https://test.com";
             
             beforeEach(^{
-                spy_on([NSUserDefaults standardUserDefaults]);
-                [NSUserDefaults standardUserDefaults] stub_method(@selector(objectForKey:)).with(MMETelemetryTestServerURL).and_return(testURLString);
-                
-                apiClient = [[MMEAPIClient alloc] initWithAccessToken:@"access-token"
-                                                        userAgentBase:@"user-agent-base"
-                                                       hostSDKVersion:@"host-sdk-1"];
+                apiClient.baseURL = [NSURL URLWithString:testURLString];
             });
             
-            it(@"should use test server", ^{
-                apiClient.sessionWrapper.usesTestServer should be_truthy;
-            });
-            
-            it(@"should equal a URL made from the test URL string", ^{
+            it(@"uses the passed in value", ^{
                 apiClient.baseURL should equal([NSURL URLWithString:testURLString]);
             });
             
-            afterEach(^{
-                stop_spying_on([NSUserDefaults standardUserDefaults]);
+            context(@"when the URL is reset with a nil value", ^{
+                beforeEach(^{
+                    apiClient.baseURL = nil;
+                });
+                
+                it(@"use the default base URL value", ^{
+                    apiClient.baseURL should equal([NSURL URLWithString:MMEAPIClientBaseURL]);
+                });
             });
         });
         
-        context(@"when a non-secure URL is added to MMETelemetryTestServerURL", ^{
+        context(@"when the URL is not secure", ^{
+            __block NSString *badTestURLString = @"http://test.com";
+            
             beforeEach(^{
-                NSString *badTestURLString = @"http://test.com";
-                spy_on([NSUserDefaults standardUserDefaults]);
-                [NSUserDefaults standardUserDefaults] stub_method(@selector(objectForKey:)).with(MMETelemetryTestServerURL).and_return(badTestURLString);
-                
-                apiClient = [[MMEAPIClient alloc] initWithAccessToken:@"access-token"
-                                                        userAgentBase:@"user-agent-base"
-                                                       hostSDKVersion:@"host-sdk-1"];
+                apiClient.baseURL = [NSURL URLWithString:badTestURLString];
             });
             
-            it(@"should NOT use test server", ^{
-                apiClient.sessionWrapper.usesTestServer should be_falsy;
-            });
-            
-            it(@"should equal the BaseURL constant", ^{
+            it(@"ignores the insecure URL and uses the default base URL value", ^{
                 apiClient.baseURL should equal([NSURL URLWithString:MMEAPIClientBaseURL]);
-            });
-            
-            afterEach(^{
-                stop_spying_on([NSUserDefaults standardUserDefaults]);
             });
         });
         
@@ -197,23 +165,16 @@ describe(@"MMEAPIClient", ^{
             });
         });
         
-        context(@"when posting a single event with a staging access token", ^{
+        context(@"when posting a single event after an access token is set", ^{
             __block NSString *expectedURLString;
             
             beforeEach(^{
                 NSString *stagingAccessToken = @"staging-access-token";
-                [[NSUserDefaults standardUserDefaults] setObject:stagingAccessToken forKey:MMETelemetryStagingAccessToken];
-                [[NSUserDefaults standardUserDefaults] synchronize];
-                
+                apiClient.accessToken = stagingAccessToken;
                 [apiClient postEvent:event completionHandler:nil];
                 
                 expectedURLString = [NSString stringWithFormat:@"%@/%@?access_token=%@", MMEAPIClientBaseURL, MMEAPIClientEventsPath, stagingAccessToken];
-            });
-            
-            afterEach(^{
-                [[NSUserDefaults standardUserDefaults] removeObjectForKey:MMETelemetryStagingAccessToken];
-                [[NSUserDefaults standardUserDefaults] synchronize];
-            });
+            });            
             
             it(@"should receive processRequest:completionHandler", ^{
                 sessionWrapperFake should have_received(@selector(processRequest:completionHandler:));

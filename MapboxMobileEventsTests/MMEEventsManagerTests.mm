@@ -74,6 +74,43 @@ describe(@"MMEEventsManager", ^{
         eventsManager.commonEventData should_not be_nil;
     });
     
+    describe(@"- setAccessToken", ^{
+        __block NSString *newAccessToken = @"new-access-token";
+        
+        beforeEach(^{
+            [eventsManager initializeWithAccessToken:@"first-access-token" userAgentBase:@"user-agent-base" hostSDKVersion:@"host-version"];
+            eventsManager.accessToken = newAccessToken;
+        });
+        
+        it(@"sets the access token on the api client", ^{
+            eventsManager.apiClient.accessToken should equal(newAccessToken);
+        });
+    });
+    
+    describe(@"- setBaseURL", ^{
+        __block NSURL *testURL = [NSURL URLWithString:@"https://test.com"];
+        
+        beforeEach(^{
+            [eventsManager initializeWithAccessToken:@"first-access-token" userAgentBase:@"user-agent-base" hostSDKVersion:@"host-version"];
+            eventsManager.baseURL should equal([NSURL URLWithString:MMEAPIClientBaseURL]);
+            eventsManager.baseURL = testURL;
+        });
+        
+        it(@"has the correct API client", ^{
+            eventsManager.baseURL should equal(testURL);
+        });
+        
+        context(@"when the url is reset with a nil value", ^{
+            beforeEach(^{
+                eventsManager.baseURL = nil;
+            });
+            
+            it(@"has the default value", ^{
+               eventsManager.baseURL should equal([NSURL URLWithString:MMEAPIClientBaseURL]);
+            });
+        });
+    });
+    
     describe(@"- pauseOrResumeMetricsCollectionIfRequired", ^{
         
         context(@"when the location manager authorization is set to when in use, metrics enabled is false, and events are queued", ^{
@@ -332,6 +369,30 @@ describe(@"MMEEventsManager", ^{
                     it(@"tells its location manager to stop updating location", ^{
                         eventsManager.locationManager should have_received(@selector(stopUpdatingLocation));
                     });
+                });
+            });
+            
+            context(@"when metrics low power mode is enabled", ^{
+                beforeEach(^{
+                    eventsManager.metricsEnabledInSimulator = YES;
+                    eventsManager.apiClient = nice_fake_for(@protocol(MMEAPIClient));
+                    eventsManager.apiClient stub_method(@selector(accessToken)).and_return(@"access-token");
+                    [eventsManager enqueueEventWithName:MMEEventTypeMapLoad];
+                    spy_on([NSProcessInfo processInfo]);
+                    [NSProcessInfo processInfo] stub_method(@selector(isLowPowerModeEnabled)).and_return(YES);
+                    [eventsManager pauseOrResumeMetricsCollectionIfRequired];
+                });
+                
+                it(@"changes its state to paused", ^{
+                    eventsManager.paused should be_truthy;
+                });
+                
+                it(@"tells its api client to post events", ^{
+                    eventsManager.apiClient should have_received(@selector(postEvents:completionHandler:));
+                });
+                
+                it(@"tells its location manager to stop updating location", ^{
+                    eventsManager.locationManager should have_received(@selector(stopUpdatingLocation));
                 });
             });
         });

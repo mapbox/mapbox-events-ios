@@ -306,7 +306,13 @@ static const NSString *kTSKKeychainPublicKeyTag = @"TSKKeychainPublicKeyTag"; //
     CFRelease(trust);
     
     // Obtain the public key bytes from the key reference
+    // Silencing the warning since there is no way to reach here unless we are on iOS 10.0+
+    // (this would otherwise warn if compiled for an app supporting < 10.0)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpartial-availability"
     CFDataRef publicKeyData = SecKeyCopyExternalRepresentation(publicKey, NULL);
+#pragma clang diagnostic pop
+    
     CFRelease(publicKey);
     
     return (__bridge_transfer NSData *)publicKeyData;

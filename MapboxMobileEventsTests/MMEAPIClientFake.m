@@ -3,6 +3,10 @@
 
 @implementation MMEAPIClientFake
 
+@synthesize baseURL;
+
+- (void)setBaseURL:(NSURL *)baseURL { /* Intentionlly blank to work around compiler warning for null resettable */ }
+
 - (void)postEvents:(NSArray *)events completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
     [self store:_cmd args:@[events, completionHandler]];
     self.callingCompletionHandler = completionHandler;
