@@ -69,14 +69,26 @@ function create_static_framework() {
         ${PRODUCTS}/${BUILDTYPE}-iphonesimulator/libMapboxMobileEventsStatic.a
 }
 
-step "[INFO] Cleaning build folder"
-rm -rf build/*
+function package_namespace_header() {
+    step "[INFO] Cleaning build folder"
+    rm -rf build/*
 
-step "Building binary using scheme ${SCHEME} for iphonesimulator"
-build iphonesimulator
+    step "Building binary using scheme ${SCHEME} for iphonesimulator"
+    build iphonesimulator
 
-step "[INFO] Generating namespaced header"
-generate_namespace_header $PRODUCTS/${BUILDTYPE}-iphonesimulator/libMapboxMobileEventsStatic.a
+    step "[INFO] Generating namespaced header"
+    generate_namespace_header $PRODUCTS/${BUILDTYPE}-iphonesimulator/libMapboxMobileEventsStatic.a
 
-step "[INFO] Copy namespaced header to project"
-cp $NAME_HEADER MapboxMobileEvents/MMENamespacedDependencies.h
+    step "[INFO] Copy namespaced header to project"
+    cp $NAME_HEADER MapboxMobileEvents/MMENamespacedDependencies.h
+}
+
+while getopts ":h" opt; do
+  case ${opt} in
+    h) 
+      package_namespace_header
+      ;;
+    \?) echo "Usage: package [-h]"
+      ;;
+  esac
+done
