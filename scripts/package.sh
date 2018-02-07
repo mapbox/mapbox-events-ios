@@ -63,6 +63,16 @@ function build() {
 }
 
 function create_static_framework() {
+    step "Cleaning build folder"
+    rm -rf build/*
+
+    step "Building binary using scheme ${SCHEME} for iphonesimulator"
+    build iphonesimulator
+
+    step "Building binary using scheme ${SCHEME} for iphoneos"
+    build iphoneos
+
+    step "Creating fat static binary for iphonesimulator iphoneos"
     mkdir -p ${OUTPUT} && touch ${OUTPUT}/libMapboxEvents.a
     libtool -static -no_warning_for_no_symbols -o ${OUTPUT}/libMapboxEvents.a \
         ${PRODUCTS}/${BUILDTYPE}-iphoneos/libMapboxMobileEventsStatic.a \
@@ -120,10 +130,13 @@ function tag_version_manual() {
     fi
 }
 
-while getopts ":hvt:" opt; do
+while getopts ":hsvt:" opt; do
   case ${opt} in
     h) 
       package_namespace_header
+      ;;
+    s)
+      create_static_framework
       ;;
     v) 
       get_current_version_number
