@@ -14,7 +14,7 @@ NAME_PATH=build/namespace/header
 NAME_HEADER=build/namespace/header/MMENamespacedDependencies.h
 PREFIX="MGL"
 
-function step { >&2 echo -e "\033[1m\033[36m* $@\033[0m"; }
+function step { >&2 echo -e "\033[1m\033[36m* [`date +%H:%M:%S`] $@\033[0m"; }
 function finish { >&2 echo -en "\033[0m"; }
 trap finish EXIT
 
@@ -70,23 +70,56 @@ function create_static_framework() {
 }
 
 function package_namespace_header() {
-    step "[INFO] Cleaning build folder"
+    step "Cleaning build folder"
     rm -rf build/*
 
     step "Building binary using scheme ${SCHEME} for iphonesimulator"
     build iphonesimulator
 
-    step "[INFO] Generating namespaced header"
+    step "Generating namespaced header"
     generate_namespace_header $PRODUCTS/${BUILDTYPE}-iphonesimulator/libMapboxMobileEventsStatic.a
 
-    step "[INFO] Copy namespaced header to project"
+    step "Copy namespaced header to project"
     cp $NAME_HEADER MapboxMobileEvents/MMENamespacedDependencies.h
 }
 
-while getopts ":h" opt; do
+function get_current_version_number() {
+    currentVersion=$(/usr/libexec/PlistBuddy -c "Print CFBundleShortVersionString" ./MapboxMobileEvents/Info.plist)
+    echo $currentVersion
+}
+
+function tag_version_manual() {
+    previousVersionNumber=$(get_current_version_number)
+
+    read  -rep $"This will version with $1 (previous version was $previousVersionNumber); do you want to proceed? (y or n): " REPLY
+    if [ "$REPLY" = "y" ]; then
+        step "Updating plist and podspec files for version: $1"
+        projectPlist="./MapboxMobileEvents/Info.plist"
+        resourcesPlist="./resources/Info.plist"
+        /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $1" $projectPlist
+        /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $1" $resourcesPlist
+        sed -e "s/$previousVersionNumber/$1/g" MapboxMobileEvents.podspec > temp.podspec && mv temp.podspec MapboxMobileEvents.podspec
+
+        step "Making commit for version: $1"
+        git commit -am "Update version to $1"
+
+        step "Making local git tag for version: $1"
+        git tag "v$1"
+
+        # TODO: Check if user wants to push the commit and tag or revert
+    fi
+}
+
+while getopts ":hvt:" opt; do
   case ${opt} in
     h) 
       package_namespace_header
+      ;;
+    v) 
+      get_current_version_number
+      ;;
+    t)
+      tag_version_manual $OPTARG      
       ;;
     \?) echo "Usage: package [-h]"
       ;;
