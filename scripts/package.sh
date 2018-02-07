@@ -106,7 +106,17 @@ function tag_version_manual() {
         step "Making local git tag for version: $1"
         git tag "v$1"
 
-        # TODO: Check if user wants to push the commit and tag or revert
+        read  -rep $"Do you want to push the commit and tag for $1 to GitHub? (y or n): " REPLY_PUSH
+        if [ "$REPLY_PUSH" = "y" ]; then
+            git push origin head
+            git push origin "v$1"
+        else
+            read  -rep $"Do you want to revert the local commit and tag for $1? (y or n): " REPLY_REVERT
+            if [ "$REPLY_REVERT" = "y" ]; then
+                git reset --hard head~1
+                git tag -d "v$1"
+            fi                   
+        fi
     fi
 }
 
