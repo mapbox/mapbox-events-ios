@@ -24,6 +24,7 @@ NSString * const MMEEventTypeMapLoad = @"map.load";
 NSString * const MMEEventTypeMapTap = @"map.click";
 NSString * const MMEEventTypeMapDragEnd = @"map.dragend";
 NSString * const MMEEventTypeLocation = @"location";
+NSString * const MMEEventTypeVisit = @"visit";
 NSString * const MMEEventTypeLocalDebug = @"debug";
 
 NSString * const MMEEventGestureSingleTap = @"SingleTap";
@@ -35,6 +36,8 @@ NSString * const MMEEventGesturePinchStart = @"Pinch";
 NSString * const MMEEventGestureRotateStart = @"Rotation";
 NSString * const MMEEventGesturePitchStart = @"Pitch";
 
+NSString * const MMEEventKeyArrivalDate = @"arrivalDate";
+NSString * const MMEEventKeyDepartureDate = @"arrivalDate";
 NSString * const MMEEventKeyLatitude = @"lat";
 NSString * const MMEEventKeyLongitude = @"lng";
 NSString * const MMEEventKeyZoomLevel = @"zoom";

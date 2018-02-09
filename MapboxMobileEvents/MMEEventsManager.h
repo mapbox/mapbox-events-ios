@@ -3,18 +3,9 @@
 #import "MMETypes.h"
 #import <CoreLocation/CoreLocation.h>
 
-
-@class MMELocationManager;
-
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol MMEEventsManagerDelegate;
-
-@protocol MMEEventsManagerDelegate <NSObject>
-
-- (void)locationManager:(MMELocationManager *)locationManager didUpdateLocations:(NSArray<CLLocation *> *)locations;
-
-@end
 
 @interface MMEEventsManager : NSObject
 
@@ -44,5 +35,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@protocol MMEEventsManagerDelegate <NSObject>
+
+@optional
+
+- (void)eventsManager:(MMEEventsManager *)eventsManager didUpdateLocations:(NSArray<CLLocation *> *)locations;
+- (void)eventsManager:(MMEEventsManager *)eventsManager didVisit:(CLVisit *)visit;
+
+@end
 
 NS_ASSUME_NONNULL_END

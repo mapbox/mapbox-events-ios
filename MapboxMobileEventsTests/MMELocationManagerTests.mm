@@ -399,6 +399,19 @@ describe(@"MMELocationManager", ^{
                 locationManager.backgroundLocationServiceTimeoutTimer should be_nil;
             });
             
+            context(@"when a visit is received", ^{
+                __block CLVisit *visit;
+                
+                beforeEach(^{
+                    visit = [[CLVisit alloc] init];
+                    [locationManager locationManager:locationManagerInstance didVisit:visit];
+                });
+                
+                it(@"tells its delegate", ^{
+                    locationManager.delegate should have_received(@selector(locationManager:didVisit:)).with(locationManager, visit);
+                });
+            });
+            
             context(@"when location data are received", ^{
                 beforeEach(^{
                     [locationManager startUpdatingLocation];

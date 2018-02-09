@@ -231,7 +231,7 @@ describe(@"MMEEventsManager", ^{
                         });
                         
                         it(@"should tell it's delegate that a location event has been received", ^{
-                            eventsManager.delegate should have_received(@selector(locationManager:didUpdateLocations:)).with(eventsManager.locationManager).and_with(locations);
+                            eventsManager.delegate should have_received(@selector(eventsManager:didUpdateLocations:)).with(eventsManager).and_with(locations);
                         });
                         
                         it(@"tells the timer manager to start", ^{
@@ -781,6 +781,47 @@ describe(@"MMEEventsManager", ^{
                 });
             });
         });
+    });
+    
+    describe(@"MMELocationManagerDelegate", ^{
+        
+        context(@"-[MMEEventsManager locatizonManager:didVisit:]", ^{
+            __block CLVisit *visit;
+            
+            beforeEach(^{
+                eventsManager.delegate = nice_fake_for(@protocol(MMEEventsManagerDelegate));
+                eventsManager.paused = NO;
+                
+                visit = [[CLVisit alloc] init];
+                spy_on(visit);
+                
+                CLLocationCoordinate2D coordinate = {10.0, -10.0};
+                NSDate *date = [NSDate dateWithTimeIntervalSince1970:0];
+                
+                visit stub_method(@selector(coordinate)).and_return(coordinate);
+                visit stub_method(@selector(arrivalDate)).and_return(date);
+                visit stub_method(@selector(departureDate)).and_return(date);
+                visit stub_method(@selector(horizontalAccuracy)).and_return(42.0);
+                
+                [eventsManager locationManager:eventsManager.locationManager didVisit:visit];
+            });
+            
+            it(@"enqueues the correct event", ^{
+                CLLocation *location = [[CLLocation alloc] initWithLatitude:visit.coordinate.latitude longitude:visit.coordinate.longitude];
+                NSDictionary *attributes = @{MMEEventKeyLatitude: @([location mme_latitudeRoundedWithPrecision:7]),
+                                             MMEEventKeyLongitude: @([location mme_longitudeRoundedWithPrecision:7]),
+                                             MMEEventHorizontalAccuracy: @(visit.horizontalAccuracy),
+                                             MMEEventKeyArrivalDate: [eventsManager.dateWrapper formattedDateStringForDate:visit.arrivalDate],
+                                             MMEEventKeyDepartureDate: [eventsManager.dateWrapper formattedDateStringForDate:visit.departureDate]};
+                MMEEvent *expectedVisitEvent = [MMEEvent visitEventWithAttributes:attributes];
+                eventsManager.eventQueue.firstObject should equal(expectedVisitEvent);
+            });
+            
+            it(@"tells its delegate", ^{
+                eventsManager.delegate should have_received(@selector(eventsManager:didVisit:)).with(eventsManager, visit);
+            });
+        });
+        
     });
 });
 
