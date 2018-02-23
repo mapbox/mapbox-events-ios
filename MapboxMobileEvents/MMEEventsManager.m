@@ -133,12 +133,14 @@
         self.application.applicationState == UIApplicationStateBackground &&
         !self.isMetricsEnabledForInUsePermissions) {
         if (_backgroundTaskIdentifier == UIBackgroundTaskInvalid) {
+            __weak __typeof__(self) weakSelf = self;
             _backgroundTaskIdentifier = [self.application beginBackgroundTaskWithExpirationHandler:^{
+                __strong __typeof__(weakSelf) strongSelf = weakSelf;
                 [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeBackgroundTask,
                                                      MMEEventKeyLocalDebugDescription: @"Ending background task",
-                                                     @"Identifier": @(_backgroundTaskIdentifier)}];
-                [self.application endBackgroundTask:_backgroundTaskIdentifier];
-                _backgroundTaskIdentifier = UIBackgroundTaskInvalid;
+                                                     @"Identifier": @(strongSelf.backgroundTaskIdentifier)}];
+                [self.application endBackgroundTask:strongSelf.backgroundTaskIdentifier];
+                strongSelf.backgroundTaskIdentifier = UIBackgroundTaskInvalid;
             }];
             [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeBackgroundTask,
                                                  MMEEventKeyLocalDebugDescription: @"Initiated background task",
@@ -186,12 +188,12 @@
         }
         
         
-        if (_backgroundTaskIdentifier != UIBackgroundTaskInvalid) {
+        if (strongSelf.backgroundTaskIdentifier != UIBackgroundTaskInvalid) {
             [strongSelf pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeBackgroundTask,
                                                        MMEEventKeyLocalDebugDescription: @"Ending background task",
-                                                       @"Identifier": @(_backgroundTaskIdentifier)}];
-            [strongSelf.application endBackgroundTask:_backgroundTaskIdentifier];
-            _backgroundTaskIdentifier = UIBackgroundTaskInvalid;
+                                                       @"Identifier": @(strongSelf.backgroundTaskIdentifier)}];
+            [strongSelf.application endBackgroundTask:strongSelf.backgroundTaskIdentifier];
+            strongSelf.backgroundTaskIdentifier = UIBackgroundTaskInvalid;
         }
     }];
     
