@@ -37,7 +37,7 @@ NSString * const MMEEventGestureRotateStart = @"Rotation";
 NSString * const MMEEventGesturePitchStart = @"Pitch";
 
 NSString * const MMEEventKeyArrivalDate = @"arrivalDate";
-NSString * const MMEEventKeyDepartureDate = @"arrivalDate";
+NSString * const MMEEventKeyDepartureDate = @"departureDate";
 NSString * const MMEEventKeyLatitude = @"lat";
 NSString * const MMEEventKeyLongitude = @"lng";
 NSString * const MMEEventKeyZoomLevel = @"zoom";

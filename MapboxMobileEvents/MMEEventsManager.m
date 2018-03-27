@@ -80,7 +80,6 @@
     }
 #pragma clang diagnostic pop
     
-    
     self.paused = YES;
     
     self.locationManager = [[MMELocationManager alloc] init];
@@ -245,7 +244,6 @@
                                              MMEEventKeyLocalDebugDescription: @"No iOS version available, can not send turntile event"}];
         return;
     }
-    
     
     NSDictionary *turnstileEventAttributes = @{MMEEventKeyEvent: MMEEventTypeAppUserTurnstile,
                                                MMEEventKeyCreated: [self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]],
@@ -470,7 +468,8 @@
                                          MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Location manager visit %@", visit]}];
     
     CLLocation *location = [[CLLocation alloc] initWithLatitude:visit.coordinate.latitude longitude:visit.coordinate.longitude];
-    MMEMapboxEventAttributes *eventAttributes = @{MMEEventKeyLatitude: @([location mme_latitudeRoundedWithPrecision:7]),
+    MMEMapboxEventAttributes *eventAttributes = @{MMEEventKeyCreated: [self.dateWrapper formattedDateStringForDate:[location timestamp]],
+                                                  MMEEventKeyLatitude: @([location mme_latitudeRoundedWithPrecision:7]),
                                                   MMEEventKeyLongitude: @([location mme_longitudeRoundedWithPrecision:7]),
                                                   MMEEventHorizontalAccuracy: @(visit.horizontalAccuracy),
                                                   MMEEventKeyArrivalDate: [self.dateWrapper formattedDateStringForDate:visit.arrivalDate],
