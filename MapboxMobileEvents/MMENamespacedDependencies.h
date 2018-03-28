@@ -364,6 +364,10 @@
 #define MMEEventTypeLocation __NS_SYMBOL(MMEEventTypeLocation)
 #endif
 
+#ifndef MMEEventTypeVisit
+#define MMEEventTypeVisit __NS_SYMBOL(MMEEventTypeVisit)
+#endif
+
 #ifndef MMEEventTypeLocalDebug
 #define MMEEventTypeLocalDebug __NS_SYMBOL(MMEEventTypeLocalDebug)
 #endif
@@ -398,6 +402,14 @@
 
 #ifndef MMEEventGesturePitchStart
 #define MMEEventGesturePitchStart __NS_SYMBOL(MMEEventGesturePitchStart)
+#endif
+
+#ifndef MMEEventKeyArrivalDate
+#define MMEEventKeyArrivalDate __NS_SYMBOL(MMEEventKeyArrivalDate)
+#endif
+
+#ifndef MMEEventKeyDepartureDate
+#define MMEEventKeyDepartureDate __NS_SYMBOL(MMEEventKeyDepartureDate)
 #endif
 
 #ifndef MMEEventKeyLatitude
@@ -544,16 +556,16 @@
 #define MMELoggerShareableHTML __NS_SYMBOL(MMELoggerShareableHTML)
 #endif
 
+#ifndef kMMEReachabilityChangedNotification
+#define kMMEReachabilityChangedNotification __NS_SYMBOL(kMMEReachabilityChangedNotification)
+#endif
+
 #ifndef MMELocationManagerHibernationRadius
 #define MMELocationManagerHibernationRadius __NS_SYMBOL(MMELocationManagerHibernationRadius)
 #endif
 
 #ifndef MMELocationManagerDistanceFilter
 #define MMELocationManagerDistanceFilter __NS_SYMBOL(MMELocationManagerDistanceFilter)
-#endif
-
-#ifndef kMMEReachabilityChangedNotification
-#define kMMEReachabilityChangedNotification __NS_SYMBOL(kMMEReachabilityChangedNotification)
 #endif
 
 #ifndef MMELocationManagerRegionIdentifier

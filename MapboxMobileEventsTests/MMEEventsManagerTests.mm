@@ -808,7 +808,8 @@ describe(@"MMEEventsManager", ^{
             
             it(@"enqueues the correct event", ^{
                 CLLocation *location = [[CLLocation alloc] initWithLatitude:visit.coordinate.latitude longitude:visit.coordinate.longitude];
-                NSDictionary *attributes = @{MMEEventKeyLatitude: @([location mme_latitudeRoundedWithPrecision:7]),
+                NSDictionary *attributes = @{MMEEventKeyCreated: [eventsManager.dateWrapper formattedDateStringForDate:[location timestamp]],
+                                             MMEEventKeyLatitude: @([location mme_latitudeRoundedWithPrecision:7]),
                                              MMEEventKeyLongitude: @([location mme_longitudeRoundedWithPrecision:7]),
                                              MMEEventHorizontalAccuracy: @(visit.horizontalAccuracy),
                                              MMEEventKeyArrivalDate: [eventsManager.dateWrapper formattedDateStringForDate:visit.arrivalDate],
