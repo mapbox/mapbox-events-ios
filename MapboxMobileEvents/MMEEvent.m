@@ -30,6 +30,16 @@
     return locationEvent;
 }
 
++ (instancetype)visitEventWithAttributes:(NSDictionary *)attributes {
+    MMEEvent *visitEvent = [[MMEEvent alloc] init];
+    visitEvent.name = MMEEventTypeVisit;
+    NSMutableDictionary *commonAttributes = [NSMutableDictionary dictionary];
+    commonAttributes[MMEEventKeyEvent] = visitEvent.name;
+    [commonAttributes addEntriesFromDictionary:attributes];
+    visitEvent.attributes = commonAttributes;
+    return visitEvent;
+}
+
 + (instancetype)mapLoadEventWithDateString:(NSString *)dateString commonEventData:(MMECommonEventData *)commonEventData; {
     MMEEvent *mapLoadEvent = [[MMEEvent alloc] init];
     mapLoadEvent.name = MMEEventTypeMapLoad;

@@ -80,7 +80,6 @@
     }
 #pragma clang diagnostic pop
     
-    
     self.paused = YES;
     
     self.locationManager = [[MMELocationManager alloc] init];
@@ -247,7 +246,6 @@
                                              MMEEventKeyLocalDebugDescription: @"No iOS version available, can not send turntile event"}];
         return;
     }
-    
     
     NSDictionary *turnstileEventAttributes = @{MMEEventKeyEvent: MMEEventTypeAppUserTurnstile,
                                                MMEEventKeyCreated: [self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]],
@@ -442,8 +440,8 @@
                                             instanceIdentifer:self.uniqueIdentifer.rollingInstanceIdentifer
                                               commonEventData:self.commonEventData]];
     }
-    if ([self.delegate respondsToSelector:@selector(locationManager:didUpdateLocations:)]) {
-        [self.delegate locationManager:self.locationManager didUpdateLocations:locations];
+    if ([self.delegate respondsToSelector:@selector(eventsManager:didUpdateLocations:)]) {
+        [self.delegate eventsManager:self didUpdateLocations:locations];
     }
 }
 
@@ -465,6 +463,24 @@
 - (void)locationManagerDidStopLocationUpdates:(MMELocationManager *)locationManager {
     [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeLocationManager,
                                          MMEEventKeyLocalDebugDescription: @"Location manager stopped location updates"}];
+}
+
+- (void)locationManager:(MMELocationManager *)locationManager didVisit:(CLVisit *)visit {
+    [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeLocationManager,
+                                         MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Location manager visit %@", visit]}];
+    
+    CLLocation *location = [[CLLocation alloc] initWithLatitude:visit.coordinate.latitude longitude:visit.coordinate.longitude];
+    MMEMapboxEventAttributes *eventAttributes = @{MMEEventKeyCreated: [self.dateWrapper formattedDateStringForDate:[location timestamp]],
+                                                  MMEEventKeyLatitude: @([location mme_latitudeRoundedWithPrecision:7]),
+                                                  MMEEventKeyLongitude: @([location mme_longitudeRoundedWithPrecision:7]),
+                                                  MMEEventHorizontalAccuracy: @(visit.horizontalAccuracy),
+                                                  MMEEventKeyArrivalDate: [self.dateWrapper formattedDateStringForDate:visit.arrivalDate],
+                                                  MMEEventKeyDepartureDate: [self.dateWrapper formattedDateStringForDate:visit.departureDate]};
+    [self pushEvent:[MMEEvent visitEventWithAttributes:eventAttributes]];
+
+    if ([self.delegate respondsToSelector:@selector(eventsManager:didVisit:)]) {
+        [self.delegate eventsManager:self didVisit:visit];
+    }
 }
 
 @end

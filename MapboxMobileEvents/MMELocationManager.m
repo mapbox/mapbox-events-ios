@@ -35,6 +35,9 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
 }
 
 - (void)startUpdatingLocation {
+    if (![CLLocationManager locationServicesEnabled]) {
+        return;
+    }
     if ([self isUpdatingLocation]) {
         return;
     }
@@ -47,6 +50,7 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
     if ([self isUpdatingLocation]) {
         [self.locationManager stopUpdatingLocation];
         [self.locationManager stopMonitoringSignificantLocationChanges];
+        [self.locationManager stopMonitoringVisits];
         self.updatingLocation = NO;
         if ([self.delegate respondsToSelector:@selector(locationManagerDidStopLocationUpdates:)]) {
             [self.delegate locationManagerDidStopLocationUpdates:self];
@@ -120,6 +124,10 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
                 #pragma clang diagnostic pop
             }
         }
+        
+        if (authorizedAlways) {
+            [self.locationManager startMonitoringVisits];
+        }
 
         [self.locationManager startUpdatingLocation];
         self.updatingLocation = YES;
@@ -191,6 +199,12 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
 - (void)locationManager:(CLLocationManager *)locationManager didExitRegion:(CLRegion *)region {
     [self startBackgroundTimeoutTimer];
     [self.locationManager startUpdatingLocation];
+}
+
+- (void)locationManager:(CLLocationManager *)manager didVisit:(CLVisit *)visit {
+    if ([self.delegate respondsToSelector:@selector(locationManager:didVisit:)]) {
+        [self.delegate locationManager:self didVisit:visit];
+    }
 }
 
 - (void)locationManagerDidPauseLocationUpdates:(CLLocationManager *)locationManager {
