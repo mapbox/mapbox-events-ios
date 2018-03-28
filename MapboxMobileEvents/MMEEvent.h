@@ -9,6 +9,7 @@
 
 + (instancetype)turnstileEventWithAttributes:(NSDictionary *)attributes;
 + (instancetype)locationEventWithAttributes:(NSDictionary *)attributes instanceIdentifer:(NSString *)instanceIdentifer commonEventData:(MMECommonEventData *)commonEventData;
++ (instancetype)visitEventWithAttributes:(NSDictionary *)attributes;
 + (instancetype)mapLoadEventWithDateString:(NSString *)dateString commonEventData:(MMECommonEventData *)commonEventData;
 + (instancetype)mapTapEventWithDateString:(NSString *)dateString attributes:(NSDictionary *)attributes;
 + (instancetype)mapDragEndEventWithDateString:(NSString *)dateString attributes:(NSDictionary *)attributes;
