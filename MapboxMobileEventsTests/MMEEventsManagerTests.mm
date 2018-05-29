@@ -13,6 +13,7 @@
 #import "MMEUIApplicationWrapperFake.h"
 #import "CLLocation+MMEMobileEvents.h"
 #import "MMEUIApplicationWrapper.h"
+#import "MMEEventsService.h"
 
 using namespace Cedar::Matchers;
 using namespace Cedar::Doubles;
@@ -72,6 +73,28 @@ describe(@"MMEEventsManager", ^{
     
     it(@"sets common event data", ^{
         eventsManager.commonEventData should_not be_nil;
+    });
+    
+    describe(@"- setConfiguration", ^{
+        beforeEach(^{
+            eventsManager.configuration = [MMEEventsService.sharedService configuration];
+        });
+
+        it(@"should set the radius for configuration", ^{
+            eventsManager.configuration.locationManagerHibernationRadius should_not equal(0);
+        });
+        
+        it(@"should set the eventFlushCountThreshold", ^{
+            eventsManager.configuration.eventFlushCountThreshold should_not equal(0);
+        });
+        
+        it(@"should set the eventFlushSecondsThreshold", ^{
+            eventsManager.configuration.eventFlushSecondsThreshold should_not equal(0);
+        });
+        
+        it(@"should set the instanceIdentifierRotationTimeInterval", ^{
+            eventsManager.configuration.instanceIdentifierRotationTimeInterval should_not equal(0);
+        });
     });
     
     describe(@"- setAccessToken", ^{
