@@ -9,6 +9,7 @@ static const NSTimeInterval MMELocationManagerHibernationTimeout = 300.0;
 static const NSTimeInterval MMELocationManagerHibernationPollInterval = 5.0;
 
 const CLLocationDistance MMELocationManagerDistanceFilter = 5.0;
+const CLLocationDistance MMERadiusAccuracyMax = 300.0;
 
 NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegionIdentifier.fence.center";
 
@@ -181,7 +182,7 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
     if (location.speed > 0.0) {
         [self startBackgroundTimeoutTimer];
     }
-    if ([self.locationManager.monitoredRegions anyObject] == nil || location.horizontalAccuracy < self.configuration.locationManagerHibernationRadius) {
+    if ([self.locationManager.monitoredRegions anyObject] == nil || location.horizontalAccuracy < MMERadiusAccuracyMax) {
         [self establishRegionMonitoringForLocation:location];
     }
     if ([self.delegate respondsToSelector:@selector(locationManager:didUpdateLocations:)]) {
