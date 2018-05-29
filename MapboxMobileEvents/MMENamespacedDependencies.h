@@ -50,6 +50,10 @@
 #define MMEEventsManager __NS_SYMBOL(MMEEventsManager)
 #endif
 
+#ifndef MMEEventsService
+#define MMEEventsService __NS_SYMBOL(MMEEventsService)
+#endif
+
 #ifndef MMELocationManager
 #define MMELocationManager __NS_SYMBOL(MMELocationManager)
 #endif
@@ -155,6 +159,14 @@
 #define convertPinsToHpkpPins __NS_SYMBOL(convertPinsToHpkpPins)
 #endif
 
+#ifndef __clang_at_available_requires_core_foundation_framework
+#define __clang_at_available_requires_core_foundation_framework __NS_SYMBOL(__clang_at_available_requires_core_foundation_framework)
+#endif
+
+#ifndef __clang_at_available_requires_core_foundation_framework
+#define __clang_at_available_requires_core_foundation_framework __NS_SYMBOL(__clang_at_available_requires_core_foundation_framework)
+#endif
+
 // Externs
 #ifndef _loggerBlock
 #define _loggerBlock __NS_SYMBOL(_loggerBlock)
@@ -258,6 +270,14 @@
 
 #ifndef kTSKAlgorithmEcDsaSecp384r1
 #define kTSKAlgorithmEcDsaSecp384r1 __NS_SYMBOL(kTSKAlgorithmEcDsaSecp384r1)
+#endif
+
+#ifndef kMMEEventsProfile
+#define kMMEEventsProfile __NS_SYMBOL(kMMEEventsProfile)
+#endif
+
+#ifndef kMMERadiusSize
+#define kMMERadiusSize __NS_SYMBOL(kMMERadiusSize)
 #endif
 
 #ifndef MMEApplicationStateForeground
@@ -560,12 +580,12 @@
 #define kMMEReachabilityChangedNotification __NS_SYMBOL(kMMEReachabilityChangedNotification)
 #endif
 
-#ifndef MMELocationManagerHibernationRadius
-#define MMELocationManagerHibernationRadius __NS_SYMBOL(MMELocationManagerHibernationRadius)
-#endif
-
 #ifndef MMELocationManagerDistanceFilter
 #define MMELocationManagerDistanceFilter __NS_SYMBOL(MMELocationManagerDistanceFilter)
+#endif
+
+#ifndef MMERadiusAccuracyMax
+#define MMERadiusAccuracyMax __NS_SYMBOL(MMERadiusAccuracyMax)
 #endif
 
 #ifndef MMELocationManagerRegionIdentifier
