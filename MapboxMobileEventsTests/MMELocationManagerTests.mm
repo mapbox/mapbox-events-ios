@@ -31,7 +31,7 @@ describe(@"MMELocationManager", ^{
     __block MMEEventsConfiguration *configuration;
     
     beforeEach(^{
-        configuration = [MMEEventsService.sharedService configuration];
+        configuration = [[MMEEventsService sharedService] configuration];
         locationManagerInstance = [[CLLocationManager alloc] init];
         spy_on(locationManagerInstance);
         // Even with the stub on UIBackgroundModes in test setup below, it is not safe to actually call `setAllowsBackgroundLocationUpdates:` in tests

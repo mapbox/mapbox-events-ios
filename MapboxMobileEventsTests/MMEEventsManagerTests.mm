@@ -77,7 +77,7 @@ describe(@"MMEEventsManager", ^{
     
     describe(@"- setConfiguration", ^{
         beforeEach(^{
-            eventsManager.configuration = [MMEEventsService.sharedService configuration];
+            eventsManager.configuration = [[MMEEventsService sharedService] configuration];
         });
 
         it(@"should set the radius for configuration", ^{

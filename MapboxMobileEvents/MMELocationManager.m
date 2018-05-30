@@ -33,7 +33,7 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
         _application = [[MMEUIApplicationWrapper alloc] init];
         NSArray *backgroundModes = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UIBackgroundModes"];
         _hostAppHasBackgroundCapability = [backgroundModes containsObject:@"location"];
-        _configuration = [MMEEventsService.sharedService configuration];
+        _configuration = [[MMEEventsService sharedService] configuration];
     }
     return self;
 }
