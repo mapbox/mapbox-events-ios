@@ -8,7 +8,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic) MMEEventsConfiguration *configuration;
 
-+ (nullable instancetype)sharedService;
++ (instancetype)sharedService;
 
 @end
 

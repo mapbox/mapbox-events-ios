@@ -55,7 +55,7 @@
         _accountType = 0;
         _eventQueue = [NSMutableArray array];
         _commonEventData = [[MMECommonEventData alloc] init];
-        _configuration = [MMEEventsService.sharedService configuration];
+        _configuration = [[MMEEventsService sharedService] configuration];
         _uniqueIdentifer = [[MMEUniqueIdentifier alloc] initWithTimeInterval:_configuration.instanceIdentifierRotationTimeInterval];
         _application = [[MMEUIApplicationWrapper alloc] init];
         _dateWrapper = [[MMENSDateWrapper alloc] init];

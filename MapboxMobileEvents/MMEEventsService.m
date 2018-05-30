@@ -15,7 +15,7 @@ static NSString *const kConfigHibernationRadiusVariableKey = @"VariableGeofence"
     return self;
 }
 
-+ (nullable instancetype)sharedService {
++ (instancetype)sharedService {
     static dispatch_once_t onceToken;
     static MMEEventsService *_sharedService;
     dispatch_once(&onceToken, ^{
