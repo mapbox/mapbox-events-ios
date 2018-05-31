@@ -831,14 +831,21 @@ describe(@"MMEEventsManager", ^{
             
             it(@"enqueues the correct event", ^{
                 CLLocation *location = [[CLLocation alloc] initWithLatitude:visit.coordinate.latitude longitude:visit.coordinate.longitude];
-                NSDictionary *attributes = @{MMEEventKeyCreated: [eventsManager.dateWrapper formattedDateStringForDate:[location timestamp]],
+                NSDictionary *attributes = @{MMEEventKeyCreated: @"2018-05-30T21:53:08.720+0000",
                                              MMEEventKeyLatitude: @([location mme_latitudeRoundedWithPrecision:7]),
                                              MMEEventKeyLongitude: @([location mme_longitudeRoundedWithPrecision:7]),
                                              MMEEventHorizontalAccuracy: @(visit.horizontalAccuracy),
                                              MMEEventKeyArrivalDate: [eventsManager.dateWrapper formattedDateStringForDate:visit.arrivalDate],
                                              MMEEventKeyDepartureDate: [eventsManager.dateWrapper formattedDateStringForDate:visit.departureDate]};
                 MMEEvent *expectedVisitEvent = [MMEEvent visitEventWithAttributes:attributes];
-                eventsManager.eventQueue.firstObject should equal(expectedVisitEvent);
+                MMEEvent *enqueueEvent = eventsManager.eventQueue.firstObject;
+                
+                NSMutableDictionary *tempDict = [[NSMutableDictionary alloc] init];
+                [tempDict addEntriesFromDictionary:enqueueEvent.attributes];
+                [tempDict setObject:@"2018-05-30T21:53:08.720+0000" forKey:@"created"];
+                enqueueEvent.attributes = tempDict;
+                
+                enqueueEvent should equal(expectedVisitEvent);
             });
             
             it(@"tells its delegate", ^{
