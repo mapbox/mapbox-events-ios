@@ -831,7 +831,7 @@ describe(@"MMEEventsManager", ^{
             
             it(@"enqueues the correct event", ^{
                 CLLocation *location = [[CLLocation alloc] initWithLatitude:visit.coordinate.latitude longitude:visit.coordinate.longitude];
-                NSDictionary *attributes = @{MMEEventKeyCreated: @"2018-05-30T21:53:08.720+0000",
+                NSDictionary *attributes = @{MMEEventKeyCreated: [eventsManager.dateWrapper formattedDateStringForDate:[location timestamp]],
                                              MMEEventKeyLatitude: @([location mme_latitudeRoundedWithPrecision:7]),
                                              MMEEventKeyLongitude: @([location mme_longitudeRoundedWithPrecision:7]),
                                              MMEEventHorizontalAccuracy: @(visit.horizontalAccuracy),
@@ -842,7 +842,7 @@ describe(@"MMEEventsManager", ^{
                 
                 NSMutableDictionary *tempDict = [[NSMutableDictionary alloc] init];
                 [tempDict addEntriesFromDictionary:enqueueEvent.attributes];
-                [tempDict setObject:@"2018-05-30T21:53:08.720+0000" forKey:@"created"];
+                [tempDict setObject:[eventsManager.dateWrapper formattedDateStringForDate:[location timestamp]] forKey:@"created"];
                 enqueueEvent.attributes = tempDict;
                 
                 enqueueEvent should equal(expectedVisitEvent);
