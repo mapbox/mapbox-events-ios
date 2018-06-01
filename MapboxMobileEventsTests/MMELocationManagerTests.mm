@@ -2,6 +2,8 @@
 #import "MMELocationManager.h"
 #import "MMEDependencyManager.h"
 #import "MMEUIApplicationWrapper.h"
+#import "MMEEventsConfiguration.h"
+#import "MMEEventsService.h"
 #import <CoreLocation/CoreLocation.h>
 
 using namespace Cedar::Matchers;
@@ -26,8 +28,10 @@ describe(@"MMELocationManager", ^{
     
     __block MMELocationManager *locationManager;
     __block CLLocationManager *locationManagerInstance;
+    __block MMEEventsConfiguration *configuration;
     
     beforeEach(^{
+        configuration = [[MMEEventsService sharedService] configuration];
         locationManagerInstance = [[CLLocationManager alloc] init];
         spy_on(locationManagerInstance);
         // Even with the stub on UIBackgroundModes in test setup below, it is not safe to actually call `setAllowsBackgroundLocationUpdates:` in tests
@@ -387,7 +391,7 @@ describe(@"MMELocationManager", ^{
             CLLocation *accurateLocation = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(0, 0) altitude:0 horizontalAccuracy:0 verticalAccuracy:0 course:0 speed:0.0 timestamp:[NSDate date]];
             CLLocation *inaccurateLocation = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(0, 0) altitude:0 horizontalAccuracy:99999 verticalAccuracy:0 course:0 speed:0.0 timestamp:[NSDate date]];
             CLLocation *movingLocation = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(0, 0) altitude:0 horizontalAccuracy:0 verticalAccuracy:0 course:0 speed:100.0 timestamp:[NSDate date]];
-            CLRegion *expectedRegion = [[CLCircularRegion alloc] initWithCenter:CLLocationCoordinate2DMake(0, 0) radius:MMELocationManagerHibernationRadius identifier:MMELocationManagerRegionIdentifier];
+            CLRegion *expectedRegion = [[CLCircularRegion alloc] initWithCenter:CLLocationCoordinate2DMake(0, 0) radius: configuration.locationManagerHibernationRadius identifier:MMELocationManagerRegionIdentifier];
             
             beforeEach(^{
                 spy_on([CLLocationManager class]);

@@ -12,6 +12,7 @@
 #import "MMENSDateWrapper.h"
 #import "MMECategoryLoader.h"
 #import "CLLocation+MMEMobileEvents.h"
+#import "MMEEventsService.h"
 #import <CoreLocation/CoreLocation.h>
 
 @interface MMEEventsManager () <MMELocationManagerDelegate>
@@ -37,12 +38,12 @@
 + (instancetype)sharedManager {
     static MMEEventsManager *_sharedManager;
     static dispatch_once_t onceToken;
-
+    
     dispatch_once(&onceToken, ^{
         [MMECategoryLoader loadCategories];
         _sharedManager = [[MMEEventsManager alloc] init];
     });
-
+    
     return _sharedManager;
 }
 
@@ -54,7 +55,7 @@
         _accountType = 0;
         _eventQueue = [NSMutableArray array];
         _commonEventData = [[MMECommonEventData alloc] init];
-        _configuration = [MMEEventsConfiguration defaultEventsConfiguration];
+        _configuration = [[MMEEventsService sharedService] configuration];
         _uniqueIdentifer = [[MMEUniqueIdentifier alloc] initWithTimeInterval:_configuration.instanceIdentifierRotationTimeInterval];
         _application = [[MMEUIApplicationWrapper alloc] init];
         _dateWrapper = [[MMENSDateWrapper alloc] init];
