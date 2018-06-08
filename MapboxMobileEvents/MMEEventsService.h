@@ -4,6 +4,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+MGL_EXPORT
 @interface MMEEventsService : NSObject
 
 @property (nonatomic) MMEEventsConfiguration *configuration;
