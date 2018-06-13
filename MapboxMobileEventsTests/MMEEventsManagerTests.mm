@@ -14,7 +14,6 @@
 #import "MMEUIApplicationWrapperFake.h"
 #import "CLLocation+MMEMobileEvents.h"
 #import "MMEUIApplicationWrapper.h"
-#import "MMEEventsService.h"
 
 using namespace Cedar::Matchers;
 using namespace Cedar::Doubles;
@@ -96,10 +95,12 @@ describe(@"MMEEventsManager", ^{
 
         context(@"when the custom events profile is set", ^{
             beforeEach(^{
-                bundle stub_method(@selector(objectForInfoDictionaryKey:)).with(@"MMEEventsProfile").and_return(@"Custom");
+                NSDictionary *infoDictionary = @{ @"MMEEventsProfile" : @"Custom" };
+                bundle stub_method(@selector(infoDictionary)).and_return(infoDictionary);
 
-                //TODO: we haven't yet implemented reading this from the Info.plist
-                configuration.initializationDelay = 10;
+                eventsManager = [[MMEEventsManager alloc] init];
+                eventsManager.dispatchManager = dispatchManager;
+
                 [eventsManager initializeWithAccessToken:@"foo" userAgentBase:@"bar" hostSDKVersion:@"baz"];
             });
 
@@ -110,6 +111,9 @@ describe(@"MMEEventsManager", ^{
 
         context(@"when no fancy value is set", ^{
             beforeEach(^{
+                eventsManager = [[MMEEventsManager alloc] init];
+                eventsManager.dispatchManager = dispatchManager;
+
                 [eventsManager initializeWithAccessToken:@"foo" userAgentBase:@"bar" hostSDKVersion:@"baz"];
             });
 
@@ -121,7 +125,7 @@ describe(@"MMEEventsManager", ^{
 
     describe(@"- setConfiguration", ^{
         beforeEach(^{
-            eventsManager.configuration = [[MMEEventsService sharedService] configuration];
+            eventsManager.configuration = [MMEEventsConfiguration configuration];
         });
 
         it(@"should set the radius for configuration", ^{

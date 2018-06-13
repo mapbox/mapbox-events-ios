@@ -1,26 +1,26 @@
 #import <Cedar/Cedar.h>
-#import "MMEEventsService.h"
+#import "MMEEventsConfiguration.h"
 
 using namespace Cedar::Matchers;
 using namespace Cedar::Doubles;
 
-SPEC_BEGIN(MMEEventsServiceSpec)
+SPEC_BEGIN(MMEEventsConfigurationSpec)
 
-describe(@"MMEEventsService", ^{
+describe(@"MMEEventsConfiguration", ^{
 
-    __block MMEEventsService *eventsService;
+    __block MMEEventsConfiguration *configuration;
 
     describe(@"creating an instance", ^{
 
         // This block runs after each nested context that also contains an 'it' block
-        subjectAction(^{ eventsService = [[MMEEventsService alloc] init]; });
+        subjectAction(^{ configuration = [MMEEventsConfiguration configuration]; });
 
         describe(@"with a default configuration", ^{
 
             // subjectAction runs here
 
             it(@"uses the standard geofence", ^{
-                eventsService.configuration.locationManagerHibernationRadius should be_close_to(300);
+                configuration.locationManagerHibernationRadius should be_close_to(300);
             });
         });
 
@@ -29,8 +29,6 @@ describe(@"MMEEventsService", ^{
 
             beforeEach(^{
                 spy_on(bundle);
-
-                bundle stub_method(@selector(objectForInfoDictionaryKey:)).with(@"MMEEventsProfile").and_return(@"Custom");
             });
 
             afterEach(^{
@@ -38,23 +36,29 @@ describe(@"MMEEventsService", ^{
             });
 
             context(@"without a specific geofence radius", ^{
+                beforeEach(^{
+                    NSDictionary *infoDictionary = @{ @"MMEEventsProfile" : @"Custom" };
+                    bundle stub_method(@selector(infoDictionary)).and_return(infoDictionary);
+                });
 
                 // subjectAction runs here
 
                 it(@"uses an alternate geofence radius of 1200", ^{
-                    eventsService.configuration.locationManagerHibernationRadius should be_close_to(1200);
+                    configuration.locationManagerHibernationRadius should be_close_to(1200);
                 });
             });
 
             context(@"with a specific geofence radius set", ^{
                 beforeEach(^{
-                    bundle stub_method(@selector(objectForInfoDictionaryKey:)).with(@"MMECustomGeofenceRadius").and_return(@1000);
+                    NSDictionary *infoDictionary = @{ @"MMEEventsProfile" : @"Custom",
+                                                      @"MMECustomGeofenceRadius" : @1000 };
+                    bundle stub_method(@selector(infoDictionary)).and_return(infoDictionary);
                 });
 
                 // subjectAction runs here
 
                 it(@"uses the specified alternate geofence radius", ^{
-                    eventsService.configuration.locationManagerHibernationRadius should be_close_to(1000);
+                    configuration.locationManagerHibernationRadius should be_close_to(1000);
                 });
 
             });

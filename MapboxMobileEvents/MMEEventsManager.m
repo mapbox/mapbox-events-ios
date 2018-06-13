@@ -13,7 +13,6 @@
 #import "MMENSDateWrapper.h"
 #import "MMECategoryLoader.h"
 #import "CLLocation+MMEMobileEvents.h"
-#import "MMEEventsService.h"
 #import <CoreLocation/CoreLocation.h>
 
 @interface MMEEventsManager () <MMELocationManagerDelegate>
@@ -58,7 +57,7 @@
         _accountType = 0;
         _eventQueue = [NSMutableArray array];
         _commonEventData = [[MMECommonEventData alloc] init];
-        _configuration = [[MMEEventsService sharedService] configuration];
+        _configuration = [MMEEventsConfiguration configuration];
         _uniqueIdentifer = [[MMEUniqueIdentifier alloc] initWithTimeInterval:_configuration.instanceIdentifierRotationTimeInterval];
         _application = [[MMEUIApplicationWrapper alloc] init];
         _dateWrapper = [[MMENSDateWrapper alloc] init];

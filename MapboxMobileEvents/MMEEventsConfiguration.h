@@ -11,7 +11,6 @@
 @property (nonatomic) NSTimeInterval instanceIdentifierRotationTimeInterval;
 @property (nonatomic) CLLocationDistance locationManagerHibernationRadius;
 
-+ (instancetype)defaultEventsConfiguration;
-+ (instancetype)eventsConfigurationWithVariableRadius:(CLLocationDistance)radius;
++ (instancetype)configuration;
 
 @end
