@@ -17,7 +17,7 @@ describe(@"MMEEventsService", ^{
 
         describe(@"with a default configuration", ^{
 
-            //
+            // subjectAction runs here
 
             it(@"uses the standard geofence", ^{
                 eventsService.configuration.locationManagerHibernationRadius should be_close_to(300);
@@ -28,7 +28,6 @@ describe(@"MMEEventsService", ^{
             NSBundle *bundle = [NSBundle mainBundle];
 
             beforeEach(^{
-                bundle should_not be_nil;
                 spy_on(bundle);
 
                 bundle stub_method(@selector(objectForInfoDictionaryKey:)).with(@"MMEEventsProfile").and_return(@"Custom");
@@ -40,7 +39,7 @@ describe(@"MMEEventsService", ^{
 
             context(@"without a specific geofence radius", ^{
 
-                //
+                // subjectAction runs here
 
                 it(@"uses an alternate geofence radius of 1200", ^{
                     eventsService.configuration.locationManagerHibernationRadius should be_close_to(1200);
@@ -52,7 +51,7 @@ describe(@"MMEEventsService", ^{
                     bundle stub_method(@selector(objectForInfoDictionaryKey:)).with(@"MMECustomGeofenceRadius").and_return(@1000);
                 });
 
-                //
+                // subjectAction runs here
 
                 it(@"uses the specified alternate geofence radius", ^{
                     eventsService.configuration.locationManagerHibernationRadius should be_close_to(1000);

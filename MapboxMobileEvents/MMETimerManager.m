@@ -19,6 +19,8 @@
 
 - (void)start {
     [self cancel];
+    // NOTE: this has the side-effect of scheduling the timer on the current or main run loop.
+    // Once delayed startup is implemented, the scheduling of this timer may also need to be delayed
     self.timer = [NSTimer scheduledTimerWithTimeInterval:self.timeInterval
                                                   target:self.target
                                                 selector:self.selector
