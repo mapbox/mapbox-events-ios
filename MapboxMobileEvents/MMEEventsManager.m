@@ -86,6 +86,10 @@
     [self resumeMetricsCollection];
     
     self.timerManager = [[MMETimerManager alloc] initWithTimeInterval:self.configuration.eventFlushSecondsThreshold target:self selector:@selector(flush)];
+  
+    [self.apiClient getBlacklistWithCompletionHandler:^(NSError * _Nullable error, NSData * _Nullable data) {
+        NSLog(@"blacklist error %@, data: %@", error, [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil]);
+    }];
 }
 
 # pragma mark - Public API
