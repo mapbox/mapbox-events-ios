@@ -8,11 +8,11 @@
 #import "MMEEventLogger.h"
 #import "MMEEventsConfiguration.h"
 #import "MMETimerManager.h"
+#import "MMEDispatchManager.h"
 #import "MMEUIApplicationWrapper.h"
 #import "MMENSDateWrapper.h"
 #import "MMECategoryLoader.h"
 #import "CLLocation+MMEMobileEvents.h"
-#import "MMEEventsService.h"
 #import <CoreLocation/CoreLocation.h>
 
 @interface MMEEventsManager () <MMELocationManagerDelegate>
@@ -25,6 +25,7 @@
 @property (nonatomic) NSDate *nextTurnstileSendDate;
 @property (nonatomic) MMEEventsConfiguration *configuration;
 @property (nonatomic) MMETimerManager *timerManager;
+@property (nonatomic) MMEDispatchManager *dispatchManager;
 @property (nonatomic, getter=isPaused) BOOL paused;
 @property (nonatomic) id<MMEUIApplicationWrapper> application;
 @property (nonatomic) MMENSDateWrapper *dateWrapper;
@@ -52,13 +53,15 @@
     if (self) {
         _metricsEnabled = YES;
         _locationMetricsEnabled = YES;
+        _paused = YES;
         _accountType = 0;
         _eventQueue = [NSMutableArray array];
         _commonEventData = [[MMECommonEventData alloc] init];
-        _configuration = [[MMEEventsService sharedService] configuration];
+        _configuration = [MMEEventsConfiguration configuration];
         _uniqueIdentifer = [[MMEUniqueIdentifier alloc] initWithTimeInterval:_configuration.instanceIdentifierRotationTimeInterval];
         _application = [[MMEUIApplicationWrapper alloc] init];
         _dateWrapper = [[MMENSDateWrapper alloc] init];
+        _dispatchManager = [[MMEDispatchManager alloc] init];
     }
     return self;
 }
@@ -69,23 +72,25 @@
 }
 
 - (void)initializeWithAccessToken:(NSString *)accessToken userAgentBase:(NSString *)userAgentBase hostSDKVersion:(NSString *)hostSDKVersion {
-    self.apiClient = [[MMEAPIClient alloc] initWithAccessToken:accessToken userAgentBase:userAgentBase hostSDKVersion:hostSDKVersion];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pauseOrResumeMetricsCollectionIfRequired) name:UIApplicationDidEnterBackgroundNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pauseOrResumeMetricsCollectionIfRequired) name:UIApplicationDidBecomeActiveNotification object:nil];
-    
-    if (@available(iOS 9.0, *)) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pauseOrResumeMetricsCollectionIfRequired) name:NSProcessInfoPowerStateDidChangeNotification object:nil];
-    }
-    
-    self.paused = YES;
-    
-    self.locationManager = [[MMELocationManager alloc] init];
-    self.locationManager.delegate = self;
-    self.locationManager.metricsEnabledForInUsePermissions = self.metricsEnabledForInUsePermissions;
-    [self resumeMetricsCollection];
-    
-    self.timerManager = [[MMETimerManager alloc] initWithTimeInterval:self.configuration.eventFlushSecondsThreshold target:self selector:@selector(flush)];
+    void(^initialization)(void) = ^{
+        self.apiClient = [[MMEAPIClient alloc] initWithAccessToken:accessToken userAgentBase:userAgentBase hostSDKVersion:hostSDKVersion];
+
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pauseOrResumeMetricsCollectionIfRequired) name:UIApplicationDidEnterBackgroundNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pauseOrResumeMetricsCollectionIfRequired) name:UIApplicationDidBecomeActiveNotification object:nil];
+
+        if (@available(iOS 9.0, *)) {
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pauseOrResumeMetricsCollectionIfRequired) name:NSProcessInfoPowerStateDidChangeNotification object:nil];
+        }
+
+        self.locationManager = [[MMELocationManager alloc] init];
+        self.locationManager.delegate = self;
+        self.locationManager.metricsEnabledForInUsePermissions = self.metricsEnabledForInUsePermissions;
+        [self resumeMetricsCollection];
+
+        self.timerManager = [[MMETimerManager alloc] initWithTimeInterval:self.configuration.eventFlushSecondsThreshold target:self selector:@selector(flush)];
+    };
+
+    [self.dispatchManager scheduleBlock:initialization afterDelay:self.configuration.initializationDelay];
 }
 
 # pragma mark - Public API

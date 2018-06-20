@@ -1,7 +1,6 @@
 #import "MMELocationManager.h"
 #import "MMEUIApplicationWrapper.h"
 #import "MMEDependencyManager.h"
-#import "MMEEventsService.h"
 #import "MMEEventsConfiguration.h"
 #import <CoreLocation/CoreLocation.h>
 
@@ -33,7 +32,7 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
         _application = [[MMEUIApplicationWrapper alloc] init];
         NSArray *backgroundModes = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UIBackgroundModes"];
         _hostAppHasBackgroundCapability = [backgroundModes containsObject:@"location"];
-        _configuration = [[MMEEventsService sharedService] configuration];
+        _configuration = [MMEEventsConfiguration configuration];
     }
     return self;
 }
