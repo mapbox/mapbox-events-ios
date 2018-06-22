@@ -1,10 +1,9 @@
 #import "MMEEventsService.h"
 
 NSString *const kMMEEventsProfile = @"MMEEventsProfile";
-NSString *const kMMERadiusSize = @"MMECustomGeofenceRadius";
-NSString *const kMMEStartupDelay = @"MMEStartupDelay";
+NSString *const kMMERadiusSize = @"MMEGeofenceRadius";
 
-static NSString *const kMMECustomProfile = @"Custom";
+static NSString *const kConfigHibernationRadiusVariableKey = @"VariableGeofence";
 
 @implementation MMEEventsService
 
@@ -26,7 +25,7 @@ static NSString *const kMMECustomProfile = @"Custom";
 }
 
 - (MMEEventsConfiguration *)configurationFromKey:(NSString *)key {
-    if ([key isEqualToString:kMMECustomProfile]) {
+    if ([key isEqualToString:kConfigHibernationRadiusVariableKey]) {
         return [MMEEventsConfiguration eventsConfigurationWithVariableRadius:[[[NSBundle mainBundle] objectForInfoDictionaryKey:kMMERadiusSize] doubleValue]];
     } else {
         return [MMEEventsConfiguration defaultEventsConfiguration];
