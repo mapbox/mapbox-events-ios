@@ -44,6 +44,21 @@ static BOOL _initialized;
                               @"yJLOJQLNTPNSOh3Btyg9UA1icIoZZssWzG0UmVEJFfA=",
                               ]
                       },
+              @"events.mapbox.cn" : @{
+                      kTSKEnforcePinning:@YES,
+                      kTSKDisableDefaultReportUri:@YES,
+                      kTSKPublicKeyAlgorithms : @[kTSKAlgorithmRsa2048],
+                      kTSKPublicKeyHashes : @[
+                              //Digicert, 2018, SHA1 Fingerprint=5F:AB:D8:86:2E:7D:8D:F3:57:6B:D8:F2:F4:57:7B:71:41:90:E3:96
+                              @"3coVlMAEAYhOEJHgXwloiPDGaF+ZfxHZbVoK8AYYWVg=",
+                              //Digicert, 2018, SHA1 Fingerprint=1F:B8:6B:11:68:EC:74:31:54:06:2E:8C:9C:C5:B1:71:A4:B7:CC:B4
+                              @"5kJvNEMw0KjrCAu7eXY5HZdvyCS13BbA0VJG1RSP91w=",
+                              //GeoTrust, 2018, SHA1 Fingerprint=57:46:0E:82:B0:3F:E7:2C:AE:AC:CA:AF:2B:1D:DA:25:B4:B3:8A:4A
+                              @"+O+QJCmvoB/FkTd0/5FvmMSvFbMqjYU+Txrw1lyGkUQ=",
+                              //GeoTrust, 2018, SHA1 Fingerprint=7C:CC:2A:87:E3:94:9F:20:57:2B:18:48:29:80:50:5F:A9:0C:AC:3B
+                              @"zUIraRNo+4JoAYA7ROeWjARtIoN4rIEbCpfCRQT6N6A=",
+                              ]
+                      },
               /* Staging */
               @"api-events-staging.tilestream.net" : @{
                       kTSKEnforcePinning:@YES,

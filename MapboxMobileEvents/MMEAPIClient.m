@@ -57,6 +57,8 @@
 - (void)setBaseURL:(NSURL *)baseURL {
     if (baseURL && [baseURL.scheme isEqualToString:@"https"]) {
         _baseURL = baseURL;
+    } else if ([[_applicationBundle objectForInfoDictionaryKey:@"MGLMapboxAPIBaseURL"] isEqualToString:MMEAPIClientBaseChinaAPIURL]) {
+        _baseURL = [NSURL URLWithString:MGLAPIClientChinaBaseURL];
     } else {
         _baseURL = [NSURL URLWithString:MMEAPIClientBaseURL];
     }
