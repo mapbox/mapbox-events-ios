@@ -22,8 +22,8 @@
         _hostSDKVersion = hostSDKVersion;
         _sessionWrapper = [[MMENSURLSessionWrapper alloc] init];
         _applicationBundle = [NSBundle mainBundle];
-        _baseURL = [NSURL URLWithString:MMEAPIClientBaseURL];
         
+        [self setBaseURL:nil];
         [self setupUserAgent];
     }
     return self;
@@ -57,6 +57,8 @@
 - (void)setBaseURL:(NSURL *)baseURL {
     if (baseURL && [baseURL.scheme isEqualToString:@"https"]) {
         _baseURL = baseURL;
+    } else if ([[_applicationBundle objectForInfoDictionaryKey:@"MGLMapboxAPIBaseURL"] isEqualToString:MMEAPIClientBaseChinaAPIURL]) {
+        _baseURL = [NSURL URLWithString:MMEAPIClientBaseChinaEventsURL];
     } else {
         _baseURL = [NSURL URLWithString:MMEAPIClientBaseURL];
     }
