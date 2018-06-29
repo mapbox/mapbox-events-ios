@@ -4,20 +4,7 @@
 
 @implementation MMETrustKitWrapper
 
-static BOOL _initialized;
-
-+ (BOOL)isInitialized {
-    return _initialized;
-}
-
-+ (void)setInitialized:(BOOL)initialized {
-    _initialized = initialized;
-}
-
-+ (void)configureCertificatePinningValidation {
-    if (_initialized) {
-        return;
-    }
++ (TrustKit *)trustKitWithUpdatedConfiguration {
 
     if (![MMEEventLogger.sharedLogger isEnabled]) {
         void (^loggerBlock)(NSString *) = ^void(NSString *message){};
@@ -72,8 +59,7 @@ static BOOL _initialized;
                       }
               }
       };
-    [TrustKit initSharedInstanceWithConfiguration:trustKitConfig];
-    _initialized = YES;
+    return [[TrustKit alloc] initWithConfiguration:trustKitConfig];
 }
 
 @end

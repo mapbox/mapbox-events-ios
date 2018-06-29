@@ -1,11 +1,9 @@
 #import <Foundation/Foundation.h>
 
+@class TrustKit;
+
 @interface MMETrustKitWrapper : NSObject
 
-+ (BOOL)isInitialized;
-+ (void)setInitialized:(BOOL)initialized;
-
-+ (void)configureCertificatePinningValidation;
-
++ (TrustKit *)trustKitWithUpdatedConfiguration;
 
 @end
