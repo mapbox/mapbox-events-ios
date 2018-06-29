@@ -3,12 +3,15 @@
 NSString * const MMEAPIClientBaseURL = @"https://events.mapbox.com";
 NSString * const MMEAPIClientBaseChinaEventsURL = @"https://events.mapbox.cn";
 NSString * const MMEAPIClientBaseChinaAPIURL = @"https://api.mapbox.cn"; 
+NSString * const MMEAPIClientBaseAPIURL = @"https://api.mapbox.com";
 NSString * const MMEAPIClientEventsPath = @"events/v2";
+NSString * const MMEAPIClientEventsConfigPath = @"events-config";
 NSString * const MMEAPIClientHeaderFieldUserAgentKey = @"User-Agent";
 NSString * const MMEAPIClientHeaderFieldContentTypeKey = @"Content-Type";
 NSString * const MMEAPIClientHeaderFieldContentTypeValue = @"application/json";
 NSString * const MMEAPIClientHeaderFieldContentEncodingKey = @"Content-Encoding";
 NSString * const MMEAPIClientHTTPMethodPost = @"POST";
+NSString * const MMEAPIClientHTTPMethodGet = @"GET";
 NSString * const MMEErrorDomain = @"MMEErrorDomain";
 
 NSString * const MMEDebugEventTypeFlush = @"flush";

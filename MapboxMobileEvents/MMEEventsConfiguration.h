@@ -7,10 +7,10 @@
 
 @property (nonatomic) NSUInteger eventFlushCountThreshold;
 @property (nonatomic) NSUInteger eventFlushSecondsThreshold;
+@property (nonatomic) NSTimeInterval initializationDelay;
 @property (nonatomic) NSTimeInterval instanceIdentifierRotationTimeInterval;
 @property (nonatomic) CLLocationDistance locationManagerHibernationRadius;
 
-+ (instancetype)defaultEventsConfiguration;
-+ (instancetype)eventsConfigurationWithVariableRadius:(CLLocationDistance)radius;
++ (instancetype)configuration;
 
 @end

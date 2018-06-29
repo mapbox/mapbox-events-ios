@@ -54,6 +54,28 @@
     [self postEvents:@[event] completionHandler:completionHandler];
 }
 
+- (void)getBlacklistWithCompletionHandler:(nullable void (^)(NSError * _Nullable error, NSData * _Nullable data))completionHandler {
+    NSURLRequest *request = [self requestFor];
+    
+    [self.sessionWrapper processRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        NSError *statusError = nil;
+        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+        if (httpResponse.statusCode >= 400) {
+            NSString *descriptionFormat = @"The session data task failed. Original request was: %@";
+            NSString *reasonFormat = @"The status code was %ld";
+            NSString *description = [NSString stringWithFormat:descriptionFormat, request];
+            NSString *reason = [NSString stringWithFormat:reasonFormat, (long)httpResponse.statusCode];
+            NSDictionary *userInfo = @{NSLocalizedDescriptionKey: description,
+                                       NSLocalizedFailureReasonErrorKey: reason};
+            statusError = [NSError errorWithDomain:MMEErrorDomain code:1 userInfo:userInfo];
+        }
+        if (completionHandler) {
+            error = error ?: statusError;
+            completionHandler(error, data);
+        }
+    }];
+}
+
 - (void)setBaseURL:(NSURL *)baseURL {
     if (baseURL && [baseURL.scheme isEqualToString:@"https"]) {
         _baseURL = baseURL;
@@ -65,6 +87,21 @@
 }
 
 #pragma mark - Utilities
+
+//TODO: rename...
+- (NSURLRequest *)requestFor {
+    
+    NSString *path = [NSString stringWithFormat:@"%@?access_token=%@", MMEAPIClientEventsConfigPath, [self accessToken]];
+    
+    NSURL *url = [NSURL URLWithString:path relativeToURL:[NSURL URLWithString:MMEAPIClientBaseAPIURL]];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+    
+    [request setValue:self.userAgent forHTTPHeaderField:MMEAPIClientHeaderFieldUserAgentKey];
+    [request setValue:MMEAPIClientHeaderFieldContentTypeValue forHTTPHeaderField:MMEAPIClientHeaderFieldContentTypeKey];
+    [request setHTTPMethod:MMEAPIClientHTTPMethodGet];
+    
+    return [request copy];
+}
 
 - (NSURLRequest *)requestForEvents:(NSArray *)events {
 
