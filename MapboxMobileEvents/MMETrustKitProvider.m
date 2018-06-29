@@ -1,8 +1,8 @@
-#import "MMETrustKitWrapper.h"
+#import "MMETrustKitProvider.h"
 #import "MMEEventLogger.h"
 #import "TrustKit.h"
 
-@implementation MMETrustKitWrapper
+@implementation MMETrustKitProvider
 
 + (TrustKit *)trustKitWithUpdatedConfiguration {
 

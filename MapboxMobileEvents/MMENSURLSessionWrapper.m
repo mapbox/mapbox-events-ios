@@ -1,5 +1,5 @@
 #import "MMENSURLSessionWrapper.h"
-#import "MMETrustKitWrapper.h"
+#import "MMETrustKitProvider.h"
 #import "TrustKit.h"
 
 
@@ -18,7 +18,7 @@
     if (self) {
         _session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:nil];
         _serialQueue = dispatch_queue_create([[NSString stringWithFormat:@"%@.events.serial", NSStringFromClass([self class])] UTF8String], DISPATCH_QUEUE_SERIAL);
-        _trustKit = [MMETrustKitWrapper trustKitWithUpdatedConfiguration];
+        _trustKit = [MMETrustKitProvider trustKitWithUpdatedConfiguration];
     }
     return self;
 }

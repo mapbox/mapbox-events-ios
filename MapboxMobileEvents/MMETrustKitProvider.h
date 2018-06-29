@@ -2,7 +2,7 @@
 
 @class TrustKit;
 
-@interface MMETrustKitWrapper : NSObject
+@interface MMETrustKitProvider : NSObject
 
 + (TrustKit *)trustKitWithUpdatedConfiguration;
 
