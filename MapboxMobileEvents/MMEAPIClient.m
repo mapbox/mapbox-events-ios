@@ -32,17 +32,8 @@
 - (void)postEvents:(NSArray *)events completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
     NSURLRequest *request = [self requestForEvents:events];
     [self.sessionWrapper processRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        NSError *statusError = nil;
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-        if (httpResponse.statusCode >= 400) {
-            NSString *descriptionFormat = @"The session data task failed. Original request was: %@";
-            NSString *reasonFormat = @"The status code was %ld";
-            NSString *description = [NSString stringWithFormat:descriptionFormat, request];
-            NSString *reason = [NSString stringWithFormat:reasonFormat, (long)httpResponse.statusCode];
-            NSDictionary *userInfo = @{NSLocalizedDescriptionKey: description,
-                                       NSLocalizedFailureReasonErrorKey: reason};
-            statusError = [NSError errorWithDomain:MMEErrorDomain code:1 userInfo:userInfo];
-        }
+        NSError *statusError = [self statusErrorFromRequest:request andHTTPResponse:httpResponse];
         if (completionHandler) {
             error = error ?: statusError;
             completionHandler(error);
@@ -55,20 +46,11 @@
 }
 
 - (void)getBlacklistWithCompletionHandler:(nullable void (^)(NSError * _Nullable error, NSData * _Nullable data))completionHandler {
-    NSURLRequest *request = [self requestFor];
+    NSURLRequest *request = [self requestForConfiguration];
     
     [self.sessionWrapper processRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        NSError *statusError = nil;
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-        if (httpResponse.statusCode >= 400) {
-            NSString *descriptionFormat = @"The session data task failed. Original request was: %@";
-            NSString *reasonFormat = @"The status code was %ld";
-            NSString *description = [NSString stringWithFormat:descriptionFormat, request];
-            NSString *reason = [NSString stringWithFormat:reasonFormat, (long)httpResponse.statusCode];
-            NSDictionary *userInfo = @{NSLocalizedDescriptionKey: description,
-                                       NSLocalizedFailureReasonErrorKey: reason};
-            statusError = [NSError errorWithDomain:MMEErrorDomain code:1 userInfo:userInfo];
-        }
+        NSError *statusError = [self statusErrorFromRequest:request andHTTPResponse:httpResponse];
         if (completionHandler) {
             error = error ?: statusError;
             completionHandler(error, data);
@@ -88,8 +70,21 @@
 
 #pragma mark - Utilities
 
-//TODO: rename...
-- (NSURLRequest *)requestFor {
+- (NSError *)statusErrorFromRequest:(NSURLRequest *)request andHTTPResponse:(NSHTTPURLResponse *)httpResponse {
+    NSError *statusError = nil;
+    if (httpResponse.statusCode >= 400) {
+        NSString *descriptionFormat = @"The session data task failed. Original request was: %@";
+        NSString *reasonFormat = @"The status code was %ld";
+        NSString *description = [NSString stringWithFormat:descriptionFormat, request];
+        NSString *reason = [NSString stringWithFormat:reasonFormat, (long)httpResponse.statusCode];
+        NSDictionary *userInfo = @{NSLocalizedDescriptionKey: description,
+                                   NSLocalizedFailureReasonErrorKey: reason};
+        statusError = [NSError errorWithDomain:MMEErrorDomain code:1 userInfo:userInfo];
+    }
+    return statusError;
+}
+
+- (NSURLRequest *)requestForConfiguration {
     
     NSString *path = [NSString stringWithFormat:@"%@?access_token=%@", MMEAPIClientEventsConfigPath, [self accessToken]];
     
