@@ -4,7 +4,7 @@
 #import "MMEConstants.h"
 #import "MMEEvent.h"
 #import "MMECommonEventData.h"
-#import "MMETrustKitWrapper.h"
+#import "MMETrustKitProvider.h"
 #import "MMENSURLSessionWrapperFake.h"
 #import "MMEAPIClientFake.h"
 
