@@ -300,6 +300,14 @@
 #define MMEAPIClientBaseURL __NS_SYMBOL(MMEAPIClientBaseURL)
 #endif
 
+#ifndef MMEAPIClientBaseChinaEventsURL
+#define MMEAPIClientBaseChinaEventsURL __NS_SYMBOL(MMEAPIClientBaseChinaEventsURL)
+#endif
+
+#ifndef MMEAPIClientBaseChinaAPIURL
+#define MMEAPIClientBaseChinaAPIURL __NS_SYMBOL(MMEAPIClientBaseChinaAPIURL)
+#endif
+
 #ifndef MMEAPIClientEventsPath
 #define MMEAPIClientEventsPath __NS_SYMBOL(MMEAPIClientEventsPath)
 #endif
