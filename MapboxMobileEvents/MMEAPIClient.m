@@ -100,9 +100,11 @@
 }
 
 - (void)setupUserAgent {
-    if ([self.applicationBundle objectForInfoDictionaryKey:@"MMEMapboxUserAgentBase"] && [self.applicationBundle objectForInfoDictionaryKey:@"MMEMapboxHostSDKVersion"]) {
-        self.hostSDKVersion = [_applicationBundle objectForInfoDictionaryKey:@"MMEMapboxHostSDKVersion"];
-        self.userAgentBase = [_applicationBundle objectForInfoDictionaryKey:@"MMEMapboxUserAgentBase"];
+    if ([self.applicationBundle objectForInfoDictionaryKey:@"MMEMapboxUserAgentBase"]) {
+        self.userAgentBase = [self.applicationBundle objectForInfoDictionaryKey:@"MMEMapboxUserAgentBase"];
+    }
+    if ([self.applicationBundle objectForInfoDictionaryKey:@"MMEMapboxHostSDKVersion"]) {
+        self.hostSDKVersion = [self.applicationBundle objectForInfoDictionaryKey:@"MMEMapboxHostSDKVersion"];
     }
     
     NSString *appName = [self.applicationBundle objectForInfoDictionaryKey:@"CFBundleIdentifier"];
