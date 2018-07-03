@@ -100,6 +100,11 @@
 }
 
 - (void)setupUserAgent {
+    if ([self.applicationBundle objectForInfoDictionaryKey:@"MMEMapboxUserAgentBase"] && [self.applicationBundle objectForInfoDictionaryKey:@"MMEMapboxHostSDKVersion"]) {
+        self.hostSDKVersion = [_applicationBundle objectForInfoDictionaryKey:@"MMEMapboxHostSDKVersion"];
+        self.userAgentBase = [_applicationBundle objectForInfoDictionaryKey:@"MMEMapboxUserAgentBase"];
+    }
+    
     NSString *appName = [self.applicationBundle objectForInfoDictionaryKey:@"CFBundleIdentifier"];
     NSString *appVersion = [self.applicationBundle objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
     NSString *appBuildNumber = [self.applicationBundle objectForInfoDictionaryKey:@"CFBundleVersion"];
