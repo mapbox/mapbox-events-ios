@@ -45,15 +45,16 @@
     [self postEvents:@[event] completionHandler:completionHandler];
 }
 
-- (void)getBlacklistWithCompletionHandler:(nullable void (^)(NSError * _Nullable error, NSData * _Nullable data))completionHandler {
+- (void)getBlacklistWithCompletionHandler:(nullable void (^)(NSError * _Nullable error, NSArray * _Nullable blacklist))completionHandler {
     NSURLRequest *request = [self requestForConfiguration];
     
     [self.sessionWrapper processRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
         NSError *statusError = [self statusErrorFromRequest:request andHTTPResponse:httpResponse];
         if (completionHandler) {
+            NSArray *blacklist = [self blacklistFromData:data];
             error = error ?: statusError;
-            completionHandler(error, data);
+            completionHandler(error, blacklist);
         }
     }];
 }
@@ -69,6 +70,21 @@
 }
 
 #pragma mark - Utilities
+
+- (NSArray *)blacklistFromData:(NSData *)data {
+    if (!data) {
+        return nil;
+    }
+    
+    NSError *jsonError = nil;
+    NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&jsonError];
+    
+    if (!jsonError) {
+        NSArray *blacklist = [json objectForKey:@"RevokedCertKeys"];
+        return blacklist;
+    }
+    return nil;
+}
 
 - (NSError *)statusErrorFromRequest:(NSURLRequest *)request andHTTPResponse:(NSHTTPURLResponse *)httpResponse {
     NSError *statusError = nil;
