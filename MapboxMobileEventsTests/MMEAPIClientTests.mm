@@ -79,6 +79,18 @@ describe(@"MMEAPIClient", ^{
             });
         });
         
+        context(@"when plist configured API endpoint to China API", ^{
+            beforeEach(^{
+                spy_on([NSBundle mainBundle]);
+                [NSBundle mainBundle] stub_method(@selector(objectForInfoDictionaryKey:)).with(@"MGLMapboxAPIBaseURL").and_return(MMEAPIClientBaseChinaAPIURL);
+                apiClient.baseURL = nil;
+            });
+
+            it(@"auto switch the events endpoint to China events API", ^{
+                apiClient.baseURL should equal([NSURL URLWithString:MMEAPIClientBaseChinaEventsURL]);
+            });
+        });
+
         context(@"when setting up user agent", ^{
             __block NSString *expectedUserAgent;
 
