@@ -1,31 +1,32 @@
 #import "MMELocationManager.h"
+#import "MMEBackgroundLocationServiceTimeoutHandler.h"
 #import "MMEUIApplicationWrapper.h"
 #import "MMEDependencyManager.h"
 #import "MMEEventsService.h"
 #import "MMEEventsConfiguration.h"
 #import <CoreLocation/CoreLocation.h>
 
-static const NSTimeInterval MMELocationManagerHibernationTimeout = 300.0;
-static const NSTimeInterval MMELocationManagerHibernationPollInterval = 5.0;
-
 const CLLocationDistance MMELocationManagerDistanceFilter = 5.0;
 const CLLocationDistance MMERadiusAccuracyMax = 300.0;
 
 NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegionIdentifier.fence.center";
 
-@interface MMELocationManager () <CLLocationManagerDelegate>
+@interface MMELocationManager () <CLLocationManagerDelegate, MMEBackgroundLocationServiceTimeoutHandlerDelegate>
 
 @property (nonatomic) id<MMEUIApplicationWrapper> application;
 @property (nonatomic) CLLocationManager *locationManager;
 @property (nonatomic, getter=isUpdatingLocation, readwrite) BOOL updatingLocation;
-@property (nonatomic) NSDate *backgroundLocationServiceTimeoutAllowedDate;
-@property (nonatomic) NSTimer *backgroundLocationServiceTimeoutTimer;
+@property (nonatomic) MMEBackgroundLocationServiceTimeoutHandler *backgroundLocationServiceTimeoutTimerWrapper;
 @property (nonatomic) BOOL hostAppHasBackgroundCapability;
 @property (nonatomic) MMEEventsConfiguration *configuration;
 
 @end
 
 @implementation MMELocationManager
+
+- (void)dealloc {
+    [self stopBackgroundTimeoutTimer];
+}
 
 - (instancetype)init {
     self = [super init];
@@ -34,6 +35,9 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
         NSArray *backgroundModes = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UIBackgroundModes"];
         _hostAppHasBackgroundCapability = [backgroundModes containsObject:@"location"];
         _configuration = [[MMEEventsService sharedService] configuration];
+
+        _backgroundLocationServiceTimeoutTimerWrapper = [[MMEBackgroundLocationServiceTimeoutHandler alloc] initWithApplication:_application];
+        _backgroundLocationServiceTimeoutTimerWrapper.delegate = self;
     }
     return self;
 }
@@ -52,6 +56,10 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
 
 - (void)stopUpdatingLocation {
     if ([self isUpdatingLocation]) {
+
+        // Stop the timer
+        [self stopBackgroundTimeoutTimer];
+
         [self.locationManager stopUpdatingLocation];
         [self.locationManager stopMonitoringSignificantLocationChanges];
         [self.locationManager stopMonitoringVisits];
@@ -132,31 +140,12 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
     }
 }
 
-- (void)timeoutAllowedCheck {
-    if (!self.isUpdatingLocation) {
-        return;
-    }
-    
-    if (self.application.applicationState == UIApplicationStateActive ||
-        self.application.applicationState == UIApplicationStateInactive ) {
-        [self startBackgroundTimeoutTimer];
-        return;
-    }
-    
-    NSTimeInterval timeIntervalSinceTimeoutAllowed = [[NSDate date] timeIntervalSinceDate:self.backgroundLocationServiceTimeoutAllowedDate];
-    if (timeIntervalSinceTimeoutAllowed > 0) {
-        [self.locationManager stopUpdatingLocation];
-        self.backgroundLocationServiceTimeoutAllowedDate = nil;
-        if ([self.delegate respondsToSelector:@selector(locationManagerBackgroundLocationUpdatesDidTimeout:)]) {
-            [self.delegate locationManagerBackgroundLocationUpdatesDidTimeout:self];
-        }
-    }
+- (void)startBackgroundTimeoutTimer {
+    [self.backgroundLocationServiceTimeoutTimerWrapper startBackgroundTimeoutTimer];
 }
 
-- (void)startBackgroundTimeoutTimer {
-    [self.backgroundLocationServiceTimeoutTimer invalidate];
-    self.backgroundLocationServiceTimeoutAllowedDate = [[NSDate date] dateByAddingTimeInterval:MMELocationManagerHibernationTimeout];
-    self.backgroundLocationServiceTimeoutTimer = [NSTimer scheduledTimerWithTimeInterval:MMELocationManagerHibernationPollInterval target:self selector:@selector(timeoutAllowedCheck) userInfo:nil repeats:YES];
+- (void)stopBackgroundTimeoutTimer {
+    [self.backgroundLocationServiceTimeoutTimerWrapper stopBackgroundTimeoutTimer];
 }
 
 - (void)establishRegionMonitoringForLocation:(CLLocation *)location {
@@ -207,5 +196,18 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
     }
 }
 
-@end
+#pragma mark - MMEBackgroundLocationServiceTimeoutHandlerDelegate
 
+- (BOOL)timeoutHandlerShouldCheckForTimeout:(__unused MMEBackgroundLocationServiceTimeoutHandler *)handler {
+    return self.isUpdatingLocation && (self.application.applicationState == UIApplicationStateBackground);
+}
+
+- (void)timeoutHandlerDidTimeout:(__unused MMEBackgroundLocationServiceTimeoutHandler *)handler {
+    if ([self.delegate respondsToSelector:@selector(locationManagerBackgroundLocationUpdatesDidTimeout:)]) {
+        [self.delegate locationManagerBackgroundLocationUpdatesDidTimeout:self];
+    }
+
+    [self.locationManager stopUpdatingLocation];
+}
+
+@end

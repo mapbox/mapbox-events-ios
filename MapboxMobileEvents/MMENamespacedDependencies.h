@@ -14,6 +14,10 @@
 #define MMEAPIClient __NS_SYMBOL(MMEAPIClient)
 #endif
 
+#ifndef MMEBackgroundLocationServiceTimeoutHandler
+#define MMEBackgroundLocationServiceTimeoutHandler __NS_SYMBOL(MMEBackgroundLocationServiceTimeoutHandler)
+#endif
+
 #ifndef MMECategoryLoader
 #define MMECategoryLoader __NS_SYMBOL(MMECategoryLoader)
 #endif
