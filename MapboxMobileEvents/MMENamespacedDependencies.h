@@ -192,6 +192,10 @@
 #define MMEAPIClient __NS_SYMBOL(MMEAPIClient)
 #endif
 
+#ifndef MMEBackgroundLocationServiceTimeoutHandlerDelegate
+#define MMEBackgroundLocationServiceTimeoutHandlerDelegate __NS_SYMBOL(MMEBackgroundLocationServiceTimeoutHandlerDelegate)
+#endif
+
 #ifndef MMELocationManager
 #define MMELocationManager __NS_SYMBOL(MMELocationManager)
 #endif
@@ -588,16 +592,16 @@
 #define MMELoggerShareableHTML __NS_SYMBOL(MMELoggerShareableHTML)
 #endif
 
-#ifndef kMMEReachabilityChangedNotification
-#define kMMEReachabilityChangedNotification __NS_SYMBOL(kMMEReachabilityChangedNotification)
-#endif
-
 #ifndef MMELocationManagerDistanceFilter
 #define MMELocationManagerDistanceFilter __NS_SYMBOL(MMELocationManagerDistanceFilter)
 #endif
 
 #ifndef MMERadiusAccuracyMax
 #define MMERadiusAccuracyMax __NS_SYMBOL(MMERadiusAccuracyMax)
+#endif
+
+#ifndef kMMEReachabilityChangedNotification
+#define kMMEReachabilityChangedNotification __NS_SYMBOL(kMMEReachabilityChangedNotification)
 #endif
 
 #ifndef MMELocationManagerRegionIdentifier
