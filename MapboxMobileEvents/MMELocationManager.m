@@ -25,6 +25,7 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
 @implementation MMELocationManager
 
 - (void)dealloc {
+    _locationManager.delegate = nil;
     [self stopBackgroundTimeoutTimer];
 }
 
@@ -92,6 +93,15 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
 }
 
 #pragma mark - Utilities
+
+- (void)setLocationManager:(CLLocationManager *)locationManager {
+    if (locationManager == _locationManager) {
+        return;
+    }
+
+    _locationManager.delegate = nil;
+    _locationManager = locationManager;
+}
 
 - (void)configurePassiveLocationManager {
     self.locationManager.delegate = self;
