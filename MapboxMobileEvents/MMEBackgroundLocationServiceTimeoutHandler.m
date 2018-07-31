@@ -7,9 +7,9 @@ static const NSTimeInterval MMELocationManagerHibernationPollInterval = 5.0;
 @interface MMEBackgroundLocationServiceTimeoutHandler ()
 
 @property (nonatomic) id<MMEUIApplicationWrapper> application;
-@property (nonatomic) NSDate *backgroundLocationServiceTimeoutAllowedDate;
-@property (nonatomic) NSTimer *backgroundLocationServiceTimeoutTimer;
-@property (nonatomic) UIBackgroundTaskIdentifier backgroundLocationServiceTimeoutTaskId;
+@property (nonatomic) NSDate *expiration;
+@property (nonatomic, readwrite) NSTimer *timer;
+@property (nonatomic) UIBackgroundTaskIdentifier backgroundTaskId;
 
 @end
 
@@ -30,53 +30,56 @@ static const NSTimeInterval MMELocationManagerHibernationPollInterval = 5.0;
 
     if (!delegate) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self stopBackgroundTimeoutTimer];
+            [self stopTimer];
         });
         return;
     }
 
     if (![delegate timeoutHandlerShouldCheckForTimeout:self]) {
-        self.backgroundLocationServiceTimeoutAllowedDate = [[NSDate date] dateByAddingTimeInterval:MMELocationManagerHibernationTimeout];
+        self.expiration = [[NSDate date] dateByAddingTimeInterval:MMELocationManagerHibernationTimeout];
         return;
     }
 
-    if (!self.backgroundLocationServiceTimeoutAllowedDate) {
+    if (!self.expiration) {
         return;
     }
 
-    NSTimeInterval timeIntervalSinceTimeoutAllowed = [[NSDate date] timeIntervalSinceDate:self.backgroundLocationServiceTimeoutAllowedDate];
+    NSTimeInterval timeIntervalSinceTimeoutAllowed = [[NSDate date] timeIntervalSinceDate:self.expiration];
     if (timeIntervalSinceTimeoutAllowed > 0) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self stopBackgroundTimeoutTimer];
+            [self stopTimer];
             [delegate timeoutHandlerDidTimeout:self];
         });
     }
 }
 
-- (void)startBackgroundTimeoutTimer {
-    if (self.backgroundLocationServiceTimeoutTimer) {
+- (void)startTimer {
+    if (self.timer) {
         return;
     }
 
     __weak __typeof__(self) weakself = self;
-    NSAssert(self.backgroundLocationServiceTimeoutTaskId == UIBackgroundTaskInvalid, @"Background task Id should be invalid");
-    self.backgroundLocationServiceTimeoutTaskId = [self.application beginBackgroundTaskWithExpirationHandler:^{
-        [weakself stopBackgroundTimeoutTimer];
+    NSAssert(self.backgroundTaskId == UIBackgroundTaskInvalid, @"Background task Id should be invalid");
+    self.backgroundTaskId = [self.application beginBackgroundTaskWithExpirationHandler:^{
+        __typeof__(self) strongSelf = weakself;
+
+        [strongSelf stopTimer];
+        [strongSelf.delegate timeoutHandlerBackgroundTaskDidExpire:strongSelf];
     }];
 
-    self.backgroundLocationServiceTimeoutAllowedDate = [[NSDate date] dateByAddingTimeInterval:MMELocationManagerHibernationTimeout];
-    self.backgroundLocationServiceTimeoutTimer = [NSTimer scheduledTimerWithTimeInterval:MMELocationManagerHibernationPollInterval target:self selector:@selector(timeoutAllowedCheck:) userInfo:nil repeats:YES];
+    self.expiration = [[NSDate date] dateByAddingTimeInterval:MMELocationManagerHibernationTimeout];
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:MMELocationManagerHibernationPollInterval target:self selector:@selector(timeoutAllowedCheck:) userInfo:nil repeats:YES];
 }
 
-- (void)stopBackgroundTimeoutTimer {
-    if (UIBackgroundTaskInvalid != self.backgroundLocationServiceTimeoutTaskId) {
-        [self.application endBackgroundTask:self.backgroundLocationServiceTimeoutTaskId];
-        self.backgroundLocationServiceTimeoutTaskId = UIBackgroundTaskInvalid;
+- (void)stopTimer {
+    if (UIBackgroundTaskInvalid != self.backgroundTaskId) {
+        [self.application endBackgroundTask:self.backgroundTaskId];
+        self.backgroundTaskId = UIBackgroundTaskInvalid;
     }
 
-    [self.backgroundLocationServiceTimeoutTimer invalidate];
-    self.backgroundLocationServiceTimeoutTimer = nil;
-    self.backgroundLocationServiceTimeoutAllowedDate = nil;
+    [self.timer invalidate];
+    self.timer = nil;
+    self.expiration = nil;
 }
 
 @end

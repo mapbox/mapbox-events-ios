@@ -26,7 +26,7 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
 
 - (void)dealloc {
     _locationManager.delegate = nil;
-    [self stopBackgroundTimeoutTimer];
+    [_backgroundLocationServiceTimeoutTimerWrapper stopTimer];
 }
 
 - (instancetype)init {
@@ -151,11 +151,11 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
 }
 
 - (void)startBackgroundTimeoutTimer {
-    [self.backgroundLocationServiceTimeoutTimerWrapper startBackgroundTimeoutTimer];
+    [self.backgroundLocationServiceTimeoutTimerWrapper startTimer];
 }
 
 - (void)stopBackgroundTimeoutTimer {
-    [self.backgroundLocationServiceTimeoutTimerWrapper stopBackgroundTimeoutTimer];
+    [self.backgroundLocationServiceTimeoutTimerWrapper stopTimer];
 }
 
 - (void)establishRegionMonitoringForLocation:(CLLocation *)location {
@@ -201,6 +201,9 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
 }
 
 - (void)locationManagerDidPauseLocationUpdates:(CLLocationManager *)locationManager {
+    // TODO: Should we stop the background timer here for completeness?
+//  [self stopBackgroundTimeoutTimer];
+
     if ([self.delegate respondsToSelector:@selector(locationManagerBackgroundLocationUpdatesDidAutomaticallyPause:)]) {
         [self.delegate locationManagerBackgroundLocationUpdatesDidAutomaticallyPause:self];
     }
@@ -219,5 +222,12 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
 
     [self.locationManager stopUpdatingLocation];
 }
+
+- (void)timeoutHandlerBackgroundTaskDidExpire:(__unused MMEBackgroundLocationServiceTimeoutHandler *)handler {
+    // Do we need a delegate method here (i.e. do we need an event for background task expiry?)
+    NSAssert(!self.timer, @"Timer should be nil by this point");
+}
+
+
 
 @end
