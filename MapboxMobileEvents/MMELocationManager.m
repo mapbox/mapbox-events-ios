@@ -225,7 +225,7 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
 
 - (void)timeoutHandlerBackgroundTaskDidExpire:(__unused MMEBackgroundLocationServiceTimeoutHandler *)handler {
     // Do we need a delegate method here (i.e. do we need an event for background task expiry?)
-    NSAssert(!self.timer, @"Timer should be nil by this point");
+    NSAssert(!handler.timer, @"Timer should be nil by this point");
 }
 
 
