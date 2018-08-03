@@ -18,9 +18,14 @@
     if (self) {
         _session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:nil];
         _serialQueue = dispatch_queue_create([[NSString stringWithFormat:@"%@.events.serial", NSStringFromClass([self class])] UTF8String], DISPATCH_QUEUE_SERIAL);
-        _trustKit = [MMETrustKitProvider trustKitWithUpdatedConfiguration];
+        _trustKit = [MMETrustKitProvider trustKitWithUpdatedConfiguration:nil];
     }
     return self;
+}
+
+- (void)reconfigure:(MMEEventsConfiguration *)configuration {
+    self.trustKit = [MMETrustKitProvider trustKitWithUpdatedConfiguration:configuration];
+    //TODO: check for other configurations that should be done here
 }
 
 #pragma mark MMENSURLSessionWrapper

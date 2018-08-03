@@ -7,6 +7,7 @@
 #import "MMEAPIClient.h"
 #import "MMEEventLogger.h"
 #import "MMEEventsConfiguration.h"
+#import "MMEConfigurationUpdater.h"
 #import "MMETimerManager.h"
 #import "MMEDispatchManager.h"
 #import "MMEUIApplicationWrapper.h"
@@ -15,7 +16,7 @@
 #import "CLLocation+MMEMobileEvents.h"
 #import <CoreLocation/CoreLocation.h>
 
-@interface MMEEventsManager () <MMELocationManagerDelegate>
+@interface MMEEventsManager () <MMELocationManagerDelegate, MMEConfigurationUpdaterDelegate>
 
 @property (nonatomic) id<MMELocationManager> locationManager;
 @property (nonatomic) id<MMEAPIClient> apiClient;
@@ -24,6 +25,7 @@
 @property (nonatomic) MMECommonEventData *commonEventData;
 @property (nonatomic) NSDate *nextTurnstileSendDate;
 @property (nonatomic) MMEEventsConfiguration *configuration;
+@property (nonatomic) MMEConfigurationUpdater *configurationUpdater;
 @property (nonatomic) MMETimerManager *timerManager;
 @property (nonatomic) MMEDispatchManager *dispatchManager;
 @property (nonatomic, getter=isPaused) BOOL paused;
@@ -58,6 +60,7 @@
         _eventQueue = [NSMutableArray array];
         _commonEventData = [[MMECommonEventData alloc] init];
         _configuration = [MMEEventsConfiguration configuration];
+        _configurationUpdater = [[MMEConfigurationUpdater alloc] init];
         _uniqueIdentifer = [[MMEUniqueIdentifier alloc] initWithTimeInterval:_configuration.instanceIdentifierRotationTimeInterval];
         _application = [[MMEUIApplicationWrapper alloc] init];
         _dateWrapper = [[MMENSDateWrapper alloc] init];
@@ -72,8 +75,10 @@
 }
 
 - (void)initializeWithAccessToken:(NSString *)accessToken userAgentBase:(NSString *)userAgentBase hostSDKVersion:(NSString *)hostSDKVersion {
+    self.apiClient = [[MMEAPIClient alloc] initWithAccessToken:accessToken userAgentBase:userAgentBase hostSDKVersion:hostSDKVersion];
+    self.configurationUpdater.delegate = self;
+    
     void(^initialization)(void) = ^{
-        self.apiClient = [[MMEAPIClient alloc] initWithAccessToken:accessToken userAgentBase:userAgentBase hostSDKVersion:hostSDKVersion];
 
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pauseOrResumeMetricsCollectionIfRequired) name:UIApplicationDidEnterBackgroundNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pauseOrResumeMetricsCollectionIfRequired) name:UIApplicationDidBecomeActiveNotification object:nil];
@@ -265,6 +270,8 @@
                                          MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Sending turnstile event: %@", turnstileEvent]}];
     [MMEEventLogger.sharedLogger logEvent:turnstileEvent];
     
+    [self.configurationUpdater updateConfigurationFromAPIClient:self.apiClient];
+    
     __weak __typeof__(self) weakSelf = self;
     [self.apiClient postEvent:turnstileEvent completionHandler:^(NSError * _Nullable error) {
         __strong __typeof__(weakSelf) strongSelf = weakSelf;
@@ -425,6 +432,15 @@
 
 - (void)displayLogFileFromDate:(NSDate *)logDate {
     [MMEEventLogger.sharedLogger readAndDisplayLogFileFromDate:logDate];
+}
+
+#pragma mark - MMEConfigurationUpdaterDelegate
+
+- (void)configurationDidUpdate:(MMEEventsConfiguration *)configuration {
+    self.configuration = configuration;
+    [self.apiClient reconfigure:configuration];
+    [self.locationManager reconfigure:configuration];
+    //TODO: check for other configurations that should be done here
 }
 
 #pragma mark - MMELocationManagerDelegate
