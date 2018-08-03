@@ -10,6 +10,7 @@
 @property (nonatomic) NSTimeInterval initializationDelay;
 @property (nonatomic) NSTimeInterval instanceIdentifierRotationTimeInterval;
 @property (nonatomic) CLLocationDistance locationManagerHibernationRadius;
+@property (nonatomic) NSArray *blacklist;
 
 + (instancetype)configuration;
 
