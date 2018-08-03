@@ -26,7 +26,7 @@ static const NSTimeInterval MMELocationManagerHibernationPollInterval = 5.0;
 }
 
 - (void)timeoutAllowedCheck:(NSTimer *)timer {
-    id<MMEBackgroundLocationServiceTimeoutHandlerDelegate> delegate = self.delegate;
+    id<MMEBackgroundLocationServiceTimeoutDelegate> delegate = self.delegate;
 
     if (!delegate) {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -55,7 +55,9 @@ static const NSTimeInterval MMELocationManagerHibernationPollInterval = 5.0;
 
 - (void)startTimer {
     if (self.timer) {
-        return;
+        // Changed from return, to ensure we get a new background task. This matches
+        // the previous behaviour (prior to refactoring)
+        [self stopTimer];
     }
 
     __weak __typeof__(self) weakself = self;

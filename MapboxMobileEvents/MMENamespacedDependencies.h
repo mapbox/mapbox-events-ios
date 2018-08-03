@@ -192,8 +192,8 @@
 #define MMEAPIClient __NS_SYMBOL(MMEAPIClient)
 #endif
 
-#ifndef MMEBackgroundLocationServiceTimeoutHandlerDelegate
-#define MMEBackgroundLocationServiceTimeoutHandlerDelegate __NS_SYMBOL(MMEBackgroundLocationServiceTimeoutHandlerDelegate)
+#ifndef MMEBackgroundLocationServiceTimeoutDelegate
+#define MMEBackgroundLocationServiceTimeoutDelegate __NS_SYMBOL(MMEBackgroundLocationServiceTimeoutDelegate)
 #endif
 
 #ifndef MMELocationManager

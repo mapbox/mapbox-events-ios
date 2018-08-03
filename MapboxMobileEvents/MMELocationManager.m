@@ -11,7 +11,7 @@ const CLLocationDistance MMERadiusAccuracyMax = 300.0;
 
 NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegionIdentifier.fence.center";
 
-@interface MMELocationManager () <CLLocationManagerDelegate, MMEBackgroundLocationServiceTimeoutHandlerDelegate>
+@interface MMELocationManager () <CLLocationManagerDelegate, MMEBackgroundLocationServiceTimeoutDelegate>
 
 @property (nonatomic) id<MMEUIApplicationWrapper> application;
 @property (nonatomic) CLLocationManager *locationManager;
@@ -209,7 +209,7 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
     }
 }
 
-#pragma mark - MMEBackgroundLocationServiceTimeoutHandlerDelegate
+#pragma mark - MMEBackgroundLocationServiceTimeoutDelegate
 
 - (BOOL)timeoutHandlerShouldCheckForTimeout:(__unused MMEBackgroundLocationServiceTimeoutHandler *)handler {
     return self.isUpdatingLocation && (self.application.applicationState == UIApplicationStateBackground);
@@ -226,6 +226,8 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
 - (void)timeoutHandlerBackgroundTaskDidExpire:(__unused MMEBackgroundLocationServiceTimeoutHandler *)handler {
     // Do we need a delegate method here (i.e. do we need an event for background task expiry?)
     NSAssert(!handler.timer, @"Timer should be nil by this point");
+
+    [self.locationManager stopUpdatingLocation];
 }
 
 
