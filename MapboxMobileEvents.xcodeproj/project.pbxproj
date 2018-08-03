@@ -141,6 +141,8 @@
 		AC611F281FCDED2F00ABBF6D /* MMEEventLogReportViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AC611F261FCDED2F00ABBF6D /* MMEEventLogReportViewController.m */; };
 		ACB6F21E1F7BF71B0032A916 /* MMELocationManagerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = ACB6F21D1F7BF71B0032A916 /* MMELocationManagerTests.mm */; };
 		ACD86DA01F96A77700DD2A8D /* MMEAPIClientTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = ACD86D9F1F96A77700DD2A8D /* MMEAPIClientTests.mm */; };
+		ACDB23FD20F416D100D84DB1 /* MMEBackgroundLocationServiceTimeoutHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = ACDB23FB20F416D000D84DB1 /* MMEBackgroundLocationServiceTimeoutHandler.h */; };
+		ACDB23FE20F416D100D84DB1 /* MMEBackgroundLocationServiceTimeoutHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = ACDB23FC20F416D000D84DB1 /* MMEBackgroundLocationServiceTimeoutHandler.m */; };
 		ACE4F01A1FD6102100035880 /* MMEUINavigation.h in Headers */ = {isa = PBXBuildFile; fileRef = ACE4F0181FD6102100035880 /* MMEUINavigation.h */; };
 		ACE4F01B1FD6102100035880 /* MMEUINavigation.m in Sources */ = {isa = PBXBuildFile; fileRef = ACE4F0191FD6102100035880 /* MMEUINavigation.m */; };
 /* End PBXBuildFile section */
@@ -292,6 +294,8 @@
 		AC611F261FCDED2F00ABBF6D /* MMEEventLogReportViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEEventLogReportViewController.m; sourceTree = "<group>"; };
 		ACB6F21D1F7BF71B0032A916 /* MMELocationManagerTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MMELocationManagerTests.mm; sourceTree = "<group>"; };
 		ACD86D9F1F96A77700DD2A8D /* MMEAPIClientTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MMEAPIClientTests.mm; sourceTree = "<group>"; };
+		ACDB23FB20F416D000D84DB1 /* MMEBackgroundLocationServiceTimeoutHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEBackgroundLocationServiceTimeoutHandler.h; sourceTree = "<group>"; };
+		ACDB23FC20F416D000D84DB1 /* MMEBackgroundLocationServiceTimeoutHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEBackgroundLocationServiceTimeoutHandler.m; sourceTree = "<group>"; };
 		ACE4F0181FD6102100035880 /* MMEUINavigation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEUINavigation.h; sourceTree = "<group>"; };
 		ACE4F0191FD6102100035880 /* MMEUINavigation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEUINavigation.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -395,6 +399,8 @@
 				40FB43761EF9EA7800EC5BC0 /* MMEEventsConfiguration.m */,
 				40C9E2791EA542BC00744FE7 /* MMEEventsManager.h */,
 				40C9E27A1EA542BC00744FE7 /* MMEEventsManager.m */,
+				ACDB23FB20F416D000D84DB1 /* MMEBackgroundLocationServiceTimeoutHandler.h */,
+				ACDB23FC20F416D000D84DB1 /* MMEBackgroundLocationServiceTimeoutHandler.m */,
 				40C9E27D1EA5473F00744FE7 /* MMELocationManager.h */,
 				40C9E27E1EA5473F00744FE7 /* MMELocationManager.m */,
 				40FB437A1EFAFAE900EC5BC0 /* MMETimerManager.h */,
@@ -578,6 +584,7 @@
 				40F133541F20051E007B4096 /* NSData+MMEGZIP.h in Headers */,
 				40AE58431EA6C86C0046B437 /* MMEUIApplicationWrapper.h in Headers */,
 				40C611871F18319000E30A6C /* TSKPinningValidatorCallback.h in Headers */,
+				ACDB23FD20F416D100D84DB1 /* MMEBackgroundLocationServiceTimeoutHandler.h in Headers */,
 				40C611471F18319000E30A6C /* configuration_utils.h in Headers */,
 				40AE585A1EA9373F0046B437 /* MMEUniqueIdentifier.h in Headers */,
 				409115351F16BCD200F4250B /* MMECategoryLoader.h in Headers */,
@@ -797,6 +804,7 @@
 				40C611801F18319000E30A6C /* TrustKit.m in Sources */,
 				40C9E27C1EA542BC00744FE7 /* MMEEventsManager.m in Sources */,
 				40AE58571EA932DB0046B437 /* MMEConstants.m in Sources */,
+				ACDB23FE20F416D100D84DB1 /* MMEBackgroundLocationServiceTimeoutHandler.m in Sources */,
 				40AE586A1EA953970046B437 /* CLLocation+MMEMobileEvents.m in Sources */,
 				40AE58441EA6C86C0046B437 /* MMEUIApplicationWrapper.m in Sources */,
 				4036EFBF1ED37D56009C40BA /* MMEEventLogger.m in Sources */,
