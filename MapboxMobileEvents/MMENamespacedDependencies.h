@@ -548,6 +548,10 @@
 #define MMENavigationEventPrefix __NS_SYMBOL(MMENavigationEventPrefix)
 #endif
 
+#ifndef MMEVisionEventPrefix
+#define MMEVisionEventPrefix __NS_SYMBOL(MMEVisionEventPrefix)
+#endif
+
 #ifndef MMEEventTypeNavigationDepart
 #define MMEEventTypeNavigationDepart __NS_SYMBOL(MMEEventTypeNavigationDepart)
 #endif

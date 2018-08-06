@@ -14,6 +14,7 @@
 + (instancetype)mapTapEventWithDateString:(NSString *)dateString attributes:(NSDictionary *)attributes;
 + (instancetype)mapDragEndEventWithDateString:(NSString *)dateString attributes:(NSDictionary *)attributes;
 + (instancetype)navigationEventWithName:(NSString *)name attributes:(NSDictionary *)attributes;
++ (instancetype)visionEventWithName:(NSString *)name attributes:(NSDictionary *)attributes;
 + (instancetype)debugEventWithAttributes:(NSDictionary *)attributes;
 
 @end
