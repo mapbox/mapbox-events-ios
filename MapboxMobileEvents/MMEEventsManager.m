@@ -299,7 +299,11 @@
     if ([name hasPrefix:MMENavigationEventPrefix]) {
         event = [MMEEvent navigationEventWithName:name attributes:attributes];
     }
-    
+
+    if ([name hasPrefix:MMEVisionEventPrefix]) {
+        event = [MMEEvent visionEventWithName:name attributes:attributes];
+    }
+
     if (event) {
         [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypePush,
                                              MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Pushing event: %@", event]}];

@@ -67,6 +67,7 @@ NSString * const MMEEventKeyAltitude = @"altitude";
 NSString * const MMEEventSDKIdentifier = @"sdkIdentifier";
 NSString * const MMEEventSDKVersion = @"sdkVersion";
 NSString * const MMENavigationEventPrefix = @"navigation.";
+NSString * const MMEVisionEventPrefix = @"vision.";
 NSString * const MMEEventTypeNavigationDepart = @"navigation.depart";
 NSString * const MMEEventTypeNavigationArrive = @"navigation.arrive";
 NSString * const MMEEventTypeNavigationCancel = @"navigation.cancel";

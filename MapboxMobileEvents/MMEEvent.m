@@ -90,6 +90,13 @@
     return navigationEvent;
 }
 
++ (instancetype)visionEventWithName:(NSString *)name attributes:(NSDictionary *)attributes {
+    MMEEvent *visionEvent = [[MMEEvent alloc] init];
+    visionEvent.name = name;
+    visionEvent.attributes = attributes;
+    return visionEvent;
+}
+
 + (instancetype)debugEventWithAttributes:(NSDictionary *)attributes {
     MMEEvent *debugEvent = [[MMEEvent alloc] init];
     debugEvent.name = MMEEventTypeLocalDebug;
