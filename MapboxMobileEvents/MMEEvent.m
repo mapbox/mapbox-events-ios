@@ -93,7 +93,10 @@
 + (instancetype)visionEventWithName:(NSString *)name attributes:(NSDictionary *)attributes {
     MMEEvent *visionEvent = [[MMEEvent alloc] init];
     visionEvent.name = name;
-    visionEvent.attributes = attributes;
+    NSMutableDictionary *commonAttributes = [NSMutableDictionary dictionary];
+    commonAttributes[MMEEventKeyEvent] = visionEvent.name;
+    [commonAttributes addEntriesFromDictionary:attributes];
+    visionEvent.attributes = commonAttributes;
     return visionEvent;
 }
 
