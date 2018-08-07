@@ -748,7 +748,7 @@ describe(@"MMEEventsManager", ^{
                 });
                 
                 it(@"has the correct event", ^{
-                    MMEEvent *expectedEvent = [MMEEvent navigationEventWithName:visionEventName attributes:attributes];
+                    MMEEvent *expectedEvent = [MMEEvent visionEventWithName:visionEventName attributes:attributes];
                     MMEEvent *event = eventsManager.eventQueue.firstObject;
                     event should equal(expectedEvent);
                 });
