@@ -166,10 +166,10 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
 }
 
 - (void)startBackgroundTimeoutTimer {
-    NSTimer *temp = self.backgroundLocationServiceTimeoutTimer;
+    NSTimer *tempTimer = self.backgroundLocationServiceTimeoutTimer;
     self.backgroundLocationServiceTimeoutAllowedDate = [[NSDate date] dateByAddingTimeInterval:MMELocationManagerHibernationTimeout];
     self.backgroundLocationServiceTimeoutTimer = [NSTimer scheduledTimerWithTimeInterval:MMELocationManagerHibernationPollInterval target:self selector:@selector(timeoutAllowedCheck) userInfo:nil repeats:YES];
-    [temp invalidate];
+    [tempTimer invalidate];
 }
 
 - (void)establishRegionMonitoringForLocation:(CLLocation *)location {
