@@ -26,6 +26,10 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
 
 @implementation MMELocationManager
 
+- (void)dealloc {
+    _locationManager.delegate = nil;
+}
+
 - (instancetype)init {
     self = [super init];
     if (self) {
@@ -48,6 +52,7 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
     if ([self isUpdatingLocation]) {
         return;
     }
+
     self.locationManager = [[MMEDependencyManager sharedManager] locationManagerInstance];
     [self configurePassiveLocationManager];
     [self startLocationServices];
@@ -65,6 +70,13 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
         [self stopMonitoringRegions];
         self.locationManager = nil;
     }
+}
+
+- (void)setLocationManager:(CLLocationManager *)locationManager {
+    id<CLLocationManagerDelegate> delegate = _locationManager.delegate;
+    _locationManager.delegate = nil;
+    _locationManager = locationManager;
+    _locationManager.delegate = delegate;
 }
 
 - (void)stopMonitoringRegions {
@@ -157,9 +169,10 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
 }
 
 - (void)startBackgroundTimeoutTimer {
-    [self.backgroundLocationServiceTimeoutTimer invalidate];
+    NSTimer *tempTimer = self.backgroundLocationServiceTimeoutTimer;
     self.backgroundLocationServiceTimeoutAllowedDate = [[NSDate date] dateByAddingTimeInterval:MMELocationManagerHibernationTimeout];
     self.backgroundLocationServiceTimeoutTimer = [NSTimer scheduledTimerWithTimeInterval:MMELocationManagerHibernationPollInterval target:self selector:@selector(timeoutAllowedCheck) userInfo:nil repeats:YES];
+    [tempTimer invalidate];
 }
 
 - (void)establishRegionMonitoringForLocation:(CLLocation *)location {

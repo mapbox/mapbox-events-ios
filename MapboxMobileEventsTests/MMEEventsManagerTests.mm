@@ -788,6 +788,20 @@ describe(@"MMEEventsManager", ^{
                 });
             });
             
+            context(@"when a vision event is pushed", ^{
+                __block NSString * visionEventName = @"vision.*";
+                
+                beforeEach(^{
+                    [eventsManager enqueueEventWithName:visionEventName attributes:attributes];
+                });
+                
+                it(@"has the correct event", ^{
+                    MMEEvent *expectedEvent = [MMEEvent visionEventWithName:visionEventName attributes:attributes];
+                    MMEEvent *event = eventsManager.eventQueue.firstObject;
+                    event should equal(expectedEvent);
+                });
+            });
+            
             context(@"when an unknown event is pushed", ^{
                 beforeEach(^{
                     [eventsManager enqueueEventWithName:@"invalid" attributes:attributes];

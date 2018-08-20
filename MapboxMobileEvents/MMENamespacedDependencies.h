@@ -300,6 +300,14 @@
 #define MMEAPIClientBaseURL __NS_SYMBOL(MMEAPIClientBaseURL)
 #endif
 
+#ifndef MMEAPIClientBaseChinaEventsURL
+#define MMEAPIClientBaseChinaEventsURL __NS_SYMBOL(MMEAPIClientBaseChinaEventsURL)
+#endif
+
+#ifndef MMEAPIClientBaseChinaAPIURL
+#define MMEAPIClientBaseChinaAPIURL __NS_SYMBOL(MMEAPIClientBaseChinaAPIURL)
+#endif
+
 #ifndef MMEAPIClientEventsPath
 #define MMEAPIClientEventsPath __NS_SYMBOL(MMEAPIClientEventsPath)
 #endif
@@ -538,6 +546,10 @@
 
 #ifndef MMENavigationEventPrefix
 #define MMENavigationEventPrefix __NS_SYMBOL(MMENavigationEventPrefix)
+#endif
+
+#ifndef MMEVisionEventPrefix
+#define MMEVisionEventPrefix __NS_SYMBOL(MMEVisionEventPrefix)
 #endif
 
 #ifndef MMEEventTypeNavigationDepart
