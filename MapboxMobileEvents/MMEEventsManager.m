@@ -440,7 +440,12 @@
     self.configuration = configuration;
     [self.apiClient reconfigure:configuration];
     [self.locationManager reconfigure:configuration];
-    //TODO: check for other configurations that should be done here
+    self.configurationUpdater.timeInterval = configuration.configurationRotationTimeInterval;
+    self.uniqueIdentifer.timeInterval = configuration.instanceIdentifierRotationTimeInterval;
+    if (self.timerManager && configuration.eventFlushSecondsThreshold != self.timerManager.timeInterval) {
+        [self.timerManager cancel];
+        self.timerManager = [[MMETimerManager alloc] initWithTimeInterval:self.configuration.eventFlushSecondsThreshold target:self selector:@selector(flush)];
+    }
 }
 
 #pragma mark - MMELocationManagerDelegate

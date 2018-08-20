@@ -39,7 +39,6 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
 
 - (void)reconfigure:(MMEEventsConfiguration *)configuration {
     self.configuration = configuration;
-    //TODO: check for other configurations that should be done here
 }
 
 - (void)startUpdatingLocation {
@@ -168,12 +167,6 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
     region.notifyOnEntry = NO;
     region.notifyOnExit = YES;
     [self.locationManager startMonitoringForRegion:region];
-}
-
-#pragma mark - MMEConfigurationUpdaterDelegate
-
-- (void)configurationDidUpdate:(MMEEventsConfiguration *)configuration {
-    self.configuration = configuration;
 }
 
 #pragma mark - CLLocationManagerDelegate

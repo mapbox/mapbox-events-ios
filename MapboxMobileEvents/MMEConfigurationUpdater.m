@@ -5,7 +5,6 @@
 
 @property (nonatomic) NSDate *configurationRotationDate;
 @property (nonatomic) MMEEventsConfiguration *configuration;
-@property (nonatomic) NSTimeInterval timeInterval;
 
 @end
 
@@ -38,7 +37,6 @@
             }
         }];
     }
-    
 }
 
 #pragma mark - Utilities

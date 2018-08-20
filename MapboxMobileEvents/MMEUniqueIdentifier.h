@@ -4,6 +4,8 @@
 
 - (NSString *)rollingInstanceIdentifer;
 
+@property (nonatomic) NSTimeInterval timeInterval;
+
 @end
 
 @interface MMEUniqueIdentifier : NSObject <MMEUniqueIdentifer>
@@ -12,5 +14,7 @@
 - (instancetype)initWithTimeInterval:(NSTimeInterval)timeInterval;
 
 - (NSString *)rollingInstanceIdentifer;
+
+@property (nonatomic) NSTimeInterval timeInterval;
 
 @end

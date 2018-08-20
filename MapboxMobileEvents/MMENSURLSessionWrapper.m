@@ -25,7 +25,6 @@
 
 - (void)reconfigure:(MMEEventsConfiguration *)configuration {
     self.trustKit = [MMETrustKitProvider trustKitWithUpdatedConfiguration:configuration];
-    //TODO: check for other configurations that should be done here
 }
 
 #pragma mark MMENSURLSessionWrapper

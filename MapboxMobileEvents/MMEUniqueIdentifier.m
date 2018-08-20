@@ -4,7 +4,6 @@
 
 @property (nonatomic) NSDate *instanceIDRotationDate;
 @property (nonatomic) NSString *instanceID;
-@property (nonatomic) NSTimeInterval timeInterval;
 
 @end
 

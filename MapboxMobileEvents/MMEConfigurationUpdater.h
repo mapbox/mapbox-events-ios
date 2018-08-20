@@ -14,6 +14,7 @@
 - (instancetype)initWithTimeInterval:(NSTimeInterval)timeInterval;
 - (void)updateConfigurationFromAPIClient:(MMEAPIClient *)apiClient;
 
+@property (nonatomic) NSTimeInterval timeInterval;
 @property (nonatomic, weak) id <MMEConfigurationUpdaterDelegate> delegate;
 
 @end

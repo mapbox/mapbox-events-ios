@@ -31,7 +31,6 @@
 
 - (void)reconfigure:(MMEEventsConfiguration *)configuration {
     [self.sessionWrapper reconfigure:configuration];
-    //TODO: check for other configurations that should be done here
 }
 
 - (void)postEvents:(NSArray *)events completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
