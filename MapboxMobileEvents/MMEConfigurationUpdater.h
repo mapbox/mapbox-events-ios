@@ -10,7 +10,10 @@
 
 @interface MMEConfigurationUpdater : NSObject
 
-@property (nonatomic, weak) id <MMEConfigurationUpdaterDelegate> delegate;
+- (instancetype)init __attribute__((unavailable("This method is not available")));
+- (instancetype)initWithTimeInterval:(NSTimeInterval)timeInterval;
 - (void)updateConfigurationFromAPIClient:(MMEAPIClient *)apiClient;
+
+@property (nonatomic, weak) id <MMEConfigurationUpdaterDelegate> delegate;
 
 @end

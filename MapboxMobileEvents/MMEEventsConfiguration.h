@@ -9,6 +9,7 @@
 @property (nonatomic) NSUInteger eventFlushSecondsThreshold;
 @property (nonatomic) NSTimeInterval initializationDelay;
 @property (nonatomic) NSTimeInterval instanceIdentifierRotationTimeInterval;
+@property (nonatomic) NSTimeInterval configurationRotationTimeInterval;
 @property (nonatomic) CLLocationDistance locationManagerHibernationRadius;
 @property (nonatomic) NSArray *blacklist;
 

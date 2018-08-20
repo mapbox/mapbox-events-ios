@@ -60,7 +60,7 @@
         _eventQueue = [NSMutableArray array];
         _commonEventData = [[MMECommonEventData alloc] init];
         _configuration = [MMEEventsConfiguration configuration];
-        _configurationUpdater = [[MMEConfigurationUpdater alloc] init];
+        _configurationUpdater = [[MMEConfigurationUpdater alloc] initWithTimeInterval:_configuration.configurationRotationTimeInterval];
         _uniqueIdentifer = [[MMEUniqueIdentifier alloc] initWithTimeInterval:_configuration.instanceIdentifierRotationTimeInterval];
         _application = [[MMEUIApplicationWrapper alloc] init];
         _dateWrapper = [[MMENSDateWrapper alloc] init];
@@ -212,6 +212,8 @@
 }
 
 - (void)sendTurnstileEvent {
+    [self.configurationUpdater updateConfigurationFromAPIClient:self.apiClient];
+    
     if (self.nextTurnstileSendDate && [[self.dateWrapper date] timeIntervalSinceDate:self.nextTurnstileSendDate] < 0) {
         NSString *debugDescription = [NSString stringWithFormat:@"Turnstile event already sent; waiting until %@ to send another one", self.nextTurnstileSendDate];
         [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstile,
@@ -269,8 +271,6 @@
     [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstile,
                                          MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Sending turnstile event: %@", turnstileEvent]}];
     [MMEEventLogger.sharedLogger logEvent:turnstileEvent];
-    
-    [self.configurationUpdater updateConfigurationFromAPIClient:self.apiClient];
     
     __weak __typeof__(self) weakSelf = self;
     [self.apiClient postEvent:turnstileEvent completionHandler:^(NSError * _Nullable error) {

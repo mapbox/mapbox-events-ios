@@ -9,7 +9,8 @@ static const CLLocationDistance kHibernationRadiusDefault = 300.0;
 static const CLLocationDistance kHibernationRadiusWide = 1200.0;
 static const NSUInteger kEventFlushCountThresholdDefault = 180;
 static const NSUInteger kEventFlushSecondsThresholdDefault = 180;
-static const NSTimeInterval kInstanceIdentifierRotationTimeIntervalDefault = 24 * 3600; // 24 hours
+static const NSTimeInterval kInstanceIdentifierRotationTimeIntervalDefault = 24 * 3600;
+static const NSTimeInterval kConfigurationRotationTimeIntervalDefault = 24 * 3600; // 24 hours
 
 @implementation MMEEventsConfiguration
 
@@ -18,16 +19,15 @@ static const NSTimeInterval kInstanceIdentifierRotationTimeIntervalDefault = 24 
     configuration.eventFlushCountThreshold = kEventFlushCountThresholdDefault;
     configuration.eventFlushSecondsThreshold = kEventFlushSecondsThresholdDefault;
     configuration.instanceIdentifierRotationTimeInterval = kInstanceIdentifierRotationTimeIntervalDefault;
+    configuration.configurationRotationTimeInterval = kConfigurationRotationTimeIntervalDefault;
     configuration.locationManagerHibernationRadius = kHibernationRadiusDefault;
     return configuration;
 }
 
 + (instancetype)eventsConfigurationWithVariableRadius:(CLLocationDistance)radius delay:(NSTimeInterval)delay {
     MMEEventsConfiguration *configuration = [self defaultEventsConfiguration];
-    configuration.instanceIdentifierRotationTimeInterval = kInstanceIdentifierRotationTimeIntervalDefault;
 
-    if (radius == 0) radius = kHibernationRadiusWide / 2; //return a median radius if no variable radius is set
-    else if (radius < kHibernationRadiusDefault) radius = kHibernationRadiusDefault;
+    if (radius < kHibernationRadiusDefault) radius = kHibernationRadiusDefault;
     else if (radius > kHibernationRadiusWide) radius = kHibernationRadiusWide;
 
     configuration.locationManagerHibernationRadius = radius;
