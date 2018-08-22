@@ -754,6 +754,20 @@ describe(@"MMEEventsManager", ^{
                 });
             });
             
+            context(@"when a search event is pushed", ^{
+                __block NSString * searchEventName = @"search.*";
+                
+                beforeEach(^{
+                    [eventsManager enqueueEventWithName:searchEventName attributes:attributes];
+                });
+                
+                it(@"has the correct event", ^{
+                    MMEEvent *expectedEvent = [MMEEvent searchEventWithName:searchEventName attributes:attributes];
+                    MMEEvent *event = eventsManager.eventQueue.firstObject;
+                    event should equal(expectedEvent);
+                });
+            });
+            
             context(@"when an unknown event is pushed", ^{
                 beforeEach(^{
                     [eventsManager enqueueEventWithName:@"invalid" attributes:attributes];
