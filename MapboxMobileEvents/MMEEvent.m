@@ -107,6 +107,16 @@
     return debugEvent;
 }
 
++ (instancetype)searchEventWithName:(NSString *)name attributes:(NSDictionary *)attributes {
+    MMEEvent *searchEvent = [[MMEEvent alloc] init];
+    searchEvent.name = name;
+    NSMutableDictionary *commonAttributes = [NSMutableDictionary dictionary];
+    commonAttributes[MMEEventKeyEvent] = searchEvent.name;
+    [commonAttributes addEntriesFromDictionary:attributes];
+    searchEvent.attributes = commonAttributes;
+    return searchEvent;
+}
+
 + (NSInteger)contentSizeScale {
     NSInteger result = -9999;
     

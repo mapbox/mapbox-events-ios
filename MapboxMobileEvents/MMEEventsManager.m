@@ -303,6 +303,10 @@
     if ([name hasPrefix:MMEVisionEventPrefix]) {
         event = [MMEEvent visionEventWithName:name attributes:attributes];
     }
+    
+    if ([name hasPrefix:MMESearchEventPrefix]) {
+        event = [MMEEvent searchEventWithName:name attributes:attributes];
+    }
 
     if (event) {
         [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypePush,

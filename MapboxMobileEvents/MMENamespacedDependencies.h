@@ -552,6 +552,10 @@
 #define MMEVisionEventPrefix __NS_SYMBOL(MMEVisionEventPrefix)
 #endif
 
+#ifndef MMESearcEventPrefix
+#define MMESearcEventPrefix __NS_SYMBOL(MMESearcEventPrefix)
+#endif
+
 #ifndef MMEEventTypeNavigationDepart
 #define MMEEventTypeNavigationDepart __NS_SYMBOL(MMEEventTypeNavigationDepart)
 #endif

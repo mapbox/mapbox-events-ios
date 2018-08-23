@@ -16,5 +16,6 @@
 + (instancetype)navigationEventWithName:(NSString *)name attributes:(NSDictionary *)attributes;
 + (instancetype)visionEventWithName:(NSString *)name attributes:(NSDictionary *)attributes;
 + (instancetype)debugEventWithAttributes:(NSDictionary *)attributes;
++ (instancetype)searchEventWithName:(NSString *)name attributes:(NSDictionary *)attributes;
 
 @end
