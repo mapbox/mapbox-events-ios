@@ -1,5 +1,12 @@
 #import "MMEHashProvider.h"
 
+@interface MMEHashProvider()
+
+@property (nonatomic, readwrite) NSArray *cnHashes;
+@property (nonatomic, readwrite) NSArray *comHashes;
+
+@end
+
 @implementation MMEHashProvider
 
 - (instancetype)init {

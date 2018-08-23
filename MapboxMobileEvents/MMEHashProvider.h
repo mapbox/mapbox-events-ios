@@ -3,8 +3,8 @@
 
 @interface MMEHashProvider : NSObject
 
-@property (nonatomic) NSArray *cnHashes;
-@property (nonatomic) NSArray *comHashes;
+@property (nonatomic, readonly) NSArray *cnHashes;
+@property (nonatomic, readonly) NSArray *comHashes;
 
 - (void)updateHashesWithConfiguration:(MMEEventsConfiguration *)configuration;
 
