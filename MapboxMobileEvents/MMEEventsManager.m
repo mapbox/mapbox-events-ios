@@ -125,7 +125,7 @@
 }
 
 - (void)powerStateDidChange:(NSNotification *)notification {
-    // From https://github.com/mapbox/mobile-telemetry/issues/213 it looks like
+    // From https://github.com/mapbox/mapbox-events-ios/issues/44 it looks like
     // `NSProcessInfoPowerStateDidChangeNotification` can be sent from a thread other than the main
     // thread.
     
