@@ -75,7 +75,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pauseOrResumeMetricsCollectionIfRequired) name:UIApplicationDidBecomeActiveNotification object:nil];
     
     if (@available(iOS 9.0, *)) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pauseOrResumeMetricsCollectionIfRequired) name:NSProcessInfoPowerStateDidChangeNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(powerStateDidChange:) name:NSProcessInfoPowerStateDidChangeNotification object:nil];
     }
     
     self.paused = YES;
@@ -122,6 +122,17 @@
 - (void)disableLocationMetrics {
     self.locationMetricsEnabled = NO;
     [self.locationManager stopUpdatingLocation];
+}
+
+- (void)powerStateDidChange:(NSNotification *)notification {
+    // From https://github.com/mapbox/mapbox-events-ios/issues/44 it looks like
+    // `NSProcessInfoPowerStateDidChangeNotification` can be sent from a thread other than the main
+    // thread.
+    
+    __weak __typeof__(self) weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [weakSelf pauseOrResumeMetricsCollectionIfRequired];
+    });
 }
 
 - (void)pauseOrResumeMetricsCollectionIfRequired {
