@@ -99,7 +99,7 @@
     [request setValue:MMEAPIClientHeaderFieldContentTypeValue forHTTPHeaderField:MMEAPIClientHeaderFieldContentTypeKey];
     [request setHTTPMethod:MMEAPIClientHTTPMethodGet];
     
-    return [request copy];
+    return request;
 }
 
 - (NSURLRequest *)requestForEvents:(NSArray *)events {
