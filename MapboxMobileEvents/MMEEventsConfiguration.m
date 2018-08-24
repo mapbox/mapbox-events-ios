@@ -55,4 +55,26 @@ static const NSTimeInterval kConfigurationRotationTimeIntervalDefault = 24 * 360
     return [self configurationWithInfoDictionary:infoDictionary];
 }
 
++ (instancetype)configurationFromData:(NSData *)data {
+    MMEEventsConfiguration *configuration = [self configuration];
+    [self parseJSONFromData:data withConfiguration:configuration];
+    return configuration;
+}
+
+#pragma mark - Utilities
+
++ (void)parseJSONFromData:(NSData *)data withConfiguration:(MMEEventsConfiguration *)configuration {
+    if (!data) {
+        return;
+    }
+    
+    NSError *jsonError = nil;
+    NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&jsonError];
+    
+    if (!jsonError) {
+        NSArray *blacklist = [json objectForKey:@"RevokedCertKeys"];
+        configuration.blacklist = blacklist;
+    }
+}
+
 @end

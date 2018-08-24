@@ -14,5 +14,6 @@
 @property (nonatomic) NSArray *blacklist;
 
 + (instancetype)configuration;
++ (instancetype)configurationFromData:(NSData *)data;
 
 @end
