@@ -182,6 +182,7 @@
     }
     
     NSArray *events = [self.eventQueue copy];
+    NSUInteger eventsCount = events.count;
     __weak __typeof__(self) weakSelf = self;
     [self.apiClient postEvents:events completionHandler:^(NSError * _Nullable error) {
         __strong __typeof__(weakSelf) strongSelf = weakSelf;
@@ -192,7 +193,7 @@
         } else {
             [strongSelf pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypePost,
                                                        MMEEventKeyLocalDebugDescription: @"post",
-                                                       @"debug.eventsCount": @(events.count)}];
+                                                       @"debug.eventsCount": @(eventsCount)}];
         }
         
         
