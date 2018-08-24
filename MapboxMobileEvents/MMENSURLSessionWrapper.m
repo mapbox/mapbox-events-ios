@@ -1,5 +1,5 @@
 #import "MMENSURLSessionWrapper.h"
-#import "MMETrustKitWrapper.h"
+#import "MMETrustKitProvider.h"
 #import "TrustKit.h"
 
 
@@ -7,6 +7,7 @@
 
 @property (nonatomic) NSURLSession *session;
 @property (nonatomic) dispatch_queue_t serialQueue;
+@property (nonatomic) TrustKit *trustKit;
 
 @end
 
@@ -17,7 +18,7 @@
     if (self) {
         _session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:nil];
         _serialQueue = dispatch_queue_create([[NSString stringWithFormat:@"%@.events.serial", NSStringFromClass([self class])] UTF8String], DISPATCH_QUEUE_SERIAL);
-        [MMETrustKitWrapper configureCertificatePinningValidation];
+        _trustKit = [MMETrustKitProvider trustKitWithUpdatedConfiguration];
     }
     return self;
 }
@@ -42,7 +43,7 @@
 
 - (void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable))completionHandler {
     // Call into TrustKit here to do pinning validation
-    if (![[TrustKit sharedInstance].pinningValidator handleChallenge:challenge completionHandler:completionHandler]) {
+    if (![self.trustKit.pinningValidator handleChallenge:challenge completionHandler:completionHandler]) {
         // TrustKit did not handle this challenge: perhaps it was not for server trust
         // or the domain was not pinned. Fall back to the default behavior
         completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
