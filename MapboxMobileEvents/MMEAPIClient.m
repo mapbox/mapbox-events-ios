@@ -53,11 +53,13 @@
     NSURLRequest *request = [self requestForConfiguration];
     
     [self.sessionWrapper processRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-        NSError *statusError = [self statusErrorFromRequest:request andHTTPResponse:httpResponse];
-        if (completionHandler) {
-            error = error ?: statusError;
-            completionHandler(error, data);
+        if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
+            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+            NSError *statusError = [self statusErrorFromRequest:request andHTTPResponse:httpResponse];
+            if (completionHandler) {
+                error = error ?: statusError;
+                completionHandler(error, data);
+            }
         }
     }];
 }
