@@ -1,14 +1,14 @@
-#import "MMEConfigurationUpdater.h"
+#import "MMEConfigurator.h"
 #import "MMEAPIClient.h"
 
-@interface MMEConfigurationUpdater ()
+@interface MMEConfigurator ()
 
 @property (nonatomic) NSDate *configurationRotationDate;
 @property (nonatomic, copy) MMEEventsConfiguration *configuration;
 
 @end
 
-@implementation MMEConfigurationUpdater
+@implementation MMEConfigurator
 
 - (instancetype)init {
     NSAssert(false, @"Use `-[MMEConfigurationUpdater initWithTimeInterval:]` to create instances of this class.");
@@ -31,7 +31,7 @@
             if (!error) {
                 self.configuration = [MMEEventsConfiguration configurationFromData:data];
                 
-                [self.delegate configurationDidUpdate:self.configuration];
+                [self.delegate configurator:self didUpdate:self.configuration];
                 self.configurationRotationDate = [[NSDate date] dateByAddingTimeInterval:self.timeInterval];
             }
         }];

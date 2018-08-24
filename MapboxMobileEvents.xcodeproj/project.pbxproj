@@ -137,9 +137,8 @@
 		AC2C715E2112408A004179E0 /* MMEDispatchManager.h in Headers */ = {isa = PBXBuildFile; fileRef = AC2C715C21124089004179E0 /* MMEDispatchManager.h */; };
 		AC2C715F2112408A004179E0 /* MMEDispatchManager.m in Sources */ = {isa = PBXBuildFile; fileRef = AC2C715D2112408A004179E0 /* MMEDispatchManager.m */; };
 		AC2C716021124099004179E0 /* MMEDispatchManager.m in Sources */ = {isa = PBXBuildFile; fileRef = AC2C715D2112408A004179E0 /* MMEDispatchManager.m */; };
-		AC2C7163211241CC004179E0 /* MMEConfigurationUpdater.m in Sources */ = {isa = PBXBuildFile; fileRef = AC2C7161211241CB004179E0 /* MMEConfigurationUpdater.m */; };
-		AC2C7164211241CC004179E0 /* MMEConfigurationUpdater.h in Headers */ = {isa = PBXBuildFile; fileRef = AC2C7162211241CC004179E0 /* MMEConfigurationUpdater.h */; };
-		AC2C7165211241D0004179E0 /* MMEConfigurationUpdater.m in Sources */ = {isa = PBXBuildFile; fileRef = AC2C7161211241CB004179E0 /* MMEConfigurationUpdater.m */; };
+		AC2C7163211241CC004179E0 /* MMEConfigurator.m in Sources */ = {isa = PBXBuildFile; fileRef = AC2C7161211241CB004179E0 /* MMEConfigurator.m */; };
+		AC2C7165211241D0004179E0 /* MMEConfigurator.m in Sources */ = {isa = PBXBuildFile; fileRef = AC2C7161211241CB004179E0 /* MMEConfigurator.m */; };
 		AC2C7168211376DA004179E0 /* MMEHashProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = AC2C7166211376DA004179E0 /* MMEHashProvider.h */; };
 		AC2C7169211376DA004179E0 /* MMEHashProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = AC2C7167211376DA004179E0 /* MMEHashProvider.m */; };
 		AC611F271FCDED2F00ABBF6D /* MMEEventLogReportViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = AC611F251FCDED2F00ABBF6D /* MMEEventLogReportViewController.h */; };
@@ -295,8 +294,8 @@
 		40FB437F1EFAFDCF00EC5BC0 /* MMETimerManagerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMETimerManagerTests.m; sourceTree = "<group>"; };
 		AC2C715C21124089004179E0 /* MMEDispatchManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEDispatchManager.h; sourceTree = "<group>"; };
 		AC2C715D2112408A004179E0 /* MMEDispatchManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEDispatchManager.m; sourceTree = "<group>"; };
-		AC2C7161211241CB004179E0 /* MMEConfigurationUpdater.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEConfigurationUpdater.m; sourceTree = "<group>"; };
-		AC2C7162211241CC004179E0 /* MMEConfigurationUpdater.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEConfigurationUpdater.h; sourceTree = "<group>"; };
+		AC2C7161211241CB004179E0 /* MMEConfigurator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEConfigurator.m; sourceTree = "<group>"; };
+		AC2C7162211241CC004179E0 /* MMEConfigurator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEConfigurator.h; sourceTree = "<group>"; };
 		AC2C7166211376DA004179E0 /* MMEHashProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEHashProvider.h; sourceTree = "<group>"; };
 		AC2C7167211376DA004179E0 /* MMEHashProvider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEHashProvider.m; sourceTree = "<group>"; };
 		AC611F251FCDED2F00ABBF6D /* MMEEventLogReportViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEEventLogReportViewController.h; sourceTree = "<group>"; };
@@ -404,8 +403,8 @@
 				AC611F261FCDED2F00ABBF6D /* MMEEventLogReportViewController.m */,
 				40FB43751EF9EA7800EC5BC0 /* MMEEventsConfiguration.h */,
 				40FB43761EF9EA7800EC5BC0 /* MMEEventsConfiguration.m */,
-				AC2C7162211241CC004179E0 /* MMEConfigurationUpdater.h */,
-				AC2C7161211241CB004179E0 /* MMEConfigurationUpdater.m */,
+				AC2C7162211241CC004179E0 /* MMEConfigurator.h */,
+				AC2C7161211241CB004179E0 /* MMEConfigurator.m */,
 				ACC8C1CD210FB00500C5055C /* MMETrustKitProvider.h */,
 				ACC8C1CB210FAFF400C5055C /* MMETrustKitProvider.m */,
 				40C9E2791EA542BC00744FE7 /* MMEEventsManager.h */,
@@ -836,7 +835,7 @@
 				40C611681F18319000E30A6C /* TSKSPKIHashCache.m in Sources */,
 				40F16C971F04514100DF338D /* MMEReachability.m in Sources */,
 				40C9E2801EA5473F00744FE7 /* MMELocationManager.m in Sources */,
-				AC2C7163211241CC004179E0 /* MMEConfigurationUpdater.m in Sources */,
+				AC2C7163211241CC004179E0 /* MMEConfigurator.m in Sources */,
 				40C611841F18319000E30A6C /* TSKPinningValidator.m in Sources */,
 				AC611F281FCDED2F00ABBF6D /* MMEEventLogReportViewController.m in Sources */,
 				40C611641F18319000E30A6C /* ssl_pin_verifier.m in Sources */,
@@ -893,7 +892,7 @@
 				4085965E1ED086D9003BD29D /* MMEEvent.m in Sources */,
 				40C611621F18319000E30A6C /* parse_configuration.m in Sources */,
 				40C6118A1F18319000E30A6C /* TSKPinningValidatorResult.m in Sources */,
-				AC2C7165211241D0004179E0 /* MMEConfigurationUpdater.m in Sources */,
+				AC2C7165211241D0004179E0 /* MMEConfigurator.m in Sources */,
 				40F133551F200524007B4096 /* NSData+MMEGZIP.m in Sources */,
 				40FB437E1EFAFAE900EC5BC0 /* MMETimerManager.m in Sources */,
 				403835041F7AF150004205B9 /* MMEDependencyManager.m in Sources */,
