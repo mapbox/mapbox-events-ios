@@ -10,8 +10,7 @@
 
 @interface MMEConfigurationUpdater : NSObject
 
-- (instancetype)init __attribute__((unavailable("This method is not available")));
-- (instancetype)initWithTimeInterval:(NSTimeInterval)timeInterval;
+- (instancetype)initWithTimeInterval:(NSTimeInterval)timeInterval NS_DESIGNATED_INITIALIZER;
 - (void)updateConfigurationFromAPIClient:(MMEAPIClient *)apiClient;
 
 @property (nonatomic) NSTimeInterval timeInterval;
