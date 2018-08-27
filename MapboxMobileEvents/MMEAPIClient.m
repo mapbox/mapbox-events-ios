@@ -4,6 +4,10 @@
 #import "MMEEvent.h"
 #import "NSData+MMEGZIP.h"
 
+typedef NS_ENUM(NSInteger, MMEErrorCode) {
+    MMESessionFailedError
+};
+
 @interface MMEAPIClient ()
 
 @property (nonatomic) id<MMENSURLSessionWrapper> sessionWrapper;
@@ -82,8 +86,9 @@
         NSString *description = [NSString stringWithFormat:descriptionFormat, request];
         NSString *reason = [NSString stringWithFormat:reasonFormat, (long)httpResponse.statusCode];
         NSDictionary *userInfo = @{NSLocalizedDescriptionKey: description,
+                                   @"MMEResponseKey": httpResponse,
                                    NSLocalizedFailureReasonErrorKey: reason};
-        statusError = [NSError errorWithDomain:MMEErrorDomain code:1 userInfo:userInfo];
+        statusError = [NSError errorWithDomain:MMEErrorDomain code:MMESessionFailedError userInfo:userInfo];
     }
     return statusError;
 }
