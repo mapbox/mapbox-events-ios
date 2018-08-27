@@ -76,6 +76,9 @@ NSString * const MMEEventTypeNavigationReroute = @"navigation.reroute";
 NSString * const MMEDebugEventType = @"debug.type";
 NSString * const MMESearchEventPrefix = @"search.";
 NSString * const MMEEventTypeSearchSelected = @"search.selected";
+NSString * const MMEventTypeCarplayConnect = @"carplay.connect";
+NSString * const MMEventTypeCarplayDisconnect = @"carplay.disconnect";
+NSString * const MMEventCarplayPrefix = @"carplay.";
 
 NSString * const MMEEventSource = @"mapbox";
 
