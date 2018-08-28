@@ -4,7 +4,7 @@
 @interface MMEConfigurator ()
 
 @property (nonatomic) NSDate *configurationRotationDate;
-@property (nonatomic, copy) MMEEventsConfiguration *configuration;
+@property (nonatomic) MMEEventsConfiguration *configuration;
 
 @end
 

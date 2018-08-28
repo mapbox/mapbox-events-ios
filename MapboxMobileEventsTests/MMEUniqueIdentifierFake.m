@@ -6,4 +6,6 @@
     return @"unique-identifer";
 }
 
+@synthesize timeInterval;
+
 @end

@@ -13,6 +13,9 @@
 
 - (void)startUpdatingLocation;
 - (void)stopUpdatingLocation;
+
+@optional
+
 - (void)reconfigure:(MMEEventsConfiguration *)configuration;
 
 @end

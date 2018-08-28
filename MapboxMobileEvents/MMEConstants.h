@@ -2,6 +2,8 @@
 
 extern NSString * const MMEAPIClientBaseURL;
 extern NSString * const MMEAPIClientBaseAPIURL;
+extern NSString * const MMEAPIClientBaseChinaEventsURL;
+extern NSString * const MMEAPIClientBaseChinaAPIURL;
 extern NSString * const MMEAPIClientEventsPath;
 extern NSString * const MMEAPIClientEventsConfigPath;
 extern NSString * const MMEAPIClientHeaderFieldUserAgentKey;
