@@ -1,27 +1,20 @@
-#import "MMETrustKitWrapper.h"
+#import "MMETrustKitProvider.h"
+#import "MMEHashProvider.h"
 #import "MMEEventLogger.h"
 #import "TrustKit.h"
 
-@implementation MMETrustKitWrapper
+@implementation MMETrustKitProvider
 
-static BOOL _initialized;
-
-+ (BOOL)isInitialized {
-    return _initialized;
-}
-
-+ (void)setInitialized:(BOOL)initialized {
-    _initialized = initialized;
-}
-
-+ (void)configureCertificatePinningValidation {
-    if (_initialized) {
-        return;
-    }
++ (TrustKit *)trustKitWithUpdatedConfiguration:(MMEEventsConfiguration *)configuration {
 
     if (![MMEEventLogger.sharedLogger isEnabled]) {
         void (^loggerBlock)(NSString *) = ^void(NSString *message){};
         [TrustKit setLoggerBlock:loggerBlock];
+    }
+    
+    MMEHashProvider *hashProvider = [[MMEHashProvider alloc] init];
+    if (configuration) {
+        [hashProvider updateHashesWithConfiguration:configuration];
     }
     
     NSDictionary *trustKitConfig =
@@ -33,16 +26,15 @@ static BOOL _initialized;
                       kTSKEnforcePinning:@YES,
                       kTSKDisableDefaultReportUri:@YES,
                       kTSKPublicKeyAlgorithms : @[kTSKAlgorithmRsa2048],
-                      kTSKPublicKeyHashes : @[
-                              // Digicert, 2016, SHA1 Fingerprint=0A:80:27:6E:1C:A6:5D:ED:1D:C2:24:E7:7D:0C:A7:24:0B:51:C8:54
-                              @"Tb0uHZ/KQjWh8N9+CZFLc4zx36LONQ55l6laDi1qtT4=",
-                              // Digicert, 2017, SHA1 Fingerprint=E2:8E:94:45:E0:B7:2F:28:62:D3:82:70:1F:C9:62:17:F2:9D:78:68
-                              @"yGp2XoimPmIK24X3bNV1IaK+HqvbGEgqar5nauDdC5E=",
-                              // Geotrust, 2016, SHA1 Fingerprint=1A:62:1C:B8:1F:05:DD:02:A9:24:77:94:6C:B4:1B:53:BF:1D:73:6C
-                              @"BhynraKizavqoC5U26qgYuxLZst6pCu9J5stfL6RSYY=",
-                              // Geotrust, 2017, SHA1 Fingerprint=20:CE:AB:72:3C:51:08:B2:8A:AA:AB:B9:EE:9A:9B:E8:FD:C5:7C:F6
-                              @"yJLOJQLNTPNSOh3Btyg9UA1icIoZZssWzG0UmVEJFfA=",
-                              ]
+                      kTSKPublicKeyHashes :
+                          hashProvider.comHashes
+                      },
+              @"events.mapbox.cn" : @{
+                      kTSKEnforcePinning:@YES,
+                      kTSKDisableDefaultReportUri:@YES,
+                      kTSKPublicKeyAlgorithms : @[kTSKAlgorithmRsa2048],
+                      kTSKPublicKeyHashes :
+                          hashProvider.cnHashes
                       },
               /* Staging */
               @"api-events-staging.tilestream.net" : @{
@@ -56,12 +48,11 @@ static BOOL _initialized;
                               ]
                       },
               @"api.mapbox.com" : @{
-                      kTSKExcludeSubdomainFromParentPolicy: @YES,
+                      kTSKExcludeSubdomainFromParentPolicy: @YES
                       },
               }
       };
-    [TrustKit initSharedInstanceWithConfiguration:trustKitConfig];
-    _initialized = YES;
+    return [[TrustKit alloc] initWithConfiguration:trustKitConfig];
 }
 
 @end
