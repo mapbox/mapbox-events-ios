@@ -321,7 +321,11 @@
     }
     
     if ([name hasPrefix:MMEventCarplayPrefix]) {
-        event =  [MMEEvent carplayEventWithName:name attributes:attributes];
+        NSString *timestamp = [self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]];
+        NSMutableDictionary *attributesWithTimestamp = [@{MMEEventKeyCreated: timestamp} mutableCopy];
+        [attributesWithTimestamp addEntriesFromDictionary:attributes];
+        
+        event =  [MMEEvent carplayEventWithName:name attributes:attributesWithTimestamp];
     }
 
     if (event) {
