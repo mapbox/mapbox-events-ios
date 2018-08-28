@@ -1,6 +1,7 @@
 #import "MMEConstants.h"
 
 NSString * const MMEAPIClientBaseURL = @"https://events.mapbox.com";
+NSString * const MMEAPIClientBaseAPIURL = @"https://api.mapbox.com";
 NSString * const MMEAPIClientEventsPath = @"events/v2";
 NSString * const MMEAPIClientEventsConfigPath = @"events-config";
 NSString * const MMEAPIClientHeaderFieldUserAgentKey = @"User-Agent";

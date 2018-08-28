@@ -10,11 +10,6 @@
 
 @implementation MMEConfigurator
 
-- (instancetype)init {
-    NSAssert(false, @"Use `-[MMEConfigurationUpdater initWithTimeInterval:]` to create instances of this class.");
-    return nil;
-}
-
 - (instancetype)initWithTimeInterval:(NSTimeInterval)timeInterval {
     if (self = [super init]) {
         _timeInterval = timeInterval;

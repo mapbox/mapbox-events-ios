@@ -7,7 +7,7 @@
 #import "MMEAPIClient.h"
 #import "MMEEventLogger.h"
 #import "MMEEventsConfiguration.h"
-#import "MMEConfigurationUpdater.h"
+#import "MMEConfigurator.h"
 #import "MMETimerManager.h"
 #import "MMEDispatchManager.h"
 #import "MMEUIApplicationWrapper.h"
@@ -16,7 +16,7 @@
 #import "CLLocation+MMEMobileEvents.h"
 #import <CoreLocation/CoreLocation.h>
 
-@interface MMEEventsManager () <MMELocationManagerDelegate, MMEConfigurationUpdaterDelegate>
+@interface MMEEventsManager () <MMELocationManagerDelegate, MMEConfiguratorDelegate>
 
 @property (nonatomic) id<MMELocationManager> locationManager;
 @property (nonatomic) id<MMEAPIClient> apiClient;
@@ -25,7 +25,7 @@
 @property (nonatomic) MMECommonEventData *commonEventData;
 @property (nonatomic) NSDate *nextTurnstileSendDate;
 @property (nonatomic) MMEEventsConfiguration *configuration;
-@property (nonatomic) MMEConfigurationUpdater *configurationUpdater;
+@property (nonatomic) MMEConfigurator *configurationUpdater;
 @property (nonatomic) MMETimerManager *timerManager;
 @property (nonatomic) MMEDispatchManager *dispatchManager;
 @property (nonatomic, getter=isPaused) BOOL paused;
@@ -60,7 +60,7 @@
         _eventQueue = [NSMutableArray array];
         _commonEventData = [[MMECommonEventData alloc] init];
         _configuration = [MMEEventsConfiguration configuration];
-        _configurationUpdater = [[MMEConfigurationUpdater alloc] initWithTimeInterval:_configuration.configurationRotationTimeInterval];
+        _configurationUpdater = [[MMEConfigurator alloc] initWithTimeInterval:_configuration.configurationRotationTimeInterval];
         _uniqueIdentifer = [[MMEUniqueIdentifier alloc] initWithTimeInterval:_configuration.instanceIdentifierRotationTimeInterval];
         _application = [[MMEUIApplicationWrapper alloc] init];
         _dateWrapper = [[MMENSDateWrapper alloc] init];
@@ -438,9 +438,9 @@
     [MMEEventLogger.sharedLogger readAndDisplayLogFileFromDate:logDate];
 }
 
-#pragma mark - MMEConfigurationUpdaterDelegate
+#pragma mark - MMEConfiguratorDelegate
 
-- (void)configurationDidUpdate:(MMEEventsConfiguration *)configuration {
+- (void)configurator:(id)updater didUpdate:(MMEEventsConfiguration *)configuration {
     self.configuration = configuration;
     [self.apiClient reconfigure:configuration];
     [self.locationManager reconfigure:configuration];

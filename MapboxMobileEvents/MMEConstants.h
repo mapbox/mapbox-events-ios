@@ -1,6 +1,7 @@
 #import <Foundation/Foundation.h>
 
 extern NSString * const MMEAPIClientBaseURL;
+extern NSString * const MMEAPIClientBaseAPIURL;
 extern NSString * const MMEAPIClientEventsPath;
 extern NSString * const MMEAPIClientEventsConfigPath;
 extern NSString * const MMEAPIClientHeaderFieldUserAgentKey;
