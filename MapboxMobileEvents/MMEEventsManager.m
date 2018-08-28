@@ -82,19 +82,21 @@
 
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pauseOrResumeMetricsCollectionIfRequired) name:UIApplicationDidEnterBackgroundNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pauseOrResumeMetricsCollectionIfRequired) name:UIApplicationDidBecomeActiveNotification object:nil];
-
+    
         if (@available(iOS 9.0, *)) {
-            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pauseOrResumeMetricsCollectionIfRequired) name:NSProcessInfoPowerStateDidChangeNotification object:nil];
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(powerStateDidChange:) name:NSProcessInfoPowerStateDidChangeNotification object:nil];
         }
-
+    
+        self.paused = YES;
+    
         self.locationManager = [[MMELocationManager alloc] init];
         self.locationManager.delegate = self;
         self.locationManager.metricsEnabledForInUsePermissions = self.metricsEnabledForInUsePermissions;
         [self resumeMetricsCollection];
-
+    
         self.timerManager = [[MMETimerManager alloc] initWithTimeInterval:self.configuration.eventFlushSecondsThreshold target:self selector:@selector(flush)];
     };
-
+    
     [self.dispatchManager scheduleBlock:initialization afterDelay:self.configuration.initializationDelay];
 }
 
@@ -132,6 +134,17 @@
 - (void)disableLocationMetrics {
     self.locationMetricsEnabled = NO;
     [self.locationManager stopUpdatingLocation];
+}
+
+- (void)powerStateDidChange:(NSNotification *)notification {
+    // From https://github.com/mapbox/mapbox-events-ios/issues/44 it looks like
+    // `NSProcessInfoPowerStateDidChangeNotification` can be sent from a thread other than the main
+    // thread.
+    
+    __weak __typeof__(self) weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [weakSelf pauseOrResumeMetricsCollectionIfRequired];
+    });
 }
 
 - (void)pauseOrResumeMetricsCollectionIfRequired {
@@ -181,6 +194,7 @@
     }
     
     NSArray *events = [self.eventQueue copy];
+    NSUInteger eventsCount = events.count;
     __weak __typeof__(self) weakSelf = self;
     [self.apiClient postEvents:events completionHandler:^(NSError * _Nullable error) {
         __strong __typeof__(weakSelf) strongSelf = weakSelf;
@@ -191,7 +205,7 @@
         } else {
             [strongSelf pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypePost,
                                                        MMEEventKeyLocalDebugDescription: @"post",
-                                                       @"debug.eventsCount": @(events.count)}];
+                                                       @"debug.eventsCount": @(eventsCount)}];
         }
         
         
@@ -314,6 +328,10 @@
 
     if ([name hasPrefix:MMEVisionEventPrefix]) {
         event = [MMEEvent visionEventWithName:name attributes:attributes];
+    }
+    
+    if ([name hasPrefix:MMESearchEventPrefix]) {
+        event = [MMEEvent searchEventWithName:name attributes:attributes];
     }
 
     if (event) {

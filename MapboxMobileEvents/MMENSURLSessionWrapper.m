@@ -33,7 +33,9 @@
     dispatch_async(self.serialQueue, ^{
         __block NSURLSessionDataTask *dataTask = [self.session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
             if (completionHandler) {
-                completionHandler(data, response, error);
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completionHandler(data, response, error);
+                });
             }
             dataTask = nil;
         }];

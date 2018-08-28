@@ -79,6 +79,8 @@ extern NSString * const MMEEventTypeNavigationCancel;
 extern NSString * const MMEEventTypeNavigationFeedback;
 extern NSString * const MMEEventTypeNavigationReroute;
 extern NSString * const MMEDebugEventType;
+extern NSString * const MMEEventTypeSearchSelected;
+extern NSString * const MMESearchEventPrefix;
 
 // SDK event source
 extern NSString * const MMEEventSource;
