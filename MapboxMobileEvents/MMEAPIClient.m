@@ -5,7 +5,8 @@
 #import "NSData+MMEGZIP.h"
 
 typedef NS_ENUM(NSInteger, MMEErrorCode) {
-    MMESessionFailedError
+    MMESessionFailedError,
+    MMEUnexpectedResponseError
 };
 
 @interface MMEAPIClient ()
@@ -40,11 +41,19 @@ typedef NS_ENUM(NSInteger, MMEErrorCode) {
 - (void)postEvents:(NSArray *)events completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
     NSURLRequest *request = [self requestForEvents:events];
     [self.sessionWrapper processRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-        NSError *statusError = [self statusErrorFromRequest:request andHTTPResponse:httpResponse];
-        if (completionHandler) {
-            error = error ?: statusError;
-            completionHandler(error);
+        if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
+            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+            NSError *statusError = [self statusErrorFromRequest:request andHTTPResponse:httpResponse];
+            if (completionHandler) {
+                error = error ?: statusError;
+                completionHandler(error);
+            }
+        } else {
+            NSError *unexpectedError = [self unexpectedResponseErrorfromRequest:request andResponse:response];
+            if (completionHandler) {
+                error = error ?: unexpectedError;
+                completionHandler(error);
+            }
         }
     }];
 }
@@ -62,6 +71,12 @@ typedef NS_ENUM(NSInteger, MMEErrorCode) {
             NSError *statusError = [self statusErrorFromRequest:request andHTTPResponse:httpResponse];
             if (completionHandler) {
                 error = error ?: statusError;
+                completionHandler(error, data);
+            }
+        } else {
+            NSError *unexpectedError = [self unexpectedResponseErrorfromRequest:request andResponse:response];
+            if (completionHandler) {
+                error = error ?: unexpectedError;
                 completionHandler(error, data);
             }
         }
@@ -86,10 +101,21 @@ typedef NS_ENUM(NSInteger, MMEErrorCode) {
         NSString *description = [NSString stringWithFormat:descriptionFormat, request];
         NSString *reason = [NSString stringWithFormat:reasonFormat, (long)httpResponse.statusCode];
         NSDictionary *userInfo = @{NSLocalizedDescriptionKey: description,
-                                   @"MMEResponseKey": httpResponse,
+                                   @"MMEHTTPResponseKey": httpResponse,
                                    NSLocalizedFailureReasonErrorKey: reason};
         statusError = [NSError errorWithDomain:MMEErrorDomain code:MMESessionFailedError userInfo:userInfo];
     }
+    return statusError;
+}
+
+- (NSError *)unexpectedResponseErrorfromRequest:(NSURLRequest *)request andResponse:(NSURLResponse *)response {
+    NSString *descriptionFormat = @"The session data task failed. Original request was: %@";
+    NSString *description = [NSString stringWithFormat:descriptionFormat, request];
+    NSString *reason = @"Unexpected response";
+    NSDictionary *userInfo = @{NSLocalizedDescriptionKey: description,
+                               @"MMEResponseKey": response,
+                               NSLocalizedFailureReasonErrorKey: reason};
+    NSError *statusError = [NSError errorWithDomain:MMEErrorDomain code:MMEUnexpectedResponseError userInfo:userInfo];
     return statusError;
 }
 
