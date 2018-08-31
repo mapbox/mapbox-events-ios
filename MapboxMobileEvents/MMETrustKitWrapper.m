@@ -69,7 +69,10 @@ static BOOL _initialized;
                               // Stub: TrustKit requires 2 hashes for every endpoint
                               @"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
                               ]
-                      }
+                      },
+              @"api.mapbox.com" : @{
+                      kTSKExcludeSubdomainFromParentPolicy: @YES
+                      },
               }
       };
     [TrustKit initSharedInstanceWithConfiguration:trustKitConfig];

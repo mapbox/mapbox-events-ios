@@ -17,6 +17,11 @@
     self.callingCompletionHandler = completionHandler;
 }
 
+- (void)postBinaries:(NSArray *)binaries completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
+    [self store:_cmd args:@[binaries, completionHandler]];
+    self.callingCompletionHandler = completionHandler;
+}
+
 - (void)completePostingEventsWithError:(NSError * _Nullable)error {
     if (self.callingCompletionHandler) {
         self.callingCompletionHandler(error);
