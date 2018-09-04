@@ -184,12 +184,12 @@
 #define MMENSURLSessionWrapper __NS_SYMBOL(MMENSURLSessionWrapper)
 #endif
 
-#ifndef MMEAPIClient
-#define MMEAPIClient __NS_SYMBOL(MMEAPIClient)
-#endif
-
 #ifndef MMELocationManager
 #define MMELocationManager __NS_SYMBOL(MMELocationManager)
+#endif
+
+#ifndef MMEAPIClient
+#define MMEAPIClient __NS_SYMBOL(MMEAPIClient)
 #endif
 
 #ifndef MMELocationManagerDelegate
@@ -300,6 +300,10 @@
 #define MMEAPIClientBaseURL __NS_SYMBOL(MMEAPIClientBaseURL)
 #endif
 
+#ifndef MMEAPIClientBaseAPIURL
+#define MMEAPIClientBaseAPIURL __NS_SYMBOL(MMEAPIClientBaseAPIURL)
+#endif
+
 #ifndef MMEAPIClientBaseChinaEventsURL
 #define MMEAPIClientBaseChinaEventsURL __NS_SYMBOL(MMEAPIClientBaseChinaEventsURL)
 #endif
@@ -312,6 +316,10 @@
 #define MMEAPIClientEventsPath __NS_SYMBOL(MMEAPIClientEventsPath)
 #endif
 
+#ifndef MMEAPIClientAttachmentsPath
+#define MMEAPIClientAttachmentsPath __NS_SYMBOL(MMEAPIClientAttachmentsPath)
+#endif
+
 #ifndef MMEAPIClientHeaderFieldUserAgentKey
 #define MMEAPIClientHeaderFieldUserAgentKey __NS_SYMBOL(MMEAPIClientHeaderFieldUserAgentKey)
 #endif
@@ -322,6 +330,10 @@
 
 #ifndef MMEAPIClientHeaderFieldContentTypeValue
 #define MMEAPIClientHeaderFieldContentTypeValue __NS_SYMBOL(MMEAPIClientHeaderFieldContentTypeValue)
+#endif
+
+#ifndef MMEAPIClientAttachmentsHeaderFieldContentTypeValue
+#define MMEAPIClientAttachmentsHeaderFieldContentTypeValue __NS_SYMBOL(MMEAPIClientAttachmentsHeaderFieldContentTypeValue)
 #endif
 
 #ifndef MMEAPIClientHeaderFieldContentEncodingKey
@@ -552,10 +564,6 @@
 #define MMEVisionEventPrefix __NS_SYMBOL(MMEVisionEventPrefix)
 #endif
 
-#ifndef MMESearcEventPrefix
-#define MMESearcEventPrefix __NS_SYMBOL(MMESearcEventPrefix)
-#endif
-
 #ifndef MMEEventTypeNavigationDepart
 #define MMEEventTypeNavigationDepart __NS_SYMBOL(MMEEventTypeNavigationDepart)
 #endif
@@ -578,6 +586,26 @@
 
 #ifndef MMEDebugEventType
 #define MMEDebugEventType __NS_SYMBOL(MMEDebugEventType)
+#endif
+
+#ifndef MMESearchEventPrefix
+#define MMESearchEventPrefix __NS_SYMBOL(MMESearchEventPrefix)
+#endif
+
+#ifndef MMEEventTypeSearchSelected
+#define MMEEventTypeSearchSelected __NS_SYMBOL(MMEEventTypeSearchSelected)
+#endif
+
+#ifndef MMEventTypeCarplayConnect
+#define MMEventTypeCarplayConnect __NS_SYMBOL(MMEventTypeCarplayConnect)
+#endif
+
+#ifndef MMEventTypeCarplayDisconnect
+#define MMEventTypeCarplayDisconnect __NS_SYMBOL(MMEventTypeCarplayDisconnect)
+#endif
+
+#ifndef MMEventCarplayPrefix
+#define MMEventCarplayPrefix __NS_SYMBOL(MMEventCarplayPrefix)
 #endif
 
 #ifndef MMEEventSource
