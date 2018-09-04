@@ -154,7 +154,8 @@ describe(@"MMEAPIClient", ^{
                 
                 beforeEach(^{
                     error = [NSError errorWithDomain:@"test" code:42 userInfo:nil];
-                    [sessionWrapperFake completeProcessingWithData:nil response:nil error:error];
+                    NSHTTPURLResponse *responseFake = [[NSHTTPURLResponse alloc] initWithURL:apiClient.baseURL statusCode:400 HTTPVersion:nil headerFields:nil];
+                    [sessionWrapperFake completeProcessingWithData:nil response:responseFake error:error];
                 });
                 
                 it(@"should equal completed process error", ^{
