@@ -6,9 +6,11 @@ NSString * const MMEAPIClientBaseChinaEventsURL = @"https://events.mapbox.cn";
 NSString * const MMEAPIClientBaseChinaAPIURL = @"https://api.mapbox.cn"; 
 NSString * const MMEAPIClientEventsPath = @"events/v2";
 NSString * const MMEAPIClientEventsConfigPath = @"events-config";
+NSString * const MMEAPIClientAttachmentsPath = @"attachments/v1";
 NSString * const MMEAPIClientHeaderFieldUserAgentKey = @"User-Agent";
 NSString * const MMEAPIClientHeaderFieldContentTypeKey = @"Content-Type";
 NSString * const MMEAPIClientHeaderFieldContentTypeValue = @"application/json";
+NSString * const MMEAPIClientAttachmentsHeaderFieldContentTypeValue = @"multipart/form-data";
 NSString * const MMEAPIClientHeaderFieldContentEncodingKey = @"Content-Encoding";
 NSString * const MMEAPIClientHTTPMethodPost = @"POST";
 NSString * const MMEAPIClientHTTPMethodGet = @"GET";
@@ -79,6 +81,9 @@ NSString * const MMEEventTypeNavigationReroute = @"navigation.reroute";
 NSString * const MMEDebugEventType = @"debug.type";
 NSString * const MMESearchEventPrefix = @"search.";
 NSString * const MMEEventTypeSearchSelected = @"search.selected";
+NSString * const MMEventTypeCarplayConnect = @"carplay.connect";
+NSString * const MMEventTypeCarplayDisconnect = @"carplay.disconnect";
+NSString * const MMEventCarplayPrefix = @"carplay.";
 
 NSString * const MMEEventSource = @"mapbox";
 

@@ -333,6 +333,10 @@
     if ([name hasPrefix:MMESearchEventPrefix]) {
         event = [MMEEvent searchEventWithName:name attributes:attributes];
     }
+    
+    if ([name hasPrefix:MMEventCarplayPrefix]) {
+        event = [MMEEvent carplayEventWithName:name attributes:attributes];
+    }
 
     if (event) {
         [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypePush,
@@ -342,6 +346,14 @@
         [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypePush,
                                              MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Unknown event: %@", event]}];
     }
+}
+
+- (void)postMetadata:(NSArray *)metadata filepaths:(NSArray *)filepaths completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
+    [self.apiClient postMetadata:metadata filepaths:filepaths completionHandler:^(NSError * _Nullable error) {
+        if (completionHandler) {
+            completionHandler(error);
+        }
+    }];
 }
 
 - (void)setDebugLoggingEnabled:(BOOL)debugLoggingEnabled {

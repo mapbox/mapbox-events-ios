@@ -816,6 +816,20 @@ describe(@"MMEEventsManager", ^{
                 });
             });
             
+            context(@"when a carplay event is pushed", ^{
+                __block NSString * carplayEventName = @"carplay.*";
+                
+                beforeEach(^{
+                    [eventsManager enqueueEventWithName:carplayEventName attributes:attributes];
+                });
+                
+                it(@"has the correct event", ^{
+                    MMEEvent *expectedEvent = [MMEEvent carplayEventWithName:carplayEventName attributes:attributes];
+                    MMEEvent *event = eventsManager.eventQueue.firstObject;
+                    event should equal(expectedEvent);
+                });
+            });
+            
             context(@"when an unknown event is pushed", ^{
                 beforeEach(^{
                     [eventsManager enqueueEventWithName:@"invalid" attributes:attributes];
