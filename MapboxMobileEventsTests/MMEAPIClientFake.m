@@ -17,6 +17,11 @@
     self.callingCompletionHandler = completionHandler;
 }
 
+- (void)postMetadata:(NSArray *)metadata filepaths:(NSArray *)filepaths completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
+    [self store:_cmd args:@[metadata, filepaths, completionHandler]];
+    self.callingCompletionHandler = completionHandler;
+}
+
 - (void)completePostingEventsWithError:(NSError * _Nullable)error {
     if (self.callingCompletionHandler) {
         self.callingCompletionHandler(error);

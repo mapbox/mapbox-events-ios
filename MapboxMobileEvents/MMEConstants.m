@@ -1,12 +1,15 @@
 #import "MMEConstants.h"
 
 NSString * const MMEAPIClientBaseURL = @"https://events.mapbox.com";
+NSString * const MMEAPIClientBaseAPIURL = @"https://api.mapbox.com";
 NSString * const MMEAPIClientBaseChinaEventsURL = @"https://events.mapbox.cn";
 NSString * const MMEAPIClientBaseChinaAPIURL = @"https://api.mapbox.cn"; 
 NSString * const MMEAPIClientEventsPath = @"events/v2";
+NSString * const MMEAPIClientAttachmentsPath = @"attachments/v1";
 NSString * const MMEAPIClientHeaderFieldUserAgentKey = @"User-Agent";
 NSString * const MMEAPIClientHeaderFieldContentTypeKey = @"Content-Type";
 NSString * const MMEAPIClientHeaderFieldContentTypeValue = @"application/json";
+NSString * const MMEAPIClientAttachmentsHeaderFieldContentTypeValue = @"multipart/form-data";
 NSString * const MMEAPIClientHeaderFieldContentEncodingKey = @"Content-Encoding";
 NSString * const MMEAPIClientHTTPMethodPost = @"POST";
 NSString * const MMEErrorDomain = @"MMEErrorDomain";
