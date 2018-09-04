@@ -17,5 +17,6 @@
 + (instancetype)visionEventWithName:(NSString *)name attributes:(NSDictionary *)attributes;
 + (instancetype)debugEventWithAttributes:(NSDictionary *)attributes;
 + (instancetype)searchEventWithName:(NSString *)name attributes:(NSDictionary *)attributes;
++ (instancetype)carplayEventWithName:(NSString *)name attributes:(NSDictionary *)attributes;
 
 @end

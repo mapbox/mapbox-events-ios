@@ -117,6 +117,16 @@
     return searchEvent;
 }
 
++ (instancetype)carplayEventWithName:(NSString *)name attributes:(NSDictionary *)attributes {
+    MMEEvent *carplayEvent = [[MMEEvent alloc] init];
+    carplayEvent.name = name;
+    NSMutableDictionary *commonAttributes = [NSMutableDictionary dictionary];
+    commonAttributes[MMEEventKeyEvent] = carplayEvent.name;
+    [commonAttributes addEntriesFromDictionary:attributes];
+    carplayEvent.attributes = commonAttributes;
+    return carplayEvent;
+}
+
 + (NSInteger)contentSizeScale {
     NSInteger result = -9999;
     
