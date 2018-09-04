@@ -330,6 +330,14 @@
     }
 }
 
+- (void)postMetadata:(NSArray *)metadata filepaths:(NSArray *)filepaths completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
+    [self.apiClient postMetadata:metadata filepaths:filepaths completionHandler:^(NSError * _Nullable error) {
+        if (completionHandler) {
+            completionHandler(error);
+        }
+    }];
+}
+
 - (void)setDebugLoggingEnabled:(BOOL)debugLoggingEnabled {
     MMEEventLogger.sharedLogger.enabled = debugLoggingEnabled;
 }

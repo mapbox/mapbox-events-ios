@@ -25,7 +25,7 @@
         _sessionWrapper = [[MMENSURLSessionWrapper alloc] init];
         _applicationBundle = [NSBundle mainBundle];
         
-        [self setBaseURL:[NSURL URLWithString:@"https://api-events-staging.tilestream.net"]];
+        [self setBaseURL:nil];
         [self setupUserAgent];
     }
     return self;
@@ -52,8 +52,10 @@
     }];
 }
 
-- (void)postBinaries:(NSArray *)binaries completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
-    NSURLRequest *request = [self requestForBinaries:binaries];
+- (void)postMetadata:(NSArray *)metadata filepaths:(NSArray *)filepaths completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
+    NSString *boundary = [[NSUUID UUID] UUIDString];
+    NSData *binaryData = [self createBodyWithBoundary:boundary metadata:metadata filePaths:filepaths];
+    NSURLRequest *request = [self requestForBinary:binaryData boundary:boundary];
     [self.sessionWrapper processRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         NSError *statusError = nil;
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
@@ -102,57 +104,14 @@
     return mimetype;
 }
 
-- (NSURLRequest *)requestForBinaries:(NSArray *)binaries {
-
-    //TESTING
-    //Object
-    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"143.13-144.13" ofType:@"mp4"];
-//    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"Cat" ofType:@"jpg"];
-//    NSDictionary *nameDic = @{@"name": @"143.13-144.13.mp4"};
-//    NSDictionary *metadata = @{@"format":@"jpg",@"eventId":@"123",@"created":@"2018-08-28T16:36:39+00:00",@"type":@"image",@"name":@"Cat.jpg"};
-    NSDictionary *thingDict = @{@"name":@"143.13-144.13.mp4",
-                                @"format":@"mp4",
-                                @"eventId":@"123",
-                                @"created":@"2018-08-28T16:36:39+00:00",
-                                @"size":@"68772",
-                                @"type":@"video",
-                                @"startTime":@"2018-08-28T16:36:39+00:00",
-                                @"endTime":@"2018-08-28T16:36:40+00:00"
-                                };
-//    NSString *metaString = [NSString stringWithFormat:@"{\"name\":\"143.13-144.13.mp4\",\"format\":\"mp4\",\"eventId\":\"123\",\"created\":\"2018-08-28T16:36:39+00:00\",\"size\":68772,\"type\":\"video\",\"startTime\":\"2018-08-28T16:36:39+00:00\",\"endTime\":\"2018-08-28T16:36:40+00:00\"}"];
-    NSArray *metaArray = @[thingDict];
-    NSDictionary *attachment = @{@"attachments":metaArray};
-    //Object
-//    NSMutableData *testData = [NSMutableData dataWithContentsOfFile:filePath];
-    //TESTING
-    
-    NSString *path = [NSString stringWithFormat:@"%@?access_token=%@", MMEAPIClientAttachmentsPath, [self accessToken]];
-    
-//    NSURL *url = [NSURL URLWithString:path relativeToURL:[NSURL URLWithString:MMEAPIClientBaseURL]];
-    NSURL *url = [NSURL URLWithString:path relativeToURL:[NSURL URLWithString:@"https://api-events-staging.tilestream.net"]];
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
-    
-    NSString *boundary = [[NSUUID UUID] UUIDString];
-    NSString *contentType = [NSString stringWithFormat:@"%@; boundary=\"%@\"",MMEAPIClientAttachmentsHeaderFieldContentTypeValue,boundary];
-    
-    [request setValue:self.userAgent forHTTPHeaderField:MMEAPIClientHeaderFieldUserAgentKey];
-    [request setValue:contentType forHTTPHeaderField:MMEAPIClientHeaderFieldContentTypeKey];
-    [request setHTTPMethod:MMEAPIClientHTTPMethodPost];
-    
-    NSData *httpBody = [self createBodyWithBoundary:boundary parameters:attachment filePaths:@[filePath]];
-    
-    [request setValue:nil forHTTPHeaderField:MMEAPIClientHeaderFieldContentEncodingKey];
-    [request setHTTPBody:httpBody];
-    
-    return request;
-}
-
-//- (NSData *)dataFromBinaries:(NSArray *)binaries {
-//    //TODO: parse binaries or accept binaries from Vision as an array of filepaths and array of metadata
-//}
-
-- (NSData *)createBodyWithBoundary:(NSString *)boundary parameters:(NSDictionary *)parameters filePaths:(NSArray *)filePaths {
+- (NSData *)createBodyWithBoundary:(NSString *)boundary metadata:(NSArray *)metadata filePaths:(NSArray *)filePaths {
     NSMutableData *httpBody = [NSMutableData data];
+    
+    [httpBody appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [httpBody appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"attachments\"\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
+    [httpBody appendData:[[NSString stringWithFormat:@"Content-Type: application/json\r\n\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
+    [httpBody appendData:[NSJSONSerialization dataWithJSONObject:metadata options:0 error:nil]];
+    [httpBody appendData:[[NSString stringWithFormat:@"\r\n\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
     
     for (NSString *path in filePaths) {
         NSString *filename  = [path lastPathComponent];
@@ -163,29 +122,34 @@
         [httpBody appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"file\"; filename=\"%@\"\r\n", filename] dataUsingEncoding:NSUTF8StringEncoding]];
         [httpBody appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\n\r\n", mimetype] dataUsingEncoding:NSUTF8StringEncoding]];
         [httpBody appendData:data];
-//                [httpBody appendData:[[NSString stringWithFormat:@"...some nice image content..."] dataUsingEncoding:NSUTF8StringEncoding]];
         [httpBody appendData:[@"\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
     }
     
-    [parameters enumerateKeysAndObjectsUsingBlock:^(NSString *parameterKey, NSString *parameterValue, BOOL *stop) {
-        [httpBody appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-        [httpBody appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n", parameterKey] dataUsingEncoding:NSUTF8StringEncoding]];
-        [httpBody appendData:[[NSString stringWithFormat:@"Content-Type: application/json\r\n\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
-//        NSError *jsonError = nil;
-//        [httpBody appendData:[[NSString stringWithFormat:@"[{\"name\":\"143.13-144.13.mp4\"}]"] dataUsingEncoding:NSUTF8StringEncoding]];
-                [httpBody appendData:[NSJSONSerialization dataWithJSONObject:parameterValue options:0 error:nil]];
-        
-//        [httpBody appendData:[[NSString stringWithFormat:@"%@\r\n", parameterValue] dataUsingEncoding:NSUTF8StringEncoding]];
-        [httpBody appendData:[[NSString stringWithFormat:@"\r\n\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
-    }];
-    
     [httpBody appendData:[[NSString stringWithFormat:@"--%@--\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
     
+    NSLog(@"httpBody: %@",[[NSString alloc] initWithData:httpBody encoding:NSUTF8StringEncoding]);
     return httpBody;
 }
 
-- (NSURLRequest *)requestForEvents:(NSArray *)events {
+- (NSURLRequest *)requestForBinary:(NSData *)binaryData boundary:(NSString *)boundary {
+    NSString *path = [NSString stringWithFormat:@"%@?access_token=%@", MMEAPIClientAttachmentsPath, [self accessToken]];
+    
+    NSURL *url = [NSURL URLWithString:path relativeToURL:self.baseURL];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+    
+    NSString *contentType = [NSString stringWithFormat:@"%@; boundary=\"%@\"",MMEAPIClientAttachmentsHeaderFieldContentTypeValue,boundary];
+    
+    [request setValue:self.userAgent forHTTPHeaderField:MMEAPIClientHeaderFieldUserAgentKey];
+    [request setValue:contentType forHTTPHeaderField:MMEAPIClientHeaderFieldContentTypeKey];
+    [request setHTTPMethod:MMEAPIClientHTTPMethodPost];
+    
+    [request setValue:nil forHTTPHeaderField:MMEAPIClientHeaderFieldContentEncodingKey];
+    [request setHTTPBody:binaryData];
+    
+    return request;
+}
 
+- (NSURLRequest *)requestForEvents:(NSArray *)events {
     NSString *path = [NSString stringWithFormat:@"%@?access_token=%@", MMEAPIClientEventsPath, [self accessToken]];
 
     NSURL *url = [NSURL URLWithString:path relativeToURL:self.baseURL];
