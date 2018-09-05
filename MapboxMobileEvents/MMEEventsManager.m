@@ -78,23 +78,28 @@
     self.apiClient = [[MMEAPIClient alloc] initWithAccessToken:accessToken userAgentBase:userAgentBase hostSDKVersion:hostSDKVersion];
     self.configurationUpdater.delegate = self;
     
+    __weak __typeof__(self) weakSelf = self;
     void(^initialization)(void) = ^{
+        __strong __typeof__(weakSelf) strongSelf = weakSelf;
+        if (strongSelf == nil) {
+            return;
+        }
 
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pauseOrResumeMetricsCollectionIfRequired) name:UIApplicationDidEnterBackgroundNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pauseOrResumeMetricsCollectionIfRequired) name:UIApplicationDidBecomeActiveNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:strongSelf selector:@selector(pauseOrResumeMetricsCollectionIfRequired) name:UIApplicationDidEnterBackgroundNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:strongSelf selector:@selector(pauseOrResumeMetricsCollectionIfRequired) name:UIApplicationDidBecomeActiveNotification object:nil];
     
         if (@available(iOS 9.0, *)) {
-            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(powerStateDidChange:) name:NSProcessInfoPowerStateDidChangeNotification object:nil];
+            [[NSNotificationCenter defaultCenter] addObserver:strongSelf selector:@selector(powerStateDidChange:) name:NSProcessInfoPowerStateDidChangeNotification object:nil];
         }
     
-        self.paused = YES;
+        strongSelf.paused = YES;
     
-        self.locationManager = [[MMELocationManager alloc] init];
-        self.locationManager.delegate = self;
-        self.locationManager.metricsEnabledForInUsePermissions = self.metricsEnabledForInUsePermissions;
-        [self resumeMetricsCollection];
+        strongSelf.locationManager = [[MMELocationManager alloc] init];
+        strongSelf.locationManager.delegate = strongSelf;
+        strongSelf.locationManager.metricsEnabledForInUsePermissions = strongSelf.metricsEnabledForInUsePermissions;
+        [strongSelf resumeMetricsCollection];
     
-        self.timerManager = [[MMETimerManager alloc] initWithTimeInterval:self.configuration.eventFlushSecondsThreshold target:self selector:@selector(flush)];
+        strongSelf.timerManager = [[MMETimerManager alloc] initWithTimeInterval:strongSelf.configuration.eventFlushSecondsThreshold target:strongSelf selector:@selector(flush)];
     };
     
     [self.dispatchManager scheduleBlock:initialization afterDelay:self.configuration.initializationDelay];
@@ -348,8 +353,8 @@
     }
 }
 
-- (void)postMetadata:(NSArray *)metadata filepaths:(NSArray *)filepaths completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
-    [self.apiClient postMetadata:metadata filepaths:filepaths completionHandler:^(NSError * _Nullable error) {
+- (void)postMetadata:(NSArray *)metadata filePaths:(NSArray *)filePaths completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
+    [self.apiClient postMetadata:metadata filePaths:filePaths completionHandler:^(NSError * _Nullable error) {
         if (completionHandler) {
             completionHandler(error);
         }
@@ -472,8 +477,13 @@
 
 - (void)configurator:(id)updater didUpdate:(MMEEventsConfiguration *)configuration {
     self.configuration = configuration;
-    [self.apiClient reconfigure:configuration];
-    [self.locationManager reconfigure:configuration];
+    if ([self.apiClient respondsToSelector:@selector(reconfigure:)]) {
+        [self.apiClient reconfigure:configuration];
+    }
+    if ([self.locationManager respondsToSelector:@selector(reconfigure:)]) {
+        [self.locationManager reconfigure:configuration];
+    }
+    
     self.configurationUpdater.timeInterval = configuration.configurationRotationTimeInterval;
     self.uniqueIdentifer.timeInterval = configuration.instanceIdentifierRotationTimeInterval;
     if (self.timerManager && configuration.eventFlushSecondsThreshold != self.timerManager.timeInterval) {

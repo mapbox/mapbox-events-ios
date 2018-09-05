@@ -43,17 +43,18 @@ typedef NS_ENUM(NSInteger, MMEErrorCode) {
 - (void)postEvents:(NSArray *)events completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
     NSURLRequest *request = [self requestForEvents:events];
     [self.sessionWrapper processRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        NSError *statusError = nil;
         if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
             NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-            NSError *statusError = [self statusErrorFromRequest:request andHTTPResponse:httpResponse];
+            statusError = [self statusErrorFromRequest:request andHTTPResponse:httpResponse];
             if (completionHandler) {
                 error = error ?: statusError;
                 completionHandler(error);
             }
         } else {
-            NSError *unexpectedError = [self unexpectedResponseErrorfromRequest:request andResponse:response];
+            statusError = [self unexpectedResponseErrorfromRequest:request andResponse:response];
             if (completionHandler) {
-                error = error ?: unexpectedError;
+                error = error ?: statusError;
                 completionHandler(error);
             }
         }
@@ -64,9 +65,10 @@ typedef NS_ENUM(NSInteger, MMEErrorCode) {
     [self postEvents:@[event] completionHandler:completionHandler];
 }
 
-- (void)postMetadata:(NSArray *)metadata filepaths:(NSArray *)filepaths completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
+- (void)postMetadata:(NSArray *)metadata filePaths:(NSArray *)filePaths completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
+    
     NSString *boundary = [[NSUUID UUID] UUIDString];
-    NSData *binaryData = [self createBodyWithBoundary:boundary metadata:metadata filePaths:filepaths];
+    NSData *binaryData = [self createBodyWithBoundary:boundary metadata:metadata filePaths:filePaths];
     NSURLRequest *request = [self requestForBinary:binaryData boundary:boundary];
     [self.sessionWrapper processRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         NSError *statusError = nil;
@@ -91,17 +93,18 @@ typedef NS_ENUM(NSInteger, MMEErrorCode) {
     NSURLRequest *request = [self requestForConfiguration];
     
     [self.sessionWrapper processRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        NSError *statusError = nil;
         if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
             NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-            NSError *statusError = [self statusErrorFromRequest:request andHTTPResponse:httpResponse];
+            statusError = [self statusErrorFromRequest:request andHTTPResponse:httpResponse];
             if (completionHandler) {
                 error = error ?: statusError;
                 completionHandler(error, data);
             }
         } else {
-            NSError *unexpectedError = [self unexpectedResponseErrorfromRequest:request andResponse:response];
+            statusError = [self unexpectedResponseErrorfromRequest:request andResponse:response];
             if (completionHandler) {
-                error = error ?: unexpectedError;
+                error = error ?: statusError;
                 completionHandler(error, data);
             }
         }
@@ -213,10 +216,14 @@ typedef NS_ENUM(NSInteger, MMEErrorCode) {
 - (NSString *)mimeTypeForPath:(NSString *)path {
     CFStringRef extension = (__bridge CFStringRef)[path pathExtension];
     CFStringRef UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, extension, NULL);
-    assert(UTI != NULL);
+    if (UTI == NULL) {
+        return nil;
+    }
     
     NSString *mimetype = CFBridgingRelease(UTTypeCopyPreferredTagWithClass(UTI, kUTTagClassMIMEType));
-    assert(mimetype != NULL);
+    if (mimetype == NULL) {
+        return nil;
+    }
     
     CFRelease(UTI);
     
@@ -246,7 +253,6 @@ typedef NS_ENUM(NSInteger, MMEErrorCode) {
     
     [httpBody appendData:[[NSString stringWithFormat:@"--%@--\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
     
-    NSLog(@"httpBody: %@",[[NSString alloc] initWithData:httpBody encoding:NSUTF8StringEncoding]);
     return httpBody;
 }
 
