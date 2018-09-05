@@ -47,16 +47,12 @@ typedef NS_ENUM(NSInteger, MMEErrorCode) {
         if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
             NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
             statusError = [self statusErrorFromRequest:request andHTTPResponse:httpResponse];
-            if (completionHandler) {
-                error = error ?: statusError;
-                completionHandler(error);
-            }
         } else {
             statusError = [self unexpectedResponseErrorfromRequest:request andResponse:response];
-            if (completionHandler) {
-                error = error ?: statusError;
-                completionHandler(error);
-            }
+        }
+        if (completionHandler) {
+            error = error ?: statusError;
+            completionHandler(error);
         }
     }];
 }
@@ -97,16 +93,12 @@ typedef NS_ENUM(NSInteger, MMEErrorCode) {
         if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
             NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
             statusError = [self statusErrorFromRequest:request andHTTPResponse:httpResponse];
-            if (completionHandler) {
-                error = error ?: statusError;
-                completionHandler(error, data);
-            }
         } else {
             statusError = [self unexpectedResponseErrorfromRequest:request andResponse:response];
-            if (completionHandler) {
-                error = error ?: statusError;
-                completionHandler(error, data);
-            }
+        }
+        if (completionHandler) {
+            error = error ?: statusError;
+            completionHandler(error, data);
         }
     }];
 }

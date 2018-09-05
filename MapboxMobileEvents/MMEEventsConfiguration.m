@@ -9,6 +9,7 @@ static const CLLocationDistance kHibernationRadiusDefault = 300.0;
 static const CLLocationDistance kHibernationRadiusWide = 1200.0;
 static const NSUInteger kEventFlushCountThresholdDefault = 180;
 static const NSUInteger kEventFlushSecondsThresholdDefault = 180;
+static const NSTimeInterval kInitDelayTimeInterval = 10;
 static const NSTimeInterval kInstanceIdentifierRotationTimeIntervalDefault = 24 * 3600;
 static const NSTimeInterval kConfigurationRotationTimeIntervalDefault = 24 * 3600; // 24 hours
 
@@ -39,10 +40,10 @@ static const NSTimeInterval kConfigurationRotationTimeIntervalDefault = 24 * 360
     NSString *profileName = infoDictionary[kMMEEventsProfile];
     if ([profileName isEqualToString:kMMECustomProfile]) {
         id customRadiusNumber = infoDictionary[kMMERadiusSize];
-        CLLocationDistance customRadius = [customRadiusNumber isKindOfClass:[NSNumber class]] ? [customRadiusNumber doubleValue] : 1200.0;
+        CLLocationDistance customRadius = [customRadiusNumber isKindOfClass:[NSNumber class]] ? [customRadiusNumber doubleValue] : kHibernationRadiusWide;
 
         id initializationDelayNumber = infoDictionary[kMMEStartupDelay];
-        NSTimeInterval initializationDelay = [initializationDelayNumber isKindOfClass:[NSNumber class]] ? [initializationDelayNumber doubleValue] : 10;
+        NSTimeInterval initializationDelay = [initializationDelayNumber isKindOfClass:[NSNumber class]] ? [initializationDelayNumber doubleValue] : kInitDelayTimeInterval;
 
         return [MMEEventsConfiguration eventsConfigurationWithVariableRadius:customRadius delay:initializationDelay];
     } else {
