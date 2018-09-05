@@ -7,16 +7,17 @@
 #import "MMELocationManager.h"
 #import "MMEAPIClient.h"
 #import "MMETimerManager.h"
+#import "MMEDispatchManagerFake.h"
 #import "MMETimerManagerFake.h"
 #import "MMEAPIClientFake.h"
 #import "MMECommonEventData.h"
 #import "MMEUIApplicationWrapperFake.h"
 #import "CLLocation+MMEMobileEvents.h"
 #import "MMEUIApplicationWrapper.h"
-#import "MMEEventsService.h"
 
 using namespace Cedar::Matchers;
 using namespace Cedar::Doubles;
+using namespace Cedar::Doubles::Arguments;
 
 @interface MMEEventsManager (Tests) <MMELocationManagerDelegate>
 
@@ -28,6 +29,7 @@ using namespace Cedar::Doubles;
 @property (nonatomic) id<MMEAPIClient> apiClient;
 @property (nonatomic) id<MMEUniqueIdentifer> uniqueIdentifer;
 @property (nonatomic) MMETimerManager *timerManager;
+@property (nonatomic) MMEDispatchManager *dispatchManager;
 @property (nonatomic) NSDate *nextTurnstileSendDate;
 @property (nonatomic) MMENSDateWrapper *dateWrapper;
 @property (nonatomic) id<MMEUIApplicationWrapper> application;
@@ -58,26 +60,72 @@ describe(@"MMEEventsManager", ^{
     
     __block MMEEventsManager *eventsManager;
     __block MMENSDateWrapper *dateWrapper;
-    
+    __block MMEEventsConfiguration *configuration;
+    __block MMEDispatchManagerFake *dispatchManager;
+
     beforeEach(^{
         dateWrapper = [[MMENSDateWrapper alloc] init];
-        eventsManager = [MMEEventsManager sharedManager];
+        dispatchManager = [[MMEDispatchManagerFake alloc] init];
+        eventsManager = [[MMEEventsManager alloc] init];
+
+        eventsManager.dispatchManager = dispatchManager;
         eventsManager.locationManager = nice_fake_for(@protocol(MMELocationManager));
-        
+
         [eventsManager.eventQueue removeAllObjects];
-        
-        MMEEventsConfiguration *configuration = [[MMEEventsConfiguration alloc] init];
+
+        configuration = [[MMEEventsConfiguration alloc] init];
         configuration.eventFlushCountThreshold = 1000;
         eventsManager.configuration = configuration;
     });
-    
+
     it(@"sets common event data", ^{
         eventsManager.commonEventData should_not be_nil;
     });
-    
+
+    describe(@"-initializeWithAccessToken:userAgentBase:hostSDKVersion:", ^{
+        NSBundle *bundle = [NSBundle mainBundle];
+
+        beforeEach(^{
+            spy_on(bundle);
+        });
+
+        afterEach(^{
+            stop_spying_on(bundle);
+        });
+
+        context(@"when the custom events profile is set", ^{
+            beforeEach(^{
+                NSDictionary *infoDictionary = @{ @"MMEEventsProfile" : @"Custom" };
+                bundle stub_method(@selector(infoDictionary)).and_return(infoDictionary);
+
+                eventsManager = [[MMEEventsManager alloc] init];
+                eventsManager.dispatchManager = dispatchManager;
+
+                [eventsManager initializeWithAccessToken:@"foo" userAgentBase:@"bar" hostSDKVersion:@"baz"];
+            });
+
+            it(@"should schedule the initialization work with a 10 second delay", ^{
+                dispatchManager.delay should equal(10);
+            });
+        });
+
+        context(@"when no fancy value is set", ^{
+            beforeEach(^{
+                eventsManager = [[MMEEventsManager alloc] init];
+                eventsManager.dispatchManager = dispatchManager;
+
+                [eventsManager initializeWithAccessToken:@"foo" userAgentBase:@"bar" hostSDKVersion:@"baz"];
+            });
+
+            it(@"should schedule the initialization work without a delay", ^{
+                dispatchManager.delay should equal(0);
+            });
+        });
+    });
+
     describe(@"- setConfiguration", ^{
         beforeEach(^{
-            eventsManager.configuration = [[MMEEventsService sharedService] configuration];
+            eventsManager.configuration = [MMEEventsConfiguration configuration];
         });
 
         it(@"should set the radius for configuration", ^{

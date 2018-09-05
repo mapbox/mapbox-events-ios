@@ -10,6 +10,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *hostSDKVersion;
 
 @property (nonatomic, nullable) void (^callingCompletionHandler)(NSError * _Nullable error);
+@property (nonatomic, nullable) void (^callingDataCompletionHandler)(NSError * _Nullable error, NSData * _Nullable data);
 
 - (void)completePostingEventsWithError:(NSError * _Nullable)error;
 

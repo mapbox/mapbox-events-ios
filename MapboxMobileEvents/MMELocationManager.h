@@ -1,6 +1,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
+#import "MMEEventsConfiguration.h"
 
 @protocol MMELocationManagerDelegate;
 
@@ -12,6 +13,10 @@
 
 - (void)startUpdatingLocation;
 - (void)stopUpdatingLocation;
+
+@optional
+
+- (void)reconfigure:(MMEEventsConfiguration *)configuration;
 
 @end
 

@@ -7,15 +7,16 @@
 #import "MMEAPIClient.h"
 #import "MMEEventLogger.h"
 #import "MMEEventsConfiguration.h"
+#import "MMEConfigurator.h"
 #import "MMETimerManager.h"
+#import "MMEDispatchManager.h"
 #import "MMEUIApplicationWrapper.h"
 #import "MMENSDateWrapper.h"
 #import "MMECategoryLoader.h"
 #import "CLLocation+MMEMobileEvents.h"
-#import "MMEEventsService.h"
 #import <CoreLocation/CoreLocation.h>
 
-@interface MMEEventsManager () <MMELocationManagerDelegate>
+@interface MMEEventsManager () <MMELocationManagerDelegate, MMEConfiguratorDelegate>
 
 @property (nonatomic) id<MMELocationManager> locationManager;
 @property (nonatomic) id<MMEAPIClient> apiClient;
@@ -24,7 +25,9 @@
 @property (nonatomic) MMECommonEventData *commonEventData;
 @property (nonatomic) NSDate *nextTurnstileSendDate;
 @property (nonatomic) MMEEventsConfiguration *configuration;
+@property (nonatomic) MMEConfigurator *configurationUpdater;
 @property (nonatomic) MMETimerManager *timerManager;
+@property (nonatomic) MMEDispatchManager *dispatchManager;
 @property (nonatomic, getter=isPaused) BOOL paused;
 @property (nonatomic) id<MMEUIApplicationWrapper> application;
 @property (nonatomic) MMENSDateWrapper *dateWrapper;
@@ -52,13 +55,16 @@
     if (self) {
         _metricsEnabled = YES;
         _locationMetricsEnabled = YES;
+        _paused = YES;
         _accountType = 0;
         _eventQueue = [NSMutableArray array];
         _commonEventData = [[MMECommonEventData alloc] init];
-        _configuration = [[MMEEventsService sharedService] configuration];
+        _configuration = [MMEEventsConfiguration configuration];
+        _configurationUpdater = [[MMEConfigurator alloc] initWithTimeInterval:_configuration.configurationRotationTimeInterval];
         _uniqueIdentifer = [[MMEUniqueIdentifier alloc] initWithTimeInterval:_configuration.instanceIdentifierRotationTimeInterval];
         _application = [[MMEUIApplicationWrapper alloc] init];
         _dateWrapper = [[MMENSDateWrapper alloc] init];
+        _dispatchManager = [[MMEDispatchManager alloc] init];
     }
     return self;
 }
@@ -70,22 +76,33 @@
 
 - (void)initializeWithAccessToken:(NSString *)accessToken userAgentBase:(NSString *)userAgentBase hostSDKVersion:(NSString *)hostSDKVersion {
     self.apiClient = [[MMEAPIClient alloc] initWithAccessToken:accessToken userAgentBase:userAgentBase hostSDKVersion:hostSDKVersion];
+    self.configurationUpdater.delegate = self;
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pauseOrResumeMetricsCollectionIfRequired) name:UIApplicationDidEnterBackgroundNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pauseOrResumeMetricsCollectionIfRequired) name:UIApplicationDidBecomeActiveNotification object:nil];
+    __weak __typeof__(self) weakSelf = self;
+    void(^initialization)(void) = ^{
+        __strong __typeof__(weakSelf) strongSelf = weakSelf;
+        if (strongSelf == nil) {
+            return;
+        }
+
+        [[NSNotificationCenter defaultCenter] addObserver:strongSelf selector:@selector(pauseOrResumeMetricsCollectionIfRequired) name:UIApplicationDidEnterBackgroundNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:strongSelf selector:@selector(pauseOrResumeMetricsCollectionIfRequired) name:UIApplicationDidBecomeActiveNotification object:nil];
     
-    if (@available(iOS 9.0, *)) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(powerStateDidChange:) name:NSProcessInfoPowerStateDidChangeNotification object:nil];
-    }
+        if (@available(iOS 9.0, *)) {
+            [[NSNotificationCenter defaultCenter] addObserver:strongSelf selector:@selector(powerStateDidChange:) name:NSProcessInfoPowerStateDidChangeNotification object:nil];
+        }
     
-    self.paused = YES;
+        strongSelf.paused = YES;
     
-    self.locationManager = [[MMELocationManager alloc] init];
-    self.locationManager.delegate = self;
-    self.locationManager.metricsEnabledForInUsePermissions = self.metricsEnabledForInUsePermissions;
-    [self resumeMetricsCollection];
+        strongSelf.locationManager = [[MMELocationManager alloc] init];
+        strongSelf.locationManager.delegate = strongSelf;
+        strongSelf.locationManager.metricsEnabledForInUsePermissions = strongSelf.metricsEnabledForInUsePermissions;
+        [strongSelf resumeMetricsCollection];
     
-    self.timerManager = [[MMETimerManager alloc] initWithTimeInterval:self.configuration.eventFlushSecondsThreshold target:self selector:@selector(flush)];
+        strongSelf.timerManager = [[MMETimerManager alloc] initWithTimeInterval:strongSelf.configuration.eventFlushSecondsThreshold target:strongSelf selector:@selector(flush)];
+    };
+    
+    [self.dispatchManager scheduleBlock:initialization afterDelay:self.configuration.initializationDelay];
 }
 
 # pragma mark - Public API
@@ -214,6 +231,8 @@
 }
 
 - (void)sendTurnstileEvent {
+    [self.configurationUpdater updateConfigurationFromAPIClient:self.apiClient];
+    
     if (self.nextTurnstileSendDate && [[self.dateWrapper date] timeIntervalSinceDate:self.nextTurnstileSendDate] < 0) {
         NSString *debugDescription = [NSString stringWithFormat:@"Turnstile event already sent; waiting until %@ to send another one", self.nextTurnstileSendDate];
         [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstile,
@@ -334,8 +353,8 @@
     }
 }
 
-- (void)postMetadata:(NSArray *)metadata filepaths:(NSArray *)filepaths completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
-    [self.apiClient postMetadata:metadata filepaths:filepaths completionHandler:^(NSError * _Nullable error) {
+- (void)postMetadata:(NSArray *)metadata filePaths:(NSArray *)filePaths completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
+    [self.apiClient postMetadata:metadata filePaths:filePaths completionHandler:^(NSError * _Nullable error) {
         if (completionHandler) {
             completionHandler(error);
         }
@@ -452,6 +471,25 @@
 
 - (void)displayLogFileFromDate:(NSDate *)logDate {
     [MMEEventLogger.sharedLogger readAndDisplayLogFileFromDate:logDate];
+}
+
+#pragma mark - MMEConfiguratorDelegate
+
+- (void)configurator:(id)updater didUpdate:(MMEEventsConfiguration *)configuration {
+    self.configuration = configuration;
+    if ([self.apiClient respondsToSelector:@selector(reconfigure:)]) {
+        [self.apiClient reconfigure:configuration];
+    }
+    if ([self.locationManager respondsToSelector:@selector(reconfigure:)]) {
+        [self.locationManager reconfigure:configuration];
+    }
+    
+    self.configurationUpdater.timeInterval = configuration.configurationRotationTimeInterval;
+    self.uniqueIdentifer.timeInterval = configuration.instanceIdentifierRotationTimeInterval;
+    if (self.timerManager && configuration.eventFlushSecondsThreshold != self.timerManager.timeInterval) {
+        [self.timerManager cancel];
+        self.timerManager = [[MMETimerManager alloc] initWithTimeInterval:self.configuration.eventFlushSecondsThreshold target:self selector:@selector(flush)];
+    }
 }
 
 #pragma mark - MMELocationManagerDelegate
