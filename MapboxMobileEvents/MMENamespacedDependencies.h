@@ -22,12 +22,20 @@
 #define MMECommonEventData __NS_SYMBOL(MMECommonEventData)
 #endif
 
+#ifndef MMEConfigurator
+#define MMEConfigurator __NS_SYMBOL(MMEConfigurator)
+#endif
+
 #ifndef MMEConstants
 #define MMEConstants __NS_SYMBOL(MMEConstants)
 #endif
 
 #ifndef MMEDependencyManager
 #define MMEDependencyManager __NS_SYMBOL(MMEDependencyManager)
+#endif
+
+#ifndef MMEDispatchManager
+#define MMEDispatchManager __NS_SYMBOL(MMEDispatchManager)
 #endif
 
 #ifndef MMEEvent
@@ -50,10 +58,6 @@
 #define MMEEventsManager __NS_SYMBOL(MMEEventsManager)
 #endif
 
-#ifndef MMEEventsService
-#define MMEEventsService __NS_SYMBOL(MMEEventsService)
-#endif
-
 #ifndef MMELocationManager
 #define MMELocationManager __NS_SYMBOL(MMELocationManager)
 #endif
@@ -74,8 +78,8 @@
 #define MMETimerManager __NS_SYMBOL(MMETimerManager)
 #endif
 
-#ifndef MMETrustKitWrapper
-#define MMETrustKitWrapper __NS_SYMBOL(MMETrustKitWrapper)
+#ifndef MMETrustKitProvider
+#define MMETrustKitProvider __NS_SYMBOL(MMETrustKitProvider)
 #endif
 
 #ifndef MMETypes
@@ -196,6 +200,10 @@
 #define MMELocationManagerDelegate __NS_SYMBOL(MMELocationManagerDelegate)
 #endif
 
+#ifndef MMEConfiguratorDelegate
+#define MMEConfiguratorDelegate __NS_SYMBOL(MMEConfiguratorDelegate)
+#endif
+
 #ifndef MapboxMobileEventsStaticVersionString
 #define MapboxMobileEventsStaticVersionString __NS_SYMBOL(MapboxMobileEventsStaticVersionString)
 #endif
@@ -272,14 +280,6 @@
 #define kTSKAlgorithmEcDsaSecp384r1 __NS_SYMBOL(kTSKAlgorithmEcDsaSecp384r1)
 #endif
 
-#ifndef kMMEEventsProfile
-#define kMMEEventsProfile __NS_SYMBOL(kMMEEventsProfile)
-#endif
-
-#ifndef kMMERadiusSize
-#define kMMERadiusSize __NS_SYMBOL(kMMERadiusSize)
-#endif
-
 #ifndef MMEApplicationStateForeground
 #define MMEApplicationStateForeground __NS_SYMBOL(MMEApplicationStateForeground)
 #endif
@@ -316,6 +316,10 @@
 #define MMEAPIClientEventsPath __NS_SYMBOL(MMEAPIClientEventsPath)
 #endif
 
+#ifndef MMEAPIClientEventsConfigPath
+#define MMEAPIClientEventsConfigPath __NS_SYMBOL(MMEAPIClientEventsConfigPath)
+#endif
+
 #ifndef MMEAPIClientAttachmentsPath
 #define MMEAPIClientAttachmentsPath __NS_SYMBOL(MMEAPIClientAttachmentsPath)
 #endif
@@ -342,6 +346,10 @@
 
 #ifndef MMEAPIClientHTTPMethodPost
 #define MMEAPIClientHTTPMethodPost __NS_SYMBOL(MMEAPIClientHTTPMethodPost)
+#endif
+
+#ifndef MMEAPIClientHTTPMethodGet
+#define MMEAPIClientHTTPMethodGet __NS_SYMBOL(MMEAPIClientHTTPMethodGet)
 #endif
 
 #ifndef MMEErrorDomain
