@@ -213,9 +213,6 @@ typedef NS_ENUM(NSInteger, MMEErrorCode) {
     }
     
     NSString *mimetype = CFBridgingRelease(UTTypeCopyPreferredTagWithClass(UTI, kUTTagClassMIMEType));
-    if (mimetype == NULL) {
-        return nil;
-    }
     
     CFRelease(UTI);
     
