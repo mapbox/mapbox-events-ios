@@ -19,6 +19,8 @@ typedef NS_ENUM(NSInteger, MMEErrorCode) {
 
 @end
 
+NSString *const kMMEResponseKey = @"MMEResponseKey";
+
 @implementation MMEAPIClient
 
 - (instancetype)initWithAccessToken:(NSString *)accessToken userAgentBase:(NSString *)userAgentBase hostSDKVersion:(NSString *)hostSDKVersion {
@@ -125,9 +127,11 @@ typedef NS_ENUM(NSInteger, MMEErrorCode) {
         NSString *reasonFormat = @"The status code was %ld";
         NSString *description = [NSString stringWithFormat:descriptionFormat, request];
         NSString *reason = [NSString stringWithFormat:reasonFormat, (long)httpResponse.statusCode];
-        NSDictionary *userInfo = @{NSLocalizedDescriptionKey: description,
-                                   @"MMEHTTPResponseKey": httpResponse,
-                                   NSLocalizedFailureReasonErrorKey: reason};
+        NSDictionary *userInfo = [[NSMutableDictionary alloc] init];
+        [userInfo setValue:description forKey:NSLocalizedDescriptionKey];
+        [userInfo setValue:reason forKey:NSLocalizedFailureReasonErrorKey];
+        [userInfo setValue:httpResponse forKey:kMMEResponseKey];
+        
         statusError = [NSError errorWithDomain:MMEErrorDomain code:MMESessionFailedError userInfo:userInfo];
     }
     return statusError;
@@ -140,9 +144,11 @@ typedef NS_ENUM(NSInteger, MMEErrorCode) {
     NSString *descriptionFormat = @"The session data task failed. Original request was: %@";
     NSString *description = [NSString stringWithFormat:descriptionFormat, request];
     NSString *reason = @"Unexpected response";
-    NSDictionary *userInfo = @{NSLocalizedDescriptionKey: description,
-                               @"MMEResponseKey": response,
-                               NSLocalizedFailureReasonErrorKey: reason};
+    NSDictionary *userInfo = [[NSMutableDictionary alloc] init];
+    [userInfo setValue:description forKey:NSLocalizedDescriptionKey];
+    [userInfo setValue:reason forKey:NSLocalizedFailureReasonErrorKey];
+    [userInfo setValue:response forKey:kMMEResponseKey];
+    
     NSError *statusError = [NSError errorWithDomain:MMEErrorDomain code:MMEUnexpectedResponseError userInfo:userInfo];
     return statusError;
 }

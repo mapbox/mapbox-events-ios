@@ -143,8 +143,8 @@ describe(@"MMEAPIClient", ^{
                     NSURLRequest *requestFake = [[NSURLRequest alloc] initWithURL:apiClient.baseURL];
                     
                     [sessionWrapperFake completeProcessingWithData:nil response:responseFake error:error];
-                    [apiClient statusErrorFromRequest:requestFake andHTTPResponse:responseFake];
-                    [apiClient unexpectedResponseErrorfromRequest:requestFake andResponse:responseFake];
+                    [apiClient statusErrorFromRequest:requestFake andHTTPResponse:responseFake] should be_nil;
+                    [apiClient unexpectedResponseErrorfromRequest:requestFake andResponse:responseFake] should_not be_nil;
                 });
                 
                 it(@"should equal completed process error", ^{
