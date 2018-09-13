@@ -118,16 +118,13 @@ NSString *const kMMEResponseKey = @"MMEResponseKey";
 #pragma mark - Utilities
 
 - (NSError *)statusErrorFromRequest:(nonnull NSURLRequest *)request andHTTPResponse:(nonnull NSHTTPURLResponse *)httpResponse {
-    if (!httpResponse) {
-        httpResponse = [[NSHTTPURLResponse alloc] initWithURL:self.baseURL statusCode:0 HTTPVersion:nil headerFields:nil];
-    }
     NSError *statusError = nil;
     if (httpResponse.statusCode >= 400) {
         NSString *descriptionFormat = @"The session data task failed. Original request was: %@";
         NSString *reasonFormat = @"The status code was %ld";
         NSString *description = [NSString stringWithFormat:descriptionFormat, request ?: [NSNull null]];
         NSString *reason = [NSString stringWithFormat:reasonFormat, (long)httpResponse.statusCode];
-        NSDictionary *userInfo = [[NSMutableDictionary alloc] init];
+        NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
         [userInfo setValue:description forKey:NSLocalizedDescriptionKey];
         [userInfo setValue:reason forKey:NSLocalizedFailureReasonErrorKey];
         [userInfo setValue:httpResponse forKey:kMMEResponseKey];
@@ -138,13 +135,10 @@ NSString *const kMMEResponseKey = @"MMEResponseKey";
 }
 
 - (NSError *)unexpectedResponseErrorfromRequest:(nonnull NSURLRequest *)request andResponse:(NSURLResponse *)response {
-    if (!response) {
-        response = [[NSURLResponse alloc] initWithURL:self.baseURL MIMEType:nil expectedContentLength:0 textEncodingName:nil];
-    }
     NSString *descriptionFormat = @"The session data task failed. Original request was: %@";
     NSString *description = [NSString stringWithFormat:descriptionFormat, request ?: [NSNull null]];
     NSString *reason = @"Unexpected response";
-    NSDictionary *userInfo = [[NSMutableDictionary alloc] init];
+    NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
     [userInfo setValue:description forKey:NSLocalizedDescriptionKey];
     [userInfo setValue:reason forKey:NSLocalizedFailureReasonErrorKey];
     [userInfo setValue:response forKey:kMMEResponseKey];
