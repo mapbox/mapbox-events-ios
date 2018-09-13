@@ -116,6 +116,44 @@ describe(@"MMEAPIClient", ^{
         });
     });
     
+    describe(@"- getConfigurationWithCompletionHandler:", ^{
+        __block MMENSURLSessionWrapperFake *sessionWrapperFake;
+        __block NSError *capturedError;
+        
+        beforeEach(^{
+            sessionWrapperFake = [[MMENSURLSessionWrapperFake alloc] init];
+            spy_on(sessionWrapperFake);
+            
+            apiClient.sessionWrapper = sessionWrapperFake;
+        });
+        
+        context(@"when getting configuration", ^{
+            __block NSError *error;
+            
+            beforeEach(^{
+                [apiClient getConfigurationWithCompletionHandler:^(NSError * _Nullable error, NSData * _Nullable data) {
+                    capturedError = error;
+                }];
+            });
+            
+            context(@"when network is offline", ^{
+                beforeEach(^{
+                    error = [NSError errorWithDomain:@"test" code:42 userInfo:nil];
+                    NSHTTPURLResponse *responseFake = nil;
+                    NSURLRequest *requestFake = [[NSURLRequest alloc] initWithURL:apiClient.baseURL];
+                    
+                    [sessionWrapperFake completeProcessingWithData:nil response:responseFake error:error];
+                    [apiClient statusErrorFromRequest:requestFake andHTTPResponse:responseFake] should be_nil;
+                    [apiClient unexpectedResponseErrorfromRequest:requestFake andResponse:responseFake] should_not be_nil;
+                });
+                
+                it(@"should equal completed process error", ^{
+                    capturedError should equal(error);
+                });
+            });
+        });
+    });
+    
     describe(@"- postEvent:completionHandler:", ^{
         __block MMEEvent *event;
         __block MMENSURLSessionWrapperFake *sessionWrapperFake;
