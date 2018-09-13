@@ -116,6 +116,9 @@ typedef NS_ENUM(NSInteger, MMEErrorCode) {
 #pragma mark - Utilities
 
 - (NSError *)statusErrorFromRequest:(NSURLRequest *)request andHTTPResponse:(NSHTTPURLResponse *)httpResponse {
+    if (!httpResponse) {
+        httpResponse = [[NSHTTPURLResponse alloc] initWithURL:self.baseURL statusCode:0 HTTPVersion:nil headerFields:nil];
+    }
     NSError *statusError = nil;
     if (httpResponse.statusCode >= 400) {
         NSString *descriptionFormat = @"The session data task failed. Original request was: %@";
@@ -131,6 +134,9 @@ typedef NS_ENUM(NSInteger, MMEErrorCode) {
 }
 
 - (NSError *)unexpectedResponseErrorfromRequest:(NSURLRequest *)request andResponse:(NSURLResponse *)response {
+    if (!response) {
+        response = [[NSURLResponse alloc] initWithURL:self.baseURL MIMEType:nil expectedContentLength:0 textEncodingName:nil];
+    }
     NSString *descriptionFormat = @"The session data task failed. Original request was: %@";
     NSString *description = [NSString stringWithFormat:descriptionFormat, request];
     NSString *reason = @"Unexpected response";

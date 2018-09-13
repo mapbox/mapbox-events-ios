@@ -163,6 +163,20 @@ describe(@"MMEAPIClient", ^{
                 });
             });
             
+            context(@"when network is offline", ^{
+                __block NSError *error;
+                
+                beforeEach(^{
+                    error = [NSError errorWithDomain:@"test" code:42 userInfo:nil];
+                    NSHTTPURLResponse *responseFake = nil;
+                    [sessionWrapperFake completeProcessingWithData:nil response:responseFake error:error];
+                });
+                
+                it(@"should equal completed process error", ^{
+                    capturedError should equal(error);
+                });
+            });
+            
             context(@"when there is a response with an invalid status code", ^{
                 beforeEach(^{
                     NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:[NSURL URLWithString:@"http:test.com"]
