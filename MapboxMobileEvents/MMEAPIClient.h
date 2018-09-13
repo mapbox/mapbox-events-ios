@@ -20,8 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)getConfigurationWithCompletionHandler:(nullable void (^)(NSError * _Nullable error, NSData * _Nullable data))completionHandler;
 - (void)reconfigure:(MMEEventsConfiguration *)configuration;
-- (NSError *)statusErrorFromRequest:(nonnull NSURLRequest *)request andHTTPResponse:(nonnull NSHTTPURLResponse *)httpResponse;
-- (NSError *)unexpectedResponseErrorfromRequest:(nonnull NSURLRequest *)request andResponse:(NSURLResponse *)response;
+- (NSError *)statusErrorFromRequest:(NSURLRequest *)request andHTTPResponse:(NSHTTPURLResponse *)httpResponse;
+- (NSError *)unexpectedResponseErrorfromRequest:(NSURLRequest *)request andResponse:(NSURLResponse *)response;
 
 @end
 
@@ -38,8 +38,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)postEvent:(MMEEvent *)event completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler;
 - (void)postMetadata:(NSArray *)metadata filePaths:(NSArray *)filePaths completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler;
 - (void)getConfigurationWithCompletionHandler:(nullable void (^)(NSError * _Nullable error, NSData * _Nullable data))completionHandler;
-- (NSError *)statusErrorFromRequest:(nonnull NSURLRequest *)request andHTTPResponse:(nonnull NSHTTPURLResponse *)httpResponse;
-- (NSError *)unexpectedResponseErrorfromRequest:(nonnull NSURLRequest *)request andResponse:(NSURLResponse *)response;
+- (NSError *)statusErrorFromRequest:(NSURLRequest *)request andHTTPResponse:(NSHTTPURLResponse *)httpResponse;
+- (NSError *)unexpectedResponseErrorfromRequest:(NSURLRequest *)request andResponse:(NSURLResponse *)response;
 
 @end
 
