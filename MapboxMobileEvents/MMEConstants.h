@@ -82,6 +82,7 @@ extern NSString * const MMEEventTypeNavigationFeedback;
 extern NSString * const MMEEventTypeNavigationReroute;
 extern NSString * const MMEDebugEventType;
 extern NSString * const MMEEventTypeSearchSelected;
+extern NSString * const MMEEventTypeSearchFeedback;
 extern NSString * const MMESearchEventPrefix;
 extern NSString * const MMEventTypeCarplayConnect;
 extern NSString * const MMEventTypeCarplayDisconnect;

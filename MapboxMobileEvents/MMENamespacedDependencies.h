@@ -604,6 +604,10 @@
 #define MMEEventTypeSearchSelected __NS_SYMBOL(MMEEventTypeSearchSelected)
 #endif
 
+#ifndef MMEEventTypeSearchFeedback
+#define MMEEventTypeSearchFeedback __NS_SYMBOL(MMEEventTypeSearchFeedback)
+#endif
+
 #ifndef MMEventTypeCarplayConnect
 #define MMEventTypeCarplayConnect __NS_SYMBOL(MMEventTypeCarplayConnect)
 #endif
