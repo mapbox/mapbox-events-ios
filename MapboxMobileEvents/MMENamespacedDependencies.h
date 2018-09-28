@@ -648,3 +648,7 @@
 #define MMELocationManagerRegionIdentifier __NS_SYMBOL(MMELocationManagerRegionIdentifier)
 #endif
 
+#ifndef kMMEResponseKey
+#define kMMEResponseKey __NS_SYMBOL(kMMEResponseKey)
+#endif
+

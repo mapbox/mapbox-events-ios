@@ -19,6 +19,8 @@ typedef NS_ENUM(NSInteger, MMEErrorCode) {
 
 @end
 
+NSString *const kMMEResponseKey = @"MMEResponseKey";
+
 @implementation MMEAPIClient
 
 - (instancetype)initWithAccessToken:(NSString *)accessToken userAgentBase:(NSString *)userAgentBase hostSDKVersion:(NSString *)hostSDKVersion {
@@ -115,28 +117,32 @@ typedef NS_ENUM(NSInteger, MMEErrorCode) {
 
 #pragma mark - Utilities
 
-- (NSError *)statusErrorFromRequest:(NSURLRequest *)request andHTTPResponse:(NSHTTPURLResponse *)httpResponse {
+- (NSError *)statusErrorFromRequest:(nonnull NSURLRequest *)request andHTTPResponse:(nonnull NSHTTPURLResponse *)httpResponse {
     NSError *statusError = nil;
     if (httpResponse.statusCode >= 400) {
         NSString *descriptionFormat = @"The session data task failed. Original request was: %@";
         NSString *reasonFormat = @"The status code was %ld";
-        NSString *description = [NSString stringWithFormat:descriptionFormat, request];
+        NSString *description = [NSString stringWithFormat:descriptionFormat, request ?: [NSNull null]];
         NSString *reason = [NSString stringWithFormat:reasonFormat, (long)httpResponse.statusCode];
-        NSDictionary *userInfo = @{NSLocalizedDescriptionKey: description,
-                                   @"MMEHTTPResponseKey": httpResponse,
-                                   NSLocalizedFailureReasonErrorKey: reason};
+        NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
+        [userInfo setValue:description forKey:NSLocalizedDescriptionKey];
+        [userInfo setValue:reason forKey:NSLocalizedFailureReasonErrorKey];
+        [userInfo setValue:httpResponse forKey:kMMEResponseKey];
+        
         statusError = [NSError errorWithDomain:MMEErrorDomain code:MMESessionFailedError userInfo:userInfo];
     }
     return statusError;
 }
 
-- (NSError *)unexpectedResponseErrorfromRequest:(NSURLRequest *)request andResponse:(NSURLResponse *)response {
+- (NSError *)unexpectedResponseErrorfromRequest:(nonnull NSURLRequest *)request andResponse:(NSURLResponse *)response {
     NSString *descriptionFormat = @"The session data task failed. Original request was: %@";
-    NSString *description = [NSString stringWithFormat:descriptionFormat, request];
+    NSString *description = [NSString stringWithFormat:descriptionFormat, request ?: [NSNull null]];
     NSString *reason = @"Unexpected response";
-    NSDictionary *userInfo = @{NSLocalizedDescriptionKey: description,
-                               @"MMEResponseKey": response,
-                               NSLocalizedFailureReasonErrorKey: reason};
+    NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
+    [userInfo setValue:description forKey:NSLocalizedDescriptionKey];
+    [userInfo setValue:reason forKey:NSLocalizedFailureReasonErrorKey];
+    [userInfo setValue:response forKey:kMMEResponseKey];
+    
     NSError *statusError = [NSError errorWithDomain:MMEErrorDomain code:MMEUnexpectedResponseError userInfo:userInfo];
     return statusError;
 }
