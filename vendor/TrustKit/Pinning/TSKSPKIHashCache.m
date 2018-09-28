@@ -303,7 +303,8 @@ static const NSString *kTSKKeychainPublicKeyTag = @"TSKKeychainPublicKeyTag"; //
     SecTrustCreateWithCertificates(certificate, policy, &trust);
     
     // Get a public key reference for the certificate from the trust
-    SecTrustEvaluate(trust, NULL);
+    SecTrustResultType result;
+    SecTrustEvaluate(trust, &result);
     SecKeyRef publicKey = SecTrustCopyPublicKey(trust);
     CFRelease(policy);
     CFRelease(trust);
@@ -339,7 +340,8 @@ static const NSString *kTSKKeychainPublicKeyTag = @"TSKKeychainPublicKeyTag"; //
     
     // Get a public key reference from the certificate
     SecTrustCreateWithCertificates(certificate, policy, &tempTrust);
-    SecTrustEvaluate(tempTrust, NULL);
+    SecTrustResultType result;
+    SecTrustEvaluate(tempTrust, &result);
     publicKey = SecTrustCopyPublicKey(tempTrust);
     CFRelease(policy);
     CFRelease(tempTrust);
