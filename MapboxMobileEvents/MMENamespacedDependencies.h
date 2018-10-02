@@ -58,6 +58,10 @@
 #define MMEEventsManager __NS_SYMBOL(MMEEventsManager)
 #endif
 
+#ifndef MMEHashProvider
+#define MMEHashProvider __NS_SYMBOL(MMEHashProvider)
+#endif
+
 #ifndef MMELocationManager
 #define MMELocationManager __NS_SYMBOL(MMELocationManager)
 #endif
