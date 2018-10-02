@@ -46,14 +46,27 @@
 #pragma mark NSURLSessionDelegate
 
 - (void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable))completionHandler {
-    // Call into TrustKit here to do pinning validation
-    if (![self.trustKit.pinningValidator handleChallenge:challenge completionHandler:completionHandler]) {
-        // TrustKit did not handle this challenge: perhaps it was not for server trust
-        // or the domain was not pinned. Fall back to the default behavior
+    __block void (^completion)(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable) = nil;
+    
+    completion = ^(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential * _Nullable credential){
         dispatch_async(dispatch_get_main_queue(), ^{
-            completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
+            if (completionHandler) {
+                completionHandler(disposition, credential);
+            }
+            completion = nil;
         });
-    }
+    };
+    
+    __weak __typeof__(self) weakSelf = self;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        __typeof__(self) strongSelf = weakSelf;
+        // Call into TrustKit here to do pinning validation
+        if (![strongSelf.trustKit.pinningValidator handleChallenge:challenge completionHandler:completionHandler]) {
+            // TrustKit did not handle this challenge: perhaps it was not for server trust
+            // or the domain was not pinned. Fall back to the default behavior
+            completion(NSURLSessionAuthChallengePerformDefaultHandling, nil);
+        }
+    });
 }
 
 @end
