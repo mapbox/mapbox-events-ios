@@ -50,7 +50,9 @@
     if (![self.trustKit.pinningValidator handleChallenge:challenge completionHandler:completionHandler]) {
         // TrustKit did not handle this challenge: perhaps it was not for server trust
         // or the domain was not pinned. Fall back to the default behavior
-        completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
+        });
     }
 }
 
