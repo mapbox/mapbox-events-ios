@@ -774,6 +774,19 @@ describe(@"MMEEventsManager", ^{
                 });
             });
             
+            context(@"when a map download event is pushed", ^{
+                beforeEach(^{
+                    [eventsManager enqueueEventWithName:MMEEventTypeOfflineDownload attributes:attributes];
+                });
+                
+                it(@"has the correct event", ^{
+                    MMEEvent *expectedEvent = [MMEEvent mapOfflineDownloadWithDateString:dateString attributes:attributes];
+                    MMEEvent *event = eventsManager.eventQueue.firstObject;
+                    
+                    event should equal(expectedEvent);
+                });
+            });
+            
             context(@"when a navigation event is pushed", ^{
                 __block NSString * navigationEventName = @"navigation.*";
                 
