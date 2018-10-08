@@ -1,4 +1,5 @@
 #import "MMEMetricsManager.h"
+#import "MMEEvent.h"
 
 @interface MMEMetricsManager ()
 
@@ -31,6 +32,26 @@
     });
     
     return _sharedManager;
+}
+
+- (void)countFromEventQueue:(NSArray *)eventQueue {
+    if (eventQueue.count > 0) {
+        if (self.eventCountPerType == nil) {
+            self.eventCountPerType = [[NSMutableDictionary alloc] init];
+        }
+        
+        self.eventCountMax = self.eventCountMax + (int)eventQueue.count;
+        
+        for (MMEEvent *event in eventQueue) {
+            if ([self.eventCountPerType objectForKey:event.name] != nil) {
+                NSNumber *eventCount = [self.eventCountPerType objectForKey:event.name];
+                eventCount = [NSNumber numberWithInteger:[eventCount integerValue] + 1];
+                [self.eventCountPerType setObject:eventCount forKey:event.name];
+            } else {
+                [self.eventCountPerType setObject:@1 forKey:event.name];
+            }
+        }
+    }
 }
 
 
