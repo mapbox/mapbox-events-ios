@@ -36,8 +36,8 @@ describe(@"MMEMetricsManager", ^{
                 [manager countFromEventQueue:eventQueue];
             });
             
-            it(@"should have max count increase", ^{
-                manager.eventCountMax should equal(2);
+            it(@"should have total count increase", ^{
+                manager.eventCountTotal should equal(2);
             });
             
             it(@"should have event count per type increase", ^{

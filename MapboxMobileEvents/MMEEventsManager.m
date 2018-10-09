@@ -14,6 +14,7 @@
 #import "MMENSDateWrapper.h"
 #import "MMECategoryLoader.h"
 #import "CLLocation+MMEMobileEvents.h"
+#import "MMEMetricsManager.h"
 #import <CoreLocation/CoreLocation.h>
 
 @interface MMEEventsManager () <MMELocationManagerDelegate, MMEConfiguratorDelegate>
@@ -200,6 +201,9 @@
     
     NSArray *events = [self.eventQueue copy];
     NSUInteger eventsCount = events.count;
+    
+    [MMEMetricsManager.sharedManager countFromEventQueue:events];
+    
     __weak __typeof__(self) weakSelf = self;
     [self.apiClient postEvents:events completionHandler:^(NSError * _Nullable error) {
         __strong __typeof__(weakSelf) strongSelf = weakSelf;
