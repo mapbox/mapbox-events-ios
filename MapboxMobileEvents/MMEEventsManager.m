@@ -340,10 +340,6 @@
     if ([name hasPrefix:MMESearchEventPrefix]) {
         event = [MMEEvent searchEventWithName:name attributes:attributes];
     }
-    
-    if ([name hasPrefix:MMEventCarplayPrefix]) {
-        event = [MMEEvent carplayEventWithName:name attributes:attributes];
-    }
 
     if (event) {
         [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypePush,

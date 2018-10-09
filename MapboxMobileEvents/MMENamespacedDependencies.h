@@ -425,6 +425,10 @@
 #define MMEEventTypeLocalDebug __NS_SYMBOL(MMEEventTypeLocalDebug)
 #endif
 
+#ifndef MMEEventTypeOfflineDownload
+#define MMEEventTypeOfflineDownload __NS_SYMBOL(MMEEventTypeOfflineDownload)
+#endif
+
 #ifndef MMEEventGestureSingleTap
 #define MMEEventGestureSingleTap __NS_SYMBOL(MMEEventGestureSingleTap)
 #endif
@@ -597,6 +601,14 @@
 #define MMEEventTypeNavigationReroute __NS_SYMBOL(MMEEventTypeNavigationReroute)
 #endif
 
+#ifndef MMEventTypeNavigationCarplayConnect
+#define MMEventTypeNavigationCarplayConnect __NS_SYMBOL(MMEventTypeNavigationCarplayConnect)
+#endif
+
+#ifndef MMEventTypeNavigationCarplayDisconnect
+#define MMEventTypeNavigationCarplayDisconnect __NS_SYMBOL(MMEventTypeNavigationCarplayDisconnect)
+#endif
+
 #ifndef MMEDebugEventType
 #define MMEDebugEventType __NS_SYMBOL(MMEDebugEventType)
 #endif
@@ -611,18 +623,6 @@
 
 #ifndef MMEEventTypeSearchFeedback
 #define MMEEventTypeSearchFeedback __NS_SYMBOL(MMEEventTypeSearchFeedback)
-#endif
-
-#ifndef MMEventTypeCarplayConnect
-#define MMEventTypeCarplayConnect __NS_SYMBOL(MMEventTypeCarplayConnect)
-#endif
-
-#ifndef MMEventTypeCarplayDisconnect
-#define MMEventTypeCarplayDisconnect __NS_SYMBOL(MMEventTypeCarplayDisconnect)
-#endif
-
-#ifndef MMEventCarplayPrefix
-#define MMEventCarplayPrefix __NS_SYMBOL(MMEventCarplayPrefix)
 #endif
 
 #ifndef MMEEventSource

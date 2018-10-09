@@ -81,13 +81,12 @@ extern NSString * const MMEEventTypeNavigationArrive;
 extern NSString * const MMEEventTypeNavigationCancel;
 extern NSString * const MMEEventTypeNavigationFeedback;
 extern NSString * const MMEEventTypeNavigationReroute;
+extern NSString * const MMEventTypeNavigationCarplayConnect;
+extern NSString * const MMEventTypeNavigationCarplayDisconnect;
 extern NSString * const MMEDebugEventType;
 extern NSString * const MMEEventTypeSearchSelected;
 extern NSString * const MMEEventTypeSearchFeedback;
 extern NSString * const MMESearchEventPrefix;
-extern NSString * const MMEventTypeCarplayConnect;
-extern NSString * const MMEventTypeCarplayDisconnect;
-extern NSString * const MMEventCarplayPrefix;
 
 // SDK event source
 extern NSString * const MMEEventSource;
