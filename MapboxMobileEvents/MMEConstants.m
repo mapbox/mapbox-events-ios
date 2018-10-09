@@ -79,13 +79,12 @@ NSString * const MMEEventTypeNavigationArrive = @"navigation.arrive";
 NSString * const MMEEventTypeNavigationCancel = @"navigation.cancel";
 NSString * const MMEEventTypeNavigationFeedback = @"navigation.feedback";
 NSString * const MMEEventTypeNavigationReroute = @"navigation.reroute";
+NSString * const MMEventTypeNavigationCarplayConnect = @"navigation.carplay.connect";
+NSString * const MMEventTypeNavigationCarplayDisconnect = @"navigation.carplay.disconnect";
 NSString * const MMEDebugEventType = @"debug.type";
 NSString * const MMESearchEventPrefix = @"search.";
 NSString * const MMEEventTypeSearchSelected = @"search.selected";
 NSString * const MMEEventTypeSearchFeedback = @"search.feedback";
-NSString * const MMEventTypeCarplayConnect = @"carplay.connect";
-NSString * const MMEventTypeCarplayDisconnect = @"carplay.disconnect";
-NSString * const MMEventCarplayPrefix = @"carplay.";
 
 NSString * const MMEEventSource = @"mapbox";
 
