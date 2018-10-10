@@ -189,6 +189,12 @@
     if (self.paused) {
         [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeFlush,
                                              MMEEventKeyLocalDebugDescription: @"Aborting flushing of event queue because collection is paused."}];
+        
+        if (self.eventQueue.count >= self.configuration.eventFlushCountThreshold) {
+            [self.eventQueue removeAllObjects];
+            [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeFlush,
+                                                 MMEEventKeyLocalDebugDescription: @"Emptying queue because threshold has passed and collection is paused"}];
+        }
         return;
     }
     
