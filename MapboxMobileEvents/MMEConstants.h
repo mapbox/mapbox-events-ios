@@ -35,7 +35,8 @@ extern NSString * const MMEEventTypeMapDragEnd;
 extern NSString * const MMEEventTypeLocation;
 extern NSString * const MMEEventTypeVisit;
 extern NSString * const MMEEventTypeLocalDebug;
-extern NSString * const MMEEventTypeOfflineDownload;
+extern NSString * const MMEventTypeOfflineDownloadStart;
+extern NSString * const MMEventTypeOfflineDownloadComplete;
 
 // Gestures
 extern NSString * const MMEEventGestureSingleTap;

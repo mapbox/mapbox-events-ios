@@ -13,7 +13,8 @@
 + (instancetype)mapLoadEventWithDateString:(NSString *)dateString commonEventData:(MMECommonEventData *)commonEventData;
 + (instancetype)mapTapEventWithDateString:(NSString *)dateString attributes:(NSDictionary *)attributes;
 + (instancetype)mapDragEndEventWithDateString:(NSString *)dateString attributes:(NSDictionary *)attributes;
-+ (instancetype)mapOfflineDownloadWithDateString:(NSString *)dateString attributes:(NSDictionary *)attributes;
++ (instancetype)mapOfflineDownloadStartWithDateString:(NSString *)dateString attributes:(NSDictionary *)attributes;
++ (instancetype)mapOfflineDownloadCompleteWithDateString:(NSString *)dateString attributes:(NSDictionary *)attributes;
 + (instancetype)navigationEventWithName:(NSString *)name attributes:(NSDictionary *)attributes;
 + (instancetype)visionEventWithName:(NSString *)name attributes:(NSDictionary *)attributes;
 + (instancetype)debugEventWithAttributes:(NSDictionary *)attributes;
