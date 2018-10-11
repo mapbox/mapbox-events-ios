@@ -888,8 +888,8 @@ describe(@"MMEEventsManager", ^{
                     [eventsManager enqueueEventWithName:MMEEventTypeMapLoad];
                 });
                 
-                it(@"has no event", ^{
-                    eventsManager.eventQueue.count should equal(0);
+                it(@"should queue events", ^{
+                    eventsManager.eventQueue.count should equal(1);
                 });
             });
         });

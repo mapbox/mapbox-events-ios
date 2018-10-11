@@ -20,6 +20,7 @@ typedef NS_ENUM(NSInteger, MMEErrorCode) {
 @end
 
 NSString *const kMMEResponseKey = @"MMEResponseKey";
+int const kMMEMaxRequestCount = 1000;
 
 @implementation MMEAPIClient
 
@@ -42,21 +43,41 @@ NSString *const kMMEResponseKey = @"MMEResponseKey";
     [self.sessionWrapper reconfigure:configuration];
 }
 
+- (NSArray *)batchFromEvents:(NSArray *)events {
+    NSMutableArray *eventBatches = [[NSMutableArray alloc] init];
+    int eventsRemaining = (int)[events count];
+    int i = 0;
+    
+    while (eventsRemaining) {
+        NSRange range = NSMakeRange(i, MIN(kMMEMaxRequestCount, eventsRemaining));
+        NSArray *batchArray = [events subarrayWithRange:range];
+        [eventBatches addObject:batchArray];
+        eventsRemaining -= range.length;
+        i += range.length;
+    }
+    
+    return eventBatches;
+}
+
 - (void)postEvents:(NSArray *)events completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
-    NSURLRequest *request = [self requestForEvents:events];
-    [self.sessionWrapper processRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        NSError *statusError = nil;
-        if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
-            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-            statusError = [self statusErrorFromRequest:request andHTTPResponse:httpResponse];
-        } else {
-            statusError = [self unexpectedResponseErrorfromRequest:request andResponse:response];
-        }
-        if (completionHandler) {
-            error = error ?: statusError;
-            completionHandler(error);
-        }
-    }];
+    NSArray *eventBatches = [self batchFromEvents:events];
+    
+    for (NSArray *batch in eventBatches) {
+        NSURLRequest *request = [self requestForEvents:batch];
+        [self.sessionWrapper processRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+            NSError *statusError = nil;
+            if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
+                NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+                statusError = [self statusErrorFromRequest:request andHTTPResponse:httpResponse];
+            } else {
+                statusError = [self unexpectedResponseErrorfromRequest:request andResponse:response];
+            }
+            if (completionHandler) {
+                error = error ?: statusError;
+                completionHandler(error);
+            }
+        }];
+    }
 }
 
 - (void)postEvent:(MMEEvent *)event completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
