@@ -187,6 +187,8 @@
 
 - (void)flush {
     if (self.paused) {
+        [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeFlush,
+                                             MMEEventKeyLocalDebugDescription: @"Aborting flushing of event queue because collection is paused."}];
         return;
     }
     
@@ -442,12 +444,6 @@
         return;
     }
     
-    if (self.paused) {
-        [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypePush,
-                                             MMEEventKeyLocalDebugDescription: @"Aborting pushing event because collection is paused."}];
-        return;
-    }
-    
     [self.eventQueue addObject:event];
     [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypePush,
                                          MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Added event to event queue; event queue now has %ld events", (long)self.eventQueue.count]}];
@@ -489,6 +485,7 @@
     if (self.timerManager && configuration.eventFlushSecondsThreshold != self.timerManager.timeInterval) {
         [self.timerManager cancel];
         self.timerManager = [[MMETimerManager alloc] initWithTimeInterval:self.configuration.eventFlushSecondsThreshold target:self selector:@selector(flush)];
+        [self.timerManager start];
     }
 }
 

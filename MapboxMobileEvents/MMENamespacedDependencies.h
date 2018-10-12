@@ -657,3 +657,7 @@
 #define kMMEResponseKey __NS_SYMBOL(kMMEResponseKey)
 #endif
 
+#ifndef kMMEMaxRequestCount
+#define kMMEMaxRequestCount __NS_SYMBOL(kMMEMaxRequestCount)
+#endif
+
