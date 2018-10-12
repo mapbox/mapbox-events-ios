@@ -83,9 +83,20 @@
     return mapTapEvent;
 }
 
-+ (instancetype)mapOfflineDownloadWithDateString:(NSString *)dateString attributes:(NSDictionary *)attributes {
++ (instancetype)mapOfflineDownloadStartWithDateString:(NSString *)dateString attributes:(NSDictionary *)attributes {
     MMEEvent *mapOfflineDownloadEvent = [[MMEEvent alloc] init];
-    mapOfflineDownloadEvent.name = MMEEventTypeOfflineDownload;
+    mapOfflineDownloadEvent.name = MMEventTypeOfflineDownloadStart;
+    NSMutableDictionary *commonAttributes = [NSMutableDictionary dictionary];
+    commonAttributes[MMEEventKeyEvent] = mapOfflineDownloadEvent.name;
+    commonAttributes[MMEEventKeyCreated] = dateString;
+    [commonAttributes addEntriesFromDictionary:attributes];
+    mapOfflineDownloadEvent.attributes = commonAttributes;
+    return mapOfflineDownloadEvent;
+}
+
++ (instancetype)mapOfflineDownloadCompleteWithDateString:(NSString *)dateString attributes:(NSDictionary *)attributes {
+    MMEEvent *mapOfflineDownloadEvent = [[MMEEvent alloc] init];
+    mapOfflineDownloadEvent.name = MMEventTypeOfflineDownloadComplete;
     NSMutableDictionary *commonAttributes = [NSMutableDictionary dictionary];
     commonAttributes[MMEEventKeyEvent] = mapOfflineDownloadEvent.name;
     commonAttributes[MMEEventKeyCreated] = dateString;

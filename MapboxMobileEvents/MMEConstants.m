@@ -33,7 +33,8 @@ NSString * const MMEEventTypeMapDragEnd = @"map.dragend";
 NSString * const MMEEventTypeLocation = @"location";
 NSString * const MMEEventTypeVisit = @"visit";
 NSString * const MMEEventTypeLocalDebug = @"debug";
-NSString * const MMEEventTypeOfflineDownload = @"map.offlineDownload";
+NSString * const MMEventTypeOfflineDownloadStart = @"map.offlineDownload.start";
+NSString * const MMEventTypeOfflineDownloadComplete = @"map.offlineDownload.complete";
 
 NSString * const MMEEventGestureSingleTap = @"SingleTap";
 NSString * const MMEEventGestureDoubleTap = @"DoubleTap";

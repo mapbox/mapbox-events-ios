@@ -327,8 +327,10 @@
     } else if ([name isEqualToString:MMEEventTypeMapDragEnd]) {
         event = [MMEEvent mapDragEndEventWithDateString:[self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]]
                                              attributes:attributes];
-    } else if ([name isEqualToString:MMEEventTypeOfflineDownload]) {
-        event = [MMEEvent mapOfflineDownloadWithDateString:[self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]] attributes:attributes];
+    } else if ([name isEqualToString:MMEventTypeOfflineDownloadStart]) {
+        event = [MMEEvent mapOfflineDownloadStartWithDateString:[self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]] attributes:attributes];
+    } else if ([name isEqualToString:MMEventTypeOfflineDownloadComplete]) {
+        event = [MMEEvent mapOfflineDownloadCompleteWithDateString:[self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]] attributes:attributes];
     }
     
     if ([name hasPrefix:MMENavigationEventPrefix]) {
