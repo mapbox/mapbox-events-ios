@@ -16,6 +16,7 @@ typedef NS_ENUM(NSInteger, MMEErrorCode) {
 
 @property (nonatomic) id<MMENSURLSessionWrapper> sessionWrapper;
 @property (nonatomic) NSBundle *applicationBundle;
+@property (nonatomic) MMEMetricsManager *metricsManager;
 @property (nonatomic, copy) NSString *userAgent;
 
 @end
@@ -30,6 +31,7 @@ typedef NS_ENUM(NSInteger, MMEErrorCode) {
         _hostSDKVersion = hostSDKVersion;
         _sessionWrapper = [[MMENSURLSessionWrapper alloc] init];
         _applicationBundle = [NSBundle mainBundle];
+        _metricsManager = [MMEMetricsManager sharedManager];
         
         [self setBaseURL:nil];
         [self setupUserAgent];
@@ -54,6 +56,11 @@ typedef NS_ENUM(NSInteger, MMEErrorCode) {
         if (completionHandler) {
             error = error ?: statusError;
             completionHandler(error);
+            
+            [self.metricsManager metricsFromEvents:events andError:error];
+            if (request.HTTPBody && error == nil) {
+                [self.metricsManager metricsFromData:request.HTTPBody];
+            }
         }
     }];
 }
@@ -82,6 +89,11 @@ typedef NS_ENUM(NSInteger, MMEErrorCode) {
         if (completionHandler) {
             error = error ?: statusError;
             completionHandler(error);
+            
+            [self.metricsManager metricsFromEvents:filePaths andError:error];
+            if (request.HTTPBody && error == nil) {
+                [self.metricsManager metricsFromData:request.HTTPBody];
+            }
         }
     }];
 }
@@ -100,6 +112,11 @@ typedef NS_ENUM(NSInteger, MMEErrorCode) {
         if (completionHandler) {
             error = error ?: statusError;
             completionHandler(error, data);
+            
+            [self.metricsManager metricsFromEvents:nil andError:error];
+            if (request.HTTPBody && error == nil) {
+                [self.metricsManager metricsFromData:request.HTTPBody];
+            }
         }
     }];
 }

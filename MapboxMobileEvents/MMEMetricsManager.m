@@ -1,12 +1,14 @@
 #import "MMEMetricsManager.h"
 #import "MMEEvent.h"
+#import "MMEReachability.h"
+#import "MMEConstants.h"
 
 @interface MMEMetricsManager ()
 
 @property (nonatomic) int requests;
-@property (nonatomic) int totalDataTransfer;
-@property (nonatomic) int cellDataTransfer;
-@property (nonatomic) int wifiDataTransfer;
+@property (nonatomic) long totalDataTransfer;
+@property (nonatomic) long cellDataTransfer;
+@property (nonatomic) long wifiDataTransfer;
 @property (nonatomic) int appWakeups;
 @property (nonatomic) int eventCountFailed;
 @property (nonatomic) int eventCountTotal;
@@ -54,6 +56,65 @@
     }
 }
 
+- (void)metricsFromEvents:(nullable NSArray *)events andError:(nullable NSError *)error {
+    if (error == nil) {
+        if (self.requests == 0) {
+            self.requests = 1;
+        } else {
+            self.requests = self.requests + 1;
+        }
+    } else {
+        if (events) {
+            if (self.eventCountFailed == 0) {
+                self.eventCountFailed = (int)events.count;
+            } else {
+                self.eventCountFailed = self.eventCountFailed + (int)events.count;
+            }
+        }
+        
+        if ([error.userInfo objectForKey:MMEResponseKey]) {
+            NSHTTPURLResponse *response = (NSHTTPURLResponse *)[error.userInfo objectForKey:MMEResponseKey];
+            NSString *urlString = [[response URL] absoluteString];
+            NSNumber *statusCode = [NSNumber numberWithLong:(long)response.statusCode];
+            NSString *statusCodeString = [statusCode stringValue];
+            NSString *failedRequestKey = [NSString stringWithFormat:@"%@, %@",urlString, statusCodeString];
+            
+            if (self.failedRequestsDict == nil) {
+                self.failedRequestsDict = [[NSMutableDictionary alloc] init];
+            }
+            
+            if ([self.failedRequestsDict objectForKey:failedRequestKey] != nil) {
+                NSNumber *failedCount = [self.failedRequestsDict objectForKey:failedRequestKey];
+                failedCount = [NSNumber numberWithInteger:[failedCount integerValue] + 1];
+                [self.failedRequestsDict setObject:failedCount forKey:failedRequestKey];
+            } else {
+                [self.failedRequestsDict setObject:@1 forKey:failedRequestKey];
+            }
+        }
+    }
+}
+
+- (void)metricsFromData:(NSData *)data {
+    if (self.totalDataTransfer == 0) {
+        self.totalDataTransfer = data.length;
+    } else {
+        self.totalDataTransfer = self.totalDataTransfer + data.length;
+    }
+    
+    if ([[MMEReachability reachabilityForLocalWiFi] isReachableViaWiFi]) {
+        if (self.wifiDataTransfer == 0) {
+            self.wifiDataTransfer = data.length;
+        } else {
+            self.wifiDataTransfer = self.wifiDataTransfer + data.length;
+        }
+    } else {
+        if (self.totalDataTransfer == 0) {
+            self.cellDataTransfer = data.length;
+        } else {
+            self.cellDataTransfer = self.cellDataTransfer + data.length;
+        }
+    }
+}
 
 
 @end

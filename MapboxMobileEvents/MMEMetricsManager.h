@@ -5,9 +5,9 @@ NS_ASSUME_NONNULL_BEGIN
 @interface MMEMetricsManager : NSObject
 
 @property (nonatomic, readonly) int requests;
-@property (nonatomic, readonly) int totalDataTransfer;
-@property (nonatomic, readonly) int cellDataTransfer;
-@property (nonatomic, readonly) int wifiDataTransfer;
+@property (nonatomic, readonly) long totalDataTransfer;
+@property (nonatomic, readonly) long cellDataTransfer;
+@property (nonatomic, readonly) long wifiDataTransfer;
 @property (nonatomic, readonly) int appWakeups;
 @property (nonatomic, readonly) int eventCountFailed;
 @property (nonatomic, readonly) int eventCountTotal;
@@ -22,8 +22,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)sharedManager;
 
-- (void)countFromEventQueue:(NSArray *)eventQueue;
+- (void)metricsFromData:(NSData *)data;
 - (void)metricsFromEventQueue:(NSArray *)eventQueue;
+- (void)metricsFromEvents:(nullable NSArray *)events andError:(nullable NSError *)error;
 
 @end
 
