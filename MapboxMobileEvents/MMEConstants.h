@@ -89,6 +89,8 @@ extern NSString * const MMEventTypeCarplayConnect;
 extern NSString * const MMEventTypeCarplayDisconnect;
 extern NSString * const MMEventCarplayPrefix;
 
+extern NSString * const MMEResponseKey;
+
 // SDK event source
 extern NSString * const MMEEventSource;
 

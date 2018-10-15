@@ -3,6 +3,7 @@
 #import "MMENSURLSessionWrapper.h"
 #import "MMEEvent.h"
 #import "NSData+MMEGZIP.h"
+#import "MMEMetricsManager.h"
 
 typedef NS_ENUM(NSInteger, MMEErrorCode) {
     MMESessionFailedError,
@@ -18,8 +19,6 @@ typedef NS_ENUM(NSInteger, MMEErrorCode) {
 @property (nonatomic, copy) NSString *userAgent;
 
 @end
-
-NSString *const kMMEResponseKey = @"MMEResponseKey";
 
 @implementation MMEAPIClient
 
@@ -127,7 +126,7 @@ NSString *const kMMEResponseKey = @"MMEResponseKey";
         NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
         [userInfo setValue:description forKey:NSLocalizedDescriptionKey];
         [userInfo setValue:reason forKey:NSLocalizedFailureReasonErrorKey];
-        [userInfo setValue:httpResponse forKey:kMMEResponseKey];
+        [userInfo setValue:httpResponse forKey:MMEResponseKey];
         
         statusError = [NSError errorWithDomain:MMEErrorDomain code:MMESessionFailedError userInfo:userInfo];
     }
@@ -141,7 +140,7 @@ NSString *const kMMEResponseKey = @"MMEResponseKey";
     NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
     [userInfo setValue:description forKey:NSLocalizedDescriptionKey];
     [userInfo setValue:reason forKey:NSLocalizedFailureReasonErrorKey];
-    [userInfo setValue:response forKey:kMMEResponseKey];
+    [userInfo setValue:response forKey:MMEResponseKey];
     
     NSError *statusError = [NSError errorWithDomain:MMEErrorDomain code:MMEUnexpectedResponseError userInfo:userInfo];
     return statusError;
