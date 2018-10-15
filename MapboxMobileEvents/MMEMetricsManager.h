@@ -23,6 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)sharedManager;
 
 - (void)countFromEventQueue:(NSArray *)eventQueue;
+- (void)metricsFromEventQueue:(NSArray *)eventQueue;
 
 @end
 

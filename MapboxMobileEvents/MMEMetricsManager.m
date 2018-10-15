@@ -34,13 +34,13 @@
     return _sharedManager;
 }
 
-- (void)countFromEventQueue:(NSArray *)eventQueue {
+- (void)metricsFromEventQueue:(NSArray *)eventQueue {
     if (eventQueue.count > 0) {
         if (self.eventCountPerType == nil) {
             self.eventCountPerType = [[NSMutableDictionary alloc] init];
         }
         
-        self.eventCountMax = self.eventCountMax + (int)eventQueue.count;
+        self.eventCountTotal = self.eventCountTotal + (int)eventQueue.count;
         
         for (MMEEvent *event in eventQueue) {
             if ([self.eventCountPerType objectForKey:event.name] != nil) {

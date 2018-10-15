@@ -202,7 +202,7 @@
     NSArray *events = [self.eventQueue copy];
     NSUInteger eventsCount = events.count;
     
-    [MMEMetricsManager.sharedManager countFromEventQueue:events];
+    [MMEMetricsManager.sharedManager metricsFromEventQueue:events];
     
     __weak __typeof__(self) weakSelf = self;
     [self.apiClient postEvents:events completionHandler:^(NSError * _Nullable error) {

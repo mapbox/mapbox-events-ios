@@ -33,7 +33,7 @@ describe(@"MMEMetricsManager", ^{
     
         context(@"when counting eventQueue metrics", ^{
             beforeEach(^{
-                [manager countFromEventQueue:eventQueue];
+                [manager metricsFromEventQueue:eventQueue];
             });
             
             it(@"should have total count increase", ^{
