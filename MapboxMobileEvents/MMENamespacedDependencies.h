@@ -429,8 +429,8 @@
 #define MMEventTypeOfflineDownloadStart __NS_SYMBOL(MMEventTypeOfflineDownloadStart)
 #endif
 
-#ifndef MMEventTypeOfflineDownloadComplete
-#define MMEventTypeOfflineDownloadComplete __NS_SYMBOL(MMEventTypeOfflineDownloadComplete)
+#ifndef MMEventTypeOfflineDownloadEnd
+#define MMEventTypeOfflineDownloadEnd __NS_SYMBOL(MMEventTypeOfflineDownloadEnd)
 #endif
 
 #ifndef MMEEventGestureSingleTap
