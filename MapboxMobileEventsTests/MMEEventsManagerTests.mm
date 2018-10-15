@@ -780,20 +780,20 @@ describe(@"MMEEventsManager", ^{
                 });
                 
                 it(@"has the correct event", ^{
-                    MMEEvent *expectedEvent = [MMEEvent mapOfflineDownloadStartWithDateString:dateString attributes:attributes];
+                    MMEEvent *expectedEvent = [MMEEvent mapOfflineDownloadStartEventWithDateString:dateString attributes:attributes];
                     MMEEvent *event = eventsManager.eventQueue.firstObject;
                     
                     event should equal(expectedEvent);
                 });
             });
             
-            context(@"when a map download complete event is pushed", ^{
+            context(@"when a map download end event is pushed", ^{
                 beforeEach(^{
-                    [eventsManager enqueueEventWithName:MMEventTypeOfflineDownloadComplete attributes:attributes];
+                    [eventsManager enqueueEventWithName:MMEventTypeOfflineDownloadEnd attributes:attributes];
                 });
                 
                 it(@"has the correct event", ^{
-                    MMEEvent *expectedEvent = [MMEEvent mapOfflineDownloadCompleteWithDateString:dateString attributes:attributes];
+                    MMEEvent *expectedEvent = [MMEEvent mapOfflineDownloadEndEventWithDateString:dateString attributes:attributes];
                     MMEEvent *event = eventsManager.eventQueue.firstObject;
                     
                     event should equal(expectedEvent);
