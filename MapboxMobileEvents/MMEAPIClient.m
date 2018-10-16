@@ -21,6 +21,8 @@ typedef NS_ENUM(NSInteger, MMEErrorCode) {
 
 @end
 
+int const kMMEMaxRequestCount = 1000;
+
 @implementation MMEAPIClient
 
 - (instancetype)initWithAccessToken:(NSString *)accessToken userAgentBase:(NSString *)userAgentBase hostSDKVersion:(NSString *)hostSDKVersion {

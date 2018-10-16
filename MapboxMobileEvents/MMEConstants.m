@@ -15,6 +15,7 @@ NSString * const MMEAPIClientHeaderFieldContentEncodingKey = @"Content-Encoding"
 NSString * const MMEAPIClientHTTPMethodPost = @"POST";
 NSString * const MMEAPIClientHTTPMethodGet = @"GET";
 NSString * const MMEErrorDomain = @"MMEErrorDomain";
+NSString * const MMEResponseKey = @"MMEResponseKey";
 
 NSString * const MMEDebugEventTypeFlush = @"flush";
 NSString * const MMEDebugEventTypePush = @"push";
@@ -27,12 +28,12 @@ NSString * const MMEDebugEventTypeMetricCollection = @"metricCollection";
 NSString * const MMEDebugEventTypeLocationManager = @"locationManager";
 
 NSString * const MMEEventTypeAppUserTurnstile = @"appUserTurnstile";
-NSString * const MMEEventTypeMapLoad = @"map.load";
-NSString * const MMEEventTypeMapTap = @"map.click";
-NSString * const MMEEventTypeMapDragEnd = @"map.dragend";
 NSString * const MMEEventTypeLocation = @"location";
 NSString * const MMEEventTypeVisit = @"visit";
 NSString * const MMEEventTypeLocalDebug = @"debug";
+NSString * const MMEEventTypeMapLoad = @"map.load";
+NSString * const MMEEventTypeMapTap = @"map.click";
+NSString * const MMEEventTypeMapDragEnd = @"map.dragend";
 NSString * const MMEventTypeOfflineDownloadStart = @"map.offlineDownload.start";
 NSString * const MMEventTypeOfflineDownloadEnd = @"map.offlineDownload.end";
 
@@ -73,8 +74,11 @@ NSString * const MMEEventKeyApplicationState = @"applicationState";
 NSString * const MMEEventKeyAltitude = @"altitude";
 NSString * const MMEEventSDKIdentifier = @"sdkIdentifier";
 NSString * const MMEEventSDKVersion = @"sdkVersion";
-NSString * const MMENavigationEventPrefix = @"navigation.";
+NSString * const MMEDebugEventType = @"debug.type";
+
 NSString * const MMEVisionEventPrefix = @"vision.";
+
+NSString * const MMENavigationEventPrefix = @"navigation.";
 NSString * const MMEEventTypeNavigationDepart = @"navigation.depart";
 NSString * const MMEEventTypeNavigationArrive = @"navigation.arrive";
 NSString * const MMEEventTypeNavigationCancel = @"navigation.cancel";
@@ -82,12 +86,10 @@ NSString * const MMEEventTypeNavigationFeedback = @"navigation.feedback";
 NSString * const MMEEventTypeNavigationReroute = @"navigation.reroute";
 NSString * const MMEventTypeNavigationCarplayConnect = @"navigation.carplay.connect";
 NSString * const MMEventTypeNavigationCarplayDisconnect = @"navigation.carplay.disconnect";
-NSString * const MMEDebugEventType = @"debug.type";
+
 NSString * const MMESearchEventPrefix = @"search.";
 NSString * const MMEEventTypeSearchSelected = @"search.selected";
 NSString * const MMEEventTypeSearchFeedback = @"search.feedback";
-
-NSString * const MMEResponseKey = @"MMEResponseKey";
 
 NSString * const MMEEventSource = @"mapbox";
 
