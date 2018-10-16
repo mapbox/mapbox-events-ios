@@ -45,31 +45,19 @@
         self.eventCountTotal = self.eventCountTotal + (int)eventQueue.count;
         
         for (MMEEvent *event in eventQueue) {
-            if ([self.eventCountPerType objectForKey:event.name] != nil) {
-                NSNumber *eventCount = [self.eventCountPerType objectForKey:event.name];
-                eventCount = [NSNumber numberWithInteger:[eventCount integerValue] + 1];
-                [self.eventCountPerType setObject:eventCount forKey:event.name];
-            } else {
-                [self.eventCountPerType setObject:@1 forKey:event.name];
-            }
+            NSNumber *eventCount = [self.eventCountPerType objectForKey:event.name];
+            eventCount = [NSNumber numberWithInteger:[eventCount integerValue] + 1];
+            [self.eventCountPerType setObject:eventCount forKey:event.name];
         }
     }
 }
 
 - (void)metricsFromEvents:(nullable NSArray *)events andError:(nullable NSError *)error {
     if (error == nil) {
-        if (self.requests == 0) {
-            self.requests = 1;
-        } else {
-            self.requests = self.requests + 1;
-        }
+        self.requests = self.requests + 1;
     } else {
         if (events) {
-            if (self.eventCountFailed == 0) {
-                self.eventCountFailed = (int)events.count;
-            } else {
-                self.eventCountFailed = self.eventCountFailed + (int)events.count;
-            }
+            self.eventCountFailed = self.eventCountFailed + (int)events.count;
         }
         
         if ([error.userInfo objectForKey:MMEResponseKey]) {
@@ -82,38 +70,23 @@
             if (self.failedRequestsDict == nil) {
                 self.failedRequestsDict = [[NSMutableDictionary alloc] init];
             }
-            
-            if ([self.failedRequestsDict objectForKey:failedRequestKey] != nil) {
-                NSNumber *failedCount = [self.failedRequestsDict objectForKey:failedRequestKey];
-                failedCount = [NSNumber numberWithInteger:[failedCount integerValue] + 1];
-                [self.failedRequestsDict setObject:failedCount forKey:failedRequestKey];
-            } else {
-                [self.failedRequestsDict setObject:@1 forKey:failedRequestKey];
-            }
+        
+            NSNumber *failedCount = [self.failedRequestsDict objectForKey:failedRequestKey];
+            failedCount = [NSNumber numberWithInteger:[failedCount integerValue] + 1];
+            [self.failedRequestsDict setObject:failedCount forKey:failedRequestKey];
         }
     }
 }
 
 - (void)metricsFromData:(NSData *)data {
-    if (self.totalDataTransfer == 0) {
-        self.totalDataTransfer = data.length;
-    } else {
-        self.totalDataTransfer = self.totalDataTransfer + data.length;
-    }
+    self.totalDataTransfer = self.totalDataTransfer + data.length;
     
     if ([[MMEReachability reachabilityForLocalWiFi] isReachableViaWiFi]) {
-        if (self.wifiDataTransfer == 0) {
-            self.wifiDataTransfer = data.length;
-        } else {
-            self.wifiDataTransfer = self.wifiDataTransfer + data.length;
-        }
+        self.wifiDataTransfer = self.wifiDataTransfer + data.length;
     } else {
-        if (self.totalDataTransfer == 0) {
-            self.cellDataTransfer = data.length;
-        } else {
-            self.cellDataTransfer = self.cellDataTransfer + data.length;
-        }
+        self.cellDataTransfer = self.cellDataTransfer + data.length;
     }
+}
 }
 
 
