@@ -188,6 +188,8 @@
 
 - (void)flush {
     if (self.paused) {
+        [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeFlush,
+                                             MMEEventKeyLocalDebugDescription: @"Aborting flushing of event queue because collection is paused."}];
         return;
     }
     
@@ -329,8 +331,10 @@
     } else if ([name isEqualToString:MMEEventTypeMapDragEnd]) {
         event = [MMEEvent mapDragEndEventWithDateString:[self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]]
                                              attributes:attributes];
-    } else if ([name isEqualToString:MMEEventTypeOfflineDownload]) {
-        event = [MMEEvent mapOfflineDownloadWithDateString:[self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]] attributes:attributes];
+    } else if ([name isEqualToString:MMEventTypeOfflineDownloadStart]) {
+        event = [MMEEvent mapOfflineDownloadStartEventWithDateString:[self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]] attributes:attributes];
+    } else if ([name isEqualToString:MMEventTypeOfflineDownloadEnd]) {
+        event = [MMEEvent mapOfflineDownloadEndEventWithDateString:[self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]] attributes:attributes];
     }
     
     if ([name hasPrefix:MMENavigationEventPrefix]) {
@@ -343,10 +347,6 @@
     
     if ([name hasPrefix:MMESearchEventPrefix]) {
         event = [MMEEvent searchEventWithName:name attributes:attributes];
-    }
-    
-    if ([name hasPrefix:MMEventCarplayPrefix]) {
-        event = [MMEEvent carplayEventWithName:name attributes:attributes];
     }
 
     if (event) {
@@ -448,12 +448,6 @@
         return;
     }
     
-    if (self.paused) {
-        [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypePush,
-                                             MMEEventKeyLocalDebugDescription: @"Aborting pushing event because collection is paused."}];
-        return;
-    }
-    
     [self.eventQueue addObject:event];
     [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypePush,
                                          MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Added event to event queue; event queue now has %ld events", (long)self.eventQueue.count]}];
@@ -495,6 +489,7 @@
     if (self.timerManager && configuration.eventFlushSecondsThreshold != self.timerManager.timeInterval) {
         [self.timerManager cancel];
         self.timerManager = [[MMETimerManager alloc] initWithTimeInterval:self.configuration.eventFlushSecondsThreshold target:self selector:@selector(flush)];
+        [self.timerManager start];
     }
 }
 

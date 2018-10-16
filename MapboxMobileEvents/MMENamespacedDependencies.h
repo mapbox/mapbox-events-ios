@@ -425,6 +425,14 @@
 #define MMEEventTypeLocalDebug __NS_SYMBOL(MMEEventTypeLocalDebug)
 #endif
 
+#ifndef MMEventTypeOfflineDownloadStart
+#define MMEventTypeOfflineDownloadStart __NS_SYMBOL(MMEventTypeOfflineDownloadStart)
+#endif
+
+#ifndef MMEventTypeOfflineDownloadEnd
+#define MMEventTypeOfflineDownloadEnd __NS_SYMBOL(MMEventTypeOfflineDownloadEnd)
+#endif
+
 #ifndef MMEEventGestureSingleTap
 #define MMEEventGestureSingleTap __NS_SYMBOL(MMEEventGestureSingleTap)
 #endif
@@ -597,6 +605,14 @@
 #define MMEEventTypeNavigationReroute __NS_SYMBOL(MMEEventTypeNavigationReroute)
 #endif
 
+#ifndef MMEventTypeNavigationCarplayConnect
+#define MMEventTypeNavigationCarplayConnect __NS_SYMBOL(MMEventTypeNavigationCarplayConnect)
+#endif
+
+#ifndef MMEventTypeNavigationCarplayDisconnect
+#define MMEventTypeNavigationCarplayDisconnect __NS_SYMBOL(MMEventTypeNavigationCarplayDisconnect)
+#endif
+
 #ifndef MMEDebugEventType
 #define MMEDebugEventType __NS_SYMBOL(MMEDebugEventType)
 #endif
@@ -613,18 +629,6 @@
 #define MMEEventTypeSearchFeedback __NS_SYMBOL(MMEEventTypeSearchFeedback)
 #endif
 
-#ifndef MMEventTypeCarplayConnect
-#define MMEventTypeCarplayConnect __NS_SYMBOL(MMEventTypeCarplayConnect)
-#endif
-
-#ifndef MMEventTypeCarplayDisconnect
-#define MMEventTypeCarplayDisconnect __NS_SYMBOL(MMEventTypeCarplayDisconnect)
-#endif
-
-#ifndef MMEventCarplayPrefix
-#define MMEventCarplayPrefix __NS_SYMBOL(MMEventCarplayPrefix)
-#endif
-
 #ifndef MMEEventSource
 #define MMEEventSource __NS_SYMBOL(MMEEventSource)
 #endif
@@ -633,12 +637,12 @@
 #define MMELoggerHTML __NS_SYMBOL(MMELoggerHTML)
 #endif
 
-#ifndef MMELoggerShareableHTML
-#define MMELoggerShareableHTML __NS_SYMBOL(MMELoggerShareableHTML)
-#endif
-
 #ifndef kMMEReachabilityChangedNotification
 #define kMMEReachabilityChangedNotification __NS_SYMBOL(kMMEReachabilityChangedNotification)
+#endif
+
+#ifndef MMELoggerShareableHTML
+#define MMELoggerShareableHTML __NS_SYMBOL(MMELoggerShareableHTML)
 #endif
 
 #ifndef MMELocationManagerDistanceFilter
@@ -655,5 +659,9 @@
 
 #ifndef kMMEResponseKey
 #define kMMEResponseKey __NS_SYMBOL(kMMEResponseKey)
+#endif
+
+#ifndef kMMEMaxRequestCount
+#define kMMEMaxRequestCount __NS_SYMBOL(kMMEMaxRequestCount)
 #endif
 

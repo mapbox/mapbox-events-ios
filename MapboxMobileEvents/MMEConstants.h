@@ -35,7 +35,8 @@ extern NSString * const MMEEventTypeMapDragEnd;
 extern NSString * const MMEEventTypeLocation;
 extern NSString * const MMEEventTypeVisit;
 extern NSString * const MMEEventTypeLocalDebug;
-extern NSString * const MMEEventTypeOfflineDownload;
+extern NSString * const MMEventTypeOfflineDownloadStart;
+extern NSString * const MMEventTypeOfflineDownloadEnd;
 
 // Gestures
 extern NSString * const MMEEventGestureSingleTap;
@@ -81,13 +82,12 @@ extern NSString * const MMEEventTypeNavigationArrive;
 extern NSString * const MMEEventTypeNavigationCancel;
 extern NSString * const MMEEventTypeNavigationFeedback;
 extern NSString * const MMEEventTypeNavigationReroute;
+extern NSString * const MMEventTypeNavigationCarplayConnect;
+extern NSString * const MMEventTypeNavigationCarplayDisconnect;
 extern NSString * const MMEDebugEventType;
 extern NSString * const MMEEventTypeSearchSelected;
 extern NSString * const MMEEventTypeSearchFeedback;
 extern NSString * const MMESearchEventPrefix;
-extern NSString * const MMEventTypeCarplayConnect;
-extern NSString * const MMEventTypeCarplayDisconnect;
-extern NSString * const MMEventCarplayPrefix;
 
 extern NSString * const MMEResponseKey;
 

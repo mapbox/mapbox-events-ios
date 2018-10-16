@@ -774,13 +774,26 @@ describe(@"MMEEventsManager", ^{
                 });
             });
             
-            context(@"when a map download event is pushed", ^{
+            context(@"when a map download start event is pushed", ^{
                 beforeEach(^{
-                    [eventsManager enqueueEventWithName:MMEEventTypeOfflineDownload attributes:attributes];
+                    [eventsManager enqueueEventWithName:MMEventTypeOfflineDownloadStart attributes:attributes];
                 });
                 
                 it(@"has the correct event", ^{
-                    MMEEvent *expectedEvent = [MMEEvent mapOfflineDownloadWithDateString:dateString attributes:attributes];
+                    MMEEvent *expectedEvent = [MMEEvent mapOfflineDownloadStartEventWithDateString:dateString attributes:attributes];
+                    MMEEvent *event = eventsManager.eventQueue.firstObject;
+                    
+                    event should equal(expectedEvent);
+                });
+            });
+            
+            context(@"when a map download end event is pushed", ^{
+                beforeEach(^{
+                    [eventsManager enqueueEventWithName:MMEventTypeOfflineDownloadEnd attributes:attributes];
+                });
+                
+                it(@"has the correct event", ^{
+                    MMEEvent *expectedEvent = [MMEEvent mapOfflineDownloadEndEventWithDateString:dateString attributes:attributes];
                     MMEEvent *event = eventsManager.eventQueue.firstObject;
                     
                     event should equal(expectedEvent);
@@ -824,20 +837,6 @@ describe(@"MMEEventsManager", ^{
                 
                 it(@"has the correct event", ^{
                     MMEEvent *expectedEvent = [MMEEvent searchEventWithName:searchEventName attributes:attributes];
-                    MMEEvent *event = eventsManager.eventQueue.firstObject;
-                    event should equal(expectedEvent);
-                });
-            });
-            
-            context(@"when a carplay event is pushed", ^{
-                __block NSString * carplayEventName = @"carplay.*";
-                
-                beforeEach(^{
-                    [eventsManager enqueueEventWithName:carplayEventName attributes:attributes];
-                });
-                
-                it(@"has the correct event", ^{
-                    MMEEvent *expectedEvent = [MMEEvent carplayEventWithName:carplayEventName attributes:attributes];
                     MMEEvent *event = eventsManager.eventQueue.firstObject;
                     event should equal(expectedEvent);
                 });
@@ -902,8 +901,8 @@ describe(@"MMEEventsManager", ^{
                     [eventsManager enqueueEventWithName:MMEEventTypeMapLoad];
                 });
                 
-                it(@"has no event", ^{
-                    eventsManager.eventQueue.count should equal(0);
+                it(@"should queue events", ^{
+                    eventsManager.eventQueue.count should equal(1);
                 });
             });
         });
