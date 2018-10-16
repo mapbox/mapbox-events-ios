@@ -32,7 +32,7 @@ describe(@"MMEMetricsManager", ^{
         });
         
     
-        context(@"when counting eventQueue metrics", ^{
+        context(@"when incrementing eventQueue metrics", ^{
             beforeEach(^{
                 [manager metricsFromEventQueue:eventQueue];
             });
@@ -50,7 +50,7 @@ describe(@"MMEMetricsManager", ^{
             });
         });
         
-        context(@"when counting failed HTTP response metrics", ^{
+        context(@"when incrementing failed HTTP response metrics", ^{
             beforeEach(^{
                 NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:[NSURL URLWithString:@"events.mapbox.com"] statusCode:404 HTTPVersion:nil headerFields:nil];
                 NSDictionary *userInfoFake = [NSDictionary dictionaryWithObject:response forKey:MMEResponseKey];
@@ -87,7 +87,7 @@ describe(@"MMEMetricsManager", ^{
             });
         });
         
-        context(@"when counting successful HTTP requests", ^{
+        context(@"when incrementing successful HTTP requests", ^{
             beforeEach(^{
                 [manager metricsFromEvents:eventQueue andError:nil];
             });
@@ -97,7 +97,7 @@ describe(@"MMEMetricsManager", ^{
             });
         });
         
-        context(@"when counting data transfer metrics", ^{
+        context(@"when incrementing data transfer metrics", ^{
             __block NSData *uncompressedData;
             
             beforeEach(^{
@@ -138,7 +138,7 @@ describe(@"MMEMetricsManager", ^{
                 });
             }
             
-            context(@"when counting more data transfer metrics", ^{
+            context(@"when incrementing more data transfer metrics", ^{
                 beforeEach(^{
                     [manager metricsFromData:uncompressedData];
                 });
@@ -158,6 +158,17 @@ describe(@"MMEMetricsManager", ^{
                 }
             });
         });
+        context(@"when incrementing appWakeUp counter ", ^{
+            beforeEach(^{
+                [manager incrementAppWakeUpCount];
+                [manager incrementAppWakeUpCount];
+            });
+            
+            it(@"should have appWakeUp count increased", ^{
+                manager.appWakeups should equal(2);
+            });
+        });
+        
     });
 });
 

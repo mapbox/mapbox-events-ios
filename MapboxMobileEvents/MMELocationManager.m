@@ -2,6 +2,7 @@
 #import "MMEUIApplicationWrapper.h"
 #import "MMEDependencyManager.h"
 #import "MMEEventsConfiguration.h"
+#import "MMEMetricsManager.h"
 #import <CoreLocation/CoreLocation.h>
 
 static const NSTimeInterval MMELocationManagerHibernationTimeout = 300.0;
@@ -209,6 +210,7 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
 - (void)locationManager:(CLLocationManager *)locationManager didExitRegion:(CLRegion *)region {
     [self startBackgroundTimeoutTimer];
     [self.locationManager startUpdatingLocation];
+    [[MMEMetricsManager sharedManager] incrementAppWakeUpCount];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didVisit:(CLVisit *)visit {

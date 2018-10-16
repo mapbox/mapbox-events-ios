@@ -87,6 +87,9 @@
         self.cellDataTransfer = self.cellDataTransfer + data.length;
     }
 }
+
+- (void)incrementAppWakeUpCount {
+    self.appWakeups = self.appWakeups + 1;
 }
 
 
