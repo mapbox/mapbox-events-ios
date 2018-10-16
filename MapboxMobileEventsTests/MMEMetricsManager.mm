@@ -158,7 +158,7 @@ describe(@"MMEMetricsManager", ^{
                 }
             });
         });
-        context(@"when incrementing appWakeUp counter ", ^{
+        context(@"when incrementing appWakeUp counter", ^{
             beforeEach(^{
                 [manager incrementAppWakeUpCount];
                 [manager incrementAppWakeUpCount];
@@ -168,6 +168,18 @@ describe(@"MMEMetricsManager", ^{
                 manager.appWakeups should equal(2);
             });
         });
+        context(@"when capturing configuration", ^{
+            beforeEach(^{
+                NSDictionary *configFake = [NSDictionary dictionaryWithObject:@"aniceconfig" forKey:@"anicekey"];
+                
+                [manager captureConfigurationJSON:configFake];
+            });
+            
+            it(@"should have a configuration assigned", ^{
+                manager.configResponseDict should_not be_nil;
+            });
+        });
+        
         
     });
 });

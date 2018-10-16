@@ -92,5 +92,10 @@
     self.appWakeups = self.appWakeups + 1;
 }
 
+- (void)captureConfigurationJSON:(NSDictionary *)configuration {
+    if (configuration) {
+        self.configResponseDict = configuration;
+    }
+}
 
 @end
