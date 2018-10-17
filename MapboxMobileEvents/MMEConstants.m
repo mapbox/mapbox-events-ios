@@ -28,6 +28,7 @@ NSString * const MMEDebugEventTypeMetricCollection = @"metricCollection";
 NSString * const MMEDebugEventTypeLocationManager = @"locationManager";
 
 NSString * const MMEEventTypeAppUserTurnstile = @"appUserTurnstile";
+NSString * const MMEEventTypeTelemetryMetrics = @"telemetryMetrics";
 NSString * const MMEEventTypeLocation = @"location";
 NSString * const MMEEventTypeVisit = @"visit";
 NSString * const MMEEventTypeLocalDebug = @"debug";

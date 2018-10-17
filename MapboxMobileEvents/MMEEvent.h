@@ -8,6 +8,7 @@
 @property (nonatomic, copy) NSDictionary *attributes;
 
 + (instancetype)turnstileEventWithAttributes:(NSDictionary *)attributes;
++ (instancetype)telemetryMetricsEventWithAttributes:(NSDictionary *)attributes;
 + (instancetype)locationEventWithAttributes:(NSDictionary *)attributes instanceIdentifer:(NSString *)instanceIdentifer commonEventData:(MMECommonEventData *)commonEventData;
 + (instancetype)visitEventWithAttributes:(NSDictionary *)attributes;
 + (instancetype)mapLoadEventWithDateString:(NSString *)dateString commonEventData:(MMECommonEventData *)commonEventData;

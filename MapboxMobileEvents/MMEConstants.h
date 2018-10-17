@@ -29,6 +29,7 @@ extern NSString * const MMEDebugEventTypeLocationManager;
 
 // Event types
 extern NSString * const MMEEventTypeAppUserTurnstile;
+extern NSString * const MMEEventTypeTelemetryMetrics;
 extern NSString * const MMEEventTypeMapLoad;
 extern NSString * const MMEEventTypeMapTap;
 extern NSString * const MMEEventTypeMapDragEnd;
