@@ -119,6 +119,22 @@
     self.dateUTCString = [dateFormatter stringFromDate:self.dateUTC];
 }
 
+- (void)resetMetrics {
+    self.failedRequestsDict = [[NSMutableDictionary alloc] init];
+    self.eventCountPerType = [[NSMutableDictionary alloc] init];
+    self.totalDataTransfer = 0;
+    self.cellDataTransfer = 0;
+    self.wifiDataTransfer = 0;
+    self.eventCountFailed = 0;
+    self.eventCountTotal = 0;
+    self.eventCountMax = 0;
+    self.appWakeups = 0;
+    self.deviceLat = 0;
+    self.deviceLon = 0;
+    self.requests = 0;
+    [self updateDateUTC];
+}
+
 #pragma mark -- attributes
 
 - (NSDictionary *)attributes {
@@ -132,8 +148,10 @@
     attributes[MMEEventEventCountTotal] = @(self.eventCountTotal);
     attributes[MMEEventEventCountMax] = @(self.eventCountMax);
     attributes[MMEEventAppWakeups] = @(self.appWakeups);
-    attributes[MMEEventDeviceLat] = @(self.deviceLat);
-    attributes[MMEEventDeviceLon] = @(self.deviceLon);
+    if (self.deviceLat != 0 && self.deviceLon != 0) {
+        attributes[MMEEventDeviceLat] = @(self.deviceLat);
+        attributes[MMEEventDeviceLon] = @(self.deviceLon);
+    }
     attributes[MMEEventRequests] = @(self.requests);
     
     return attributes;

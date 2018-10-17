@@ -334,10 +334,11 @@
         if (error) {
             [strongSelf pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTelemetryMetrics,
                                                        MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Could not send telemetryMetrics event: %@", error]}];
+            [strongSelf.metricsManager resetMetrics];
             return;
         }
         
-        [strongSelf.metricsManager updateDateUTC];
+        [strongSelf.metricsManager resetMetrics];
         [strongSelf pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstile,
                                                    MMEEventKeyLocalDebugDescription: @"Sent telemetryMetrics event"}];
     }];

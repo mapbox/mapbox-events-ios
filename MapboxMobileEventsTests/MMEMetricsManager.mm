@@ -35,7 +35,6 @@ describe(@"MMEMetricsManager", ^{
             MMEEvent *event2 = [MMEEvent mapTapEventWithDateString:dateString attributes:attributes];
             eventQueue = [[NSArray alloc] initWithObjects:event1, event2, nil];
         });
-        
     
         context(@"when incrementing eventQueue metrics", ^{
             beforeEach(^{

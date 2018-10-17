@@ -30,6 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)captureLatitude:(float)lat longitude:(float)lon;
 - (void)incrementAppWakeUpCount;
 - (void)updateDateUTC;
+- (void)resetMetrics;
 
 - (NSDictionary *)attributes;
 
