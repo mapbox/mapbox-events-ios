@@ -29,6 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)captureConfigurationJSON:(NSDictionary *)configuration;
 - (void)captureLatitude:(float)lat longitude:(float)lon;
 - (void)incrementAppWakeUpCount;
+- (void)updateDateUTC;
 
 - (NSDictionary *)attributes;
 

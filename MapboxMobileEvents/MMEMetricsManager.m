@@ -39,7 +39,7 @@
 
 - (void)metricsFromEventQueue:(NSArray *)eventQueue {
     if (self.dateUTC == nil) {
-        [self setDateUTC];
+        [self updateDateUTC];
     }
     
     if (eventQueue.count > 0) {
@@ -110,7 +110,7 @@
     }
 }
 
-- (void)setDateUTC {
+- (void)updateDateUTC {
     self.dateUTC = [NSDate date];
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     NSTimeZone *utcTimeZone = [NSTimeZone timeZoneWithName:@"UTC"];

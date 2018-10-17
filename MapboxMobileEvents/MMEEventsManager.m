@@ -29,6 +29,7 @@
 @property (nonatomic) MMEConfigurator *configurationUpdater;
 @property (nonatomic) MMETimerManager *timerManager;
 @property (nonatomic) MMEDispatchManager *dispatchManager;
+@property (nonatomic) MMEMetricsManager *metricsManager;
 @property (nonatomic, getter=isPaused) BOOL paused;
 @property (nonatomic) id<MMEUIApplicationWrapper> application;
 @property (nonatomic) MMENSDateWrapper *dateWrapper;
@@ -66,6 +67,7 @@
         _application = [[MMEUIApplicationWrapper alloc] init];
         _dateWrapper = [[MMENSDateWrapper alloc] init];
         _dispatchManager = [[MMEDispatchManager alloc] init];
+        _metricsManager = [MMEMetricsManager sharedManager];
     }
     return self;
 }
@@ -204,7 +206,8 @@
     NSArray *events = [self.eventQueue copy];
     NSUInteger eventsCount = events.count;
     
-    [MMEMetricsManager.sharedManager metricsFromEventQueue:events];
+    [self.metricsManager metricsFromEventQueue:events];
+    [self sendTelemetryMetricsEvent];
     
     __weak __typeof__(self) weakSelf = self;
     [self.apiClient postEvents:events completionHandler:^(NSError * _Nullable error) {
@@ -309,6 +312,34 @@
         [strongSelf updateNextTurnstileSendDate];
         [strongSelf pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstile,
                                                    MMEEventKeyLocalDebugDescription: @"Sent turnstile event"}];
+    }];
+}
+
+- (void)sendTelemetryMetricsEvent {
+    if (self.metricsManager.dateUTC && [self.metricsManager.dateUTC timeIntervalSinceDate:[self.dateWrapper startOfTomorrowFromDate:self.metricsManager.dateUTC]] < 0) {
+        NSString *debugDescription = [NSString stringWithFormat:@"TelemetryMetrics event isn't ready to be sent; waiting until %@ to send", self.nextTurnstileSendDate];
+        [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTelemetryMetrics,
+                                             MMEEventKeyLocalDebugDescription: debugDescription}];
+        return;
+    }
+    
+    MMEEvent *telemetryMetrics = [MMEEvent telemetryMetricsEventWithDateString:[self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]] attributes:[self.metricsManager attributes]];
+    [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstile,
+                                         MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Sending telemetryMetrics event: %@", telemetryMetrics]}];
+    [MMEEventLogger.sharedLogger logEvent:telemetryMetrics];
+    
+    __weak __typeof__(self) weakSelf = self;
+    [self.apiClient postEvent:telemetryMetrics completionHandler:^(NSError * _Nullable error) {
+        __strong __typeof__(weakSelf) strongSelf = weakSelf;
+        if (error) {
+            [strongSelf pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTelemetryMetrics,
+                                                       MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Could not send telemetryMetrics event: %@", error]}];
+            return;
+        }
+        
+        [strongSelf.metricsManager updateDateUTC];
+        [strongSelf pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstile,
+                                                   MMEEventKeyLocalDebugDescription: @"Sent telemetryMetrics event"}];
     }];
 }
 
@@ -437,7 +468,7 @@
     // Find the start of tomorrow and use that as the next turnstile send date. The effect of this is that
     // turnstile events can be sent as much as once per calendar day and always at the start of a session
     // when a map load happens.
-    self.nextTurnstileSendDate = [self.dateWrapper startOfTomorrow];
+    self.nextTurnstileSendDate = [self.dateWrapper startOfTomorrowFromDate:[self.dateWrapper date]];
     
     [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstile,
                                          MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Set next turnstile date to: %@", self.nextTurnstileSendDate]}];

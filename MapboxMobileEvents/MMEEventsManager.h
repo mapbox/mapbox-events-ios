@@ -27,6 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)pauseOrResumeMetricsCollectionIfRequired;
 - (void)flush;
 - (void)sendTurnstileEvent;
+- (void)sendTelemetryMetricsEvent;
 - (void)enqueueEventWithName:(NSString *)name;
 - (void)enqueueEventWithName:(NSString *)name attributes:(MMEMapboxEventAttributes *)attributes;
 - (void)postMetadata:(NSArray *)metadata filePaths:(NSArray *)filePaths completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler;

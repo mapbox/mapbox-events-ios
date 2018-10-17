@@ -14,6 +14,7 @@
 #import "MMEUIApplicationWrapperFake.h"
 #import "CLLocation+MMEMobileEvents.h"
 #import "MMEUIApplicationWrapper.h"
+#import "MMEMetricsManager.h"
 
 using namespace Cedar::Matchers;
 using namespace Cedar::Doubles;
@@ -722,6 +723,56 @@ describe(@"MMEEventsManager", ^{
             });
         });
         
+    });
+    
+    describe(@"- sendTelemetryMetricsEvent", ^{
+        context(@"when next telemetryMetrics send date is not nil and event manager is correctly configured", ^{
+            beforeEach(^{
+                MMEEvent *event = [MMEEvent mapTapEventWithDateString:@"a nice date" attributes:@{@"attribute1": @"a nice attribute"}];
+                NSArray *eventQueueFake = [[NSArray alloc] initWithObjects:event, nil];
+                eventsManager.eventQueue = [eventQueueFake mutableCopy];
+                [eventsManager flush];
+                
+                MMEAPIClientFake *fakeAPIClient = [[MMEAPIClientFake alloc] init];
+                spy_on(fakeAPIClient);
+                fakeAPIClient.accessToken = @"access-token";
+                fakeAPIClient.userAgentBase = @"user-agent-base";
+                fakeAPIClient.hostSDKVersion = @"host-sdk-version";
+                eventsManager.apiClient = fakeAPIClient;
+                
+                spy_on([MMEMetricsManager sharedManager]);
+            });
+            
+            afterEach(^{
+                stop_spying_on([MMEMetricsManager sharedManager]);
+            });
+            
+            context(@"when the current time is before the next telemetryMetrics send date", ^{
+                beforeEach(^{
+                    NSDate *date = [NSDate dateWithTimeIntervalSince1970:500];
+                    [MMEMetricsManager sharedManager] stub_method(@selector(dateUTC)).and_return(date);
+                    
+                    [eventsManager sendTelemetryMetricsEvent];
+                });
+                
+                it(@"tells its api client to not post events", ^{
+                    eventsManager.apiClient should_not have_received(@selector(postEvent:completionHandler:));
+                });
+            });
+            
+            context(@"when the current time is after the next telemetryMetrics send date", ^{
+                beforeEach(^{
+                    NSDate *date = [dateWrapper startOfTomorrowFromDate:[NSDate date]];
+                    [MMEMetricsManager sharedManager] stub_method(@selector(dateUTC)).and_return(date);
+                    
+                    [eventsManager sendTelemetryMetricsEvent];
+                });
+                
+                it(@"tells its api client to post events", ^{
+                    eventsManager.apiClient should have_received(@selector(postEvent:completionHandler:));
+                });
+            });
+        });
     });
     
     describe(@"- enqueueEventWithName:attributes", ^{

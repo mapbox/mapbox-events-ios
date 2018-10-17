@@ -27,6 +27,7 @@ extern NSString * const MMEDebugEventTypeTurnstileFailed;
 extern NSString * const MMEDebugEventTypeBackgroundTask;
 extern NSString * const MMEDebugEventTypeMetricCollection;
 extern NSString * const MMEDebugEventTypeLocationManager;
+extern NSString * const MMEDebugEventTypeTelemetryMetrics;
 
 // Event types
 extern NSString * const MMEEventTypeAppUserTurnstile;
