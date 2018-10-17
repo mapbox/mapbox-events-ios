@@ -22,10 +22,14 @@ describe(@"MMEMetricsManager", ^{
     describe(@"- MMEMetricsManagerInstance", ^{
         
         __block NSArray *eventQueue;
+        __block NSDateFormatter *dateFormatter;
         
         beforeEach(^{
             NSString *dateString = @"A nice date";
             NSDictionary *attributes = @{@"attribute1": @"a nice attribute"};
+            
+            dateFormatter = [[NSDateFormatter alloc] init];
+            dateFormatter.dateFormat = @"yyyy-MM-dd";
             
             MMEEvent *event1 = [MMEEvent mapTapEventWithDateString:dateString attributes:attributes];
             MMEEvent *event2 = [MMEEvent mapTapEventWithDateString:dateString attributes:attributes];
@@ -49,6 +53,16 @@ describe(@"MMEMetricsManager", ^{
             it(@"should have event count per type object count increase", ^{
                 [manager.eventCountPerType objectForKey:MMEEventTypeMapTap] should equal(@2);
             });
+            
+            it(@"should set dateUTC", ^{
+                manager.dateUTC should_not be_nil;
+        });
+        
+            it(@"should set dateUTC with the correct format", ^{
+                [dateFormatter dateFromString:manager.dateUTCString] should_not be_nil;
+            });
+        
+            
         });
         
         context(@"when incrementing failed HTTP response metrics", ^{

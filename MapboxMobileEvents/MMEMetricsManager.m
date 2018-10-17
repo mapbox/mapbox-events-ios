@@ -17,6 +17,7 @@
 @property (nonatomic) float deviceLat;
 @property (nonatomic) float deviceLon;
 @property (nonatomic) NSDate *dateUTC;
+@property (nonatomic) NSString *dateUTCString;
 @property (nonatomic) NSDictionary *configResponseDict;
 @property (nonatomic) NSMutableDictionary *eventCountPerType;
 @property (nonatomic) NSMutableDictionary *failedRequestsDict;
@@ -37,6 +38,10 @@
 }
 
 - (void)metricsFromEventQueue:(NSArray *)eventQueue {
+    if (self.dateUTC == nil) {
+        [self setDateUTC];
+    }
+    
     if (eventQueue.count > 0) {
         if (self.eventCountPerType == nil) {
             self.eventCountPerType = [[NSMutableDictionary alloc] init];
@@ -103,5 +108,14 @@
         self.deviceLat = [[NSString stringWithFormat:@"%.06f", lat] floatValue];
         self.deviceLon = [[NSString stringWithFormat:@"%.06f", lon] floatValue];
     }
+}
+
+- (void)setDateUTC {
+    self.dateUTC = [NSDate date];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    NSTimeZone *utcTimeZone = [NSTimeZone timeZoneWithName:@"UTC"];
+    [dateFormatter setTimeZone:utcTimeZone];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd"];
+    self.dateUTCString = [dateFormatter stringFromDate:self.dateUTC];
 }
 @end

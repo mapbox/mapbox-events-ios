@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) float deviceLat;
 @property (nonatomic, readonly) float deviceLon;
 @property (nonatomic, readonly) NSDate *dateUTC;
+@property (nonatomic, readonly) NSString *dateUTCString;
 @property (nonatomic, readonly) NSDictionary *configResponseDict;
 @property (nonatomic, readonly) NSMutableDictionary *eventCountPerType;
 @property (nonatomic, readonly) NSMutableDictionary *failedRequestsDict;
