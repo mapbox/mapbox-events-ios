@@ -56,13 +56,11 @@ describe(@"MMEMetricsManager", ^{
             
             it(@"should set dateUTC", ^{
                 manager.dateUTC should_not be_nil;
-        });
-        
+            });
+            
             it(@"should set dateUTC with the correct format", ^{
                 [dateFormatter dateFromString:manager.dateUTCString] should_not be_nil;
             });
-        
-            
         });
         
         context(@"when incrementing failed HTTP response metrics", ^{
@@ -209,6 +207,11 @@ describe(@"MMEMetricsManager", ^{
             
             it(@"should have less accurate values on deviceLon", ^{
                 manager.deviceLon should be_greater_than(location.coordinate.longitude);
+            });
+        });
+        context(@"when sending attributes", ^{
+            it(@"should not be nil attributes", ^{
+                [manager attributes] should_not be_nil;
             });
         });
         

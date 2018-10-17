@@ -12,11 +12,12 @@
     return turnstileEvent;
 }
 
-+ (instancetype)telemetryMetricsEventWithAttributes:(NSDictionary *)attributes {
++ (instancetype)telemetryMetricsEventWithDateString:(NSString *)dateString attributes:(NSDictionary *)attributes {
     MMEEvent *telemetryMetrics = [[MMEEvent alloc] init];
     telemetryMetrics.name = MMEEventTypeTelemetryMetrics;
     NSMutableDictionary *commonAttributes = [NSMutableDictionary dictionary];
     commonAttributes[MMEEventKeyEvent] = telemetryMetrics.name;
+    commonAttributes[MMEEventKeyCreated] = dateString;
     [commonAttributes addEntriesFromDictionary:attributes];
     telemetryMetrics.attributes = attributes;
     return telemetryMetrics;

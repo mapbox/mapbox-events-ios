@@ -30,6 +30,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)captureLatitude:(float)lat longitude:(float)lon;
 - (void)incrementAppWakeUpCount;
 
+- (NSDictionary *)attributes;
+
 @end
 
 NS_ASSUME_NONNULL_END

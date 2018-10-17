@@ -118,4 +118,25 @@
     [dateFormatter setDateFormat:@"yyyy-MM-dd"];
     self.dateUTCString = [dateFormatter stringFromDate:self.dateUTC];
 }
+
+#pragma mark -- attributes
+
+- (NSDictionary *)attributes {
+    NSMutableDictionary *attributes = [[NSMutableDictionary alloc] init];
+    attributes[MMEEventFailedRequests] = [NSString stringWithFormat:@"%@",self.failedRequestsDict];
+    attributes[MMEEventEventCountPerType] = [NSString stringWithFormat:@"%@",self.eventCountPerType];
+    attributes[MMEEventTotalDataTransfer] = @(self.totalDataTransfer);
+    attributes[MMEEventCellDataTransfer] = @(self.cellDataTransfer);
+    attributes[MMEEventWiFiDataTransfer] = @(self.wifiDataTransfer);
+    attributes[MMEEventEventCountFailed] = @(self.eventCountFailed);
+    attributes[MMEEventEventCountTotal] = @(self.eventCountTotal);
+    attributes[MMEEventEventCountMax] = @(self.eventCountMax);
+    attributes[MMEEventAppWakeups] = @(self.appWakeups);
+    attributes[MMEEventDeviceLat] = @(self.deviceLat);
+    attributes[MMEEventDeviceLon] = @(self.deviceLon);
+    attributes[MMEEventRequests] = @(self.requests);
+    
+    return attributes;
+}
+
 @end
