@@ -205,6 +205,7 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
     if ([self.delegate respondsToSelector:@selector(locationManager:didUpdateLocations:)]) {
         [self.delegate locationManager:self didUpdateLocations:locations];
     }
+    [[MMEMetricsManager sharedManager] captureLatitude:location.coordinate.latitude longitude:location.coordinate.latitude];
 }
 
 - (void)locationManager:(CLLocationManager *)locationManager didExitRegion:(CLRegion *)region {

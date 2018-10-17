@@ -98,4 +98,10 @@
     }
 }
 
+- (void)captureLatitude:(float)lat longitude:(float)lon {
+    if (!self.deviceLat || !self.deviceLon) {
+        self.deviceLat = [[NSString stringWithFormat:@"%.06f", lat] floatValue];
+        self.deviceLon = [[NSString stringWithFormat:@"%.06f", lon] floatValue];
+    }
+}
 @end

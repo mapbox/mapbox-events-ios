@@ -4,6 +4,7 @@
 #import "MMEMetricsManager.h"
 #import "MMEConstants.h"
 #import "MMEReachability.h"
+#import <CoreLocation/CoreLocation.h>
 
 using namespace Cedar::Matchers;
 using namespace Cedar::Doubles;
@@ -179,7 +180,23 @@ describe(@"MMEMetricsManager", ^{
                 manager.configResponseDict should_not be_nil;
             });
         });
-        
+        context(@"when capturing coordinates", ^{
+            __block CLLocation *location;
+            
+            beforeEach(^{
+                location = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(38.644375, -77.289127) altitude:0 horizontalAccuracy:0 verticalAccuracy:0 course:0 speed:0.0 timestamp:[NSDate date]];
+                
+                [manager captureLatitude:location.coordinate.latitude longitude:location.coordinate.longitude];
+            });
+            
+            it(@"should have less accurate values on deviceLat", ^{
+                manager.deviceLat should be_less_than(location.coordinate.latitude);
+            });
+            
+            it(@"should have less accurate values on deviceLon", ^{
+                manager.deviceLon should be_greater_than(location.coordinate.longitude);
+            });
+        });
         
     });
 });

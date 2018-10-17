@@ -26,6 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)metricsFromEventQueue:(NSArray *)eventQueue;
 - (void)metricsFromEvents:(nullable NSArray *)events andError:(nullable NSError *)error;
 - (void)captureConfigurationJSON:(NSDictionary *)configuration;
+- (void)captureLatitude:(float)lat longitude:(float)lon;
 - (void)incrementAppWakeUpCount;
 
 @end
