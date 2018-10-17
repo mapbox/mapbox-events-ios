@@ -17,6 +17,7 @@ NSString * const MMEAPIClientHTTPMethodGet = @"GET";
 NSString * const MMEErrorDomain = @"MMEErrorDomain";
 NSString * const MMEResponseKey = @"MMEResponseKey";
 
+NSString * const MMEDebugEventType = @"debug.type";
 NSString * const MMEDebugEventTypeFlush = @"flush";
 NSString * const MMEDebugEventTypePush = @"push";
 NSString * const MMEDebugEventTypePost = @"post";
@@ -75,7 +76,21 @@ NSString * const MMEEventKeyApplicationState = @"applicationState";
 NSString * const MMEEventKeyAltitude = @"altitude";
 NSString * const MMEEventSDKIdentifier = @"sdkIdentifier";
 NSString * const MMEEventSDKVersion = @"sdkVersion";
-NSString * const MMEDebugEventType = @"debug.type";
+NSString * const MMEEventDateUTC = @"dateUTC";
+NSString * const MMEEventRequests = @"requests";
+NSString * const MMEEventFailedRequests = @"failedRequests";
+NSString * const MMEEventTotalDataTransfer = @"totalDataTransfer";
+NSString * const MMEEventCellDataTransfer = @"cellDataTransfer";
+NSString * const MMEEventWiFiDataTransfer = @"wifiDataTransfer";
+NSString * const MMEEventAppWakeups = @"appWakeups";
+NSString * const MMEEventEventCountPerType = @"eventCountPerType";
+NSString * const MMEEventEventCountFailed = @"eventCountFailed";
+NSString * const MMEEventEventCountTotal = @"eventCountTotal";
+NSString * const MMEEventEventCountMax = @"eventCountMax";
+NSString * const MMEEventDeviceLat = @"deviceLat";
+NSString * const MMEEventDeviceLon = @"deviceLon";
+NSString * const MMEEventDeviceTimeDrift = @"deviceTimeDrift";
+NSString * const MMEEventConfigResponse = @"configResponse";
 
 NSString * const MMEVisionEventPrefix = @"vision.";
 
