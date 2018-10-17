@@ -57,7 +57,7 @@
     }
 }
 
-- (void)metricsFromEvents:(nullable NSArray *)events andError:(nullable NSError *)error {
+- (void)metricsFromEvents:(nullable NSArray *)events error:(nullable NSError *)error {
     if (error == nil) {
         self.requests = self.requests + 1;
     } else {

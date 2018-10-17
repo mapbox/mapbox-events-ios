@@ -78,7 +78,7 @@ int const kMMEMaxRequestCount = 1000;
                 error = error ?: statusError;
                 completionHandler(error);
               
-                [self.metricsManager metricsFromEvents:events andError:error];
+                [self.metricsManager metricsFromEvents:events error:error];
                 if (request.HTTPBody && error == nil) {
                     [self.metricsManager metricsFromData:request.HTTPBody];
                 }
@@ -112,7 +112,7 @@ int const kMMEMaxRequestCount = 1000;
             error = error ?: statusError;
             completionHandler(error);
             
-            [self.metricsManager metricsFromEvents:filePaths andError:error];
+            [self.metricsManager metricsFromEvents:filePaths error:error];
             if (request.HTTPBody && error == nil) {
                 [self.metricsManager metricsFromData:request.HTTPBody];
             }
@@ -135,7 +135,7 @@ int const kMMEMaxRequestCount = 1000;
             error = error ?: statusError;
             completionHandler(error, data);
             
-            [self.metricsManager metricsFromEvents:nil andError:error];
+            [self.metricsManager metricsFromEvents:nil error:error];
             if (request.HTTPBody && error == nil) {
                 [self.metricsManager metricsFromData:request.HTTPBody];
             }

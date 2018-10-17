@@ -68,14 +68,14 @@ describe(@"MMEMetricsManager", ^{
                 NSDictionary *userInfoFake = [NSDictionary dictionaryWithObject:response forKey:MMEResponseKey];
                 NSError *errorFake = [NSError errorWithDomain:@"test" code:42 userInfo:userInfoFake];
                 
-                [manager metricsFromEvents:eventQueue andError:errorFake];
-                [manager metricsFromEvents:eventQueue andError:errorFake];
+                [manager metricsFromEvents:eventQueue error:errorFake];
+                [manager metricsFromEvents:eventQueue error:errorFake];
                 
                 NSHTTPURLResponse *responseTwo = [[NSHTTPURLResponse alloc] initWithURL:[NSURL URLWithString:@"events.mapbox.com"] statusCode:500 HTTPVersion:nil headerFields:nil];
                 NSDictionary *userInfoFakeTwo = [NSDictionary dictionaryWithObject:responseTwo forKey:MMEResponseKey];
                 NSError *errorFakeTwo = [NSError errorWithDomain:@"test" code:42 userInfo:userInfoFakeTwo];
                 
-                [manager metricsFromEvents:eventQueue andError:errorFakeTwo];
+                [manager metricsFromEvents:eventQueue error:errorFakeTwo];
             });
             
             it(@"should have failedRequests 404 count increased", ^{
@@ -101,7 +101,7 @@ describe(@"MMEMetricsManager", ^{
         
         context(@"when incrementing successful HTTP requests", ^{
             beforeEach(^{
-                [manager metricsFromEvents:eventQueue andError:nil];
+                [manager metricsFromEvents:eventQueue error:nil];
             });
             
             it(@"should have request count increased", ^{
