@@ -61,7 +61,7 @@
         
         if ([error.userInfo objectForKey:MMEResponseKey]) {
             NSHTTPURLResponse *response = (NSHTTPURLResponse *)[error.userInfo objectForKey:MMEResponseKey];
-            NSString *urlString = [[response URL] absoluteString];
+            NSString *urlString = response.URL.absoluteString;
             NSNumber *statusCode = @(response.statusCode);
             NSString *statusCodeString = [statusCode stringValue];
             NSString *failedRequestKey = [NSString stringWithFormat:@"%@, %@",urlString, statusCodeString];
