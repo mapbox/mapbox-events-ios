@@ -1,25 +1,11 @@
 #import <Foundation/Foundation.h>
+#import "MMEMetrics.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface MMEMetricsManager : NSObject
 
-@property (nonatomic, readonly) int requests;
-@property (nonatomic, readonly) long totalDataTransfer;
-@property (nonatomic, readonly) long cellDataTransfer;
-@property (nonatomic, readonly) long wifiDataTransfer;
-@property (nonatomic, readonly) int appWakeups;
-@property (nonatomic, readonly) int eventCountFailed;
-@property (nonatomic, readonly) int eventCountTotal;
-@property (nonatomic, readonly) int eventCountMax;
-@property (nonatomic, readonly) int deviceTimeDrift;
-@property (nonatomic, readonly) float deviceLat;
-@property (nonatomic, readonly) float deviceLon;
-@property (nonatomic, readonly) NSDate *dateUTC;
-@property (nonatomic, readonly) NSString *dateUTCString;
-@property (nonatomic, readonly) NSDictionary *configResponseDict;
-@property (nonatomic, readonly) NSMutableDictionary *eventCountPerType;
-@property (nonatomic, readonly) NSMutableDictionary *failedRequestsDict;
+@property (nonatomic, readonly) MMEMetrics *metrics;
 
 + (instancetype)sharedManager;
 
@@ -27,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)metricsFromEventQueue:(NSArray *)eventQueue;
 - (void)metricsFromEvents:(nullable NSArray *)events error:(nullable NSError *)error;
 - (void)captureConfigurationJSON:(NSDictionary *)configuration;
-- (void)captureLatitude:(float)lat longitude:(float)lon;
+- (void)captureCoordinate:(CLLocationCoordinate2D)coordinate;
 - (void)incrementAppWakeUpCount;
 - (void)updateDateUTC;
 - (void)resetMetrics;

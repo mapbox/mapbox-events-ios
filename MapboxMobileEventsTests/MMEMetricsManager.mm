@@ -42,23 +42,23 @@ describe(@"MMEMetricsManager", ^{
             });
             
             it(@"should have total count increase", ^{
-                manager.eventCountTotal should equal(2);
+                manager.metrics.eventCountTotal should equal(2);
             });
             
             it(@"should have event count per type increase", ^{
-                manager.eventCountPerType.count should equal(1);
+                manager.metrics.eventCountPerType.count should equal(1);
             });
             
             it(@"should have event count per type object count increase", ^{
-                [manager.eventCountPerType objectForKey:MMEEventTypeMapTap] should equal(@2);
+                [manager.metrics.eventCountPerType objectForKey:MMEEventTypeMapTap] should equal(@2);
             });
             
             it(@"should set dateUTC", ^{
-                manager.dateUTC should_not be_nil;
+                manager.metrics.dateUTC should_not be_nil;
             });
             
             it(@"should set dateUTC with the correct format", ^{
-                [dateFormatter dateFromString:manager.dateUTCString] should_not be_nil;
+                [dateFormatter dateFromString:manager.metrics.dateUTCString] should_not be_nil;
             });
         });
         
@@ -79,23 +79,23 @@ describe(@"MMEMetricsManager", ^{
             });
             
             it(@"should have failedRequests 404 count increased", ^{
-                [manager.failedRequestsDict objectForKey:@"events.mapbox.com, 404"] should equal(@2);
+                [manager.metrics.failedRequestsDict objectForKey:@"events.mapbox.com, 404"] should equal(@2);
             });
             
             it(@"should have failedRequests 500 count increased", ^{
-                [manager.failedRequestsDict objectForKey:@"events.mapbox.com, 500"] should equal(@1);
+                [manager.metrics.failedRequestsDict objectForKey:@"events.mapbox.com, 500"] should equal(@1);
             });
             
             it(@"should have all keys count increased", ^{
-                [manager.failedRequestsDict allKeys].count should equal(2);
+                [manager.metrics.failedRequestsDict allKeys].count should equal(2);
             });
             
             it(@"should have eventCountFailed count increased", ^{
-                manager.eventCountFailed should equal(6);
+                manager.metrics.eventCountFailed should equal(6);
             });
             
             it(@"should have request count NOT increased", ^{
-                manager.requests should equal(0);
+                manager.metrics.requests should equal(0);
             });
         });
         
@@ -105,7 +105,7 @@ describe(@"MMEMetricsManager", ^{
             });
             
             it(@"should have request count increased", ^{
-                manager.requests should equal(1);
+                manager.metrics.requests should equal(1);
             });
         });
         
@@ -137,16 +137,16 @@ describe(@"MMEMetricsManager", ^{
             });
             
             it(@"should have totalDataTransfer increase count again", ^{
-                manager.totalDataTransfer should be_greater_than(0);
+                manager.metrics.totalDataTransfer should be_greater_than(0);
             });
             
             if ([[MMEReachability reachabilityForLocalWiFi] isReachableViaWiFi]) {
                 it(@"should have wifi data transfer increase count again", ^{
-                    manager.wifiDataTransfer should be_greater_than(0);
+                    manager.metrics.wifiDataTransfer should be_greater_than(0);
                 });
             } else {
                 it(@"should have cell data transfer increase count again", ^{
-                    manager.cellDataTransfer should be_greater_than(0);
+                    manager.metrics.cellDataTransfer should be_greater_than(0);
                 });
             }
             
@@ -156,16 +156,16 @@ describe(@"MMEMetricsManager", ^{
                 });
                 
                 it(@"should have totalDataTransfer increase count again", ^{
-                    manager.totalDataTransfer should be_greater_than(300);
+                    manager.metrics.totalDataTransfer should be_greater_than(300);
                 });
                 
                 if ([[MMEReachability reachabilityForLocalWiFi] isReachableViaWiFi]) {
                     it(@"should have wifi data transfer increase count again", ^{
-                        manager.wifiDataTransfer should be_greater_than(300);
+                        manager.metrics.wifiDataTransfer should be_greater_than(300);
                     });
                 } else {
                     it(@"should have cell data transfer increase count again", ^{
-                        manager.cellDataTransfer should be_greater_than(300);
+                        manager.metrics.cellDataTransfer should be_greater_than(300);
                     });
                 }
             });
@@ -177,7 +177,7 @@ describe(@"MMEMetricsManager", ^{
             });
             
             it(@"should have appWakeUp count increased", ^{
-                manager.appWakeups should equal(2);
+                manager.metrics.appWakeups should equal(2);
             });
         });
         context(@"when capturing configuration", ^{
@@ -188,7 +188,7 @@ describe(@"MMEMetricsManager", ^{
             });
             
             it(@"should have a configuration assigned", ^{
-                manager.configResponseDict should_not be_nil;
+                manager.metrics.configResponseDict should_not be_nil;
             });
         });
         context(@"when capturing coordinates", ^{
@@ -197,15 +197,15 @@ describe(@"MMEMetricsManager", ^{
             beforeEach(^{
                 location = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(38.644375, -77.289127) altitude:0 horizontalAccuracy:0 verticalAccuracy:0 course:0 speed:0.0 timestamp:[NSDate date]];
                 
-                [manager captureLatitude:location.coordinate.latitude longitude:location.coordinate.longitude];
+                [manager captureCoordinate:location.coordinate];
             });
             
             it(@"should have less accurate values on deviceLat", ^{
-                manager.deviceLat should be_less_than(location.coordinate.latitude);
+                manager.metrics.deviceLat should be_less_than(location.coordinate.latitude);
             });
             
             it(@"should have less accurate values on deviceLon", ^{
-                manager.deviceLon should be_greater_than(location.coordinate.longitude);
+                manager.metrics.deviceLon should be_greater_than(location.coordinate.longitude);
             });
         });
         context(@"when sending attributes", ^{

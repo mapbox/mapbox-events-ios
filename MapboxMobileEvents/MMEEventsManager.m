@@ -315,33 +315,40 @@
     }];
 }
 
-- (void)sendTelemetryMetricsEvent {
-    if (self.metricsManager.dateUTC && [self.metricsManager.dateUTC timeIntervalSinceDate:[self.dateWrapper startOfTomorrowFromDate:self.metricsManager.dateUTC]] < 0) {
+- (MMEEvent *)generateTelemetryMetricsEvent {
+    if (self.metricsManager.metrics.dateUTC && [self.metricsManager.metrics.dateUTC timeIntervalSinceDate:[self.dateWrapper startOfTomorrowFromDate:self.metricsManager.metrics.dateUTC]] < 0) {
         NSString *debugDescription = [NSString stringWithFormat:@"TelemetryMetrics event isn't ready to be sent; waiting until %@ to send", self.nextTurnstileSendDate];
         [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTelemetryMetrics,
                                              MMEEventKeyLocalDebugDescription: debugDescription}];
-        return;
+        return nil;
     }
     
     MMEEvent *telemetryMetrics = [MMEEvent telemetryMetricsEventWithDateString:[self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]] attributes:[self.metricsManager attributes]];
-    [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstile,
-                                         MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Sending telemetryMetrics event: %@", telemetryMetrics]}];
     [MMEEventLogger.sharedLogger logEvent:telemetryMetrics];
     
-    __weak __typeof__(self) weakSelf = self;
-    [self.apiClient postEvent:telemetryMetrics completionHandler:^(NSError * _Nullable error) {
-        __strong __typeof__(weakSelf) strongSelf = weakSelf;
-        if (error) {
-            [strongSelf pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTelemetryMetrics,
-                                                       MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Could not send telemetryMetrics event: %@", error]}];
+    return telemetryMetrics;
+}
+
+- (void)sendTelemetryMetricsEvent {
+    MMEEvent *telemetryMetricsEvent = [self generateTelemetryMetricsEvent];
+    [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstile,
+                                         MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Sending telemetryMetrics event: %@", telemetryMetricsEvent]}];
+    
+    if (telemetryMetricsEvent) {
+        __weak __typeof__(self) weakSelf = self;
+        [self.apiClient postEvent:telemetryMetricsEvent completionHandler:^(NSError * _Nullable error) {
+            __strong __typeof__(weakSelf) strongSelf = weakSelf;
             [strongSelf.metricsManager resetMetrics];
-            return;
-        }
-        
-        [strongSelf.metricsManager resetMetrics];
-        [strongSelf pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstile,
-                                                   MMEEventKeyLocalDebugDescription: @"Sent telemetryMetrics event"}];
-    }];
+            if (error) {
+                [strongSelf pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTelemetryMetrics,
+                                                           MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Could not send telemetryMetrics event: %@", error]}];
+                return;
+            }
+            
+            [strongSelf pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstile,
+                                                       MMEEventKeyLocalDebugDescription: @"Sent telemetryMetrics event"}];
+        }];
+    }
 }
 
 - (void)enqueueEventWithName:(NSString *)name {

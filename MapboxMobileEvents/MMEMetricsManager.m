@@ -5,22 +5,7 @@
 
 @interface MMEMetricsManager ()
 
-@property (nonatomic) int requests;
-@property (nonatomic) long totalDataTransfer;
-@property (nonatomic) long cellDataTransfer;
-@property (nonatomic) long wifiDataTransfer;
-@property (nonatomic) int appWakeups;
-@property (nonatomic) int eventCountFailed;
-@property (nonatomic) int eventCountTotal;
-@property (nonatomic) int eventCountMax;
-@property (nonatomic) int deviceTimeDrift;
-@property (nonatomic) float deviceLat;
-@property (nonatomic) float deviceLon;
-@property (nonatomic) NSDate *dateUTC;
-@property (nonatomic) NSString *dateUTCString;
-@property (nonatomic) NSDictionary *configResponseDict;
-@property (nonatomic) NSMutableDictionary *eventCountPerType;
-@property (nonatomic) NSMutableDictionary *failedRequestsDict;
+@property (nonatomic) MMEMetrics *metrics;
 
 @end
 
@@ -32,37 +17,46 @@
     
     dispatch_once(&onceToken, ^{
         _sharedManager = [[MMEMetricsManager alloc] init];
+        _sharedManager.metrics = [[MMEMetrics alloc] init];
     });
     
     return _sharedManager;
 }
 
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        _metrics = [[MMEMetrics alloc] init];
+    }
+    return self;
+}
+
 - (void)metricsFromEventQueue:(NSArray *)eventQueue {
-    if (self.dateUTC == nil) {
+    if (self.metrics.dateUTC == nil) {
         [self updateDateUTC];
     }
     
     if (eventQueue.count > 0) {
-        if (self.eventCountPerType == nil) {
-            self.eventCountPerType = [[NSMutableDictionary alloc] init];
+        if (self.metrics.eventCountPerType == nil) {
+            self.metrics.eventCountPerType = [[NSMutableDictionary alloc] init];
         }
         
-        self.eventCountTotal = self.eventCountTotal + (int)eventQueue.count;
+        self.metrics.eventCountTotal += (int)eventQueue.count;
         
         for (MMEEvent *event in eventQueue) {
-            NSNumber *eventCount = [self.eventCountPerType objectForKey:event.name];
+            NSNumber *eventCount = [self.metrics.eventCountPerType objectForKey:event.name];
             eventCount = [NSNumber numberWithInteger:[eventCount integerValue] + 1];
-            [self.eventCountPerType setObject:eventCount forKey:event.name];
+            [self.metrics.eventCountPerType setObject:eventCount forKey:event.name];
         }
     }
 }
 
 - (void)metricsFromEvents:(nullable NSArray *)events error:(nullable NSError *)error {
     if (error == nil) {
-        self.requests = self.requests + 1;
+        self.metrics.requests++;
     } else {
         if (events) {
-            self.eventCountFailed = self.eventCountFailed + (int)events.count;
+            self.metrics.eventCountFailed += (int)events.count;
         }
         
         if ([error.userInfo objectForKey:MMEResponseKey]) {
@@ -72,66 +66,55 @@
             NSString *statusCodeString = [statusCode stringValue];
             NSString *failedRequestKey = [NSString stringWithFormat:@"%@, %@",urlString, statusCodeString];
             
-            if (self.failedRequestsDict == nil) {
-                self.failedRequestsDict = [[NSMutableDictionary alloc] init];
+            if (self.metrics.failedRequestsDict == nil) {
+                self.metrics.failedRequestsDict = [[NSMutableDictionary alloc] init];
             }
         
-            NSNumber *failedCount = [self.failedRequestsDict objectForKey:failedRequestKey];
+            NSNumber *failedCount = [self.metrics.failedRequestsDict objectForKey:failedRequestKey];
             failedCount = [NSNumber numberWithInteger:[failedCount integerValue] + 1];
-            [self.failedRequestsDict setObject:failedCount forKey:failedRequestKey];
+            [self.metrics.failedRequestsDict setObject:failedCount forKey:failedRequestKey];
         }
     }
 }
 
 - (void)metricsFromData:(NSData *)data {
-    self.totalDataTransfer = self.totalDataTransfer + data.length;
+    self.metrics.totalDataTransfer += data.length;
     
     if ([[MMEReachability reachabilityForLocalWiFi] isReachableViaWiFi]) {
-        self.wifiDataTransfer = self.wifiDataTransfer + data.length;
+        self.metrics.wifiDataTransfer += data.length;
     } else {
-        self.cellDataTransfer = self.cellDataTransfer + data.length;
+        self.metrics.cellDataTransfer += data.length;
     }
 }
 
 - (void)incrementAppWakeUpCount {
-    self.appWakeups = self.appWakeups + 1;
+    self.metrics.appWakeups++;
 }
 
 - (void)captureConfigurationJSON:(NSDictionary *)configuration {
     if (configuration) {
-        self.configResponseDict = configuration;
+        self.metrics.configResponseDict = configuration;
     }
 }
 
-- (void)captureLatitude:(float)lat longitude:(float)lon {
-    if (!self.deviceLat || !self.deviceLon) {
-        self.deviceLat = [[NSString stringWithFormat:@"%.06f", lat] floatValue];
-        self.deviceLon = [[NSString stringWithFormat:@"%.06f", lon] floatValue];
+- (void)captureCoordinate:(CLLocationCoordinate2D)coordinate; {
+    if (!self.metrics.deviceLat || !self.metrics.deviceLon) {
+        self.metrics.deviceLat = round(coordinate.latitude*1000)/1000;
+        self.metrics.deviceLon = round(coordinate.longitude*1000)/1000;
     }
 }
 
 - (void)updateDateUTC {
-    self.dateUTC = [NSDate date];
+    self.metrics.dateUTC = [NSDate date];
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     NSTimeZone *utcTimeZone = [NSTimeZone timeZoneWithName:@"UTC"];
     [dateFormatter setTimeZone:utcTimeZone];
     [dateFormatter setDateFormat:@"yyyy-MM-dd"];
-    self.dateUTCString = [dateFormatter stringFromDate:self.dateUTC];
+    self.metrics.dateUTCString = [dateFormatter stringFromDate:self.metrics.dateUTC];
 }
 
 - (void)resetMetrics {
-    self.failedRequestsDict = [[NSMutableDictionary alloc] init];
-    self.eventCountPerType = [[NSMutableDictionary alloc] init];
-    self.totalDataTransfer = 0;
-    self.cellDataTransfer = 0;
-    self.wifiDataTransfer = 0;
-    self.eventCountFailed = 0;
-    self.eventCountTotal = 0;
-    self.eventCountMax = 0;
-    self.appWakeups = 0;
-    self.deviceLat = 0;
-    self.deviceLon = 0;
-    self.requests = 0;
+    self.metrics = [[MMEMetrics alloc] init];
     [self updateDateUTC];
 }
 
@@ -139,20 +122,20 @@
 
 - (NSDictionary *)attributes {
     NSMutableDictionary *attributes = [[NSMutableDictionary alloc] init];
-    attributes[MMEEventFailedRequests] = [NSString stringWithFormat:@"%@",self.failedRequestsDict];
-    attributes[MMEEventEventCountPerType] = [NSString stringWithFormat:@"%@",self.eventCountPerType];
-    attributes[MMEEventTotalDataTransfer] = @(self.totalDataTransfer);
-    attributes[MMEEventCellDataTransfer] = @(self.cellDataTransfer);
-    attributes[MMEEventWiFiDataTransfer] = @(self.wifiDataTransfer);
-    attributes[MMEEventEventCountFailed] = @(self.eventCountFailed);
-    attributes[MMEEventEventCountTotal] = @(self.eventCountTotal);
-    attributes[MMEEventEventCountMax] = @(self.eventCountMax);
-    attributes[MMEEventAppWakeups] = @(self.appWakeups);
-    if (self.deviceLat != 0 && self.deviceLon != 0) {
-        attributes[MMEEventDeviceLat] = @(self.deviceLat);
-        attributes[MMEEventDeviceLon] = @(self.deviceLon);
+    attributes[MMEEventFailedRequests] = [NSString stringWithFormat:@"%@",self.metrics.failedRequestsDict];
+    attributes[MMEEventEventCountPerType] = [NSString stringWithFormat:@"%@",self.metrics.eventCountPerType];
+    attributes[MMEEventTotalDataTransfer] = @(self.metrics.totalDataTransfer);
+    attributes[MMEEventCellDataTransfer] = @(self.metrics.cellDataTransfer);
+    attributes[MMEEventWiFiDataTransfer] = @(self.metrics.wifiDataTransfer);
+    attributes[MMEEventEventCountFailed] = @(self.metrics.eventCountFailed);
+    attributes[MMEEventEventCountTotal] = @(self.metrics.eventCountTotal);
+    attributes[MMEEventEventCountMax] = @(self.metrics.eventCountMax);
+    attributes[MMEEventAppWakeups] = @(self.metrics.appWakeups);
+    if (self.metrics.deviceLat != 0 && self.metrics.deviceLon != 0) {
+        attributes[MMEEventDeviceLat] = @(self.metrics.deviceLat);
+        attributes[MMEEventDeviceLon] = @(self.metrics.deviceLon);
     }
-    attributes[MMEEventRequests] = @(self.requests);
+    attributes[MMEEventRequests] = @(self.metrics.requests);
     
     return attributes;
 }

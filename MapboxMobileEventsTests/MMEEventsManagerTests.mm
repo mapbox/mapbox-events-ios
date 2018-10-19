@@ -740,17 +740,17 @@ describe(@"MMEEventsManager", ^{
                 fakeAPIClient.hostSDKVersion = @"host-sdk-version";
                 eventsManager.apiClient = fakeAPIClient;
                 
-                spy_on([MMEMetricsManager sharedManager]);
+                spy_on([MMEMetricsManager sharedManager].metrics);
             });
             
             afterEach(^{
-                stop_spying_on([MMEMetricsManager sharedManager]);
+                stop_spying_on([MMEMetricsManager sharedManager].metrics);
             });
             
             context(@"when the current time is before the next telemetryMetrics send date", ^{
                 beforeEach(^{
                     NSDate *date = [NSDate dateWithTimeIntervalSince1970:500];
-                    [MMEMetricsManager sharedManager] stub_method(@selector(dateUTC)).and_return(date);
+                    [MMEMetricsManager sharedManager].metrics stub_method(@selector(dateUTC)).and_return(date);
                     
                     [eventsManager sendTelemetryMetricsEvent];
                 });
@@ -763,7 +763,7 @@ describe(@"MMEEventsManager", ^{
             context(@"when the current time is after the next telemetryMetrics send date", ^{
                 beforeEach(^{
                     NSDate *date = [dateWrapper startOfTomorrowFromDate:[NSDate date]];
-                    [MMEMetricsManager sharedManager] stub_method(@selector(dateUTC)).and_return(date);
+                    [MMEMetricsManager sharedManager].metrics stub_method(@selector(dateUTC)).and_return(date);
                     
                     [eventsManager sendTelemetryMetricsEvent];
                 });
