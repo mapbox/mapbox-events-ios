@@ -481,12 +481,24 @@
 #define MMEEventKeyLongitude __NS_SYMBOL(MMEEventKeyLongitude)
 #endif
 
+#ifndef MMEEventKeyMaxZoomLevel
+#define MMEEventKeyMaxZoomLevel __NS_SYMBOL(MMEEventKeyMaxZoomLevel)
+#endif
+
+#ifndef MMEEventKeyMinZoomLevel
+#define MMEEventKeyMinZoomLevel __NS_SYMBOL(MMEEventKeyMinZoomLevel)
+#endif
+
 #ifndef MMEEventKeyZoomLevel
 #define MMEEventKeyZoomLevel __NS_SYMBOL(MMEEventKeyZoomLevel)
 #endif
 
 #ifndef MMEEventKeySpeed
 #define MMEEventKeySpeed __NS_SYMBOL(MMEEventKeySpeed)
+#endif
+
+#ifndef MMEEventKeyStyleURL
+#define MMEEventKeyStyleURL __NS_SYMBOL(MMEEventKeyStyleURL)
 #endif
 
 #ifndef MMEEventKeyCourse
@@ -537,6 +549,10 @@
 #define MMEEventKeyResolution __NS_SYMBOL(MMEEventKeyResolution)
 #endif
 
+#ifndef kMMEReachabilityChangedNotification
+#define kMMEReachabilityChangedNotification __NS_SYMBOL(kMMEReachabilityChangedNotification)
+#endif
+
 #ifndef MMEEventKeyAccessibilityFontScale
 #define MMEEventKeyAccessibilityFontScale __NS_SYMBOL(MMEEventKeyAccessibilityFontScale)
 #endif
@@ -551,6 +567,10 @@
 
 #ifndef MMEEventKeyWifi
 #define MMEEventKeyWifi __NS_SYMBOL(MMEEventKeyWifi)
+#endif
+
+#ifndef MMEEventKeyShapeForOfflineRegion
+#define MMEEventKeyShapeForOfflineRegion __NS_SYMBOL(MMEEventKeyShapeForOfflineRegion)
 #endif
 
 #ifndef MMEEventKeySource
@@ -635,10 +655,6 @@
 
 #ifndef MMELoggerHTML
 #define MMELoggerHTML __NS_SYMBOL(MMELoggerHTML)
-#endif
-
-#ifndef kMMEReachabilityChangedNotification
-#define kMMEReachabilityChangedNotification __NS_SYMBOL(kMMEReachabilityChangedNotification)
 #endif
 
 #ifndef MMELoggerShareableHTML
