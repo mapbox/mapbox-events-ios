@@ -23,6 +23,7 @@ describe(@"MMEMetricsManager", ^{
         
         __block NSArray *eventQueue;
         __block NSDateFormatter *dateFormatter;
+        __block NSURLRequest *requestFake;
         
         beforeEach(^{
             NSString *dateString = @"A nice date";
@@ -34,11 +35,13 @@ describe(@"MMEMetricsManager", ^{
             MMEEvent *event1 = [MMEEvent mapTapEventWithDateString:dateString attributes:attributes];
             MMEEvent *event2 = [MMEEvent mapTapEventWithDateString:dateString attributes:attributes];
             eventQueue = [[NSArray alloc] initWithObjects:event1, event2, nil];
+            
+            requestFake = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"https://areallyniceURL"]];
         });
     
         context(@"when incrementing eventQueue metrics", ^{
             beforeEach(^{
-                [manager metricsFromEventQueue:eventQueue];
+                [manager updateMetricsFromEventQueue:eventQueue];
             });
             
             it(@"should have total count increase", ^{
@@ -53,11 +56,17 @@ describe(@"MMEMetricsManager", ^{
                 [manager.metrics.eventCountPerType objectForKey:MMEEventTypeMapTap] should equal(@2);
             });
             
-            it(@"should set dateUTC", ^{
-                manager.metrics.dateUTC should_not be_nil;
+            it(@"should set date", ^{
+                manager.metrics.date should_not be_nil;
+            });
+        });
+        
+        context(@"when preparing attributes", ^{
+            beforeEach(^{
+                [manager attributes];
             });
             
-            it(@"should set dateUTC with the correct format", ^{
+            it(@"should set dateUTCString with the correct format", ^{
                 [dateFormatter dateFromString:manager.metrics.dateUTCString] should_not be_nil;
             });
         });
@@ -68,14 +77,14 @@ describe(@"MMEMetricsManager", ^{
                 NSDictionary *userInfoFake = [NSDictionary dictionaryWithObject:response forKey:MMEResponseKey];
                 NSError *errorFake = [NSError errorWithDomain:@"test" code:42 userInfo:userInfoFake];
                 
-                [manager metricsFromEvents:eventQueue error:errorFake];
-                [manager metricsFromEvents:eventQueue error:errorFake];
+                [manager updateMetricsFromEvents:eventQueue request:requestFake error:errorFake];
+                [manager updateMetricsFromEvents:eventQueue request:requestFake error:errorFake];
                 
                 NSHTTPURLResponse *responseTwo = [[NSHTTPURLResponse alloc] initWithURL:[NSURL URLWithString:@"events.mapbox.com"] statusCode:500 HTTPVersion:nil headerFields:nil];
                 NSDictionary *userInfoFakeTwo = [NSDictionary dictionaryWithObject:responseTwo forKey:MMEResponseKey];
                 NSError *errorFakeTwo = [NSError errorWithDomain:@"test" code:42 userInfo:userInfoFakeTwo];
                 
-                [manager metricsFromEvents:eventQueue error:errorFakeTwo];
+                [manager updateMetricsFromEvents:eventQueue request:requestFake error:errorFakeTwo];
             });
             
             it(@"should have failedRequests 404 count increased", ^{
@@ -101,7 +110,7 @@ describe(@"MMEMetricsManager", ^{
         
         context(@"when incrementing successful HTTP requests", ^{
             beforeEach(^{
-                [manager metricsFromEvents:eventQueue error:nil];
+                [manager updateMetricsFromEvents:eventQueue request:requestFake error:nil];
             });
             
             it(@"should have request count increased", ^{
@@ -133,7 +142,7 @@ describe(@"MMEMetricsManager", ^{
                 
                 uncompressedData = [NSJSONSerialization dataWithJSONObject:eventAttributes options:0 error:nil];
                 
-                [manager metricsFromData:uncompressedData];
+                [manager updateMetricsFromData:uncompressedData];
             });
             
             it(@"should have totalDataTransfer increase count again", ^{
@@ -152,7 +161,7 @@ describe(@"MMEMetricsManager", ^{
             
             context(@"when incrementing more data transfer metrics", ^{
                 beforeEach(^{
-                    [manager metricsFromData:uncompressedData];
+                    [manager updateMetricsFromData:uncompressedData];
                 });
                 
                 it(@"should have totalDataTransfer increase count again", ^{
@@ -184,7 +193,7 @@ describe(@"MMEMetricsManager", ^{
             beforeEach(^{
                 NSDictionary *configFake = [NSDictionary dictionaryWithObject:@"aniceconfig" forKey:@"anicekey"];
                 
-                [manager captureConfigurationJSON:configFake];
+                [manager updateConfigurationJSON:configFake];
             });
             
             it(@"should have a configuration assigned", ^{
@@ -197,7 +206,7 @@ describe(@"MMEMetricsManager", ^{
             beforeEach(^{
                 location = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(38.644375, -77.289127) altitude:0 horizontalAccuracy:0 verticalAccuracy:0 course:0 speed:0.0 timestamp:[NSDate date]];
                 
-                [manager captureCoordinate:location.coordinate];
+                [manager updateCoordinate:location.coordinate];
             });
             
             it(@"should have less accurate values on deviceLat", ^{

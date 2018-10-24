@@ -7,6 +7,7 @@
     if (self) {
         self.failedRequestsDict = [[NSMutableDictionary alloc] init];
         self.eventCountPerType = [[NSMutableDictionary alloc] init];
+        self.date = [NSDate date];
         self.totalDataTransfer = 0;
         self.cellDataTransfer = 0;
         self.wifiDataTransfer = 0;

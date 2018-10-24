@@ -9,13 +9,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)sharedManager;
 
-- (void)metricsFromData:(NSData *)data;
-- (void)metricsFromEventQueue:(NSArray *)eventQueue;
-- (void)metricsFromEvents:(nullable NSArray *)events error:(nullable NSError *)error;
-- (void)captureConfigurationJSON:(NSDictionary *)configuration;
-- (void)captureCoordinate:(CLLocationCoordinate2D)coordinate;
+- (void)updateMetricsFromData:(NSData *)data;
+- (void)updateMetricsFromEventQueue:(NSArray *)eventQueue;
+- (void)updateMetricsFromEvents:(nullable NSArray *)events request:(NSURLRequest *)request error:(nullable NSError *)error;
+- (void)updateConfigurationJSON:(NSDictionary *)configuration;
+- (void)updateCoordinate:(CLLocationCoordinate2D)coordinate;
 - (void)incrementAppWakeUpCount;
-- (void)updateDateUTC;
 - (void)resetMetrics;
 
 - (NSDictionary *)attributes;

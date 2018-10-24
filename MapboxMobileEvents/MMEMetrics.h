@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) NSInteger deviceTimeDrift;
 @property (nonatomic) CLLocationDegrees deviceLat;
 @property (nonatomic) CLLocationDegrees deviceLon;
-@property (nonatomic) NSDate *dateUTC;
+@property (nonatomic) NSDate *date;
 @property (nonatomic) NSString *dateUTCString;
 @property (nonatomic) NSDictionary *configResponseDict;
 @property (nonatomic) NSMutableDictionary *eventCountPerType;

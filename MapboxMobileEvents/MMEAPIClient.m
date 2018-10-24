@@ -78,10 +78,7 @@ int const kMMEMaxRequestCount = 1000;
                 error = error ?: statusError;
                 completionHandler(error);
               
-                [self.metricsManager metricsFromEvents:events error:error];
-                if (request.HTTPBody && error == nil) {
-                    [self.metricsManager metricsFromData:request.HTTPBody];
-                }
+                [self.metricsManager updateMetricsFromEvents:events request:request error:error];
             }
         }];
     }
@@ -99,23 +96,12 @@ int const kMMEMaxRequestCount = 1000;
     [self.sessionWrapper processRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         NSError *statusError = nil;
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-        if (httpResponse.statusCode >= 400) {
-            NSString *descriptionFormat = @"The session data task failed. Original request was: %@";
-            NSString *reasonFormat = @"The status code was %ld";
-            NSString *description = [NSString stringWithFormat:descriptionFormat, request];
-            NSString *reason = [NSString stringWithFormat:reasonFormat, (long)httpResponse.statusCode];
-            NSDictionary *userInfo = @{NSLocalizedDescriptionKey: description,
-                                       NSLocalizedFailureReasonErrorKey: reason};
-            statusError = [NSError errorWithDomain:MMEErrorDomain code:1 userInfo:userInfo];
-        }
+        statusError = [self statusErrorFromRequest:request andHTTPResponse:httpResponse];
         if (completionHandler) {
             error = error ?: statusError;
             completionHandler(error);
             
-            [self.metricsManager metricsFromEvents:filePaths error:error];
-            if (request.HTTPBody && error == nil) {
-                [self.metricsManager metricsFromData:request.HTTPBody];
-            }
+            [self.metricsManager updateMetricsFromEvents:filePaths request:request error:error];
         }
     }];
 }
@@ -135,10 +121,7 @@ int const kMMEMaxRequestCount = 1000;
             error = error ?: statusError;
             completionHandler(error, data);
             
-            [self.metricsManager metricsFromEvents:nil error:error];
-            if (request.HTTPBody && error == nil) {
-                [self.metricsManager metricsFromData:request.HTTPBody];
-            }
+            [self.metricsManager updateMetricsFromEvents:nil request:request error:error];
         }
     }];
 }

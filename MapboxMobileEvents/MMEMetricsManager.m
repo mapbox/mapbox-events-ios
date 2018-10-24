@@ -17,7 +17,6 @@
     
     dispatch_once(&onceToken, ^{
         _sharedManager = [[MMEMetricsManager alloc] init];
-        _sharedManager.metrics = [[MMEMetrics alloc] init];
     });
     
     return _sharedManager;
@@ -31,11 +30,7 @@
     return self;
 }
 
-- (void)metricsFromEventQueue:(NSArray *)eventQueue {
-    if (self.metrics.dateUTC == nil) {
-        [self updateDateUTC];
-    }
-    
+- (void)updateMetricsFromEventQueue:(NSArray *)eventQueue {
     if (eventQueue.count > 0) {
         if (self.metrics.eventCountPerType == nil) {
             self.metrics.eventCountPerType = [[NSMutableDictionary alloc] init];
@@ -51,7 +46,11 @@
     }
 }
 
-- (void)metricsFromEvents:(nullable NSArray *)events error:(nullable NSError *)error {
+- (void)updateMetricsFromEvents:(nullable NSArray *)events request:(NSURLRequest *)request error:(nullable NSError *)error {
+    if (request.HTTPBody && error == nil) {
+        [self updateMetricsFromData:request.HTTPBody];
+    }
+    
     if (error == nil) {
         self.metrics.requests++;
     } else {
@@ -77,7 +76,7 @@
     }
 }
 
-- (void)metricsFromData:(NSData *)data {
+- (void)updateMetricsFromData:(NSData *)data {
     self.metrics.totalDataTransfer += data.length;
     
     if ([[MMEReachability reachabilityForLocalWiFi] isReachableViaWiFi]) {
@@ -91,39 +90,42 @@
     self.metrics.appWakeups++;
 }
 
-- (void)captureConfigurationJSON:(NSDictionary *)configuration {
+- (void)updateConfigurationJSON:(NSDictionary *)configuration {
     if (configuration) {
         self.metrics.configResponseDict = configuration;
     }
 }
 
-- (void)captureCoordinate:(CLLocationCoordinate2D)coordinate; {
+- (void)updateCoordinate:(CLLocationCoordinate2D)coordinate; {
     if (!self.metrics.deviceLat || !self.metrics.deviceLon) {
         self.metrics.deviceLat = round(coordinate.latitude*1000)/1000;
         self.metrics.deviceLon = round(coordinate.longitude*1000)/1000;
     }
 }
 
-- (void)updateDateUTC {
-    self.metrics.dateUTC = [NSDate date];
+- (void)formatUTCDate:(NSDate *)date {
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     NSTimeZone *utcTimeZone = [NSTimeZone timeZoneWithName:@"UTC"];
     [dateFormatter setTimeZone:utcTimeZone];
     [dateFormatter setDateFormat:@"yyyy-MM-dd"];
-    self.metrics.dateUTCString = [dateFormatter stringFromDate:self.metrics.dateUTC];
+    self.metrics.dateUTCString = [dateFormatter stringFromDate:date];
 }
 
 - (void)resetMetrics {
     self.metrics = [[MMEMetrics alloc] init];
-    [self updateDateUTC];
 }
 
 #pragma mark -- attributes
 
 - (NSDictionary *)attributes {
     NSMutableDictionary *attributes = [[NSMutableDictionary alloc] init];
+    if (self.metrics.date) {
+        [self formatUTCDate:self.metrics.date];
+        attributes[MMEEventDateUTC] = self.metrics.dateUTCString;
+    }
     attributes[MMEEventFailedRequests] = [NSString stringWithFormat:@"%@",self.metrics.failedRequestsDict];
     attributes[MMEEventEventCountPerType] = [NSString stringWithFormat:@"%@",self.metrics.eventCountPerType];
+    attributes[MMEEventConfigResponse] = [NSString stringWithFormat:@"%@",self.metrics.configResponseDict];
     attributes[MMEEventTotalDataTransfer] = @(self.metrics.totalDataTransfer);
     attributes[MMEEventCellDataTransfer] = @(self.metrics.cellDataTransfer);
     attributes[MMEEventWiFiDataTransfer] = @(self.metrics.wifiDataTransfer);
@@ -136,6 +138,7 @@
         attributes[MMEEventDeviceLon] = @(self.metrics.deviceLon);
     }
     attributes[MMEEventRequests] = @(self.metrics.requests);
+    attributes[MMEEventDeviceTimeDrift] = @(self.metrics.deviceTimeDrift);
     
     return attributes;
 }

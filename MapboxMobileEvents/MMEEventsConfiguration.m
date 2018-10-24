@@ -74,7 +74,7 @@ static const NSTimeInterval kConfigurationRotationTimeIntervalDefault = 24 * 360
     NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&jsonError];
     
     if (!jsonError) {
-        [[MMEMetricsManager sharedManager] captureConfigurationJSON:json];
+        [[MMEMetricsManager sharedManager] updateConfigurationJSON:json];
         NSArray *blacklist = [json objectForKey:@"RevokedCertKeys"];
         configuration.blacklist = blacklist;
     }

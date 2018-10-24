@@ -206,7 +206,7 @@
     NSArray *events = [self.eventQueue copy];
     NSUInteger eventsCount = events.count;
     
-    [self.metricsManager metricsFromEventQueue:events];
+    [self.metricsManager updateMetricsFromEventQueue:events];
     [self sendTelemetryMetricsEvent];
     
     __weak __typeof__(self) weakSelf = self;
@@ -316,7 +316,7 @@
 }
 
 - (MMEEvent *)generateTelemetryMetricsEvent {
-    if (self.metricsManager.metrics.dateUTC && [self.metricsManager.metrics.dateUTC timeIntervalSinceDate:[self.dateWrapper startOfTomorrowFromDate:self.metricsManager.metrics.dateUTC]] < 0) {
+    if (self.metricsManager.metrics.date && [self.metricsManager.metrics.date timeIntervalSinceDate:[self.dateWrapper startOfTomorrowFromDate:self.metricsManager.metrics.date]] < 0) {
         NSString *debugDescription = [NSString stringWithFormat:@"TelemetryMetrics event isn't ready to be sent; waiting until %@ to send", self.nextTurnstileSendDate];
         [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTelemetryMetrics,
                                              MMEEventKeyLocalDebugDescription: debugDescription}];

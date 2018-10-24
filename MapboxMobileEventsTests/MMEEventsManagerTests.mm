@@ -750,7 +750,7 @@ describe(@"MMEEventsManager", ^{
             context(@"when the current time is before the next telemetryMetrics send date", ^{
                 beforeEach(^{
                     NSDate *date = [NSDate dateWithTimeIntervalSince1970:500];
-                    [MMEMetricsManager sharedManager].metrics stub_method(@selector(dateUTC)).and_return(date);
+                    [MMEMetricsManager sharedManager].metrics stub_method(@selector(date)).and_return(date);
                     
                     [eventsManager sendTelemetryMetricsEvent];
                 });
@@ -763,7 +763,7 @@ describe(@"MMEEventsManager", ^{
             context(@"when the current time is after the next telemetryMetrics send date", ^{
                 beforeEach(^{
                     NSDate *date = [dateWrapper startOfTomorrowFromDate:[NSDate date]];
-                    [MMEMetricsManager sharedManager].metrics stub_method(@selector(dateUTC)).and_return(date);
+                    [MMEMetricsManager sharedManager].metrics stub_method(@selector(date)).and_return(date);
                     
                     [eventsManager sendTelemetryMetricsEvent];
                 });
