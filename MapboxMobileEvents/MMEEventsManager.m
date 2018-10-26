@@ -324,22 +324,8 @@
     }];
 }
 
-- (MMEEvent *)generateTelemetryMetricsEvent {
-    if (self.metricsManager.metrics.date && [self.metricsManager.metrics.date timeIntervalSinceDate:[self.dateWrapper startOfTomorrowFromDate:self.metricsManager.metrics.date]] < 0) {
-        NSString *debugDescription = [NSString stringWithFormat:@"TelemetryMetrics event isn't ready to be sent; waiting until %@ to send", [self.dateWrapper startOfTomorrowFromDate:self.metricsManager.metrics.date]];
-        [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTelemetryMetrics,
-                                             MMEEventKeyLocalDebugDescription: debugDescription}];
-        return nil;
-    }
-    
-    MMEEvent *telemetryMetrics = [MMEEvent telemetryMetricsEventWithDateString:[self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]] attributes:[self.metricsManager attributes]];
-    [MMEEventLogger.sharedLogger logEvent:telemetryMetrics];
-    
-    return telemetryMetrics;
-}
-
 - (void)sendTelemetryMetricsEvent {
-    MMEEvent *telemetryMetricsEvent = [self generateTelemetryMetricsEvent];
+    MMEEvent *telemetryMetricsEvent = [self.metricsManager generateTelemetryMetricsEvent];
     [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstile,
                                          MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Sending telemetryMetrics event: %@", telemetryMetricsEvent]}];
     
