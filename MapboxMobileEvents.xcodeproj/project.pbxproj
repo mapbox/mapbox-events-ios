@@ -144,6 +144,13 @@
 		AC2C7169211376DA004179E0 /* MMEHashProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = AC2C7167211376DA004179E0 /* MMEHashProvider.m */; };
 		AC611F271FCDED2F00ABBF6D /* MMEEventLogReportViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = AC611F251FCDED2F00ABBF6D /* MMEEventLogReportViewController.h */; };
 		AC611F281FCDED2F00ABBF6D /* MMEEventLogReportViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AC611F261FCDED2F00ABBF6D /* MMEEventLogReportViewController.m */; };
+		AC61FA09216BE7A0008519F5 /* MMEMetricsManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = AC61FA08216BE7A0008519F5 /* MMEMetricsManager.mm */; };
+		AC61FA5C217A04CC008519F5 /* MMEMetrics.h in Headers */ = {isa = PBXBuildFile; fileRef = AC61FA5A217A04CC008519F5 /* MMEMetrics.h */; };
+		AC61FA5D217A04CC008519F5 /* MMEMetrics.m in Sources */ = {isa = PBXBuildFile; fileRef = AC61FA5B217A04CC008519F5 /* MMEMetrics.m */; };
+		AC61FA5E217A04CC008519F5 /* MMEMetrics.m in Sources */ = {isa = PBXBuildFile; fileRef = AC61FA5B217A04CC008519F5 /* MMEMetrics.m */; };
+		AC86FE1D2169250000D1B89C /* MMEMetricsManager.h in Headers */ = {isa = PBXBuildFile; fileRef = AC86FE1B2169250000D1B89C /* MMEMetricsManager.h */; };
+		AC86FE1E2169250000D1B89C /* MMEMetricsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = AC86FE1C2169250000D1B89C /* MMEMetricsManager.m */; };
+		AC86FE1F2169250000D1B89C /* MMEMetricsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = AC86FE1C2169250000D1B89C /* MMEMetricsManager.m */; };
 		ACA65F38213591ED00537748 /* MMEHashProviderTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = ACA65F37213591ED00537748 /* MMEHashProviderTests.mm */; };
 		ACA65F3B2135C67F00537748 /* MMEDispatchManagerFake.m in Sources */ = {isa = PBXBuildFile; fileRef = ACA65F392135C67E00537748 /* MMEDispatchManagerFake.m */; };
 		ACB6F21E1F7BF71B0032A916 /* MMELocationManagerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = ACB6F21D1F7BF71B0032A916 /* MMELocationManagerTests.mm */; };
@@ -301,6 +308,11 @@
 		AC2C7167211376DA004179E0 /* MMEHashProvider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEHashProvider.m; sourceTree = "<group>"; };
 		AC611F251FCDED2F00ABBF6D /* MMEEventLogReportViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEEventLogReportViewController.h; sourceTree = "<group>"; };
 		AC611F261FCDED2F00ABBF6D /* MMEEventLogReportViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEEventLogReportViewController.m; sourceTree = "<group>"; };
+		AC61FA08216BE7A0008519F5 /* MMEMetricsManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MMEMetricsManager.mm; sourceTree = "<group>"; };
+		AC61FA5A217A04CC008519F5 /* MMEMetrics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEMetrics.h; sourceTree = "<group>"; };
+		AC61FA5B217A04CC008519F5 /* MMEMetrics.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEMetrics.m; sourceTree = "<group>"; };
+		AC86FE1B2169250000D1B89C /* MMEMetricsManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEMetricsManager.h; sourceTree = "<group>"; };
+		AC86FE1C2169250000D1B89C /* MMEMetricsManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEMetricsManager.m; sourceTree = "<group>"; };
 		ACA65F37213591ED00537748 /* MMEHashProviderTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MMEHashProviderTests.mm; sourceTree = "<group>"; };
 		ACA65F392135C67E00537748 /* MMEDispatchManagerFake.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEDispatchManagerFake.m; sourceTree = "<group>"; };
 		ACA65F3A2135C67F00537748 /* MMEDispatchManagerFake.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEDispatchManagerFake.h; sourceTree = "<group>"; };
@@ -419,6 +431,8 @@
 				40FB437B1EFAFAE900EC5BC0 /* MMETimerManager.m */,
 				40AE584C1EA926710046B437 /* MMETypes.h */,
 				40AE584D1EA926710046B437 /* MMETypes.m */,
+				AC86FE1B2169250000D1B89C /* MMEMetricsManager.h */,
+				AC86FE1C2169250000D1B89C /* MMEMetricsManager.m */,
 				40AE58601EA94E4A0046B437 /* Categories */,
 				40C9E2841EA5615900744FE7 /* Utilities */,
 				401379661F16F26E00567137 /* Vendor */,
@@ -439,6 +453,7 @@
 				403834FE1F7AC55D004205B9 /* MMENSDateWrapperTests.mm */,
 				403835051F7AF860004205B9 /* MMEDependencyManagerTests.mm */,
 				ACB6F21D1F7BF71B0032A916 /* MMELocationManagerTests.mm */,
+				AC61FA08216BE7A0008519F5 /* MMEMetricsManager.mm */,
 				40FB437F1EFAFDCF00EC5BC0 /* MMETimerManagerTests.m */,
 			);
 			path = MapboxMobileEventsTests;
@@ -532,6 +547,8 @@
 		40C9E2841EA5615900744FE7 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				AC61FA5A217A04CC008519F5 /* MMEMetrics.h */,
+				AC61FA5B217A04CC008519F5 /* MMEMetrics.m */,
 				ACE4F0181FD6102100035880 /* MMEUINavigation.h */,
 				ACE4F0191FD6102100035880 /* MMEUINavigation.m */,
 				40AE58411EA6C86C0046B437 /* MMEUIApplicationWrapper.h */,
@@ -608,6 +625,7 @@
 				40AE58561EA932DB0046B437 /* MMEConstants.h in Headers */,
 				AC2C7168211376DA004179E0 /* MMEHashProvider.h in Headers */,
 				40AE585E1EA93B3A0046B437 /* MMECommonEventData.h in Headers */,
+				AC61FA5C217A04CC008519F5 /* MMEMetrics.h in Headers */,
 				40FB437C1EFAFAE900EC5BC0 /* MMETimerManager.h in Headers */,
 				AC2C715E2112408A004179E0 /* MMEDispatchManager.h in Headers */,
 				96AB510A2164178900A261B8 /* MMEConfigurator.h in Headers */,
@@ -627,6 +645,7 @@
 				40C6116A1F18319000E30A6C /* reporting_utils.h in Headers */,
 				403835021F7AF145004205B9 /* MMEDependencyManager.h in Headers */,
 				40AE586D1EA95EDD0046B437 /* MMEEvent.h in Headers */,
+				AC86FE1D2169250000D1B89C /* MMEMetricsManager.h in Headers */,
 				40C611631F18319000E30A6C /* ssl_pin_verifier.h in Headers */,
 				40C6117F1F18319000E30A6C /* TrustKit.h in Headers */,
 				ACE4F01A1FD6102100035880 /* MMEUINavigation.h in Headers */,
@@ -813,6 +832,7 @@
 			files = (
 				40C6118D1F18319000E30A6C /* TSKTrustKitConfig.m in Sources */,
 				40C611741F18319000E30A6C /* TSKReportsRateLimiter.m in Sources */,
+				AC86FE1E2169250000D1B89C /* MMEMetricsManager.m in Sources */,
 				ACE4F01B1FD6102100035880 /* MMEUINavigation.m in Sources */,
 				40C611481F18319000E30A6C /* configuration_utils.m in Sources */,
 				40C6116B1F18319000E30A6C /* reporting_utils.m in Sources */,
@@ -823,6 +843,7 @@
 				AC2C715F2112408A004179E0 /* MMEDispatchManager.m in Sources */,
 				40C9E27C1EA542BC00744FE7 /* MMEEventsManager.m in Sources */,
 				40AE58571EA932DB0046B437 /* MMEConstants.m in Sources */,
+				AC61FA5D217A04CC008519F5 /* MMEMetrics.m in Sources */,
 				40AE586A1EA953970046B437 /* CLLocation+MMEMobileEvents.m in Sources */,
 				ACC8C1CC210FAFF400C5055C /* MMETrustKitProvider.m in Sources */,
 				40AE58441EA6C86C0046B437 /* MMEUIApplicationWrapper.m in Sources */,
@@ -858,6 +879,7 @@
 			files = (
 				40031E5E1EFC5CA1009EAB33 /* MMEUniqueIdentifierFake.m in Sources */,
 				ACB6F21E1F7BF71B0032A916 /* MMELocationManagerTests.mm in Sources */,
+				AC61FA09216BE7A0008519F5 /* MMEMetricsManager.mm in Sources */,
 				ACA65F38213591ED00537748 /* MMEHashProviderTests.mm in Sources */,
 				40AE58471EA6C9F10046B437 /* MMEUIApplicationWrapperFake.m in Sources */,
 				403834FF1F7AC55D004205B9 /* MMENSDateWrapperTests.mm in Sources */,
@@ -892,6 +914,7 @@
 				408596641ED086EB003BD29D /* MMEUIApplicationWrapper.m in Sources */,
 				4085965F1ED086DC003BD29D /* MMEEventsManager.m in Sources */,
 				4085965C1ED086D3003BD29D /* MMEConstants.m in Sources */,
+				AC61FA5E217A04CC008519F5 /* MMEMetrics.m in Sources */,
 				4036EFC01ED38489009C40BA /* MMEEventLogger.m in Sources */,
 				40FB43791EF9EA7800EC5BC0 /* MMEEventsConfiguration.m in Sources */,
 				40C611721F18319000E30A6C /* TSKPinFailureReport.m in Sources */,
@@ -913,6 +936,7 @@
 				408596691ED086FA003BD29D /* MMENSURLSessionWrapper.m in Sources */,
 				96AB5108216416E800A261B8 /* MMETrustKitProvider.m in Sources */,
 				408596671ED086F4003BD29D /* MMECommonEventData.m in Sources */,
+				AC86FE1F2169250000D1B89C /* MMEMetricsManager.m in Sources */,
 				408596631ED086E8003BD29D /* CLLocation+MMEMobileEvents.m in Sources */,
 				40C611781F18319000E30A6C /* vendor_identifier.m in Sources */,
 				408596611ED086E2003BD29D /* MMEAPIClient.m in Sources */,
