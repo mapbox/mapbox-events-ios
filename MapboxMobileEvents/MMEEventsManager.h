@@ -26,6 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)pauseOrResumeMetricsCollectionIfRequired;
 - (void)flush;
+- (void)resetEventQueuing;
 - (void)sendTurnstileEvent;
 - (void)sendTelemetryMetricsEvent;
 - (void)enqueueEventWithName:(NSString *)name;

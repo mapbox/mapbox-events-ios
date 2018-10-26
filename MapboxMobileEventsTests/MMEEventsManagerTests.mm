@@ -496,6 +496,7 @@ describe(@"MMEEventsManager", ^{
                 beforeEach(^{
                     eventsManager.apiClient stub_method(@selector(accessToken)).and_return(nil);
                     [eventsManager flush];
+                    [eventsManager resetEventQueuing];
                 });
                 
                 it(@"does NOT tell the api client to post events", ^{
@@ -512,6 +513,7 @@ describe(@"MMEEventsManager", ^{
                     beforeEach(^{
                         eventsManager.eventQueue.count should equal(0);
                         [eventsManager flush];
+                        [eventsManager resetEventQueuing];
                     });
                     
                     it(@"does NOT tell the api client to post events", ^{
@@ -525,6 +527,7 @@ describe(@"MMEEventsManager", ^{
                         spy_on(eventsManager.timerManager);
                         [eventsManager enqueueEventWithName:MMEEventTypeMapLoad];
                         [eventsManager flush];
+                        [eventsManager resetEventQueuing];
                     });
                     
                     it(@"tells the api client to post events", ^{

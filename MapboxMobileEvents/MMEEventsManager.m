@@ -174,6 +174,8 @@
                                                  MMEEventKeyLocalDebugDescription: @"Initiated background task",
                                                  @"Identifier": @(_backgroundTaskIdentifier)}];
             [self flush];
+            [self sendTelemetryMetricsEvent];
+            [self resetEventQueuing];
         }
         [self pauseMetricsCollection];
         return;
@@ -184,6 +186,8 @@
         [self resumeMetricsCollection];
     } else if (!self.paused && ![self isEnabled]) {
         [self flush];
+        [self sendTelemetryMetricsEvent];
+        [self resetEventQueuing];
         [self pauseMetricsCollection];
     }
 }
@@ -204,10 +208,21 @@
     }
     
     NSArray *events = [self.eventQueue copy];
+    [self postEvents:events];
+    
+    [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeFlush,
+                                         MMEEventKeyLocalDebugDescription:@"flush"}];
+}
+
+- (void)resetEventQueuing {
+    [self.eventQueue removeAllObjects];
+    [self.timerManager cancel];
+}
+
+- (void)postEvents:(NSArray *)events {
     NSUInteger eventsCount = events.count;
     
     [self.metricsManager updateMetricsFromEventQueue:events];
-    [self sendTelemetryMetricsEvent];
     
     __weak __typeof__(self) weakSelf = self;
     [self.apiClient postEvents:events completionHandler:^(NSError * _Nullable error) {
@@ -231,12 +246,6 @@
             strongSelf.backgroundTaskIdentifier = UIBackgroundTaskInvalid;
         }
     }];
-    
-    [self.eventQueue removeAllObjects];
-    [self.timerManager cancel];
-    
-    [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeFlush,
-                                         MMEEventKeyLocalDebugDescription:@"flush"}];
 }
 
 - (void)sendTurnstileEvent {
@@ -317,7 +326,7 @@
 
 - (MMEEvent *)generateTelemetryMetricsEvent {
     if (self.metricsManager.metrics.date && [self.metricsManager.metrics.date timeIntervalSinceDate:[self.dateWrapper startOfTomorrowFromDate:self.metricsManager.metrics.date]] < 0) {
-        NSString *debugDescription = [NSString stringWithFormat:@"TelemetryMetrics event isn't ready to be sent; waiting until %@ to send", self.nextTurnstileSendDate];
+        NSString *debugDescription = [NSString stringWithFormat:@"TelemetryMetrics event isn't ready to be sent; waiting until %@ to send", [self.dateWrapper startOfTomorrowFromDate:self.metricsManager.metrics.date]];
         [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTelemetryMetrics,
                                              MMEEventKeyLocalDebugDescription: debugDescription}];
         return nil;
@@ -493,6 +502,8 @@
     
     if (self.eventQueue.count >= self.configuration.eventFlushCountThreshold) {
         [self flush];
+        [self sendTelemetryMetricsEvent];
+        [self resetEventQueuing];
     }
     
     if (self.eventQueue.count == 1) {
