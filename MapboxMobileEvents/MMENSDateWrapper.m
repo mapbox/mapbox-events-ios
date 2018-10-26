@@ -28,7 +28,7 @@
     return [self.iso8601DateFormatter stringFromDate:date];
 }
 
-- (NSDate *)startOfTomorrow {
+- (NSDate *)startOfTomorrowFromDate:(NSDate *)date {
     // Find the time a day from now (sometime tomorrow)
     NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *dayComponent = [[NSDateComponents alloc] init];

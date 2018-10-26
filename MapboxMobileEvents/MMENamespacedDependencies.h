@@ -67,6 +67,10 @@
 #define MMELocationManager __NS_SYMBOL(MMELocationManager)
 #endif
 
+#ifndef MMEMetricsManager
+#define MMEMetricsManager __NS_SYMBOL(MMEMetricsManager)
+#endif
+
 #ifndef MMENSDateWrapper
 #define MMENSDateWrapper __NS_SYMBOL(MMENSDateWrapper)
 #endif
@@ -301,6 +305,10 @@
 #define MMEApplicationStateUnknown __NS_SYMBOL(MMEApplicationStateUnknown)
 #endif
 
+#ifndef kMMEReachabilityChangedNotification
+#define kMMEReachabilityChangedNotification __NS_SYMBOL(kMMEReachabilityChangedNotification)
+#endif
+
 #ifndef MMEAPIClientBaseURL
 #define MMEAPIClientBaseURL __NS_SYMBOL(MMEAPIClientBaseURL)
 #endif
@@ -361,6 +369,14 @@
 #define MMEErrorDomain __NS_SYMBOL(MMEErrorDomain)
 #endif
 
+#ifndef MMEResponseKey
+#define MMEResponseKey __NS_SYMBOL(MMEResponseKey)
+#endif
+
+#ifndef MMEDebugEventType
+#define MMEDebugEventType __NS_SYMBOL(MMEDebugEventType)
+#endif
+
 #ifndef MMEDebugEventTypeFlush
 #define MMEDebugEventTypeFlush __NS_SYMBOL(MMEDebugEventTypeFlush)
 #endif
@@ -401,16 +417,8 @@
 #define MMEEventTypeAppUserTurnstile __NS_SYMBOL(MMEEventTypeAppUserTurnstile)
 #endif
 
-#ifndef MMEEventTypeMapLoad
-#define MMEEventTypeMapLoad __NS_SYMBOL(MMEEventTypeMapLoad)
-#endif
-
-#ifndef MMEEventTypeMapTap
-#define MMEEventTypeMapTap __NS_SYMBOL(MMEEventTypeMapTap)
-#endif
-
-#ifndef MMEEventTypeMapDragEnd
-#define MMEEventTypeMapDragEnd __NS_SYMBOL(MMEEventTypeMapDragEnd)
+#ifndef MMEEventTypeTelemetryMetrics
+#define MMEEventTypeTelemetryMetrics __NS_SYMBOL(MMEEventTypeTelemetryMetrics)
 #endif
 
 #ifndef MMEEventTypeLocation
@@ -423,6 +431,18 @@
 
 #ifndef MMEEventTypeLocalDebug
 #define MMEEventTypeLocalDebug __NS_SYMBOL(MMEEventTypeLocalDebug)
+#endif
+
+#ifndef MMEEventTypeMapLoad
+#define MMEEventTypeMapLoad __NS_SYMBOL(MMEEventTypeMapLoad)
+#endif
+
+#ifndef MMEEventTypeMapTap
+#define MMEEventTypeMapTap __NS_SYMBOL(MMEEventTypeMapTap)
+#endif
+
+#ifndef MMEEventTypeMapDragEnd
+#define MMEEventTypeMapDragEnd __NS_SYMBOL(MMEEventTypeMapDragEnd)
 #endif
 
 #ifndef MMEventTypeOfflineDownloadStart
@@ -597,12 +617,72 @@
 #define MMEEventSDKVersion __NS_SYMBOL(MMEEventSDKVersion)
 #endif
 
-#ifndef MMENavigationEventPrefix
-#define MMENavigationEventPrefix __NS_SYMBOL(MMENavigationEventPrefix)
+#ifndef MMEEventDateUTC
+#define MMEEventDateUTC __NS_SYMBOL(MMEEventDateUTC)
+#endif
+
+#ifndef MMEEventRequests
+#define MMEEventRequests __NS_SYMBOL(MMEEventRequests)
+#endif
+
+#ifndef MMEEventFailedRequests
+#define MMEEventFailedRequests __NS_SYMBOL(MMEEventFailedRequests)
+#endif
+
+#ifndef MMEEventTotalDataTransfer
+#define MMEEventTotalDataTransfer __NS_SYMBOL(MMEEventTotalDataTransfer)
+#endif
+
+#ifndef MMEEventCellDataTransfer
+#define MMEEventCellDataTransfer __NS_SYMBOL(MMEEventCellDataTransfer)
+#endif
+
+#ifndef MMEEventWiFiDataTransfer
+#define MMEEventWiFiDataTransfer __NS_SYMBOL(MMEEventWiFiDataTransfer)
+#endif
+
+#ifndef MMEEventAppWakeups
+#define MMEEventAppWakeups __NS_SYMBOL(MMEEventAppWakeups)
+#endif
+
+#ifndef MMEEventEventCountPerType
+#define MMEEventEventCountPerType __NS_SYMBOL(MMEEventEventCountPerType)
+#endif
+
+#ifndef MMEEventEventCountFailed
+#define MMEEventEventCountFailed __NS_SYMBOL(MMEEventEventCountFailed)
+#endif
+
+#ifndef MMEEventEventCountTotal
+#define MMEEventEventCountTotal __NS_SYMBOL(MMEEventEventCountTotal)
+#endif
+
+#ifndef MMEEventEventCountMax
+#define MMEEventEventCountMax __NS_SYMBOL(MMEEventEventCountMax)
+#endif
+
+#ifndef MMEEventDeviceLat
+#define MMEEventDeviceLat __NS_SYMBOL(MMEEventDeviceLat)
+#endif
+
+#ifndef MMEEventDeviceLon
+#define MMEEventDeviceLon __NS_SYMBOL(MMEEventDeviceLon)
+#endif
+
+#ifndef MMEEventDeviceTimeDrift
+#define MMEEventDeviceTimeDrift __NS_SYMBOL(MMEEventDeviceTimeDrift)
+#endif
+
+#ifndef MMEEventConfigResponse
+#define MMEEventConfigResponse __NS_SYMBOL(MMEEventConfigResponse)
 #endif
 
 #ifndef MMEVisionEventPrefix
 #define MMEVisionEventPrefix __NS_SYMBOL(MMEVisionEventPrefix)
+#endif
+
+#ifndef MMENavigationEventPrefix
+#define MMENavigationEventPrefix __NS_SYMBOL(MMENavigationEventPrefix)
 #endif
 
 #ifndef MMEEventTypeNavigationDepart
@@ -633,10 +713,6 @@
 #define MMEventTypeNavigationCarplayDisconnect __NS_SYMBOL(MMEventTypeNavigationCarplayDisconnect)
 #endif
 
-#ifndef MMEDebugEventType
-#define MMEDebugEventType __NS_SYMBOL(MMEDebugEventType)
-#endif
-
 #ifndef MMESearchEventPrefix
 #define MMESearchEventPrefix __NS_SYMBOL(MMESearchEventPrefix)
 #endif
@@ -645,8 +721,16 @@
 #define MMEEventTypeSearchSelected __NS_SYMBOL(MMEEventTypeSearchSelected)
 #endif
 
+#ifndef MMELocationManagerDistanceFilter
+#define MMELocationManagerDistanceFilter __NS_SYMBOL(MMELocationManagerDistanceFilter)
+#endif
+
 #ifndef MMEEventTypeSearchFeedback
 #define MMEEventTypeSearchFeedback __NS_SYMBOL(MMEEventTypeSearchFeedback)
+#endif
+
+#ifndef MMERadiusAccuracyMax
+#define MMERadiusAccuracyMax __NS_SYMBOL(MMERadiusAccuracyMax)
 #endif
 
 #ifndef MMEEventSource
@@ -661,20 +745,8 @@
 #define MMELoggerShareableHTML __NS_SYMBOL(MMELoggerShareableHTML)
 #endif
 
-#ifndef MMELocationManagerDistanceFilter
-#define MMELocationManagerDistanceFilter __NS_SYMBOL(MMELocationManagerDistanceFilter)
-#endif
-
-#ifndef MMERadiusAccuracyMax
-#define MMERadiusAccuracyMax __NS_SYMBOL(MMERadiusAccuracyMax)
-#endif
-
 #ifndef MMELocationManagerRegionIdentifier
 #define MMELocationManagerRegionIdentifier __NS_SYMBOL(MMELocationManagerRegionIdentifier)
-#endif
-
-#ifndef kMMEResponseKey
-#define kMMEResponseKey __NS_SYMBOL(kMMEResponseKey)
 #endif
 
 #ifndef kMMEMaxRequestCount

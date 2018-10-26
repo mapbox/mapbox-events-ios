@@ -17,6 +17,7 @@ extern NSString * const MMEAPIClientHTTPMethodGet;
 extern NSString * const MMEErrorDomain;
 
 // Debug types
+extern NSString * const MMEDebugEventType;
 extern NSString * const MMEDebugEventTypeFlush;
 extern NSString * const MMEDebugEventTypePush;
 extern NSString * const MMEDebugEventTypePost;
@@ -26,9 +27,11 @@ extern NSString * const MMEDebugEventTypeTurnstileFailed;
 extern NSString * const MMEDebugEventTypeBackgroundTask;
 extern NSString * const MMEDebugEventTypeMetricCollection;
 extern NSString * const MMEDebugEventTypeLocationManager;
+extern NSString * const MMEDebugEventTypeTelemetryMetrics;
 
 // Event types
 extern NSString * const MMEEventTypeAppUserTurnstile;
+extern NSString * const MMEEventTypeTelemetryMetrics;
 extern NSString * const MMEEventTypeMapLoad;
 extern NSString * const MMEEventTypeMapTap;
 extern NSString * const MMEEventTypeMapDragEnd;
@@ -88,10 +91,26 @@ extern NSString * const MMEEventTypeNavigationFeedback;
 extern NSString * const MMEEventTypeNavigationReroute;
 extern NSString * const MMEventTypeNavigationCarplayConnect;
 extern NSString * const MMEventTypeNavigationCarplayDisconnect;
-extern NSString * const MMEDebugEventType;
 extern NSString * const MMEEventTypeSearchSelected;
 extern NSString * const MMEEventTypeSearchFeedback;
 extern NSString * const MMESearchEventPrefix;
+extern NSString * const MMEEventDateUTC;
+extern NSString * const MMEEventRequests;
+extern NSString * const MMEEventFailedRequests;
+extern NSString * const MMEEventTotalDataTransfer;
+extern NSString * const MMEEventCellDataTransfer;
+extern NSString * const MMEEventWiFiDataTransfer;
+extern NSString * const MMEEventAppWakeups;
+extern NSString * const MMEEventEventCountPerType;
+extern NSString * const MMEEventEventCountFailed;
+extern NSString * const MMEEventEventCountTotal;
+extern NSString * const MMEEventEventCountMax;
+extern NSString * const MMEEventDeviceLat;
+extern NSString * const MMEEventDeviceLon;
+extern NSString * const MMEEventDeviceTimeDrift;
+extern NSString * const MMEEventConfigResponse;
+
+extern NSString * const MMEResponseKey;
 
 // SDK event source
 extern NSString * const MMEEventSource;
