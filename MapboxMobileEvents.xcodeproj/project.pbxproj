@@ -1162,6 +1162,7 @@
 		408596591ED084C0003BD29D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				DEFINES_MODULE = YES;
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/vendor/TrustKit/TrustKit/**";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				OTHER_LDFLAGS = "";
@@ -1173,6 +1174,7 @@
 		4085965A1ED084C0003BD29D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				DEFINES_MODULE = YES;
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/vendor/TrustKit/TrustKit/**";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				OTHER_LDFLAGS = "";

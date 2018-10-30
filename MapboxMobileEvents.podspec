@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
   # ―――  Spec Metadata  ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
   s.name = 'MapboxMobileEvents'
-  s.version = "0.6.0"
+  s.version = "0.7.0.beta"
   s.summary = "Mapbox Mobile Events"
 
   s.description  = "Collects usage information to help Mapbox improve its products."
@@ -39,5 +39,6 @@ Pod::Spec.new do |s|
   s.requires_arc = true
   s.module_name = 'MapboxMobileEvents'
   s.library = 'z'
+  s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES' }
 
 end

@@ -67,6 +67,10 @@
 #define MMELocationManager __NS_SYMBOL(MMELocationManager)
 #endif
 
+#ifndef MMEMetrics
+#define MMEMetrics __NS_SYMBOL(MMEMetrics)
+#endif
+
 #ifndef MMEMetricsManager
 #define MMEMetricsManager __NS_SYMBOL(MMEMetricsManager)
 #endif
@@ -413,6 +417,10 @@
 #define MMEDebugEventTypeLocationManager __NS_SYMBOL(MMEDebugEventTypeLocationManager)
 #endif
 
+#ifndef MMEDebugEventTypeTelemetryMetrics
+#define MMEDebugEventTypeTelemetryMetrics __NS_SYMBOL(MMEDebugEventTypeTelemetryMetrics)
+#endif
+
 #ifndef MMEEventTypeAppUserTurnstile
 #define MMEEventTypeAppUserTurnstile __NS_SYMBOL(MMEEventTypeAppUserTurnstile)
 #endif
@@ -553,8 +561,16 @@
 #define MMEEventKeyModel __NS_SYMBOL(MMEEventKeyModel)
 #endif
 
+#ifndef MMELocationManagerDistanceFilter
+#define MMELocationManagerDistanceFilter __NS_SYMBOL(MMELocationManagerDistanceFilter)
+#endif
+
 #ifndef MMEEventKeyDevice
 #define MMEEventKeyDevice __NS_SYMBOL(MMEEventKeyDevice)
+#endif
+
+#ifndef MMERadiusAccuracyMax
+#define MMERadiusAccuracyMax __NS_SYMBOL(MMERadiusAccuracyMax)
 #endif
 
 #ifndef MMEEventKeyEnabledTelemetry
@@ -567,10 +583,6 @@
 
 #ifndef MMEEventKeyResolution
 #define MMEEventKeyResolution __NS_SYMBOL(MMEEventKeyResolution)
-#endif
-
-#ifndef kMMEReachabilityChangedNotification
-#define kMMEReachabilityChangedNotification __NS_SYMBOL(kMMEReachabilityChangedNotification)
 #endif
 
 #ifndef MMEEventKeyAccessibilityFontScale
@@ -721,16 +733,8 @@
 #define MMEEventTypeSearchSelected __NS_SYMBOL(MMEEventTypeSearchSelected)
 #endif
 
-#ifndef MMELocationManagerDistanceFilter
-#define MMELocationManagerDistanceFilter __NS_SYMBOL(MMELocationManagerDistanceFilter)
-#endif
-
 #ifndef MMEEventTypeSearchFeedback
 #define MMEEventTypeSearchFeedback __NS_SYMBOL(MMEEventTypeSearchFeedback)
-#endif
-
-#ifndef MMERadiusAccuracyMax
-#define MMERadiusAccuracyMax __NS_SYMBOL(MMERadiusAccuracyMax)
 #endif
 
 #ifndef MMEEventSource
