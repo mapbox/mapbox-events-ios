@@ -3,11 +3,11 @@
 set -e
 set -o pipefail
 
-file_path="build/mapbox-events-ios-static.zip"
+file_path="build/namespace/mapbox-events-ios-static/libMapboxEvents.a"
 file_size=$(wc -c <"$file_path" | sed -e 's/^[[:space:]]*//')
 date=`date '+%Y-%m-%d'`
 utc_iso_date=`date -u +'%Y-%m-%dT%H:%M:%SZ'`
-label="Telemetry Static ZIP"
+label="Telemetry Static"
 source="mobile_binarysize"
 scripts_path="scripts"
 json_name="$scripts_path/ios-binarysize.json"
