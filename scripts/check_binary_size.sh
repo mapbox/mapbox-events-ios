@@ -24,5 +24,7 @@ EOL
 # Compress json file
 gzip -f "$json_name" > "$json_gz" 
 
-# Publish to aws
-"$scripts_path"/publish_to_aws.sh $source $date $json_gz
+# Set env variables before the next step
+envman add --key AWS_SOURCE --value "$source"
+envman add --key AWS_PARTITION --value "$date"
+envman add --key LOCAL_PATH --value "$json_gz"
