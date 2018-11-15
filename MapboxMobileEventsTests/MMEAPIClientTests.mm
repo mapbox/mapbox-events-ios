@@ -43,6 +43,33 @@ describe(@"MMEAPIClient", ^{
         apiClient.baseURL should equal([NSURL URLWithString:MMEAPIClientBaseURL]);
     });
     
+
+                
+                MMENSURLSessionWrapper *sessionWrapper = [[MMENSURLSessionWrapper alloc] init];
+                
+                apiClient.sessionWrapper = sessionWrapper;
+                spy_on(apiClient.sessionWrapper);
+                
+                NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
+                
+                NSURLSession *urlSession = [NSURLSession sessionWithConfiguration:sessionConfig delegate:nil delegateQueue:nil];
+                NSURLAuthenticationChallenge *challenge = [[NSURLAuthenticationChallenge alloc] init];
+                [sessionWrapper URLSession:urlSession didReceiveChallenge:challenge completionHandler:^(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable) {
+
+                }];
+                
+            });
+            
+            it(@"should receive challenge", ^{
+                apiClient.sessionWrapper should have_received(@selector(URLSession:didReceiveChallenge:completionHandler:));
+            });
+            
+            it(@"should not receive challenge", ^{
+                apiClient.sessionWrapper should_not have_received(@selector(URLSession:task:didReceiveChallenge:completionHandler:));
+            });
+        });
+    });
+    
     describe(@"- setBaseURL", ^{
         
         context(@"when the URL string is secure", ^{

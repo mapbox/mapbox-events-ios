@@ -17,6 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface MMENSURLSessionWrapper : NSObject <MMENSURLSessionWrapper, NSURLSessionDelegate>
 
+- (void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable))completionHandler;
+
 @end
 
 NS_ASSUME_NONNULL_END
