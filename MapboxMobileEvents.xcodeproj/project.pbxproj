@@ -138,6 +138,7 @@
 		AC2C7165211241D0004179E0 /* MMEConfigurator.m in Sources */ = {isa = PBXBuildFile; fileRef = AC2C7161211241CB004179E0 /* MMEConfigurator.m */; };
 		AC2C7168211376DA004179E0 /* MMEHashProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = AC2C7166211376DA004179E0 /* MMEHashProvider.h */; };
 		AC2C7169211376DA004179E0 /* MMEHashProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = AC2C7167211376DA004179E0 /* MMEHashProvider.m */; };
+		AC2F2C50218B9400000EA7B5 /* APIServiceURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = AC2F2C4F218B9400000EA7B5 /* APIServiceURLProtocol.m */; };
 		AC611F271FCDED2F00ABBF6D /* MMEEventLogReportViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = AC611F251FCDED2F00ABBF6D /* MMEEventLogReportViewController.h */; };
 		AC611F281FCDED2F00ABBF6D /* MMEEventLogReportViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AC611F261FCDED2F00ABBF6D /* MMEEventLogReportViewController.m */; };
 		ACA65F38213591ED00537748 /* MMEHashProviderTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = ACA65F37213591ED00537748 /* MMEHashProviderTests.mm */; };
@@ -295,6 +296,8 @@
 		AC2C7162211241CC004179E0 /* MMEConfigurator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEConfigurator.h; sourceTree = "<group>"; };
 		AC2C7166211376DA004179E0 /* MMEHashProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEHashProvider.h; sourceTree = "<group>"; };
 		AC2C7167211376DA004179E0 /* MMEHashProvider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEHashProvider.m; sourceTree = "<group>"; };
+		AC2F2C4E218B9400000EA7B5 /* APIServiceURLProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = APIServiceURLProtocol.h; sourceTree = "<group>"; };
+		AC2F2C4F218B9400000EA7B5 /* APIServiceURLProtocol.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = APIServiceURLProtocol.m; sourceTree = "<group>"; };
 		AC611F251FCDED2F00ABBF6D /* MMEEventLogReportViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEEventLogReportViewController.h; sourceTree = "<group>"; };
 		AC611F261FCDED2F00ABBF6D /* MMEEventLogReportViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEEventLogReportViewController.m; sourceTree = "<group>"; };
 		ACA65F37213591ED00537748 /* MMEHashProviderTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MMEHashProviderTests.mm; sourceTree = "<group>"; };
@@ -453,6 +456,8 @@
 			children = (
 				40AE58491EA80EA90046B437 /* MMETestStub.h */,
 				40AE584A1EA80EA90046B437 /* MMETestStub.m */,
+				AC2F2C4E218B9400000EA7B5 /* APIServiceURLProtocol.h */,
+				AC2F2C4F218B9400000EA7B5 /* APIServiceURLProtocol.m */,
 			);
 			name = Utilities;
 			sourceTree = "<group>";
@@ -860,6 +865,7 @@
 				40FB43801EFAFDCF00EC5BC0 /* MMETimerManagerTests.m in Sources */,
 				4036EFBB1ED36F06009C40BA /* MMEAPIClientFake.m in Sources */,
 				ACA65F3B2135C67F00537748 /* MMEDispatchManagerFake.m in Sources */,
+				AC2F2C50218B9400000EA7B5 /* APIServiceURLProtocol.m in Sources */,
 				4002E6361F83155E0090D724 /* MMEEventsManagerTests.mm in Sources */,
 				4052C4F31EFB4A740044E2FF /* MMETimerManagerFake.m in Sources */,
 				40F16C7E1F01DF5700DF338D /* MMELocationManagerFake.m in Sources */,

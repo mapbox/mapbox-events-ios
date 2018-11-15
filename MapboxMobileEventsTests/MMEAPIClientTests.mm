@@ -7,6 +7,7 @@
 #import "MMETrustKitProvider.h"
 #import "MMENSURLSessionWrapperFake.h"
 #import "MMEAPIClientFake.h"
+#import "APIServiceURLProtocol.h"
 
 using namespace Cedar::Matchers;
 using namespace Cedar::Doubles;
@@ -43,21 +44,46 @@ describe(@"MMEAPIClient", ^{
         apiClient.baseURL should equal([NSURL URLWithString:MMEAPIClientBaseURL]);
     });
     
-
+    describe(@"- URLSession:didReceiveChallenge:completionHandler:", ^{
+        
+        fcontext(@"when a request is sent", ^{
+            beforeEach(^{
+                // register the URLProtocol class
+                [NSURLProtocol registerClass:[APIServiceURLProtocol class]];
                 
                 MMENSURLSessionWrapper *sessionWrapper = [[MMENSURLSessionWrapper alloc] init];
                 
                 apiClient.sessionWrapper = sessionWrapper;
+//                spy_on(apiClient);
                 spy_on(apiClient.sessionWrapper);
                 
                 NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
+//                sessionConfig.protocolClasses = @[[APIServiceURLProtocol class]];
                 
                 NSURLSession *urlSession = [NSURLSession sessionWithConfiguration:sessionConfig delegate:nil delegateQueue:nil];
+//                NSURLSessionDataTask *task = [urlSession dataTaskWithURL:[NSURL URLWithString:@"fakeURL://somestring/again.com"]];
+//                [task resume];
+//
                 NSURLAuthenticationChallenge *challenge = [[NSURLAuthenticationChallenge alloc] init];
+//
+////                apiClient.sessionWrapper stub_method(@selector(URLSession:didReceiveChallenge:completionHandler:)).with(urlSession).and_with(challenge);
+////                apiClient.sessionWrapper stub_method(@selector(URLSession:didReceiveChallenge:completionHandler:));
+//
                 [sessionWrapper URLSession:urlSession didReceiveChallenge:challenge completionHandler:^(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable) {
-
+                    
                 }];
                 
+//                [[urlSession dataTaskWithURL:[NSURL URLWithString:@"fakeURL://somestring/again.com"] completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+//                    // response management code
+//                }] resume];
+                
+//                [urlSession dataTaskWithURL:[NSURL URLWithString:@"fakeURL://somestring/again.com"]];
+//                NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"fakeURL://somestring/again.com"]];
+                
+                // This should trigger a dataTask method and cause APIServiceURLProtocol to trigger URLSession:didReceiveChallenge:
+//                [apiClient.sessionWrapper processRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+//
+//                }];
             });
             
             it(@"should receive challenge", ^{
