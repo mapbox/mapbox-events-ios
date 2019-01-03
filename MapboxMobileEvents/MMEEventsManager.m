@@ -388,8 +388,10 @@
                                              MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Pushing event: %@", event]}];
         [self pushEvent:event];
     } else {
+        event = [MMEEvent eventWithDateString:[self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]] name:name attributes:attributes];
         [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypePush,
-                                             MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Unknown event: %@", event]}];
+                                             MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Pushing generic event: %@", event]}];
+        [self pushEvent:event];
     }
 }
 

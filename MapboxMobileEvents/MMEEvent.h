@@ -21,5 +21,6 @@
 + (instancetype)debugEventWithAttributes:(NSDictionary *)attributes;
 + (instancetype)searchEventWithName:(NSString *)name attributes:(NSDictionary *)attributes;
 + (instancetype)carplayEventWithName:(NSString *)name attributes:(NSDictionary *)attributes;
++ (instancetype)eventWithDateString:(NSString *)dateString name:(NSString *)name attributes:(NSDictionary *)attributes;
 
 @end
