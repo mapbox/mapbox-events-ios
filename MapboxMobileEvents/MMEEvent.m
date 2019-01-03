@@ -160,6 +160,17 @@
     return carplayEvent;
 }
 
++ (instancetype)eventWithDateString:(NSString *)dateString name:(NSString *)name attributes:(NSDictionary *)attributes {
+    MMEEvent *event = [[MMEEvent alloc] init];
+    event.name = name;
+    NSMutableDictionary *commonAttributes = [NSMutableDictionary dictionary];
+    commonAttributes[MMEEventKeyEvent] = event.name;
+    commonAttributes[MMEEventKeyCreated] = dateString;
+    [commonAttributes addEntriesFromDictionary:attributes];
+    event.attributes = commonAttributes;
+    return event;
+}
+
 + (NSInteger)contentSizeScale {
     NSInteger result = -9999;
     
