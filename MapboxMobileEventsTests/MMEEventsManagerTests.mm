@@ -896,13 +896,13 @@ describe(@"MMEEventsManager", ^{
                 });
             });
             
-            context(@"when an unknown event is pushed", ^{
+            context(@"when a generic event is pushed", ^{
                 beforeEach(^{
-                    [eventsManager enqueueEventWithName:@"invalid" attributes:attributes];
+                    [eventsManager enqueueEventWithName:@"generic" attributes:attributes];
                 });
                 
-                it(@"does not queue the event", ^{
-                    eventsManager.eventQueue.count should equal(0);
+                it(@"does queue the event", ^{
+                    eventsManager.eventQueue.count should equal(1);
                 });
             });
         });
