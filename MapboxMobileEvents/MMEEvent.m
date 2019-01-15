@@ -19,7 +19,7 @@
     commonAttributes[MMEEventKeyEvent] = telemetryMetrics.name;
     commonAttributes[MMEEventKeyCreated] = dateString;
     [commonAttributes addEntriesFromDictionary:attributes];
-    telemetryMetrics.attributes = attributes;
+    telemetryMetrics.attributes = commonAttributes;
     return telemetryMetrics;
 }
 

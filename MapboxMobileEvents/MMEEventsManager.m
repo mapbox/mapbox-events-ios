@@ -209,6 +209,7 @@
     
     NSArray *events = [self.eventQueue copy];
     [self postEvents:events];
+    [self resetEventQueuing];
     
     [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeFlush,
                                          MMEEventKeyLocalDebugDescription:@"flush"}];
