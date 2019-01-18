@@ -6,7 +6,7 @@ file_path="$3"
 if [ -z "$file_path" ] || [ -z "$source" ] || [ -z "$date" ]; then
     >&2 echo "Usage: publish.sh source date filepath"
     >&2 echo ""
-    >&2 echo "Example: publish.sh mobile_binarysize 2018-11-01 android-binarysize.json.gz"
+    >&2 echo "Example: publish.sh mobile_binarysize 2018-11-01 ios-binarysize.json.gz"
     exit 1
 fi
 
