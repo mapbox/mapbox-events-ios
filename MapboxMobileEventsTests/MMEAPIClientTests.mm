@@ -12,6 +12,9 @@
 using namespace Cedar::Matchers;
 using namespace Cedar::Doubles;
 
+@interface DelegateTestClass : NSObject<NSURLConnectionDelegate, NSURLAuthenticationChallengeSender>
+@end
+
 @interface MMEAPIClient (Tests)
 
 @property (nonatomic) id<MMENSURLSessionWrapper> sessionWrapper;
@@ -45,45 +48,123 @@ describe(@"MMEAPIClient", ^{
     });
     
     describe(@"- URLSession:didReceiveChallenge:completionHandler:", ^{
-        
-        fcontext(@"when a request is sent", ^{
+        context(@"when challenge is evaluated by TrustKit", ^{
+            __block bool isMainThread;
+            
             beforeEach(^{
-                // register the URLProtocol class
-                [NSURLProtocol registerClass:[APIServiceURLProtocol class]];
+                id<CedarDouble> delegateFake = fake_for(@protocol(NSURLAuthenticationChallengeSender));
                 
+                NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
                 MMENSURLSessionWrapper *sessionWrapper = [[MMENSURLSessionWrapper alloc] init];
                 
                 apiClient.sessionWrapper = sessionWrapper;
-//                spy_on(apiClient);
                 spy_on(apiClient.sessionWrapper);
                 
-                NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
-//                sessionConfig.protocolClasses = @[[APIServiceURLProtocol class]];
+                __block bool completionBlockCalled = false;
                 
-                NSURLSession *urlSession = [NSURLSession sessionWithConfiguration:sessionConfig delegate:nil delegateQueue:nil];
-//                NSURLSessionDataTask *task = [urlSession dataTaskWithURL:[NSURL URLWithString:@"fakeURL://somestring/again.com"]];
-//                [task resume];
-//
-                NSURLAuthenticationChallenge *challenge = [[NSURLAuthenticationChallenge alloc] init];
-//
-////                apiClient.sessionWrapper stub_method(@selector(URLSession:didReceiveChallenge:completionHandler:)).with(urlSession).and_with(challenge);
-////                apiClient.sessionWrapper stub_method(@selector(URLSession:didReceiveChallenge:completionHandler:));
-//
+                NSURLSession *urlSession = [NSURLSession sessionWithConfiguration:sessionConfig delegate:sessionWrapper delegateQueue:nil];
+                NSURLProtectionSpace *space = [[NSURLProtectionSpace alloc] initWithHost:@"hostname" port:0 protocol:nil realm:nil authenticationMethod:NSURLAuthenticationMethodServerTrust];
+                NSURLAuthenticationChallenge *challenge = [[NSURLAuthenticationChallenge alloc] initWithProtectionSpace:space proposedCredential:nil previousFailureCount:0 failureResponse:nil error:nil sender:((DelegateTestClass *)delegateFake)];
+                
                 [sessionWrapper URLSession:urlSession didReceiveChallenge:challenge completionHandler:^(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable) {
-                    
+                    isMainThread = [NSThread isMainThread];
+                    completionBlockCalled = true;
                 }];
                 
-//                [[urlSession dataTaskWithURL:[NSURL URLWithString:@"fakeURL://somestring/again.com"] completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-//                    // response management code
-//                }] resume];
+                while (!completionBlockCalled) {
+                    NSDate *futureDate = [NSDate dateWithTimeIntervalSinceNow:0.1];
+                    [[NSRunLoop currentRunLoop] runUntilDate:futureDate];
+                }
+            });
+            
+            it(@"should be on background queue", ^{
+                isMainThread should be_falsy;
+            });
+            
+            it(@"should receive challenge", ^{
+                apiClient.sessionWrapper should have_received(@selector(URLSession:didReceiveChallenge:completionHandler:));
+            });
+            
+            it(@"should not receive challenge", ^{
+                apiClient.sessionWrapper should_not have_received(@selector(URLSession:task:didReceiveChallenge:completionHandler:));
+            });
+        });
+    });
+    
+    describe(@"- URLSession:didReceiveChallenge:completionHandler:", ^{
+        
+        context(@"when using a background thread", ^{
+            __block bool isMainThread;
+            
+            beforeEach(^{
+                NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
+                MMENSURLSessionWrapper *sessionWrapper = [[MMENSURLSessionWrapper alloc] init];
                 
-//                [urlSession dataTaskWithURL:[NSURL URLWithString:@"fakeURL://somestring/again.com"]];
-//                NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"fakeURL://somestring/again.com"]];
+                apiClient.sessionWrapper = sessionWrapper;
+                spy_on(apiClient.sessionWrapper);
                 
-                // This should trigger a dataTask method and cause APIServiceURLProtocol to trigger URLSession:didReceiveChallenge:
-//                [apiClient.sessionWrapper processRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-//
-//                }];
+                __block bool completionBlockCalled = false;
+                
+                NSURLSession *urlSession = [NSURLSession sessionWithConfiguration:sessionConfig delegate:sessionWrapper delegateQueue:nil];
+                NSURLAuthenticationChallenge *challenge = [[NSURLAuthenticationChallenge alloc] init];
+
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                    [sessionWrapper URLSession:urlSession didReceiveChallenge:challenge completionHandler:^(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable) {
+                        isMainThread = [NSThread isMainThread];
+                        completionBlockCalled = true;
+                    }];
+                });
+                
+                while (!completionBlockCalled) {
+                    NSDate *futureDate = [NSDate dateWithTimeIntervalSinceNow:0.1];
+                    [[NSRunLoop currentRunLoop] runUntilDate:futureDate];
+                }
+            });
+            
+            it(@"should be main thread", ^{
+                isMainThread should be_truthy;
+            });
+            
+            it(@"should receive challenge", ^{
+                apiClient.sessionWrapper should have_received(@selector(URLSession:didReceiveChallenge:completionHandler:));
+            });
+            
+            it(@"should not receive challenge", ^{
+                apiClient.sessionWrapper should_not have_received(@selector(URLSession:task:didReceiveChallenge:completionHandler:));
+            });
+        });
+    });
+    
+    describe(@"- URLSession:didReceiveChallenge:completionHandler:", ^{
+        
+        context(@"when a request is sent", ^{
+            __block bool isMainThread;
+            
+            beforeEach(^{
+                NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
+                MMENSURLSessionWrapper *sessionWrapper = [[MMENSURLSessionWrapper alloc] init];
+                
+                apiClient.sessionWrapper = sessionWrapper;
+                spy_on(apiClient.sessionWrapper);
+                
+                __block bool completionBlockCalled = false;
+                
+                NSURLSession *urlSession = [NSURLSession sessionWithConfiguration:sessionConfig delegate:sessionWrapper delegateQueue:nil];
+                NSURLAuthenticationChallenge *challenge = [[NSURLAuthenticationChallenge alloc] init];
+                
+                [sessionWrapper URLSession:urlSession didReceiveChallenge:challenge completionHandler:^(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable) {
+                    isMainThread = [NSThread isMainThread];
+                    completionBlockCalled = true;
+                }];
+                
+                while (!completionBlockCalled) {
+                    NSDate *futureDate = [NSDate dateWithTimeIntervalSinceNow:0.1];
+                    [[NSRunLoop currentRunLoop] runUntilDate:futureDate];
+                }
+            });
+            
+            it(@"should be main thread", ^{
+                isMainThread should be_truthy;
             });
             
             it(@"should receive challenge", ^{

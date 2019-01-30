@@ -31,9 +31,8 @@
 - (void)startLoading {
 
     NSURLProtectionSpace *protectionSpace = [[NSURLProtectionSpace alloc] initWithHost:@"someHost" port:0 protocol:nil realm:nil authenticationMethod:nil];
-    NSURLAuthenticationChallenge *challenge = [[NSURLAuthenticationChallenge alloc] initWithProtectionSpace:protectionSpace  proposedCredential:nil previousFailureCount:0 failureResponse:nil error:nil sender:self];
     
-    [self.client URLProtocol:self didReceiveAuthenticationChallenge:challenge];
+    
     
     NSDictionary *responseDictionary = @{@"status" : @"success"};
     NSError *error = nil;
@@ -41,7 +40,15 @@
     NSData *responseData = [NSJSONSerialization dataWithJSONObject:responseDictionary
                                                            options:0
                                                              error:&error];
+    
+    NSURLResponse *response = [[NSURLResponse alloc] initWithURL:self.request.URL MIMEType:@"plain/text" expectedContentLength:responseData.length textEncodingName:nil];
 
+    [self.client URLProtocol:self didReceiveResponse:response cacheStoragePolicy:NSURLCacheStorageNotAllowed];
+    
+    NSURLAuthenticationChallenge *challenge = [[NSURLAuthenticationChallenge alloc] initWithProtectionSpace:protectionSpace  proposedCredential:nil previousFailureCount:0 failureResponse:nil error:nil sender:self];
+    
+    [self.client URLProtocol:self didReceiveAuthenticationChallenge:challenge];
+    
     [self.client URLProtocol:self didLoadData:responseData];
     [self.client URLProtocolDidFinishLoading:self];
 }
