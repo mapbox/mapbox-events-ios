@@ -37,7 +37,7 @@
         [self.dateFormatter setDateFormat:@"yyyy'-'MM'-'dd"];
         [self.dateFormatter setTimeZone:[NSTimeZone systemTimeZone]];
         self.dateForDebugLogFile = [self.dateFormatter stringFromDate:[self.dateWrapper date]];
-        self.nextLogFileDate = [self.dateWrapper startOfTomorrow];
+        self.nextLogFileDate = [self.dateWrapper startOfTomorrowFromDate:[self.dateWrapper date]];
     }
     return self;
 }
@@ -63,7 +63,7 @@
     
     if (self.isTimeForNewLogFile) {
         self.dateForDebugLogFile = [self.dateFormatter stringFromDate:[self.dateWrapper date]];
-        self.nextLogFileDate = [self.dateWrapper startOfTomorrow];
+        self.nextLogFileDate = [self.dateWrapper startOfTomorrowFromDate:[self.dateWrapper date]];
     }
     
     if (!self.debugLogSerialQueue) {

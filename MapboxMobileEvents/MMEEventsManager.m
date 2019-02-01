@@ -14,6 +14,7 @@
 #import "MMENSDateWrapper.h"
 #import "MMECategoryLoader.h"
 #import "CLLocation+MMEMobileEvents.h"
+#import "MMEMetricsManager.h"
 #import <CoreLocation/CoreLocation.h>
 
 @interface MMEEventsManager () <MMELocationManagerDelegate, MMEConfiguratorDelegate>
@@ -28,6 +29,7 @@
 @property (nonatomic) MMEConfigurator *configurationUpdater;
 @property (nonatomic) MMETimerManager *timerManager;
 @property (nonatomic) MMEDispatchManager *dispatchManager;
+@property (nonatomic) MMEMetricsManager *metricsManager;
 @property (nonatomic, getter=isPaused) BOOL paused;
 @property (nonatomic) id<MMEUIApplicationWrapper> application;
 @property (nonatomic) MMENSDateWrapper *dateWrapper;
@@ -65,6 +67,7 @@
         _application = [[MMEUIApplicationWrapper alloc] init];
         _dateWrapper = [[MMENSDateWrapper alloc] init];
         _dispatchManager = [[MMEDispatchManager alloc] init];
+        _metricsManager = [MMEMetricsManager sharedManager];
     }
     return self;
 }
@@ -171,6 +174,8 @@
                                                  MMEEventKeyLocalDebugDescription: @"Initiated background task",
                                                  @"Identifier": @(_backgroundTaskIdentifier)}];
             [self flush];
+            [self sendTelemetryMetricsEvent];
+            [self resetEventQueuing];
         }
         [self pauseMetricsCollection];
         return;
@@ -181,12 +186,16 @@
         [self resumeMetricsCollection];
     } else if (!self.paused && ![self isEnabled]) {
         [self flush];
+        [self sendTelemetryMetricsEvent];
+        [self resetEventQueuing];
         [self pauseMetricsCollection];
     }
 }
 
 - (void)flush {
     if (self.paused) {
+        [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeFlush,
+                                             MMEEventKeyLocalDebugDescription: @"Aborting flushing of event queue because collection is paused."}];
         return;
     }
     
@@ -199,7 +208,23 @@
     }
     
     NSArray *events = [self.eventQueue copy];
+    [self postEvents:events];
+    [self resetEventQueuing];
+    
+    [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeFlush,
+                                         MMEEventKeyLocalDebugDescription:@"flush"}];
+}
+
+- (void)resetEventQueuing {
+    [self.eventQueue removeAllObjects];
+    [self.timerManager cancel];
+}
+
+- (void)postEvents:(NSArray *)events {
     NSUInteger eventsCount = events.count;
+    
+    [self.metricsManager updateMetricsFromEventQueue:events];
+    
     __weak __typeof__(self) weakSelf = self;
     [self.apiClient postEvents:events completionHandler:^(NSError * _Nullable error) {
         __strong __typeof__(weakSelf) strongSelf = weakSelf;
@@ -222,12 +247,6 @@
             strongSelf.backgroundTaskIdentifier = UIBackgroundTaskInvalid;
         }
     }];
-    
-    [self.eventQueue removeAllObjects];
-    [self.timerManager cancel];
-    
-    [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeFlush,
-                                         MMEEventKeyLocalDebugDescription:@"flush"}];
 }
 
 - (void)sendTurnstileEvent {
@@ -306,6 +325,28 @@
     }];
 }
 
+- (void)sendTelemetryMetricsEvent {
+    MMEEvent *telemetryMetricsEvent = [self.metricsManager generateTelemetryMetricsEvent];
+    [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstile,
+                                         MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Sending telemetryMetrics event: %@", telemetryMetricsEvent]}];
+    
+    if (telemetryMetricsEvent) {
+        __weak __typeof__(self) weakSelf = self;
+        [self.apiClient postEvent:telemetryMetricsEvent completionHandler:^(NSError * _Nullable error) {
+            __strong __typeof__(weakSelf) strongSelf = weakSelf;
+            [strongSelf.metricsManager resetMetrics];
+            if (error) {
+                [strongSelf pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTelemetryMetrics,
+                                                           MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Could not send telemetryMetrics event: %@", error]}];
+                return;
+            }
+            
+            [strongSelf pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstile,
+                                                       MMEEventKeyLocalDebugDescription: @"Sent telemetryMetrics event"}];
+        }];
+    }
+}
+
 - (void)enqueueEventWithName:(NSString *)name {
     [self createAndPushEventBasedOnName:name attributes:nil];
 }
@@ -325,6 +366,10 @@
     } else if ([name isEqualToString:MMEEventTypeMapDragEnd]) {
         event = [MMEEvent mapDragEndEventWithDateString:[self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]]
                                              attributes:attributes];
+    } else if ([name isEqualToString:MMEventTypeOfflineDownloadStart]) {
+        event = [MMEEvent mapOfflineDownloadStartEventWithDateString:[self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]] attributes:attributes];
+    } else if ([name isEqualToString:MMEventTypeOfflineDownloadEnd]) {
+        event = [MMEEvent mapOfflineDownloadEndEventWithDateString:[self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]] attributes:attributes];
     }
     
     if ([name hasPrefix:MMENavigationEventPrefix]) {
@@ -338,18 +383,16 @@
     if ([name hasPrefix:MMESearchEventPrefix]) {
         event = [MMEEvent searchEventWithName:name attributes:attributes];
     }
-    
-    if ([name hasPrefix:MMEventCarplayPrefix]) {
-        event = [MMEEvent carplayEventWithName:name attributes:attributes];
-    }
 
     if (event) {
         [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypePush,
                                              MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Pushing event: %@", event]}];
         [self pushEvent:event];
     } else {
+        event = [MMEEvent eventWithDateString:[self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]] name:name attributes:attributes];
         [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypePush,
-                                             MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Unknown event: %@", event]}];
+                                             MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Pushing generic event: %@", event]}];
+        [self pushEvent:event];
     }
 }
 
@@ -431,7 +474,7 @@
     // Find the start of tomorrow and use that as the next turnstile send date. The effect of this is that
     // turnstile events can be sent as much as once per calendar day and always at the start of a session
     // when a map load happens.
-    self.nextTurnstileSendDate = [self.dateWrapper startOfTomorrow];
+    self.nextTurnstileSendDate = [self.dateWrapper startOfTomorrowFromDate:[self.dateWrapper date]];
     
     [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstile,
                                          MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Set next turnstile date to: %@", self.nextTurnstileSendDate]}];
@@ -442,18 +485,14 @@
         return;
     }
     
-    if (self.paused) {
-        [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypePush,
-                                             MMEEventKeyLocalDebugDescription: @"Aborting pushing event because collection is paused."}];
-        return;
-    }
-    
     [self.eventQueue addObject:event];
     [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypePush,
                                          MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Added event to event queue; event queue now has %ld events", (long)self.eventQueue.count]}];
     
     if (self.eventQueue.count >= self.configuration.eventFlushCountThreshold) {
         [self flush];
+        [self sendTelemetryMetricsEvent];
+        [self resetEventQueuing];
     }
     
     if (self.eventQueue.count == 1) {
@@ -489,6 +528,7 @@
     if (self.timerManager && configuration.eventFlushSecondsThreshold != self.timerManager.timeInterval) {
         [self.timerManager cancel];
         self.timerManager = [[MMETimerManager alloc] initWithTimeInterval:self.configuration.eventFlushSecondsThreshold target:self selector:@selector(flush)];
+        [self.timerManager start];
     }
 }
 

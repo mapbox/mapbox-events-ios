@@ -24,7 +24,8 @@ function generate_namespace_header {
 
     echo "Generating $NAME_HEADER from $1"
 
-    echo "// Namespaced Header
+    echo "// This namespaced header is generated.
+// Add source files to the MapboxMobileEventsStatic target, then run \`make name-header\`.
 
 #ifndef __NS_SYMBOL
 // We need to have multiple levels of macros here so that __NAMESPACE_PREFIX_ is
