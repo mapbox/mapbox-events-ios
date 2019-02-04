@@ -7,7 +7,6 @@
 #import "MMETrustKitProvider.h"
 #import "MMENSURLSessionWrapperFake.h"
 #import "MMEAPIClientFake.h"
-#import "APIServiceURLProtocol.h"
 
 using namespace Cedar::Matchers;
 using namespace Cedar::Doubles;
