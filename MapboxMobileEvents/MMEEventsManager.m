@@ -303,7 +303,10 @@
                                                MMEEventKeyOperatingSystem: self.commonEventData.iOSVersion,
                                                MMEEventSDKIdentifier: self.apiClient.userAgentBase,
                                                MMEEventSDKVersion: self.apiClient.hostSDKVersion,
-                                               MMEEventKeyEnabledTelemetry: @([self isEnabled])};
+                                               MMEEventKeyEnabledTelemetry: @([self isEnabled]),
+                                               MMEEventKeyLocationEnabled: @([CLLocationManager locationServicesEnabled]),
+                                               MMEEventKeyLocationAuthorization: [self locationAuthorizationStatus]
+                                               };
     
     MMEEvent *turnstileEvent = [MMEEvent turnstileEventWithAttributes:turnstileEventAttributes];
     [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstile,
@@ -588,6 +591,30 @@
 
     if ([self.delegate respondsToSelector:@selector(eventsManager:didVisit:)]) {
         [self.delegate eventsManager:self didVisit:visit];
+    }
+}
+
+- (NSString *)locationAuthorizationStatus {
+    CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
+    switch (status) {
+        case kCLAuthorizationStatusDenied:
+            return MMEEventStatusDenied;
+            break;
+        case kCLAuthorizationStatusRestricted:
+            return MMEEventStatusRestricted;
+            break;
+        case kCLAuthorizationStatusNotDetermined:
+            return MMEEventStatusNotDetermined;
+            break;
+        case kCLAuthorizationStatusAuthorizedAlways:
+            return MMEEventStatusAuthorizedAlways;
+            break;
+        case kCLAuthorizationStatusAuthorizedWhenInUse:
+            return MMEEventStatusAuthorizedWhenInUse;
+            break;
+        default:
+            return MMEEventUnknown;
+            break;
     }
 }
 

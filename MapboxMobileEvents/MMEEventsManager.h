@@ -34,6 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)postMetadata:(NSArray *)metadata filePaths:(NSArray *)filePaths completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler;
 - (void)disableLocationMetrics;
 
+- (NSString *)locationAuthorizationStatus;
 - (void)displayLogFileFromDate:(NSDate *)logDate;
 
 @end

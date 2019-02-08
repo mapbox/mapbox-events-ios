@@ -78,6 +78,8 @@ extern NSString * const MMEEventKeySource;
 extern NSString * const MMEEventKeySessionId;
 extern NSString * const MMEEventKeyApplicationState;
 extern NSString * const MMEEventKeyAltitude;
+extern NSString * const MMEEventKeyLocationAuthorization;
+extern NSString * const MMEEventKeyLocationEnabled;
 extern NSString * const MMEEventHorizontalAccuracy;
 extern NSString * const MMEEventSDKIdentifier;
 extern NSString * const MMEEventSDKVersion;
@@ -109,6 +111,12 @@ extern NSString * const MMEEventDeviceLat;
 extern NSString * const MMEEventDeviceLon;
 extern NSString * const MMEEventDeviceTimeDrift;
 extern NSString * const MMEEventConfigResponse;
+extern NSString * const MMEEventStatusDenied;
+extern NSString * const MMEEventStatusRestricted;
+extern NSString * const MMEEventStatusNotDetermined;
+extern NSString * const MMEEventStatusAuthorizedAlways;
+extern NSString * const MMEEventStatusAuthorizedWhenInUse;
+extern NSString * const MMEEventUnknown;
 
 extern NSString * const MMEResponseKey;
 

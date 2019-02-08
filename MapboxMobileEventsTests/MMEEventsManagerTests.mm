@@ -668,7 +668,10 @@ describe(@"MMEEventsManager", ^{
                                                                MMEEventKeyOperatingSystem: eventsManager.commonEventData.iOSVersion,
                                                                MMEEventSDKIdentifier: eventsManager.apiClient.userAgentBase,
                                                                MMEEventSDKVersion: eventsManager.apiClient.hostSDKVersion,
-                                                               MMEEventKeyEnabledTelemetry: @NO};
+                                                               MMEEventKeyEnabledTelemetry: @NO,
+                                                               MMEEventKeyLocationEnabled: @([CLLocationManager locationServicesEnabled]),
+                                                               MMEEventKeyLocationAuthorization: [eventsManager locationAuthorizationStatus]
+                                                               };
                     MMEEvent *expectedEvent = [MMEEvent turnstileEventWithAttributes:turnstileEventAttributes];
                     
                     eventsManager.apiClient should have_received(@selector(postEvent:completionHandler:)).with(expectedEvent).and_with(Arguments::anything);
