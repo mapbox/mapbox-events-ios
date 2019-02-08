@@ -70,7 +70,7 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         __typeof__(self) strongSelf = weakSelf;
         // Call into TrustKit here to do pinning validation
-        if (![strongSelf.trustKit.pinningValidator handleChallenge:challenge completionHandler:completionHandler]) {
+        if (![strongSelf.trustKit.pinningValidator handleChallenge:challenge completionHandler:completion]) {
             // TrustKit did not handle this challenge: perhaps it was not for server trust
             // or the domain was not pinned. Fall back to the default behavior
             completion(NSURLSessionAuthChallengePerformDefaultHandling, nil);

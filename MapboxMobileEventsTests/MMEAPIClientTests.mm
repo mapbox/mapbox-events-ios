@@ -76,8 +76,8 @@ describe(@"MMEAPIClient", ^{
                 }
             });
             
-            it(@"should be on background queue", ^{
-                isMainThread should be_falsy;
+            it(@"should be on main queue", ^{
+                isMainThread should be_truthy;
             });
             
             it(@"should receive challenge", ^{

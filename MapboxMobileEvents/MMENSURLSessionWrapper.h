@@ -1,8 +1,6 @@
 #import <Foundation/Foundation.h>
 #import "MMEEventsConfiguration.h"
 
-@class MMENSURLSessionWrapper;
-
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol MMENSURLSessionWrapper <NSObject>
@@ -16,8 +14,6 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface MMENSURLSessionWrapper : NSObject <MMENSURLSessionWrapper, NSURLSessionDelegate>
-
-- (void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable))completionHandler;
 
 @end
 
