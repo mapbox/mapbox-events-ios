@@ -51,6 +51,8 @@ describe(@"MMEAPIClient", ^{
             __block bool isMainThread;
             
             beforeEach(^{
+                dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+                
                 id<CedarDouble> delegateFake = fake_for(@protocol(NSURLAuthenticationChallengeSender));
                 
                 NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
@@ -59,20 +61,17 @@ describe(@"MMEAPIClient", ^{
                 apiClient.sessionWrapper = sessionWrapper;
                 spy_on(apiClient.sessionWrapper);
                 
-                __block bool completionBlockCalled = false;
-                
                 NSURLSession *urlSession = [NSURLSession sessionWithConfiguration:sessionConfig delegate:sessionWrapper delegateQueue:nil];
                 NSURLProtectionSpace *space = [[NSURLProtectionSpace alloc] initWithHost:@"hostname" port:0 protocol:nil realm:nil authenticationMethod:NSURLAuthenticationMethodServerTrust];
                 NSURLAuthenticationChallenge *challenge = [[NSURLAuthenticationChallenge alloc] initWithProtectionSpace:space proposedCredential:nil previousFailureCount:0 failureResponse:nil error:nil sender:((DelegateTestClass *)delegateFake)];
                 
                 [sessionWrapper URLSession:urlSession didReceiveChallenge:challenge completionHandler:^(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable) {
                     isMainThread = [NSThread isMainThread];
-                    completionBlockCalled = true;
+                    dispatch_semaphore_signal(semaphore);
                 }];
                 
-                while (!completionBlockCalled) {
-                    NSDate *futureDate = [NSDate dateWithTimeIntervalSinceNow:0.1];
-                    [[NSRunLoop currentRunLoop] runUntilDate:futureDate];
+                while (dispatch_semaphore_wait(semaphore, DISPATCH_TIME_NOW)) {
+                    [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:10]];
                 }
             });
             
@@ -96,27 +95,26 @@ describe(@"MMEAPIClient", ^{
             __block bool isMainThread;
             
             beforeEach(^{
+                dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+                
                 NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
                 MMENSURLSessionWrapper *sessionWrapper = [[MMENSURLSessionWrapper alloc] init];
                 
                 apiClient.sessionWrapper = sessionWrapper;
                 spy_on(apiClient.sessionWrapper);
                 
-                __block bool completionBlockCalled = false;
-                
                 NSURLSession *urlSession = [NSURLSession sessionWithConfiguration:sessionConfig delegate:sessionWrapper delegateQueue:nil];
                 NSURLAuthenticationChallenge *challenge = [[NSURLAuthenticationChallenge alloc] init];
-
+                
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                     [sessionWrapper URLSession:urlSession didReceiveChallenge:challenge completionHandler:^(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable) {
                         isMainThread = [NSThread isMainThread];
-                        completionBlockCalled = true;
+                        dispatch_semaphore_signal(semaphore);
                     }];
                 });
                 
-                while (!completionBlockCalled) {
-                    NSDate *futureDate = [NSDate dateWithTimeIntervalSinceNow:0.1];
-                    [[NSRunLoop currentRunLoop] runUntilDate:futureDate];
+                while (dispatch_semaphore_wait(semaphore, DISPATCH_TIME_NOW)) {
+                    [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:10]];
                 }
             });
             
@@ -140,25 +138,24 @@ describe(@"MMEAPIClient", ^{
             __block bool isMainThread;
             
             beforeEach(^{
+                dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+                
                 NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
                 MMENSURLSessionWrapper *sessionWrapper = [[MMENSURLSessionWrapper alloc] init];
                 
                 apiClient.sessionWrapper = sessionWrapper;
                 spy_on(apiClient.sessionWrapper);
                 
-                __block bool completionBlockCalled = false;
-                
                 NSURLSession *urlSession = [NSURLSession sessionWithConfiguration:sessionConfig delegate:sessionWrapper delegateQueue:nil];
                 NSURLAuthenticationChallenge *challenge = [[NSURLAuthenticationChallenge alloc] init];
                 
                 [sessionWrapper URLSession:urlSession didReceiveChallenge:challenge completionHandler:^(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable) {
                     isMainThread = [NSThread isMainThread];
-                    completionBlockCalled = true;
+                    dispatch_semaphore_signal(semaphore);
                 }];
                 
-                while (!completionBlockCalled) {
-                    NSDate *futureDate = [NSDate dateWithTimeIntervalSinceNow:0.1];
-                    [[NSRunLoop currentRunLoop] runUntilDate:futureDate];
+                while (dispatch_semaphore_wait(semaphore, DISPATCH_TIME_NOW)) {
+                    [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:10]];
                 }
             });
             
