@@ -13,6 +13,7 @@
 #import "MMECommonEventData.h"
 #import "MMEUIApplicationWrapperFake.h"
 #import "CLLocation+MMEMobileEvents.h"
+#import "CLLocationManager+MMEMobileEvents.h"
 #import "MMEUIApplicationWrapper.h"
 #import "MMEMetricsManager.h"
 
@@ -670,7 +671,7 @@ describe(@"MMEEventsManager", ^{
                                                                MMEEventSDKVersion: eventsManager.apiClient.hostSDKVersion,
                                                                MMEEventKeyEnabledTelemetry: @NO,
                                                                MMEEventKeyLocationEnabled: @([CLLocationManager locationServicesEnabled]),
-                                                               MMEEventKeyLocationAuthorization: [eventsManager locationAuthorizationStatus]
+                                                               MMEEventKeyLocationAuthorization: [CLLocationManager mme_authorizationStatusString]
                                                                };
                     MMEEvent *expectedEvent = [MMEEvent turnstileEventWithAttributes:turnstileEventAttributes];
                     

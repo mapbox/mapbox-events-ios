@@ -7,6 +7,6 @@
 void mme_linkCLLocationManagerCategory();
 #pragma clang diagnostic pop
 
-+ (NSString *)locationAuthorizationStatus;
++ (NSString *)mme_authorizationStatusString;
 
 @end

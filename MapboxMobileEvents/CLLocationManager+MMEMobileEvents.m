@@ -5,7 +5,7 @@
 
 void mme_linkCLLocationManagerCategory(){}
 
-+ (NSString *)locationAuthorizationStatus {
++ (NSString *)mme_authorizationStatusString {
     CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
     NSString *statusString;
     
