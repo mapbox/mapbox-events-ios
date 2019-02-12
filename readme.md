@@ -1,7 +1,9 @@
-## Mapbox Mobile Events
+# Mapbox Mobile Events
 
 [![Bitrise](https://app.bitrise.io/app/63d52d847cdb36db/status.svg?token=DDdEMfpVR8emhdGSgToskA&branch=master)](https://www.bitrise.io/app/63d52d847cdb36db)
 ![codecov](https://codecov.io/gh/mapbox/mapbox-events-ios/branch/master/graph/badge.svg)
+
+The Mapbox Mobile Events SDK collects [anonymous data](https://www.mapbox.com/telemetry/) about the map and device location to continuously update and improve your maps.
 
 ### Dependancies
 
@@ -25,8 +27,7 @@ Include `MapboxMobileEvents.framework` in your application, in the application d
     manager.delegate = self;
     manager.isMetricsEnabledInSimulator = YES;
     manager.isDebugLoggingEnabled = (DEBUG ? YES : NO);
-    manager.initilize(withAccessToken:@"your token kere")
-    [manager sendTurnstileEvents];
+    [manager sendTurnstileEvent];
 
 Or, in Swift:
   
@@ -35,10 +36,3 @@ Or, in Swift:
     eventsManager.isDebugLoggingEnabled = (DEBUG ? true : false)
     eventsManager.initialize(withAccessToken: "your-mapbox-token", userAgentBase: "user-agent-string", hostSDKVersion: "1.0.0")
     eventsManager.sendTurnstileEvent()
-
-The `userAgentBase` and `hostSDKVersion` strings are used to build the `UserAgent:` header for event reports.
-
-### Change Log
-
-- v0.8.1 — Fix for some events not reacing the server, and duplication when flushing
-- v0.8.0 — 
