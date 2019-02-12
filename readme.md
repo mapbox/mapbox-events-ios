@@ -30,10 +30,7 @@ Include `MapboxMobileEvents.framework` in your application, in the application d
 
 Or, in Swift:
   
-    /// declare this in your app delegate class
-    var eventsManager: MMEEventsManager { return appDelegate.eventsManager }
-    
-    /// in …didFinishLaunching…
+    var eventsManager = MMEEventsManager()
     eventsManager.isMetricsEnabledInSimulator = true
     eventsManager.isDebugLoggingEnabled = (DEBUG ? true : false)
     eventsManager.initialize(withAccessToken: "your-mapbox-token", userAgentBase: "user-agent-string", hostSDKVersion: "1.0.0")
