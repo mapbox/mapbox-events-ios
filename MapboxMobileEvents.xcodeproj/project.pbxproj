@@ -337,6 +337,8 @@
 		9C6322632213530A00653792 /* readme.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = readme.md; sourceTree = "<group>"; };
 		AC1B090F22137BB000DB56C8 /* CLLocationManager+MMEMobileEvents.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CLLocationManager+MMEMobileEvents.h"; sourceTree = "<group>"; };
 		AC1B091022137BB000DB56C8 /* CLLocationManager+MMEMobileEvents.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "CLLocationManager+MMEMobileEvents.m"; sourceTree = "<group>"; };
+		9C6322622213530A00653792 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		9C6322632213530A00653792 /* readme.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = readme.md; sourceTree = "<group>"; };
 		AC2C715C21124089004179E0 /* MMEDispatchManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEDispatchManager.h; sourceTree = "<group>"; };
 		AC2C715D2112408A004179E0 /* MMEDispatchManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEDispatchManager.m; sourceTree = "<group>"; };
 		AC2C7161211241CB004179E0 /* MMEConfigurator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEConfigurator.m; sourceTree = "<group>"; };
