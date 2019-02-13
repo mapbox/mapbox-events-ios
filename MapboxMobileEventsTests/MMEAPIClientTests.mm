@@ -30,6 +30,7 @@ SPEC_BEGIN(MMEAPIClientSpec)
 describe(@"MMEAPIClient", ^{
     
     __block MMEAPIClient *apiClient;
+    __block int64_t timeoutInNanoseconds = 1000000000;
     
     beforeEach(^{
         apiClient = [[MMEAPIClient alloc] initWithAccessToken:@"access-token"
@@ -61,7 +62,7 @@ describe(@"MMEAPIClient", ^{
                 apiClient.sessionWrapper = sessionWrapper;
                 spy_on(apiClient.sessionWrapper);
                 
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1000000000), dispatch_get_main_queue(), ^{
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, timeoutInNanoseconds), dispatch_get_main_queue(), ^{
                     dispatch_semaphore_signal(semaphore);
                 });
                 
@@ -107,7 +108,7 @@ describe(@"MMEAPIClient", ^{
                 apiClient.sessionWrapper = sessionWrapper;
                 spy_on(apiClient.sessionWrapper);
                 
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1000000000), dispatch_get_main_queue(), ^{
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, timeoutInNanoseconds), dispatch_get_main_queue(), ^{
                     dispatch_semaphore_signal(semaphore);
                 });
                 
@@ -154,7 +155,7 @@ describe(@"MMEAPIClient", ^{
                 apiClient.sessionWrapper = sessionWrapper;
                 spy_on(apiClient.sessionWrapper);
                 
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1000000000), dispatch_get_main_queue(), ^{
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, timeoutInNanoseconds), dispatch_get_main_queue(), ^{
                     dispatch_semaphore_signal(semaphore);
                 });
                 
