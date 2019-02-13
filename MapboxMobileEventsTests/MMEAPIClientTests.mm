@@ -61,6 +61,10 @@ describe(@"MMEAPIClient", ^{
                 apiClient.sessionWrapper = sessionWrapper;
                 spy_on(apiClient.sessionWrapper);
                 
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1000000000), dispatch_get_main_queue(), ^{
+                    dispatch_semaphore_signal(semaphore);
+                });
+                
                 NSURLSession *urlSession = [NSURLSession sessionWithConfiguration:sessionConfig delegate:sessionWrapper delegateQueue:nil];
                 NSURLProtectionSpace *space = [[NSURLProtectionSpace alloc] initWithHost:@"hostname" port:0 protocol:nil realm:nil authenticationMethod:NSURLAuthenticationMethodServerTrust];
                 NSURLAuthenticationChallenge *challenge = [[NSURLAuthenticationChallenge alloc] initWithProtectionSpace:space proposedCredential:nil previousFailureCount:0 failureResponse:nil error:nil sender:((DelegateTestClass *)delegateFake)];
@@ -102,6 +106,10 @@ describe(@"MMEAPIClient", ^{
                 
                 apiClient.sessionWrapper = sessionWrapper;
                 spy_on(apiClient.sessionWrapper);
+                
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1000000000), dispatch_get_main_queue(), ^{
+                    dispatch_semaphore_signal(semaphore);
+                });
                 
                 NSURLSession *urlSession = [NSURLSession sessionWithConfiguration:sessionConfig delegate:sessionWrapper delegateQueue:nil];
                 NSURLAuthenticationChallenge *challenge = [[NSURLAuthenticationChallenge alloc] init];
@@ -145,6 +153,10 @@ describe(@"MMEAPIClient", ^{
                 
                 apiClient.sessionWrapper = sessionWrapper;
                 spy_on(apiClient.sessionWrapper);
+                
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1000000000), dispatch_get_main_queue(), ^{
+                    dispatch_semaphore_signal(semaphore);
+                });
                 
                 NSURLSession *urlSession = [NSURLSession sessionWithConfiguration:sessionConfig delegate:sessionWrapper delegateQueue:nil];
                 NSURLAuthenticationChallenge *challenge = [[NSURLAuthenticationChallenge alloc] init];
