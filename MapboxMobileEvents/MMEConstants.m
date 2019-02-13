@@ -79,6 +79,8 @@ NSString * const MMEEventKeySource = @"source";
 NSString * const MMEEventKeySessionId = @"sessionId";
 NSString * const MMEEventKeyApplicationState = @"applicationState";
 NSString * const MMEEventKeyAltitude = @"altitude";
+NSString * const MMEEventKeyLocationAuthorization = @"locationAuthorization";
+NSString * const MMEEventKeyLocationEnabled = @"locationEnabled";
 NSString * const MMEEventSDKIdentifier = @"sdkIdentifier";
 NSString * const MMEEventSDKVersion = @"sdkVersion";
 NSString * const MMEEventDateUTC = @"dateUTC";
@@ -96,6 +98,12 @@ NSString * const MMEEventDeviceLat = @"deviceLat";
 NSString * const MMEEventDeviceLon = @"deviceLon";
 NSString * const MMEEventDeviceTimeDrift = @"deviceTimeDrift";
 NSString * const MMEEventConfigResponse = @"configResponse";
+NSString * const MMEEventStatusDenied = @"denied";
+NSString * const MMEEventStatusRestricted = @"restricted";
+NSString * const MMEEventStatusNotDetermined = @"notDetermined";
+NSString * const MMEEventStatusAuthorizedAlways = @"always";
+NSString * const MMEEventStatusAuthorizedWhenInUse = @"whenInUse";
+NSString * const MMEEventUnknown = @"unknown";
 
 NSString * const MMEVisionEventPrefix = @"vision.";
 

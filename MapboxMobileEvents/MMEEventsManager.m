@@ -14,6 +14,7 @@
 #import "MMENSDateWrapper.h"
 #import "MMECategoryLoader.h"
 #import "CLLocation+MMEMobileEvents.h"
+#import "CLLocationManager+MMEMobileEvents.h"
 #import "MMEMetricsManager.h"
 #import <CoreLocation/CoreLocation.h>
 
@@ -303,7 +304,10 @@
                                                MMEEventKeyOperatingSystem: self.commonEventData.iOSVersion,
                                                MMEEventSDKIdentifier: self.apiClient.userAgentBase,
                                                MMEEventSDKVersion: self.apiClient.hostSDKVersion,
-                                               MMEEventKeyEnabledTelemetry: @([self isEnabled])};
+                                               MMEEventKeyEnabledTelemetry: @([self isEnabled]),
+                                               MMEEventKeyLocationEnabled: @([CLLocationManager locationServicesEnabled]),
+                                               MMEEventKeyLocationAuthorization: [CLLocationManager mme_authorizationStatusString]
+                                               };
     
     MMEEvent *turnstileEvent = [MMEEvent turnstileEventWithAttributes:turnstileEventAttributes];
     [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstile,
