@@ -13,6 +13,7 @@
 #import "MMECommonEventData.h"
 #import "MMEUIApplicationWrapperFake.h"
 #import "CLLocation+MMEMobileEvents.h"
+#import "CLLocationManager+MMEMobileEvents.h"
 #import "MMEUIApplicationWrapper.h"
 #import "MMEMetricsManager.h"
 
@@ -668,7 +669,10 @@ describe(@"MMEEventsManager", ^{
                                                                MMEEventKeyOperatingSystem: eventsManager.commonEventData.iOSVersion,
                                                                MMEEventSDKIdentifier: eventsManager.apiClient.userAgentBase,
                                                                MMEEventSDKVersion: eventsManager.apiClient.hostSDKVersion,
-                                                               MMEEventKeyEnabledTelemetry: @NO};
+                                                               MMEEventKeyEnabledTelemetry: @NO,
+                                                               MMEEventKeyLocationEnabled: @([CLLocationManager locationServicesEnabled]),
+                                                               MMEEventKeyLocationAuthorization: [CLLocationManager mme_authorizationStatusString]
+                                                               };
                     MMEEvent *expectedEvent = [MMEEvent turnstileEventWithAttributes:turnstileEventAttributes];
                     
                     eventsManager.apiClient should have_received(@selector(postEvent:completionHandler:)).with(expectedEvent).and_with(Arguments::anything);
