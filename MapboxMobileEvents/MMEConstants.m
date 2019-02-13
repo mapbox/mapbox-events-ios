@@ -18,6 +18,7 @@ NSString * const MMEErrorDomain = @"MMEErrorDomain";
 NSString * const MMEResponseKey = @"MMEResponseKey";
 
 NSString * const MMEDebugEventType = @"debug.type";
+NSString * const MMEDebugEventTypeError = @"error";
 NSString * const MMEDebugEventTypeFlush = @"flush";
 NSString * const MMEDebugEventTypePush = @"push";
 NSString * const MMEDebugEventTypePost = @"post";
@@ -62,6 +63,9 @@ NSString * const MMEEventKeyCourse = @"course";
 NSString * const MMEEventKeyGestureID = @"gesture";
 NSString * const MMEEventHorizontalAccuracy = @"horizontalAccuracy";
 NSString * const MMEEventKeyLocalDebugDescription = @"debug.description";
+NSString * const MMEEventKeyErrorCode = @"error.code";
+NSString * const MMEEventKeyErrorDescription = @"error.description";
+NSString * const MMEEventKeyErrorFailureReason = @"error.failureReason";
 NSString * const MMEEventKeyEvent = @"event";
 NSString * const MMEEventKeyCreated = @"created";
 NSString * const MMEEventKeyVendorID = @"userId";

@@ -4,6 +4,7 @@
 #import "MMEEvent.h"
 #import "NSData+MMEGZIP.h"
 #import "MMEMetricsManager.h"
+#import "MMEEventsManager.h"
 
 typedef NS_ENUM(NSInteger, MMEErrorCode) {
     MMESessionFailedError,
@@ -11,6 +12,14 @@ typedef NS_ENUM(NSInteger, MMEErrorCode) {
 };
 
 @import MobileCoreServices;
+
+#pragma mark -
+
+@interface MMEEventsManager (Private)
+- (void) pushDebugEventWithAttributes:(NSDictionary*) debugAttributes;
+@end
+
+#pragma mark -
 
 @interface MMEAPIClient ()
 
@@ -22,6 +31,8 @@ typedef NS_ENUM(NSInteger, MMEErrorCode) {
 @end
 
 int const kMMEMaxRequestCount = 1000;
+
+#pragma mark -
 
 @implementation MMEAPIClient
 
@@ -66,21 +77,23 @@ int const kMMEMaxRequestCount = 1000;
     
     for (NSArray *batch in eventBatches) {
         NSURLRequest *request = [self requestForEvents:batch];
-        [self.sessionWrapper processRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-            NSError *statusError = nil;
-            if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
-                NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-                statusError = [self statusErrorFromRequest:request andHTTPResponse:httpResponse];
-            } else {
-                statusError = [self unexpectedResponseErrorfromRequest:request andResponse:response];
-            }
-            if (completionHandler) {
-                error = error ?: statusError;
-                completionHandler(error);
-              
-                [self.metricsManager updateMetricsFromEvents:events request:request error:error];
-            }
-        }];
+        if (request) {
+            [self.sessionWrapper processRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+                NSError *statusError = nil;
+                if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
+                    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+                    statusError = [self statusErrorFromRequest:request andHTTPResponse:httpResponse];
+                } else {
+                    statusError = [self unexpectedResponseErrorfromRequest:request andResponse:response];
+                }
+                if (completionHandler) {
+                    error = error ?: statusError;
+                    completionHandler(error);
+
+                    [self.metricsManager updateMetricsFromEvents:events request:request error:error];
+                }
+            }];
+        }
     }
 }
 
@@ -217,16 +230,28 @@ int const kMMEMaxRequestCount = 1000;
         }
     }];
 
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:eventAttributes options:0 error:nil];
-    
-    // Compressing less than 2 events can have a negative impact on the size.
-    if (events.count >= 2) {
-        NSData *compressedData = [jsonData mme_gzippedData];
-        [request setValue:@"gzip" forHTTPHeaderField:MMEAPIClientHeaderFieldContentEncodingKey];
-        [request setHTTPBody:compressedData];
-    } else {
-        [request setValue:nil forHTTPHeaderField:MMEAPIClientHeaderFieldContentEncodingKey];
-        [request setHTTPBody:jsonData];
+    NSError* jsonError = nil;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:eventAttributes options:0 error:&jsonError];
+
+    if (jsonData) { // we were able to convert the eventAttrubutes, attempt compresison
+        // Compressing less than 2 events can have a negative impact on the size.
+        if (events.count >= 2) {
+            NSData *compressedData = [jsonData mme_gzippedData];
+            [request setValue:@"gzip" forHTTPHeaderField:MMEAPIClientHeaderFieldContentEncodingKey];
+            [request setHTTPBody:compressedData];
+        } else {
+            [request setValue:nil forHTTPHeaderField:MMEAPIClientHeaderFieldContentEncodingKey];
+            [request setHTTPBody:jsonData];
+        }
+    } else if (jsonError) {
+        [[MMEEventsManager sharedManager] pushDebugEventWithAttributes:@{
+            MMEDebugEventType: MMEDebugEventTypeError,
+            MMEEventKeyErrorCode: @(jsonError.code),
+            MMEEventKeyErrorDescription: jsonError.localizedDescription,
+            MMEEventKeyErrorFailureReason: jsonError.localizedFailureReason
+        }];
+
+        return nil;
     }
     
     return [request copy];
@@ -248,18 +273,30 @@ int const kMMEMaxRequestCount = 1000;
 
 - (NSData *)createBodyWithBoundary:(NSString *)boundary metadata:(NSArray *)metadata filePaths:(NSArray *)filePaths {
     NSMutableData *httpBody = [NSMutableData data];
-    
+    NSError *jsonError = nil;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:metadata options:0 error:&jsonError];
+
     [httpBody appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
     [httpBody appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"attachments\"\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
-    [httpBody appendData:[[NSString stringWithFormat:@"Content-Type: application/json\r\n\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
-    [httpBody appendData:[NSJSONSerialization dataWithJSONObject:metadata options:0 error:nil]];
-    [httpBody appendData:[[NSString stringWithFormat:@"\r\n\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
-    
-    for (NSString *path in filePaths) {
+
+    if (jsonData) { // add json metadata part
+        [httpBody appendData:[[NSString stringWithFormat:@"Content-Type: application/json\r\n\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
+        [httpBody appendData:jsonData];
+        [httpBody appendData:[[NSString stringWithFormat:@"\r\n\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
+    } else if (jsonError) {
+        [[MMEEventsManager sharedManager] pushDebugEventWithAttributes:@{
+            MMEDebugEventType: MMEDebugEventTypeError,
+            MMEEventKeyErrorCode: @(jsonError.code),
+            MMEEventKeyErrorDescription: jsonError.localizedDescription,
+            MMEEventKeyErrorFailureReason: jsonError.localizedFailureReason
+        }];
+    }
+
+    for (NSString *path in filePaths) { // add a file part for each
         NSString *filename  = [path lastPathComponent];
         NSData   *data      = [NSData dataWithContentsOfFile:path];
         NSString *mimetype  = [self mimeTypeForPath:path];
-        
+
         [httpBody appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
         [httpBody appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"file\"; filename=\"%@\"\r\n", filename] dataUsingEncoding:NSUTF8StringEncoding]];
         [httpBody appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\n\r\n", mimetype] dataUsingEncoding:NSUTF8StringEncoding]];

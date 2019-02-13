@@ -18,6 +18,7 @@ extern NSString * const MMEErrorDomain;
 
 // Debug types
 extern NSString * const MMEDebugEventType;
+extern NSString * const MMEDebugEventTypeError;
 extern NSString * const MMEDebugEventTypeFlush;
 extern NSString * const MMEDebugEventTypePush;
 extern NSString * const MMEDebugEventTypePost;
@@ -84,6 +85,9 @@ extern NSString * const MMEEventHorizontalAccuracy;
 extern NSString * const MMEEventSDKIdentifier;
 extern NSString * const MMEEventSDKVersion;
 extern NSString * const MMEEventKeyLocalDebugDescription;
+extern NSString * const MMEEventKeyErrorCode;
+extern NSString * const MMEEventKeyErrorDescription;
+extern NSString * const MMEEventKeyErrorFailureReason;
 extern NSString * const MMENavigationEventPrefix;
 extern NSString * const MMEVisionEventPrefix;
 extern NSString * const MMEEventTypeNavigationDepart;
