@@ -1,8 +1,6 @@
 #import <Foundation/Foundation.h>
 #import "MMEEventsConfiguration.h"
 
-@class MMENSURLSessionWrapper;
-
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol MMENSURLSessionWrapper <NSObject>
