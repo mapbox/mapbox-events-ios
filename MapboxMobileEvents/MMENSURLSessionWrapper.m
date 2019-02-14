@@ -46,12 +46,36 @@
 #pragma mark NSURLSessionDelegate
 
 - (void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable))completionHandler {
-    // Call into TrustKit here to do pinning validation
-    if (![self.trustKit.pinningValidator handleChallenge:challenge completionHandler:completionHandler]) {
-        // TrustKit did not handle this challenge: perhaps it was not for server trust
-        // or the domain was not pinned. Fall back to the default behavior
-        completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
-    }
+    __block void (^completion)(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable) = nil;
+    
+    completion = ^(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential * _Nullable credential){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (completionHandler) {
+                completionHandler(disposition, credential);
+            }
+            completion = nil;
+        });
+    };
+    
+    // From SecTrustEvaluate docs:
+    /*
+     This function will completely evaluate trust before returning,
+     possibly including network access to fetch intermediate certificates or to
+     perform revocation checking. Since this function can block during those
+     operations, you should call it from within a function that is placed on a
+     dispatch queue, or in a separate thread from your application's main
+     run loop. Alternatively, you can use the SecTrustEvaluateAsync function.
+     */
+    __weak __typeof__(self) weakSelf = self;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        __typeof__(self) strongSelf = weakSelf;
+        // Call into TrustKit here to do pinning validation
+        if (![strongSelf.trustKit.pinningValidator handleChallenge:challenge completionHandler:completion]) {
+            // TrustKit did not handle this challenge: perhaps it was not for server trust
+            // or the domain was not pinned. Fall back to the default behavior
+            completion(NSURLSessionAuthChallengePerformDefaultHandling, nil);
+        }
+    });
 }
 
 @end
