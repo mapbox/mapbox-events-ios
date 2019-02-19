@@ -52,7 +52,7 @@
 
 #pragma mark - Write to Local File
 
-- (BOOL)isTimeForNewLogFile {
+- (BOOL)timeForNewLogFile {
     return [[self.dateWrapper date] timeIntervalSinceDate:self.nextLogFileDate] > 0;
 }
 
@@ -61,7 +61,7 @@
         return;
     }
     
-    if (self.isTimeForNewLogFile) {
+    if (self.timeForNewLogFile) {
         self.dateForDebugLogFile = [self.dateFormatter stringFromDate:[self.dateWrapper date]];
         self.nextLogFileDate = [self.dateWrapper startOfTomorrowFromDate:[self.dateWrapper date]];
     }
