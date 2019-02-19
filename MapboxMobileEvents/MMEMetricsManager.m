@@ -99,7 +99,7 @@
     }
 }
 
-- (void)updateCoordinate:(CLLocationCoordinate2D)coordinate; {
+- (void)updateCoordinate:(CLLocationCoordinate2D)coordinate {
     if (!self.metrics.deviceLat || !self.metrics.deviceLon) {
         self.metrics.deviceLat = round(coordinate.latitude*1000)/1000;
         self.metrics.deviceLon = round(coordinate.longitude*1000)/1000;

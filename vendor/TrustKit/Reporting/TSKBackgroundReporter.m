@@ -38,7 +38,7 @@ static NSString * const kTSKBackgroundSessionIdentifierFormat = @"%@.TSKBackgrou
 
 #pragma mark Public methods
 
-- (nonnull instancetype)initAndRateLimitReports:(BOOL)shouldRateLimitReports;
+- (nonnull instancetype)initAndRateLimitReports:(BOOL)shouldRateLimitReports
 {
     self = [super init];
     if (self)
