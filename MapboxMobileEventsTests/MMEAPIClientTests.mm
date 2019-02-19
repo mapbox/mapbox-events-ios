@@ -30,7 +30,11 @@ SPEC_BEGIN(MMEAPIClientSpec)
 describe(@"MMEAPIClient", ^{
     
     __block MMEAPIClient *apiClient;
-    __block int64_t timeoutInNanoseconds = 1000000000;
+    __block NSURLSessionAuthChallengeDisposition receivedDisposition;
+    
+    int64_t timeoutInNanoseconds = 1000000000;
+    NSURLSessionAuthChallengeDisposition expectedDefaultDisposition = NSURLSessionAuthChallengePerformDefaultHandling;
+    NSURLSessionAuthChallengeDisposition expectedCancelDisposition = NSURLSessionAuthChallengeCancelAuthenticationChallenge;
     
     beforeEach(^{
         apiClient = [[MMEAPIClient alloc] initWithAccessToken:@"access-token"
@@ -60,7 +64,6 @@ describe(@"MMEAPIClient", ^{
                 MMENSURLSessionWrapper *sessionWrapper = [[MMENSURLSessionWrapper alloc] init];
                 
                 apiClient.sessionWrapper = sessionWrapper;
-                spy_on(apiClient.sessionWrapper);
                 
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, timeoutInNanoseconds), dispatch_get_main_queue(), ^{
                     dispatch_semaphore_signal(semaphore);
@@ -70,8 +73,9 @@ describe(@"MMEAPIClient", ^{
                 NSURLProtectionSpace *space = [[NSURLProtectionSpace alloc] initWithHost:@"hostname" port:0 protocol:nil realm:nil authenticationMethod:NSURLAuthenticationMethodServerTrust];
                 NSURLAuthenticationChallenge *challenge = [[NSURLAuthenticationChallenge alloc] initWithProtectionSpace:space proposedCredential:nil previousFailureCount:0 failureResponse:nil error:nil sender:((DelegateTestClass *)delegateFake)];
                 
-                [sessionWrapper URLSession:urlSession didReceiveChallenge:challenge completionHandler:^(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable) {
+                [sessionWrapper URLSession:urlSession didReceiveChallenge:challenge completionHandler:^(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential * _Nullable credential) {
                     isMainThread = [NSThread isMainThread];
+                    receivedDisposition = disposition;
                     dispatch_semaphore_signal(semaphore);
                 }];
                 
@@ -84,19 +88,15 @@ describe(@"MMEAPIClient", ^{
                 isMainThread should be_truthy;
             });
             
-            it(@"should receive challenge", ^{
-                apiClient.sessionWrapper should have_received(@selector(URLSession:didReceiveChallenge:completionHandler:));
-            });
-            
-            it(@"should not receive challenge", ^{
-                apiClient.sessionWrapper should_not have_received(@selector(URLSession:task:didReceiveChallenge:completionHandler:));
+            it(@"should equal expected CancelAuthentication disposition", ^{
+                receivedDisposition should equal(expectedCancelDisposition);
             });
         });
     });
     
     describe(@"- URLSession:didReceiveChallenge:completionHandler:", ^{
         
-        context(@"when using a background thread", ^{
+        context(@"when using a background thread and without a proper challenge", ^{
             __block bool isMainThread;
             
             beforeEach(^{
@@ -106,7 +106,6 @@ describe(@"MMEAPIClient", ^{
                 MMENSURLSessionWrapper *sessionWrapper = [[MMENSURLSessionWrapper alloc] init];
                 
                 apiClient.sessionWrapper = sessionWrapper;
-                spy_on(apiClient.sessionWrapper);
                 
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, timeoutInNanoseconds), dispatch_get_main_queue(), ^{
                     dispatch_semaphore_signal(semaphore);
@@ -116,8 +115,9 @@ describe(@"MMEAPIClient", ^{
                 NSURLAuthenticationChallenge *challenge = [[NSURLAuthenticationChallenge alloc] init];
                 
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                    [sessionWrapper URLSession:urlSession didReceiveChallenge:challenge completionHandler:^(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable) {
+                    [sessionWrapper URLSession:urlSession didReceiveChallenge:challenge completionHandler:^(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential * _Nullable credential) {
                         isMainThread = [NSThread isMainThread];
+                        receivedDisposition = disposition;
                         dispatch_semaphore_signal(semaphore);
                     }];
                 });
@@ -131,19 +131,15 @@ describe(@"MMEAPIClient", ^{
                 isMainThread should be_truthy;
             });
             
-            it(@"should receive challenge", ^{
-                apiClient.sessionWrapper should have_received(@selector(URLSession:didReceiveChallenge:completionHandler:));
-            });
-            
-            it(@"should not receive challenge", ^{
-                apiClient.sessionWrapper should_not have_received(@selector(URLSession:task:didReceiveChallenge:completionHandler:));
+            it(@"should equal expected DefaultHandling disposition", ^{
+                receivedDisposition should equal(expectedDefaultDisposition);
             });
         });
     });
     
     describe(@"- URLSession:didReceiveChallenge:completionHandler:", ^{
         
-        context(@"when a request is sent", ^{
+        context(@"when using the main thread and without a proper challenge", ^{
             __block bool isMainThread;
             
             beforeEach(^{
@@ -153,7 +149,6 @@ describe(@"MMEAPIClient", ^{
                 MMENSURLSessionWrapper *sessionWrapper = [[MMENSURLSessionWrapper alloc] init];
                 
                 apiClient.sessionWrapper = sessionWrapper;
-                spy_on(apiClient.sessionWrapper);
                 
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, timeoutInNanoseconds), dispatch_get_main_queue(), ^{
                     dispatch_semaphore_signal(semaphore);
@@ -162,10 +157,13 @@ describe(@"MMEAPIClient", ^{
                 NSURLSession *urlSession = [NSURLSession sessionWithConfiguration:sessionConfig delegate:sessionWrapper delegateQueue:nil];
                 NSURLAuthenticationChallenge *challenge = [[NSURLAuthenticationChallenge alloc] init];
                 
-                [sessionWrapper URLSession:urlSession didReceiveChallenge:challenge completionHandler:^(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable) {
-                    isMainThread = [NSThread isMainThread];
-                    dispatch_semaphore_signal(semaphore);
-                }];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [sessionWrapper URLSession:urlSession didReceiveChallenge:challenge completionHandler:^(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential * _Nullable credential) {
+                        isMainThread = [NSThread isMainThread];
+                        receivedDisposition = disposition;
+                        dispatch_semaphore_signal(semaphore);
+                    }];
+                });
                 
                 while (dispatch_semaphore_wait(semaphore, DISPATCH_TIME_NOW)) {
                     [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:10]];
@@ -176,12 +174,8 @@ describe(@"MMEAPIClient", ^{
                 isMainThread should be_truthy;
             });
             
-            it(@"should receive challenge", ^{
-                apiClient.sessionWrapper should have_received(@selector(URLSession:didReceiveChallenge:completionHandler:));
-            });
-            
-            it(@"should not receive challenge", ^{
-                apiClient.sessionWrapper should_not have_received(@selector(URLSession:task:didReceiveChallenge:completionHandler:));
+            it(@"should equal expected DefaultHandling disposition", ^{
+                receivedDisposition should equal(expectedDefaultDisposition);
             });
         });
     });
