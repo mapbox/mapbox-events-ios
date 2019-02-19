@@ -54,7 +54,7 @@
 }
 
 
-- (nonnull NSData *)json;
+- (nonnull NSData *)json
 {
     // NSDateFormatter (and NSNumberFormatter) is extremely expensive to initialize, doesn't
     // change, and is listed as explicitely thread safe, so lets reuse the instance.
