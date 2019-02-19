@@ -13,7 +13,7 @@ static MMEDependencyManager *_sharedInstance;
     return _sharedInstance;
 }
 
-- (CLLocationManager *)locationManagerInstance; {
+- (CLLocationManager *)locationManagerInstance {
     return [[CLLocationManager alloc] init];
 }
 
