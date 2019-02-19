@@ -30,10 +30,11 @@ SPEC_BEGIN(MMEAPIClientSpec)
 describe(@"MMEAPIClient", ^{
     
     __block MMEAPIClient *apiClient;
-    __block int64_t timeoutInNanoseconds = 1000000000;
     __block NSURLSessionAuthChallengeDisposition receivedDisposition;
-    __block NSURLSessionAuthChallengeDisposition expectedDefaultDisposition = NSURLSessionAuthChallengePerformDefaultHandling;
-    __block NSURLSessionAuthChallengeDisposition expectedCancelDisposition = NSURLSessionAuthChallengeCancelAuthenticationChallenge;
+    
+    int64_t timeoutInNanoseconds = 1000000000;
+    NSURLSessionAuthChallengeDisposition expectedDefaultDisposition = NSURLSessionAuthChallengePerformDefaultHandling;
+    NSURLSessionAuthChallengeDisposition expectedCancelDisposition = NSURLSessionAuthChallengeCancelAuthenticationChallenge;
     
     beforeEach(^{
         apiClient = [[MMEAPIClient alloc] initWithAccessToken:@"access-token"
@@ -88,7 +89,7 @@ describe(@"MMEAPIClient", ^{
             });
             
             it(@"should equal expected CancelAuthentication disposition", ^{
-                expectedCancelDisposition should equal(receivedDisposition);
+                receivedDisposition should equal(expectedCancelDisposition);
             });
         });
     });
@@ -131,7 +132,7 @@ describe(@"MMEAPIClient", ^{
             });
             
             it(@"should equal expected DefaultHandling disposition", ^{
-                expectedDefaultDisposition should equal(receivedDisposition);
+                receivedDisposition should equal(expectedDefaultDisposition);
             });
         });
     });
@@ -174,7 +175,7 @@ describe(@"MMEAPIClient", ^{
             });
             
             it(@"should equal expected DefaultHandling disposition", ^{
-                expectedDefaultDisposition should equal(receivedDisposition);
+                receivedDisposition should equal(expectedDefaultDisposition);
             });
         });
     });
