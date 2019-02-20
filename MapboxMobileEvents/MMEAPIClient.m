@@ -16,7 +16,7 @@ typedef NS_ENUM(NSInteger, MMEErrorCode) {
 #pragma mark -
 
 @interface MMEEventsManager (Private)
-- (void) pushDebugEventWithAttributes:(NSDictionary*) debugAttributes;
+- (void)pushEvent:(MMEEvent *)event;
 @end
 
 #pragma mark -
@@ -244,12 +244,7 @@ int const kMMEMaxRequestCount = 1000;
             [request setHTTPBody:jsonData];
         }
     } else if (jsonError) {
-        [[MMEEventsManager sharedManager] pushDebugEventWithAttributes:@{
-            MMEDebugEventType: MMEDebugEventTypeError,
-            MMEEventKeyErrorCode: @(jsonError.code),
-            MMEEventKeyErrorDescription: jsonError.localizedDescription,
-            MMEEventKeyErrorFailureReason: jsonError.localizedFailureReason
-        }];
+        [[MMEEventsManager sharedManager] pushEvent:[MMEEvent debugEventWithError:jsonError]];
 
         return nil;
     }
@@ -284,12 +279,7 @@ int const kMMEMaxRequestCount = 1000;
         [httpBody appendData:jsonData];
         [httpBody appendData:[[NSString stringWithFormat:@"\r\n\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
     } else if (jsonError) {
-        [[MMEEventsManager sharedManager] pushDebugEventWithAttributes:@{
-            MMEDebugEventType: MMEDebugEventTypeError,
-            MMEEventKeyErrorCode: @(jsonError.code),
-            MMEEventKeyErrorDescription: jsonError.localizedDescription,
-            MMEEventKeyErrorFailureReason: jsonError.localizedFailureReason
-        }];
+        [[MMEEventsManager sharedManager] pushEvent:[MMEEvent debugEventWithError:jsonError]];
     }
 
     for (NSString *path in filePaths) { // add a file part for each
