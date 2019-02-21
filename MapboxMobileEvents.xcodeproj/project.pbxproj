@@ -331,14 +331,13 @@
 		40FB437A1EFAFAE900EC5BC0 /* MMETimerManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMETimerManager.h; sourceTree = "<group>"; };
 		40FB437B1EFAFAE900EC5BC0 /* MMETimerManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMETimerManager.m; sourceTree = "<group>"; };
 		40FB437F1EFAFDCF00EC5BC0 /* MMETimerManagerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMETimerManagerTests.m; sourceTree = "<group>"; };
-		AC1B090F22137BB000DB56C8 /* CLLocationManager+MMEMobileEvents.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CLLocationManager+MMEMobileEvents.h"; sourceTree = "<group>"; };
-		AC1B091022137BB000DB56C8 /* CLLocationManager+MMEMobileEvents.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "CLLocationManager+MMEMobileEvents.m"; sourceTree = "<group>"; };
 		9C6322622213530A00653792 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		9C6322632213530A00653792 /* readme.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = readme.md; sourceTree = "<group>"; };
+		9C6D9881221F369000679292 /* Cartfile.private */ = {isa = PBXFileReference; lastKnownFileType = text; path = Cartfile.private; sourceTree = "<group>"; };
+		9C6D9883221F37FA00679292 /* package.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = package.json; sourceTree = "<group>"; };
+		9C6D9884221F37FA00679292 /* codecov.yml */ = {isa = PBXFileReference; lastKnownFileType = text; path = codecov.yml; sourceTree = "<group>"; };
 		AC1B090F22137BB000DB56C8 /* CLLocationManager+MMEMobileEvents.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CLLocationManager+MMEMobileEvents.h"; sourceTree = "<group>"; };
 		AC1B091022137BB000DB56C8 /* CLLocationManager+MMEMobileEvents.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "CLLocationManager+MMEMobileEvents.m"; sourceTree = "<group>"; };
-		9C6322622213530A00653792 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
-		9C6322632213530A00653792 /* readme.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = readme.md; sourceTree = "<group>"; };
 		AC2C715C21124089004179E0 /* MMEDispatchManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEDispatchManager.h; sourceTree = "<group>"; };
 		AC2C715D2112408A004179E0 /* MMEDispatchManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEDispatchManager.m; sourceTree = "<group>"; };
 		AC2C7161211241CB004179E0 /* MMEConfigurator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEConfigurator.m; sourceTree = "<group>"; };
@@ -419,13 +418,10 @@
 			isa = PBXGroup;
 			children = (
 				9C6322632213530A00653792 /* readme.md */,
-				9C6322622213530A00653792 /* Makefile */,
-				404C5E221F85809400C026DD /* Scanfile */,
-				402F02A41F7DA28700E7FF06 /* Cartfile */,
-				402F02A51F7DA28700E7FF06 /* MapboxMobileEvents.podspec */,
 				404807BB1EA186D8008A6D50 /* MapboxMobileEvents */,
 				404807C61EA186D8008A6D50 /* MapboxMobileEventsTests */,
 				408596701ED08FF7003BD29D /* resources */,
+				9C6D9882221F37A200679292 /* Packaging */,
 				404807BA1EA186D8008A6D50 /* Products */,
 				4032F47C1F1FEDC6001C1FBD /* Frameworks */,
 			);
@@ -644,6 +640,20 @@
 				40F16C951F04514100DF338D /* MMEReachability.m */,
 			);
 			path = Reachability;
+			sourceTree = "<group>";
+		};
+		9C6D9882221F37A200679292 /* Packaging */ = {
+			isa = PBXGroup;
+			children = (
+				402F02A41F7DA28700E7FF06 /* Cartfile */,
+				9C6D9881221F369000679292 /* Cartfile.private */,
+				9C6D9884221F37FA00679292 /* codecov.yml */,
+				9C6322622213530A00653792 /* Makefile */,
+				402F02A51F7DA28700E7FF06 /* MapboxMobileEvents.podspec */,
+				9C6D9883221F37FA00679292 /* package.json */,
+				404C5E221F85809400C026DD /* Scanfile */,
+			);
+			name = Packaging;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
