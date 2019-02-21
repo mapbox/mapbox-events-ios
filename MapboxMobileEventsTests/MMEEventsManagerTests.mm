@@ -37,6 +37,8 @@ using namespace Cedar::Doubles::Arguments;
 @property (nonatomic) id<MMEUIApplicationWrapper> application;
 @property (nonatomic) UIBackgroundTaskIdentifier backgroundTaskIdentifier;
 
+- (void)pushEvent:(MMEEvent *)event;
+
 @end
 
 static CLLocation * location() {
@@ -962,7 +964,36 @@ describe(@"MMEEventsManager", ^{
             });
         });
     });
-    
+
+    describe(@"- pushEvent:", ^{
+        beforeEach(^{
+            eventsManager.paused = YES;
+        });
+
+        context(@"when an error event is pushed", ^{
+            NSError* testError = [NSError.alloc initWithDomain:NSCocoaErrorDomain code:999 userInfo:@{
+                NSLocalizedDescriptionKey: @"Test Error Description",
+                NSLocalizedFailureReasonErrorKey: @"Test Error Failure Reason"
+            }];
+
+            [[MMEEventsManager sharedManager] pushEvent:[MMEEvent debugEventWithError:testError]];
+
+            it(@"should not queue error events", ^{
+                eventsManager.eventQueue.count should equal(0);
+            });
+        });
+
+        context(@"when an exception event is pushed", ^{
+            NSException* testException = [NSException.alloc initWithName:@"TestExceptionName" reason:@"TestExceptionReason" userInfo:nil];
+
+            [[MMEEventsManager sharedManager] pushEvent:[MMEEvent debugEventWithException:testException]];
+
+            it(@"should not queue exception events", ^{
+                eventsManager.eventQueue.count should equal(0);
+            });
+        });
+    });
+
     describe(@"MMELocationManagerDelegate", ^{
         
         context(@"-[MMEEventsManager locatizonManager:didVisit:]", ^{
