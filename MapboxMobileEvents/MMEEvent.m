@@ -140,6 +140,24 @@
     return debugEvent;
 }
 
++ (instancetype)debugEventWithError:(NSError*) error {
+    return [self debugEventWithAttributes:@{
+        MMEDebugEventType: MMEDebugEventTypeError,
+        MMEEventKeyErrorCode: @(error.code),
+        MMEEventKeyErrorDescription: error.localizedDescription,
+        MMEEventKeyErrorFailureReason: error.localizedFailureReason
+    }];
+}
+
++ (instancetype)debugEventWithException:(NSException*) except {
+    return [self debugEventWithAttributes:@{
+        MMEDebugEventType: MMEDebugEventTypeError,
+        MMEEventKeyErrorDescription: except.name,
+        MMEEventKeyErrorFailureReason: except.reason
+        // TODO add the stack trace via .callstackSymbols after sanatizing the list
+    }];
+}
+
 + (instancetype)searchEventWithName:(NSString *)name attributes:(NSDictionary *)attributes {
     MMEEvent *searchEvent = [[MMEEvent alloc] init];
     searchEvent.name = name;

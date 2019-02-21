@@ -36,3 +36,14 @@ Or, in Swift:
     eventsManager.isDebugLoggingEnabled = (DEBUG ? true : false)
     eventsManager.initialize(withAccessToken: "your-mapbox-token", userAgentBase: "user-agent-string", hostSDKVersion: "1.0.0")
     eventsManager.sendTurnstileEvent()
+
+### Testing
+
+Test cases are written using [Cedar](https://github.com/cedarbdd/cedar), to run the test in `Xcode` using `Command-U` you'll need to install the framework:
+
+    # install carthage
+    brew install carthage
+    
+    # bootstrap the project
+    cd $PROJECT_DIR
+    carthage bootstrap
