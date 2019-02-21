@@ -976,9 +976,8 @@ describe(@"MMEEventsManager", ^{
                 NSLocalizedFailureReasonErrorKey: @"Test Error Failure Reason"
             }];
 
-            [[MMEEventsManager sharedManager] pushEvent:[MMEEvent debugEventWithError:testError]];
-
             it(@"should not queue error events", ^{
+                [[MMEEventsManager sharedManager] pushEvent:[MMEEvent debugEventWithError:testError]];
                 eventsManager.eventQueue.count should equal(0);
             });
         });
@@ -986,9 +985,8 @@ describe(@"MMEEventsManager", ^{
         context(@"when an exception event is pushed", ^{
             NSException* testException = [NSException.alloc initWithName:@"TestExceptionName" reason:@"TestExceptionReason" userInfo:nil];
 
-            [[MMEEventsManager sharedManager] pushEvent:[MMEEvent debugEventWithException:testException]];
-
             it(@"should not queue exception events", ^{
+                [[MMEEventsManager sharedManager] pushEvent:[MMEEvent debugEventWithException:testException]];
                 eventsManager.eventQueue.count should equal(0);
             });
         });
