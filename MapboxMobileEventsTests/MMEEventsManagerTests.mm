@@ -784,10 +784,7 @@ describe(@"MMEEventsManager", ^{
         
         beforeEach(^{
             dateString = @"A nice date";
-            // spy_on(dateWrapper);
-            // dateWrapper stub_method(@selector(formattedDateStringForDate:)).and_return(dateString);
-            // eventsManager.dateWrapper = dateWrapper;
-            
+
             commonEventData = [[MMECommonEventData alloc] init];
             commonEventData.vendorId = @"a nice vendor id";
             commonEventData.model = @"a nice model";
@@ -913,9 +910,6 @@ describe(@"MMEEventsManager", ^{
         
         beforeEach(^{
             dateString = @"A nice date";
-            // spy_on(dateWrapper);
-            // dateWrapper stub_method(@selector(formattedDateStringForDate:)).and_return(dateString);
-            // eventsManager.dateWrapper = dateWrapper;
             
             commonEventData = [[MMECommonEventData alloc] init];
             commonEventData.vendorId = @"a nice vendor id";
