@@ -624,7 +624,7 @@
 				40AE58461EA6C9F10046B437 /* MMEUIApplicationWrapperFake.m */,
 				40031E5C1EFC5CA1009EAB33 /* MMEUniqueIdentifierFake.h */,
 				40031E5D1EFC5CA1009EAB33 /* MMEUniqueIdentifierFake.m */,
-			);
+				);
 			name = Fakes;
 			sourceTree = "<group>";
 		};

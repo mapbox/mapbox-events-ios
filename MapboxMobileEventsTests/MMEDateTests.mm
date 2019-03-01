@@ -120,7 +120,6 @@ describe(@"MMEDate", ^{
             round(then.timeIntervalSinceReferenceDate) should equal(round(now.timeIntervalSinceReferenceDate));
         });
     });
-
 });
 
 SPEC_END
