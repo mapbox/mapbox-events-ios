@@ -1,13 +1,12 @@
 #import "MMEMetricsManager.h"
 #import "MMEReachability.h"
 #import "MMEConstants.h"
-#import "MMENSDateWrapper.h"
+#import "MMEDate.h"
 #import "MMEEventLogger.h"
 
 @interface MMEMetricsManager ()
 
 @property (nonatomic) MMEMetrics *metrics;
-@property (nonatomic) MMENSDateWrapper *dateWrapper;
 
 @end
 
@@ -28,7 +27,6 @@
     self = [super init];
     if (self) {
         _metrics = [[MMEMetrics alloc] init];
-        _dateWrapper = [[MMENSDateWrapper alloc] init];
     }
     return self;
 }
@@ -147,14 +145,14 @@
 }
 
 - (MMEEvent *)generateTelemetryMetricsEvent {
-    if (self.metrics.date && [self.metrics.date timeIntervalSinceDate:[self.dateWrapper startOfTomorrowFromDate:self.metrics.date]] < 0) {
-        NSString *debugDescription = [NSString stringWithFormat:@"TelemetryMetrics event isn't ready to be sent; waiting until %@ to send", [self.dateWrapper startOfTomorrowFromDate:self.metrics.date]];
+    if (self.metrics.date && [self.metrics.date timeIntervalSinceDate:[self.metrics.date mme_oneDayLater]] < 0) {
+        NSString *debugDescription = [NSString stringWithFormat:@"TelemetryMetrics event isn't ready to be sent; waiting until %@ to send", [self.metrics.date mme_oneDayLater]];
         [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTelemetryMetrics,
                                              MMEEventKeyLocalDebugDescription: debugDescription}];
         return nil;
     }
     
-    MMEEvent *telemetryMetrics = [MMEEvent telemetryMetricsEventWithDateString:[self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]] attributes:[self attributes]];
+    MMEEvent *telemetryMetrics = [MMEEvent telemetryMetricsEventWithDateString:[MMEDate.iso8601DateFormatter stringFromDate:[NSDate date]] attributes:[self attributes]];
     [MMEEventLogger.sharedLogger logEvent:telemetryMetrics];
     
     return telemetryMetrics;
@@ -162,7 +160,7 @@
 
 - (void)pushDebugEventWithAttributes:(NSDictionary *)attributes {
     NSMutableDictionary *combinedAttributes = [NSMutableDictionary dictionaryWithDictionary:attributes];
-    [combinedAttributes setObject:[self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]] forKey:@"created"];
+    [combinedAttributes setObject:[MMEDate.iso8601DateFormatter stringFromDate:[NSDate date]] forKey:@"created"];
     MMEEvent *debugEvent = [MMEEvent debugEventWithAttributes:attributes];
     [[MMEEventLogger sharedLogger] logEvent:debugEvent];
 }

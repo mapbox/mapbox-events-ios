@@ -2,14 +2,13 @@
 #import "MMEEvent.h"
 #import "MMEEventLogReportViewController.h"
 #import "MMEUINavigation.h"
-#import "MMENSDateWrapper.h"
+#import "MMEDate.h"
 #import <WebKit/WebKit.h>
 
 @interface MMEEventLogger()
 
 @property (nonatomic, copy) NSString *dateForDebugLogFile;
 @property (nonatomic) dispatch_queue_t debugLogSerialQueue;
-@property (nonatomic) MMENSDateWrapper *dateWrapper;
 @property (nonatomic) NSDate *nextLogFileDate;
 @property (nonatomic) NSDateFormatter *dateFormatter;
 @property (nonatomic, getter=isTimeForNewLogFile) BOOL timeForNewLogFile;
@@ -32,12 +31,12 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        self.dateWrapper = [[MMENSDateWrapper alloc] init];
+        MMEDate* now = [MMEDate date];
         self.dateFormatter = [[NSDateFormatter alloc] init];
         [self.dateFormatter setDateFormat:@"yyyy'-'MM'-'dd"];
         [self.dateFormatter setTimeZone:[NSTimeZone systemTimeZone]];
-        self.dateForDebugLogFile = [self.dateFormatter stringFromDate:[self.dateWrapper date]];
-        self.nextLogFileDate = [self.dateWrapper startOfTomorrowFromDate:[self.dateWrapper date]];
+        self.dateForDebugLogFile = [self.dateFormatter stringFromDate:now];
+        self.nextLogFileDate = [now mme_oneDayLater];
     }
     return self;
 }
@@ -53,17 +52,19 @@
 #pragma mark - Write to Local File
 
 - (BOOL)timeForNewLogFile {
-    return [[self.dateWrapper date] timeIntervalSinceDate:self.nextLogFileDate] > 0;
+    return [[NSDate date] timeIntervalSinceDate:self.nextLogFileDate] > 0;
 }
 
 - (void)writeEventToLocalDebugLog:(MMEEvent *)event {
+    MMEDate* now = [MMEDate date];
+
     if (!self.isEnabled) {
         return;
     }
     
     if (self.timeForNewLogFile) {
-        self.dateForDebugLogFile = [self.dateFormatter stringFromDate:[self.dateWrapper date]];
-        self.nextLogFileDate = [self.dateWrapper startOfTomorrowFromDate:[self.dateWrapper date]];
+        self.dateForDebugLogFile = [self.dateFormatter stringFromDate:now];
+        self.nextLogFileDate = [now mme_oneDayLater];
     }
     
     if (!self.debugLogSerialQueue) {

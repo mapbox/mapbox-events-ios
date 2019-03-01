@@ -11,7 +11,7 @@
 #import "MMETimerManager.h"
 #import "MMEDispatchManager.h"
 #import "MMEUIApplicationWrapper.h"
-#import "MMENSDateWrapper.h"
+#import "MMEDate.h"
 #import "MMECategoryLoader.h"
 #import "CLLocation+MMEMobileEvents.h"
 #import "CLLocationManager+MMEMobileEvents.h"
@@ -33,7 +33,6 @@
 @property (nonatomic) MMEMetricsManager *metricsManager;
 @property (nonatomic, getter=isPaused) BOOL paused;
 @property (nonatomic) id<MMEUIApplicationWrapper> application;
-@property (nonatomic) MMENSDateWrapper *dateWrapper;
 @property (nonatomic, getter=isLocationMetricsEnabled) BOOL locationMetricsEnabled;
 @property (nonatomic) UIBackgroundTaskIdentifier backgroundTaskIdentifier;
 
@@ -66,7 +65,6 @@
         _configurationUpdater = [[MMEConfigurator alloc] initWithTimeInterval:_configuration.configurationRotationTimeInterval];
         _uniqueIdentifer = [[MMEUniqueIdentifier alloc] initWithTimeInterval:_configuration.instanceIdentifierRotationTimeInterval];
         _application = [[MMEUIApplicationWrapper alloc] init];
-        _dateWrapper = [[MMENSDateWrapper alloc] init];
         _dispatchManager = [[MMEDispatchManager alloc] init];
         _metricsManager = [MMEMetricsManager sharedManager];
     }
@@ -253,7 +251,7 @@
 - (void)sendTurnstileEvent {
     [self.configurationUpdater updateConfigurationFromAPIClient:self.apiClient];
     
-    if (self.nextTurnstileSendDate && [[self.dateWrapper date] timeIntervalSinceDate:self.nextTurnstileSendDate] < 0) {
+    if (self.nextTurnstileSendDate && [[NSDate date] timeIntervalSinceDate:self.nextTurnstileSendDate] < 0) {
         NSString *debugDescription = [NSString stringWithFormat:@"Turnstile event already sent; waiting until %@ to send another one", self.nextTurnstileSendDate];
         [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstile,
                                              MMEEventKeyLocalDebugDescription: debugDescription}];
@@ -297,7 +295,7 @@
     }
     
     NSDictionary *turnstileEventAttributes = @{MMEEventKeyEvent: MMEEventTypeAppUserTurnstile,
-                                               MMEEventKeyCreated: [self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]],
+                                               MMEEventKeyCreated: [MMEDate.iso8601DateFormatter stringFromDate:[NSDate date]],
                                                MMEEventKeyVendorID: self.commonEventData.vendorId,
                                                // MMEEventKeyDevice is synonomous with MMEEventKeyModel but the server will only accept "device" in turnstile events
                                                MMEEventKeyDevice: self.commonEventData.model,
@@ -360,20 +358,21 @@
 }
 
 - (void)createAndPushEventBasedOnName:(NSString *)name attributes:(NSDictionary *)attributes {
+    MMEDate *now = [MMEDate date];
     MMEEvent *event = nil;
     if ([name isEqualToString:MMEEventTypeMapLoad]) {
-        event = [MMEEvent mapLoadEventWithDateString:[self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]]
+        event = [MMEEvent mapLoadEventWithDateString:[MMEDate.iso8601DateFormatter stringFromDate:now]
                                      commonEventData:self.commonEventData];
     } else if ([name isEqualToString:MMEEventTypeMapTap]) {
-        event = [MMEEvent mapTapEventWithDateString:[self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]]
+        event = [MMEEvent mapTapEventWithDateString:[MMEDate.iso8601DateFormatter stringFromDate:now]
                                          attributes:attributes];
     } else if ([name isEqualToString:MMEEventTypeMapDragEnd]) {
-        event = [MMEEvent mapDragEndEventWithDateString:[self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]]
+        event = [MMEEvent mapDragEndEventWithDateString:[MMEDate.iso8601DateFormatter stringFromDate:now]
                                              attributes:attributes];
     } else if ([name isEqualToString:MMEventTypeOfflineDownloadStart]) {
-        event = [MMEEvent mapOfflineDownloadStartEventWithDateString:[self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]] attributes:attributes];
+        event = [MMEEvent mapOfflineDownloadStartEventWithDateString:[MMEDate.iso8601DateFormatter stringFromDate:now] attributes:attributes];
     } else if ([name isEqualToString:MMEventTypeOfflineDownloadEnd]) {
-        event = [MMEEvent mapOfflineDownloadEndEventWithDateString:[self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]] attributes:attributes];
+        event = [MMEEvent mapOfflineDownloadEndEventWithDateString:[MMEDate.iso8601DateFormatter stringFromDate:now] attributes:attributes];
     }
     
     if ([name hasPrefix:MMENavigationEventPrefix]) {
@@ -393,7 +392,7 @@
                                              MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Pushing event: %@", event]}];
         [self pushEvent:event];
     } else {
-        event = [MMEEvent eventWithDateString:[self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]] name:name attributes:attributes];
+        event = [MMEEvent eventWithDateString:[MMEDate.iso8601DateFormatter stringFromDate:now] name:name attributes:attributes];
         [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypePush,
                                              MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Pushing generic event: %@", event]}];
         [self pushEvent:event];
@@ -478,7 +477,7 @@
     // Find the start of tomorrow and use that as the next turnstile send date. The effect of this is that
     // turnstile events can be sent as much as once per calendar day and always at the start of a session
     // when a map load happens.
-    self.nextTurnstileSendDate = [self.dateWrapper startOfTomorrowFromDate:[self.dateWrapper date]];
+    self.nextTurnstileSendDate = [[NSDate date] mme_oneDayLater];
     
     [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstile,
                                          MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Set next turnstile date to: %@", self.nextTurnstileSendDate]}];
@@ -506,7 +505,7 @@
 
 - (void)pushDebugEventWithAttributes:(MMEMapboxEventAttributes *)attributes {
     MMEMutableMapboxEventAttributes *combinedAttributes = [MMEMutableMapboxEventAttributes dictionaryWithDictionary:attributes];
-    [combinedAttributes setObject:[self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]] forKey:@"created"];
+    [combinedAttributes setObject:[MMEDate.iso8601DateFormatter stringFromDate:[NSDate date]] forKey:@"created"];
     [combinedAttributes setObject:self.uniqueIdentifer.rollingInstanceIdentifer forKey:@"instance"];
     MMEEvent *debugEvent = [MMEEvent debugEventWithAttributes:combinedAttributes];
     [MMEEventLogger.sharedLogger logEvent:debugEvent];
@@ -543,7 +542,7 @@
                                          MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Location manager sent %ld locations", (long)locations.count]}];
     
     for (CLLocation *location in locations) {        
-        MMEMapboxEventAttributes *eventAttributes = @{MMEEventKeyCreated: [self.dateWrapper formattedDateStringForDate:[location timestamp]],
+        MMEMapboxEventAttributes *eventAttributes = @{MMEEventKeyCreated: [MMEDate.iso8601DateFormatter stringFromDate:[location timestamp]],
                                                       MMEEventKeyLatitude: @([location mme_latitudeRoundedWithPrecision:7]),
                                                       MMEEventKeyLongitude: @([location mme_longitudeRoundedWithPrecision:7]),
                                                       MMEEventKeyAltitude: @([location mme_roundedAltitude]),
@@ -582,12 +581,12 @@
                                          MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Location manager visit %@", visit]}];
     
     CLLocation *location = [[CLLocation alloc] initWithLatitude:visit.coordinate.latitude longitude:visit.coordinate.longitude];
-    MMEMapboxEventAttributes *eventAttributes = @{MMEEventKeyCreated: [self.dateWrapper formattedDateStringForDate:[location timestamp]],
+    MMEMapboxEventAttributes *eventAttributes = @{MMEEventKeyCreated: [MMEDate.iso8601DateFormatter stringFromDate:[location timestamp]],
                                                   MMEEventKeyLatitude: @([location mme_latitudeRoundedWithPrecision:7]),
                                                   MMEEventKeyLongitude: @([location mme_longitudeRoundedWithPrecision:7]),
                                                   MMEEventHorizontalAccuracy: @(visit.horizontalAccuracy),
-                                                  MMEEventKeyArrivalDate: [self.dateWrapper formattedDateStringForDate:visit.arrivalDate],
-                                                  MMEEventKeyDepartureDate: [self.dateWrapper formattedDateStringForDate:visit.departureDate]};
+                                                  MMEEventKeyArrivalDate: [MMEDate.iso8601DateFormatter stringFromDate:visit.arrivalDate],
+                                                  MMEEventKeyDepartureDate: [MMEDate.iso8601DateFormatter stringFromDate:visit.departureDate]};
     [self pushEvent:[MMEEvent visitEventWithAttributes:eventAttributes]];
 
     if ([self.delegate respondsToSelector:@selector(eventsManager:didVisit:)]) {
