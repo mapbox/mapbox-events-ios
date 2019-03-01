@@ -786,7 +786,7 @@ describe(@"MMEEventsManager", ^{
             context(@"when the current time is after the next telemetryMetrics send date", ^{
                 beforeEach(^{
                     [MMEMetricsManager sharedManager].metrics stub_method(@selector(recordingStarted)).and_return(NSDate.distantPast);
-                    
+
                     [eventsManager sendTelemetryMetricsEvent];
                 });
                 
@@ -807,7 +807,6 @@ describe(@"MMEEventsManager", ^{
             NSDateFormatter *dateFormatter = MMEDate.iso8601DateFormatter;
             spy_on(dateFormatter);
             dateFormatter stub_method(@selector(stringFromDate:)).and_return(dateString);
-
             commonEventData = [[MMECommonEventData alloc] init];
             commonEventData.vendorId = @"a nice vendor id";
             commonEventData.model = @"a nice model";
