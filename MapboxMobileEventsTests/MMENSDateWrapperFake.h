@@ -1,7 +1,7 @@
 #import <Foundation/Foundation.h>
-#import "MMENSDateWrapper.h"
+#import "MMEDate.h"
 
-@interface MMENSDateWrapperFake : MMENSDateWrapper
+@interface MMENSDateWrapperFake : MMEDate
 
 @property (nonatomic) NSDate *testDate;
 

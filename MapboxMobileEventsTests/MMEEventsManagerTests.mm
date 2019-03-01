@@ -33,7 +33,6 @@ using namespace Cedar::Doubles::Arguments;
 @property (nonatomic) MMETimerManager *timerManager;
 @property (nonatomic) MMEDispatchManager *dispatchManager;
 @property (nonatomic) NSDate *nextTurnstileSendDate;
-@property (nonatomic) MMENSDateWrapper *dateWrapper;
 @property (nonatomic) id<MMEUIApplicationWrapper> application;
 @property (nonatomic) UIBackgroundTaskIdentifier backgroundTaskIdentifier;
 
@@ -63,12 +62,10 @@ SPEC_BEGIN(MMEEventsManagerSpec)
 describe(@"MMEEventsManager", ^{
     
     __block MMEEventsManager *eventsManager;
-    __block MMENSDateWrapper *dateWrapper;
     __block MMEEventsConfiguration *configuration;
     __block MMEDispatchManagerFake *dispatchManager;
 
     beforeEach(^{
-        dateWrapper = [[MMENSDateWrapper alloc] init];
         dispatchManager = [[MMEDispatchManagerFake alloc] init];
         eventsManager = [[MMEEventsManager alloc] init];
 
@@ -357,7 +354,6 @@ describe(@"MMEEventsManager", ^{
                             
                             it(@"tells the api client to post events with the location", ^{
                                 CLLocation *location = locations.firstObject;
-                                MMENSDateWrapper *dateWrapper = [[MMENSDateWrapper alloc] init];
                                 MMEMapboxEventAttributes *eventAttributes = @{MMEEventKeyCreated: [MMEDate.iso8601DateFormatter stringFromDate:[location timestamp]],
                                                                               MMEEventKeyLatitude: @([location mme_latitudeRoundedWithPrecision:7]),
                                                                               MMEEventKeyLongitude: @([location mme_longitudeRoundedWithPrecision:7]),
@@ -665,7 +661,7 @@ describe(@"MMEEventsManager", ^{
                 
                 it(@"tells its api client to post events", ^{
                     NSDictionary *turnstileEventAttributes = @{MMEEventKeyEvent: MMEEventTypeAppUserTurnstile,
-                                                               MMEEventKeyCreated: [MMEDate.iso8601DateFormatter stringFromDate:[dateWrapper date]],
+                                                               MMEEventKeyCreated: [MMEDate.iso8601DateFormatter stringFromDate:[NSDate date]],
                                                                MMEEventKeyVendorID: eventsManager.commonEventData.vendorId,
                                                                MMEEventKeyDevice: eventsManager.commonEventData.model,
                                                                MMEEventKeyOperatingSystem: eventsManager.commonEventData.iOSVersion,
@@ -768,7 +764,7 @@ describe(@"MMEEventsManager", ^{
             
             context(@"when the current time is after the next telemetryMetrics send date", ^{
                 beforeEach(^{
-                    NSDate *date = [dateWrapper startOfTomorrowFromDate:[NSDate date]];
+                    NSDate *date = [[NSDate date] mme_oneDayLater];
                     [MMEMetricsManager sharedManager].metrics stub_method(@selector(date)).and_return(date);
                     
                     [eventsManager sendTelemetryMetricsEvent];
@@ -788,9 +784,9 @@ describe(@"MMEEventsManager", ^{
         
         beforeEach(^{
             dateString = @"A nice date";
-            spy_on(dateWrapper);
+            // spy_on(dateWrapper);
             // dateWrapper stub_method(@selector(formattedDateStringForDate:)).and_return(dateString);
-            eventsManager.dateWrapper = dateWrapper;
+            // eventsManager.dateWrapper = dateWrapper;
             
             commonEventData = [[MMECommonEventData alloc] init];
             commonEventData.vendorId = @"a nice vendor id";
@@ -917,9 +913,9 @@ describe(@"MMEEventsManager", ^{
         
         beforeEach(^{
             dateString = @"A nice date";
-            spy_on(dateWrapper);
+            // spy_on(dateWrapper);
             // dateWrapper stub_method(@selector(formattedDateStringForDate:)).and_return(dateString);
-            eventsManager.dateWrapper = dateWrapper;
+            // eventsManager.dateWrapper = dateWrapper;
             
             commonEventData = [[MMECommonEventData alloc] init];
             commonEventData.vendorId = @"a nice vendor id";
