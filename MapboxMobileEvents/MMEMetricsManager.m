@@ -42,7 +42,11 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
+<<<<<<< HEAD
         [self resetMetrics];
+=======
+        _metrics = [[MMEMetrics alloc] init];
+>>>>>>> Issue #105 - Refactor `MMENSDateWrapper` into `MMEDate`
     }
     return self;
 }
