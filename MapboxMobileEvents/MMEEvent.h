@@ -19,6 +19,8 @@
 + (instancetype)navigationEventWithName:(NSString *)name attributes:(NSDictionary *)attributes;
 + (instancetype)visionEventWithName:(NSString *)name attributes:(NSDictionary *)attributes;
 + (instancetype)debugEventWithAttributes:(NSDictionary *)attributes;
++ (instancetype)debugEventWithError:(NSError*) error;
++ (instancetype)debugEventWithException:(NSException*) except;
 + (instancetype)searchEventWithName:(NSString *)name attributes:(NSDictionary *)attributes;
 + (instancetype)carplayEventWithName:(NSString *)name attributes:(NSDictionary *)attributes;
 + (instancetype)eventWithDateString:(NSString *)dateString name:(NSString *)name attributes:(NSDictionary *)attributes;

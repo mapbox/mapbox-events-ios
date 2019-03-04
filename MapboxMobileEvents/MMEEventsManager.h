@@ -20,7 +20,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, null_resettable) NSURL *baseURL;
 @property (nonatomic) NSInteger accountType;
 
+#pragma mark -
+
 + (instancetype)sharedManager;
+
+#pragma mark -
 
 - (void)initializeWithAccessToken:(NSString *)accessToken userAgentBase:(NSString *)userAgentBase hostSDKVersion:(NSString *)hostSDKVersion;
 
@@ -37,6 +41,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)displayLogFileFromDate:(NSDate *)logDate;
 
 @end
+
+#pragma mark -
 
 @protocol MMEEventsManagerDelegate <NSObject>
 
