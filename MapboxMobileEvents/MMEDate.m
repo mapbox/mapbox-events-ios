@@ -84,19 +84,28 @@ static NSTimeInterval _timeOffsetFromServer = 0.0; // TODO maintain a list of MM
 
 #pragma mark - NSCoding
 
+static NSInteger const MMEDateVersion = 1;
+static NSString* const MMEDateVersionKey = @"MMEDateVersion";
+static NSString* const MMEDateSinceReferenceDateKey = @"MMEDateSinceReferenceDate";
+static NSString* const MMEDateOffsetFromServerKey = @"MMEDateOffsetFromServer";
+
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
     if (self = [super init]) {
-        _sinceReferenceDate = [aDecoder decodeDoubleForKey:@"sinceReferenceDate"];
-        _offsetFromServer = [aDecoder decodeDoubleForKey:@"offsetFromServer"];
+        NSInteger encodedVersion = [aDecoder decodeIntegerForKey:MMEDateVersionKey];
+        _sinceReferenceDate = [aDecoder decodeDoubleForKey:MMEDateSinceReferenceDateKey];
+        _offsetFromServer = [aDecoder decodeDoubleForKey:MMEDateOffsetFromServerKey];
+        if (encodedVersion > MMEDateVersion) {
+            NSLog(@"%@ WARNING encodedVersion %li > MMEDateVersion %li", NSStringFromClass(self.class), encodedVersion, MMEDateVersion);
+        }
     }
 
     return self;
 }
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeDouble:_sinceReferenceDate forKey:@"sinceReferenceDate"];
-    [aCoder encodeDouble:_offsetFromServer forKey:@"offsetFromServer"];
-    [aCoder encodeInteger:1 forKey:@"MMEDateVersion"];
+    [aCoder encodeDouble:_sinceReferenceDate forKey:MMEDateSinceReferenceDateKey];
+    [aCoder encodeDouble:_offsetFromServer forKey:MMEDateOffsetFromServerKey];
+    [aCoder encodeInteger:MMEDateVersion forKey:MMEDateVersionKey];
 }
 
 #pragma mark - MMEDate Methods
