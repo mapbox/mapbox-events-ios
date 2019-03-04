@@ -1,4 +1,5 @@
 #import "MMEEvent.h"
+#import "MMEDate.h"
 #import "MMEConstants.h"
 #import "MMECommonEventData.h"
 #import "MMEReachability.h"
@@ -254,16 +255,27 @@
     return result;
 }
 
+#pragma mark - NSSecureCoding
+
++ (BOOL) supportsSecureCoding {
+    return YES;
+}
+
+#pragma mark -
+
 - (BOOL)isEqualToEvent:(MMEEvent *)event {
     if (!event) {
         return NO;
     }
     
     BOOL hasEqualName = [self.name isEqualToString:event.name];
+    BOOL hasEqualDate = (self.date.timeIntervalSinceReferenceDate == event.date.timeIntervalSinceReferenceDate);
     BOOL hasEqualAttributes = [self.attributes isEqual:event.attributes];
     
-    return hasEqualName && hasEqualAttributes;
+    return (hasEqualName && hasEqualDate && hasEqualAttributes);
 }
+
+#pragma mark - NSObject overrides
 
 - (BOOL)isEqual:(id)other {
     if (other == self) {
@@ -278,11 +290,40 @@
 }
 
 - (NSUInteger)hash {
-    return self.name.hash ^ self.attributes.hash;
+    return (self.name.hash ^ self.attributes.hash);
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"<%@ name=%@, attributes=%@>", NSStringFromClass([self class]), self.name, self.attributes];
+    return [NSString stringWithFormat:@"<%@ name=%@, date=%@, attributes=%@>", NSStringFromClass(self.class), self.name, self.date, self.attributes];
+}
+
+#pragma mark - NSCopying
+
+- (id)copyWithZone:(NSZone *)zone {
+    MMEEvent* copy = [MMEEvent new];
+    copy.name = [self.name copy];
+    copy.date = [self.date copy];
+    copy.attributes = [self.attributes copy];
+    return copy;
+}
+
+#pragma mark - NSCoding
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    if (self = [super init]) {
+        _name = [aDecoder decodeObjectOfClass:NSString.class forKey:@"MMEEventName"];
+        _date = [aDecoder decodeObjectOfClass:MMEDate.class forKey:@"MMEEventDate"];
+        _attributes = [aDecoder decodeObjectOfClass:NSDictionary.class forKey:@"MMEEventAttributes"];
+    }
+
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:_name forKey:@"MMEEventName"];
+    [aCoder encodeObject:_date forKey:@"MMEEventDate"];
+    [aCoder encodeObject:_attributes forKey:@"MMEEventAttributes"];
+    [aCoder encodeInteger:1 forKey:@"MMEEventVersion"];
 }
 
 @end

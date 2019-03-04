@@ -18,7 +18,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) NSUInteger eventCountFailed;
 @property (nonatomic) NSUInteger eventCountTotal;
 @property (nonatomic) NSUInteger eventCountMax;
-@property (nonatomic) NSInteger deviceTimeDrift;
 @property (nonatomic) CLLocationDegrees deviceLat;
 @property (nonatomic) CLLocationDegrees deviceLon;
 @property (nonatomic) MMEDate *recordingStarted;

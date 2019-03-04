@@ -168,12 +168,12 @@
     attributes[MMEEventEventCountMax] = @(self.metrics.eventCountMax);
     attributes[MMEEventAppWakeups] = @(self.metrics.appWakeups);
     attributes[MMEEventRequests] = @(self.metrics.requests);
-    attributes[MMEEventDeviceTimeDrift] = @(self.metrics.deviceTimeDrift);
+    attributes[MMEEventDeviceTimeDrift] = @(MMEDate.recordedTimeOffsetFromServer);
     if (self.metrics.deviceLat != 0 && self.metrics.deviceLon != 0) {
         attributes[MMEEventDeviceLat] = @(self.metrics.deviceLat);
         attributes[MMEEventDeviceLon] = @(self.metrics.deviceLon);
     }
-    
+    attributes[MMEEventKeyVendorID] = [MMEEventsManager sharedManager].commonEventData.vendorId;
     attributes[MMEEventKeyModel] = [MMEEventsManager sharedManager].commonEventData.model;
     attributes[MMEEventKeyOperatingSystem] = [MMEEventsManager sharedManager].commonEventData.osVersion;
     attributes[MMEEventKeyPlatform] = [MMEEventsManager sharedManager].commonEventData.platform;
@@ -182,7 +182,7 @@
     attributes[MMEEventSDKIdentifier] = [MMEEventsManager sharedManager].apiClient.userAgentBase;
     attributes[MMEEventSDKVersion] = [MMEEventsManager sharedManager].apiClient.hostSDKVersion;
     attributes[MMEEventKeyUserAgent] = [MMEEventsManager sharedManager].apiClient.userAgent;
-    
+
     return attributes;
 }
 
@@ -194,8 +194,9 @@
                                              MMEEventKeyLocalDebugDescription: debugDescription}];
         return nil;
     }
-    
-    MMEEvent *telemetryMetrics = [MMEEvent telemetryMetricsEventWithDateString:[MMEDate.iso8601DateFormatter stringFromDate:[MMEDate new]] attributes:[self attributes]];
+
+    NSString *metricsDate = [MMEDate.iso8601DateFormatter stringFromDate:NSDate.date];
+    MMEEvent *telemetryMetrics = [MMEEvent telemetryMetricsEventWithDateString:metricsDate attributes:self.attributes];
     [MMEEventLogger.sharedLogger logEvent:telemetryMetrics];
     
     return telemetryMetrics;
@@ -203,9 +204,9 @@
 
 - (void)pushDebugEventWithAttributes:(NSDictionary *)attributes {
     NSMutableDictionary *combinedAttributes = [NSMutableDictionary dictionaryWithDictionary:attributes];
-    [combinedAttributes setObject:[MMEDate.iso8601DateFormatter stringFromDate:[NSDate date]] forKey:@"created"];
+    [combinedAttributes setObject:[MMEDate.iso8601DateFormatter stringFromDate:NSDate.date] forKey:@"created"];
     MMEEvent *debugEvent = [MMEEvent debugEventWithAttributes:attributes];
-    [[MMEEventLogger sharedLogger] logEvent:debugEvent];
+    [MMEEventLogger.sharedLogger logEvent:debugEvent];
 }
 
 #pragma mark -

@@ -1,11 +1,18 @@
 #import <Foundation/Foundation.h>
 
+@class MMEDate;
 @class MMECommonEventData;
 
-@interface MMEEvent : NSObject
-
+/*! @brief represents a telemetry event, with date, name and attributes */
+@interface MMEEvent : NSObject <NSCopying,NSCoding,NSSecureCoding>
+/*! @brief date on which the event occured, including the local time offset */
+@property (nonatomic, copy) MMEDate *date;
+/*! @brief name of the event */
 @property (nonatomic, copy) NSString *name;
+/*! @brief attributes of the event */
 @property (nonatomic, copy) NSDictionary *attributes;
+
+#pragma mark -
 
 + (instancetype)turnstileEventWithAttributes:(NSDictionary *)attributes;
 + (instancetype)telemetryMetricsEventWithDateString:(NSString *)dateString attributes:(NSDictionary *)attributes;

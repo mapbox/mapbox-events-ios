@@ -103,6 +103,12 @@ static NSTimeInterval _timeOffsetFromServer = 0.0; // TODO maintain a list of MM
     return _sinceReferenceDate;
 }
 
+#pragma mark - NSObject Overrides
+
+- (NSString *)description {
+    return [NSString stringWithFormat:@"<%@ sinceReference=%f, offsetFromServer=%f>", NSStringFromClass(self.class), _sinceReferenceDate, _offsetFromServer];
+}
+
 #pragma mark - NSCopying
 
 - (id)copyWithZone:(NSZone *)zone {
