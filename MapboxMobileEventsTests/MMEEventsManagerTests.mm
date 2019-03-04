@@ -934,7 +934,7 @@ describe(@"MMEEventsManager", ^{
             dateString = @"A nice date";
             NSDateFormatter *dateFormatter = MMEDate.iso8601DateFormatter;
             spy_on(dateFormatter);
-            dateFormatter stub_method(@selector(stringFromDate:)).and_return(dateString);            
+            dateFormatter stub_method(@selector(stringFromDate:)).and_return(dateString);
             commonEventData = [[MMECommonEventData alloc] init];
             commonEventData.vendorId = @"a nice vendor id";
             commonEventData.model = @"a nice model";
