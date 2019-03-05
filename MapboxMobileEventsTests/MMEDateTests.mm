@@ -57,12 +57,31 @@ describe(@"MMEDate", ^{
     });
 
     context(@"- mme_oneDayLater", ^{
+        MMEDate* now = MMEDate.date;
+        NSDate* later = now.mme_startOfTomorrow;
+        NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+
         it(@"should be less than 24 hours to the start of the next day", ^{
-            MMEDate* now = MMEDate.date;
-            NSDate* later = now.mme_startOfTomorrow;
             NSTimeInterval oneDay = (60 * 60 * 24); // S * M * H
 
-            round(fabs([now timeIntervalSinceDate:later])) should be_less_than(oneDay);
+            round([later timeIntervalSinceDate:now]) should be_less_than(oneDay);
+        });
+
+        it(@"should be the next calendar day", ^{
+            NSUInteger todayDay = [calendar component:NSCalendarUnitDay fromDate:now];
+            NSUInteger laterDay = [calendar component:NSCalendarUnitDay fromDate:later];
+
+            (todayDay + 1) should equal(laterDay);
+        });
+
+        it(@"should be 00:00:00 hours", ^{
+            NSUInteger laterHours = [calendar component:NSCalendarUnitHour fromDate:later];
+            NSUInteger laterMinutes = [calendar component:NSCalendarUnitMinute fromDate:later];
+            NSUInteger laterSeconds = [calendar component:NSCalendarUnitSecond fromDate:later];
+
+            laterHours should equal(0);
+            laterMinutes should equal(0);
+            laterSeconds should equal(0);
         });
     });
 
