@@ -47,3 +47,13 @@ Test cases are written using [Cedar](https://github.com/cedarbdd/cedar), to run 
     # bootstrap the project
     cd $PROJECT_DIR
     carthage bootstrap
+
+### Building
+
+Build scripts are driven by the top-level `Makefile`
+
+    # install xcpretty (avoding any homebrew ruby version you might have)
+    sudo /usr/bin/gem install xcpretty
+    
+    # build the static library into ./build
+    make create-static

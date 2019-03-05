@@ -336,6 +336,10 @@
 		9C6D9881221F369000679292 /* Cartfile.private */ = {isa = PBXFileReference; lastKnownFileType = text; path = Cartfile.private; sourceTree = "<group>"; };
 		9C6D9883221F37FA00679292 /* package.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = package.json; sourceTree = "<group>"; };
 		9C6D9884221F37FA00679292 /* codecov.yml */ = {isa = PBXFileReference; lastKnownFileType = text; path = codecov.yml; sourceTree = "<group>"; };
+		9C6D989B222F124D00679292 /* check_binary_size.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = check_binary_size.sh; sourceTree = "<group>"; };
+		9C6D989C222F124D00679292 /* publish_to_aws.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = publish_to_aws.sh; sourceTree = "<group>"; };
+		9C6D989D222F124D00679292 /* package.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = package.sh; sourceTree = "<group>"; };
+		9C6D989E222F124D00679292 /* publish_to_sizechecker.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = publish_to_sizechecker.js; sourceTree = "<group>"; };
 		AC1B090F22137BB000DB56C8 /* CLLocationManager+MMEMobileEvents.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CLLocationManager+MMEMobileEvents.h"; sourceTree = "<group>"; };
 		AC1B091022137BB000DB56C8 /* CLLocationManager+MMEMobileEvents.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "CLLocationManager+MMEMobileEvents.m"; sourceTree = "<group>"; };
 		AC2C715C21124089004179E0 /* MMEDispatchManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEDispatchManager.h; sourceTree = "<group>"; };
@@ -652,8 +656,20 @@
 				402F02A51F7DA28700E7FF06 /* MapboxMobileEvents.podspec */,
 				9C6D9883221F37FA00679292 /* package.json */,
 				404C5E221F85809400C026DD /* Scanfile */,
+				9C6D989A222F124D00679292 /* scripts */,
 			);
 			name = Packaging;
+			sourceTree = "<group>";
+		};
+		9C6D989A222F124D00679292 /* scripts */ = {
+			isa = PBXGroup;
+			children = (
+				9C6D989B222F124D00679292 /* check_binary_size.sh */,
+				9C6D989C222F124D00679292 /* publish_to_aws.sh */,
+				9C6D989D222F124D00679292 /* package.sh */,
+				9C6D989E222F124D00679292 /* publish_to_sizechecker.js */,
+			);
+			path = scripts;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
