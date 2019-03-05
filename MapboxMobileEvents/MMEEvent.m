@@ -310,10 +310,10 @@
 #pragma mark - NSCoding
 
 static NSInteger const MMEEventVersion1 = 1;
+static NSString* const MMEEventVersionKey = @"MMEEventVersion";
 static NSString* const MMEEventNameKey = @"MMEEventName";
 static NSString* const MMEEventDateKey = @"MMEEventDate";
 static NSString* const MMEEventAttributesKey = @"MMEEventAttributes";
-static NSString* const MMEEventVersionKey = @"MMEEventVersion";
 
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
@@ -323,7 +323,7 @@ static NSString* const MMEEventVersionKey = @"MMEEventVersion";
         _date = [aDecoder decodeObjectOfClass:MMEDate.class forKey:MMEEventDateKey];
         _attributes = [aDecoder decodeObjectOfClass:NSDictionary.class forKey:MMEEventAttributesKey];
         if (encodedVersion > MMEEventVersion1) {
-            NSLog(@"%@ WARNING encodedVersion %li > MMEDateVersion %li", NSStringFromClass(self.class), encodedVersion, MMEEventVersion1);
+            NSLog(@"%@ WARNING encodedVersion %li > MMEEventVersion %li", NSStringFromClass(self.class), encodedVersion, MMEEventVersion1);
         }
     }
 

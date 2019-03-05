@@ -4,7 +4,7 @@
 @class MMECommonEventData;
 
 /*! @brief represents a telemetry event, with date, name and attributes */
-@interface MMEEvent : NSObject <NSCopying,NSCoding,NSSecureCoding>
+@interface MMEEvent : NSObject <NSCopying,NSSecureCoding>
 /*! @brief date on which the event occured, including the local time offset */
 @property (nonatomic, copy) MMEDate *date;
 /*! @brief name of the event */
