@@ -136,15 +136,15 @@ static NSString* const MMEDateOffsetFromServerKey = @"MMEDateOffsetFromServer";
 }
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeInteger:MMEDateVersion1 forKey:MMEDateVersionKey];
     [aCoder encodeDouble:_sinceReferenceDate forKey:MMEDateSinceReferenceDateKey];
     [aCoder encodeDouble:_offsetFromServer forKey:MMEDateOffsetFromServerKey];
-    [aCoder encodeInteger:MMEDateVersion1 forKey:MMEDateVersionKey];
 }
 
 #pragma mark - MMEDate Methods
 
 - (MMEDate*) offsetToServer {
-    return [self dateByAddingTimeInterval:_offsetFromServer]; // negative?
+    return [self dateByAddingTimeInterval:_offsetFromServer];
 }
 
 @end
