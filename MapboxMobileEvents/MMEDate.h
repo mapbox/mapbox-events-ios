@@ -1,7 +1,7 @@
 #import <Foundation/Foundation.h>
 
 /*! @brief MMEDate is a subclass of NSDate which stores information needed to compute clock offsets from servers */
-@interface MMEDate : NSDate <NSSecureCoding>
+@interface MMEDate : NSDate
 
 /*! @brief store the recorded time offset for the date when created using the +[MMEDate date] or +[MMEDate dateWithOffsetFromServer:(NSTimeInterval)offset]` methods */
 @property(nonatomic,assign,readonly) NSTimeInterval offsetFromServer;
