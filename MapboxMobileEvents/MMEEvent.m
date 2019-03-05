@@ -309,21 +309,32 @@
 
 #pragma mark - NSCoding
 
+static NSInteger const MMEEventVersion1 = 1;
+static NSString* const MMEEventNameKey = @"MMEEventName";
+static NSString* const MMEEventDateKey = @"MMEEventDate";
+static NSString* const MMEEventAttributesKey = @"MMEEventAttributes";
+static NSString* const MMEEventVersionKey = @"MMEEventVersion";
+
+
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
     if (self = [super init]) {
-        _name = [aDecoder decodeObjectOfClass:NSString.class forKey:@"MMEEventName"];
-        _date = [aDecoder decodeObjectOfClass:MMEDate.class forKey:@"MMEEventDate"];
-        _attributes = [aDecoder decodeObjectOfClass:NSDictionary.class forKey:@"MMEEventAttributes"];
+        NSInteger encodedVersion = [aDecoder decodeIntegerForKey:MMEEventVersionKey];
+        _name = [aDecoder decodeObjectOfClass:NSString.class forKey:MMEEventNameKey];
+        _date = [aDecoder decodeObjectOfClass:MMEDate.class forKey:MMEEventDateKey];
+        _attributes = [aDecoder decodeObjectOfClass:NSDictionary.class forKey:MMEEventAttributesKey];
+        if (encodedVersion > MMEEventVersion1) {
+            NSLog(@"%@ WARNING encodedVersion %li > MMEDateVersion %li", NSStringFromClass(self.class), encodedVersion, MMEEventVersion1);
+        }
     }
 
     return self;
 }
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:_name forKey:@"MMEEventName"];
-    [aCoder encodeObject:_date forKey:@"MMEEventDate"];
-    [aCoder encodeObject:_attributes forKey:@"MMEEventAttributes"];
-    [aCoder encodeInteger:1 forKey:@"MMEEventVersion"];
+    [aCoder encodeObject:_name forKey:MMEEventNameKey];
+    [aCoder encodeObject:_date forKey:MMEEventDateKey];
+    [aCoder encodeObject:_attributes forKey:MMEEventAttributesKey];
+    [aCoder encodeInteger:MMEEventVersion1 forKey:MMEEventVersionKey];
 }
 
 @end
