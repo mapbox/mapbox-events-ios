@@ -786,7 +786,6 @@ describe(@"MMEEventsManager", ^{
             context(@"when the current time is after the next telemetryMetrics send date", ^{
                 beforeEach(^{
                     [MMEMetricsManager sharedManager].metrics stub_method(@selector(recordingStarted)).and_return(NSDate.distantPast);
-
                     [eventsManager sendTelemetryMetricsEvent];
                 });
                 

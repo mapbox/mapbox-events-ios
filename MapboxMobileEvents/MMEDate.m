@@ -25,14 +25,41 @@ static NSTimeInterval _timeOffsetFromServer = 0.0; // TODO maintain a list of MM
     static NSDateFormatter *_iso8601DateFormatter;
 
     if (!_iso8601DateFormatter) {
-        _iso8601DateFormatter = [[NSDateFormatter alloc] init];
-        NSLocale *enUSPOSIXLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+        _iso8601DateFormatter = [NSDateFormatter.alloc init];
+        NSLocale *enUSPOSIXLocale = [NSLocale.alloc initWithLocaleIdentifier:@"en_US_POSIX"];
         [_iso8601DateFormatter setLocale:enUSPOSIXLocale];
         [_iso8601DateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSSZ"];
         [_iso8601DateFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
     }
 
     return _iso8601DateFormatter;
+}
+
++ (NSDateFormatter *)iso8601DateOnlyFormatter {
+    static NSDateFormatter *_iso8601ShortDateFormatter;
+
+    if (!_iso8601ShortDateFormatter) {
+        _iso8601ShortDateFormatter = [NSDateFormatter.alloc init];
+        NSLocale *enUSPOSIXLocale = [NSLocale.alloc initWithLocaleIdentifier:@"en_US_POSIX"];
+        [_iso8601ShortDateFormatter setLocale:enUSPOSIXLocale];
+        [_iso8601ShortDateFormatter setDateFormat:@"yyyy-MM-dd"];
+        [_iso8601ShortDateFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
+    }
+
+    return _iso8601ShortDateFormatter;
+}
+
++ (NSDateFormatter *)logDateFormatter {
+    static NSDateFormatter *_logDateFormatter;
+
+    if (!_logDateFormatter) {
+        _logDateFormatter = [NSDateFormatter.alloc init];
+        NSLocale *enUSPOSIXLocale = [NSLocale.alloc initWithLocaleIdentifier:@"en_US_POSIX"];
+        [_logDateFormatter setLocale:enUSPOSIXLocale];
+        [_logDateFormatter setDateFormat:@"yyyy-MM-dd"];
+    }
+
+    return _logDateFormatter;
 }
 
 /*! @brief returns a date with the recordedTimeOffsetFromServer */
@@ -120,14 +147,11 @@ static NSString* const MMEDateOffsetFromServerKey = @"MMEDateOffsetFromServer";
 
 @implementation NSDate (MMEDate)
 
-
-- (NSDate *)mme_oneDayLater {
-    // Find the time a day from now (sometime tomorrow)
+- (NSDate *)mme_startOfTomorrow {
     NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    NSDateComponents *dayComponent = [[NSDateComponents alloc] init];
+    NSDateComponents *dayComponent = [NSDateComponents new];
     dayComponent.day = 1;
-    NSDate *sometimeTomorrow = [calendar dateByAddingComponents:dayComponent toDate:[NSDate date] options:0];
-    
+    NSDate *sometimeTomorrow = [calendar dateByAddingComponents:dayComponent toDate:self options:0];
     NSDate *startOfTomorrow = nil;
     [calendar rangeOfUnit:NSCalendarUnitDay startDate:&startOfTomorrow interval:nil forDate:sometimeTomorrow];
     return startOfTomorrow;
