@@ -10,9 +10,6 @@ describe(@"MMEDate", ^{
 
     NSTimeInterval const interval = 60; // just a minute
 
-    beforeEach(^{
-    });
-
     context(@"+ recordTimeOffsetFromServer:", ^{
         it(@"computes offsets from server time", ^{
             NSDate* serverTime = [NSDate dateWithTimeIntervalSinceNow:interval];
@@ -60,12 +57,49 @@ describe(@"MMEDate", ^{
     });
 
     context(@"- mme_oneDayLater", ^{
-        it(@"", ^{
+        it(@"should be less than 24 hours to the start of the next day", ^{
             MMEDate* now = MMEDate.date;
             NSDate* later = now.mme_startOfTomorrow;
             NSTimeInterval oneDay = (60 * 60 * 24); // S * M * H
 
             round(fabs([now timeIntervalSinceDate:later])) should be_less_than(oneDay);
+        });
+    });
+
+    context(@"- NSCoding of MMEDate", ^{
+        MMEDate* now = MMEDate.date;
+        NSString* tempFile = [NSTemporaryDirectory() stringByAppendingPathComponent:@"MMEDate-now.data"];
+        __block NSData* nowData = nil;
+
+        beforeEach(^{
+            if (@available(iOS 11.0, *)) {
+                NSError* archiveError = nil;
+                nowData = [NSKeyedArchiver archivedDataWithRootObject:now requiringSecureCoding:YES error:&archiveError];
+                archiveError should equal(nil);
+            }
+        });
+
+        it(@"should encode to data", ^{
+            nowData.length should be_greater_than(0);
+        });
+
+        it(@"should decode from data", ^{
+            if (@available(iOS 11.0, *)) {
+                NSError* archiveError = nil;
+                MMEDate* then = [NSKeyedUnarchiver unarchivedObjectOfClass:MMEDate.class fromData:nowData error:&archiveError];
+                round(then.timeIntervalSinceReferenceDate) should equal(round(NSDate.timeIntervalSinceReferenceDate));
+                archiveError should equal(nil);
+            }
+        });
+
+        it(@"should write encoded data to a file", ^{
+            [NSKeyedArchiver archiveRootObject:now toFile:tempFile];
+            [NSFileManager.defaultManager fileExistsAtPath:tempFile] should equal(YES);
+        });
+
+        it(@"should read data and decode from a file", ^{
+            MMEDate* then = [NSKeyedUnarchiver unarchiveObjectWithFile:tempFile];
+            round(then.timeIntervalSinceReferenceDate) should equal(round(NSDate.timeIntervalSinceReferenceDate));
         });
     });
 
