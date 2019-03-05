@@ -477,7 +477,7 @@
     // Find the start of tomorrow and use that as the next turnstile send date. The effect of this is that
     // turnstile events can be sent as much as once per calendar day and always at the start of a session
     // when a map load happens.
-    self.nextTurnstileSendDate = [[NSDate date] mme_oneDayLater];
+    self.nextTurnstileSendDate = [NSDate.date mme_startOfTomorrow];
     
     [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstile,
                                          MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Set next turnstile date to: %@", self.nextTurnstileSendDate]}];

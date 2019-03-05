@@ -56,18 +56,17 @@ describe(@"MMEMetricsManager", ^{
                 [manager.metrics.eventCountPerType objectForKey:MMEEventTypeMapTap] should equal(@2);
             });
             
-            it(@"should set date", ^{
-                manager.metrics.date should_not be_nil;
+            it(@"should set recordingStarted date", ^{
+                manager.metrics.recordingStarted should_not be_nil;
             });
         });
         
         context(@"when preparing attributes", ^{
-            beforeEach(^{
-                [manager attributes];
-            });
-            
-            it(@"should set dateUTCString with the correct format", ^{
-                [dateFormatter dateFromString:manager.metrics.dateUTCString] should_not be_nil;
+
+            it(@"should set MMEEventDateUTC attributes with the correct format", ^{
+                NSDictionary* attributes = [manager attributes];
+
+                [dateFormatter dateFromString:attributes[MMEEventDateUTC]] should_not be_nil;
             });
         });
         

@@ -58,7 +58,17 @@ describe(@"MMEDate", ^{
             dateString should equal(@"1970-01-03T11:14:02.000+0000");
         });
     });
-    
+
+    context(@"- mme_oneDayLater", ^{
+        it(@"", ^{
+            MMEDate* now = MMEDate.date;
+            NSDate* later = now.mme_startOfTomorrow;
+            NSTimeInterval oneDay = (60 * 60 * 24); // S * M * H
+
+            round(fabs([now timeIntervalSinceDate:later])) should be_less_than(oneDay);
+        });
+    });
+
 });
 
 SPEC_END
