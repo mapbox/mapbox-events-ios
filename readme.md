@@ -57,3 +57,4 @@ Build scripts are driven by the top-level `Makefile`
     
     # build the static library into ./build
     make create-static
+
