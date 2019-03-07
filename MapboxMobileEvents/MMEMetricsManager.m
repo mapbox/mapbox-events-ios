@@ -61,21 +61,30 @@
             self.metrics.eventCountFailed += (int)events.count;
         }
         
-        if ([error.userInfo objectForKey:MMEResponseKey]) {
-            NSHTTPURLResponse *response = (NSHTTPURLResponse *)[error.userInfo objectForKey:MMEResponseKey];
-            NSString *urlString = response.URL.absoluteString;
-            NSNumber *statusCode = @(response.statusCode);
-            NSString *statusCodeString = [statusCode stringValue];
-            NSString *failedRequestKey = [NSString stringWithFormat:@"%@, %@",urlString, statusCodeString];
-            
-            if (self.metrics.failedRequestsDict == nil) {
-                self.metrics.failedRequestsDict = [[NSMutableDictionary alloc] init];
-            }
+        NSHTTPURLResponse *response = (NSHTTPURLResponse *)[error.userInfo objectForKey:MMEResponseKey];
+        NSString *urlString = response.URL.absoluteString;
+        NSNumber *statusCode = @(response.statusCode);
+        NSString *statusCodeKey = [statusCode stringValue];
         
-            NSNumber *failedCount = [self.metrics.failedRequestsDict objectForKey:failedRequestKey];
-            failedCount = [NSNumber numberWithInteger:[failedCount integerValue] + 1];
-            [self.metrics.failedRequestsDict setObject:failedCount forKey:failedRequestKey];
+        if (self.metrics.failedRequestsDict == nil) {
+            self.metrics.failedRequestsDict = [[NSMutableDictionary alloc] init];
         }
+        
+        if (urlString && [self.metrics.failedRequestsDict objectForKey:MMEEventKeyHeader] == nil) {
+            [self.metrics.failedRequestsDict setObject:urlString forKey:MMEEventKeyHeader];
+        }
+    
+        if ([self.metrics.failedRequestsDict objectForKey:MMEEventKeyFailedRequests] == nil) {
+            [self.metrics.failedRequestsDict setObject:[NSMutableDictionary new] forKey:MMEEventKeyFailedRequests];
+        }
+        
+        NSMutableDictionary *failedRequests = [self.metrics.failedRequestsDict objectForKey:MMEEventKeyFailedRequests];
+        
+        NSNumber *failedCount = [failedRequests objectForKey:statusCodeKey];
+        failedCount = [NSNumber numberWithInteger:[failedCount integerValue] + 1];
+        [failedRequests setObject:failedCount forKey:statusCodeKey];
+        
+        [self.metrics.failedRequestsDict setObject:failedRequests forKey:MMEEventKeyFailedRequests];
     }
 }
 
@@ -126,7 +135,7 @@
         [self formatUTCDate:self.metrics.date];
         attributes[MMEEventDateUTC] = self.metrics.dateUTCString;
     }
-    attributes[MMEEventFailedRequests] = [NSString stringWithFormat:@"%@",self.metrics.failedRequestsDict];
+    attributes[MMEEventKeyFailedRequests] = [NSString stringWithFormat:@"%@",self.metrics.failedRequestsDict];
     attributes[MMEEventEventCountPerType] = [NSString stringWithFormat:@"%@",self.metrics.eventCountPerType];
     attributes[MMEEventConfigResponse] = [NSString stringWithFormat:@"%@",self.metrics.configResponseDict];
     attributes[MMEEventTotalDataTransfer] = @(self.metrics.totalDataTransfer);

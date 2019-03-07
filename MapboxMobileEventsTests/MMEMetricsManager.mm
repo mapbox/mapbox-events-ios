@@ -88,11 +88,17 @@ describe(@"MMEMetricsManager", ^{
             });
             
             it(@"should have failedRequests 404 count increased", ^{
-                [manager.metrics.failedRequestsDict objectForKey:@"events.mapbox.com, 404"] should equal(@2);
+                NSDictionary *failedRequestsDict = [manager.metrics.failedRequestsDict objectForKey:MMEEventKeyFailedRequests];
+                [failedRequestsDict objectForKey:@"404"] should equal(@2);
             });
             
             it(@"should have failedRequests 500 count increased", ^{
-                [manager.metrics.failedRequestsDict objectForKey:@"events.mapbox.com, 500"] should equal(@1);
+                NSDictionary *failedRequestsDict = [manager.metrics.failedRequestsDict objectForKey:MMEEventKeyFailedRequests];
+                [failedRequestsDict objectForKey:@"500"] should equal(@1);
+            });
+            
+            it(@"should have header in dictionary", ^{
+                [manager.metrics.failedRequestsDict objectForKey:MMEEventKeyHeader] should_not be_nil;
             });
             
             it(@"should have all keys count increased", ^{
