@@ -20,7 +20,7 @@ The Mapbox Mobile Events SDK collects [anonymous data](https://www.mapbox.com/te
 
 Include `MapboxMobileEvents.framework` in your application, in the application delegate's  `…didFinishLaunching…` method, add:
 
-    MMEventsManager* manager = [MMEventsManager.alloc 
+    MMEventsManager *manager = [MMEventsManager.alloc 
         initilizeWithAccessToken:@"your-mapbox-token" 
         userAgentBase:@"user-agent-string"
         hostSDKVersion:@"1.0.0"];

@@ -56,25 +56,21 @@ describe(@"MMEDate", ^{
         });
     });
 
-    context(@"- mme_oneDayLater", ^{
+    context(@"- mme_startOfTomorrow", ^{
         MMEDate* now = MMEDate.date;
         NSDate* later = now.mme_startOfTomorrow;
         NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
 
-        it(@"should be less than 24 hours to the start of the next day", ^{
+        it(@"should be in the future", ^{
+            [later timeIntervalSinceDate:now] should be_greater_than(0);
+        });
+
+        it(@"should be less than 24 hours in the future", ^{
             NSTimeInterval oneDay = (60 * 60 * 24); // S * M * H
-
-            round([later timeIntervalSinceDate:now]) should be_less_than(oneDay);
+            [later timeIntervalSinceDate:now] should be_less_than(oneDay);
         });
 
-        it(@"should be the next calendar day", ^{
-            NSUInteger todayDay = [calendar component:NSCalendarUnitDay fromDate:now];
-            NSUInteger laterDay = [calendar component:NSCalendarUnitDay fromDate:later];
-
-            (todayDay + 1) should equal(laterDay);
-        });
-
-        it(@"should be 00:00:00 hours", ^{
+        it(@"should be exactly midnight", ^{
             NSUInteger laterHours = [calendar component:NSCalendarUnitHour fromDate:later];
             NSUInteger laterMinutes = [calendar component:NSCalendarUnitMinute fromDate:later];
             NSUInteger laterSeconds = [calendar component:NSCalendarUnitSecond fromDate:later];
@@ -86,29 +82,29 @@ describe(@"MMEDate", ^{
     });
 
     context(@"- NSCoding of MMEDate", ^{
-        MMEDate* now = MMEDate.date;
+        MMEDate* now = [MMEDate new];
+        NSData* nowData = nil;
         NSString* tempFile = [NSTemporaryDirectory() stringByAppendingPathComponent:@"MMEDate-now.data"];
-        __block NSData* nowData = nil;
+        NSKeyedArchiver* archiver = [NSKeyedArchiver new];
+        archiver.requiresSecureCoding = YES;
+        [archiver encodeObject:now forKey:NSKeyedArchiveRootObjectKey];
+        nowData = archiver.encodedData;
 
-        beforeEach(^{
-            if (@available(iOS 11.0, *)) {
-                NSError* archiveError = nil;
-                nowData = [NSKeyedArchiver archivedDataWithRootObject:now requiringSecureCoding:YES error:&archiveError];
-                archiveError should equal(nil);
-            }
+        it(@"now should be an MMEDate", ^{
+            now.class should equal(MMEDate.class);
         });
 
-        it(@"should encode to data", ^{
+        it(@"should encode to nowData", ^{
+            nowData should_not equal(nil);
             nowData.length should be_greater_than(0);
         });
 
         it(@"should decode from data", ^{
-            if (@available(iOS 11.0, *)) {
-                NSError* archiveError = nil;
-                MMEDate* then = [NSKeyedUnarchiver unarchivedObjectOfClass:MMEDate.class fromData:nowData error:&archiveError];
-                round(then.timeIntervalSinceReferenceDate) should equal(round(NSDate.timeIntervalSinceReferenceDate));
-                archiveError should equal(nil);
-            }
+            NSKeyedUnarchiver* unarchiver = [NSKeyedUnarchiver.alloc initForReadingWithData:nowData];
+            unarchiver.requiresSecureCoding = YES;
+            MMEDate* then = [unarchiver decodeObjectOfClass:MMEDate.class forKey:NSKeyedArchiveRootObjectKey];
+            then should_not equal(nil);
+            then.timeIntervalSinceReferenceDate should equal(now.timeIntervalSinceReferenceDate);
         });
 
         it(@"should write encoded data to a file", ^{
@@ -117,8 +113,11 @@ describe(@"MMEDate", ^{
         });
 
         it(@"should read data and decode from a file", ^{
-            MMEDate* then = [NSKeyedUnarchiver unarchiveObjectWithFile:tempFile];
-            round(then.timeIntervalSinceReferenceDate) should equal(round(NSDate.timeIntervalSinceReferenceDate));
+            NSData* thenData = [NSData dataWithContentsOfFile:tempFile];
+            NSKeyedUnarchiver* unarchiver = [NSKeyedUnarchiver.alloc initForReadingWithData:thenData];
+            unarchiver.requiresSecureCoding = YES;
+            MMEDate* then = [unarchiver decodeObjectOfClass:MMEDate.class forKey:NSKeyedArchiveRootObjectKey];
+            then.timeIntervalSinceReferenceDate should equal(now.timeIntervalSinceReferenceDate);
         });
     });
 

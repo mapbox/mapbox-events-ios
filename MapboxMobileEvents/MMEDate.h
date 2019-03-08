@@ -12,7 +12,6 @@
 /*! @brief returns the recorded time offset from the server's time frame */
 + (NSTimeInterval)recordedTimeOffsetFromServer;
 
-
 /*! @brief UTC yyyy-MM-dd'T'HH:mm:ss.SSSZ formatter */
 + (NSDateFormatter *)iso8601DateFormatter;
 
@@ -35,7 +34,7 @@
 #pragma mark -
 
 /*! @brief returns the date, with the offsetFromServer adjustment applied, putting the date in the server's time frame  */
-- (NSDate*) offsetToServer;
+- (NSDate *)offsetToServer;
 
 @end
 
@@ -43,7 +42,7 @@
 
 @interface NSDate (MMEDate)
 
-/*! @brief returns a date at 00:00 on the next calendar day */
+/*! @brief returns a date at 00:00:00 on the next calendar day */
 - (NSDate *)mme_startOfTomorrow;
 
 @end
