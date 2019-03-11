@@ -117,7 +117,7 @@ describe(@"MMEDate", ^{
             NSKeyedUnarchiver* unarchiver = [NSKeyedUnarchiver.alloc initForReadingWithData:thenData];
             unarchiver.requiresSecureCoding = YES;
             MMEDate *then = [unarchiver decodeObjectOfClass:MMEDate.class forKey:NSKeyedArchiveRootObjectKey];
-            then.timeIntervalSinceReferenceDate should equal(now.timeIntervalSinceReferenceDate);
+            round(then.timeIntervalSinceReferenceDate) should equal(round(now.timeIntervalSinceReferenceDate));
         });
     });
 

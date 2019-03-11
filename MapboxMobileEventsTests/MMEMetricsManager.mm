@@ -62,11 +62,18 @@ describe(@"MMEMetricsManager", ^{
         });
         
         context(@"when preparing attributes", ^{
+            __block NSString *dateString = nil;
 
-            it(@"should set MMEEventDateUTC attributes with the correct format", ^{
-                NSDictionary* attributes = [manager attributes];
+            beforeEach(^{
+                dateString = manager.attributes[MMEEventDateUTC];
+            });
 
-                [dateFormatter dateFromString:attributes[MMEEventDateUTC]] should_not be_nil;
+            it(@"should set MMEEventDateUTC attributes", ^{
+                dateString should_not be_nil;
+            });
+
+            it(@"should set MMEEventDateUTC to ISO 8501 Format", ^{
+                [dateFormatter dateFromString:dateString] should_not be_nil;
             });
         });
         
