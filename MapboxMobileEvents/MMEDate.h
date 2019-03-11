@@ -6,7 +6,7 @@
 /*! @brief store the recorded time offset for the date when created using the +[MMEDate date] or +[MMEDate dateWithOffsetFromServer:(NSTimeInterval)offset]` methods */
 @property(nonatomic,assign,readonly) NSTimeInterval offsetFromServer;
 
-/*! @brief computes, reccords and returns the time offset from the server's time frame */
+/*! @brief computes, records and returns the time offset from the server's time frame */
 + (NSTimeInterval)recordTimeOffsetFromServer:(NSDate *)responseDate;
 
 /*! @brief returns the recorded time offset from the server's time frame */

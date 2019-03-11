@@ -12,7 +12,7 @@ describe(@"MMEDate", ^{
 
     context(@"+ recordTimeOffsetFromServer:", ^{
         it(@"computes offsets from server time", ^{
-            NSDate* serverTime = [NSDate dateWithTimeIntervalSinceNow:interval];
+            NSDate *serverTime = [NSDate dateWithTimeIntervalSinceNow:interval];
             NSTimeInterval recorded = [MMEDate recordTimeOffsetFromServer:serverTime];
 
             round(recorded) should equal(round(interval));
@@ -40,7 +40,7 @@ describe(@"MMEDate", ^{
 
     context(@"- offsetToServer:", ^{
         it(@"correctly computes offsetToServer date", ^{
-            NSDate* serverTime = [NSDate dateWithTimeIntervalSinceNow:interval];
+            NSDate *serverTime = [NSDate dateWithTimeIntervalSinceNow:interval];
             MMEDate *offset = [MMEDate.alloc initWithOffset:interval];
 
             round(offset.offsetToServer.timeIntervalSinceReferenceDate) should equal(round(serverTime.timeIntervalSinceReferenceDate));
@@ -57,8 +57,8 @@ describe(@"MMEDate", ^{
     });
 
     context(@"- mme_startOfTomorrow", ^{
-        MMEDate* now = MMEDate.date;
-        NSDate* later = now.mme_startOfTomorrow;
+        MMEDate *now = MMEDate.date;
+        NSDate *later = now.mme_startOfTomorrow;
         NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
 
         it(@"should be in the future", ^{
@@ -82,10 +82,10 @@ describe(@"MMEDate", ^{
     });
 
     context(@"- NSCoding of MMEDate", ^{
-        MMEDate* now = [MMEDate new];
-        NSData* nowData = nil;
-        NSString* tempFile = [NSTemporaryDirectory() stringByAppendingPathComponent:@"MMEDate-now.data"];
-        NSKeyedArchiver* archiver = [NSKeyedArchiver new];
+        MMEDate *now = [MMEDate new];
+        NSData *nowData = nil;
+        NSString *tempFile = [NSTemporaryDirectory() stringByAppendingPathComponent:@"MMEDate-now.data"];
+        NSKeyedArchiver *archiver = [NSKeyedArchiver new];
         archiver.requiresSecureCoding = YES;
         [archiver encodeObject:now forKey:NSKeyedArchiveRootObjectKey];
         nowData = archiver.encodedData;
@@ -95,28 +95,28 @@ describe(@"MMEDate", ^{
         });
 
         it(@"should encode to nowData", ^{
-            nowData should_not equal(nil);
+            nowData should_not be_nil;
             nowData.length should be_greater_than(0);
         });
 
         it(@"should decode from data", ^{
-            NSKeyedUnarchiver* unarchiver = [NSKeyedUnarchiver.alloc initForReadingWithData:nowData];
+            NSKeyedUnarchiver *unarchiver = [NSKeyedUnarchiver.alloc initForReadingWithData:nowData];
             unarchiver.requiresSecureCoding = YES;
-            MMEDate* then = [unarchiver decodeObjectOfClass:MMEDate.class forKey:NSKeyedArchiveRootObjectKey];
-            then should_not equal(nil);
+            MMEDate *then = [unarchiver decodeObjectOfClass:MMEDate.class forKey:NSKeyedArchiveRootObjectKey];
+            then should_not be_nil;
             then.timeIntervalSinceReferenceDate should equal(now.timeIntervalSinceReferenceDate);
         });
 
         it(@"should write encoded data to a file", ^{
             [NSKeyedArchiver archiveRootObject:now toFile:tempFile];
-            [NSFileManager.defaultManager fileExistsAtPath:tempFile] should equal(YES);
+            [NSFileManager.defaultManager fileExistsAtPath:tempFile] should be_truthy;
         });
 
         it(@"should read data and decode from a file", ^{
-            NSData* thenData = [NSData dataWithContentsOfFile:tempFile];
+            NSData *thenData = [NSData dataWithContentsOfFile:tempFile];
             NSKeyedUnarchiver* unarchiver = [NSKeyedUnarchiver.alloc initForReadingWithData:thenData];
             unarchiver.requiresSecureCoding = YES;
-            MMEDate* then = [unarchiver decodeObjectOfClass:MMEDate.class forKey:NSKeyedArchiveRootObjectKey];
+            MMEDate *then = [unarchiver decodeObjectOfClass:MMEDate.class forKey:NSKeyedArchiveRootObjectKey];
             then.timeIntervalSinceReferenceDate should equal(now.timeIntervalSinceReferenceDate);
         });
     });

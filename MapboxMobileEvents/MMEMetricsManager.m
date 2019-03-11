@@ -137,7 +137,7 @@
 }
 
 - (MMEEvent *)generateTelemetryMetricsEvent {
-    NSDate* zeroHour = [self.metrics.recordingStarted mme_startOfTomorrow];
+    NSDate *zeroHour = [self.metrics.recordingStarted mme_startOfTomorrow];
     if (zeroHour.timeIntervalSinceNow > 0) {
         NSString *debugDescription = [NSString stringWithFormat:@"TelemetryMetrics event isn't ready to be sent; waiting until %@ to send", zeroHour];
         [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTelemetryMetrics,
