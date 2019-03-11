@@ -1,5 +1,9 @@
 #import "MMECommonEventData.h"
 #import "MMEConstants.h"
+
+#if TARGET_OS_IOS || TARGET_OS_TVOS
+#import <UIKit/UIKit.h>
+#endif
 #include <sys/sysctl.h>
 
 NSString * const MMEApplicationStateForeground = @"Foreground";
@@ -9,23 +13,7 @@ NSString * const MMEApplicationStateUnknown = @"Unknown";
 
 @implementation MMECommonEventData
 
-- (instancetype)init {
-    if (self = [super init]) {
-        _vendorId = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
-        _model = [self sysInfoByName:"hw.machine"];
-        _platform = [self platformInfo];
-        _osVersion = [NSString stringWithFormat:@"%@ %@", [UIDevice currentDevice].systemName, [UIDevice currentDevice].systemVersion];
-        _device = [UIDevice currentDevice].name;
-        if ([UIScreen instancesRespondToSelector:@selector(nativeScale)]) {
-            _scale = [UIScreen mainScreen].nativeScale;
-        } else {
-            _scale = [UIScreen mainScreen].scale;
-        }
-    }
-    return self;
-}
-
-- (NSString *)sysInfoByName:(char *)typeSpecifier {
++ (NSString *)sysInfoByName:(char *)typeSpecifier {
     size_t size;
     sysctlbyname(typeSpecifier, NULL, &size, NULL, 0);
 
@@ -38,7 +26,33 @@ NSString * const MMEApplicationStateUnknown = @"Unknown";
     return results;
 }
 
+#pragma mark -
+
+- (instancetype)init {
+    if (self = [super init]) {
+        _model = [MMECommonEventData sysInfoByName:"hw.machine"];
+        _platform = [self platformInfo];
+#if TARGET_OS_IOS || TARGET_OS_TVOS
+        _vendorId = UIDevice.currentDevice.identifierForVendor.UUIDString;
+        _osVersion = [NSString stringWithFormat:@"%@ %@", UIDevice.currentDevice.systemName, UIDevice.currentDevice.systemVersion];
+        _device = UIDevice.currentDevice.name;
+        if ([UIScreen instancesRespondToSelector:@selector(nativeScale)]) {
+            _scale = UIScreen.mainScreen.nativeScale;
+        } else {
+            _scale = UIScreen.mainScreen.scale;
+        }
+#else
+        _vendorId = nil;
+        _iOSVersion = nil;
+        _scale = 0;
+#endif
+    }
+    return self;
+}
+
+
 - (NSString *)applicationState {
+#if TARGET_OS_IOS || TARGET_OS_TVOS
     switch ([UIApplication sharedApplication].applicationState) {
         case UIApplicationStateActive:
             return MMEApplicationStateForeground;
@@ -49,6 +63,9 @@ NSString * const MMEApplicationStateUnknown = @"Unknown";
         default:
             return MMEApplicationStateUnknown;
     }
+#else
+    return nil;
+#endif
 }
 
 - (NSString *)platformInfo {

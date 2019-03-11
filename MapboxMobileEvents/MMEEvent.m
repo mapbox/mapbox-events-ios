@@ -4,6 +4,10 @@
 #import "MMECommonEventData.h"
 #import "MMEReachability.h"
 
+#if TARGET_OS_IOS || TARGET_OS_TVOS
+#import <UIKit/UIKit.h>
+#endif
+
 @implementation MMEEvent
 
 + (instancetype)turnstileEventWithAttributes:(NSDictionary *)attributes {
@@ -62,8 +66,10 @@
     attributes[MMEEventKeyModel] = commonEventData.model;
     attributes[MMEEventKeyOperatingSystem] = commonEventData.osVersion;
     attributes[MMEEventKeyResolution] = @(commonEventData.scale);
+#if TARGET_OS_IOS || TARGET_OS_TVOS
     attributes[MMEEventKeyAccessibilityFontScale] = @([self contentSizeScale]);
     attributes[MMEEventKeyOrientation] = [self deviceOrientation];
+#endif
     attributes[MMEEventKeyWifi] = @([[MMEReachability reachabilityForLocalWiFi] isReachableViaWiFi]);
     mapLoadEvent.attributes = attributes;
     return mapLoadEvent;
@@ -75,7 +81,9 @@
     NSMutableDictionary *commonAttributes = [NSMutableDictionary dictionary];
     commonAttributes[MMEEventKeyEvent] = mapTapEvent.name;
     commonAttributes[MMEEventKeyCreated] = dateString;
+#if TARGET_OS_IOS || TARGET_OS_TVOS
     commonAttributes[MMEEventKeyOrientation] = [self deviceOrientation];
+#endif
     commonAttributes[MMEEventKeyWifi] = @([[MMEReachability reachabilityForLocalWiFi] isReachableViaWiFi]);
     [commonAttributes addEntriesFromDictionary:attributes];
     mapTapEvent.attributes = commonAttributes;
@@ -88,7 +96,9 @@
     NSMutableDictionary *commonAttributes = [NSMutableDictionary dictionary];
     commonAttributes[MMEEventKeyEvent] = mapTapEvent.name;
     commonAttributes[MMEEventKeyCreated] = dateString;
+#if TARGET_OS_IOS || TARGET_OS_TVOS
     commonAttributes[MMEEventKeyOrientation] = [self deviceOrientation];
+#endif
     commonAttributes[MMEEventKeyWifi] = @([[MMEReachability reachabilityForLocalWiFi] isReachableViaWiFi]);
     [commonAttributes addEntriesFromDictionary:attributes];
     mapTapEvent.attributes = commonAttributes;
@@ -190,6 +200,9 @@
     return event;
 }
 
+#pragma mark -
+
+#if TARGET_OS_IOS || TARGET_OS_TVOS
 + (NSInteger)contentSizeScale {
     NSInteger result = -9999;
     
@@ -254,6 +267,7 @@
     }
     return result;
 }
+#endif
 
 #pragma mark - NSSecureCoding
 
@@ -300,7 +314,7 @@
 #pragma mark - NSCopying
 
 - (id)copyWithZone:(NSZone *)zone {
-    MMEEvent* copy = [MMEEvent new];
+    MMEEvent *copy = [MMEEvent new];
     copy.name = [self.name copy];
     copy.date = [self.date copy];
     copy.attributes = [self.attributes copy];
@@ -310,10 +324,10 @@
 #pragma mark - NSCoding
 
 static NSInteger const MMEEventVersion1 = 1;
-static NSString* const MMEEventVersionKey = @"MMEEventVersion";
-static NSString* const MMEEventNameKey = @"MMEEventName";
-static NSString* const MMEEventDateKey = @"MMEEventDate";
-static NSString* const MMEEventAttributesKey = @"MMEEventAttributes";
+static NSString * const MMEEventVersionKey = @"MMEEventVersion";
+static NSString * const MMEEventNameKey = @"MMEEventName";
+static NSString * const MMEEventDateKey = @"MMEEventDate";
+static NSString * const MMEEventAttributesKey = @"MMEEventAttributes";
 
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
