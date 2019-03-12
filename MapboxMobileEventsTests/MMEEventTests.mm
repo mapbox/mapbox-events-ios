@@ -9,23 +9,73 @@ using namespace Cedar::Doubles;
 SPEC_BEGIN(MMEEventSpec)
 
 describe(@"MMEEvent", ^{
+    NSString *testName = @"TestEventName";
+    NSDictionary *testAttrs = @{@"AttributeName": @"AttributeValue"};
 
-    context(@"constructors", ^{
-        it(@"should init via new", ^{
-            MMEEvent *event = [MMEEvent new];
+    context(@"eventWithName:attributes:", ^{
+        NSDate *now = [NSDate date];
+        MMEEvent *event = [MMEEvent eventWithName:testName attributes:testAttrs];
 
+        it(@"should not be nil", ^{
             event should_not be_nil;
         });
 
-        it(@"should init with a date near now", ^{
-            MMEEvent *event = [MMEEvent new];
-            NSDate *now = [NSDate date];
-
+        it(@"should have a date near now", ^{
             round(event.date.timeIntervalSinceReferenceDate) should equal(round(now.timeIntervalSinceReferenceDate));
         });
 
+        it(@"should have the test event name", ^{
+            event.name should equal(testName);
+        });
+
+        it(@"should hace the test event attrs", ^{
+            event.attributes should equal(testAttrs);
+        });
     });
 
+    context(@"- NSSecureCoding of MMEEvent", ^{
+        MMEEvent *event = [MMEEvent eventWithName:testName attributes:testAttrs];
+        NSString *tempFile = [NSTemporaryDirectory() stringByAppendingPathComponent:@"MMEEvent-test.data"];
+        if ([NSFileManager.defaultManager fileExistsAtPath:tempFile]) {
+            [NSFileManager.defaultManager removeItemAtPath:tempFile error:nil];
+        }
+
+        it(@"should archive to data", ^{
+            NSKeyedArchiver *archiver = [NSKeyedArchiver new];
+            archiver.requiresSecureCoding = YES;
+            [archiver encodeObject:event forKey:NSKeyedArchiveRootObjectKey];
+            NSData* eventData = archiver.encodedData;
+
+            it(@"should encode to eventData", ^{
+                eventData should_not be_nil;
+                eventData.length should be_greater_than(0);
+            });
+
+            it(@"should decode from eventData", ^{
+                NSKeyedUnarchiver *unarchiver = [NSKeyedUnarchiver.alloc initForReadingWithData:eventData];
+                unarchiver.requiresSecureCoding = YES;
+                MMEEvent *unarchived = [unarchiver decodeObjectOfClass:MMEDate.class forKey:NSKeyedArchiveRootObjectKey];
+
+                unarchived should_not be_nil;
+                unarchived should equal(event);
+            });
+        });
+
+        it(@"should write encoded data to a file", ^{
+            [NSKeyedArchiver archiveRootObject:event toFile:tempFile];
+            [NSFileManager.defaultManager fileExistsAtPath:tempFile] should be_truthy;
+
+            it(@"should read data and decode from a file", ^{
+                NSData *thenData = [NSData dataWithContentsOfFile:tempFile];
+                NSKeyedUnarchiver* unarchiver = [NSKeyedUnarchiver.alloc initForReadingWithData:thenData];
+                unarchiver.requiresSecureCoding = YES;
+                MMEEvent *unarchived = [unarchiver decodeObjectOfClass:MMEDate.class forKey:NSKeyedArchiveRootObjectKey];
+
+                unarchived should_not be_nil;
+                unarchived should equal(event);
+            });
+        });
+    });
 });
 
 SPEC_END

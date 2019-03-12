@@ -11,38 +11,58 @@ describe(@"MMEDate", ^{
     NSTimeInterval const interval = 60; // just a minute
 
     context(@"+ recordTimeOffsetFromServer:", ^{
-        it(@"computes offsets from server time", ^{
-            NSDate *serverTime = [NSDate dateWithTimeIntervalSinceNow:interval];
-            NSTimeInterval recorded = [MMEDate recordTimeOffsetFromServer:serverTime];
+        NSDate *serverTime = [NSDate dateWithTimeIntervalSinceNow:interval];
+        NSTimeInterval recorded = [MMEDate recordTimeOffsetFromServer:serverTime];
 
+        it(@"computes offsets from server time", ^{
             round(recorded) should equal(round(interval));
         });
     });
 
     context(@"+ recordedTimeOffsetFromServer:", ^{
-        it(@"records computed offset from server time", ^{
-            NSDate *serverTime = [NSDate dateWithTimeIntervalSinceNow:interval];
-            NSTimeInterval computed = [MMEDate recordTimeOffsetFromServer:serverTime];
-            NSTimeInterval recorded = [MMEDate recordedTimeOffsetFromServer];
+        NSDate *serverTime = [NSDate dateWithTimeIntervalSinceNow:interval];
+        NSTimeInterval computed = [MMEDate recordTimeOffsetFromServer:serverTime];
+        NSTimeInterval recorded = [MMEDate recordedTimeOffsetFromServer];
 
+        it(@"checks computed and recorded", ^{
+            computed should equal(recorded);
+        });
+
+        it(@"checks the computed interval", ^{
             round(computed) should equal(round(interval));
+        });
+
+        it(@"check the recorded interval", ^{
             round(recorded) should equal(round(interval));
         });
     });
 
-    context(@"- initWithOffset:", ^{
-        it(@"correctly records offsetFromServer", ^{
-            MMEDate *offset = [MMEDate.alloc initWithOffset:interval];
+    context(@"clear timeOffsetFromServer:", ^{
+        NSTimeInterval interval = [MMEDate recordTimeOffsetFromServer:NSDate.date];
+        NSTimeInterval recorded = [MMEDate recordedTimeOffsetFromServer];
 
+        it(@"should be a short interval", ^{
+            interval should be_close_to(0.0);
+        });
+
+        it(@"shoul have reset the recorded offset", ^{
+            recorded should be_close_to(0.0);
+        });
+    });
+
+    context(@"- initWithOffset:", ^{
+        MMEDate *offset = [MMEDate.alloc initWithOffset:interval];
+
+        it(@"correctly records offsetFromServer", ^{
             offset.offsetFromServer should equal(interval);
         });
     });
 
     context(@"- offsetToServer:", ^{
-        it(@"correctly computes offsetToServer date", ^{
-            NSDate *serverTime = [NSDate dateWithTimeIntervalSinceNow:interval];
-            MMEDate *offset = [MMEDate.alloc initWithOffset:interval];
+        NSDate *serverTime = [NSDate dateWithTimeIntervalSinceNow:interval];
+        MMEDate *offset = [MMEDate.alloc initWithOffset:interval];
 
+        it(@"correctly computes offsetToServer date", ^{
             round(offset.offsetToServer.timeIntervalSinceReferenceDate) should equal(round(serverTime.timeIntervalSinceReferenceDate));
         });
     });
