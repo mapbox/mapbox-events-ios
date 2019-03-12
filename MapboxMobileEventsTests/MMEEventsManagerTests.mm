@@ -321,18 +321,20 @@ describe(@"MMEEventsManager", ^{
                             
                             it(@"tells the api client to post events with the location", ^{
                                 CLLocation *location = locations.firstObject;
-                                MMEMapboxEventAttributes *eventAttributes = @{MMEEventKeyCreated: [MMEDate.iso8601DateFormatter stringFromDate:[location timestamp]],
-                                                                              MMEEventKeyLatitude: @([location mme_latitudeRoundedWithPrecision:7]),
-                                                                              MMEEventKeyLongitude: @([location mme_longitudeRoundedWithPrecision:7]),
-                                                                              MMEEventKeyAltitude: @([location mme_roundedAltitude]),
-                                                                              MMEEventHorizontalAccuracy: @([location mme_roundedHorizontalAccuracy])};
+                                MMEMapboxEventAttributes *eventAttributes = @{
+                                    MMEEventKeyCreated: [MMEDate.iso8601DateFormatter stringFromDate:[location timestamp]],
+                                    MMEEventKeyLatitude: @([location mme_latitudeRoundedWithPrecision:7]),
+                                    MMEEventKeyLongitude: @([location mme_longitudeRoundedWithPrecision:7]),
+                                    MMEEventKeyAltitude: @([location mme_roundedAltitude]),
+                                    MMEEventHorizontalAccuracy: @([location mme_roundedHorizontalAccuracy])
+                                };
                                 
                                 MMEEvent *expectedEvent1 = [MMEEvent locationEventWithAttributes:eventAttributes
-                                                                              instanceIdentifer:eventsManager.uniqueIdentifer.rollingInstanceIdentifer
-                                                                                commonEventData:eventsManager.commonEventData];
+                                    instanceIdentifer:eventsManager.uniqueIdentifer.rollingInstanceIdentifer
+                                    commonEventData:eventsManager.commonEventData];
                                 MMEEvent *expectedEvent2 = [MMEEvent locationEventWithAttributes:eventAttributes
-                                                                              instanceIdentifer:eventsManager.uniqueIdentifer.rollingInstanceIdentifer
-                                                                                commonEventData:eventsManager.commonEventData];
+                                    instanceIdentifer:eventsManager.uniqueIdentifer.rollingInstanceIdentifer
+                                    commonEventData:eventsManager.commonEventData];
                                 
                                 eventsManager.apiClient should have_received(@selector(postEvents:completionHandler:)).with(@[expectedEvent1, expectedEvent2]).and_with(Arguments::anything);
                             });
@@ -376,15 +378,17 @@ describe(@"MMEEventsManager", ^{
                             
                             it(@"tells the api client to post events with the location", ^{
                                 CLLocation *location = locations.firstObject;
-                                MMEMapboxEventAttributes *eventAttributes = @{MMEEventKeyCreated: [MMEDate.iso8601DateFormatter stringFromDate:[location timestamp]],
-                                                                              MMEEventKeyLatitude: @([location mme_latitudeRoundedWithPrecision:7]),
-                                                                              MMEEventKeyLongitude: @([location mme_longitudeRoundedWithPrecision:7]),
-                                                                              MMEEventKeyAltitude: @([location mme_roundedAltitude]),
-                                                                              MMEEventHorizontalAccuracy: @([location mme_roundedHorizontalAccuracy])};
+                                MMEMapboxEventAttributes *eventAttributes = @{
+                                    MMEEventKeyCreated: [MMEDate.iso8601DateFormatter stringFromDate:[location timestamp]],
+                                    MMEEventKeyLatitude: @([location mme_latitudeRoundedWithPrecision:7]),
+                                    MMEEventKeyLongitude: @([location mme_longitudeRoundedWithPrecision:7]),
+                                    MMEEventKeyAltitude: @([location mme_roundedAltitude]),
+                                    MMEEventHorizontalAccuracy: @([location mme_roundedHorizontalAccuracy])
+                                };
                                 
                                 MMEEvent *expectedEvent1 = [MMEEvent locationEventWithAttributes:eventAttributes
-                                                                               instanceIdentifer:eventsManager.uniqueIdentifer.rollingInstanceIdentifer
-                                                                                 commonEventData:eventsManager.commonEventData];
+                                    instanceIdentifer:eventsManager.uniqueIdentifer.rollingInstanceIdentifer
+                                    commonEventData:eventsManager.commonEventData];
                                 
                                 eventsManager.apiClient should have_received(@selector(postEvents:completionHandler:)).with(@[expectedEvent1]).and_with(Arguments::anything);
                             });
@@ -694,7 +698,7 @@ describe(@"MMEEventsManager", ^{
                                                                MMEEventKeyLocationAuthorization: [CLLocationManager mme_authorizationStatusString]
                                                                };
                     MMEEvent *expectedEvent = [MMEEvent turnstileEventWithAttributes:turnstileEventAttributes];
-                    
+
                     eventsManager.apiClient should have_received(@selector(postEvent:completionHandler:)).with(expectedEvent).and_with(Arguments::anything);
                 });
             });
@@ -829,6 +833,8 @@ describe(@"MMEEventsManager", ^{
                 it(@"has the correct event", ^{
                     MMEEvent *expectedEvent = [MMEEvent mapTapEventWithDateString:dateString attributes:attributes];
                     MMEEvent *event = eventsManager.eventQueue.firstObject;
+                    expectedEvent.date = event.date;
+
                     event should equal(expectedEvent);
                 });
             });
@@ -841,6 +847,8 @@ describe(@"MMEEventsManager", ^{
                 it(@"has the correct event", ^{
                     MMEEvent *expectedEvent = [MMEEvent mapDragEndEventWithDateString:dateString attributes:attributes];
                     MMEEvent *event = eventsManager.eventQueue.firstObject;
+                    expectedEvent.date = event.date;
+
                     event should equal(expectedEvent);
                 });
             });
@@ -853,7 +861,8 @@ describe(@"MMEEventsManager", ^{
                 it(@"has the correct event", ^{
                     MMEEvent *expectedEvent = [MMEEvent mapOfflineDownloadStartEventWithDateString:dateString attributes:attributes];
                     MMEEvent *event = eventsManager.eventQueue.firstObject;
-                    
+                    expectedEvent.date = event.date;
+
                     event should equal(expectedEvent);
                 });
             });
@@ -866,7 +875,8 @@ describe(@"MMEEventsManager", ^{
                 it(@"has the correct event", ^{
                     MMEEvent *expectedEvent = [MMEEvent mapOfflineDownloadEndEventWithDateString:dateString attributes:attributes];
                     MMEEvent *event = eventsManager.eventQueue.firstObject;
-                    
+                    expectedEvent.date = event.date;
+
                     event should equal(expectedEvent);
                 });
             });
@@ -881,6 +891,8 @@ describe(@"MMEEventsManager", ^{
                 it(@"has the correct event", ^{
                     MMEEvent *expectedEvent = [MMEEvent navigationEventWithName:navigationEventName attributes:attributes];
                     MMEEvent *event = eventsManager.eventQueue.firstObject;
+                    expectedEvent.date = event.date;
+
                     event should equal(expectedEvent);
                 });
             });
@@ -895,6 +907,8 @@ describe(@"MMEEventsManager", ^{
                 it(@"has the correct event", ^{
                     MMEEvent *expectedEvent = [MMEEvent visionEventWithName:visionEventName attributes:attributes];
                     MMEEvent *event = eventsManager.eventQueue.firstObject;
+                    expectedEvent.date = event.date;
+
                     event should equal(expectedEvent);
                 });
             });
@@ -909,6 +923,8 @@ describe(@"MMEEventsManager", ^{
                 it(@"has the correct event", ^{
                     MMEEvent *expectedEvent = [MMEEvent searchEventWithName:searchEventName attributes:attributes];
                     MMEEvent *event = eventsManager.eventQueue.firstObject;
+                    expectedEvent.date = event.date;
+
                     event should equal(expectedEvent);
                 });
             });
@@ -955,7 +971,8 @@ describe(@"MMEEventsManager", ^{
                 it(@"has the correct event", ^{
                     MMEEvent *expectedEvent = [MMEEvent mapLoadEventWithDateString:dateString commonEventData:commonEventData];
                     MMEEvent *event = eventsManager.eventQueue.firstObject;
-                    
+                    expectedEvent.date = event.date;
+
                     event should equal(expectedEvent);
                 });
             });
@@ -1030,15 +1047,19 @@ describe(@"MMEEventsManager", ^{
             
             it(@"enqueues the correct event", ^{
                 CLLocation *location = [[CLLocation alloc] initWithLatitude:visit.coordinate.latitude longitude:visit.coordinate.longitude];
-                NSDictionary *attributes = @{MMEEventKeyCreated: [MMEDate.iso8601DateFormatter stringFromDate:[location timestamp]],
-                                             MMEEventKeyLatitude: @([location mme_latitudeRoundedWithPrecision:7]),
-                                             MMEEventKeyLongitude: @([location mme_longitudeRoundedWithPrecision:7]),
-                                             MMEEventHorizontalAccuracy: @(visit.horizontalAccuracy),
-                                             MMEEventKeyArrivalDate: [MMEDate.iso8601DateFormatter stringFromDate:visit.arrivalDate],
-                                             MMEEventKeyDepartureDate: [MMEDate.iso8601DateFormatter stringFromDate:visit.departureDate]};
+                NSDictionary *attributes = @{
+                    MMEEventKeyCreated: [MMEDate.iso8601DateFormatter stringFromDate:[location timestamp]],
+                    MMEEventKeyLatitude: @([location mme_latitudeRoundedWithPrecision:7]),
+                    MMEEventKeyLongitude: @([location mme_longitudeRoundedWithPrecision:7]),
+                    MMEEventHorizontalAccuracy: @(visit.horizontalAccuracy),
+                    MMEEventKeyArrivalDate: [MMEDate.iso8601DateFormatter stringFromDate:visit.arrivalDate],
+                    MMEEventKeyDepartureDate: [MMEDate.iso8601DateFormatter stringFromDate:visit.departureDate]
+                };
                 MMEEvent *expectedVisitEvent = [MMEEvent visitEventWithAttributes:attributes];
                 MMEEvent *enqueueEvent = eventsManager.eventQueue.firstObject;
-                
+
+                expectedVisitEvent.date = enqueueEvent.date;
+
                 NSMutableDictionary *tempDict = [[NSMutableDictionary alloc] init];
                 [tempDict addEntriesFromDictionary:enqueueEvent.attributes];
                 [tempDict setObject:[MMEDate.iso8601DateFormatter stringFromDate:[location timestamp]] forKey:@"created"];
@@ -1051,7 +1072,6 @@ describe(@"MMEEventsManager", ^{
                 eventsManager.delegate should have_received(@selector(eventsManager:didVisit:)).with(eventsManager, visit);
             });
         });
-        
     });
 });
 

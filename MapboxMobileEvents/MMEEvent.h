@@ -17,6 +17,9 @@
 
 #pragma mark -
 
++ (instancetype)eventWithDate:(MMEDate *)eventDate name:(NSString *)name attributes:(NSDictionary *)attributes;
++ (instancetype)eventWithName:(NSString *)eventName attributes:(NSDictionary *)attributes;
+
 + (instancetype)turnstileEventWithAttributes:(NSDictionary *)attributes;
 + (instancetype)telemetryMetricsEventWithDateString:(NSString *)dateString attributes:(NSDictionary *)attributes;
 + (instancetype)locationEventWithAttributes:(NSDictionary *)attributes instanceIdentifer:(NSString *)instanceIdentifer commonEventData:(MMECommonEventData *)commonEventData;
@@ -34,5 +37,6 @@
 + (instancetype)searchEventWithName:(NSString *)name attributes:(NSDictionary *)attributes;
 + (instancetype)carplayEventWithName:(NSString *)name attributes:(NSDictionary *)attributes;
 + (instancetype)eventWithDateString:(NSString *)dateString name:(NSString *)name attributes:(NSDictionary *)attributes;
+
 
 @end

@@ -148,6 +148,8 @@
 		96AB5108216416E800A261B8 /* MMETrustKitProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = ACC8C1CB210FAFF400C5055C /* MMETrustKitProvider.m */; };
 		96AB510A2164178900A261B8 /* MMEConfigurator.h in Headers */ = {isa = PBXBuildFile; fileRef = AC2C7162211241CC004179E0 /* MMEConfigurator.h */; };
 		96AB510B21641A6000A261B8 /* MMEUINavigation.m in Sources */ = {isa = PBXBuildFile; fileRef = ACE4F0191FD6102100035880 /* MMEUINavigation.m */; };
+		9C6D98A622371DA400679292 /* MMEEventTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9C6D98A322371DA400679292 /* MMEEventTests.mm */; };
+		9C6D98A722371DA400679292 /* MMEEventsConfigurationTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9C6D98A422371DA400679292 /* MMEEventsConfigurationTests.mm */; };
 		AC1B091122137BB000DB56C8 /* CLLocationManager+MMEMobileEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = AC1B090F22137BB000DB56C8 /* CLLocationManager+MMEMobileEvents.h */; };
 		AC1B091222137BB000DB56C8 /* CLLocationManager+MMEMobileEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = AC1B091022137BB000DB56C8 /* CLLocationManager+MMEMobileEvents.m */; };
 		AC1B091322137BB000DB56C8 /* CLLocationManager+MMEMobileEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = AC1B091022137BB000DB56C8 /* CLLocationManager+MMEMobileEvents.m */; };
@@ -333,6 +335,8 @@
 		9C6D9881221F369000679292 /* Cartfile.private */ = {isa = PBXFileReference; lastKnownFileType = text; path = Cartfile.private; sourceTree = "<group>"; };
 		9C6D9883221F37FA00679292 /* package.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = package.json; sourceTree = "<group>"; };
 		9C6D9884221F37FA00679292 /* codecov.yml */ = {isa = PBXFileReference; lastKnownFileType = text; path = codecov.yml; sourceTree = "<group>"; };
+		9C6D98A322371DA400679292 /* MMEEventTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MMEEventTests.mm; sourceTree = "<group>"; };
+		9C6D98A422371DA400679292 /* MMEEventsConfigurationTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MMEEventsConfigurationTests.mm; sourceTree = "<group>"; };
 		AC1B090F22137BB000DB56C8 /* CLLocationManager+MMEMobileEvents.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CLLocationManager+MMEMobileEvents.h"; sourceTree = "<group>"; };
 		AC1B091022137BB000DB56C8 /* CLLocationManager+MMEMobileEvents.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "CLLocationManager+MMEMobileEvents.m"; sourceTree = "<group>"; };
 		AC2C715C21124089004179E0 /* MMEDispatchManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEDispatchManager.h; sourceTree = "<group>"; };
@@ -477,16 +481,18 @@
 		404807C61EA186D8008A6D50 /* MapboxMobileEventsTests */ = {
 			isa = PBXGroup;
 			children = (
+				404807C91EA186D8008A6D50 /* Info.plist */,
 				ACD86D9F1F96A77700DD2A8D /* MMEAPIClientTests.mm */,
 				403834FE1F7AC55D004205B9 /* MMEDateTests.mm */,
 				403835051F7AF860004205B9 /* MMEDependencyManagerTests.mm */,
+				9C6D98A422371DA400679292 /* MMEEventsConfigurationTests.mm */,
 				4002E6351F83155E0090D724 /* MMEEventsManagerTests.mm */,
+				9C6D98A322371DA400679292 /* MMEEventTests.mm */,
 				ACA65F37213591ED00537748 /* MMEHashProviderTests.mm */,
 				ACB6F21D1F7BF71B0032A916 /* MMELocationManagerTests.mm */,
 				AC61FA08216BE7A0008519F5 /* MMEMetricsManager.mm */,
 				40FB437F1EFAFDCF00EC5BC0 /* MMETimerManagerTests.m */,
 				40A7F9951F79A7CA002B931F /* MMEUniqueIdentifierTests.mm */,
-				404807C91EA186D8008A6D50 /* Info.plist */,
 				40C9E28B1EA5762F00744FE7 /* Fakes */,
 				40AE58481EA80E5E0046B437 /* Utilities */,
 			);
@@ -941,8 +947,10 @@
 				40FB43801EFAFDCF00EC5BC0 /* MMETimerManagerTests.m in Sources */,
 				4036EFBB1ED36F06009C40BA /* MMEAPIClientFake.m in Sources */,
 				ACA65F3B2135C67F00537748 /* MMEDispatchManagerFake.m in Sources */,
+				9C6D98A722371DA400679292 /* MMEEventsConfigurationTests.mm in Sources */,
 				4002E6361F83155E0090D724 /* MMEEventsManagerTests.mm in Sources */,
 				4052C4F31EFB4A740044E2FF /* MMETimerManagerFake.m in Sources */,
+				9C6D98A622371DA400679292 /* MMEEventTests.mm in Sources */,
 				40F16C7E1F01DF5700DF338D /* MMELocationManagerFake.m in Sources */,
 				405172E51EB13C6D00F8CDA1 /* MMENSURLSessionWrapperFake.m in Sources */,
 				40A7F9961F79A7CA002B931F /* MMEUniqueIdentifierTests.mm in Sources */,

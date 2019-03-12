@@ -83,41 +83,43 @@ describe(@"MMEDate", ^{
 
     context(@"- NSCoding of MMEDate", ^{
         MMEDate *now = [MMEDate new];
-        NSData *nowData = nil;
         NSString *tempFile = [NSTemporaryDirectory() stringByAppendingPathComponent:@"MMEDate-now.data"];
-        NSKeyedArchiver *archiver = [NSKeyedArchiver new];
-        archiver.requiresSecureCoding = YES;
-        [archiver encodeObject:now forKey:NSKeyedArchiveRootObjectKey];
-        nowData = archiver.encodedData;
+        if ([NSFileManager.defaultManager fileExistsAtPath:tempFile]) {
+            [NSFileManager.defaultManager removeItemAtPath:tempFile error:nil];
+        }
 
-        it(@"now should be an MMEDate", ^{
-            now.class should equal(MMEDate.class);
-        });
+        it(@"should archive to data", ^{
+            NSKeyedArchiver *archiver = [NSKeyedArchiver new];
+            archiver.requiresSecureCoding = YES;
+            [archiver encodeObject:now forKey:NSKeyedArchiveRootObjectKey];
+            NSData* nowData = archiver.encodedData;
 
-        it(@"should encode to nowData", ^{
-            nowData should_not be_nil;
-            nowData.length should be_greater_than(0);
-        });
+            it(@"should encode to nowData", ^{
+                nowData should_not be_nil;
+                nowData.length should be_greater_than(0);
+            });
 
-        it(@"should decode from data", ^{
-            NSKeyedUnarchiver *unarchiver = [NSKeyedUnarchiver.alloc initForReadingWithData:nowData];
-            unarchiver.requiresSecureCoding = YES;
-            MMEDate *then = [unarchiver decodeObjectOfClass:MMEDate.class forKey:NSKeyedArchiveRootObjectKey];
-            then should_not be_nil;
-            then.timeIntervalSinceReferenceDate should equal(now.timeIntervalSinceReferenceDate);
+            it(@"should decode from data", ^{
+                NSKeyedUnarchiver *unarchiver = [NSKeyedUnarchiver.alloc initForReadingWithData:nowData];
+                unarchiver.requiresSecureCoding = YES;
+                MMEDate *then = [unarchiver decodeObjectOfClass:MMEDate.class forKey:NSKeyedArchiveRootObjectKey];
+                then should_not be_nil;
+                then.timeIntervalSinceReferenceDate should equal(now.timeIntervalSinceReferenceDate);
+            });
         });
 
         it(@"should write encoded data to a file", ^{
             [NSKeyedArchiver archiveRootObject:now toFile:tempFile];
             [NSFileManager.defaultManager fileExistsAtPath:tempFile] should be_truthy;
-        });
 
-        it(@"should read data and decode from a file", ^{
-            NSData *thenData = [NSData dataWithContentsOfFile:tempFile];
-            NSKeyedUnarchiver* unarchiver = [NSKeyedUnarchiver.alloc initForReadingWithData:thenData];
-            unarchiver.requiresSecureCoding = YES;
-            MMEDate *then = [unarchiver decodeObjectOfClass:MMEDate.class forKey:NSKeyedArchiveRootObjectKey];
-            round(then.timeIntervalSinceReferenceDate) should equal(round(now.timeIntervalSinceReferenceDate));
+            it(@"should read data and decode from a file", ^{
+                NSData *thenData = [NSData dataWithContentsOfFile:tempFile];
+                NSKeyedUnarchiver* unarchiver = [NSKeyedUnarchiver.alloc initForReadingWithData:thenData];
+                unarchiver.requiresSecureCoding = YES;
+                MMEDate *then = [unarchiver decodeObjectOfClass:MMEDate.class forKey:NSKeyedArchiveRootObjectKey];
+                then should_not be_nil;
+                then.timeIntervalSinceReferenceDate should equal(now.timeIntervalSinceReferenceDate);
+            });
         });
     });
 });

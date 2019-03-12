@@ -10,6 +10,14 @@
 
 @implementation MMEEvent
 
++ (instancetype)eventWithDate:(MMEDate *)eventDate name:(NSString *)eventName attributes:(NSDictionary *)attributes {
+    return [MMEEvent.alloc initWithDate:eventDate name:eventName attributes:attributes];
+}
+
++ (instancetype)eventWithName:(NSString *)eventName attributes:(NSDictionary *)attributes {
+    return [MMEEvent.alloc initWithDate:MMEDate.date name:eventName attributes:attributes];
+}
+
 + (instancetype)turnstileEventWithAttributes:(NSDictionary *)attributes {
     MMEEvent *turnstileEvent = [[MMEEvent alloc] init];
     turnstileEvent.name = MMEEventTypeAppUserTurnstile;
@@ -200,7 +208,7 @@
     return event;
 }
 
-#pragma mark -
+#pragma mark - AppKit
 
 #if TARGET_OS_IOS || TARGET_OS_TVOS
 + (NSInteger)contentSizeScale {
@@ -277,6 +285,16 @@
 
 #pragma mark -
 
+- (instancetype) initWithDate:(MMEDate *)eventDate name:(NSString *)eventName  attributes:(NSDictionary *)eventAttributes {
+    if (self = [super init]) {
+        _date = eventDate;
+        _name = eventName;
+        _attributes = eventAttributes;
+    }
+
+    return self;
+}
+
 - (BOOL)isEqualToEvent:(MMEEvent *)event {
     if (!event) {
         return NO;
@@ -296,7 +314,7 @@
         return YES;
     }
     
-    if (![other isKindOfClass:[MMEEvent class]]) {
+    if (![other isKindOfClass:MMEEvent.class]) {
         return  NO;
     }
     

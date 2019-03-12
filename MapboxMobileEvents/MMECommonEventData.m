@@ -64,7 +64,7 @@ NSString * const MMEApplicationStateUnknown = @"Unknown";
             return MMEApplicationStateUnknown;
     }
 #else
-    return nil;
+    return MMEApplicationStateUnknown;
 #endif
 }
 

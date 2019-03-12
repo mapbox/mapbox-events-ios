@@ -359,14 +359,11 @@
     MMEDate *now = [MMEDate date];
     MMEEvent *event = nil;
     if ([name isEqualToString:MMEEventTypeMapLoad]) {
-        event = [MMEEvent mapLoadEventWithDateString:[MMEDate.iso8601DateFormatter stringFromDate:now]
-                                     commonEventData:self.commonEventData];
+        event = [MMEEvent mapLoadEventWithDateString:[MMEDate.iso8601DateFormatter stringFromDate:now] commonEventData:self.commonEventData];
     } else if ([name isEqualToString:MMEEventTypeMapTap]) {
-        event = [MMEEvent mapTapEventWithDateString:[MMEDate.iso8601DateFormatter stringFromDate:now]
-                                         attributes:attributes];
+        event = [MMEEvent mapTapEventWithDateString:[MMEDate.iso8601DateFormatter stringFromDate:now] attributes:attributes];
     } else if ([name isEqualToString:MMEEventTypeMapDragEnd]) {
-        event = [MMEEvent mapDragEndEventWithDateString:[MMEDate.iso8601DateFormatter stringFromDate:now]
-                                             attributes:attributes];
+        event = [MMEEvent mapDragEndEventWithDateString:[MMEDate.iso8601DateFormatter stringFromDate:now] attributes:attributes];
     } else if ([name isEqualToString:MMEventTypeOfflineDownloadStart]) {
         event = [MMEEvent mapOfflineDownloadStartEventWithDateString:[MMEDate.iso8601DateFormatter stringFromDate:now] attributes:attributes];
     } else if ([name isEqualToString:MMEventTypeOfflineDownloadEnd]) {
@@ -386,13 +383,15 @@
     }
 
     if (event) {
-        [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypePush,
-                                             MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Pushing event: %@", event]}];
+        [self pushDebugEventWithAttributes:@{
+            MMEDebugEventType: MMEDebugEventTypePush,
+            MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Pushing event: %@", event]}];
         [self pushEvent:event];
     } else {
         event = [MMEEvent eventWithDateString:[MMEDate.iso8601DateFormatter stringFromDate:now] name:name attributes:attributes];
-        [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypePush,
-                                             MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Pushing generic event: %@", event]}];
+        [self pushDebugEventWithAttributes:@{
+            MMEDebugEventType: MMEDebugEventTypePush,
+            MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Pushing generic event: %@", event]}];
         [self pushEvent:event];
     }
 }
@@ -467,8 +466,9 @@
     if (self.locationMetricsEnabled) {
         [self.locationManager startUpdatingLocation];
     }
-    [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeLocationManager,
-                                         MMEEventKeyLocalDebugDescription: @"Resumed and location manager started"}];
+    [self pushDebugEventWithAttributes:@{
+        MMEDebugEventType: MMEDebugEventTypeLocationManager,
+        MMEEventKeyLocalDebugDescription: @"Resumed and location manager started"}];
 }
 
 - (void)updateNextTurnstileSendDate {
@@ -476,9 +476,10 @@
     // turnstile events can be sent as much as once per calendar day and always at the start of a session
     // when a map load happens.
     self.nextTurnstileSendDate = [NSDate.date mme_startOfTomorrow];
-    
-    [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstile,
-                                         MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Set next turnstile date to: %@", self.nextTurnstileSendDate]}];
+
+    [self pushDebugEventWithAttributes:@{
+        MMEDebugEventType: MMEDebugEventTypeTurnstile,
+        MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Set next turnstile date to: %@", self.nextTurnstileSendDate]}];
 }
 
 - (void)pushEvent:(MMEEvent *)event {
@@ -487,8 +488,9 @@
     }
     
     [self.eventQueue addObject:event];
-    [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypePush,
-                                         MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Added event to event queue; event queue now has %ld events", (long)self.eventQueue.count]}];
+    [self pushDebugEventWithAttributes:@{
+        MMEDebugEventType: MMEDebugEventTypePush,
+        MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Added event to event queue; event queue now has %ld events", (long)self.eventQueue.count]}];
     
     if (self.eventQueue.count >= self.configuration.eventFlushCountThreshold) {
         [self flush];
@@ -535,55 +537,64 @@
 #pragma mark - MMELocationManagerDelegate
 
 - (void)locationManager:(MMELocationManager *)locationManager didUpdateLocations:(NSArray *)locations {
-    [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeLocationManager,
-                                         MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Location manager sent %ld locations", (long)locations.count]}];
+    [self pushDebugEventWithAttributes:@{
+        MMEDebugEventType: MMEDebugEventTypeLocationManager,
+        MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Location manager sent %ld locations", (long)locations.count]}];
     
     for (CLLocation *location in locations) {        
-        MMEMapboxEventAttributes *eventAttributes = @{MMEEventKeyCreated: [MMEDate.iso8601DateFormatter stringFromDate:[location timestamp]],
-                                                      MMEEventKeyLatitude: @([location mme_latitudeRoundedWithPrecision:7]),
-                                                      MMEEventKeyLongitude: @([location mme_longitudeRoundedWithPrecision:7]),
-                                                      MMEEventKeyAltitude: @([location mme_roundedAltitude]),
-                                                      MMEEventHorizontalAccuracy: @([location mme_roundedHorizontalAccuracy])};
+        MMEMapboxEventAttributes *eventAttributes = @{
+            MMEEventKeyCreated: [MMEDate.iso8601DateFormatter stringFromDate:[location timestamp]],
+            MMEEventKeyLatitude: @([location mme_latitudeRoundedWithPrecision:7]),
+            MMEEventKeyLongitude: @([location mme_longitudeRoundedWithPrecision:7]),
+            MMEEventKeyAltitude: @([location mme_roundedAltitude]),
+            MMEEventHorizontalAccuracy: @([location mme_roundedHorizontalAccuracy])};
         [self pushEvent:[MMEEvent locationEventWithAttributes:eventAttributes
                                             instanceIdentifer:self.uniqueIdentifer.rollingInstanceIdentifer
                                               commonEventData:self.commonEventData]];
     }
+
     if ([self.delegate respondsToSelector:@selector(eventsManager:didUpdateLocations:)]) {
         [self.delegate eventsManager:self didUpdateLocations:locations];
     }
 }
 
 - (void)locationManagerDidStartLocationUpdates:(MMELocationManager *)locationManager {
-    [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeLocationManager,
-                                         MMEEventKeyLocalDebugDescription: @"Location manager started location updates"}];
+    [self pushDebugEventWithAttributes:@{
+        MMEDebugEventType: MMEDebugEventTypeLocationManager,
+        MMEEventKeyLocalDebugDescription: @"Location manager started location updates"}];
 }
 
 - (void)locationManagerBackgroundLocationUpdatesDidTimeout:(MMELocationManager *)locationManager {
-    [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeLocationManager,
-                                         MMEEventKeyLocalDebugDescription: @"Location manager timed out"}];
+    [self pushDebugEventWithAttributes:@{
+        MMEDebugEventType: MMEDebugEventTypeLocationManager,
+        MMEEventKeyLocalDebugDescription: @"Location manager timed out"}];
 }
 
 - (void)locationManagerBackgroundLocationUpdatesDidAutomaticallyPause:(MMELocationManager *)locationManager {
-    [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeLocationManager,
-                                         MMEEventKeyLocalDebugDescription: @"Location manager automatically paused"}];
+    [self pushDebugEventWithAttributes:@{
+        MMEDebugEventType: MMEDebugEventTypeLocationManager,
+        MMEEventKeyLocalDebugDescription: @"Location manager automatically paused"}];
 }
 
 - (void)locationManagerDidStopLocationUpdates:(MMELocationManager *)locationManager {
-    [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeLocationManager,
-                                         MMEEventKeyLocalDebugDescription: @"Location manager stopped location updates"}];
+    [self pushDebugEventWithAttributes:@{
+        MMEDebugEventType: MMEDebugEventTypeLocationManager,
+        MMEEventKeyLocalDebugDescription: @"Location manager stopped location updates"}];
 }
 
 - (void)locationManager:(MMELocationManager *)locationManager didVisit:(CLVisit *)visit {
-    [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeLocationManager,
-                                         MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Location manager visit %@", visit]}];
+    [self pushDebugEventWithAttributes:@{
+        MMEDebugEventType: MMEDebugEventTypeLocationManager,
+        MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Location manager visit %@", visit]}];
     
     CLLocation *location = [[CLLocation alloc] initWithLatitude:visit.coordinate.latitude longitude:visit.coordinate.longitude];
-    MMEMapboxEventAttributes *eventAttributes = @{MMEEventKeyCreated: [MMEDate.iso8601DateFormatter stringFromDate:[location timestamp]],
-                                                  MMEEventKeyLatitude: @([location mme_latitudeRoundedWithPrecision:7]),
-                                                  MMEEventKeyLongitude: @([location mme_longitudeRoundedWithPrecision:7]),
-                                                  MMEEventHorizontalAccuracy: @(visit.horizontalAccuracy),
-                                                  MMEEventKeyArrivalDate: [MMEDate.iso8601DateFormatter stringFromDate:visit.arrivalDate],
-                                                  MMEEventKeyDepartureDate: [MMEDate.iso8601DateFormatter stringFromDate:visit.departureDate]};
+    MMEMapboxEventAttributes *eventAttributes = @{
+        MMEEventKeyCreated: [MMEDate.iso8601DateFormatter stringFromDate:[location timestamp]],
+        MMEEventKeyLatitude: @([location mme_latitudeRoundedWithPrecision:7]),
+        MMEEventKeyLongitude: @([location mme_longitudeRoundedWithPrecision:7]),
+        MMEEventHorizontalAccuracy: @(visit.horizontalAccuracy),
+        MMEEventKeyArrivalDate: [MMEDate.iso8601DateFormatter stringFromDate:visit.arrivalDate],
+        MMEEventKeyDepartureDate: [MMEDate.iso8601DateFormatter stringFromDate:visit.departureDate]};
     [self pushEvent:[MMEEvent visitEventWithAttributes:eventAttributes]];
 
     if ([self.delegate respondsToSelector:@selector(eventsManager:didVisit:)]) {
@@ -592,4 +603,3 @@
 }
 
 @end
-
