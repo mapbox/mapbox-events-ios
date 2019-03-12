@@ -143,6 +143,7 @@ describe(@"MMEAPIClient", ^{
                 receivedDisposition should equal(expectedDefaultDisposition);
             });
         });
+    });
     
     describe(@"- setBaseURL", ^{
         
