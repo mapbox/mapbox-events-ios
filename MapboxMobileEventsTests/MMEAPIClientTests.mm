@@ -143,43 +143,6 @@ describe(@"MMEAPIClient", ^{
                 receivedDisposition should equal(expectedDefaultDisposition);
             });
         });
-        
-        context(@"when using the main thread", ^{
-            __block bool isMainThread;
-            
-            beforeEach(^{
-                
-                pinningValidator stub_method(@selector(handleChallenge:completionHandler:)).and_return(NO);
-                
-                dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-                
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, timeoutInNanoseconds), dispatch_get_main_queue(), ^{
-                    dispatch_semaphore_signal(semaphore);
-                });
-                
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [sessionWrapper URLSession:urlSession didReceiveChallenge:challenge completionHandler:^(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential * _Nullable credential) {
-                        isMainThread = [NSThread isMainThread];
-                        receivedDisposition = disposition;
-                        dispatch_semaphore_signal(semaphore);
-                    }];
-                });
-                
-                while (dispatch_semaphore_wait(semaphore, DISPATCH_TIME_NOW)) {
-                    [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:10]];
-                }
-
-            });
-            
-            it(@"should be main thread", ^{
-                isMainThread should be_truthy;
-            });
-            
-            it(@"should equal expected DefaultHandling disposition", ^{
-                receivedDisposition should equal(expectedDefaultDisposition);
-            });
-        });
-    });
     
     describe(@"- setBaseURL", ^{
         
