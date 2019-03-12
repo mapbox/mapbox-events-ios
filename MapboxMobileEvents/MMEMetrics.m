@@ -1,13 +1,14 @@
 #import "MMEMetrics.h"
+#import "MMEDate.h"
 
 @implementation MMEMetrics
 
 - (instancetype)init {
     self = [super init];
     if (self) {
-        self.failedRequestsDict = [[NSMutableDictionary alloc] init];
-        self.eventCountPerType = [[NSMutableDictionary alloc] init];
-        self.date = [NSDate date];
+        self.failedRequestsDict = [NSMutableDictionary dictionary];
+        self.eventCountPerType = [NSMutableDictionary dictionary];
+        self.recordingStarted = [MMEDate date];
         self.totalDataTransfer = 0;
         self.cellDataTransfer = 0;
         self.wifiDataTransfer = 0;
