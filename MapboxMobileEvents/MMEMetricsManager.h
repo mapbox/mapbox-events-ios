@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)updateTransferredData:(NSData *)data;
 - (void)updateReceivedData:(NSData *)data;
 - (void)updateMetricsFromEventQueue:(NSArray *)eventQueue;
-- (void)updateMetricsFromEvents:(nullable NSArray *)events request:(NSURLRequest *)request error:(nullable NSError *)error;
+- (void)updateMetricsFromEvents:(nullable NSArray *)events request:(nullable NSURLRequest *)request error:(nullable NSError *)error;
 - (void)updateConfigurationJSON:(NSDictionary *)configuration;
 - (void)updateCoordinate:(CLLocationCoordinate2D)coordinate;
 - (void)incrementAppWakeUpCount;

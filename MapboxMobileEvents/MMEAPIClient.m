@@ -92,14 +92,16 @@ int const kMMEMaxRequestCount = 1000;
                 } else {
                     statusError = [self unexpectedResponseErrorfromRequest:request andResponse:response];
                 }
+                error = error ?: statusError;
+                
+                [self.metricsManager updateMetricsFromEvents:events request:request error:error];
+                
                 if (completionHandler) {
-                    error = error ?: statusError;
                     completionHandler(error);
-
-                    [self.metricsManager updateMetricsFromEvents:events request:request error:error];
                 }
             }];
         }
+        [self.metricsManager updateMetricsFromEvents:events request:nil error:nil];
     }
 }
 

@@ -49,17 +49,18 @@
     }
 }
 
-- (void)updateMetricsFromEvents:(nullable NSArray *)events request:(NSURLRequest *)request error:(nullable NSError *)error {
+- (void)updateMetricsFromEvents:(nullable NSArray *)events request:(nullable NSURLRequest *)request error:(nullable NSError *)error {
     if (request.HTTPBody) {
         [self updateTransferredData:request.HTTPBody];
     }
     
-    if (error == nil) {
+    if (request == nil && error == nil) {
+        [self updateEventsFailedCountFromEvents:events];
+    } else if (error == nil) {
+        //successful request -- the events for this are counted elsewhere
         self.metrics.requests++;
     } else {
-        if (events) {
-            self.metrics.eventCountFailed += (int)events.count;
-        }
+        [self updateEventsFailedCountFromEvents:events];
         
         NSHTTPURLResponse *response = (NSHTTPURLResponse *)[error.userInfo objectForKey:MMEResponseKey];
         NSString *urlString = response.URL.absoluteString;
@@ -88,7 +89,11 @@
     }
 }
 
-- (void)updateMetricsFromData:(NSData *)data {
+- (void)updateEventsFailedCountFromEvents:(NSArray *)events {
+    if (events) {
+        self.metrics.eventCountFailed += (int)events.count;
+    }
+}
 
 - (void)updateTransferredData:(NSData *)data {
     self.metrics.totalDataTransfer += data.length;
