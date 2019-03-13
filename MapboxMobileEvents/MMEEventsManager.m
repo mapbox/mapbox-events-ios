@@ -52,8 +52,7 @@
 }
 
 - (instancetype)init {
-    self = [super init];
-    if (self) {
+    if (self = [super init]) {
         _metricsEnabled = YES;
         _locationMetricsEnabled = YES;
         _paused = YES;
@@ -83,6 +82,7 @@
     __weak __typeof__(self) weakSelf = self;
     void(^initialization)(void) = ^{
         __strong __typeof__(weakSelf) strongSelf = weakSelf;
+
         if (strongSelf == nil) {
             return;
         }
@@ -235,6 +235,7 @@
     __weak __typeof__(self) weakSelf = self;
     [self.apiClient postEvents:events completionHandler:^(NSError * _Nullable error) {
         __strong __typeof__(weakSelf) strongSelf = weakSelf;
+
         if (error) {
             [strongSelf pushDebugEventWithAttributes:@{
                 MMEDebugEventType: MMEDebugEventTypePostFailed,
@@ -332,6 +333,7 @@
     __weak __typeof__(self) weakSelf = self;
     [self.apiClient postEvent:turnstileEvent completionHandler:^(NSError * _Nullable error) {
         __strong __typeof__(weakSelf) strongSelf = weakSelf;
+
         if (error) {
             [strongSelf pushDebugEventWithAttributes:@{
                 MMEDebugEventType: MMEDebugEventTypeTurnstile,
@@ -348,6 +350,7 @@
 
 - (void)sendPendingTelemetryMetricsEvent {
     MMEEvent *pendingMetricsEvent = [MMEMetricsManager.sharedManager loadPendingTelemetryMetricsEvent];
+
     if (pendingMetricsEvent) {
         __weak __typeof__(self) weakSelf = self;
         [self.apiClient postEvent:pendingMetricsEvent completionHandler:^(NSError * _Nullable error) {
@@ -401,6 +404,7 @@
 - (void)createAndPushEventBasedOnName:(NSString *)name attributes:(NSDictionary *)attributes {
     MMEDate *now = [MMEDate date];
     MMEEvent *event = nil;
+
     if ([name isEqualToString:MMEEventTypeMapLoad]) {
         event = [MMEEvent mapLoadEventWithDateString:[MMEDate.iso8601DateFormatter stringFromDate:now] commonEventData:self.commonEventData];
     } else if ([name isEqualToString:MMEEventTypeMapTap]) {
@@ -512,7 +516,9 @@
     }
     
     self.paused = NO;
-    
+
+    [self sendPendingTelemetryMetricsEvent];
+
     if (self.locationMetricsEnabled) {
         [self.locationManager startUpdatingLocation];
     }
@@ -568,15 +574,18 @@
 
 - (void)configurator:(id)updater didUpdate:(MMEEventsConfiguration *)configuration {
     self.configuration = configuration;
+
     if ([self.apiClient respondsToSelector:@selector(reconfigure:)]) {
         [self.apiClient reconfigure:configuration];
     }
+
     if ([self.locationManager respondsToSelector:@selector(reconfigure:)]) {
         [self.locationManager reconfigure:configuration];
     }
     
     self.configurationUpdater.timeInterval = configuration.configurationRotationTimeInterval;
     self.uniqueIdentifer.timeInterval = configuration.instanceIdentifierRotationTimeInterval;
+
     if (self.timerManager && configuration.eventFlushSecondsThreshold != self.timerManager.timeInterval) {
         [self.timerManager cancel];
         self.timerManager = [[MMETimerManager alloc] initWithTimeInterval:self.configuration.eventFlushSecondsThreshold target:self selector:@selector(flush)];
@@ -598,7 +607,7 @@
             MMEEventKeyLongitude: @([location mme_longitudeRoundedWithPrecision:7]),
             MMEEventKeyAltitude: @([location mme_roundedAltitude]),
             MMEEventHorizontalAccuracy: @([location mme_roundedHorizontalAccuracy])};
-            
+
         [self pushEvent:[MMEEvent locationEventWithAttributes:eventAttributes
                                             instanceIdentifer:self.uniqueIdentifer.rollingInstanceIdentifer
                                               commonEventData:self.commonEventData]];
