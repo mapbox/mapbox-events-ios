@@ -10,7 +10,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)sharedManager;
 
-- (void)updateMetricsFromData:(NSData *)data;
+- (void)updateTransferredData:(NSData *)data;
+- (void)updateReceivedData:(NSData *)data;
 - (void)updateMetricsFromEventQueue:(NSArray *)eventQueue;
 - (void)updateMetricsFromEvents:(nullable NSArray *)events request:(NSURLRequest *)request error:(nullable NSError *)error;
 - (void)updateConfigurationJSON:(NSDictionary *)configuration;

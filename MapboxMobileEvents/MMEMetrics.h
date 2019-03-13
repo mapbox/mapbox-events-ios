@@ -9,6 +9,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) NSUInteger totalDataTransfer;
 @property (nonatomic) NSUInteger cellDataTransfer;
 @property (nonatomic) NSUInteger wifiDataTransfer;
+@property (nonatomic) NSUInteger totalDataReceived;
+@property (nonatomic) NSUInteger cellDataReceived;
+@property (nonatomic) NSUInteger wifiDataReceived;
 @property (nonatomic) NSUInteger appWakeups;
 @property (nonatomic) NSUInteger eventCountFailed;
 @property (nonatomic) NSUInteger eventCountTotal;

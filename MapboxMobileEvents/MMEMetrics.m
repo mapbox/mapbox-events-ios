@@ -11,6 +11,9 @@
         self.totalDataTransfer = 0;
         self.cellDataTransfer = 0;
         self.wifiDataTransfer = 0;
+        self.totalDataReceived = 0;
+        self.cellDataReceived = 0;
+        self.wifiDataReceived = 0;
         self.eventCountFailed = 0;
         self.eventCountTotal = 0;
         self.eventCountMax = 0;

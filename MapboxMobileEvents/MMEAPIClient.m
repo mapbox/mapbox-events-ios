@@ -79,6 +79,12 @@ int const kMMEMaxRequestCount = 1000;
         NSURLRequest *request = [self requestForEvents:batch];
         if (request) {
             [self.sessionWrapper processRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+                NSData *receivedData = [NSURLConnection sendSynchronousRequest:request
+                                                             returningResponse:&response
+                                                                         error:&error];
+                
+                [self.metricsManager updateReceivedData:receivedData];
+                
                 NSError *statusError = nil;
                 if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
                     NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
@@ -107,6 +113,12 @@ int const kMMEMaxRequestCount = 1000;
     NSData *binaryData = [self createBodyWithBoundary:boundary metadata:metadata filePaths:filePaths];
     NSURLRequest *request = [self requestForBinary:binaryData boundary:boundary];
     [self.sessionWrapper processRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        NSData *receivedData = [NSURLConnection sendSynchronousRequest:request
+                                                     returningResponse:&response
+                                                                 error:&error];
+        
+        [self.metricsManager updateReceivedData:receivedData];
+        
         NSError *statusError = nil;
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
         statusError = [self statusErrorFromRequest:request andHTTPResponse:httpResponse];
@@ -123,6 +135,12 @@ int const kMMEMaxRequestCount = 1000;
     NSURLRequest *request = [self requestForConfiguration];
     
     [self.sessionWrapper processRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        NSData *receivedData = [NSURLConnection sendSynchronousRequest:request
+                                                     returningResponse:&response
+                                                                 error:&error];
+        
+        [self.metricsManager updateReceivedData:receivedData];
+        
         NSError *statusError = nil;
         if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
             NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;

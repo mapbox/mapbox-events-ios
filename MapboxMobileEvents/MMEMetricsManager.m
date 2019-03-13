@@ -50,8 +50,8 @@
 }
 
 - (void)updateMetricsFromEvents:(nullable NSArray *)events request:(NSURLRequest *)request error:(nullable NSError *)error {
-    if (request.HTTPBody && error == nil) {
-        [self updateMetricsFromData:request.HTTPBody];
+    if (request.HTTPBody) {
+        [self updateTransferredData:request.HTTPBody];
     }
     
     if (error == nil) {
@@ -89,6 +89,18 @@
 }
 
 - (void)updateMetricsFromData:(NSData *)data {
+
+- (void)updateTransferredData:(NSData *)data {
+    self.metrics.totalDataTransfer += data.length;
+    
+    if ([[MMEReachability reachabilityForLocalWiFi] isReachableViaWiFi]) {
+        self.metrics.wifiDataTransfer += data.length;
+    } else {
+        self.metrics.cellDataTransfer += data.length;
+    }
+}
+
+- (void)updateReceivedData:(NSData *)data {
     self.metrics.totalDataTransfer += data.length;
     
     if ([[MMEReachability reachabilityForLocalWiFi] isReachableViaWiFi]) {
