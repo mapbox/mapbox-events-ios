@@ -30,7 +30,6 @@
 @property (nonatomic) MMEConfigurator *configurationUpdater;
 @property (nonatomic) MMETimerManager *timerManager;
 @property (nonatomic) MMEDispatchManager *dispatchManager;
-@property (nonatomic) MMEMetricsManager *metricsManager;
 @property (nonatomic, getter=isPaused) BOOL paused;
 @property (nonatomic) id<MMEUIApplicationWrapper> application;
 @property (nonatomic, getter=isLocationMetricsEnabled) BOOL locationMetricsEnabled;
@@ -66,18 +65,19 @@
         _uniqueIdentifer = [[MMEUniqueIdentifier alloc] initWithTimeInterval:_configuration.instanceIdentifierRotationTimeInterval];
         _application = [[MMEUIApplicationWrapper alloc] init];
         _dispatchManager = [[MMEDispatchManager alloc] init];
-        _metricsManager = [MMEMetricsManager sharedManager];
     }
     return self;
 }
 
 - (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [NSNotificationCenter.defaultCenter removeObserver:self];
     [self pauseMetricsCollection];
 }
 
 - (void)initializeWithAccessToken:(NSString *)accessToken userAgentBase:(NSString *)userAgentBase hostSDKVersion:(NSString *)hostSDKVersion {
-    self.apiClient = [[MMEAPIClient alloc] initWithAccessToken:accessToken userAgentBase:userAgentBase hostSDKVersion:hostSDKVersion];
+    self.apiClient = [[MMEAPIClient alloc] initWithAccessToken:accessToken
+        userAgentBase:userAgentBase
+        hostSDKVersion:hostSDKVersion];
     self.configurationUpdater.delegate = self;
     
     __weak __typeof__(self) weakSelf = self;
@@ -87,15 +87,23 @@
             return;
         }
 
-        [[NSNotificationCenter defaultCenter] addObserver:strongSelf selector:@selector(pauseOrResumeMetricsCollectionIfRequired) name:UIApplicationDidEnterBackgroundNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:strongSelf selector:@selector(pauseOrResumeMetricsCollectionIfRequired) name:UIApplicationDidBecomeActiveNotification object:nil];
+        [NSNotificationCenter.defaultCenter addObserver:strongSelf
+            selector:@selector(pauseOrResumeMetricsCollectionIfRequired)
+            name:UIApplicationDidEnterBackgroundNotification
+            object:nil];
+        [NSNotificationCenter.defaultCenter addObserver:strongSelf
+            selector:@selector(pauseOrResumeMetricsCollectionIfRequired)
+            name:UIApplicationDidBecomeActiveNotification
+            object:nil];
     
         if (@available(iOS 9.0, *)) {
-            [[NSNotificationCenter defaultCenter] addObserver:strongSelf selector:@selector(powerStateDidChange:) name:NSProcessInfoPowerStateDidChangeNotification object:nil];
+            [NSNotificationCenter.defaultCenter addObserver:strongSelf
+                selector:@selector(powerStateDidChange:)
+                name:NSProcessInfoPowerStateDidChangeNotification
+                object:nil];
         }
     
         strongSelf.paused = YES;
-    
         strongSelf.locationManager = [[MMELocationManager alloc] init];
         strongSelf.locationManager.delegate = strongSelf;
         strongSelf.locationManager.metricsEnabledForInUsePermissions = strongSelf.metricsEnabledForInUsePermissions;
@@ -193,8 +201,9 @@
     [self sendTelemetryMetricsEvent];
     
     if (self.paused) {
-        [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeFlush,
-                                             MMEEventKeyLocalDebugDescription: @"Aborting flushing of event queue because collection is paused."}];
+        [self pushDebugEventWithAttributes:@{
+            MMEDebugEventType: MMEDebugEventTypeFlush,
+            MMEEventKeyLocalDebugDescription: @"Aborting flushing of event queue because collection is paused."}];
         return;
     }
     
@@ -210,8 +219,9 @@
     [self postEvents:events];
     [self resetEventQueuing];
     
-    [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeFlush,
-                                         MMEEventKeyLocalDebugDescription:@"flush"}];
+    [self pushDebugEventWithAttributes:@{
+        MMEDebugEventType: MMEDebugEventTypeFlush,
+        MMEEventKeyLocalDebugDescription:@"flush"}];
 }
 
 - (void)resetEventQueuing {
@@ -226,20 +236,22 @@
     [self.apiClient postEvents:events completionHandler:^(NSError * _Nullable error) {
         __strong __typeof__(weakSelf) strongSelf = weakSelf;
         if (error) {
-            [strongSelf pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypePostFailed,
-                                                       MMEEventKeyLocalDebugDescription: @"Network error",
-                                                       @"error": error}];
+            [strongSelf pushDebugEventWithAttributes:@{
+                MMEDebugEventType: MMEDebugEventTypePostFailed,
+                MMEEventKeyLocalDebugDescription: @"Network error",
+                @"error": error}];
         } else {
-            [strongSelf pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypePost,
-                                                       MMEEventKeyLocalDebugDescription: @"post",
-                                                       @"debug.eventsCount": @(eventsCount)}];
+            [strongSelf pushDebugEventWithAttributes:@{
+                MMEDebugEventType: MMEDebugEventTypePost,
+                MMEEventKeyLocalDebugDescription: @"post",
+                @"debug.eventsCount": @(eventsCount)}];
         }
-        
-        
+
         if (strongSelf.backgroundTaskIdentifier != UIBackgroundTaskInvalid) {
-            [strongSelf pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeBackgroundTask,
-                                                       MMEEventKeyLocalDebugDescription: @"Ending background task",
-                                                       @"Identifier": @(strongSelf.backgroundTaskIdentifier)}];
+            [strongSelf pushDebugEventWithAttributes:@{
+                MMEDebugEventType: MMEDebugEventTypeBackgroundTask,
+                MMEEventKeyLocalDebugDescription: @"Ending background task",
+                @"Identifier": @(strongSelf.backgroundTaskIdentifier)}];
             [strongSelf.application endBackgroundTask:strongSelf.backgroundTaskIdentifier];
             strongSelf.backgroundTaskIdentifier = UIBackgroundTaskInvalid;
         }
@@ -249,40 +261,46 @@
 - (void)sendTurnstileEvent {
     [self.configurationUpdater updateConfigurationFromAPIClient:self.apiClient];
     
-    if (self.nextTurnstileSendDate && [[NSDate date] timeIntervalSinceDate:self.nextTurnstileSendDate] < 0) {
+    if (self.nextTurnstileSendDate && ([NSDate.date timeIntervalSinceDate:self.nextTurnstileSendDate] < 0)) {
         NSString *debugDescription = [NSString stringWithFormat:@"Turnstile event already sent; waiting until %@ to send another one", self.nextTurnstileSendDate];
-        [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstile,
-                                             MMEEventKeyLocalDebugDescription: debugDescription}];
+        [self pushDebugEventWithAttributes:@{
+            MMEDebugEventType: MMEDebugEventTypeTurnstile,
+            MMEEventKeyLocalDebugDescription: debugDescription}];
         return;
     }
     
     if (!self.apiClient.accessToken) {
-        [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstileFailed,
-                                             MMEEventKeyLocalDebugDescription: @"No access token sent, can not send turntile event"}];
+        [self pushDebugEventWithAttributes:@{
+            MMEDebugEventType: MMEDebugEventTypeTurnstileFailed,
+            MMEEventKeyLocalDebugDescription: @"No access token sent, can not send turntile event"}];
         return;
     }
     
     if (!self.apiClient.userAgentBase) {
-        [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstileFailed,
-                                             MMEEventKeyLocalDebugDescription: @"No user agent base set, can not send turntile event"}];
+        [self pushDebugEventWithAttributes:@{
+            MMEDebugEventType: MMEDebugEventTypeTurnstileFailed,
+            MMEEventKeyLocalDebugDescription: @"No user agent base set, can not send turntile event"}];
         return;
     }
     
     if (!self.apiClient.hostSDKVersion) {
-        [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstileFailed,
-                                             MMEEventKeyLocalDebugDescription: @"No host SDK version set, can not send turntile event"}];
+        [self pushDebugEventWithAttributes:@{
+            MMEDebugEventType: MMEDebugEventTypeTurnstileFailed,
+            MMEEventKeyLocalDebugDescription: @"No host SDK version set, can not send turntile event"}];
         return;
     }
     
     if (!self.commonEventData.vendorId) {
-        [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstileFailed,
-                                             MMEEventKeyLocalDebugDescription: @"No vendor id available, can not send turntile event"}];
+        [self pushDebugEventWithAttributes:@{
+            MMEDebugEventType: MMEDebugEventTypeTurnstileFailed,
+            MMEEventKeyLocalDebugDescription: @"No vendor id available, can not send turntile event"}];
         return;
     }
     
     if (!self.commonEventData.model) {
-        [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstileFailed,
-                                             MMEEventKeyLocalDebugDescription: @"No model available, can not send turntile event"}];
+        [self pushDebugEventWithAttributes:@{
+            MMEDebugEventType: MMEDebugEventTypeTurnstileFailed,
+            MMEEventKeyLocalDebugDescription: @"No model available, can not send turntile event"}];
         return;
     }
     
@@ -306,43 +324,68 @@
                                                };
     
     MMEEvent *turnstileEvent = [MMEEvent turnstileEventWithAttributes:turnstileEventAttributes];
-    [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstile,
-                                         MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Sending turnstile event: %@", turnstileEvent]}];
+    [self pushDebugEventWithAttributes:@{
+        MMEDebugEventType: MMEDebugEventTypeTurnstile,
+        MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Sending turnstile event: %@", turnstileEvent]}];
     [MMEEventLogger.sharedLogger logEvent:turnstileEvent];
     
     __weak __typeof__(self) weakSelf = self;
     [self.apiClient postEvent:turnstileEvent completionHandler:^(NSError * _Nullable error) {
         __strong __typeof__(weakSelf) strongSelf = weakSelf;
         if (error) {
-            [strongSelf pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstile,
-                                                 MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Could not send turnstile event: %@", error]}];
+            [strongSelf pushDebugEventWithAttributes:@{
+                MMEDebugEventType: MMEDebugEventTypeTurnstile,
+                MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Could not send turnstile event: %@", error]}];
             return;
         }
         
         [strongSelf updateNextTurnstileSendDate];
-        [strongSelf pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstile,
-                                                   MMEEventKeyLocalDebugDescription: @"Sent turnstile event"}];
+        [strongSelf pushDebugEventWithAttributes:@{
+            MMEDebugEventType: MMEDebugEventTypeTurnstile,
+            MMEEventKeyLocalDebugDescription: @"Sent turnstile event"}];
     }];
 }
 
+- (void)sendPendingTelemetryMetricsEvent {
+    MMEEvent *pendingMetricsEvent = [MMEMetricsManager.sharedManager loadPendingTelemetryMetricsEvent];
+    if (pendingMetricsEvent) {
+        __weak __typeof__(self) weakSelf = self;
+        [self.apiClient postEvent:pendingMetricsEvent completionHandler:^(NSError * _Nullable error) {
+            __strong __typeof__(weakSelf) strongSelf = weakSelf;
+            [MMEMetricsManager.sharedManager resetMetrics];
+            if (error) {
+                [strongSelf pushEvent:[MMEEvent debugEventWithError:error]];
+                return;
+            }
+
+            [strongSelf pushDebugEventWithAttributes:@{
+                MMEDebugEventType: MMEDebugEventTypeTurnstile,
+                MMEEventKeyLocalDebugDescription: @"Sent pendingTelemetryMetrics event"}];
+        }];
+    }
+}
+
 - (void)sendTelemetryMetricsEvent {
-    MMEEvent *telemetryMetricsEvent = [self.metricsManager generateTelemetryMetricsEvent];
-    [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstile,
-                                         MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Sending telemetryMetrics event: %@", telemetryMetricsEvent]}];
+    MMEEvent *telemetryMetricsEvent = [MMEMetricsManager.sharedManager generateTelemetryMetricsEvent];
+    [self pushDebugEventWithAttributes:@{
+        MMEDebugEventType: MMEDebugEventTypeTurnstile,
+        MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Sending telemetryMetrics event: %@", telemetryMetricsEvent]}];
     
     if (telemetryMetricsEvent) {
         __weak __typeof__(self) weakSelf = self;
         [self.apiClient postEvent:telemetryMetricsEvent completionHandler:^(NSError * _Nullable error) {
             __strong __typeof__(weakSelf) strongSelf = weakSelf;
-            [strongSelf.metricsManager resetMetrics];
+            [MMEMetricsManager.sharedManager resetMetrics];
             if (error) {
-                [strongSelf pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTelemetryMetrics,
-                                                           MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Could not send telemetryMetrics event: %@", error]}];
+                [strongSelf pushDebugEventWithAttributes:@{
+                    MMEDebugEventType: MMEDebugEventTypeTelemetryMetrics,
+                    MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Could not send telemetryMetrics event: %@", error]}];
                 return;
             }
             
-            [strongSelf pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstile,
-                                                       MMEEventKeyLocalDebugDescription: @"Sent telemetryMetrics event"}];
+            [strongSelf pushDebugEventWithAttributes:@{
+                MMEDebugEventType: MMEDebugEventTypeTurnstile,
+                MMEEventKeyLocalDebugDescription: @"Sent telemetryMetrics event"}];
         }];
     }
 }
@@ -435,11 +478,14 @@
 }
 
 - (void)pauseMetricsCollection {
-    [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeMetricCollection,
-                                         MMEEventKeyLocalDebugDescription: @"Pausing metrics collection..."}];
+    [self pushDebugEventWithAttributes:@{
+        MMEDebugEventType: MMEDebugEventTypeMetricCollection,
+        MMEEventKeyLocalDebugDescription: @"Pausing metrics collection..."}];
+
     if (self.isPaused) {
-        [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeMetricCollection,
-                                             MMEEventKeyLocalDebugDescription: @"Already paused"}];
+        [self pushDebugEventWithAttributes:@{
+            MMEDebugEventType: MMEDebugEventTypeMetricCollection,
+            MMEEventKeyLocalDebugDescription: @"Already paused"}];
         return;
     }
     
@@ -448,16 +494,20 @@
     [self.eventQueue removeAllObjects];
     
     [self.locationManager stopUpdatingLocation];
-    [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeLocationManager,
-                                         MMEEventKeyLocalDebugDescription: @"Paused and location manager stopped"}];
+    [self pushDebugEventWithAttributes:@{
+        MMEDebugEventType: MMEDebugEventTypeLocationManager,
+        MMEEventKeyLocalDebugDescription: @"Paused and location manager stopped"}];
 }
 
 - (void)resumeMetricsCollection {
-    [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeMetricCollection,
-                                         MMEEventKeyLocalDebugDescription: @"Resuming metrics collection..."}];
+    [self pushDebugEventWithAttributes:@{
+        MMEDebugEventType: MMEDebugEventTypeMetricCollection,
+        MMEEventKeyLocalDebugDescription: @"Resuming metrics collection..."}];
+
     if (!self.isPaused || ![self isEnabled]) {
-        [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeMetricCollection,
-                                             MMEEventKeyLocalDebugDescription: @"Already running"}];
+        [self pushDebugEventWithAttributes:@{
+            MMEDebugEventType: MMEDebugEventTypeMetricCollection,
+            MMEEventKeyLocalDebugDescription: @"Already running"}];
         return;
     }
     
@@ -548,6 +598,7 @@
             MMEEventKeyLongitude: @([location mme_longitudeRoundedWithPrecision:7]),
             MMEEventKeyAltitude: @([location mme_roundedAltitude]),
             MMEEventHorizontalAccuracy: @([location mme_roundedHorizontalAccuracy])};
+            
         [self pushEvent:[MMEEvent locationEventWithAttributes:eventAttributes
                                             instanceIdentifer:self.uniqueIdentifer.rollingInstanceIdentifer
                                               commonEventData:self.commonEventData]];
@@ -595,6 +646,7 @@
         MMEEventHorizontalAccuracy: @(visit.horizontalAccuracy),
         MMEEventKeyArrivalDate: [MMEDate.iso8601DateFormatter stringFromDate:visit.arrivalDate],
         MMEEventKeyDepartureDate: [MMEDate.iso8601DateFormatter stringFromDate:visit.departureDate]};
+
     [self pushEvent:[MMEEvent visitEventWithAttributes:eventAttributes]];
 
     if ([self.delegate respondsToSelector:@selector(eventsManager:didVisit:)]) {

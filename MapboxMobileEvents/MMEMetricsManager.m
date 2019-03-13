@@ -26,6 +26,8 @@
 
 @end
 
+#pragma mark -
+
 @implementation MMEMetricsManager
 
 + (instancetype)sharedManager {
@@ -39,9 +41,44 @@
     return _sharedManager;
 }
 
++ (NSString *)pendingMetricsEventPath {
+    static NSString *pendingMetricFile = nil;
+    static dispatch_once_t onceToken;
+
+    dispatch_once(&onceToken, ^{
+        NSString *libraryPath = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES).lastObject;
+        NSString *frameworkLibraryPath = [libraryPath stringByAppendingPathComponent:[NSBundle bundleForClass:self].bundleIdentifier];
+        pendingMetricFile = [frameworkLibraryPath stringByAppendingPathComponent:@"pending-metrics.event"];
+    });
+
+    return pendingMetricFile;
+}
+
+/*! @brief Remove any existing pending metrics event, logging any errors that occur */
++ (BOOL)deletePendingMetricsEventFile {
+    BOOL success = NO;
+    if ([NSFileManager.defaultManager fileExistsAtPath:MMEMetricsManager.pendingMetricsEventPath]) {
+        NSError *fileError = nil;
+        if (![NSFileManager.defaultManager removeItemAtPath:MMEMetricsManager.pendingMetricsEventPath error:&fileError]) {
+            MMEEvent *errorEvent = [MMEEvent debugEventWithError:fileError];
+            [MMEEventLogger.sharedLogger logEvent:errorEvent];
+        }
+        else {  // we successufll removed the file
+            success = YES;
+
+        }
+    }
+    else { // there was no file to begin with
+        success = YES;
+    }
+
+    return success;
+}
+
+#pragma mark -
+
 - (instancetype)init {
-    self = [super init];
-    if (self) {
+    if (self = [super init]) {
         [self resetMetrics];
     }
     return self;
@@ -140,12 +177,9 @@
     }
 }
 
-
 - (void)resetMetrics {
     self.metrics = [MMEMetrics new];
 }
-
-#pragma mark -- Event creation
 
 - (NSDictionary *)attributes {
     MMEMutableMapboxEventAttributes *attributes = [MMEMutableMapboxEventAttributes dictionary];
@@ -186,18 +220,51 @@
     return attributes;
 }
 
+- (MMEEvent *)loadPendingTelemetryMetricsEvent {
+    MMEEvent* pending = nil;
+
+    if ([NSFileManager.defaultManager fileExistsAtPath:MMEMetricsManager.pendingMetricsEventPath]) {
+        @try {
+            NSData *thenData = [NSData dataWithContentsOfFile:MMEMetricsManager.pendingMetricsEventPath];
+            NSKeyedUnarchiver* unarchiver = [NSKeyedUnarchiver.alloc initForReadingWithData:thenData];
+            unarchiver.requiresSecureCoding = YES;
+            pending = [unarchiver decodeObjectOfClass:MMEDate.class forKey:NSKeyedArchiveRootObjectKey];
+        }
+        @catch (NSException *exception) {
+            [MMEEventLogger.sharedLogger logEvent:[MMEEvent debugEventWithException:exception]];
+        }
+    }
+
+    return pending;
+}
+
 - (MMEEvent *)generateTelemetryMetricsEvent {
     NSDate *zeroHour = [self.metrics.recordingStarted mme_startOfTomorrow];
-    if (zeroHour.timeIntervalSinceNow > 0) {
-        NSString *debugDescription = [NSString stringWithFormat:@"TelemetryMetrics event isn't ready to be sent; waiting until %@ to send", zeroHour];
+    MMEEvent *telemetryMetrics = [MMEEvent telemetryMetricsEventWithDateString:[MMEDate.iso8601DateFormatter stringFromDate:NSDate.date] attributes:self.attributes];
+
+    if (zeroHour.timeIntervalSinceNow > 0) { // it's not time to send metrics yet, write them to a pending file
+        NSString *debugDescription = [NSString stringWithFormat:@"TelemetryMetrics event isn't ready to be sent; writing to %@ and waiting until %@ to send", MMEMetricsManager.pendingMetricsEventPath, zeroHour];
+        
         [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTelemetryMetrics,
                                              MMEEventKeyLocalDebugDescription: debugDescription}];
+
+        [MMEMetricsManager deletePendingMetricsEventFile];
+
+        // Attempt to write the metrics event to the pending metrics event path, catching and logging any exceptions
+        @try {
+            [NSKeyedArchiver archiveRootObject:telemetryMetrics toFile:MMEMetricsManager.pendingMetricsEventPath];
+        }
+        @catch (NSException* exception) {
+            [MMEEventLogger.sharedLogger logEvent:[MMEEvent debugEventWithException:exception]];
+        }
+
         return nil;
     }
 
     NSString *metricsDate = [MMEDate.iso8601DateFormatter stringFromDate:NSDate.date];
     MMEEvent *telemetryMetrics = [MMEEvent telemetryMetricsEventWithDateString:metricsDate attributes:self.attributes];
     [MMEEventLogger.sharedLogger logEvent:telemetryMetrics];
+    [MMEMetricsManager deletePendingMetricsEventFile];
     
     return telemetryMetrics;
 }
