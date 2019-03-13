@@ -6,11 +6,6 @@
 @implementation MMETrustKitProvider
 
 + (TrustKit *)trustKitWithUpdatedConfiguration:(MMEEventsConfiguration *)configuration {
-
-    if (![MMEEventLogger.sharedLogger isEnabled]) {
-        void (^loggerBlock)(NSString *) = ^void(NSString *message){};
-        [TrustKit setLoggerBlock:loggerBlock];
-    }
     
     MMEHashProvider *hashProvider = [[MMEHashProvider alloc] init];
     if (configuration) {
