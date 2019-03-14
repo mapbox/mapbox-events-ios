@@ -8,7 +8,7 @@
     if (self) {
         _failedRequestsDict = [[NSMutableDictionary alloc] init];
         _eventCountPerType = [[NSMutableDictionary alloc] init];
-        _date = [NSDate date];
+        _recordingStarted = [MMEDate date];
         _cellBytesSent = 0;
         _wifiBytesSent = 0;
         _cellBytesReceived = 0;
