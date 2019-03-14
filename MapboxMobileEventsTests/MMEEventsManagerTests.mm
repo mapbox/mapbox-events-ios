@@ -342,6 +342,28 @@ describe(@"MMEEventsManager", ^{
                             });
                         });
                         
+                        context(@"when no additional events are received but the time threshold is reached", ^{
+                            __block MMEEvent *telemetryMetricsEvent;
+                            beforeEach(^{
+                                telemetryMetricsEvent = [MMEEvent telemetryMetricsEventWithDateString:@"anicedate" attributes:@{}];
+                                
+                                spy_on([MMEMetricsManager sharedManager]);
+                                [MMEMetricsManager sharedManager] stub_method(@selector(generateTelemetryMetricsEvent)).and_return(telemetryMetricsEvent);
+                                
+                                MMETimerManagerFake *timerManager = [[MMETimerManagerFake alloc] init];
+                                spy_on(timerManager);
+                                timerManager.target = eventsManager;
+                                timerManager.selector = @selector(sendTelemetryMetricsEvent);
+                                [MMEEventsManager sharedManager].timerManager = timerManager;
+                                [timerManager triggerTimer];
+                            });
+                            
+                            it(@"should attempt to post telemetryMetrics event", ^{
+                                eventsManager.apiClient should have_received(@selector(postEvents:completionHandler:)).with(@[telemetryMetricsEvent]).and_with(Arguments::anything);
+                            });
+                            
+                        });
+                        
                         context(@"when no additional location events are received but the time threshold is reached", ^{
                             beforeEach(^{
                                 MMETimerManagerFake *timerManager = [[MMETimerManagerFake alloc] init];
