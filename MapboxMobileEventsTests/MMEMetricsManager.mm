@@ -169,8 +169,6 @@ describe(@"MMEMetricsManager", ^{
             }
             
             it(@"should have totalBytes increase count again", ^{
-                [manager.metrics computeTransferredBytes];
-                
                 manager.metrics.totalBytesSent should be_greater_than(0);
                 manager.metrics.totalBytesReceived should be_greater_than(0);
             });
@@ -194,8 +192,6 @@ describe(@"MMEMetricsManager", ^{
                 }
                 
                 it(@"should have totalBytesSent increase count again", ^{
-                    [manager.metrics computeTransferredBytes];
-                    
                     manager.metrics.totalBytesSent should be_greater_than(400);
                     manager.metrics.totalBytesReceived should be_greater_than(400);
                 });

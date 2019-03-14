@@ -8,10 +8,8 @@
         _failedRequestsDict = [[NSMutableDictionary alloc] init];
         _eventCountPerType = [[NSMutableDictionary alloc] init];
         _date = [NSDate date];
-        _totalBytesSent = 0;
         _cellBytesSent = 0;
         _wifiBytesSent = 0;
-        _totalBytesReceived = 0;
         _cellBytesReceived = 0;
         _wifiBytesReceived = 0;
         _eventCountFailed = 0;
@@ -25,9 +23,7 @@
     return self;
 }
 
-- (void)computeTransferredBytes {
-    _totalBytesSent = _cellBytesSent + _wifiBytesSent;
-    _totalBytesReceived = _cellBytesReceived + _wifiBytesReceived;
-}
+- (NSUInteger) totalBytesSent { return _wifiBytesSent + _cellBytesSent; }
+- (NSUInteger) totalBytesReceived { return _wifiBytesReceived + _cellBytesReceived; }
 
 @end

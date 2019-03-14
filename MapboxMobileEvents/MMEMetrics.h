@@ -25,8 +25,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) NSMutableDictionary *eventCountPerType;
 @property (nonatomic) NSMutableDictionary *failedRequestsDict;
 
-- (void)computeTransferredBytes;
-
 @end
 
 NS_ASSUME_NONNULL_END

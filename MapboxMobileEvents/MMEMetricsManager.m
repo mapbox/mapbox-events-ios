@@ -143,7 +143,6 @@
 - (NSDictionary *)attributes {
     NSMutableDictionary *attributes = [[NSMutableDictionary alloc] init];
     
-    [self.metrics computeTransferredBytes];
     if (self.metrics.date) {
         [self formatUTCDate:self.metrics.date];
         attributes[MMEEventDateUTC] = self.metrics.dateUTCString;
