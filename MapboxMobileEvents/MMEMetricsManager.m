@@ -49,18 +49,18 @@
     }
 }
 
-- (void)updateMetricsFromEvents:(nullable NSArray *)events request:(nullable NSURLRequest *)request error:(nullable NSError *)error {
+- (void)updateMetricsFromEventCount:(NSUInteger)eventCount request:(nullable NSURLRequest *)request error:(nullable NSError *)error {
     if (request.HTTPBody) {
-        [self updateTransferredData:request.HTTPBody];
+        [self updateSentBytes:request.HTTPBody.length];
     }
     
     if (request == nil && error == nil) {
-        [self updateEventsFailedCountFromEvents:events];
+        [self updateEventsFailedCount:eventCount];
     } else if (error == nil) {
         //successful request -- the events for this are counted elsewhere
         self.metrics.requests++;
     } else {
-        [self updateEventsFailedCountFromEvents:events];
+        [self updateEventsFailedCount:eventCount];
         
         NSHTTPURLResponse *response = (NSHTTPURLResponse *)[error.userInfo objectForKey:MMEResponseKey];
         NSString *urlString = response.URL.absoluteString;
@@ -89,29 +89,23 @@
     }
 }
 
-- (void)updateEventsFailedCountFromEvents:(NSArray *)events {
-    if (events) {
-        self.metrics.eventCountFailed += (int)events.count;
+- (void)updateEventsFailedCount:(NSUInteger)eventCount {
+    self.metrics.eventCountFailed += eventCount;
+}
+
+- (void)updateSentBytes:(NSUInteger)bytes {
+    if ([[MMEReachability reachabilityForLocalWiFi] isReachableViaWiFi]) {
+        self.metrics.wifiBytesSent += bytes;
+    } else {
+        self.metrics.cellBytesSent += bytes;
     }
 }
 
-- (void)updateTransferredData:(NSData *)data {
-    self.metrics.totalDataTransfer += data.length;
-    
+- (void)updateReceivedBytes:(NSUInteger)bytes {
     if ([[MMEReachability reachabilityForLocalWiFi] isReachableViaWiFi]) {
-        self.metrics.wifiDataTransfer += data.length;
+        self.metrics.wifiBytesReceived += bytes;
     } else {
-        self.metrics.cellDataTransfer += data.length;
-    }
-}
-
-- (void)updateReceivedData:(NSData *)data {
-    self.metrics.totalDataTransfer += data.length;
-    
-    if ([[MMEReachability reachabilityForLocalWiFi] isReachableViaWiFi]) {
-        self.metrics.wifiDataTransfer += data.length;
-    } else {
-        self.metrics.cellDataTransfer += data.length;
+        self.metrics.cellBytesReceived += bytes;
     }
 }
 
@@ -148,6 +142,8 @@
 
 - (NSDictionary *)attributes {
     NSMutableDictionary *attributes = [[NSMutableDictionary alloc] init];
+    
+    [self.metrics computeTransferredBytes];
     if (self.metrics.date) {
         [self formatUTCDate:self.metrics.date];
         attributes[MMEEventDateUTC] = self.metrics.dateUTCString;
@@ -155,9 +151,12 @@
     attributes[MMEEventKeyFailedRequests] = [NSString stringWithFormat:@"%@",self.metrics.failedRequestsDict];
     attributes[MMEEventEventCountPerType] = [NSString stringWithFormat:@"%@",self.metrics.eventCountPerType];
     attributes[MMEEventConfigResponse] = [NSString stringWithFormat:@"%@",self.metrics.configResponseDict];
-    attributes[MMEEventTotalDataTransfer] = @(self.metrics.totalDataTransfer);
-    attributes[MMEEventCellDataTransfer] = @(self.metrics.cellDataTransfer);
-    attributes[MMEEventWiFiDataTransfer] = @(self.metrics.wifiDataTransfer);
+    attributes[MMEEventTotalDataTransfer] = @(self.metrics.totalBytesSent);
+    attributes[MMEEventCellDataTransfer] = @(self.metrics.cellBytesSent);
+    attributes[MMEEventWiFiDataTransfer] = @(self.metrics.wifiBytesSent);
+    attributes[MMEEventTotalDataReceived] = @(self.metrics.totalBytesReceived);
+    attributes[MMEEventCellDataReceived] = @(self.metrics.cellBytesReceived);
+    attributes[MMEEventWiFiDataReceived] = @(self.metrics.wifiBytesReceived);
     attributes[MMEEventEventCountFailed] = @(self.metrics.eventCountFailed);
     attributes[MMEEventEventCountTotal] = @(self.metrics.eventCountTotal);
     attributes[MMEEventEventCountMax] = @(self.metrics.eventCountMax);
