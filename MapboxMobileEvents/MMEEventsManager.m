@@ -175,7 +175,6 @@
                                                  MMEEventKeyLocalDebugDescription: @"Initiated background task",
                                                  @"Identifier": @(_backgroundTaskIdentifier)}];
             [self flush];
-            [self sendTelemetryMetricsEvent];
             [self resetEventQueuing];
         }
         [self pauseMetricsCollection];
@@ -187,13 +186,14 @@
         [self resumeMetricsCollection];
     } else if (!self.paused && ![self isEnabled]) {
         [self flush];
-        [self sendTelemetryMetricsEvent];
         [self resetEventQueuing];
         [self pauseMetricsCollection];
     }
 }
 
 - (void)flush {
+    [self sendTelemetryMetricsEvent];
+    
     if (self.paused) {
         [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeFlush,
                                              MMEEventKeyLocalDebugDescription: @"Aborting flushing of event queue because collection is paused."}];
@@ -495,7 +495,6 @@
     
     if (self.eventQueue.count >= self.configuration.eventFlushCountThreshold) {
         [self flush];
-        [self sendTelemetryMetricsEvent];
         [self resetEventQueuing];
     }
     
