@@ -75,8 +75,8 @@
 #define MMEMetricsManager __NS_SYMBOL(MMEMetricsManager)
 #endif
 
-#ifndef MMENSDateWrapper
-#define MMENSDateWrapper __NS_SYMBOL(MMENSDateWrapper)
+#ifndef MMEDate
+#define MMEDate __NS_SYMBOL(MMEDate)
 #endif
 
 #ifndef MMENSURLSessionWrapper

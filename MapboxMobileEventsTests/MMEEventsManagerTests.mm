@@ -3,7 +3,7 @@
 #import "MMEConstants.h"
 #import "MMEUniqueIdentifier.h"
 #import "MMEEventsConfiguration.h"
-#import "MMENSDateWrapper.h"
+#import "MMEDate.h"
 #import "MMELocationManager.h"
 #import "MMEAPIClient.h"
 #import "MMETimerManager.h"
@@ -33,7 +33,6 @@ using namespace Cedar::Doubles::Arguments;
 @property (nonatomic) MMETimerManager *timerManager;
 @property (nonatomic) MMEDispatchManager *dispatchManager;
 @property (nonatomic) NSDate *nextTurnstileSendDate;
-@property (nonatomic) MMENSDateWrapper *dateWrapper;
 @property (nonatomic) id<MMEUIApplicationWrapper> application;
 @property (nonatomic) UIBackgroundTaskIdentifier backgroundTaskIdentifier;
 
@@ -63,12 +62,10 @@ SPEC_BEGIN(MMEEventsManagerSpec)
 describe(@"MMEEventsManager", ^{
     
     __block MMEEventsManager *eventsManager;
-    __block MMENSDateWrapper *dateWrapper;
     __block MMEEventsConfiguration *configuration;
     __block MMEDispatchManagerFake *dispatchManager;
 
     beforeEach(^{
-        dateWrapper = [[MMENSDateWrapper alloc] init];
         dispatchManager = [[MMEDispatchManagerFake alloc] init];
         eventsManager = [[MMEEventsManager alloc] init];
 
@@ -324,7 +321,7 @@ describe(@"MMEEventsManager", ^{
                             
                             it(@"tells the api client to post events with the location", ^{
                                 CLLocation *location = locations.firstObject;
-                                MMEMapboxEventAttributes *eventAttributes = @{MMEEventKeyCreated: [dateWrapper formattedDateStringForDate:[location timestamp]],
+                                MMEMapboxEventAttributes *eventAttributes = @{MMEEventKeyCreated: [MMEDate.iso8601DateFormatter stringFromDate:[location timestamp]],
                                                                               MMEEventKeyLatitude: @([location mme_latitudeRoundedWithPrecision:7]),
                                                                               MMEEventKeyLongitude: @([location mme_longitudeRoundedWithPrecision:7]),
                                                                               MMEEventKeyAltitude: @([location mme_roundedAltitude]),
@@ -357,8 +354,7 @@ describe(@"MMEEventsManager", ^{
                             
                             it(@"tells the api client to post events with the location", ^{
                                 CLLocation *location = locations.firstObject;
-                                MMENSDateWrapper *dateWrapper = [[MMENSDateWrapper alloc] init];
-                                MMEMapboxEventAttributes *eventAttributes = @{MMEEventKeyCreated: [dateWrapper formattedDateStringForDate:[location timestamp]],
+                                MMEMapboxEventAttributes *eventAttributes = @{MMEEventKeyCreated: [MMEDate.iso8601DateFormatter stringFromDate:[location timestamp]],
                                                                               MMEEventKeyLatitude: @([location mme_latitudeRoundedWithPrecision:7]),
                                                                               MMEEventKeyLongitude: @([location mme_longitudeRoundedWithPrecision:7]),
                                                                               MMEEventKeyAltitude: @([location mme_roundedAltitude]),
@@ -665,7 +661,7 @@ describe(@"MMEEventsManager", ^{
                 
                 it(@"tells its api client to post events", ^{
                     NSDictionary *turnstileEventAttributes = @{MMEEventKeyEvent: MMEEventTypeAppUserTurnstile,
-                                                               MMEEventKeyCreated: [dateWrapper formattedDateStringForDate:[dateWrapper date]],
+                                                               MMEEventKeyCreated: [MMEDate.iso8601DateFormatter stringFromDate:[NSDate date]],
                                                                MMEEventKeyVendorID: eventsManager.commonEventData.vendorId,
                                                                MMEEventKeyDevice: eventsManager.commonEventData.model,
                                                                MMEEventKeyOperatingSystem: eventsManager.commonEventData.iOSVersion,
@@ -755,8 +751,7 @@ describe(@"MMEEventsManager", ^{
             
             context(@"when the current time is before the next telemetryMetrics send date", ^{
                 beforeEach(^{
-                    NSDate *date = [NSDate dateWithTimeIntervalSince1970:500];
-                    [MMEMetricsManager sharedManager].metrics stub_method(@selector(date)).and_return(date);
+                    [MMEMetricsManager sharedManager].metrics stub_method(@selector(recordingStarted)).and_return(NSDate.distantFuture);
                     
                     [eventsManager sendTelemetryMetricsEvent];
                 });
@@ -768,8 +763,7 @@ describe(@"MMEEventsManager", ^{
             
             context(@"when the current time is after the next telemetryMetrics send date", ^{
                 beforeEach(^{
-                    NSDate *date = [dateWrapper startOfTomorrowFromDate:[NSDate date]];
-                    [MMEMetricsManager sharedManager].metrics stub_method(@selector(date)).and_return(date);
+                    [MMEMetricsManager sharedManager].metrics stub_method(@selector(recordingStarted)).and_return(NSDate.distantPast);
                     
                     [eventsManager sendTelemetryMetricsEvent];
                 });
@@ -788,9 +782,9 @@ describe(@"MMEEventsManager", ^{
         
         beforeEach(^{
             dateString = @"A nice date";
-            spy_on(dateWrapper);
-            dateWrapper stub_method(@selector(formattedDateStringForDate:)).and_return(dateString);
-            eventsManager.dateWrapper = dateWrapper;
+            NSDateFormatter *dateFormatter = MMEDate.iso8601DateFormatter;
+            spy_on(dateFormatter);
+            dateFormatter stub_method(@selector(stringFromDate:)).and_return(dateString);
             
             commonEventData = [[MMECommonEventData alloc] init];
             commonEventData.vendorId = @"a nice vendor id";
@@ -917,9 +911,9 @@ describe(@"MMEEventsManager", ^{
         
         beforeEach(^{
             dateString = @"A nice date";
-            spy_on(dateWrapper);
-            dateWrapper stub_method(@selector(formattedDateStringForDate:)).and_return(dateString);
-            eventsManager.dateWrapper = dateWrapper;
+            NSDateFormatter *dateFormatter = MMEDate.iso8601DateFormatter;
+            spy_on(dateFormatter);
+            dateFormatter stub_method(@selector(stringFromDate:)).and_return(dateString);
             
             commonEventData = [[MMECommonEventData alloc] init];
             commonEventData.vendorId = @"a nice vendor id";
@@ -1017,18 +1011,18 @@ describe(@"MMEEventsManager", ^{
             
             it(@"enqueues the correct event", ^{
                 CLLocation *location = [[CLLocation alloc] initWithLatitude:visit.coordinate.latitude longitude:visit.coordinate.longitude];
-                NSDictionary *attributes = @{MMEEventKeyCreated: [eventsManager.dateWrapper formattedDateStringForDate:[location timestamp]],
+                NSDictionary *attributes = @{MMEEventKeyCreated: [MMEDate.iso8601DateFormatter stringFromDate:[location timestamp]],
                                              MMEEventKeyLatitude: @([location mme_latitudeRoundedWithPrecision:7]),
                                              MMEEventKeyLongitude: @([location mme_longitudeRoundedWithPrecision:7]),
                                              MMEEventHorizontalAccuracy: @(visit.horizontalAccuracy),
-                                             MMEEventKeyArrivalDate: [eventsManager.dateWrapper formattedDateStringForDate:visit.arrivalDate],
-                                             MMEEventKeyDepartureDate: [eventsManager.dateWrapper formattedDateStringForDate:visit.departureDate]};
+                                             MMEEventKeyArrivalDate: [MMEDate.iso8601DateFormatter stringFromDate:visit.arrivalDate],
+                                             MMEEventKeyDepartureDate: [MMEDate.iso8601DateFormatter stringFromDate:visit.departureDate]};
                 MMEEvent *expectedVisitEvent = [MMEEvent visitEventWithAttributes:attributes];
                 MMEEvent *enqueueEvent = eventsManager.eventQueue.firstObject;
                 
                 NSMutableDictionary *tempDict = [[NSMutableDictionary alloc] init];
                 [tempDict addEntriesFromDictionary:enqueueEvent.attributes];
-                [tempDict setObject:[eventsManager.dateWrapper formattedDateStringForDate:[location timestamp]] forKey:@"created"];
+                [tempDict setObject:[MMEDate.iso8601DateFormatter stringFromDate:[location timestamp]] forKey:@"created"];
                 enqueueEvent.attributes = tempDict;
                 
                 enqueueEvent should equal(expectedVisitEvent);

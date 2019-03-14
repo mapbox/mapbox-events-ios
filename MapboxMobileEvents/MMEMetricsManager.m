@@ -1,13 +1,12 @@
 #import "MMEMetricsManager.h"
 #import "MMEReachability.h"
 #import "MMEConstants.h"
-#import "MMENSDateWrapper.h"
+#import "MMEDate.h"
 #import "MMEEventLogger.h"
 
 @interface MMEMetricsManager ()
 
 @property (nonatomic) MMEMetrics *metrics;
-@property (nonatomic) MMENSDateWrapper *dateWrapper;
 
 @end
 
@@ -27,8 +26,7 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        _metrics = [[MMEMetrics alloc] init];
-        _dateWrapper = [[MMENSDateWrapper alloc] init];
+        [self resetMetrics];
     }
     return self;
 }
@@ -126,26 +124,17 @@
     }
 }
 
-- (void)formatUTCDate:(NSDate *)date {
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    NSTimeZone *utcTimeZone = [NSTimeZone timeZoneWithName:@"UTC"];
-    [dateFormatter setTimeZone:utcTimeZone];
-    [dateFormatter setDateFormat:@"yyyy-MM-dd"];
-    self.metrics.dateUTCString = [dateFormatter stringFromDate:date];
-}
 
 - (void)resetMetrics {
-    self.metrics = [[MMEMetrics alloc] init];
+    self.metrics = [MMEMetrics new];
 }
 
 #pragma mark -- Event creation
 
 - (NSDictionary *)attributes {
-    NSMutableDictionary *attributes = [[NSMutableDictionary alloc] init];
-    
-    if (self.metrics.date) {
-        [self formatUTCDate:self.metrics.date];
-        attributes[MMEEventDateUTC] = self.metrics.dateUTCString;
+    NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
+    if (self.metrics.recordingStarted) {
+        attributes[MMEEventDateUTC] = [MMEDate.iso8601DateOnlyFormatter stringFromDate:self.metrics.recordingStarted];
     }
     attributes[MMEEventKeyFailedRequests] = [NSString stringWithFormat:@"%@",self.metrics.failedRequestsDict];
     attributes[MMEEventEventCountPerType] = [NSString stringWithFormat:@"%@",self.metrics.eventCountPerType];
@@ -171,14 +160,15 @@
 }
 
 - (MMEEvent *)generateTelemetryMetricsEvent {
-    if (self.metrics.date && [self.metrics.date timeIntervalSinceDate:[self.dateWrapper startOfTomorrowFromDate:self.metrics.date]] < 0) {
-        NSString *debugDescription = [NSString stringWithFormat:@"TelemetryMetrics event isn't ready to be sent; waiting until %@ to send", [self.dateWrapper startOfTomorrowFromDate:self.metrics.date]];
+    NSDate *zeroHour = [self.metrics.recordingStarted mme_startOfTomorrow];
+    if (zeroHour.timeIntervalSinceNow > 0) {
+        NSString *debugDescription = [NSString stringWithFormat:@"TelemetryMetrics event isn't ready to be sent; waiting until %@ to send", zeroHour];
         [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTelemetryMetrics,
                                              MMEEventKeyLocalDebugDescription: debugDescription}];
         return nil;
     }
     
-    MMEEvent *telemetryMetrics = [MMEEvent telemetryMetricsEventWithDateString:[self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]] attributes:[self attributes]];
+    MMEEvent *telemetryMetrics = [MMEEvent telemetryMetricsEventWithDateString:[MMEDate.iso8601DateFormatter stringFromDate:zeroHour] attributes:[self attributes]];
     [MMEEventLogger.sharedLogger logEvent:telemetryMetrics];
     
     return telemetryMetrics;
@@ -186,7 +176,7 @@
 
 - (void)pushDebugEventWithAttributes:(NSDictionary *)attributes {
     NSMutableDictionary *combinedAttributes = [NSMutableDictionary dictionaryWithDictionary:attributes];
-    [combinedAttributes setObject:[self.dateWrapper formattedDateStringForDate:[self.dateWrapper date]] forKey:@"created"];
+    [combinedAttributes setObject:[MMEDate.iso8601DateFormatter stringFromDate:[NSDate date]] forKey:@"created"];
     MMEEvent *debugEvent = [MMEEvent debugEventWithAttributes:attributes];
     [[MMEEventLogger sharedLogger] logEvent:debugEvent];
 }

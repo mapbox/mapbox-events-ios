@@ -2,16 +2,14 @@
 #import "MMEEvent.h"
 #import "MMEEventLogReportViewController.h"
 #import "MMEUINavigation.h"
-#import "MMENSDateWrapper.h"
+#import "MMEDate.h"
 #import <WebKit/WebKit.h>
 
 @interface MMEEventLogger()
 
 @property (nonatomic, copy) NSString *dateForDebugLogFile;
 @property (nonatomic) dispatch_queue_t debugLogSerialQueue;
-@property (nonatomic) MMENSDateWrapper *dateWrapper;
 @property (nonatomic) NSDate *nextLogFileDate;
-@property (nonatomic) NSDateFormatter *dateFormatter;
 @property (nonatomic, getter=isTimeForNewLogFile) BOOL timeForNewLogFile;
 
 @end
@@ -29,15 +27,25 @@
     return _sharedLogger;
 }
 
++ (NSDateFormatter *)logFileDateFormatter {
+    static NSDateFormatter *_logFileFormatter = nil;
+    if (!_logFileFormatter) {
+        _logFileFormatter = [[NSDateFormatter alloc] init];
+        [_logFileFormatter setDateFormat:@"yyyy'-'MM'-'dd"];
+        [_logFileFormatter setTimeZone:[NSTimeZone systemTimeZone]];
+    }
+
+    return _logFileFormatter;
+}
+
+#pragma mark -
+
 - (instancetype)init {
     self = [super init];
     if (self) {
-        self.dateWrapper = [[MMENSDateWrapper alloc] init];
-        self.dateFormatter = [[NSDateFormatter alloc] init];
-        [self.dateFormatter setDateFormat:@"yyyy'-'MM'-'dd"];
-        [self.dateFormatter setTimeZone:[NSTimeZone systemTimeZone]];
-        self.dateForDebugLogFile = [self.dateFormatter stringFromDate:[self.dateWrapper date]];
-        self.nextLogFileDate = [self.dateWrapper startOfTomorrowFromDate:[self.dateWrapper date]];
+        MMEDate* now = [MMEDate date];
+        self.dateForDebugLogFile = [MMEEventLogger.logFileDateFormatter stringFromDate:now];
+        self.nextLogFileDate = [now mme_startOfTomorrow];
     }
     return self;
 }
@@ -53,17 +61,19 @@
 #pragma mark - Write to Local File
 
 - (BOOL)timeForNewLogFile {
-    return [[self.dateWrapper date] timeIntervalSinceDate:self.nextLogFileDate] > 0;
+    return [[NSDate date] timeIntervalSinceDate:self.nextLogFileDate] > 0;
 }
 
 - (void)writeEventToLocalDebugLog:(MMEEvent *)event {
+    MMEDate* now = [MMEDate date];
+
     if (!self.isEnabled) {
         return;
     }
     
     if (self.timeForNewLogFile) {
-        self.dateForDebugLogFile = [self.dateFormatter stringFromDate:[self.dateWrapper date]];
-        self.nextLogFileDate = [self.dateWrapper startOfTomorrowFromDate:[self.dateWrapper date]];
+        self.dateForDebugLogFile = [MMEEventLogger.logFileDateFormatter stringFromDate:now];
+        self.nextLogFileDate = [now mme_startOfTomorrow];
     }
     
     if (!self.debugLogSerialQueue) {
@@ -128,16 +138,13 @@
     NSMutableArray *timelineDataArray = [[NSMutableArray alloc] init];
     NSArray *JSON = [NSJSONSerialization JSONObjectWithData:[contents dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
     
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    dateFormatter.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSSSZ";
-    
     if (JSON) {
         for (NSDictionary *dictionary in JSON) {
             NSDictionary *eventDict = [dictionary valueForKeyPath:@"debug"];
             
             if (eventDict) {
                 if ([eventDict valueForKey:@"created"]) {
-                    NSDate *date = [dateFormatter dateFromString:[eventDict valueForKey:@"created"]];
+                    NSDate *date = [MMEDate.iso8601DateFormatter dateFromString:[eventDict valueForKey:@"created"]];
                     NSDateComponents *components = [[NSCalendar currentCalendar] components:
                                                     NSCalendarUnitYear |
                                                     NSCalendarUnitMonth |
