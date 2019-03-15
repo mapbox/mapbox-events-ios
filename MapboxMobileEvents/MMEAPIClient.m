@@ -79,6 +79,8 @@ int const kMMEMaxRequestCount = 1000;
         NSURLRequest *request = [self requestForEvents:batch];
         if (request) {
             [self.sessionWrapper processRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+                [self.metricsManager updateReceivedBytes:data.length];
+                
                 NSError *statusError = nil;
                 if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
                     NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
@@ -86,14 +88,16 @@ int const kMMEMaxRequestCount = 1000;
                 } else {
                     statusError = [self unexpectedResponseErrorfromRequest:request andResponse:response];
                 }
+                error = error ?: statusError;
+                
+                [self.metricsManager updateMetricsFromEventCount:events.count request:request error:error];
+                
                 if (completionHandler) {
-                    error = error ?: statusError;
                     completionHandler(error);
-
-                    [self.metricsManager updateMetricsFromEvents:events request:request error:error];
                 }
             }];
         }
+        [self.metricsManager updateMetricsFromEventCount:events.count request:nil error:nil];
     }
 }
 
@@ -107,6 +111,8 @@ int const kMMEMaxRequestCount = 1000;
     NSData *binaryData = [self createBodyWithBoundary:boundary metadata:metadata filePaths:filePaths];
     NSURLRequest *request = [self requestForBinary:binaryData boundary:boundary];
     [self.sessionWrapper processRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        [self.metricsManager updateReceivedBytes:data.length];
+        
         NSError *statusError = nil;
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
         statusError = [self statusErrorFromRequest:request andHTTPResponse:httpResponse];
@@ -114,7 +120,7 @@ int const kMMEMaxRequestCount = 1000;
             error = error ?: statusError;
             completionHandler(error);
             
-            [self.metricsManager updateMetricsFromEvents:filePaths request:request error:error];
+            [self.metricsManager updateMetricsFromEventCount:filePaths.count request:request error:error];
         }
     }];
 }
@@ -123,6 +129,8 @@ int const kMMEMaxRequestCount = 1000;
     NSURLRequest *request = [self requestForConfiguration];
     
     [self.sessionWrapper processRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        [self.metricsManager updateReceivedBytes:data.length];
+        
         NSError *statusError = nil;
         if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
             NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
@@ -134,7 +142,7 @@ int const kMMEMaxRequestCount = 1000;
             error = error ?: statusError;
             completionHandler(error, data);
             
-            [self.metricsManager updateMetricsFromEvents:nil request:request error:error];
+            [self.metricsManager updateMetricsFromEventCount:0 request:request error:error];
         }
     }];
 }

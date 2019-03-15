@@ -8,9 +8,12 @@ NS_ASSUME_NONNULL_BEGIN
 @interface MMEMetrics : NSObject
 
 @property (nonatomic) NSUInteger requests;
-@property (nonatomic) NSUInteger totalDataTransfer;
-@property (nonatomic) NSUInteger cellDataTransfer;
-@property (nonatomic) NSUInteger wifiDataTransfer;
+@property (nonatomic, readonly) NSUInteger totalBytesSent;
+@property (nonatomic) NSUInteger cellBytesSent;
+@property (nonatomic) NSUInteger wifiBytesSent;
+@property (nonatomic, readonly) NSUInteger totalBytesReceived;
+@property (nonatomic) NSUInteger cellBytesReceived;
+@property (nonatomic) NSUInteger wifiBytesReceived;
 @property (nonatomic) NSUInteger appWakeups;
 @property (nonatomic) NSUInteger eventCountFailed;
 @property (nonatomic) NSUInteger eventCountTotal;

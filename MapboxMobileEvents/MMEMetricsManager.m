@@ -47,43 +47,63 @@
     }
 }
 
-- (void)updateMetricsFromEvents:(nullable NSArray *)events request:(NSURLRequest *)request error:(nullable NSError *)error {
-    if (request.HTTPBody && error == nil) {
-        [self updateMetricsFromData:request.HTTPBody];
+- (void)updateMetricsFromEventCount:(NSUInteger)eventCount request:(nullable NSURLRequest *)request error:(nullable NSError *)error {
+    if (request.HTTPBody) {
+        [self updateSentBytes:request.HTTPBody.length];
     }
     
-    if (error == nil) {
+    if (request == nil && error == nil) {
+        [self updateEventsFailedCount:eventCount];
+    } else if (error == nil) {
+        //successful request -- the events for this are counted elsewhere
         self.metrics.requests++;
     } else {
-        if (events) {
-            self.metrics.eventCountFailed += (int)events.count;
+        [self updateEventsFailedCount:eventCount];
+        
+        NSHTTPURLResponse *response = (NSHTTPURLResponse *)[error.userInfo objectForKey:MMEResponseKey];
+        NSString *urlString = response.URL.absoluteString;
+        NSNumber *statusCode = @(response.statusCode);
+        NSString *statusCodeKey = [statusCode stringValue];
+        
+        if (self.metrics.failedRequestsDict == nil) {
+            self.metrics.failedRequestsDict = [[NSMutableDictionary alloc] init];
         }
         
-        if ([error.userInfo objectForKey:MMEResponseKey]) {
-            NSHTTPURLResponse *response = (NSHTTPURLResponse *)[error.userInfo objectForKey:MMEResponseKey];
-            NSString *urlString = response.URL.absoluteString;
-            NSNumber *statusCode = @(response.statusCode);
-            NSString *statusCodeString = [statusCode stringValue];
-            NSString *failedRequestKey = [NSString stringWithFormat:@"%@, %@",urlString, statusCodeString];
-            
-            if (self.metrics.failedRequestsDict == nil) {
-                self.metrics.failedRequestsDict = [[NSMutableDictionary alloc] init];
-            }
-        
-            NSNumber *failedCount = [self.metrics.failedRequestsDict objectForKey:failedRequestKey];
-            failedCount = [NSNumber numberWithInteger:[failedCount integerValue] + 1];
-            [self.metrics.failedRequestsDict setObject:failedCount forKey:failedRequestKey];
+        if (urlString && [self.metrics.failedRequestsDict objectForKey:MMEEventKeyHeader] == nil) {
+            [self.metrics.failedRequestsDict setObject:urlString forKey:MMEEventKeyHeader];
         }
+    
+        if ([self.metrics.failedRequestsDict objectForKey:MMEEventKeyFailedRequests] == nil) {
+            [self.metrics.failedRequestsDict setObject:[NSMutableDictionary new] forKey:MMEEventKeyFailedRequests];
+        }
+        
+        NSMutableDictionary *failedRequests = [self.metrics.failedRequestsDict objectForKey:MMEEventKeyFailedRequests];
+        
+        NSNumber *failedCount = [failedRequests objectForKey:statusCodeKey];
+        failedCount = [NSNumber numberWithInteger:[failedCount integerValue] + 1];
+        [failedRequests setObject:failedCount forKey:statusCodeKey];
+        
+        [self.metrics.failedRequestsDict setObject:failedRequests forKey:MMEEventKeyFailedRequests];
     }
 }
 
-- (void)updateMetricsFromData:(NSData *)data {
-    self.metrics.totalDataTransfer += data.length;
-    
+- (void)updateEventsFailedCount:(NSUInteger)eventCount {
+    self.metrics.eventCountFailed += eventCount;
+}
+
+- (void)updateSentBytes:(NSUInteger)bytes {
     if ([[MMEReachability reachabilityForLocalWiFi] isReachableViaWiFi]) {
-        self.metrics.wifiDataTransfer += data.length;
+        self.metrics.wifiBytesSent += bytes;
     } else {
-        self.metrics.cellDataTransfer += data.length;
+        self.metrics.cellBytesSent += bytes;
+    }
+}
+
+- (void)updateReceivedBytes:(NSUInteger)bytes {
+    if ([[MMEReachability reachabilityForLocalWiFi] isReachableViaWiFi]) {
+        self.metrics.wifiBytesReceived += bytes;
+    } else {
+        self.metrics.cellBytesReceived += bytes;
     }
 }
 
@@ -116,12 +136,15 @@
     if (self.metrics.recordingStarted) {
         attributes[MMEEventDateUTC] = [MMEDate.iso8601DateOnlyFormatter stringFromDate:self.metrics.recordingStarted];
     }
-    attributes[MMEEventFailedRequests] = [NSString stringWithFormat:@"%@",self.metrics.failedRequestsDict];
+    attributes[MMEEventKeyFailedRequests] = [NSString stringWithFormat:@"%@",self.metrics.failedRequestsDict];
     attributes[MMEEventEventCountPerType] = [NSString stringWithFormat:@"%@",self.metrics.eventCountPerType];
     attributes[MMEEventConfigResponse] = [NSString stringWithFormat:@"%@",self.metrics.configResponseDict];
-    attributes[MMEEventTotalDataTransfer] = @(self.metrics.totalDataTransfer);
-    attributes[MMEEventCellDataTransfer] = @(self.metrics.cellDataTransfer);
-    attributes[MMEEventWiFiDataTransfer] = @(self.metrics.wifiDataTransfer);
+    attributes[MMEEventTotalDataTransfer] = @(self.metrics.totalBytesSent);
+    attributes[MMEEventCellDataTransfer] = @(self.metrics.cellBytesSent);
+    attributes[MMEEventWiFiDataTransfer] = @(self.metrics.wifiBytesSent);
+    attributes[MMEEventTotalDataReceived] = @(self.metrics.totalBytesReceived);
+    attributes[MMEEventCellDataReceived] = @(self.metrics.cellBytesReceived);
+    attributes[MMEEventWiFiDataReceived] = @(self.metrics.wifiBytesReceived);
     attributes[MMEEventEventCountFailed] = @(self.metrics.eventCountFailed);
     attributes[MMEEventEventCountTotal] = @(self.metrics.eventCountTotal);
     attributes[MMEEventEventCountMax] = @(self.metrics.eventCountMax);

@@ -83,22 +83,28 @@ describe(@"MMEMetricsManager", ^{
                 NSDictionary *userInfoFake = [NSDictionary dictionaryWithObject:response forKey:MMEResponseKey];
                 NSError *errorFake = [NSError errorWithDomain:@"test" code:42 userInfo:userInfoFake];
                 
-                [manager updateMetricsFromEvents:eventQueue request:requestFake error:errorFake];
-                [manager updateMetricsFromEvents:eventQueue request:requestFake error:errorFake];
+                [manager updateMetricsFromEventCount:eventQueue.count request:requestFake error:errorFake];
+                [manager updateMetricsFromEventCount:eventQueue.count request:requestFake error:errorFake];
                 
                 NSHTTPURLResponse *responseTwo = [[NSHTTPURLResponse alloc] initWithURL:[NSURL URLWithString:@"events.mapbox.com"] statusCode:500 HTTPVersion:nil headerFields:nil];
                 NSDictionary *userInfoFakeTwo = [NSDictionary dictionaryWithObject:responseTwo forKey:MMEResponseKey];
                 NSError *errorFakeTwo = [NSError errorWithDomain:@"test" code:42 userInfo:userInfoFakeTwo];
                 
-                [manager updateMetricsFromEvents:eventQueue request:requestFake error:errorFakeTwo];
+                [manager updateMetricsFromEventCount:eventQueue.count request:requestFake error:errorFakeTwo];
             });
             
             it(@"should have failedRequests 404 count increased", ^{
-                [manager.metrics.failedRequestsDict objectForKey:@"events.mapbox.com, 404"] should equal(@2);
+                NSDictionary *failedRequestsDict = [manager.metrics.failedRequestsDict objectForKey:MMEEventKeyFailedRequests];
+                [failedRequestsDict objectForKey:@"404"] should equal(@2);
             });
             
             it(@"should have failedRequests 500 count increased", ^{
-                [manager.metrics.failedRequestsDict objectForKey:@"events.mapbox.com, 500"] should equal(@1);
+                NSDictionary *failedRequestsDict = [manager.metrics.failedRequestsDict objectForKey:MMEEventKeyFailedRequests];
+                [failedRequestsDict objectForKey:@"500"] should equal(@1);
+            });
+            
+            it(@"should have header in dictionary", ^{
+                [manager.metrics.failedRequestsDict objectForKey:MMEEventKeyHeader] should_not be_nil;
             });
             
             it(@"should have all keys count increased", ^{
@@ -109,6 +115,10 @@ describe(@"MMEMetricsManager", ^{
                 manager.metrics.eventCountFailed should equal(6);
             });
             
+            it(@"should not have total count increase", ^{
+                manager.metrics.eventCountTotal should equal(0);
+            });
+            
             it(@"should have request count NOT increased", ^{
                 manager.metrics.requests should equal(0);
             });
@@ -116,7 +126,7 @@ describe(@"MMEMetricsManager", ^{
         
         context(@"when incrementing successful HTTP requests", ^{
             beforeEach(^{
-                [manager updateMetricsFromEvents:eventQueue request:requestFake error:nil];
+                [manager updateMetricsFromEventCount:eventQueue.count request:requestFake error:nil];
             });
             
             it(@"should have request count increased", ^{
@@ -148,41 +158,49 @@ describe(@"MMEMetricsManager", ^{
                 
                 uncompressedData = [NSJSONSerialization dataWithJSONObject:eventAttributes options:0 error:nil];
                 
-                [manager updateMetricsFromData:uncompressedData];
-            });
-            
-            it(@"should have totalDataTransfer increase count again", ^{
-                manager.metrics.totalDataTransfer should be_greater_than(0);
+                [manager updateSentBytes:uncompressedData.length];
+                [manager updateReceivedBytes:uncompressedData.length];
             });
             
             if ([[MMEReachability reachabilityForLocalWiFi] isReachableViaWiFi]) {
-                it(@"should have wifi data transfer increase count again", ^{
-                    manager.metrics.wifiDataTransfer should be_greater_than(0);
+                it(@"should have wifiBytesSent increase count again", ^{
+                    manager.metrics.wifiBytesSent should be_greater_than(0);
+                    manager.metrics.wifiBytesReceived should be_greater_than(0);
                 });
             } else {
-                it(@"should have cell data transfer increase count again", ^{
-                    manager.metrics.cellDataTransfer should be_greater_than(0);
+                it(@"should have cellBytesSent increase count again", ^{
+                    manager.metrics.cellBytesSent should be_greater_than(0);
+                    manager.metrics.cellBytesReceived should be_greater_than(0);
                 });
             }
             
+            it(@"should have totalBytes increase count again", ^{
+                manager.metrics.totalBytesSent should be_greater_than(0);
+                manager.metrics.totalBytesReceived should be_greater_than(0);
+            });
+            
             context(@"when incrementing more data transfer metrics", ^{
                 beforeEach(^{
-                    [manager updateMetricsFromData:uncompressedData];
-                });
-                
-                it(@"should have totalDataTransfer increase count again", ^{
-                    manager.metrics.totalDataTransfer should be_greater_than(300);
+                    [manager updateSentBytes:uncompressedData.length];
+                    [manager updateReceivedBytes:uncompressedData.length];
                 });
                 
                 if ([[MMEReachability reachabilityForLocalWiFi] isReachableViaWiFi]) {
-                    it(@"should have wifi data transfer increase count again", ^{
-                        manager.metrics.wifiDataTransfer should be_greater_than(300);
+                    it(@"should have wifiBytesSent increase count again", ^{
+                        manager.metrics.wifiBytesSent should be_greater_than(300);
+                        manager.metrics.wifiBytesReceived should be_greater_than(300);
                     });
                 } else {
-                    it(@"should have cell data transfer increase count again", ^{
-                        manager.metrics.cellDataTransfer should be_greater_than(300);
+                    it(@"should have cellBytesSent increase count again", ^{
+                        manager.metrics.cellBytesSent should be_greater_than(300);
+                        manager.metrics.cellBytesReceived should be_greater_than(300);
                     });
                 }
+                
+                it(@"should have totalBytesSent increase count again", ^{
+                    manager.metrics.totalBytesSent should be_greater_than(400);
+                    manager.metrics.totalBytesReceived should be_greater_than(400);
+                });
             });
         });
         context(@"when incrementing appWakeUp counter", ^{
