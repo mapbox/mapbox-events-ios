@@ -1,5 +1,6 @@
 #import <Cedar/Cedar.h>
 #import <Foundation/Foundation.h>
+#import "TrustKit.h"
 #import "MMEAPIClient.h"
 #import "MMEConstants.h"
 #import "MMEEvent.h"
@@ -25,21 +26,41 @@ using namespace Cedar::Doubles;
 
 @end
 
+@interface MMENSURLSessionWrapper (MMEAPIClientTests)
+
+@property (nonatomic) TrustKit *trustKit;
+
+@end
+
 SPEC_BEGIN(MMEAPIClientSpec)
 
 describe(@"MMEAPIClient", ^{
     
     __block MMEAPIClient *apiClient;
     __block NSURLSessionAuthChallengeDisposition receivedDisposition;
+    __block MMENSURLSessionWrapper *sessionWrapper;
+    __block TSKPinningValidator *pinningValidator;
+    __block NSURLSession *urlSession;
+    __block NSURLAuthenticationChallenge *challenge;
+    id<CedarDouble> delegateFake = fake_for(@protocol(NSURLAuthenticationChallengeSender));
     
     int64_t timeoutInNanoseconds = 1000000000;
     NSURLSessionAuthChallengeDisposition expectedDefaultDisposition = NSURLSessionAuthChallengePerformDefaultHandling;
-    NSURLSessionAuthChallengeDisposition expectedCancelDisposition = NSURLSessionAuthChallengeCancelAuthenticationChallenge;
     
     beforeEach(^{
         apiClient = [[MMEAPIClient alloc] initWithAccessToken:@"access-token"
                                                 userAgentBase:@"user-agent-base"
                                                hostSDKVersion:@"host-sdk-1"];
+        
+        sessionWrapper = (MMENSURLSessionWrapper *)apiClient.sessionWrapper;
+        pinningValidator = sessionWrapper.trustKit.pinningValidator;
+        spy_on(pinningValidator);
+        
+        NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
+        urlSession = [NSURLSession sessionWithConfiguration:sessionConfig delegate:sessionWrapper delegateQueue:nil];
+        
+        NSURLProtectionSpace *space = [[NSURLProtectionSpace alloc] initWithHost:@"hostname" port:0 protocol:nil realm:nil authenticationMethod:NSURLAuthenticationMethodServerTrust];
+        challenge = [[NSURLAuthenticationChallenge alloc] initWithProtectionSpace:space proposedCredential:nil previousFailureCount:0 failureResponse:nil error:nil sender:((DelegateTestClass *)delegateFake)];
     });
     
     it(@"has the correct type of session wrapper", ^{
@@ -52,26 +73,18 @@ describe(@"MMEAPIClient", ^{
     });
     
     describe(@"- URLSession:didReceiveChallenge:completionHandler:", ^{
-        context(@"when challenge is evaluated by TrustKit", ^{
-            __block bool isMainThread;
-            
+        __block bool isMainThread;
+        
+        context(@"when the pinning validator does not handle the challenge", ^{
             beforeEach(^{
+                
+                pinningValidator stub_method(@selector(handleChallenge:completionHandler:)).and_return(NO);
+                
                 dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-                
-                id<CedarDouble> delegateFake = fake_for(@protocol(NSURLAuthenticationChallengeSender));
-                
-                NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
-                MMENSURLSessionWrapper *sessionWrapper = [[MMENSURLSessionWrapper alloc] init];
-                
-                apiClient.sessionWrapper = sessionWrapper;
                 
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, timeoutInNanoseconds), dispatch_get_main_queue(), ^{
                     dispatch_semaphore_signal(semaphore);
                 });
-                
-                NSURLSession *urlSession = [NSURLSession sessionWithConfiguration:sessionConfig delegate:sessionWrapper delegateQueue:nil];
-                NSURLProtectionSpace *space = [[NSURLProtectionSpace alloc] initWithHost:@"hostname" port:0 protocol:nil realm:nil authenticationMethod:NSURLAuthenticationMethodServerTrust];
-                NSURLAuthenticationChallenge *challenge = [[NSURLAuthenticationChallenge alloc] initWithProtectionSpace:space proposedCredential:nil previousFailureCount:0 failureResponse:nil error:nil sender:((DelegateTestClass *)delegateFake)];
                 
                 [sessionWrapper URLSession:urlSession didReceiveChallenge:challenge completionHandler:^(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential * _Nullable credential) {
                     isMainThread = [NSThread isMainThread];
@@ -82,37 +95,31 @@ describe(@"MMEAPIClient", ^{
                 while (dispatch_semaphore_wait(semaphore, DISPATCH_TIME_NOW)) {
                     [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:10]];
                 }
+                
             });
             
             it(@"should be on main queue", ^{
                 isMainThread should be_truthy;
             });
             
-            it(@"should equal expected CancelAuthentication disposition", ^{
-                receivedDisposition should equal(expectedCancelDisposition);
+            it(@"should call the completion with the default disposition", ^{
+                receivedDisposition should equal(expectedDefaultDisposition);
             });
+            
         });
-    });
-    
-    describe(@"- URLSession:didReceiveChallenge:completionHandler:", ^{
         
-        context(@"when using a background thread and without a proper challenge", ^{
+        context(@"when using a background thread", ^{
             __block bool isMainThread;
             
             beforeEach(^{
+                
+                pinningValidator stub_method(@selector(handleChallenge:completionHandler:)).and_return(NO);
+                
                 dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-                
-                NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
-                MMENSURLSessionWrapper *sessionWrapper = [[MMENSURLSessionWrapper alloc] init];
-                
-                apiClient.sessionWrapper = sessionWrapper;
                 
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, timeoutInNanoseconds), dispatch_get_main_queue(), ^{
                     dispatch_semaphore_signal(semaphore);
                 });
-                
-                NSURLSession *urlSession = [NSURLSession sessionWithConfiguration:sessionConfig delegate:sessionWrapper delegateQueue:nil];
-                NSURLAuthenticationChallenge *challenge = [[NSURLAuthenticationChallenge alloc] init];
                 
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                     [sessionWrapper URLSession:urlSession didReceiveChallenge:challenge completionHandler:^(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential * _Nullable credential) {
@@ -125,49 +132,7 @@ describe(@"MMEAPIClient", ^{
                 while (dispatch_semaphore_wait(semaphore, DISPATCH_TIME_NOW)) {
                     [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:10]];
                 }
-            });
-            
-            it(@"should be main thread", ^{
-                isMainThread should be_truthy;
-            });
-            
-            it(@"should equal expected DefaultHandling disposition", ^{
-                receivedDisposition should equal(expectedDefaultDisposition);
-            });
-        });
-    });
-    
-    describe(@"- URLSession:didReceiveChallenge:completionHandler:", ^{
-        
-        context(@"when using the main thread and without a proper challenge", ^{
-            __block bool isMainThread;
-            
-            beforeEach(^{
-                dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-                
-                NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
-                MMENSURLSessionWrapper *sessionWrapper = [[MMENSURLSessionWrapper alloc] init];
-                
-                apiClient.sessionWrapper = sessionWrapper;
-                
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, timeoutInNanoseconds), dispatch_get_main_queue(), ^{
-                    dispatch_semaphore_signal(semaphore);
-                });
-                
-                NSURLSession *urlSession = [NSURLSession sessionWithConfiguration:sessionConfig delegate:sessionWrapper delegateQueue:nil];
-                NSURLAuthenticationChallenge *challenge = [[NSURLAuthenticationChallenge alloc] init];
-                
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [sessionWrapper URLSession:urlSession didReceiveChallenge:challenge completionHandler:^(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential * _Nullable credential) {
-                        isMainThread = [NSThread isMainThread];
-                        receivedDisposition = disposition;
-                        dispatch_semaphore_signal(semaphore);
-                    }];
-                });
-                
-                while (dispatch_semaphore_wait(semaphore, DISPATCH_TIME_NOW)) {
-                    [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:10]];
-                }
+
             });
             
             it(@"should be main thread", ^{
