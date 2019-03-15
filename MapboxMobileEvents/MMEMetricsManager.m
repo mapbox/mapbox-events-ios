@@ -112,7 +112,7 @@
         self.metrics.requests++;
     } else {
         [self updateEventsFailedCount:eventCount];
-        
+
         NSHTTPURLResponse *response = (NSHTTPURLResponse *)[error.userInfo objectForKey:MMEResponseKey];
         NSString *urlString = response.URL.absoluteString;
         NSNumber *statusCode = @(response.statusCode);
@@ -186,11 +186,9 @@
     if (self.metrics.recordingStarted) {
         attributes[MMEEventDateUTC] = [MMEDate.iso8601DateOnlyFormatter stringFromDate:self.metrics.recordingStarted];
     }
-    
     attributes[MMEEventKeyFailedRequests] = [self jsonStringfromDict:self.metrics.failedRequestsDict];
     attributes[MMEEventEventCountPerType] = [self jsonStringfromDict:self.metrics.eventCountPerType];
     attributes[MMEEventConfigResponse] = [self jsonStringfromDict:self.metrics.configResponseDict];
-    
     attributes[MMEEventTotalDataSent] = @(self.metrics.totalBytesSent);
     attributes[MMEEventCellDataSent] = @(self.metrics.cellBytesSent);
     attributes[MMEEventWiFiDataSent] = @(self.metrics.wifiBytesSent);
@@ -240,7 +238,8 @@
 
 - (MMEEvent *)generateTelemetryMetricsEvent {
     NSDate *zeroHour = [self.metrics.recordingStarted mme_startOfTomorrow];
-    MMEEvent *telemetryMetrics = [MMEEvent telemetryMetricsEventWithDateString:[MMEDate.iso8601DateFormatter stringFromDate:NSDate.date] attributes:self.attributes];
+    NSString *metricsDate = [MMEDate.iso8601DateFormatter stringFromDate:NSDate.date];
+    MMEEvent *telemetryMetrics = [MMEEvent telemetryMetricsEventWithDateString:metricsDate attributes:self.attributes];
 
     if (zeroHour.timeIntervalSinceNow > 0) { // it's not time to send metrics yet, write them to a pending file
         NSString *debugDescription = [NSString stringWithFormat:@"TelemetryMetrics event isn't ready to be sent; writing to %@ and waiting until %@ to send", MMEMetricsManager.pendingMetricsEventPath, zeroHour];
@@ -261,8 +260,6 @@
         return nil;
     }
 
-    NSString *metricsDate = [MMEDate.iso8601DateFormatter stringFromDate:NSDate.date];
-    MMEEvent *telemetryMetrics = [MMEEvent telemetryMetricsEventWithDateString:metricsDate attributes:self.attributes];
     [MMEEventLogger.sharedLogger logEvent:telemetryMetrics];
     [MMEMetricsManager deletePendingMetricsEventFile];
     
