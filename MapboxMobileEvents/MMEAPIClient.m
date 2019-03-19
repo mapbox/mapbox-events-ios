@@ -73,6 +73,8 @@ int const kMMEMaxRequestCount = 1000;
 }
 
 - (void)postEvents:(NSArray *)events completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
+    [self.metricsManager updateMetricsFromEventQueue:events];
+    
     NSArray *eventBatches = [self batchFromEvents:events];
     
     for (NSArray *batch in eventBatches) {

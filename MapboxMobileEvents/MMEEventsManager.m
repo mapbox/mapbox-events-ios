@@ -222,8 +222,6 @@
 - (void)postEvents:(NSArray *)events {
     NSUInteger eventsCount = events.count;
     
-    [self.metricsManager updateMetricsFromEventQueue:events];
-    
     __weak __typeof__(self) weakSelf = self;
     [self.apiClient postEvents:events completionHandler:^(NSError * _Nullable error) {
         __strong __typeof__(weakSelf) strongSelf = weakSelf;
