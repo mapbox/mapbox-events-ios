@@ -11,6 +11,8 @@ extern NSString * const MMEApplicationStateUnknown;
 @property (nonatomic) NSString * vendorId;
 @property (nonatomic) NSString * model;
 @property (nonatomic) NSString * iOSVersion;
+@property (nonatomic) NSString * platform;
+@property (nonatomic) NSString * device;
 @property (nonatomic) CGFloat scale;
 
 - (NSString *)applicationState;
