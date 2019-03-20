@@ -78,6 +78,8 @@
         userAgentBase:userAgentBase
         hostSDKVersion:hostSDKVersion];
     self.configurationUpdater.delegate = self;
+
+    [self sendPendingTelemetryMetricsEvent];
     
     __weak __typeof__(self) weakSelf = self;
     void(^initialization)(void) = ^{
@@ -516,8 +518,6 @@
     }
     
     self.paused = NO;
-
-    [self sendPendingTelemetryMetricsEvent];
 
     if (self.locationMetricsEnabled) {
         [self.locationManager startUpdatingLocation];
