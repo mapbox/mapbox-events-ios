@@ -97,8 +97,6 @@
             eventCount = [NSNumber numberWithInteger:[eventCount integerValue] + 1];
             [self.metrics.eventCountPerType setObject:eventCount forKey:event.name];
         }
-
-        [self generateTelemetryMetricsEvent];
     }
 }
 
@@ -140,8 +138,6 @@
         
         [self.metrics.failedRequestsDict setObject:failedRequests forKey:MMEEventKeyFailedRequests];
     }
-
-    [self generateTelemetryMetricsEvent];
 }
 
 - (void)updateEventsFailedCount:(NSUInteger)eventCount {
@@ -162,14 +158,10 @@
     } else {
         self.metrics.cellBytesReceived += bytes;
     }
-
-    [self generateTelemetryMetricsEvent];
 }
 
 - (void)incrementAppWakeUpCount {
     self.metrics.appWakeups++;
-
-    [self generateTelemetryMetricsEvent];
 }
 
 - (void)updateConfigurationJSON:(NSDictionary *)configuration {
