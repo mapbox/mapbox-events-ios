@@ -4,6 +4,7 @@
 @implementation MMEAPIClientFake
 
 @synthesize baseURL;
+@synthesize userAgent;
 
 - (void)setBaseURL:(NSURL *)baseURL { /* Intentionlly blank to work around compiler warning for null resettable */ }
 

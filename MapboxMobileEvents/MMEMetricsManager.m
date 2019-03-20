@@ -212,16 +212,19 @@
 #pragma mark -
 
 - (NSString *)jsonStringfromDict:(NSDictionary *)dictionary {
-    NSString *jsonString;
-    NSError *jsonError = nil;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dictionary options:0 error:&jsonError];
-    
-    if (jsonData) {
-        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-    } else if (jsonError) {
-        [[MMEEventsManager sharedManager] pushEvent:[MMEEvent debugEventWithError:jsonError]];
+    if (dictionary) {
+        NSString *jsonString;
+        NSError *jsonError = nil;
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dictionary options:0 error:&jsonError];
+        
+        if (jsonData) {
+            jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        } else if (jsonError) {
+            [[MMEEventsManager sharedManager] pushEvent:[MMEEvent debugEventWithError:jsonError]];
+        }
+        return jsonString;
     }
-    return jsonString;
+    return nil;
 }
 
 @end
