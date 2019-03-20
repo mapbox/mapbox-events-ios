@@ -286,7 +286,7 @@
         return;
     }
     
-    if (!self.commonEventData.iOSVersion) {
+    if (!self.commonEventData.osVersion) {
         [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTurnstileFailed,
                                              MMEEventKeyLocalDebugDescription: @"No iOS version available, can not send turntile event"}];
         return;
@@ -297,7 +297,7 @@
                                                MMEEventKeyVendorID: self.commonEventData.vendorId,
                                                // MMEEventKeyDevice is synonomous with MMEEventKeyModel but the server will only accept "device" in turnstile events
                                                MMEEventKeyDevice: self.commonEventData.model,
-                                               MMEEventKeyOperatingSystem: self.commonEventData.iOSVersion,
+                                               MMEEventKeyOperatingSystem: self.commonEventData.osVersion,
                                                MMEEventSDKIdentifier: self.apiClient.userAgentBase,
                                                MMEEventSDKVersion: self.apiClient.hostSDKVersion,
                                                MMEEventKeyEnabledTelemetry: @([self isEnabled]),

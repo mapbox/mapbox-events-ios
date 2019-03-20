@@ -176,7 +176,7 @@
     
     attributes[MMEEventKeyVendorID] = [MMEEventsManager sharedManager].commonEventData.vendorId;
     attributes[MMEEventKeyModel] = [MMEEventsManager sharedManager].commonEventData.model;
-    attributes[MMEEventKeyOperatingSystem] = [MMEEventsManager sharedManager].commonEventData.iOSVersion;
+    attributes[MMEEventKeyOperatingSystem] = [MMEEventsManager sharedManager].commonEventData.osVersion;
     attributes[MMEEventKeyPlatform] = [MMEEventsManager sharedManager].commonEventData.platform;
     attributes[MMEEventKeyDevice] = [MMEEventsManager sharedManager].commonEventData.device;
     

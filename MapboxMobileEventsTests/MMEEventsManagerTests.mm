@@ -589,7 +589,7 @@ describe(@"MMEEventsManager", ^{
                     spy_on(commonEventData);
                     commonEventData.vendorId = @"vendor-id";
                     commonEventData.model = @"model";
-                    commonEventData.iOSVersion = @"ios-version";
+                    commonEventData.osVersion = @"ios-version";
                     
                     eventsManager.commonEventData = commonEventData;
                 });
@@ -651,7 +651,7 @@ describe(@"MMEEventsManager", ^{
                 
                 context(@"when the events manager's common even data does not have a ios version", ^{
                     beforeEach(^{
-                        eventsManager.commonEventData stub_method(@selector(iOSVersion)).and_return(nil);
+                        eventsManager.commonEventData stub_method(@selector(osVersion)).and_return(nil);
                         [eventsManager sendTurnstileEvent];
                     });
                     
@@ -686,7 +686,7 @@ describe(@"MMEEventsManager", ^{
                                                                MMEEventKeyCreated: [MMEDate.iso8601DateFormatter stringFromDate:[NSDate date]],
                                                                MMEEventKeyVendorID: eventsManager.commonEventData.vendorId,
                                                                MMEEventKeyDevice: eventsManager.commonEventData.model,
-                                                               MMEEventKeyOperatingSystem: eventsManager.commonEventData.iOSVersion,
+                                                               MMEEventKeyOperatingSystem: eventsManager.commonEventData.osVersion,
                                                                MMEEventSDKIdentifier: eventsManager.apiClient.userAgentBase,
                                                                MMEEventSDKVersion: eventsManager.apiClient.hostSDKVersion,
                                                                MMEEventKeyEnabledTelemetry: @NO,
@@ -811,7 +811,7 @@ describe(@"MMEEventsManager", ^{
             commonEventData = [[MMECommonEventData alloc] init];
             commonEventData.vendorId = @"a nice vendor id";
             commonEventData.model = @"a nice model";
-            commonEventData.iOSVersion = @"a nice ios version";
+            commonEventData.osVersion = @"a nice ios version";
             commonEventData.scale = 42.0;
             eventsManager.commonEventData = commonEventData;
             
@@ -940,7 +940,7 @@ describe(@"MMEEventsManager", ^{
             commonEventData = [[MMECommonEventData alloc] init];
             commonEventData.vendorId = @"a nice vendor id";
             commonEventData.model = @"a nice model";
-            commonEventData.iOSVersion = @"a nice ios version";
+            commonEventData.osVersion = @"a nice ios version";
             commonEventData.scale = 42.0;
             eventsManager.commonEventData = commonEventData;
         });

@@ -14,7 +14,7 @@ NSString * const MMEApplicationStateUnknown = @"Unknown";
         _vendorId = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
         _model = [self sysInfoByName:"hw.machine"];
         _platform = [self platformInfo];
-        _iOSVersion = [NSString stringWithFormat:@"%@ %@", [UIDevice currentDevice].systemName, [UIDevice currentDevice].systemVersion];
+        _osVersion = [NSString stringWithFormat:@"%@ %@", [UIDevice currentDevice].systemName, [UIDevice currentDevice].systemVersion];
         _device = [UIDevice currentDevice].name;
         if ([UIScreen instancesRespondToSelector:@selector(nativeScale)]) {
             _scale = [UIScreen mainScreen].nativeScale;

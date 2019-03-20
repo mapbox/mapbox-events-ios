@@ -271,7 +271,7 @@ describe(@"MMEAPIClient", ^{
             MMECommonEventData *commonEventData = [[MMECommonEventData alloc] init];
             commonEventData.vendorId = @"vendor-id";
             commonEventData.model = @"model";
-            commonEventData.iOSVersion = @"1";
+            commonEventData.osVersion = @"1";
             commonEventData.scale = 42;
             
             event = [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-1" commonEventData:commonEventData];
@@ -346,7 +346,7 @@ describe(@"MMEAPIClient", ^{
                 MMECommonEventData *commonEventData = [[MMECommonEventData alloc] init];
                 commonEventData.vendorId = @"vendor-id";
                 commonEventData.model = @"model";
-                commonEventData.iOSVersion = @"1";
+                commonEventData.osVersion = @"1";
                 commonEventData.scale = 42;
                 
                 eventTwo = [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-1" commonEventData:commonEventData];
