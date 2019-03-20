@@ -31,7 +31,7 @@
     commonAttributes[MMEEventKeyEvent] = locationEvent.name;
     commonAttributes[MMEEventKeySource] = MMEEventSource;
     commonAttributes[MMEEventKeySessionId] = instanceIdentifer;
-    commonAttributes[MMEEventKeyOperatingSystem] = commonEventData.iOSVersion;
+    commonAttributes[MMEEventKeyOperatingSystem] = commonEventData.osVersion;
     NSString *applicationState = [commonEventData applicationState];
     if (![applicationState isEqualToString:MMEApplicationStateUnknown]) {
         commonAttributes[MMEEventKeyApplicationState] = applicationState;
@@ -59,7 +59,7 @@
     attributes[MMEEventKeyCreated] = dateString;
     attributes[MMEEventKeyVendorID] = commonEventData.vendorId;
     attributes[MMEEventKeyModel] = commonEventData.model;
-    attributes[MMEEventKeyOperatingSystem] = commonEventData.iOSVersion;
+    attributes[MMEEventKeyOperatingSystem] = commonEventData.osVersion;
     attributes[MMEEventKeyResolution] = @(commonEventData.scale);
     attributes[MMEEventKeyAccessibilityFontScale] = @([self contentSizeScale]);
     attributes[MMEEventKeyOrientation] = [self deviceOrientation];

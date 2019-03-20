@@ -3,6 +3,22 @@
 #import "MMEConstants.h"
 #import "MMEDate.h"
 #import "MMEEventLogger.h"
+#import "MMEEventsManager.h"
+#import "MMECommonEventData.h"
+#import "MMEAPIClient.h"
+
+#pragma mark -
+
+@interface MMEEventsManager (Private)
+
+- (void)pushEvent:(MMEEvent *)event;
+
+@property (nonatomic) MMECommonEventData *commonEventData;
+@property (nonatomic) id<MMEAPIClient> apiClient;
+
+@end
+
+#pragma mark -
 
 @interface MMEMetricsManager ()
 
@@ -132,13 +148,15 @@
 #pragma mark -- Event creation
 
 - (NSDictionary *)attributes {
-    NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
+    MMEMutableMapboxEventAttributes *attributes = [MMEMutableMapboxEventAttributes dictionary];
     if (self.metrics.recordingStarted) {
         attributes[MMEEventDateUTC] = [MMEDate.iso8601DateOnlyFormatter stringFromDate:self.metrics.recordingStarted];
     }
-    attributes[MMEEventKeyFailedRequests] = [NSString stringWithFormat:@"%@",self.metrics.failedRequestsDict];
-    attributes[MMEEventEventCountPerType] = [NSString stringWithFormat:@"%@",self.metrics.eventCountPerType];
-    attributes[MMEEventConfigResponse] = [NSString stringWithFormat:@"%@",self.metrics.configResponseDict];
+    
+    attributes[MMEEventKeyFailedRequests] = [self jsonStringfromDict:self.metrics.failedRequestsDict];
+    attributes[MMEEventEventCountPerType] = [self jsonStringfromDict:self.metrics.eventCountPerType];
+    attributes[MMEEventConfigResponse] = [self jsonStringfromDict:self.metrics.configResponseDict];
+    
     attributes[MMEEventTotalDataTransfer] = @(self.metrics.totalBytesSent);
     attributes[MMEEventCellDataTransfer] = @(self.metrics.cellBytesSent);
     attributes[MMEEventWiFiDataTransfer] = @(self.metrics.wifiBytesSent);
@@ -149,12 +167,22 @@
     attributes[MMEEventEventCountTotal] = @(self.metrics.eventCountTotal);
     attributes[MMEEventEventCountMax] = @(self.metrics.eventCountMax);
     attributes[MMEEventAppWakeups] = @(self.metrics.appWakeups);
+    attributes[MMEEventRequests] = @(self.metrics.requests);
+    attributes[MMEEventDeviceTimeDrift] = @(self.metrics.deviceTimeDrift);
     if (self.metrics.deviceLat != 0 && self.metrics.deviceLon != 0) {
         attributes[MMEEventDeviceLat] = @(self.metrics.deviceLat);
         attributes[MMEEventDeviceLon] = @(self.metrics.deviceLon);
     }
-    attributes[MMEEventRequests] = @(self.metrics.requests);
-    attributes[MMEEventDeviceTimeDrift] = @(self.metrics.deviceTimeDrift);
+    
+    attributes[MMEEventKeyVendorID] = [MMEEventsManager sharedManager].commonEventData.vendorId;
+    attributes[MMEEventKeyModel] = [MMEEventsManager sharedManager].commonEventData.model;
+    attributes[MMEEventKeyOperatingSystem] = [MMEEventsManager sharedManager].commonEventData.osVersion;
+    attributes[MMEEventKeyPlatform] = [MMEEventsManager sharedManager].commonEventData.platform;
+    attributes[MMEEventKeyDevice] = [MMEEventsManager sharedManager].commonEventData.device;
+    
+    attributes[MMEEventSDKIdentifier] = [MMEEventsManager sharedManager].apiClient.userAgentBase;
+    attributes[MMEEventSDKVersion] = [MMEEventsManager sharedManager].apiClient.hostSDKVersion;
+    attributes[MMEEventKeyUserAgent] = [MMEEventsManager sharedManager].apiClient.userAgent;
     
     return attributes;
 }
@@ -168,7 +196,7 @@
         return nil;
     }
     
-    MMEEvent *telemetryMetrics = [MMEEvent telemetryMetricsEventWithDateString:[MMEDate.iso8601DateFormatter stringFromDate:zeroHour] attributes:[self attributes]];
+    MMEEvent *telemetryMetrics = [MMEEvent telemetryMetricsEventWithDateString:[MMEDate.iso8601DateFormatter stringFromDate:[MMEDate new]] attributes:[self attributes]];
     [MMEEventLogger.sharedLogger logEvent:telemetryMetrics];
     
     return telemetryMetrics;
@@ -179,6 +207,24 @@
     [combinedAttributes setObject:[MMEDate.iso8601DateFormatter stringFromDate:[NSDate date]] forKey:@"created"];
     MMEEvent *debugEvent = [MMEEvent debugEventWithAttributes:attributes];
     [[MMEEventLogger sharedLogger] logEvent:debugEvent];
+}
+
+#pragma mark -
+
+- (NSString *)jsonStringfromDict:(NSDictionary *)dictionary {
+    if (dictionary) {
+        NSString *jsonString;
+        NSError *jsonError = nil;
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dictionary options:0 error:&jsonError];
+        
+        if (jsonData) {
+            jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        } else if (jsonError) {
+            [[MMEEventsManager sharedManager] pushEvent:[MMEEvent debugEventWithError:jsonError]];
+        }
+        return jsonString;
+    }
+    return nil;
 }
 
 @end

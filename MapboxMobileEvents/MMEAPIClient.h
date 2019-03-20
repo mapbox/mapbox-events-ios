@@ -10,6 +10,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *accessToken;
 @property (nonatomic, copy) NSString *userAgentBase;
 @property (nonatomic, copy) NSString *hostSDKVersion;
+@property (nonatomic, copy) NSString *userAgent;
 @property (nonatomic, copy, null_resettable) NSURL *baseURL;
 
 - (void)postEvents:(NSArray *)events completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler;

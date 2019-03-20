@@ -141,7 +141,7 @@ describe(@"MMEMetricsManager", ^{
                 MMECommonEventData *commonEventData = [[MMECommonEventData alloc] init];
                 commonEventData.vendorId = @"vendor-id";
                 commonEventData.model = @"model";
-                commonEventData.iOSVersion = @"1";
+                commonEventData.osVersion = @"1";
                 commonEventData.scale = 42;
                 
                 MMEEvent *event = [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-1" commonEventData:commonEventData];
