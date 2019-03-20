@@ -326,7 +326,8 @@
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"<%@ name=%@, date=%@, attributes=%@>", NSStringFromClass(self.class), self.name, self.date, self.attributes];
+    return [NSString stringWithFormat:@"<%@ name=%@, date=%@, attributes=%@>",
+        NSStringFromClass(self.class), self.name, self.date, self.attributes];
 }
 
 #pragma mark - NSCopying
@@ -355,7 +356,8 @@ static NSString * const MMEEventAttributesKey = @"MMEEventAttributes";
         _date = [aDecoder decodeObjectOfClass:MMEDate.class forKey:MMEEventDateKey];
         _attributes = [aDecoder decodeObjectOfClass:NSDictionary.class forKey:MMEEventAttributesKey];
         if (encodedVersion > MMEEventVersion1) {
-            NSLog(@"%@ WARNING encodedVersion %li > MMEEventVersion %li", NSStringFromClass(self.class), encodedVersion, MMEEventVersion1);
+            NSLog(@"%@ WARNING encodedVersion %li > MMEEventVersion %li",
+                NSStringFromClass(self.class), (long)encodedVersion, (long)MMEEventVersion1);
         }
     }
 

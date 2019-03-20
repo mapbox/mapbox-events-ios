@@ -144,7 +144,8 @@ static NSString * const MMEDateOffsetFromServerKey = @"MMEDateOffsetFromServer";
         _sinceReferenceDate = [aDecoder decodeDoubleForKey:MMEDateSinceReferenceDateKey];
         _offsetFromServer = [aDecoder decodeDoubleForKey:MMEDateOffsetFromServerKey];
         if (encodedVersion > MMEDateVersion1) {
-            NSLog(@"%@ WARNING encodedVersion %li > MMEDateVersion %li", NSStringFromClass(self.class), encodedVersion, MMEDateVersion1);
+            NSLog(@"%@ WARNING encodedVersion %li > MMEDateVersion %li",
+                NSStringFromClass(self.class), (long)encodedVersion, (long)MMEDateVersion1);
         }
     }
 
