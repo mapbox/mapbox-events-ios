@@ -250,7 +250,11 @@
         [MMEMetricsManager deletePendingMetricsEventFile];
 
         @try { // to write the metrics event to the pending metrics event path
-            if (![NSKeyedArchiver archiveRootObject:telemetryMetrics toFile:MMEMetricsManager.pendingMetricsEventPath]) {
+            NSKeyedArchiver *archiver = [NSKeyedArchiver new];
+            archiver.requiresSecureCoding = YES;
+            [archiver encodeObject:telemetryMetrics forKey:NSKeyedArchiveRootObjectKey];
+
+            if (![archiver.encodedData writeToFile:MMEMetricsManager.pendingMetricsEventPath atomically:YES]) {
                 NSLog(@"Failed to archiveRootObject: %@ toFile: %@",
                     telemetryMetrics, MMEMetricsManager.pendingMetricsEventPath);
             }
