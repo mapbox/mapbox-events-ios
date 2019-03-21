@@ -357,7 +357,7 @@
         __weak __typeof__(self) weakSelf = self;
         [self.apiClient postEvent:pendingMetricsEvent completionHandler:^(NSError * _Nullable error) {
             __strong __typeof__(weakSelf) strongSelf = weakSelf;
-            [MMEMetricsManager.sharedManager resetMetrics];
+
             if (error) {
                 [strongSelf pushEvent:[MMEEvent debugEventWithError:error]];
                 return;
