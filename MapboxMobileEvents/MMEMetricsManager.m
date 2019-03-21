@@ -259,7 +259,7 @@
             NSData *thenData = [NSData dataWithContentsOfFile:MMEMetricsManager.pendingMetricsEventPath];
             NSKeyedUnarchiver* unarchiver = [NSKeyedUnarchiver.alloc initForReadingWithData:thenData];
             unarchiver.requiresSecureCoding = YES;
-            pending = [unarchiver decodeObjectOfClass:MMEDate.class forKey:NSKeyedArchiveRootObjectKey];
+            pending = [unarchiver decodeObjectOfClass:MMEEvent.class forKey:NSKeyedArchiveRootObjectKey];
         }
         @catch (NSException *exception) {
             [MMEEventLogger.sharedLogger logEvent:[MMEEvent debugEventWithException:exception]];
