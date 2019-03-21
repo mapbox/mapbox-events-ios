@@ -174,7 +174,6 @@
         attributes[MMEEventDeviceLon] = @(self.metrics.deviceLon);
     }
     
-    attributes[MMEEventKeyVendorID] = [MMEEventsManager sharedManager].commonEventData.vendorId;
     attributes[MMEEventKeyModel] = [MMEEventsManager sharedManager].commonEventData.model;
     attributes[MMEEventKeyOperatingSystem] = [MMEEventsManager sharedManager].commonEventData.osVersion;
     attributes[MMEEventKeyPlatform] = [MMEEventsManager sharedManager].commonEventData.platform;
@@ -212,7 +211,8 @@
 #pragma mark -
 
 - (NSString *)jsonStringfromDict:(NSDictionary *)dictionary {
-    if (dictionary) {
+    //prevents empty dictionaries from being stringified
+    if ([dictionary count] > 0) {
         NSString *jsonString;
         NSError *jsonError = nil;
         NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dictionary options:0 error:&jsonError];
