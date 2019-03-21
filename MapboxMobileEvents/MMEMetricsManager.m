@@ -46,8 +46,9 @@
     static dispatch_once_t onceToken;
 
     dispatch_once(&onceToken, ^{
-        NSString *libraryPath = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES).lastObject;
+        NSString *libraryPath = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).lastObject;
         NSString *frameworkLibraryPath = [libraryPath stringByAppendingPathComponent:[NSBundle bundleForClass:self].bundleIdentifier];
+
         pendingMetricFile = [frameworkLibraryPath stringByAppendingPathComponent:@"pending-metrics.event"];
     });
 
@@ -73,6 +74,38 @@
     }
 
     return success;
+}
+
++ (BOOL)createFrameworkMetricsEventDir {
+    NSString *sdkPath = MMEMetricsManager.pendingMetricsEventPath.stringByDeletingLastPathComponent;
+    BOOL sdkPathIsDir = NO;
+    BOOL sdkPathExtant = [NSFileManager.defaultManager fileExistsAtPath:sdkPath isDirectory:&sdkPathIsDir];
+    NSError* sdkPathError = nil;
+
+    if (!sdkPathIsDir) { // remove it
+        if ([NSFileManager.defaultManager removeItemAtPath:sdkPath error:&sdkPathError]) {
+            sdkPathExtant = NO;
+        }
+        else {
+            [MMEEventLogger.sharedLogger logEvent:[MMEEvent debugEventWithError:sdkPathError]];
+        }
+    }
+
+    if (!sdkPathExtant) { // create it
+        if ([NSFileManager.defaultManager createDirectoryAtPath:sdkPath withIntermediateDirectories:YES attributes:nil error:&sdkPathError]) {
+            if ([[NSURL fileURLWithPath:sdkPath] setResourceValue:@(YES) forKey:NSURLIsExcludedFromBackupKey error:&sdkPathError]) {
+                sdkPathIsDir = YES;
+            }
+            else {
+                [MMEEventLogger.sharedLogger logEvent:[MMEEvent debugEventWithError:sdkPathError]];
+            }
+        }
+        else {
+            [MMEEventLogger.sharedLogger logEvent:[MMEEvent debugEventWithError:sdkPathError]];
+        }
+    }
+
+    return sdkPathIsDir;
 }
 
 #pragma mark -
@@ -249,18 +282,24 @@
 
         [MMEMetricsManager deletePendingMetricsEventFile];
 
-        @try { // to write the metrics event to the pending metrics event path
-            NSKeyedArchiver *archiver = [NSKeyedArchiver new];
-            archiver.requiresSecureCoding = YES;
-            [archiver encodeObject:telemetryMetrics forKey:NSKeyedArchiveRootObjectKey];
+        if ([MMEMetricsManager createFrameworkMetricsEventDir]) {
+            @try { // to write the metrics event to the pending metrics event path
+                NSKeyedArchiver *archiver = [NSKeyedArchiver new];
+                archiver.requiresSecureCoding = YES;
+                [archiver encodeObject:telemetryMetrics forKey:NSKeyedArchiveRootObjectKey];
 
-            if (![archiver.encodedData writeToFile:MMEMetricsManager.pendingMetricsEventPath atomically:YES]) {
-                NSLog(@"Failed to archiveRootObject: %@ toFile: %@",
-                    telemetryMetrics, MMEMetricsManager.pendingMetricsEventPath);
+
+                if (![archiver.encodedData writeToFile:MMEMetricsManager.pendingMetricsEventPath atomically:YES]) {
+                    debugDescription = [NSString stringWithFormat:@"Failed to archiveRootObject: %@ toFile: %@",
+                        telemetryMetrics, MMEMetricsManager.pendingMetricsEventPath];
+                    [self pushDebugEventWithAttributes:@{
+                        MMEDebugEventType: MMEDebugEventTypeTelemetryMetrics,
+                        MMEEventKeyLocalDebugDescription: debugDescription}];
+                }
             }
-        }
-        @catch (NSException* exception) {
-            [MMEEventLogger.sharedLogger logEvent:[MMEEvent debugEventWithException:exception]];
+            @catch (NSException* exception) {
+                [MMEEventLogger.sharedLogger logEvent:[MMEEvent debugEventWithException:exception]];
+            }
         }
 
         return nil;
