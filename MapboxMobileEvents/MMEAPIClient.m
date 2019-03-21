@@ -25,7 +25,6 @@ typedef NS_ENUM(NSInteger, MMEErrorCode) {
 
 @property (nonatomic) id<MMENSURLSessionWrapper> sessionWrapper;
 @property (nonatomic) NSBundle *applicationBundle;
-@property (nonatomic, copy) NSString *userAgent;
 
 @end
 
@@ -73,7 +72,7 @@ int const kMMEMaxRequestCount = 1000;
 }
 
 - (void)postEvents:(NSArray *)events completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
-    [self.metricsManager updateMetricsFromEventQueue:events];
+    [MMEMetricsManager.sharedManager updateMetricsFromEventQueue:events];
     
     NSArray *eventBatches = [self batchFromEvents:events];
     
