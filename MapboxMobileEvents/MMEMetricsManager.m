@@ -157,9 +157,9 @@
     attributes[MMEEventEventCountPerType] = [self jsonStringfromDict:self.metrics.eventCountPerType];
     attributes[MMEEventConfigResponse] = [self jsonStringfromDict:self.metrics.configResponseDict];
     
-    attributes[MMEEventTotalDataTransfer] = @(self.metrics.totalBytesSent);
-    attributes[MMEEventCellDataTransfer] = @(self.metrics.cellBytesSent);
-    attributes[MMEEventWiFiDataTransfer] = @(self.metrics.wifiBytesSent);
+    attributes[MMEEventTotalDataSent] = @(self.metrics.totalBytesSent);
+    attributes[MMEEventCellDataSent] = @(self.metrics.cellBytesSent);
+    attributes[MMEEventWiFiDataSent] = @(self.metrics.wifiBytesSent);
     attributes[MMEEventTotalDataReceived] = @(self.metrics.totalBytesReceived);
     attributes[MMEEventCellDataReceived] = @(self.metrics.cellBytesReceived);
     attributes[MMEEventWiFiDataReceived] = @(self.metrics.wifiBytesReceived);
