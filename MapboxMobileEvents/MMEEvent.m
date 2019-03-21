@@ -15,7 +15,7 @@
 }
 
 + (instancetype)eventWithName:(NSString *)eventName attributes:(NSDictionary *)attributes {
-    return [MMEEvent.alloc initWithDate:MMEDate.date name:eventName attributes:attributes];
+    return [MMEEvent eventWithDate:MMEDate.date name:eventName attributes:attributes];
 }
 
 + (instancetype)turnstileEventWithAttributes:(NSDictionary *)attributes {
@@ -287,9 +287,9 @@
 
 - (instancetype) initWithDate:(MMEDate *)eventDate name:(NSString *)eventName  attributes:(NSDictionary *)eventAttributes {
     if (self = [super init]) {
-        _date = eventDate;
-        _name = eventName;
-        _attributes = eventAttributes;
+        _date = eventDate.copy;
+        _name = eventName.copy;
+        _attributes = eventAttributes.copy;
     }
 
     return self;
@@ -334,9 +334,9 @@
 
 - (id)copyWithZone:(NSZone *)zone {
     MMEEvent *copy = [MMEEvent new];
-    copy.name = [self.name copy];
-    copy.date = [self.date copy];
-    copy.attributes = [self.attributes copy];
+    copy.name = self.name;
+    copy.date = self.date;
+    copy.attributes = self.attributes;
     return copy;
 }
 
