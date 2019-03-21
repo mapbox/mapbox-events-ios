@@ -1,5 +1,5 @@
 #import <Foundation/Foundation.h>
-#import <UIKit/UIKit.h>
+#import <CoreGraphics/CoreGraphics.h>
 
 extern NSString * const MMEApplicationStateForeground;
 extern NSString * const MMEApplicationStateBackground;

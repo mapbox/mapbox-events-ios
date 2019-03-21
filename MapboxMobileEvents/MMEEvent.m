@@ -1,9 +1,22 @@
 #import "MMEEvent.h"
+#import "MMEDate.h"
 #import "MMEConstants.h"
 #import "MMECommonEventData.h"
 #import "MMEReachability.h"
 
+#if TARGET_OS_IOS || TARGET_OS_TVOS
+#import <UIKit/UIKit.h>
+#endif
+
 @implementation MMEEvent
+
++ (instancetype)eventWithDate:(MMEDate *)eventDate name:(NSString *)eventName attributes:(NSDictionary *)attributes {
+    return [MMEEvent.alloc initWithDate:eventDate name:eventName attributes:attributes];
+}
+
++ (instancetype)eventWithName:(NSString *)eventName attributes:(NSDictionary *)attributes {
+    return [MMEEvent eventWithDate:MMEDate.date name:eventName attributes:attributes];
+}
 
 + (instancetype)turnstileEventWithAttributes:(NSDictionary *)attributes {
     MMEEvent *turnstileEvent = [[MMEEvent alloc] init];
@@ -61,8 +74,10 @@
     attributes[MMEEventKeyModel] = commonEventData.model;
     attributes[MMEEventKeyOperatingSystem] = commonEventData.osVersion;
     attributes[MMEEventKeyResolution] = @(commonEventData.scale);
+#if TARGET_OS_IOS || TARGET_OS_TVOS
     attributes[MMEEventKeyAccessibilityFontScale] = @([self contentSizeScale]);
     attributes[MMEEventKeyOrientation] = [self deviceOrientation];
+#endif
     attributes[MMEEventKeyWifi] = @([[MMEReachability reachabilityForLocalWiFi] isReachableViaWiFi]);
     mapLoadEvent.attributes = attributes;
     return mapLoadEvent;
@@ -74,7 +89,9 @@
     NSMutableDictionary *commonAttributes = [NSMutableDictionary dictionary];
     commonAttributes[MMEEventKeyEvent] = mapTapEvent.name;
     commonAttributes[MMEEventKeyCreated] = dateString;
+#if TARGET_OS_IOS || TARGET_OS_TVOS
     commonAttributes[MMEEventKeyOrientation] = [self deviceOrientation];
+#endif
     commonAttributes[MMEEventKeyWifi] = @([[MMEReachability reachabilityForLocalWiFi] isReachableViaWiFi]);
     [commonAttributes addEntriesFromDictionary:attributes];
     mapTapEvent.attributes = commonAttributes;
@@ -87,7 +104,9 @@
     NSMutableDictionary *commonAttributes = [NSMutableDictionary dictionary];
     commonAttributes[MMEEventKeyEvent] = mapTapEvent.name;
     commonAttributes[MMEEventKeyCreated] = dateString;
+#if TARGET_OS_IOS || TARGET_OS_TVOS
     commonAttributes[MMEEventKeyOrientation] = [self deviceOrientation];
+#endif
     commonAttributes[MMEEventKeyWifi] = @([[MMEReachability reachabilityForLocalWiFi] isReachableViaWiFi]);
     [commonAttributes addEntriesFromDictionary:attributes];
     mapTapEvent.attributes = commonAttributes;
@@ -189,6 +208,9 @@
     return event;
 }
 
+#pragma mark - AppKit
+
+#if TARGET_OS_IOS || TARGET_OS_TVOS
 + (NSInteger)contentSizeScale {
     NSInteger result = -9999;
     
@@ -253,6 +275,25 @@
     }
     return result;
 }
+#endif
+
+#pragma mark - NSSecureCoding
+
++ (BOOL) supportsSecureCoding {
+    return YES;
+}
+
+#pragma mark -
+
+- (instancetype) initWithDate:(MMEDate *)eventDate name:(NSString *)eventName  attributes:(NSDictionary *)eventAttributes {
+    if (self = [super init]) {
+        _date = eventDate.copy;
+        _name = eventName.copy;
+        _attributes = eventAttributes.copy;
+    }
+
+    return self;
+}
 
 - (BOOL)isEqualToEvent:(MMEEvent *)event {
     if (!event) {
@@ -260,17 +301,20 @@
     }
     
     BOOL hasEqualName = [self.name isEqualToString:event.name];
+    BOOL hasEqualDate = (self.date.timeIntervalSinceReferenceDate == event.date.timeIntervalSinceReferenceDate);
     BOOL hasEqualAttributes = [self.attributes isEqual:event.attributes];
     
-    return hasEqualName && hasEqualAttributes;
+    return (hasEqualName && hasEqualDate && hasEqualAttributes);
 }
+
+#pragma mark - NSObject overrides
 
 - (BOOL)isEqual:(id)other {
     if (other == self) {
         return YES;
     }
     
-    if (![other isKindOfClass:[MMEEvent class]]) {
+    if (![other isKindOfClass:MMEEvent.class]) {
         return  NO;
     }
     
@@ -278,11 +322,53 @@
 }
 
 - (NSUInteger)hash {
-    return self.name.hash ^ self.attributes.hash;
+    return (self.name.hash ^ self.attributes.hash);
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"<%@ name=%@, attributes=%@>", NSStringFromClass([self class]), self.name, self.attributes];
+    return [NSString stringWithFormat:@"<%@ name=%@, date=%@, attributes=%@>",
+        NSStringFromClass(self.class), self.name, self.date, self.attributes];
+}
+
+#pragma mark - NSCopying
+
+- (id)copyWithZone:(NSZone *)zone {
+    MMEEvent *copy = [MMEEvent new];
+    copy.name = self.name;
+    copy.date = self.date;
+    copy.attributes = self.attributes;
+    return copy;
+}
+
+#pragma mark - NSCoding
+
+static NSInteger const MMEEventVersion1 = 1;
+static NSString * const MMEEventVersionKey = @"MMEEventVersion";
+static NSString * const MMEEventNameKey = @"MMEEventName";
+static NSString * const MMEEventDateKey = @"MMEEventDate";
+static NSString * const MMEEventAttributesKey = @"MMEEventAttributes";
+
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    if (self = [super init]) {
+        NSInteger encodedVersion = [aDecoder decodeIntegerForKey:MMEEventVersionKey];
+        _name = [aDecoder decodeObjectOfClass:NSString.class forKey:MMEEventNameKey];
+        _date = [aDecoder decodeObjectOfClass:MMEDate.class forKey:MMEEventDateKey];
+        _attributes = [aDecoder decodeObjectOfClass:NSDictionary.class forKey:MMEEventAttributesKey];
+        if (encodedVersion > MMEEventVersion1) {
+            NSLog(@"%@ WARNING encodedVersion %li > MMEEventVersion %li",
+                NSStringFromClass(self.class), (long)encodedVersion, (long)MMEEventVersion1);
+        }
+    }
+
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:_name forKey:MMEEventNameKey];
+    [aCoder encodeObject:_date forKey:MMEEventDateKey];
+    [aCoder encodeObject:_attributes forKey:MMEEventAttributesKey];
+    [aCoder encodeInteger:MMEEventVersion1 forKey:MMEEventVersionKey];
 }
 
 @end

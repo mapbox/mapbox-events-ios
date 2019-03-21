@@ -25,7 +25,6 @@ typedef NS_ENUM(NSInteger, MMEErrorCode) {
 
 @property (nonatomic) id<MMENSURLSessionWrapper> sessionWrapper;
 @property (nonatomic) NSBundle *applicationBundle;
-@property (nonatomic) MMEMetricsManager *metricsManager;
 
 @end
 
@@ -45,7 +44,6 @@ int const kMMEMaxRequestCount = 1000;
         _hostSDKVersion = hostSDKVersion;
         _sessionWrapper = [[MMENSURLSessionWrapper alloc] init];
         _applicationBundle = [NSBundle mainBundle];
-        _metricsManager = [MMEMetricsManager sharedManager];
         
         [self setBaseURL:nil];
         [self setupUserAgent];
@@ -74,7 +72,7 @@ int const kMMEMaxRequestCount = 1000;
 }
 
 - (void)postEvents:(NSArray *)events completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
-    [self.metricsManager updateMetricsFromEventQueue:events];
+    [MMEMetricsManager.sharedManager updateMetricsFromEventQueue:events];
     
     NSArray *eventBatches = [self batchFromEvents:events];
     
@@ -82,7 +80,7 @@ int const kMMEMaxRequestCount = 1000;
         NSURLRequest *request = [self requestForEvents:batch];
         if (request) {
             [self.sessionWrapper processRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-                [self.metricsManager updateReceivedBytes:data.length];
+                [MMEMetricsManager.sharedManager updateReceivedBytes:data.length];
                 
                 NSError *statusError = nil;
                 if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
@@ -93,15 +91,17 @@ int const kMMEMaxRequestCount = 1000;
                 }
                 error = error ?: statusError;
                 
-                [self.metricsManager updateMetricsFromEventCount:events.count request:request error:error];
+                [MMEMetricsManager.sharedManager updateMetricsFromEventCount:events.count request:request error:error];
                 
                 if (completionHandler) {
                     completionHandler(error);
                 }
             }];
         }
-        [self.metricsManager updateMetricsFromEventCount:events.count request:nil error:nil];
+        [MMEMetricsManager.sharedManager updateMetricsFromEventCount:events.count request:nil error:nil];
     }
+
+    [MMEMetricsManager.sharedManager generateTelemetryMetricsEvent];
 }
 
 - (void)postEvent:(MMEEvent *)event completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
@@ -114,7 +114,7 @@ int const kMMEMaxRequestCount = 1000;
     NSData *binaryData = [self createBodyWithBoundary:boundary metadata:metadata filePaths:filePaths];
     NSURLRequest *request = [self requestForBinary:binaryData boundary:boundary];
     [self.sessionWrapper processRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        [self.metricsManager updateReceivedBytes:data.length];
+        [MMEMetricsManager.sharedManager updateReceivedBytes:data.length];
         
         NSError *statusError = nil;
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
@@ -123,8 +123,10 @@ int const kMMEMaxRequestCount = 1000;
             error = error ?: statusError;
             completionHandler(error);
             
-            [self.metricsManager updateMetricsFromEventCount:filePaths.count request:request error:error];
+            [MMEMetricsManager.sharedManager updateMetricsFromEventCount:filePaths.count request:request error:error];
         }
+
+        [MMEMetricsManager.sharedManager generateTelemetryMetricsEvent];
     }];
 }
 
@@ -132,7 +134,7 @@ int const kMMEMaxRequestCount = 1000;
     NSURLRequest *request = [self requestForConfiguration];
     
     [self.sessionWrapper processRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        [self.metricsManager updateReceivedBytes:data.length];
+        [MMEMetricsManager.sharedManager updateReceivedBytes:data.length];
         
         NSError *statusError = nil;
         if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
@@ -145,8 +147,9 @@ int const kMMEMaxRequestCount = 1000;
             error = error ?: statusError;
             completionHandler(error, data);
             
-            [self.metricsManager updateMetricsFromEventCount:0 request:request error:error];
+            [MMEMetricsManager.sharedManager updateMetricsFromEventCount:0 request:request error:error];
         }
+        [MMEMetricsManager.sharedManager generateTelemetryMetricsEvent];
     }];
 }
 

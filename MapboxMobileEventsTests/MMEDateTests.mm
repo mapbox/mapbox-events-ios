@@ -11,38 +11,58 @@ describe(@"MMEDate", ^{
     NSTimeInterval const interval = 60; // just a minute
 
     context(@"+ recordTimeOffsetFromServer:", ^{
-        it(@"computes offsets from server time", ^{
-            NSDate *serverTime = [NSDate dateWithTimeIntervalSinceNow:interval];
-            NSTimeInterval recorded = [MMEDate recordTimeOffsetFromServer:serverTime];
+        NSDate *serverTime = [NSDate dateWithTimeIntervalSinceNow:interval];
+        NSTimeInterval recorded = [MMEDate recordTimeOffsetFromServer:serverTime];
 
+        it(@"computes offsets from server time", ^{
             round(recorded) should equal(round(interval));
         });
     });
 
     context(@"+ recordedTimeOffsetFromServer:", ^{
-        it(@"records computed offset from server time", ^{
-            NSDate *serverTime = [NSDate dateWithTimeIntervalSinceNow:interval];
-            NSTimeInterval computed = [MMEDate recordTimeOffsetFromServer:serverTime];
-            NSTimeInterval recorded = [MMEDate recordedTimeOffsetFromServer];
+        NSDate *serverTime = [NSDate dateWithTimeIntervalSinceNow:interval];
+        NSTimeInterval computed = [MMEDate recordTimeOffsetFromServer:serverTime];
+        NSTimeInterval recorded = [MMEDate recordedTimeOffsetFromServer];
 
+        it(@"checks computed and recorded", ^{
+            computed should equal(recorded);
+        });
+
+        it(@"checks the computed interval", ^{
             round(computed) should equal(round(interval));
+        });
+
+        it(@"check the recorded interval", ^{
             round(recorded) should equal(round(interval));
         });
     });
 
-    context(@"- initWithOffset:", ^{
-        it(@"correctly records offsetFromServer", ^{
-            MMEDate *offset = [MMEDate.alloc initWithOffset:interval];
+    context(@"clear timeOffsetFromServer:", ^{
+        NSTimeInterval interval = [MMEDate recordTimeOffsetFromServer:NSDate.date];
+        NSTimeInterval recorded = [MMEDate recordedTimeOffsetFromServer];
 
+        it(@"should be a short interval", ^{
+            interval should be_close_to(0.0);
+        });
+
+        it(@"shoul have reset the recorded offset", ^{
+            recorded should be_close_to(0.0);
+        });
+    });
+
+    context(@"- initWithOffset:", ^{
+        MMEDate *offset = [MMEDate.alloc initWithOffset:interval];
+
+        it(@"correctly records offsetFromServer", ^{
             offset.offsetFromServer should equal(interval);
         });
     });
 
     context(@"- offsetToServer:", ^{
-        it(@"correctly computes offsetToServer date", ^{
-            NSDate *serverTime = [NSDate dateWithTimeIntervalSinceNow:interval];
-            MMEDate *offset = [MMEDate.alloc initWithOffset:interval];
+        NSDate *serverTime = [NSDate dateWithTimeIntervalSinceNow:interval];
+        MMEDate *offset = [MMEDate.alloc initWithOffset:interval];
 
+        it(@"correctly computes offsetToServer date", ^{
             round(offset.offsetToServer.timeIntervalSinceReferenceDate) should equal(round(serverTime.timeIntervalSinceReferenceDate));
         });
     });
@@ -83,44 +103,45 @@ describe(@"MMEDate", ^{
 
     context(@"- NSCoding of MMEDate", ^{
         MMEDate *now = [MMEDate new];
-        NSData *nowData = nil;
         NSString *tempFile = [NSTemporaryDirectory() stringByAppendingPathComponent:@"MMEDate-now.data"];
-        NSKeyedArchiver *archiver = [NSKeyedArchiver new];
-        archiver.requiresSecureCoding = YES;
-        [archiver encodeObject:now forKey:NSKeyedArchiveRootObjectKey];
-        nowData = archiver.encodedData;
+        if ([NSFileManager.defaultManager fileExistsAtPath:tempFile]) {
+            [NSFileManager.defaultManager removeItemAtPath:tempFile error:nil];
+        }
 
-        it(@"now should be an MMEDate", ^{
-            now.class should equal(MMEDate.class);
-        });
+        it(@"should archive to data", ^{
+            NSKeyedArchiver *archiver = [NSKeyedArchiver new];
+            archiver.requiresSecureCoding = YES;
+            [archiver encodeObject:now forKey:NSKeyedArchiveRootObjectKey];
+            NSData* nowData = archiver.encodedData;
 
-        it(@"should encode to nowData", ^{
-            nowData should_not be_nil;
-            nowData.length should be_greater_than(0);
-        });
+            it(@"should encode to nowData", ^{
+                nowData should_not be_nil;
+                nowData.length should be_greater_than(0);
+            });
 
-        it(@"should decode from data", ^{
-            NSKeyedUnarchiver *unarchiver = [NSKeyedUnarchiver.alloc initForReadingWithData:nowData];
-            unarchiver.requiresSecureCoding = YES;
-            MMEDate *then = [unarchiver decodeObjectOfClass:MMEDate.class forKey:NSKeyedArchiveRootObjectKey];
-            then should_not be_nil;
-            then.timeIntervalSinceReferenceDate should equal(now.timeIntervalSinceReferenceDate);
+            it(@"should decode from data", ^{
+                NSKeyedUnarchiver *unarchiver = [NSKeyedUnarchiver.alloc initForReadingWithData:nowData];
+                unarchiver.requiresSecureCoding = YES;
+                MMEDate *then = [unarchiver decodeObjectOfClass:MMEDate.class forKey:NSKeyedArchiveRootObjectKey];
+                then should_not be_nil;
+                then.timeIntervalSinceReferenceDate should equal(now.timeIntervalSinceReferenceDate);
+            });
         });
 
         it(@"should write encoded data to a file", ^{
             [NSKeyedArchiver archiveRootObject:now toFile:tempFile];
             [NSFileManager.defaultManager fileExistsAtPath:tempFile] should be_truthy;
-        });
 
-        it(@"should read data and decode from a file", ^{
-            NSData *thenData = [NSData dataWithContentsOfFile:tempFile];
-            NSKeyedUnarchiver* unarchiver = [NSKeyedUnarchiver.alloc initForReadingWithData:thenData];
-            unarchiver.requiresSecureCoding = YES;
-            MMEDate *then = [unarchiver decodeObjectOfClass:MMEDate.class forKey:NSKeyedArchiveRootObjectKey];
-            round(then.timeIntervalSinceReferenceDate) should equal(round(now.timeIntervalSinceReferenceDate));
+            it(@"should read data and decode from a file", ^{
+                NSData *thenData = [NSData dataWithContentsOfFile:tempFile];
+                NSKeyedUnarchiver* unarchiver = [NSKeyedUnarchiver.alloc initForReadingWithData:thenData];
+                unarchiver.requiresSecureCoding = YES;
+                MMEDate *then = [unarchiver decodeObjectOfClass:MMEDate.class forKey:NSKeyedArchiveRootObjectKey];
+                then should_not be_nil;
+                then.timeIntervalSinceReferenceDate should equal(now.timeIntervalSinceReferenceDate);
+            });
         });
     });
-
 });
 
 SPEC_END

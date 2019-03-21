@@ -115,6 +115,12 @@ static NSTimeInterval _timeOffsetFromServer = 0.0; // TODO maintain a list of MM
     return _sinceReferenceDate;
 }
 
+#pragma mark - NSObject Overrides
+
+- (NSString *)description {
+    return [NSString stringWithFormat:@"<%@ sinceReference=%f, offsetFromServer=%f>", NSStringFromClass(self.class), _sinceReferenceDate, _offsetFromServer];
+}
+
 #pragma mark - NSCopying
 
 - (id)copyWithZone:(NSZone *)zone {
@@ -123,7 +129,7 @@ static NSTimeInterval _timeOffsetFromServer = 0.0; // TODO maintain a list of MM
 
 #pragma mark - NSCoding
 
-static NSInteger const MMEDateVersion = 1;
+static NSInteger const MMEDateVersion1 = 1;
 static NSString * const MMEDateVersionKey = @"MMEDateVersion";
 static NSString * const MMEDateSinceReferenceDateKey = @"MMEDateSinceReferenceDate";
 static NSString * const MMEDateOffsetFromServerKey = @"MMEDateOffsetFromServer";
@@ -137,8 +143,9 @@ static NSString * const MMEDateOffsetFromServerKey = @"MMEDateOffsetFromServer";
         NSInteger encodedVersion = [aDecoder decodeIntegerForKey:MMEDateVersionKey];
         _sinceReferenceDate = [aDecoder decodeDoubleForKey:MMEDateSinceReferenceDateKey];
         _offsetFromServer = [aDecoder decodeDoubleForKey:MMEDateOffsetFromServerKey];
-        if (encodedVersion > MMEDateVersion) {
-            NSLog(@"%@ WARNING encodedVersion %li > MMEDateVersion %li", NSStringFromClass(self.class), encodedVersion, MMEDateVersion);
+        if (encodedVersion > MMEDateVersion1) {
+            NSLog(@"%@ WARNING encodedVersion %li > MMEDateVersion %li",
+                NSStringFromClass(self.class), (long)encodedVersion, (long)MMEDateVersion1);
         }
     }
 
@@ -146,7 +153,7 @@ static NSString * const MMEDateOffsetFromServerKey = @"MMEDateOffsetFromServer";
 }
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeInteger:MMEDateVersion forKey:MMEDateVersionKey];
+    [aCoder encodeInteger:MMEDateVersion1 forKey:MMEDateVersionKey];
     [aCoder encodeDouble:_sinceReferenceDate forKey:MMEDateSinceReferenceDateKey];
     [aCoder encodeDouble:_offsetFromServer forKey:MMEDateOffsetFromServerKey];
 }
