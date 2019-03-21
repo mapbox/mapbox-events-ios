@@ -16,3 +16,10 @@ tag-version:
 .PHONY: create-static
 create-static:
 	./scripts/package.sh -s
+
+.PHONY: pod-lint
+pod-lint:
+	pod lib lint
+
+.PHONE: preflight-checks
+preflight-checks: pod-lint

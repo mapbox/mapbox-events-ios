@@ -64,7 +64,7 @@
             MMEEvent *errorEvent = [MMEEvent debugEventWithError:fileError];
             [MMEEventLogger.sharedLogger logEvent:errorEvent];
         }
-        else {  // we successufll removed the file
+        else {  // we successfully removed the file
             success = YES;
 
         }
@@ -238,7 +238,6 @@
         attributes[MMEEventDeviceLat] = @(self.metrics.deviceLat);
         attributes[MMEEventDeviceLon] = @(self.metrics.deviceLon);
     }
-    attributes[MMEEventKeyVendorID] = [MMEEventsManager sharedManager].commonEventData.vendorId;
     attributes[MMEEventKeyModel] = [MMEEventsManager sharedManager].commonEventData.model;
     attributes[MMEEventKeyOperatingSystem] = [MMEEventsManager sharedManager].commonEventData.osVersion;
     attributes[MMEEventKeyPlatform] = [MMEEventsManager sharedManager].commonEventData.platform;
@@ -275,30 +274,33 @@
     MMEEvent *telemetryMetrics = [MMEEvent telemetryMetricsEventWithDateString:metricsDate attributes:self.attributes];
 
     if (zeroHour.timeIntervalSinceNow > 0) { // it's not time to send metrics yet, write them to a pending file
-        NSString *debugDescription = [NSString stringWithFormat:@"TelemetryMetrics event isn't ready to be sent; writing to %@ and waiting until %@ to send", MMEMetricsManager.pendingMetricsEventPath, zeroHour];
+        NSString *debugDescription = [NSString stringWithFormat:@"TelemetryMetrics event isn't ready to be sent; writing to %@ and waiting until %@ to send",
+            MMEMetricsManager.pendingMetricsEventPath, zeroHour];
         
-        [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeTelemetryMetrics,
-                                             MMEEventKeyLocalDebugDescription: debugDescription}];
+        [self pushDebugEventWithAttributes:@{
+            MMEDebugEventType: MMEDebugEventTypeTelemetryMetrics,
+            MMEEventKeyLocalDebugDescription: debugDescription}];
 
-        [MMEMetricsManager deletePendingMetricsEventFile];
+        if (@available(iOS 10.0, macos 10.12, tvOS 10.0, watchOS 3.0, *)) {
+            [MMEMetricsManager deletePendingMetricsEventFile];
 
-        if ([MMEMetricsManager createFrameworkMetricsEventDir]) {
-            @try { // to write the metrics event to the pending metrics event path
-                NSKeyedArchiver *archiver = [NSKeyedArchiver new];
-                archiver.requiresSecureCoding = YES;
-                [archiver encodeObject:telemetryMetrics forKey:NSKeyedArchiveRootObjectKey];
+            if ([MMEMetricsManager createFrameworkMetricsEventDir]) {
+                @try { // to write the metrics event to the pending metrics event path
+                    NSKeyedArchiver *archiver = [NSKeyedArchiver new];
+                    archiver.requiresSecureCoding = YES;
+                    [archiver encodeObject:telemetryMetrics forKey:NSKeyedArchiveRootObjectKey];
 
-
-                if (![archiver.encodedData writeToFile:MMEMetricsManager.pendingMetricsEventPath atomically:YES]) {
-                    debugDescription = [NSString stringWithFormat:@"Failed to archiveRootObject: %@ toFile: %@",
-                        telemetryMetrics, MMEMetricsManager.pendingMetricsEventPath];
-                    [self pushDebugEventWithAttributes:@{
-                        MMEDebugEventType: MMEDebugEventTypeTelemetryMetrics,
-                        MMEEventKeyLocalDebugDescription: debugDescription}];
+                    if (![archiver.encodedData writeToFile:MMEMetricsManager.pendingMetricsEventPath atomically:YES]) {
+                        debugDescription = [NSString stringWithFormat:@"Failed to archiveRootObject: %@ toFile: %@",
+                            telemetryMetrics, MMEMetricsManager.pendingMetricsEventPath];
+                        [self pushDebugEventWithAttributes:@{
+                            MMEDebugEventType: MMEDebugEventTypeTelemetryMetrics,
+                            MMEEventKeyLocalDebugDescription: debugDescription}];
+                    }
                 }
-            }
-            @catch (NSException* exception) {
-                [MMEEventLogger.sharedLogger logEvent:[MMEEvent debugEventWithException:exception]];
+                @catch (NSException* exception) {
+                    [MMEEventLogger.sharedLogger logEvent:[MMEEvent debugEventWithException:exception]];
+                }
             }
         }
 
