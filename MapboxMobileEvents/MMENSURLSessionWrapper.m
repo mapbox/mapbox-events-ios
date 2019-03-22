@@ -57,19 +57,9 @@
         });
     };
     
-    // From SecTrustEvaluate docs:
-    /*
-     This function will completely evaluate trust before returning,
-     possibly including network access to fetch intermediate certificates or to
-     perform revocation checking. Since this function can block during those
-     operations, you should call it from within a function that is placed on a
-     dispatch queue, or in a separate thread from your application's main
-     run loop. Alternatively, you can use the SecTrustEvaluateAsync function.
-     */
     __weak __typeof__(self) weakSelf = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         __typeof__(self) strongSelf = weakSelf;
-        // Call into TrustKit here to do pinning validation
         [strongSelf.certPin handleChallenge:challenge completionHandler:completionHandler];
     });
 }

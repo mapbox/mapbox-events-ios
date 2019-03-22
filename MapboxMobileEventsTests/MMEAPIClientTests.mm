@@ -1,11 +1,9 @@
 #import <Cedar/Cedar.h>
 #import <Foundation/Foundation.h>
-#import "TrustKit.h"
 #import "MMEAPIClient.h"
 #import "MMEConstants.h"
 #import "MMEEvent.h"
 #import "MMECommonEventData.h"
-#import "MMETrustKitProvider.h"
 #import "MMENSURLSessionWrapperFake.h"
 #import "MMEAPIClientFake.h"
 
@@ -28,8 +26,6 @@ using namespace Cedar::Doubles;
 
 @interface MMENSURLSessionWrapper (MMEAPIClientTests)
 
-@property (nonatomic) TrustKit *trustKit;
-
 @end
 
 SPEC_BEGIN(MMEAPIClientSpec)
@@ -39,7 +35,6 @@ describe(@"MMEAPIClient", ^{
     __block MMEAPIClient *apiClient;
     __block NSURLSessionAuthChallengeDisposition receivedDisposition;
     __block MMENSURLSessionWrapper *sessionWrapper;
-    __block TSKPinningValidator *pinningValidator;
     __block NSURLSession *urlSession;
     __block NSURLAuthenticationChallenge *challenge;
     id<CedarDouble> delegateFake = fake_for(@protocol(NSURLAuthenticationChallengeSender));
@@ -53,8 +48,6 @@ describe(@"MMEAPIClient", ^{
                                                hostSDKVersion:@"host-sdk-1"];
         
         sessionWrapper = (MMENSURLSessionWrapper *)apiClient.sessionWrapper;
-        pinningValidator = sessionWrapper.trustKit.pinningValidator;
-        spy_on(pinningValidator);
         
         NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
         urlSession = [NSURLSession sessionWithConfiguration:sessionConfig delegate:sessionWrapper delegateQueue:nil];
@@ -78,8 +71,6 @@ describe(@"MMEAPIClient", ^{
         context(@"when the pinning validator does not handle the challenge", ^{
             beforeEach(^{
                 
-                pinningValidator stub_method(@selector(handleChallenge:completionHandler:)).and_return(NO);
-                
                 dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
                 
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, timeoutInNanoseconds), dispatch_get_main_queue(), ^{
@@ -102,8 +93,8 @@ describe(@"MMEAPIClient", ^{
                 isMainThread should be_truthy;
             });
             
-            it(@"should call the completion with the default disposition", ^{
-                receivedDisposition should equal(expectedDefaultDisposition);
+            it(@"should call the completion with the cancel disposition", ^{
+                receivedDisposition should equal(NSURLSessionAuthChallengeCancelAuthenticationChallenge);
             });
             
         });
@@ -112,8 +103,6 @@ describe(@"MMEAPIClient", ^{
             __block bool isMainThread;
             
             beforeEach(^{
-                
-                pinningValidator stub_method(@selector(handleChallenge:completionHandler:)).and_return(NO);
                 
                 dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
                 
@@ -140,7 +129,7 @@ describe(@"MMEAPIClient", ^{
             });
             
             it(@"should equal expected DefaultHandling disposition", ^{
-                receivedDisposition should equal(expectedDefaultDisposition);
+                receivedDisposition should equal(NSURLSessionAuthChallengeCancelAuthenticationChallenge);
             });
         });
     });
