@@ -45,18 +45,7 @@
 
 #pragma mark NSURLSessionDelegate
 
-- (void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable))completionHandler {
-    __block void (^completion)(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable) = nil;
-    
-    completion = ^(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential * _Nullable credential){
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (completionHandler) {
-                completionHandler(disposition, credential);
-            }
-            completion = nil;
-        });
-    };
-    
+- (void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable))completionHandler {    
     __weak __typeof__(self) weakSelf = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         __typeof__(self) strongSelf = weakSelf;
