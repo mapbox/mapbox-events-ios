@@ -40,7 +40,6 @@ describe(@"MMEAPIClient", ^{
     id<CedarDouble> delegateFake = fake_for(@protocol(NSURLAuthenticationChallengeSender));
     
     int64_t timeoutInNanoseconds = 1000000000;
-    NSURLSessionAuthChallengeDisposition expectedDefaultDisposition = NSURLSessionAuthChallengePerformDefaultHandling;
     
     beforeEach(^{
         apiClient = [[MMEAPIClient alloc] initWithAccessToken:@"access-token"
