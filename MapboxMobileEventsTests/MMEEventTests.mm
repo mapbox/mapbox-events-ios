@@ -103,7 +103,7 @@ describe(@"MMEEvent", ^{
             errorEventWithAllInfo should_not be_nil;
         });
 
-        it(@"should create an MMEevent from a nil error", ^{
+        it(@"should create an MMEEevent from a nil error", ^{
             MMEEvent *errorEventWithNilError = [MMEEvent debugEventWithError:nil];
 
             errorEventWithNilError should_not be_nil;
