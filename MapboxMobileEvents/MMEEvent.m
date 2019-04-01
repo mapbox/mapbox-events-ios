@@ -169,7 +169,7 @@
 
 + (instancetype)debugEventWithException:(NSException*) except {
     NSMutableDictionary* exceptionAttributes = [NSMutableDictionary dictionaryWithObject:MMEDebugEventTypeError forKey:MMEDebugEventType];
-    exceptionAttributes[MMEEventKeyErrorDescription] = (except.name ? except.name : except.description);
+    exceptionAttributes[MMEEventKeyErrorDescription] = except.name;
     exceptionAttributes[MMEEventKeyErrorFailureReason] = (except.reason ? except.reason : MMEEventKeyErrorNoReason);
     return [self debugEventWithAttributes:exceptionAttributes];
 }
