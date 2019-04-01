@@ -28,12 +28,12 @@ describe(@"MMEEvent", ^{
             event.name should equal(testName);
         });
 
-        it(@"should hace the test event attrs", ^{
+        it(@"should have the test event attrs", ^{
             event.attributes should equal(testAttrs);
         });
     });
 
-    context(@"- NSSecureCoding of MMEEvent", ^{
+    context(@"NSSecureCoding of MMEEvent", ^{
         MMEEvent *event = [MMEEvent eventWithName:testName attributes:testAttrs];
         NSString *tempFile = [NSTemporaryDirectory() stringByAppendingPathComponent:@"MMEEvent-test.data"];
         if ([NSFileManager.defaultManager fileExistsAtPath:tempFile]) {
@@ -74,6 +74,59 @@ describe(@"MMEEvent", ^{
                 unarchived should_not be_nil;
                 unarchived should equal(event);
             });
+        });
+    });
+
+    context(@"debugEventWithError", ^{
+        NSError *errorWithNoInfo = [NSError errorWithDomain:NSCocoaErrorDomain code:0 userInfo:nil];
+        NSError *errorWithAllInfo = [NSError errorWithDomain:NSCocoaErrorDomain code:1 userInfo:@{
+            NSURLErrorKey: [NSURL URLWithString:@"http://mapbox.com"],
+            NSHelpAnchorErrorKey: @"NSHelpAnchorErrorKey",
+            NSLocalizedDescriptionKey: @"NSLocalizedDescriptionKey",
+            NSLocalizedFailureReasonErrorKey: @"NSLocalizedFailureReasonErrorKey",
+            NSLocalizedRecoveryOptionsErrorKey: @[@"Abort", @"Retry", @"Fail"],
+            NSLocalizedRecoverySuggestionErrorKey: @"NSLocalizedRecoverySuggestionErrorKey",
+            NSStringEncodingErrorKey: @(NSUTF8StringEncoding),
+            NSUnderlyingErrorKey: errorWithNoInfo,
+            NSDebugDescriptionErrorKey: @"PC LOAD LETTER"
+        }];
+
+        it(@"should create an MMEEvent from errorWithNoInfo", ^{
+            MMEEvent *errorEventWithNoInfo = [MMEEvent debugEventWithError:errorWithNoInfo];
+
+            errorEventWithNoInfo should_not be_nil;
+        });
+
+        it(@"should crteate an MMEEvent from errorWithAllInfo", ^{
+            MMEEvent *errorEventWithAllInfo = [MMEEvent debugEventWithError:errorWithAllInfo];
+
+            errorEventWithAllInfo should_not be_nil;
+        });
+
+        it(@"should create an MMEevent from a nil error", ^{
+            MMEEvent *errorEventWithNilError = [MMEEvent debugEventWithError:nil];
+
+            errorEventWithNilError should_not be_nil;
+        });
+
+    });
+
+    context(@"debugEventWithException", ^{
+        NSException *exceptionWithNoInfo = [NSException exceptionWithName:NSGenericException reason:nil userInfo:nil];
+        NSException *exceptionWithAllInfo = [NSException exceptionWithName:NSGenericException reason:@"TestReason" userInfo:@{
+            @"ExceptionUserInfo": @"ExceptionUserInfo"
+        }];
+
+        it(@"should create an MMEEvent from exceptionWithNoInfo", ^{
+            MMEEvent *exceptionEventWithNoInfo = [MMEEvent debugEventWithException:exceptionWithNoInfo];
+
+            exceptionEventWithNoInfo should_not be_nil;
+        });
+
+        it(@"should create an MMEEvent from exceptionWithAllInfo", ^{
+            MMEEvent *exceptionEventWithAllInfo = [MMEEvent debugEventWithException:exceptionWithAllInfo];
+
+            exceptionEventWithAllInfo should_not be_nil;
         });
     });
 });

@@ -66,6 +66,7 @@ NSString * const MMEEventKeyLocalDebugDescription = @"debug.description";
 NSString * const MMEEventKeyErrorCode = @"error.code";
 NSString * const MMEEventKeyErrorDescription = @"error.description";
 NSString * const MMEEventKeyErrorFailureReason = @"error.failureReason";
+NSString * const MMEEventKeyErrorNoReason = @"No Reason";
 NSString * const MMEEventKeyEvent = @"event";
 NSString * const MMEEventKeyCreated = @"created";
 NSString * const MMEEventKeyVendorID = @"userId";
