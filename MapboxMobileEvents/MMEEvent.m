@@ -160,21 +160,18 @@
 }
 
 + (instancetype)debugEventWithError:(NSError*) error {
-    return [self debugEventWithAttributes:@{
-        MMEDebugEventType: MMEDebugEventTypeError,
-        MMEEventKeyErrorCode: @(error.code),
-        MMEEventKeyErrorDescription: error.localizedDescription,
-        MMEEventKeyErrorFailureReason: error.localizedFailureReason
-    }];
+    NSMutableDictionary* errorAttributes = [NSMutableDictionary dictionaryWithObject:MMEDebugEventTypeError forKey:MMEDebugEventType];
+    errorAttributes[MMEEventKeyErrorCode] = @(error.code);
+    errorAttributes[MMEEventKeyErrorDescription] = (error.localizedDescription ? error.localizedDescription : error.description);
+    errorAttributes[MMEEventKeyErrorFailureReason] = (error.localizedFailureReason ? error.localizedFailureReason : MMEEventKeyErrorNoReason);
+    return [self debugEventWithAttributes:errorAttributes];
 }
 
 + (instancetype)debugEventWithException:(NSException*) except {
-    return [self debugEventWithAttributes:@{
-        MMEDebugEventType: MMEDebugEventTypeError,
-        MMEEventKeyErrorDescription: except.name,
-        MMEEventKeyErrorFailureReason: except.reason
-        // TODO add the stack trace via .callstackSymbols after sanatizing the list
-    }];
+    NSMutableDictionary* exceptionAttributes = [NSMutableDictionary dictionaryWithObject:MMEDebugEventTypeError forKey:MMEDebugEventType];
+    exceptionAttributes[MMEEventKeyErrorDescription] = except.name;
+    exceptionAttributes[MMEEventKeyErrorFailureReason] = (except.reason ? except.reason : MMEEventKeyErrorNoReason);
+    return [self debugEventWithAttributes:exceptionAttributes];
 }
 
 + (instancetype)searchEventWithName:(NSString *)name attributes:(NSDictionary *)attributes {

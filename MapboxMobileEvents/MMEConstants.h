@@ -88,6 +88,7 @@ extern NSString * const MMEEventKeyLocalDebugDescription;
 extern NSString * const MMEEventKeyErrorCode;
 extern NSString * const MMEEventKeyErrorDescription;
 extern NSString * const MMEEventKeyErrorFailureReason;
+extern NSString * const MMEEventKeyErrorNoReason;
 extern NSString * const MMEEventKeyFailedRequests;
 extern NSString * const MMEEventKeyHeader;
 extern NSString * const MMEEventKeyPlatform;
