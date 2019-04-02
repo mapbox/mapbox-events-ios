@@ -577,6 +577,10 @@
 #define MMEEventKeyErrorFailureReason __NS_SYMBOL(MMEEventKeyErrorFailureReason)
 #endif
 
+#ifndef MMEEventKeyErrorNoReason
+#define MMEEventKeyErrorNoReason __NS_SYMBOL(MMEEventKeyErrorNoReason)
+#endif
+
 #ifndef MMEEventKeyEvent
 #define MMEEventKeyEvent __NS_SYMBOL(MMEEventKeyEvent)
 #endif
@@ -645,6 +649,10 @@
 #define MMEEventKeyAltitude __NS_SYMBOL(MMEEventKeyAltitude)
 #endif
 
+#ifndef MMELocationManagerRegionIdentifier
+#define MMELocationManagerRegionIdentifier __NS_SYMBOL(MMELocationManagerRegionIdentifier)
+#endif
+
 #ifndef MMEEventKeyLocationAuthorization
 #define MMEEventKeyLocationAuthorization __NS_SYMBOL(MMEEventKeyLocationAuthorization)
 #endif
@@ -667,10 +675,6 @@
 
 #ifndef MMEEventKeyUserAgent
 #define MMEEventKeyUserAgent __NS_SYMBOL(MMEEventKeyUserAgent)
-#endif
-
-#ifndef MMELocationManagerRegionIdentifier
-#define MMELocationManagerRegionIdentifier __NS_SYMBOL(MMELocationManagerRegionIdentifier)
 #endif
 
 #ifndef MMEEventKeyiOS
