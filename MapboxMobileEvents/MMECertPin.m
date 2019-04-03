@@ -156,17 +156,13 @@
     
     if (cachedSubjectPublicKeyInfo)
     {
-        NSLog(@"Subject Public Key Info hash was found in the cache");
         return cachedSubjectPublicKeyInfo;
     }
     
-    // We didn't this certificate in the cache
-    NSLog(@"Generating Subject Public Key Info hash...");
-    
+    // We didn't have this certificate in the cache
     // First extract the public key bytes
     NSData *publicKeyData = [self getPublicKeyDataFromCertificate:certificate];
     if (publicKeyData == nil){
-        NSLog(@"Error - could not extract the public key bytes");
         return nil;
     }
     
@@ -273,7 +269,6 @@ static const unsigned char rsa2048Asn1Header[] = {
     if ((resultAdd != errSecSuccess) || (resultDel != errSecSuccess))
     {
         // Something went wrong with the Keychain we won't know if we did get the right key data
-        NSLog(@"Keychain error");
         publicKeyData = nil;
     }
     
