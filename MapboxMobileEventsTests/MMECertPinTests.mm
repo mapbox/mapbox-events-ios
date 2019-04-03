@@ -30,7 +30,7 @@ describe(@"MMECertPin", ^{
     
     beforeEach(^{
         configuration = [MMEEventsConfiguration configuration];
-        sessionWrapper.certPin = [[MMECertPin alloc] init];
+        sessionWrapper.certPin = [[MMENSURLSessionWrapper alloc] init];
         blacklistFake = [NSArray arrayWithObjects:@"i/4rsupujT8Ww/2yIGJ3wb6R7GDw2FHPyOM5sWh87DQ=", @"+1CHLRDE6ehp61cm8+NDMvd32z0Qc4bgnZRLH0OjE94=", nil];
         configuration.blacklist = blacklistFake;
     });
