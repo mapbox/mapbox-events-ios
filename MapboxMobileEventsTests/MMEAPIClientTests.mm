@@ -6,6 +6,7 @@
 #import "MMECommonEventData.h"
 #import "MMENSURLSessionWrapperFake.h"
 #import "MMEAPIClientFake.h"
+#import "MMECertPin.h"
 
 using namespace Cedar::Matchers;
 using namespace Cedar::Doubles;
@@ -25,6 +26,8 @@ using namespace Cedar::Doubles;
 @end
 
 @interface MMENSURLSessionWrapper (MMEAPIClientTests)
+
+@property (nonatomic) MMECertPin *certPin;
 
 @end
 

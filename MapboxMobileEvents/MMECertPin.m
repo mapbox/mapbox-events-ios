@@ -10,6 +10,7 @@
 @property (nonatomic) NSMutableSet<NSData *> *serverSSLPinsSet;
 @property (nonatomic) NSMutableDictionary<NSData *, NSData *> *publicKeyInfoHashesCache;
 @property (nonatomic) NSMutableSet<NSString *> *excludeSubdomainsSet;
+@property (nonatomic) NSURLSessionAuthChallengeDisposition lastAuthChanllengeDisposition;
 
 @property (nonatomic) dispatch_queue_t lockQueue;
 
@@ -74,9 +75,10 @@
         for(NSString *excludeSubdomains in _excludeSubdomainsSet){
             if([challenge.protectionSpace.host isEqualToString:excludeSubdomains]){
                 dispatch_async(dispatch_get_main_queue(), ^{
+                    self.lastAuthChanllengeDisposition = NSURLSessionAuthChallengePerformDefaultHandling;
                     completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
-                    return;
                 });
+                return;
             }
         }
         
@@ -98,6 +100,7 @@
                 
                 if([_serverSSLPinsSet containsObject:remoteCertificatePublicKeyHash]){
                     dispatch_async(dispatch_get_main_queue(), ^{
+                        self.lastAuthChanllengeDisposition = NSURLSessionAuthChallengeUseCredential;
                         completionHandler(NSURLSessionAuthChallengeUseCredential, [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust]);
                     });
                     found = YES;
@@ -107,6 +110,7 @@
             if (!found) {
                 // The certificate wasn't found. Cancel the connection.
                 dispatch_async(dispatch_get_main_queue(), ^{
+                    self.lastAuthChanllengeDisposition = NSURLSessionAuthChallengeCancelAuthenticationChallenge;
                     completionHandler(NSURLSessionAuthChallengeCancelAuthenticationChallenge, [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust]);
                 });
             }
@@ -115,6 +119,7 @@
         else if (trustResult == kSecTrustResultProceed)
         {
             dispatch_async(dispatch_get_main_queue(), ^{
+                self.lastAuthChanllengeDisposition = NSURLSessionAuthChallengePerformDefaultHandling;
                 completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust]);
             });
         }
@@ -122,6 +127,7 @@
         {
             // Certificate chain validation failed; cancel the connection
             dispatch_async(dispatch_get_main_queue(), ^{
+                self.lastAuthChanllengeDisposition = NSURLSessionAuthChallengeCancelAuthenticationChallenge;
                 completionHandler(NSURLSessionAuthChallengeCancelAuthenticationChallenge, [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust]);
             });
         }
@@ -129,6 +135,7 @@
     else
     {
         dispatch_async(dispatch_get_main_queue(), ^{
+            self.lastAuthChanllengeDisposition = NSURLSessionAuthChallengePerformDefaultHandling;
             completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
         });
     }

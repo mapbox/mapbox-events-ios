@@ -9,6 +9,8 @@ using namespace Cedar::Doubles;
 
 @interface MMECertPin (Tests)
 
+@property (nonatomic) MMEPinningConfigurationProvider *pinningConfigProvider;
+
 @end
 
 SPEC_BEGIN(MMECertPinSpec)
