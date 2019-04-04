@@ -18,62 +18,64 @@
 
 @implementation MMECertPin
 
-- (instancetype)init{
-    if(self = [super init]){
+- (instancetype)init {
+    if (self = [super init]) {
         _pinningConfigProvider = [MMEPinningConfigurationProvider pinningConfigProviderWithConfiguration:nil];
         _serverSSLPinsSet = [NSMutableSet set];
         _excludeSubdomainsSet = [NSMutableSet set];
         _publicKeyInfoHashesCache = [NSMutableDictionary dictionary];
-        
         _lockQueue = dispatch_queue_create("MMECertHashLock", DISPATCH_QUEUE_CONCURRENT);
-        
-        //Generate SSL Pins Sets
-        for(NSString *pinningDomains in self.pinningConfigProvider.pinningConfig[kMMEPinnedDomains]){
-            NSArray *hashes = self.pinningConfigProvider.pinningConfig[kMMEPinnedDomains][pinningDomains][kMMEPublicKeyHashes];
-            for (NSString *pinnedKeyHashBase64 in hashes) {
-                NSData *pinnedKeyHash = [[NSData alloc] initWithBase64EncodedString:pinnedKeyHashBase64 options:(NSDataBase64DecodingOptions)0];
-                if ([pinnedKeyHash length] != CC_SHA256_DIGEST_LENGTH){
-                    // The subject public key info hash doesn't have a valid size
-                    [NSException raise:@"Hash value invalid" format:@"Hash value invalid: %@", pinnedKeyHash];
-                }
-                [_serverSSLPinsSet addObject:pinnedKeyHash];
-            }
-            if([self.pinningConfigProvider.pinningConfig[kMMEPinnedDomains][pinningDomains][kMMEExcludeSubdomainFromParentPolicy] boolValue]){
-                [_excludeSubdomainsSet addObject:pinningDomains];
-            }
-        }
+
+        [self updateSSLPinSet];
     }
+
     return self;
 }
 
-- (void)updateWithConfiguration:(MMEEventsConfiguration *)configuration{
-    if(configuration && configuration.blacklist && configuration.blacklist.count > 0){
-        self.pinningConfigProvider = [MMEPinningConfigurationProvider pinningConfigProviderWithConfiguration:configuration];
-        [self.serverSSLPinsSet removeAllObjects];
-        [self.publicKeyInfoHashesCache removeAllObjects];
-        
-        for(NSString *pinningDomains in self.pinningConfigProvider.pinningConfig[kMMEPinnedDomains]){
-            NSArray *hashes = self.pinningConfigProvider.pinningConfig[kMMEPinnedDomains][pinningDomains][kMMEPublicKeyHashes];
-            for (NSString *pinnedKeyHashBase64 in hashes) {
-                NSData *pinnedKeyHash = [[NSData alloc] initWithBase64EncodedString:pinnedKeyHashBase64 options:(NSDataBase64DecodingOptions)0];
-                if ([pinnedKeyHash length] != CC_SHA256_DIGEST_LENGTH){
-                    // The subject public key info hash doesn't have a valid size
-                    [NSException raise:@"Hash value invalid" format:@"Hash value invalid: %@", pinnedKeyHash];
+- (void) updateSSLPinSet {
+    [self.serverSSLPinsSet removeAllObjects];
+    [self.publicKeyInfoHashesCache removeAllObjects];
+
+    if ([self.pinningConfigProvider.pinningConfig.allKeys containsObject:kMMEPinnedDomains]) {
+        NSDictionary *configPinnedDomains = self.pinningConfigProvider.pinningConfig[kMMEPinnedDomains];
+
+        for (NSString *pinnedDomain in configPinnedDomains.allKeys) {
+            NSDictionary *pinnedDomainConfig = configPinnedDomains[pinnedDomain];
+
+            if ([pinnedDomainConfig.allKeys containsObject:kMMEPublicKeyHashes]) {
+                for (NSString *pinnedKeyHashBase64 in pinnedDomainConfig[kMMEPublicKeyHashes]) {
+                    NSData *pinnedKeyHash = [[NSData alloc] initWithBase64EncodedString:pinnedKeyHashBase64 options:(NSDataBase64DecodingOptions)0];
+                    if ([pinnedKeyHash length] != CC_SHA256_DIGEST_LENGTH){
+                        // The subject public key info hash doesn't have a valid size
+                        [NSException raise:@"Hash value invalid" format:@"Hash value invalid: %@", pinnedKeyHash];
+                    }
+                    [_serverSSLPinsSet addObject:pinnedKeyHash];
                 }
-                [_serverSSLPinsSet addObject:pinnedKeyHash];
+            }
+
+            if ([pinnedDomainConfig.allKeys containsObject:kMMEExcludeSubdomainFromParentPolicy]
+             && [pinnedDomainConfig[kMMEExcludeSubdomainFromParentPolicy] boolValue]) {
+                [_excludeSubdomainsSet addObject:pinnedDomain];
             }
         }
     }
 }
 
+- (void) updateWithConfiguration:(MMEEventsConfiguration *)configuration {
+    if (configuration && configuration.blacklist && configuration.blacklist.count > 0) {
+        self.pinningConfigProvider = [MMEPinningConfigurationProvider pinningConfigProviderWithConfiguration:configuration];
 
-- (void)handleChallenge:(NSURLAuthenticationChallenge * _Nonnull)challenge completionHandler:(void (^ _Nonnull)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential * _Nullable credential))completionHandler{
+        [self updateSSLPinSet];
+    }
+}
+
+- (void) handleChallenge:(NSURLAuthenticationChallenge * _Nonnull)challenge completionHandler:(void (^ _Nonnull)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential * _Nullable credential))completionHandler{
     
-    if([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
+    if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
         
         //Domain should be excluded
-        for(NSString *excludeSubdomains in _excludeSubdomainsSet){
-            if([challenge.protectionSpace.host isEqualToString:excludeSubdomains]){
+        for (NSString *excludeSubdomains in _excludeSubdomainsSet) {
+            if ([challenge.protectionSpace.host isEqualToString:excludeSubdomains]) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     self.lastAuthChanllengeDisposition = NSURLSessionAuthChallengePerformDefaultHandling;
                     completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
@@ -88,17 +90,16 @@
         // Validate the certificate chain with the device's trust store anyway
         // This *might* give use revocation checking
         SecTrustEvaluate(serverTrust, &trustResult);
-        if (trustResult == kSecTrustResultUnspecified)
-        {
+        if (trustResult == kSecTrustResultUnspecified) {
             // Look for a pinned certificate in the server's certificate chain
             long numKeys = SecTrustGetCertificateCount(serverTrust);
             
             BOOL found = NO;
-            for (int lc = 0; lc < numKeys; lc++){
+            for (int lc = 0; lc < numKeys; lc++) {
                 SecCertificateRef remoteCertificate = SecTrustGetCertificateAtIndex(serverTrust, lc);
                 NSData *remoteCertificatePublicKeyHash = [self hashSubjectPublicKeyInfoFromCertificate:remoteCertificate];
                 
-                if([_serverSSLPinsSet containsObject:remoteCertificatePublicKeyHash]){
+                if ([_serverSSLPinsSet containsObject:remoteCertificatePublicKeyHash]) {
                     dispatch_async(dispatch_get_main_queue(), ^{
                         self.lastAuthChanllengeDisposition = NSURLSessionAuthChallengeUseCredential;
                         completionHandler(NSURLSessionAuthChallengeUseCredential, [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust]);
@@ -107,6 +108,7 @@
                     break;
                 }
             }
+
             if (!found) {
                 // The certificate wasn't found. Cancel the connection.
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -114,17 +116,14 @@
                     completionHandler(NSURLSessionAuthChallengeCancelAuthenticationChallenge, [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust]);
                 });
             }
-            
         }
-        else if (trustResult == kSecTrustResultProceed)
-        {
+        else if (trustResult == kSecTrustResultProceed) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.lastAuthChanllengeDisposition = NSURLSessionAuthChallengePerformDefaultHandling;
                 completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust]);
             });
         }
-        else
-        {
+        else {
             // Certificate chain validation failed; cancel the connection
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.lastAuthChanllengeDisposition = NSURLSessionAuthChallengeCancelAuthenticationChallenge;
@@ -132,8 +131,7 @@
             });
         }
     }
-    else
-    {
+    else {
         dispatch_async(dispatch_get_main_queue(), ^{
             self.lastAuthChanllengeDisposition = NSURLSessionAuthChallengePerformDefaultHandling;
             completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
@@ -154,15 +152,14 @@
         cachedSubjectPublicKeyInfo = strongSelf.publicKeyInfoHashesCache[certificateData];
     });
     
-    if (cachedSubjectPublicKeyInfo)
-    {
+    if (cachedSubjectPublicKeyInfo) {
         return cachedSubjectPublicKeyInfo;
     }
     
     // We didn't have this certificate in the cache
     // First extract the public key bytes
     NSData *publicKeyData = [self getPublicKeyDataFromCertificate:certificate];
-    if (publicKeyData == nil){
+    if (publicKeyData == nil) {
         return nil;
     }
     
@@ -187,7 +184,6 @@
     
     return subjectPublicKeyInfoHash;
 }
-
 
 #pragma mark - Generate Public Key Hash
 
@@ -220,7 +216,6 @@ static const unsigned char rsa2048Asn1Header[] = {
     }
 #endif
 }
-
 
 - (NSData *)getPublicKeyDataFromCertificate_legacy_ios:(SecCertificateRef)certificate
 {
@@ -275,7 +270,6 @@ static const unsigned char rsa2048Asn1Header[] = {
     return publicKeyData;
 }
 
-
 - (NSData *)getPublicKeyDataFromCertificate_unified:(SecCertificateRef)certificate
 {
     // Create an X509 trust using the using the certificate
@@ -302,7 +296,5 @@ static const unsigned char rsa2048Asn1Header[] = {
     
     return (__bridge_transfer NSData *)publicKeyData;
 }
-
-
 
 @end

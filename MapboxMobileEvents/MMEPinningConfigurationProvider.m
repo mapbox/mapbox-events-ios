@@ -169,7 +169,7 @@ const NSString *kMMEExcludeSubdomainFromParentPolicy = @"kMMEExcludeSubdomainFro
 
 @implementation MMEPinningConfigurationProvider
 
-+ (MMEPinningConfigurationProvider *)pinningConfigProviderWithConfiguration:(MMEEventsConfiguration *)configuration{
++ (MMEPinningConfigurationProvider *)pinningConfigProviderWithConfiguration:(MMEEventsConfiguration *)configuration {
     MMEPinningConfigurationProvider *pinningConfigurationProvider = [[MMEPinningConfigurationProvider alloc]init];
     
     if (configuration) {
@@ -177,32 +177,32 @@ const NSString *kMMEExcludeSubdomainFromParentPolicy = @"kMMEExcludeSubdomainFro
     }
     
     pinningConfigurationProvider.pinningConfig = @{
-                       kMMEPinnedDomains: @{
-                               @"events.mapbox.com":@{
-                                       kMMEPublicKeyHashes: pinningConfigurationProvider.hashProvider.comHashes
-                                       },
-                               @"events.mapbox.cn":@{
-                                       kMMEPublicKeyHashes: pinningConfigurationProvider.hashProvider.cnHashes
-                                       },
-                               /* Staging */
-                               @"api-events-staging.tilestream.net":@{
-                                       kMMEPublicKeyHashes: @[
-                                               // Digicert, SHA1 Fingerprint=C6:1B:FE:8C:59:8F:29:F0:36:2E:88:BB:A2:CD:08:3B:F6:59:08:22
-                                               @"3euxrJOrEZI15R4104UsiAkDqe007EPyZ6eTL/XxdAY=",
-                                               // Stub: TrustKit requires 2 hashes for every endpoint
-                                               @"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
-                                               ]
-                                       },
-                               @"api.mapbox.com":@{
-                                       kMMEExcludeSubdomainFromParentPolicy:@(YES)
-                                       }
-                               }
-                       };
+        kMMEPinnedDomains: @{
+            @"events.mapbox.com": @{
+                kMMEPublicKeyHashes: pinningConfigurationProvider.hashProvider.comHashes
+            },
+            @"events.mapbox.cn": @{
+                kMMEPublicKeyHashes: pinningConfigurationProvider.hashProvider.cnHashes
+            },
+            /* Staging */
+            @"api-events-staging.tilestream.net": @{
+                kMMEPublicKeyHashes: @[
+                    // Digicert, SHA1 Fingerprint=C6:1B:FE:8C:59:8F:29:F0:36:2E:88:BB:A2:CD:08:3B:F6:59:08:22
+                    @"3euxrJOrEZI15R4104UsiAkDqe007EPyZ6eTL/XxdAY=",
+                   // Stub: TrustKit requires 2 hashes for every endpoint
+                   @"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+                ]
+            },
+            @"api.mapbox.com": @{
+                kMMEExcludeSubdomainFromParentPolicy: @(YES)
+            }
+        }
+    };
     return pinningConfigurationProvider;
 }
 
-- (id)init{
-    if(self = [super init]){
+- (id) init {
+    if (self = [super init]) {
         _hashProvider = [MMEHashProvider new];
     }
     return self;

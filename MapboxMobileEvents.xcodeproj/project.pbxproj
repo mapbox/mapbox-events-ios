@@ -129,12 +129,10 @@
 		CF870EA22254A93200959A65 /* MMEAPIClientCertPinTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = CF870EA12254A93200959A65 /* MMEAPIClientCertPinTests.mm */; };
 		CF93A6582241EDD500BBA199 /* MMECertPin.m in Sources */ = {isa = PBXBuildFile; fileRef = CF93A6562241EDD500BBA199 /* MMECertPin.m */; };
 		CF93A6592241EDD500BBA199 /* MMECertPin.m in Sources */ = {isa = PBXBuildFile; fileRef = CF93A6562241EDD500BBA199 /* MMECertPin.m */; };
-		CF93A65A2241EDD500BBA199 /* MMECertPin.m in Sources */ = {isa = PBXBuildFile; fileRef = CF93A6562241EDD500BBA199 /* MMECertPin.m */; };
 		CF93A65B2241EDD500BBA199 /* MMECertPin.h in Headers */ = {isa = PBXBuildFile; fileRef = CF93A6572241EDD500BBA199 /* MMECertPin.h */; };
 		CF93A65E2244C01300BBA199 /* MMEPinningConfigurationProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = CF93A65C2244C01300BBA199 /* MMEPinningConfigurationProvider.h */; };
 		CF93A65F2244C01300BBA199 /* MMEPinningConfigurationProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = CF93A65D2244C01300BBA199 /* MMEPinningConfigurationProvider.m */; };
 		CF93A6602244C01300BBA199 /* MMEPinningConfigurationProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = CF93A65D2244C01300BBA199 /* MMEPinningConfigurationProvider.m */; };
-		CF93A6612244C01300BBA199 /* MMEPinningConfigurationProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = CF93A65D2244C01300BBA199 /* MMEPinningConfigurationProvider.m */; };
 		CF93A66322488A4500BBA199 /* MMECertPinTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = CF93A66222488A4500BBA199 /* MMECertPinTests.mm */; };
 /* End PBXBuildFile section */
 
@@ -785,8 +783,6 @@
 				40031E5E1EFC5CA1009EAB33 /* MMEUniqueIdentifierFake.m in Sources */,
 				ACB6F21E1F7BF71B0032A916 /* MMELocationManagerTests.mm in Sources */,
 				AC61FA09216BE7A0008519F5 /* MMEMetricsManager.mm in Sources */,
-				CF93A65A2241EDD500BBA199 /* MMECertPin.m in Sources */,
-				CF93A6612244C01300BBA199 /* MMEPinningConfigurationProvider.m in Sources */,
 				40AE58471EA6C9F10046B437 /* MMEUIApplicationWrapperFake.m in Sources */,
 				403834FF1F7AC55D004205B9 /* MMEDateTests.mm in Sources */,
 				40AE584B1EA80EA90046B437 /* MMETestStub.m in Sources */,

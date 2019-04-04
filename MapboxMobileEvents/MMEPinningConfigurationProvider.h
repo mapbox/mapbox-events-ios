@@ -10,6 +10,6 @@ FOUNDATION_EXPORT const NSString *kMMEExcludeSubdomainFromParentPolicy;
 
 + (MMEPinningConfigurationProvider *)pinningConfigProviderWithConfiguration:(MMEEventsConfiguration *)configuration;
 
-@property (nonatomic, readonly) NSDictionary *pinningConfig;
+@property (nonatomic, readonly) NSDictionary *pinningConfig; // Dictionary<Domain, Dictionary<Keys, Array|Number>>
 
 @end
