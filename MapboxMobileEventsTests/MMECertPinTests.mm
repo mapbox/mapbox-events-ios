@@ -6,6 +6,7 @@
 #import "MMEEventsConfiguration.h"
 #import "MMEPinningConfigurationProvider.h"
 #import "MMENSURLSessionWrapper.h"
+#import "MMEAPIClientFake.h"
 
 using namespace Cedar::Matchers;
 using namespace Cedar::Doubles;
@@ -16,6 +17,8 @@ using namespace Cedar::Doubles;
 
 @end
 
+#pragma mark -
+
 @interface MMECertPin (Tests)
 
 @property (nonatomic) MMEPinningConfigurationProvider *pinningConfigProvider;
@@ -23,6 +26,8 @@ using namespace Cedar::Doubles;
 - (NSData *)getPublicKeyDataFromCertificate_legacy_ios:(SecCertificateRef)certificate;
 
 @end
+
+#pragma mark -
 
 SPEC_BEGIN(MMECertPinSpec)
 
@@ -69,17 +74,26 @@ describe(@"MMECertPin", ^{
     });
 
     it(@"should support legacy ios devices", ^{
-        NSDictionary *certQuery = @{
+        NSString *testCARoot = @"MMETestCARoot";
+        NSBundle *testsBundle = [NSBundle bundleForClass:MMEAPIClientFake.class];
+        NSString *testCARootCertPath = [testsBundle pathForResource:testCARoot ofType:@"cer"];
+        NSData *testCARootCertData = [NSData dataWithContentsOfFile:testCARootCertPath];
+        SecCertificateRef certificate = SecCertificateCreateWithData(kCFAllocatorDefault, (__bridge CFDataRef)testCARootCertData);
+
+        certificate should_not be_nil;
+
+        // for get publicKeyData to work we need to put MMETestCARoot into the kehchain
+        NSDictionary *addQuery = @{
+            (id)kSecValueRef: (__bridge id)certificate,
             (id)kSecClass: (id)kSecClassCertificate,
-            (id)kSecAttrLabel: @"Apple Root CA",
-            (id)kSecReturnRef: @YES
+            (id)kSecAttrLabel: testCARoot
         };
 
-        SecCertificateRef certificate = NULL;
-        if (SecItemCopyMatching((__bridge CFDictionaryRef)certQuery, (CFTypeRef *)&certificate) == errSecSuccess) {
-            NSData* publicKey = [sessionWrapper.certPin getPublicKeyDataFromCertificate_legacy_ios:certificate];
-            publicKey should_not be_nil;
-        }
+        OSStatus addStatus = SecItemAdd((__bridge CFDictionaryRef)addQuery, NULL);
+        addStatus should equal(errSecSuccess);
+
+        NSData* publicKey = [sessionWrapper.certPin getPublicKeyDataFromCertificate_legacy_ios:certificate];
+        publicKey should_not be_nil;
     });
 });
 
