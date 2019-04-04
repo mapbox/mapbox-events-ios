@@ -89,8 +89,7 @@ describe(@"MMECertPin", ^{
             (id)kSecAttrLabel: testCARoot
         };
 
-        OSStatus addStatus = SecItemAdd((__bridge CFDictionaryRef)addQuery, NULL);
-        addStatus should equal(errSecSuccess);
+        SecItemAdd((__bridge CFDictionaryRef)addQuery, NULL);
 
         NSData* publicKey = [sessionWrapper.certPin getPublicKeyDataFromCertificate_legacy_ios:certificate];
         publicKey should_not be_nil;
