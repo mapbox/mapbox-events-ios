@@ -324,14 +324,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		401379661F16F26E00567137 /* Vendor */ = {
-			isa = PBXGroup;
-			children = (
-				40F16C931F04514100DF338D /* Reachability */,
-			);
-			name = Vendor;
-			sourceTree = "<group>";
-		};
 		4032F47C1F1FEDC6001C1FBD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -397,7 +389,7 @@
 				40AE584D1EA926710046B437 /* MMETypes.m */,
 				40AE58601EA94E4A0046B437 /* Categories */,
 				40C9E2841EA5615900744FE7 /* Utilities */,
-				401379661F16F26E00567137 /* Vendor */,
+				40F16C931F04514100DF338D /* Reachability */,
 			);
 			path = MapboxMobileEvents;
 			sourceTree = "<group>";
