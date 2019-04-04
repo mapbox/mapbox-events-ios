@@ -762,8 +762,9 @@
 					};
 					404807C11EA186D8008A6D50 = {
 						CreatedOnToolsVersion = 8.3.1;
-						DevelopmentTeam = 8G8GJ5WNL6;
+						DevelopmentTeam = GJZR2MEM28;
 						ProvisioningStyle = Automatic;
+						TestTargetID = 9C65A2652256C110006E3FED;
 					};
 					408596521ED084C0003BD29D = {
 						CreatedOnToolsVersion = 8.3.2;
@@ -1216,7 +1217,7 @@
 		404807D11EA186D8008A6D50 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEVELOPMENT_TEAM = 8G8GJ5WNL6;
+				DEVELOPMENT_TEAM = GJZR2MEM28;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -1238,7 +1239,7 @@
 		404807D21EA186D8008A6D50 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEVELOPMENT_TEAM = 8G8GJ5WNL6;
+				DEVELOPMENT_TEAM = GJZR2MEM28;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
