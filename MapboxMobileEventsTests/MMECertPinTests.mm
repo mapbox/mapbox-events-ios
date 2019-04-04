@@ -1,5 +1,7 @@
 #import <Cedar/Cedar.h>
 #import <Foundation/Foundation.h>
+#import <Security/Security.h>
+
 #import "MMECertPin.h"
 #import "MMEEventsConfiguration.h"
 #import "MMEPinningConfigurationProvider.h"
@@ -17,6 +19,8 @@ using namespace Cedar::Doubles;
 @interface MMECertPin (Tests)
 
 @property (nonatomic) MMEPinningConfigurationProvider *pinningConfigProvider;
+
+- (NSData *)getPublicKeyDataFromCertificate_legacy_ios:(SecCertificateRef)certificate;
 
 @end
 
@@ -62,6 +66,20 @@ describe(@"MMECertPin", ^{
                 comHashes.count should equal(53);
             });
         });
+    });
+
+    it(@"should support legacy ios devices", ^{
+        NSDictionary *certQuery = @{
+            (id)kSecClass: (id)kSecClassCertificate,
+            (id)kSecAttrLabel: @"Apple Root CA",
+            (id)kSecReturnRef: @YES
+        };
+
+        SecCertificateRef certificate = NULL;
+        if (SecItemCopyMatching((__bridge CFDictionaryRef)certQuery, (CFTypeRef *)&certificate) == errSecSuccess) {
+            NSData* publicKey = [sessionWrapper.certPin getPublicKeyDataFromCertificate_legacy_ios:certificate];
+            publicKey should_not be_nil;
+        }
     });
 });
 
