@@ -126,7 +126,7 @@
 		ACD86DA01F96A77700DD2A8D /* MMEAPIClientTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = ACD86D9F1F96A77700DD2A8D /* MMEAPIClientTests.mm */; };
 		ACE4F01A1FD6102100035880 /* MMEUINavigation.h in Headers */ = {isa = PBXBuildFile; fileRef = ACE4F0181FD6102100035880 /* MMEUINavigation.h */; };
 		ACE4F01B1FD6102100035880 /* MMEUINavigation.m in Sources */ = {isa = PBXBuildFile; fileRef = ACE4F0191FD6102100035880 /* MMEUINavigation.m */; };
-		CF870EA22254A93200959A65 /* MMEAPIClientCertPinTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CF870EA12254A93200959A65 /* MMEAPIClientCertPinTests.m */; };
+		CF870EA22254A93200959A65 /* MMEAPIClientCertPinTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = CF870EA12254A93200959A65 /* MMEAPIClientCertPinTests.mm */; };
 		CF93A6582241EDD500BBA199 /* MMECertPin.m in Sources */ = {isa = PBXBuildFile; fileRef = CF93A6562241EDD500BBA199 /* MMECertPin.m */; };
 		CF93A6592241EDD500BBA199 /* MMECertPin.m in Sources */ = {isa = PBXBuildFile; fileRef = CF93A6562241EDD500BBA199 /* MMECertPin.m */; };
 		CF93A65A2241EDD500BBA199 /* MMECertPin.m in Sources */ = {isa = PBXBuildFile; fileRef = CF93A6562241EDD500BBA199 /* MMECertPin.m */; };
@@ -284,7 +284,7 @@
 		ACD86D9F1F96A77700DD2A8D /* MMEAPIClientTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MMEAPIClientTests.mm; sourceTree = "<group>"; };
 		ACE4F0181FD6102100035880 /* MMEUINavigation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEUINavigation.h; sourceTree = "<group>"; };
 		ACE4F0191FD6102100035880 /* MMEUINavigation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEUINavigation.m; sourceTree = "<group>"; };
-		CF870EA12254A93200959A65 /* MMEAPIClientCertPinTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEAPIClientCertPinTests.m; sourceTree = "<group>"; };
+		CF870EA12254A93200959A65 /* MMEAPIClientCertPinTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MMEAPIClientCertPinTests.mm; sourceTree = "<group>"; };
 		CF93A6562241EDD500BBA199 /* MMECertPin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMECertPin.m; sourceTree = "<group>"; };
 		CF93A6572241EDD500BBA199 /* MMECertPin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMECertPin.h; sourceTree = "<group>"; };
 		CF93A65C2244C01300BBA199 /* MMEPinningConfigurationProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEPinningConfigurationProvider.h; sourceTree = "<group>"; };
@@ -409,7 +409,7 @@
 			children = (
 				404807C91EA186D8008A6D50 /* Info.plist */,
 				CF93A66222488A4500BBA199 /* MMECertPinTests.mm */,
-				CF870EA12254A93200959A65 /* MMEAPIClientCertPinTests.m */,
+				CF870EA12254A93200959A65 /* MMEAPIClientCertPinTests.mm */,
 				ACD86D9F1F96A77700DD2A8D /* MMEAPIClientTests.mm */,
 				403834FE1F7AC55D004205B9 /* MMEDateTests.mm */,
 				403835051F7AF860004205B9 /* MMEDependencyManagerTests.mm */,
@@ -684,6 +684,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = 404807AF1EA186D8008A6D50;
@@ -792,7 +793,7 @@
 				40FB43801EFAFDCF00EC5BC0 /* MMETimerManagerTests.m in Sources */,
 				CF93A66322488A4500BBA199 /* MMECertPinTests.mm in Sources */,
 				4036EFBB1ED36F06009C40BA /* MMEAPIClientFake.m in Sources */,
-				CF870EA22254A93200959A65 /* MMEAPIClientCertPinTests.m in Sources */,
+				CF870EA22254A93200959A65 /* MMEAPIClientCertPinTests.mm in Sources */,
 				ACA65F3B2135C67F00537748 /* MMEDispatchManagerFake.m in Sources */,
 				9C6D98A722371DA400679292 /* MMEEventsConfigurationTests.mm in Sources */,
 				4002E6361F83155E0090D724 /* MMEEventsManagerTests.mm in Sources */,
