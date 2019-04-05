@@ -3,6 +3,9 @@
 #import "CLLocationManager+MMEMobileEvents.h"
 #import "CLLocation+MMEMobileEvents.h"
 #import "NSData+MMEGZIP.h"
+#if TARGET_OS_IOS || TARGET_OS_TV
+#import "UIKit+MMEMobileEvents.h"
+#endif
 
 @implementation MMECategoryLoader
 
@@ -12,6 +15,9 @@
     mme_linkCLLocationManagerCategory();
     mme_linkCLLocationCategory();
     mme_linkNSDataCategory();
+#if TARGET_OS_IOS || TARGET_OS_TV
+    mme_linkUIKitCategories();
+#endif
 }
 
 @end

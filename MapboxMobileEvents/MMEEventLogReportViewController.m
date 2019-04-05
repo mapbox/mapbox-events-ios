@@ -17,7 +17,7 @@
     UINavigationBar *navBar = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, [UIApplication sharedApplication].statusBarFrame.size.height, self.view.frame.size.width, 80 + [UIApplication sharedApplication].statusBarFrame.size.height)];
     navBar.backgroundColor = [UIColor colorWithRed:(247.0f/255.0f) green:(247.0f/255.0f) blue:(247.0f/255.0f) alpha:1];
     
-    UINavigationItem *navItem = [[UINavigationItem alloc] initWithTitle:@"Profiler"];
+    UINavigationItem *navItem = [[UINavigationItem alloc] initWithTitle:NSLocalizedString(@"Profiler",nil)];
     UIBarButtonItem *shareButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(shareButtonPressed:)];
     navItem.rightBarButtonItem = shareButton;
     

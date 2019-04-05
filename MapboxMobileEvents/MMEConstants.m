@@ -14,7 +14,6 @@ NSString * const MMEAPIClientAttachmentsHeaderFieldContentTypeValue = @"multipar
 NSString * const MMEAPIClientHeaderFieldContentEncodingKey = @"Content-Encoding";
 NSString * const MMEAPIClientHTTPMethodPost = @"POST";
 NSString * const MMEAPIClientHTTPMethodGet = @"GET";
-NSString * const MMEErrorDomain = @"MMEErrorDomain";
 NSString * const MMEResponseKey = @"MMEResponseKey";
 
 NSString * const MMEDebugEventType = @"debug.type";
@@ -61,7 +60,7 @@ NSString * const MMEEventKeyZoomLevel = @"zoom";
 NSString * const MMEEventKeySpeed = @"speed";
 NSString * const MMEEventKeyStyleURL = @"styleURL";
 NSString * const MMEEventKeyCourse = @"course";
-NSString * const MMEEventKeyGestureID = @"gesture";
+NSString * const MMEEventKeyGestureId = @"gesture";
 NSString * const MMEEventHorizontalAccuracy = @"horizontalAccuracy";
 NSString * const MMEEventKeyLocalDebugDescription = @"debug.description";
 NSString * const MMEEventKeyErrorCode = @"error.code";
@@ -70,7 +69,7 @@ NSString * const MMEEventKeyErrorFailureReason = @"error.failureReason";
 NSString * const MMEEventKeyErrorNoReason = @"No Reason";
 NSString * const MMEEventKeyEvent = @"event";
 NSString * const MMEEventKeyCreated = @"created";
-NSString * const MMEEventKeyVendorID = @"userId";
+NSString * const MMEEventKeyVendorId = @"userId";
 NSString * const MMEEventKeyModel = @"model";
 NSString * const MMEEventKeyDevice = @"device";
 NSString * const MMEEventKeySkuId = @"skuId";
@@ -137,11 +136,42 @@ NSString * const MMEEventTypeSearchFeedback = @"search.feedback";
 
 NSString * const MMEEventSource = @"mapbox";
 
+#pragma mark - mobile.crash events
+
+NSString * const MMEEventMobileCrash = @"mobile.crash";
+NSString * const MMEEventKeyOSVersion = @"osVersion";
+NSString * const MMEEventKeyBuildType = @"buildType";
+NSString * const MMEEventKeyIsSilentCrash = @"isSilent";
+NSString * const MMEEventKeyStackTrace = @"stackTrace";
+NSString * const MMEEventKeyStackTraceHash = @"stackTraceHash";
+NSString * const MMEEventKeyInstallationId = @"installationID";
+NSString * const MMEEventKeyThreadDetails = @"threadDetails";
+NSString * const MMEEventKeyAppId = @"appId";
+NSString * const MMEEventKeyAppVersion = @"appVersion";
+NSString * const MMEEventKeyAppStartDate = @"appStartDate";
+NSString * const MMEEventKeyCustomData = @"threadDetails";
+
+#pragma mark - MMEErrorDomain
+
+NSErrorDomain const MMEErrorDomain = @"MMEErrorDomain";
+
+NSInteger const MMENoError = 0;
+NSInteger const MMEErrorMin = 10000;
+NSInteger const MMEErrorException = (MMEErrorMin + 1);
+NSInteger const MMEErrorEventInit = (MMEErrorMin + 2);
+
+NSString * const MMEErrorDescriptionKey = @"errorDescription";
+NSString * const MMEErrorEventAttributesKey = @"eventAttributes";
+NSString * const MMEErrorUnderlyingExceptionKey = @"underlyingException";
+
+#pragma mark - Deperecated
+
+NSString * const MMEEventKeyGestureID = MMEEventKeyGestureId;
+NSString * const MMEEventKeyVendorID = MMEEventKeyVendorId;
+NSString * const MMEEventKeyInstallationID = MMEEventKeyInstallationId;
+NSString * const MMEEventKeyAppID = MMEEventKeyAppId;
+
 NSString * const MMELoggerHTML = @"<html><head><script type='text/javascript' src='https://www.gstatic.com/charts/loader.js'></script><script type='text/javascript'>google.charts.load('current', {'packages':['timeline']});var container = document.getElementById('timeline-tooltip');var dataString;function addData(data) {dataString = data}window.webkit.messageHandlers.data.postMessage('data');google.charts.setOnLoadCallback(drawChart); function drawChart() {var dataTable = new google.visualization.DataTable({cols: [{id: 'eventType', label: 'Event Type', type: 'string'},{id: 'instance', type: 'string'},{type: 'string', role: 'tooltip', p:{html:true}},{id: 'start', label: 'Event Start Time', type: 'datetime'},{id: 'end', label: 'Event End Time', type: 'datetime'}],rows: dataString});var options = {'title':'Telemetry Log Data','width':1024,'height':400,'timeline': { groupByRowLabel: true },tooltip: {isHtml: true}};var chart = new google.visualization.Timeline(document.getElementById('chart_div'));google.visualization.events.addListener(chart, 'ready', afterDraw);chart.draw(dataTable, options);}function afterDraw() {window.webkit.messageHandlers.complete.postMessage('complete');}</script></head><body><div id=\"timeline-tooltip\" style=\"height: 180px;\"></div><div id='chart_div'></div></body></html>";
 
 NSString * const MMELoggerShareableHTML = @"<html><head><script type='text/javascript' src='https://www.gstatic.com/charts/loader.js'></script><script type='text/javascript'>google.charts.load('current', {'packages':['timeline']});var container = document.getElementById('timeline-tooltip');var dataString;function addData(data) {dataString = data};google.charts.setOnLoadCallback(drawChart); function drawChart() {var dataTable = new google.visualization.DataTable({cols: [{id: 'eventType', label: 'Event Type', type: 'string'},{id: 'instance', type: 'string'},{type: 'string', role: 'tooltip', p:{html:true}},{id: 'start', label: 'Event Start Time', type: 'datetime'},{id: 'end', label: 'Event End Time', type: 'datetime'}],rows: dataString});var options = {'title':'Telemetry Log Data','width':1024,'height':400,'timeline': { groupByRowLabel: true },tooltip: {isHtml: true}};var chart = new google.visualization.Timeline(document.getElementById('chart_div'));google.visualization.events.addListener(chart, 'ready', afterDraw);chart.draw(dataTable, options);}function afterDraw() {}</script></head><body><div id=\"timeline-tooltip\" style=\"height: 180px;\"></div><div id='chart_div'></div></body></html>";
-
-@implementation MMEConstants
-
-@end
 

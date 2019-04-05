@@ -23,7 +23,6 @@ function generate_namespace_header {
     mkdir -p $NAME_PATH && touch $NAME_HEADER
 
     echo "Generating $NAME_HEADER from $1"
-
     echo "// This namespaced header is generated.
 // Add source files to the MapboxMobileEventsStatic target, then run \`make name-header\`.
 
@@ -38,17 +37,60 @@ function generate_namespace_header {
     " > $NAME_HEADER
 
     echo "// Classes" >> $NAME_HEADER
-    nm $1 -j | sort | uniq | grep "^_OBJC_CLASS_\$_" | grep -v "\$_AGSGT" | grep -v "\$_CL" | grep -v "\$_NS" | grep -v "\$_UI" | sed -e 's/_OBJC_CLASS_\$_\(.*\)/#ifndef \1\'$'\n''#define \1 __NS_SYMBOL(\1)\'$'\n''#endif\'$'\n''/g' >> $NAME_HEADER
+    nm $1 -j | sort | uniq | grep "^_OBJC_CLASS_\$_" \
+        | grep -v "\$_AGSGT" \
+        | grep -v "\$_CL" \
+        | grep -v "\$_NS" \
+        | grep -v "\$_UI" \
+        | grep -v "\$___block" \
+        | grep -v "\$___clang" \
+        | grep -v "\$___copy" \
+        | grep -v "\$___destroy" \
+        | sed -e 's/_OBJC_CLASS_\$_\(.*\)/#ifndef \1\'$'\n''#define \1 __NS_SYMBOL(\1)\'$'\n''#endif\'$'\n''/g' >> $NAME_HEADER
 
     echo "// Functions" >> $NAME_HEADER
-    nm $1 | sort | uniq | grep " T " | cut -d' ' -f3 | grep -v "\$_NS" | grep -v "\$_UI" | sed -e 's/_\(.*\)/#ifndef \1\'$'\n''#define \1 __NS_SYMBOL(\1)\'$'\n''#endif\'$'\n''/g' >> $NAME_HEADER
-
+    nm $1 | sort | uniq | grep " T " | cut -d' ' -f3 \
+        | grep -v "\$_NS" \
+        | grep -v "\$_UI" \
+        | grep -v "___block" \
+        | grep -v "___clang" \
+        | grep -v "___copy" \
+        | grep -v "___destroy" \
+        | sed -e 's/_\(.*\)/#ifndef \1\'$'\n''#define \1 __NS_SYMBOL(\1)\'$'\n''#endif\'$'\n''/g' >> $NAME_HEADER
 
     echo "// Externs" >> $NAME_HEADER
     
-    nm $1 | sort | uniq | grep " D " | cut -d' ' -f3 | grep -v "\$_NS" | grep -v "\$_UI" | grep -v "l_OBJC_PROTOCOL" | sed -e 's/_\(.*\)/#ifndef \1\'$'\n''#define \1 __NS_SYMBOL(\1)\'$'\n''#endif\'$'\n''/g' >> $NAME_HEADER
-    nm $1 | sort | uniq | grep " D " | cut -d' ' -f3 | grep -v "\$_NS" | grep -v "\$_UI" | grep -v "\$_CL" | grep "l_OBJC_PROTOCOL" | sed -e 's/l_OBJC_PROTOCOL_\$_\(.*\)/#ifndef \1\'$'\n''#define \1 __NS_SYMBOL(\1)\'$'\n''#endif\'$'\n''/g' >> $NAME_HEADER
-    nm $1 | sort | uniq | grep " S " | cut -d' ' -f3 | grep -v "\$_NS" | grep -v ".eh" | grep -v "\$_UI" | grep -v "OBJC_" | sed -e 's/_\(.*\)/#ifndef \1\'$'\n''#define \1 __NS_SYMBOL(\1)\'$'\n''#endif\'$'\n''/g' >> $NAME_HEADER
+    nm $1 | sort | uniq | grep " D " | cut -d' ' -f3 \
+        | grep -v "l_OBJC_PROTOCOL" \
+        | grep -v "\$_NS" \
+        | grep -v "\$_UI" \
+        | grep -v "___block" \
+        | grep -v "___clang" \
+        | grep -v "___copy" \
+        | grep -v "___destroy" \
+        | sed -e 's/_\(.*\)/#ifndef \1\'$'\n''#define \1 __NS_SYMBOL(\1)\'$'\n''#endif\'$'\n''/g' >> $NAME_HEADER
+
+    nm $1 | sort | uniq | grep " D " | cut -d' ' -f3 \
+        | grep "l_OBJC_PROTOCOL" \
+        | grep -v "\$_NS" \
+        | grep -v "\$_UI" \
+        | grep -v "\$_CL" \
+        | grep -v "___block" \
+        | grep -v "___clang" \
+        | grep -v "___copy" \
+        | grep -v "___destroy" \
+        | sed -e 's/l_OBJC_PROTOCOL_\$_\(.*\)/#ifndef \1\'$'\n''#define \1 __NS_SYMBOL(\1)\'$'\n''#endif\'$'\n''/g' >> $NAME_HEADER
+
+    nm $1 | sort | uniq | grep " S " | cut -d' ' -f3 \
+        | grep -v "OBJC_" \
+        | grep -v ".eh" \
+        | grep -v "\$_NS" \
+        | grep -v "\$_UI" \
+        | grep -v "___block" \
+        | grep -v "___clang" \
+        | grep -v "___copy" \
+        | grep -v "___destroy" \
+        | sed -e 's/_\(.*\)/#ifndef \1\'$'\n''#define \1 __NS_SYMBOL(\1)\'$'\n''#endif\'$'\n''/g' >> $NAME_HEADER
 }
 
 # Can build iphoneos (device) or iphonesimulator (simulator)

@@ -1,6 +1,7 @@
 #import "MMENSURLSessionWrapper.h"
 #import "MMEEventsManager.h"
 #import "MMECertPin.h"
+#import "MMEEvent.h"
 
 #pragma mark -
 
