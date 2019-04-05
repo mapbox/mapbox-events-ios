@@ -128,7 +128,7 @@ describe(@"MMEDate", ^{
             });
         });
 
-        it(@"should write encoded data to a file", ^{
+        it(@"should write encoded data to a file/read data and decode from a file", ^{
             [NSKeyedArchiver archiveRootObject:now toFile:tempFile];
             [NSFileManager.defaultManager fileExistsAtPath:tempFile] should be_truthy;
 
