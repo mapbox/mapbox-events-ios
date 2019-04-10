@@ -1,5 +1,6 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import "MMETypes.h"
 
 @class MMEEvent;
 
@@ -13,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)logEvent:(MMEEvent *)event;
 - (void)readAndDisplayLogFileFromDate:(NSDate *)logDate;
+- (void)pushDebugEventWithAttributes:(MMEMapboxEventAttributes *)attributes;
 
 @end
 

@@ -82,7 +82,7 @@ describe(@"MMECertPin", ^{
 
         certificate should_not be_nil;
 
-        // for get publicKeyData to work we need to put MMETestCARoot into the kehchain
+        // for get publicKeyData to work we need to put MMETestCARoot into the keychain
         NSDictionary *addQuery = @{
             (id)kSecValueRef: (__bridge id)certificate,
             (id)kSecClass: (id)kSecClassCertificate,

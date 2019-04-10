@@ -60,6 +60,13 @@
 
 #pragma mark - Write to Local File
 
+- (void)pushDebugEventWithAttributes:(MMEMapboxEventAttributes *)attributes {
+    MMEMutableMapboxEventAttributes *combinedAttributes = [MMEMutableMapboxEventAttributes dictionaryWithDictionary:attributes];
+    [combinedAttributes setObject:[MMEDate.iso8601DateFormatter stringFromDate:[NSDate date]] forKey:@"created"];
+    MMEEvent *debugEvent = [MMEEvent debugEventWithAttributes:combinedAttributes];
+    [MMEEventLogger.sharedLogger logEvent:debugEvent];
+}
+
 - (BOOL)timeForNewLogFile {
     return [[NSDate date] timeIntervalSinceDate:self.nextLogFileDate] > 0;
 }

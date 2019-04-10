@@ -29,6 +29,7 @@ NSString * const MMEDebugEventTypeBackgroundTask = @"backgroundTask";
 NSString * const MMEDebugEventTypeMetricCollection = @"metricCollection";
 NSString * const MMEDebugEventTypeLocationManager = @"locationManager";
 NSString * const MMEDebugEventTypeTelemetryMetrics = @"telemMetrics";
+NSString * const MMEDebugEventTypeCertPinning = @"certPinning";
 
 NSString * const MMEEventTypeAppUserTurnstile = @"appUserTurnstile";
 NSString * const MMEEventTypeTelemetryMetrics = @"telemetryMetrics";
