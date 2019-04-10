@@ -277,7 +277,7 @@
         NSString *debugDescription = [NSString stringWithFormat:@"TelemetryMetrics event isn't ready to be sent; writing to %@ and waiting until %@ to send",
             MMEMetricsManager.pendingMetricsEventPath, zeroHour];
         
-        [self pushDebugEventWithAttributes:@{
+        [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
             MMEDebugEventType: MMEDebugEventTypeTelemetryMetrics,
             MMEEventKeyLocalDebugDescription: debugDescription}];
 
@@ -293,7 +293,7 @@
                     if (![archiver.encodedData writeToFile:MMEMetricsManager.pendingMetricsEventPath atomically:YES]) {
                         debugDescription = [NSString stringWithFormat:@"Failed to archiveRootObject: %@ toFile: %@",
                             telemetryMetrics, MMEMetricsManager.pendingMetricsEventPath];
-                        [self pushDebugEventWithAttributes:@{
+                        [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
                             MMEDebugEventType: MMEDebugEventTypeTelemetryMetrics,
                             MMEEventKeyLocalDebugDescription: debugDescription}];
                     }
@@ -311,13 +311,6 @@
     [MMEMetricsManager deletePendingMetricsEventFile];
     
     return telemetryMetrics;
-}
-
-- (void)pushDebugEventWithAttributes:(NSDictionary *)attributes {
-    NSMutableDictionary *combinedAttributes = [NSMutableDictionary dictionaryWithDictionary:attributes];
-    [combinedAttributes setObject:[MMEDate.iso8601DateFormatter stringFromDate:NSDate.date] forKey:@"created"];
-    MMEEvent *debugEvent = [MMEEvent debugEventWithAttributes:attributes];
-    [MMEEventLogger.sharedLogger logEvent:debugEvent];
 }
 
 #pragma mark -
