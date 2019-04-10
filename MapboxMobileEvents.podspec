@@ -30,7 +30,7 @@ Pod::Spec.new do |s|
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
-  s.source_files = ["MapboxMobileEvents/**/*.{h,m}", "vendor/TrustKit/**/*.{h,m,c}"]
+  s.source_files = ["MapboxMobileEvents/**/*.{h,m}"]
   s.resources = "MapboxMobileEvents/Resources/*"
   s.exclude_files = "MapboxMobileEvents/MMENamespacedDependencies.h"
 
