@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
   # ―――  Spec Metadata  ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
   s.name = 'MapboxMobileEvents'
-  s.version = "0.9.2"
+  s.version = "0.9.3"
   s.summary = "Mapbox Mobile Events"
 
   s.description  = "Collects usage information to help Mapbox improve its products."
@@ -30,7 +30,7 @@ Pod::Spec.new do |s|
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
-  s.source_files = ["MapboxMobileEvents/**/*.{h,m}", "vendor/TrustKit/**/*.{h,m,c}"]
+  s.source_files = ["MapboxMobileEvents/**/*.{h,m}"]
   s.resources = "MapboxMobileEvents/Resources/*"
   s.exclude_files = "MapboxMobileEvents/MMENamespacedDependencies.h"
 

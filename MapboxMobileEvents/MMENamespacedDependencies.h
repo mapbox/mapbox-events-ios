@@ -19,6 +19,10 @@
 #define MMECategoryLoader __NS_SYMBOL(MMECategoryLoader)
 #endif
 
+#ifndef MMECertPin
+#define MMECertPin __NS_SYMBOL(MMECertPin)
+#endif
+
 #ifndef MMECommonEventData
 #define MMECommonEventData __NS_SYMBOL(MMECommonEventData)
 #endif
@@ -83,16 +87,16 @@
 #define MMENSURLSessionWrapper __NS_SYMBOL(MMENSURLSessionWrapper)
 #endif
 
+#ifndef MMEPinningConfigurationProvider
+#define MMEPinningConfigurationProvider __NS_SYMBOL(MMEPinningConfigurationProvider)
+#endif
+
 #ifndef MMEReachability
 #define MMEReachability __NS_SYMBOL(MMEReachability)
 #endif
 
 #ifndef MMETimerManager
 #define MMETimerManager __NS_SYMBOL(MMETimerManager)
-#endif
-
-#ifndef MMETrustKitProvider
-#define MMETrustKitProvider __NS_SYMBOL(MMETrustKitProvider)
 #endif
 
 #ifndef MMETypes
@@ -111,47 +115,7 @@
 #define MMEUniqueIdentifier __NS_SYMBOL(MMEUniqueIdentifier)
 #endif
 
-#ifndef TSKBackgroundReporter
-#define TSKBackgroundReporter __NS_SYMBOL(TSKBackgroundReporter)
-#endif
-
-#ifndef TSKPinFailureReport
-#define TSKPinFailureReport __NS_SYMBOL(TSKPinFailureReport)
-#endif
-
-#ifndef TSKPinningValidator
-#define TSKPinningValidator __NS_SYMBOL(TSKPinningValidator)
-#endif
-
-#ifndef TSKPinningValidatorResult
-#define TSKPinningValidatorResult __NS_SYMBOL(TSKPinningValidatorResult)
-#endif
-
-#ifndef TSKReportsRateLimiter
-#define TSKReportsRateLimiter __NS_SYMBOL(TSKReportsRateLimiter)
-#endif
-
-#ifndef TSKSPKIHashCache
-#define TSKSPKIHashCache __NS_SYMBOL(TSKSPKIHashCache)
-#endif
-
-#ifndef TrustKit
-#define TrustKit __NS_SYMBOL(TrustKit)
-#endif
-
 // Functions
-#ifndef convertTrustToPemArray
-#define convertTrustToPemArray __NS_SYMBOL(convertTrustToPemArray)
-#endif
-
-#ifndef getPinningConfigurationKeyForDomain
-#define getPinningConfigurationKeyForDomain __NS_SYMBOL(getPinningConfigurationKeyForDomain)
-#endif
-
-#ifndef identifier_for_vendor
-#define identifier_for_vendor __NS_SYMBOL(identifier_for_vendor)
-#endif
-
 #ifndef mme_linkCLLocationCategory
 #define mme_linkCLLocationCategory __NS_SYMBOL(mme_linkCLLocationCategory)
 #endif
@@ -164,28 +128,168 @@
 #define mme_linkNSDataCategory __NS_SYMBOL(mme_linkNSDataCategory)
 #endif
 
-#ifndef parseTrustKitConfiguration
-#define parseTrustKitConfiguration __NS_SYMBOL(parseTrustKitConfiguration)
+#ifndef __copy_helper_block_e8_
+#define __copy_helper_block_e8_ __NS_SYMBOL(__copy_helper_block_e8_)
 #endif
 
-#ifndef verifyPublicKeyPin
-#define verifyPublicKeyPin __NS_SYMBOL(verifyPublicKeyPin)
+#ifndef __destroy_helper_block_e8_
+#define __destroy_helper_block_e8_ __NS_SYMBOL(__destroy_helper_block_e8_)
 #endif
 
-#ifndef TSKLog
-#define TSKLog __NS_SYMBOL(TSKLog)
+#ifndef __copy_helper_block_e8_32s
+#define __copy_helper_block_e8_32s __NS_SYMBOL(__copy_helper_block_e8_32s)
 #endif
 
-#ifndef convertPinsToHpkpPins
-#define convertPinsToHpkpPins __NS_SYMBOL(convertPinsToHpkpPins)
+#ifndef __destroy_helper_block_e8_32s
+#define __destroy_helper_block_e8_32s __NS_SYMBOL(__destroy_helper_block_e8_32s)
+#endif
+
+#ifndef __copy_helper_block_e8_32b40s48s56s
+#define __copy_helper_block_e8_32b40s48s56s __NS_SYMBOL(__copy_helper_block_e8_32b40s48s56s)
+#endif
+
+#ifndef __destroy_helper_block_e8_32s40s48s56s
+#define __destroy_helper_block_e8_32s40s48s56s __NS_SYMBOL(__destroy_helper_block_e8_32s40s48s56s)
+#endif
+
+#ifndef __copy_helper_block_e8_32b40r
+#define __copy_helper_block_e8_32b40r __NS_SYMBOL(__copy_helper_block_e8_32b40r)
+#endif
+
+#ifndef __destroy_helper_block_e8_32s40r
+#define __destroy_helper_block_e8_32s40r __NS_SYMBOL(__destroy_helper_block_e8_32s40r)
+#endif
+
+#ifndef __copy_helper_block_e8_32s40s48b
+#define __copy_helper_block_e8_32s40s48b __NS_SYMBOL(__copy_helper_block_e8_32s40s48b)
+#endif
+
+#ifndef __copy_helper_block_e8_32w
+#define __copy_helper_block_e8_32w __NS_SYMBOL(__copy_helper_block_e8_32w)
+#endif
+
+#ifndef __destroy_helper_block_e8_32s40s48s
+#define __destroy_helper_block_e8_32s40s48s __NS_SYMBOL(__destroy_helper_block_e8_32s40s48s)
+#endif
+
+#ifndef __destroy_helper_block_e8_32w
+#define __destroy_helper_block_e8_32w __NS_SYMBOL(__destroy_helper_block_e8_32w)
+#endif
+
+#ifndef __copy_helper_block_e8_32s40s48s56b
+#define __copy_helper_block_e8_32s40s48s56b __NS_SYMBOL(__copy_helper_block_e8_32s40s48s56b)
+#endif
+
+#ifndef __destroy_helper_block_e8_32s40s48s56s
+#define __destroy_helper_block_e8_32s40s48s56s __NS_SYMBOL(__destroy_helper_block_e8_32s40s48s56s)
+#endif
+
+#ifndef __copy_helper_block_e8_32s40b48w
+#define __copy_helper_block_e8_32s40b48w __NS_SYMBOL(__copy_helper_block_e8_32s40b48w)
+#endif
+
+#ifndef __destroy_helper_block_e8_32s40s48w
+#define __destroy_helper_block_e8_32s40s48w __NS_SYMBOL(__destroy_helper_block_e8_32s40s48w)
+#endif
+
+#ifndef __copy_helper_block_e8_32s40s
+#define __copy_helper_block_e8_32s40s __NS_SYMBOL(__copy_helper_block_e8_32s40s)
+#endif
+
+#ifndef __destroy_helper_block_e8_32s40s
+#define __destroy_helper_block_e8_32s40s __NS_SYMBOL(__destroy_helper_block_e8_32s40s)
+#endif
+
+#ifndef __copy_helper_block_e8_32s
+#define __copy_helper_block_e8_32s __NS_SYMBOL(__copy_helper_block_e8_32s)
+#endif
+
+#ifndef __destroy_helper_block_e8_32s
+#define __destroy_helper_block_e8_32s __NS_SYMBOL(__destroy_helper_block_e8_32s)
+#endif
+
+#ifndef __copy_helper_block_e8_32s40s48b56s
+#define __copy_helper_block_e8_32s40s48b56s __NS_SYMBOL(__copy_helper_block_e8_32s40s48b56s)
+#endif
+
+#ifndef __copy_helper_block_e8_32s40w
+#define __copy_helper_block_e8_32s40w __NS_SYMBOL(__copy_helper_block_e8_32s40w)
+#endif
+
+#ifndef __destroy_helper_block_e8_32s40w
+#define __destroy_helper_block_e8_32s40w __NS_SYMBOL(__destroy_helper_block_e8_32s40w)
+#endif
+
+#ifndef __copy_helper_block_e8_32s40s48b
+#define __copy_helper_block_e8_32s40s48b __NS_SYMBOL(__copy_helper_block_e8_32s40s48b)
+#endif
+
+#ifndef __destroy_helper_block_e8_32s40s48s
+#define __destroy_helper_block_e8_32s40s48s __NS_SYMBOL(__destroy_helper_block_e8_32s40s48s)
 #endif
 
 #ifndef __clang_at_available_requires_core_foundation_framework
 #define __clang_at_available_requires_core_foundation_framework __NS_SYMBOL(__clang_at_available_requires_core_foundation_framework)
 #endif
 
+#ifndef __copy_helper_block_e8_32s40b
+#define __copy_helper_block_e8_32s40b __NS_SYMBOL(__copy_helper_block_e8_32s40b)
+#endif
+
+#ifndef __destroy_helper_block_e8_32s40s
+#define __destroy_helper_block_e8_32s40s __NS_SYMBOL(__destroy_helper_block_e8_32s40s)
+#endif
+
+#ifndef __copy_helper_block_e8_32s40b48s
+#define __copy_helper_block_e8_32s40b48s __NS_SYMBOL(__copy_helper_block_e8_32s40b48s)
+#endif
+
+#ifndef __destroy_helper_block_e8_32s40s48s
+#define __destroy_helper_block_e8_32s40s48s __NS_SYMBOL(__destroy_helper_block_e8_32s40s48s)
+#endif
+
+#ifndef __copy_helper_block_e8_32s40r48w
+#define __copy_helper_block_e8_32s40r48w __NS_SYMBOL(__copy_helper_block_e8_32s40r48w)
+#endif
+
+#ifndef __destroy_helper_block_e8_32s40r48w
+#define __destroy_helper_block_e8_32s40r48w __NS_SYMBOL(__destroy_helper_block_e8_32s40r48w)
+#endif
+
+#ifndef __copy_helper_block_e8_32s40s48w
+#define __copy_helper_block_e8_32s40s48w __NS_SYMBOL(__copy_helper_block_e8_32s40s48w)
+#endif
+
+#ifndef __destroy_helper_block_e8_32s40s48w
+#define __destroy_helper_block_e8_32s40s48w __NS_SYMBOL(__destroy_helper_block_e8_32s40s48w)
+#endif
+
+#ifndef __copy_helper_block_e8_32s
+#define __copy_helper_block_e8_32s __NS_SYMBOL(__copy_helper_block_e8_32s)
+#endif
+
+#ifndef __destroy_helper_block_e8_32s
+#define __destroy_helper_block_e8_32s __NS_SYMBOL(__destroy_helper_block_e8_32s)
+#endif
+
+#ifndef __copy_helper_block_e8_32s40s48r56r64r
+#define __copy_helper_block_e8_32s40s48r56r64r __NS_SYMBOL(__copy_helper_block_e8_32s40s48r56r64r)
+#endif
+
+#ifndef __destroy_helper_block_e8_32s40s48r56r64r
+#define __destroy_helper_block_e8_32s40s48r56r64r __NS_SYMBOL(__destroy_helper_block_e8_32s40s48r56r64r)
+#endif
+
 #ifndef __clang_at_available_requires_core_foundation_framework
 #define __clang_at_available_requires_core_foundation_framework __NS_SYMBOL(__clang_at_available_requires_core_foundation_framework)
+#endif
+
+#ifndef __copy_helper_block_e8_32b
+#define __copy_helper_block_e8_32b __NS_SYMBOL(__copy_helper_block_e8_32b)
+#endif
+
+#ifndef __destroy_helper_block_e8_32s
+#define __destroy_helper_block_e8_32s __NS_SYMBOL(__destroy_helper_block_e8_32s)
 #endif
 
 #ifndef __clang_at_available_requires_core_foundation_framework
@@ -193,8 +297,16 @@
 #endif
 
 // Externs
-#ifndef _loggerBlock
-#define _loggerBlock __NS_SYMBOL(_loggerBlock)
+#ifndef kMMEPinnedDomains
+#define kMMEPinnedDomains __NS_SYMBOL(kMMEPinnedDomains)
+#endif
+
+#ifndef kMMEPublicKeyHashes
+#define kMMEPublicKeyHashes __NS_SYMBOL(kMMEPublicKeyHashes)
+#endif
+
+#ifndef kMMEExcludeSubdomainFromParentPolicy
+#define kMMEExcludeSubdomainFromParentPolicy __NS_SYMBOL(kMMEExcludeSubdomainFromParentPolicy)
 #endif
 
 #ifndef MMEUIApplicationWrapper
@@ -233,72 +345,8 @@
 #define MapboxMobileEventsStaticVersionNumber __NS_SYMBOL(MapboxMobileEventsStaticVersionNumber)
 #endif
 
-#ifndef TrustKitVersion
-#define TrustKitVersion __NS_SYMBOL(TrustKitVersion)
-#endif
-
-#ifndef kTSKSwizzleNetworkDelegates
-#define kTSKSwizzleNetworkDelegates __NS_SYMBOL(kTSKSwizzleNetworkDelegates)
-#endif
-
-#ifndef kTSKPinnedDomains
-#define kTSKPinnedDomains __NS_SYMBOL(kTSKPinnedDomains)
-#endif
-
-#ifndef kTSKIgnorePinningForUserDefinedTrustAnchors
-#define kTSKIgnorePinningForUserDefinedTrustAnchors __NS_SYMBOL(kTSKIgnorePinningForUserDefinedTrustAnchors)
-#endif
-
-#ifndef kTSKPublicKeyHashes
-#define kTSKPublicKeyHashes __NS_SYMBOL(kTSKPublicKeyHashes)
-#endif
-
-#ifndef kTSKEnforcePinning
-#define kTSKEnforcePinning __NS_SYMBOL(kTSKEnforcePinning)
-#endif
-
-#ifndef kTSKExcludeSubdomainFromParentPolicy
-#define kTSKExcludeSubdomainFromParentPolicy __NS_SYMBOL(kTSKExcludeSubdomainFromParentPolicy)
-#endif
-
-#ifndef kTSKIncludeSubdomains
-#define kTSKIncludeSubdomains __NS_SYMBOL(kTSKIncludeSubdomains)
-#endif
-
-#ifndef kTSKPublicKeyAlgorithms
-#define kTSKPublicKeyAlgorithms __NS_SYMBOL(kTSKPublicKeyAlgorithms)
-#endif
-
-#ifndef kTSKReportUris
-#define kTSKReportUris __NS_SYMBOL(kTSKReportUris)
-#endif
-
-#ifndef kTSKDisableDefaultReportUri
-#define kTSKDisableDefaultReportUri __NS_SYMBOL(kTSKDisableDefaultReportUri)
-#endif
-
-#ifndef kTSKExpirationDate
-#define kTSKExpirationDate __NS_SYMBOL(kTSKExpirationDate)
-#endif
-
-#ifndef kTSKAdditionalTrustAnchors
-#define kTSKAdditionalTrustAnchors __NS_SYMBOL(kTSKAdditionalTrustAnchors)
-#endif
-
-#ifndef kTSKAlgorithmRsa2048
-#define kTSKAlgorithmRsa2048 __NS_SYMBOL(kTSKAlgorithmRsa2048)
-#endif
-
-#ifndef kTSKAlgorithmRsa4096
-#define kTSKAlgorithmRsa4096 __NS_SYMBOL(kTSKAlgorithmRsa4096)
-#endif
-
-#ifndef kTSKAlgorithmEcDsaSecp256r1
-#define kTSKAlgorithmEcDsaSecp256r1 __NS_SYMBOL(kTSKAlgorithmEcDsaSecp256r1)
-#endif
-
-#ifndef kTSKAlgorithmEcDsaSecp384r1
-#define kTSKAlgorithmEcDsaSecp384r1 __NS_SYMBOL(kTSKAlgorithmEcDsaSecp384r1)
+#ifndef __block_descriptor_32_e5_v8@?0l
+#define __block_descriptor_32_e5_v8@?0l __NS_SYMBOL(__block_descriptor_32_e5_v8@?0l)
 #endif
 
 #ifndef MMEApplicationStateForeground
@@ -317,8 +365,32 @@
 #define MMEApplicationStateUnknown __NS_SYMBOL(MMEApplicationStateUnknown)
 #endif
 
+#ifndef __block_descriptor_40_e8_32s_e28_v24@?0@"NSError"8@"NSData"16l
+#define __block_descriptor_40_e8_32s_e28_v24@?0@"NSError"8@"NSData"16l __NS_SYMBOL(__block_descriptor_40_e8_32s_e28_v24@?0@"NSError"8@"NSData"16l)
+#endif
+
+#ifndef __block_descriptor_64_e8_32bs40s48s56s_e5_v8@?0l
+#define __block_descriptor_64_e8_32bs40s48s56s_e5_v8@?0l __NS_SYMBOL(__block_descriptor_64_e8_32bs40s48s56s_e5_v8@?0l)
+#endif
+
+#ifndef __block_descriptor_48_e8_32bs40r_e46_v32@?0@"NSData"8@"NSURLResponse"16@"NSError"24l
+#define __block_descriptor_48_e8_32bs40r_e46_v32@?0@"NSData"8@"NSURLResponse"16@"NSError"24l __NS_SYMBOL(__block_descriptor_48_e8_32bs40r_e46_v32@?0@"NSData"8@"NSURLResponse"16@"NSError"24l)
+#endif
+
+#ifndef __block_descriptor_56_e8_32s40s48bs_e5_v8@?0l
+#define __block_descriptor_56_e8_32s40s48bs_e5_v8@?0l __NS_SYMBOL(__block_descriptor_56_e8_32s40s48bs_e5_v8@?0l)
+#endif
+
+#ifndef __block_descriptor_56_e8_32s40bs48w_e5_v8@?0l
+#define __block_descriptor_56_e8_32s40bs48w_e5_v8@?0l __NS_SYMBOL(__block_descriptor_56_e8_32s40bs48w_e5_v8@?0l)
+#endif
+
 #ifndef kMMEReachabilityChangedNotification
 #define kMMEReachabilityChangedNotification __NS_SYMBOL(kMMEReachabilityChangedNotification)
+#endif
+
+#ifndef __block_descriptor_40_e8_32s_e5_v8@?0l
+#define __block_descriptor_40_e8_32s_e5_v8@?0l __NS_SYMBOL(__block_descriptor_40_e8_32s_e5_v8@?0l)
 #endif
 
 #ifndef MMELocationManagerDistanceFilter
@@ -439,6 +511,10 @@
 
 #ifndef MMEDebugEventTypeTelemetryMetrics
 #define MMEDebugEventTypeTelemetryMetrics __NS_SYMBOL(MMEDebugEventTypeTelemetryMetrics)
+#endif
+
+#ifndef MMEDebugEventTypeCertPinning
+#define MMEDebugEventTypeCertPinning __NS_SYMBOL(MMEDebugEventTypeCertPinning)
 #endif
 
 #ifndef MMEEventTypeAppUserTurnstile
@@ -621,6 +697,10 @@
 #define MMEEventKeyOrientation __NS_SYMBOL(MMEEventKeyOrientation)
 #endif
 
+#ifndef MMELocationManagerRegionIdentifier
+#define MMELocationManagerRegionIdentifier __NS_SYMBOL(MMELocationManagerRegionIdentifier)
+#endif
+
 #ifndef MMEEventKeyPluggedIn
 #define MMEEventKeyPluggedIn __NS_SYMBOL(MMEEventKeyPluggedIn)
 #endif
@@ -647,10 +727,6 @@
 
 #ifndef MMEEventKeyAltitude
 #define MMEEventKeyAltitude __NS_SYMBOL(MMEEventKeyAltitude)
-#endif
-
-#ifndef MMELocationManagerRegionIdentifier
-#define MMELocationManagerRegionIdentifier __NS_SYMBOL(MMELocationManagerRegionIdentifier)
 #endif
 
 #ifndef MMEEventKeyLocationAuthorization
@@ -845,7 +921,83 @@
 #define MMELoggerShareableHTML __NS_SYMBOL(MMELoggerShareableHTML)
 #endif
 
+#ifndef __block_descriptor_32_e5_v8@?0l
+#define __block_descriptor_32_e5_v8@?0l __NS_SYMBOL(__block_descriptor_32_e5_v8@?0l)
+#endif
+
+#ifndef __block_descriptor_48_e8_32s40s_e5_v8@?0l
+#define __block_descriptor_48_e8_32s40s_e5_v8@?0l __NS_SYMBOL(__block_descriptor_48_e8_32s40s_e5_v8@?0l)
+#endif
+
 #ifndef kMMEMaxRequestCount
 #define kMMEMaxRequestCount __NS_SYMBOL(kMMEMaxRequestCount)
+#endif
+
+#ifndef __block_descriptor_32_e5_v8@?0l
+#define __block_descriptor_32_e5_v8@?0l __NS_SYMBOL(__block_descriptor_32_e5_v8@?0l)
+#endif
+
+#ifndef __block_descriptor_40_e8__e5_v8@?0l
+#define __block_descriptor_40_e8__e5_v8@?0l __NS_SYMBOL(__block_descriptor_40_e8__e5_v8@?0l)
+#endif
+
+#ifndef __block_descriptor_48_e8_32s40bs_e5_v8@?0l
+#define __block_descriptor_48_e8_32s40bs_e5_v8@?0l __NS_SYMBOL(__block_descriptor_48_e8_32s40bs_e5_v8@?0l)
+#endif
+
+#ifndef __block_descriptor_56_e8_32s40bs48s_e5_v8@?0l
+#define __block_descriptor_56_e8_32s40bs48s_e5_v8@?0l __NS_SYMBOL(__block_descriptor_56_e8_32s40bs48s_e5_v8@?0l)
+#endif
+
+#ifndef __block_descriptor_56_e8_32s40r48w_e5_v8@?0l
+#define __block_descriptor_56_e8_32s40r48w_e5_v8@?0l __NS_SYMBOL(__block_descriptor_56_e8_32s40r48w_e5_v8@?0l)
+#endif
+
+#ifndef __block_descriptor_56_e8_32s40s48w_e5_v8@?0l
+#define __block_descriptor_56_e8_32s40s48w_e5_v8@?0l __NS_SYMBOL(__block_descriptor_56_e8_32s40s48w_e5_v8@?0l)
+#endif
+
+#ifndef __block_descriptor_72_e8_32s40s48r56r64r_e5_v8@?0l
+#define __block_descriptor_72_e8_32s40s48r56r64r_e5_v8@?0l __NS_SYMBOL(__block_descriptor_72_e8_32s40s48r56r64r_e5_v8@?0l)
+#endif
+
+#ifndef __block_descriptor_64_e8_32s40s48s56bs_e46_v32@?0@"NSData"8@"NSURLResponse"16@"NSError"24l
+#define __block_descriptor_64_e8_32s40s48s56bs_e46_v32@?0@"NSData"8@"NSURLResponse"16@"NSError"24l __NS_SYMBOL(__block_descriptor_64_e8_32s40s48s56bs_e46_v32@?0@"NSData"8@"NSURLResponse"16@"NSError"24l)
+#endif
+
+#ifndef __block_descriptor_64_e8_32s40s48bs56s_e46_v32@?0@"NSData"8@"NSURLResponse"16@"NSError"24l
+#define __block_descriptor_64_e8_32s40s48bs56s_e46_v32@?0@"NSData"8@"NSURLResponse"16@"NSError"24l __NS_SYMBOL(__block_descriptor_64_e8_32s40s48bs56s_e46_v32@?0@"NSData"8@"NSURLResponse"16@"NSError"24l)
+#endif
+
+#ifndef __block_descriptor_56_e8_32s40s48bs_e46_v32@?0@"NSData"8@"NSURLResponse"16@"NSError"24l
+#define __block_descriptor_56_e8_32s40s48bs_e46_v32@?0@"NSData"8@"NSURLResponse"16@"NSError"24l __NS_SYMBOL(__block_descriptor_56_e8_32s40s48bs_e46_v32@?0@"NSData"8@"NSURLResponse"16@"NSError"24l)
+#endif
+
+#ifndef __block_descriptor_40_e8_32s_e25_v32@?0@"MMEEvent"8Q16^B24l
+#define __block_descriptor_40_e8_32s_e25_v32@?0@"MMEEvent"8Q16^B24l __NS_SYMBOL(__block_descriptor_40_e8_32s_e25_v32@?0@"MMEEvent"8Q16^B24l)
+#endif
+
+#ifndef __block_descriptor_32_e5_v8@?0l
+#define __block_descriptor_32_e5_v8@?0l __NS_SYMBOL(__block_descriptor_32_e5_v8@?0l)
+#endif
+
+#ifndef __block_descriptor_40_e8_32w_e5_v8@?0l
+#define __block_descriptor_40_e8_32w_e5_v8@?0l __NS_SYMBOL(__block_descriptor_40_e8_32w_e5_v8@?0l)
+#endif
+
+#ifndef __block_descriptor_48_e8_32s40w_e5_v8@?0l
+#define __block_descriptor_48_e8_32s40w_e5_v8@?0l __NS_SYMBOL(__block_descriptor_48_e8_32s40w_e5_v8@?0l)
+#endif
+
+#ifndef __block_descriptor_48_e8_32w_e17_v16@?0@"NSError"8l
+#define __block_descriptor_48_e8_32w_e17_v16@?0@"NSError"8l __NS_SYMBOL(__block_descriptor_48_e8_32w_e17_v16@?0@"NSError"8l)
+#endif
+
+#ifndef __block_descriptor_40_e8_32w_e17_v16@?0@"NSError"8l
+#define __block_descriptor_40_e8_32w_e17_v16@?0@"NSError"8l __NS_SYMBOL(__block_descriptor_40_e8_32w_e17_v16@?0@"NSError"8l)
+#endif
+
+#ifndef __block_descriptor_40_e8_32bs_e17_v16@?0@"NSError"8l
+#define __block_descriptor_40_e8_32bs_e17_v16@?0@"NSError"8l __NS_SYMBOL(__block_descriptor_40_e8_32bs_e17_v16@?0@"NSError"8l)
 #endif
 
