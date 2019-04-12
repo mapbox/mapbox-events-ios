@@ -323,7 +323,8 @@
                                                MMEEventSDKVersion: self.apiClient.hostSDKVersion,
                                                MMEEventKeyEnabledTelemetry: @([self isEnabled]),
                                                MMEEventKeyLocationEnabled: @([CLLocationManager locationServicesEnabled]),
-                                               MMEEventKeyLocationAuthorization: [CLLocationManager mme_authorizationStatusString]
+                                               MMEEventKeyLocationAuthorization: [CLLocationManager mme_authorizationStatusString],
+                                               MMEEventKeySkuID: self.skuID ?: [NSNull null]
                                                };
     
     MMEEvent *turnstileEvent = [MMEEvent turnstileEventWithAttributes:turnstileEventAttributes];
