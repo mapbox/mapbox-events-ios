@@ -146,21 +146,21 @@ describe(@"MMEEventsManager", ^{
         });
     });
     
-    describe(@"- setSkuID", ^{
-        __block NSString *aNiceSkuID = @"42";
+    describe(@"- setSkuId", ^{
+        __block NSString *aNiceSkuId = @"42";
         
         beforeEach(^{
             [eventsManager initializeWithAccessToken:@"access-token" userAgentBase:@"user-agent-base" hostSDKVersion:@"host-version"];
         });
         
         it(@"shouldn't be set", ^{
-            eventsManager.skuID should be_nil;
+            eventsManager.skuId should be_nil;
         });
         
-        it(@"sets the skuID on the events manager", ^{
-            [eventsManager setSkuID:aNiceSkuID];
+        it(@"sets the skuId on the events manager", ^{
+            [eventsManager setSkuId:aNiceSkuId];
             
-            eventsManager.skuID should equal(aNiceSkuID);
+            eventsManager.skuId should equal(aNiceSkuId);
         });
     });
     
@@ -714,7 +714,7 @@ describe(@"MMEEventsManager", ^{
                                                                MMEEventKeyEnabledTelemetry: @NO,
                                                                MMEEventKeyLocationEnabled: @([CLLocationManager locationServicesEnabled]),
                                                                MMEEventKeyLocationAuthorization: [CLLocationManager mme_authorizationStatusString],
-                                                               MMEEventKeySkuID: eventsManager.skuID ?: [NSNull null]
+                                                               MMEEventKeySkuId: eventsManager.skuId ?: [NSNull null]
                                                                };
                     MMEEvent *expectedEvent = [MMEEvent turnstileEventWithAttributes:turnstileEventAttributes];
 
