@@ -1,0 +1,1 @@
+../vendor/mapbox-accounts-ios/MBXSKUToken.h
