@@ -11,10 +11,10 @@ The Mapbox Mobile Events SDK collects [anonymous data](https://www.mapbox.com/te
 
 ### Dependents
 
-- [MapBox Maps SDK](https://github.com/mapbox/mapbox-gl-native/)
-- [MapBox Navigation SDK](https://github.com/mapbox/mapbox-navigation-ios/)
-- [MapBox Vision SDK](https://github.com/mapbox/mapbox-vision-ios)
-- [MapBox ReactNative SDK](https://github.com/mapbox/react-native-mapbox-gl)
+- [Mapbox Maps SDK](https://github.com/mapbox/mapbox-gl-native/)
+- [Mapbox Navigation SDK](https://github.com/mapbox/mapbox-navigation-ios/)
+- [Mapbox Vision SDK](https://github.com/mapbox/mapbox-vision-ios)
+- [Mapbox ReactNative SDK](https://github.com/mapbox/react-native-mapbox-gl)
 
 ### Quick Start
 

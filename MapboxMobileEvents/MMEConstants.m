@@ -29,6 +29,7 @@ NSString * const MMEDebugEventTypeBackgroundTask = @"backgroundTask";
 NSString * const MMEDebugEventTypeMetricCollection = @"metricCollection";
 NSString * const MMEDebugEventTypeLocationManager = @"locationManager";
 NSString * const MMEDebugEventTypeTelemetryMetrics = @"telemMetrics";
+NSString * const MMEDebugEventTypeCertPinning = @"certPinning";
 
 NSString * const MMEEventTypeAppUserTurnstile = @"appUserTurnstile";
 NSString * const MMEEventTypeTelemetryMetrics = @"telemetryMetrics";
@@ -72,6 +73,7 @@ NSString * const MMEEventKeyCreated = @"created";
 NSString * const MMEEventKeyVendorID = @"userId";
 NSString * const MMEEventKeyModel = @"model";
 NSString * const MMEEventKeyDevice = @"device";
+NSString * const MMEEventKeySkuId = @"skuId";
 NSString * const MMEEventKeyEnabledTelemetry = @"enabled.telemetry";
 NSString * const MMEEventKeyOperatingSystem = @"operatingSystem";
 NSString * const MMEEventKeyResolution = @"resolution";

@@ -29,6 +29,7 @@ extern NSString * const MMEDebugEventTypeBackgroundTask;
 extern NSString * const MMEDebugEventTypeMetricCollection;
 extern NSString * const MMEDebugEventTypeLocationManager;
 extern NSString * const MMEDebugEventTypeTelemetryMetrics;
+extern NSString * const MMEDebugEventTypeCertPinning;
 
 // Event types
 extern NSString * const MMEEventTypeAppUserTurnstile;
@@ -67,6 +68,7 @@ extern NSString * const MMEEventKeyStyleURL;
 extern NSString * const MMEEventKeyVendorID;
 extern NSString * const MMEEventKeyModel;
 extern NSString * const MMEEventKeyDevice;
+extern NSString * const MMEEventKeySkuId;
 extern NSString * const MMEEventKeyEnabledTelemetry;
 extern NSString * const MMEEventKeyOperatingSystem;
 extern NSString * const MMEEventKeyResolution;

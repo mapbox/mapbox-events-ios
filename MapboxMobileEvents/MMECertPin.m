@@ -3,6 +3,8 @@
 #import "MMECertPin.h"
 #import "MMEPinningConfigurationProvider.h"
 #import "MMEEventsConfiguration.h"
+#import "MMEEventLogger.h"
+#import "MMEConstants.h"
 
 @interface MMECertPin()
 
@@ -10,7 +12,7 @@
 @property (nonatomic) NSMutableSet<NSData *> *serverSSLPinsSet;
 @property (nonatomic) NSMutableDictionary<NSData *, NSData *> *publicKeyInfoHashesCache;
 @property (nonatomic) NSMutableSet<NSString *> *excludeSubdomainsSet;
-@property (nonatomic) NSURLSessionAuthChallengeDisposition lastAuthChanllengeDisposition;
+@property (nonatomic) NSURLSessionAuthChallengeDisposition lastAuthChallengeDisposition;
 
 @property (nonatomic) dispatch_queue_t lockQueue;
 
@@ -35,6 +37,9 @@
 - (void) updateSSLPinSet {
     [self.serverSSLPinsSet removeAllObjects];
     [self.publicKeyInfoHashesCache removeAllObjects];
+    
+    [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeCertPinning,
+                                                                MMEEventKeyLocalDebugDescription: @"Updating SSL pin set..."}];
 
     if ([self.pinningConfigProvider.pinningConfig.allKeys containsObject:kMMEPinnedDomains]) {
         NSDictionary *configPinnedDomains = self.pinningConfigProvider.pinningConfig[kMMEPinnedDomains];
@@ -63,6 +68,10 @@
 
 - (void) updateWithConfiguration:(MMEEventsConfiguration *)configuration {
     if (configuration && configuration.blacklist && configuration.blacklist.count > 0) {
+        NSString *debugDescription = [NSString stringWithFormat:@"blacklisted hash(s) found: %@", configuration.blacklist];
+        [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeCertPinning,
+                                                                    MMEEventKeyLocalDebugDescription: debugDescription}];
+        
         self.pinningConfigProvider = [MMEPinningConfigurationProvider pinningConfigProviderWithConfiguration:configuration];
 
         [self updateSSLPinSet];
@@ -77,9 +86,14 @@
         for (NSString *excludeSubdomains in _excludeSubdomainsSet) {
             if ([challenge.protectionSpace.host isEqualToString:excludeSubdomains]) {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    self.lastAuthChanllengeDisposition = NSURLSessionAuthChallengePerformDefaultHandling;
+                    self.lastAuthChallengeDisposition = NSURLSessionAuthChallengePerformDefaultHandling;
                     completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
                 });
+                
+                NSString *debugDescription = [NSString stringWithFormat:@"Excluded subdomain(s): %@", excludeSubdomains];
+                [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeCertPinning,
+                                                                            MMEEventKeyLocalDebugDescription: debugDescription}];
+                
                 return;
             }
         }
@@ -101,41 +115,55 @@
                 
                 if ([_serverSSLPinsSet containsObject:remoteCertificatePublicKeyHash]) {
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        self.lastAuthChanllengeDisposition = NSURLSessionAuthChallengeUseCredential;
+                        self.lastAuthChallengeDisposition = NSURLSessionAuthChallengeUseCredential;
                         completionHandler(NSURLSessionAuthChallengeUseCredential, [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust]);
                     });
+                    
+                    [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeCertPinning,
+                                                                                MMEEventKeyLocalDebugDescription: @"Certificate found and accepted trust!"}];
+                    
                     found = YES;
                     break;
                 }
             }
 
             if (!found) {
-                // The certificate wasn't found. Cancel the connection.
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    self.lastAuthChanllengeDisposition = NSURLSessionAuthChallengeCancelAuthenticationChallenge;
+                    self.lastAuthChallengeDisposition = NSURLSessionAuthChallengeCancelAuthenticationChallenge;
                     completionHandler(NSURLSessionAuthChallengeCancelAuthenticationChallenge, [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust]);
                 });
+                
+                [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeCertPinning,
+                                                                            MMEEventKeyLocalDebugDescription: @"No certificate found; connection canceled"}];
             }
         }
         else if (trustResult == kSecTrustResultProceed) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                self.lastAuthChanllengeDisposition = NSURLSessionAuthChallengePerformDefaultHandling;
+                self.lastAuthChallengeDisposition = NSURLSessionAuthChallengePerformDefaultHandling;
                 completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust]);
             });
+            
+            [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeCertPinning,
+                                                                        MMEEventKeyLocalDebugDescription: @"User granted - Always Trust; proceeding"}];
         }
         else {
-            // Certificate chain validation failed; cancel the connection
             dispatch_async(dispatch_get_main_queue(), ^{
-                self.lastAuthChanllengeDisposition = NSURLSessionAuthChallengeCancelAuthenticationChallenge;
+                self.lastAuthChallengeDisposition = NSURLSessionAuthChallengeCancelAuthenticationChallenge;
                 completionHandler(NSURLSessionAuthChallengeCancelAuthenticationChallenge, [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust]);
             });
+            
+            [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeCertPinning,
+                                                                        MMEEventKeyLocalDebugDescription: @"Certificate chain validation failed; connection canceled"}];
         }
     }
     else {
         dispatch_async(dispatch_get_main_queue(), ^{
-            self.lastAuthChanllengeDisposition = NSURLSessionAuthChallengePerformDefaultHandling;
+            self.lastAuthChallengeDisposition = NSURLSessionAuthChallengePerformDefaultHandling;
             completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
         });
+        
+        [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeCertPinning,
+                                                                    MMEEventKeyLocalDebugDescription: @"Ignoring credentials; default handling for challenge"}];
     }
     
 }

@@ -19,6 +19,10 @@
 #define MMECategoryLoader __NS_SYMBOL(MMECategoryLoader)
 #endif
 
+#ifndef MMECertPin
+#define MMECertPin __NS_SYMBOL(MMECertPin)
+#endif
+
 #ifndef MMECommonEventData
 #define MMECommonEventData __NS_SYMBOL(MMECommonEventData)
 #endif
@@ -83,16 +87,16 @@
 #define MMENSURLSessionWrapper __NS_SYMBOL(MMENSURLSessionWrapper)
 #endif
 
+#ifndef MMEPinningConfigurationProvider
+#define MMEPinningConfigurationProvider __NS_SYMBOL(MMEPinningConfigurationProvider)
+#endif
+
 #ifndef MMEReachability
 #define MMEReachability __NS_SYMBOL(MMEReachability)
 #endif
 
 #ifndef MMETimerManager
 #define MMETimerManager __NS_SYMBOL(MMETimerManager)
-#endif
-
-#ifndef MMETrustKitProvider
-#define MMETrustKitProvider __NS_SYMBOL(MMETrustKitProvider)
 #endif
 
 #ifndef MMETypes
@@ -111,47 +115,7 @@
 #define MMEUniqueIdentifier __NS_SYMBOL(MMEUniqueIdentifier)
 #endif
 
-#ifndef TSKBackgroundReporter
-#define TSKBackgroundReporter __NS_SYMBOL(TSKBackgroundReporter)
-#endif
-
-#ifndef TSKPinFailureReport
-#define TSKPinFailureReport __NS_SYMBOL(TSKPinFailureReport)
-#endif
-
-#ifndef TSKPinningValidator
-#define TSKPinningValidator __NS_SYMBOL(TSKPinningValidator)
-#endif
-
-#ifndef TSKPinningValidatorResult
-#define TSKPinningValidatorResult __NS_SYMBOL(TSKPinningValidatorResult)
-#endif
-
-#ifndef TSKReportsRateLimiter
-#define TSKReportsRateLimiter __NS_SYMBOL(TSKReportsRateLimiter)
-#endif
-
-#ifndef TSKSPKIHashCache
-#define TSKSPKIHashCache __NS_SYMBOL(TSKSPKIHashCache)
-#endif
-
-#ifndef TrustKit
-#define TrustKit __NS_SYMBOL(TrustKit)
-#endif
-
 // Functions
-#ifndef convertTrustToPemArray
-#define convertTrustToPemArray __NS_SYMBOL(convertTrustToPemArray)
-#endif
-
-#ifndef getPinningConfigurationKeyForDomain
-#define getPinningConfigurationKeyForDomain __NS_SYMBOL(getPinningConfigurationKeyForDomain)
-#endif
-
-#ifndef identifier_for_vendor
-#define identifier_for_vendor __NS_SYMBOL(identifier_for_vendor)
-#endif
-
 #ifndef mme_linkCLLocationCategory
 #define mme_linkCLLocationCategory __NS_SYMBOL(mme_linkCLLocationCategory)
 #endif
@@ -164,37 +128,17 @@
 #define mme_linkNSDataCategory __NS_SYMBOL(mme_linkNSDataCategory)
 #endif
 
-#ifndef parseTrustKitConfiguration
-#define parseTrustKitConfiguration __NS_SYMBOL(parseTrustKitConfiguration)
-#endif
-
-#ifndef verifyPublicKeyPin
-#define verifyPublicKeyPin __NS_SYMBOL(verifyPublicKeyPin)
-#endif
-
-#ifndef TSKLog
-#define TSKLog __NS_SYMBOL(TSKLog)
-#endif
-
-#ifndef convertPinsToHpkpPins
-#define convertPinsToHpkpPins __NS_SYMBOL(convertPinsToHpkpPins)
-#endif
-
-#ifndef __clang_at_available_requires_core_foundation_framework
-#define __clang_at_available_requires_core_foundation_framework __NS_SYMBOL(__clang_at_available_requires_core_foundation_framework)
-#endif
-
-#ifndef __clang_at_available_requires_core_foundation_framework
-#define __clang_at_available_requires_core_foundation_framework __NS_SYMBOL(__clang_at_available_requires_core_foundation_framework)
-#endif
-
-#ifndef __clang_at_available_requires_core_foundation_framework
-#define __clang_at_available_requires_core_foundation_framework __NS_SYMBOL(__clang_at_available_requires_core_foundation_framework)
-#endif
-
 // Externs
-#ifndef _loggerBlock
-#define _loggerBlock __NS_SYMBOL(_loggerBlock)
+#ifndef kMMEPinnedDomains
+#define kMMEPinnedDomains __NS_SYMBOL(kMMEPinnedDomains)
+#endif
+
+#ifndef kMMEPublicKeyHashes
+#define kMMEPublicKeyHashes __NS_SYMBOL(kMMEPublicKeyHashes)
+#endif
+
+#ifndef kMMEExcludeSubdomainFromParentPolicy
+#define kMMEExcludeSubdomainFromParentPolicy __NS_SYMBOL(kMMEExcludeSubdomainFromParentPolicy)
 #endif
 
 #ifndef MMEUIApplicationWrapper
@@ -231,74 +175,6 @@
 
 #ifndef MapboxMobileEventsStaticVersionNumber
 #define MapboxMobileEventsStaticVersionNumber __NS_SYMBOL(MapboxMobileEventsStaticVersionNumber)
-#endif
-
-#ifndef TrustKitVersion
-#define TrustKitVersion __NS_SYMBOL(TrustKitVersion)
-#endif
-
-#ifndef kTSKSwizzleNetworkDelegates
-#define kTSKSwizzleNetworkDelegates __NS_SYMBOL(kTSKSwizzleNetworkDelegates)
-#endif
-
-#ifndef kTSKPinnedDomains
-#define kTSKPinnedDomains __NS_SYMBOL(kTSKPinnedDomains)
-#endif
-
-#ifndef kTSKIgnorePinningForUserDefinedTrustAnchors
-#define kTSKIgnorePinningForUserDefinedTrustAnchors __NS_SYMBOL(kTSKIgnorePinningForUserDefinedTrustAnchors)
-#endif
-
-#ifndef kTSKPublicKeyHashes
-#define kTSKPublicKeyHashes __NS_SYMBOL(kTSKPublicKeyHashes)
-#endif
-
-#ifndef kTSKEnforcePinning
-#define kTSKEnforcePinning __NS_SYMBOL(kTSKEnforcePinning)
-#endif
-
-#ifndef kTSKExcludeSubdomainFromParentPolicy
-#define kTSKExcludeSubdomainFromParentPolicy __NS_SYMBOL(kTSKExcludeSubdomainFromParentPolicy)
-#endif
-
-#ifndef kTSKIncludeSubdomains
-#define kTSKIncludeSubdomains __NS_SYMBOL(kTSKIncludeSubdomains)
-#endif
-
-#ifndef kTSKPublicKeyAlgorithms
-#define kTSKPublicKeyAlgorithms __NS_SYMBOL(kTSKPublicKeyAlgorithms)
-#endif
-
-#ifndef kTSKReportUris
-#define kTSKReportUris __NS_SYMBOL(kTSKReportUris)
-#endif
-
-#ifndef kTSKDisableDefaultReportUri
-#define kTSKDisableDefaultReportUri __NS_SYMBOL(kTSKDisableDefaultReportUri)
-#endif
-
-#ifndef kTSKExpirationDate
-#define kTSKExpirationDate __NS_SYMBOL(kTSKExpirationDate)
-#endif
-
-#ifndef kTSKAdditionalTrustAnchors
-#define kTSKAdditionalTrustAnchors __NS_SYMBOL(kTSKAdditionalTrustAnchors)
-#endif
-
-#ifndef kTSKAlgorithmRsa2048
-#define kTSKAlgorithmRsa2048 __NS_SYMBOL(kTSKAlgorithmRsa2048)
-#endif
-
-#ifndef kTSKAlgorithmRsa4096
-#define kTSKAlgorithmRsa4096 __NS_SYMBOL(kTSKAlgorithmRsa4096)
-#endif
-
-#ifndef kTSKAlgorithmEcDsaSecp256r1
-#define kTSKAlgorithmEcDsaSecp256r1 __NS_SYMBOL(kTSKAlgorithmEcDsaSecp256r1)
-#endif
-
-#ifndef kTSKAlgorithmEcDsaSecp384r1
-#define kTSKAlgorithmEcDsaSecp384r1 __NS_SYMBOL(kTSKAlgorithmEcDsaSecp384r1)
 #endif
 
 #ifndef MMEApplicationStateForeground
@@ -439,6 +315,10 @@
 
 #ifndef MMEDebugEventTypeTelemetryMetrics
 #define MMEDebugEventTypeTelemetryMetrics __NS_SYMBOL(MMEDebugEventTypeTelemetryMetrics)
+#endif
+
+#ifndef MMEDebugEventTypeCertPinning
+#define MMEDebugEventTypeCertPinning __NS_SYMBOL(MMEDebugEventTypeCertPinning)
 #endif
 
 #ifndef MMEEventTypeAppUserTurnstile
@@ -621,6 +501,10 @@
 #define MMEEventKeyOrientation __NS_SYMBOL(MMEEventKeyOrientation)
 #endif
 
+#ifndef MMELocationManagerRegionIdentifier
+#define MMELocationManagerRegionIdentifier __NS_SYMBOL(MMELocationManagerRegionIdentifier)
+#endif
+
 #ifndef MMEEventKeyPluggedIn
 #define MMEEventKeyPluggedIn __NS_SYMBOL(MMEEventKeyPluggedIn)
 #endif
@@ -647,10 +531,6 @@
 
 #ifndef MMEEventKeyAltitude
 #define MMEEventKeyAltitude __NS_SYMBOL(MMEEventKeyAltitude)
-#endif
-
-#ifndef MMELocationManagerRegionIdentifier
-#define MMELocationManagerRegionIdentifier __NS_SYMBOL(MMELocationManagerRegionIdentifier)
 #endif
 
 #ifndef MMEEventKeyLocationAuthorization
@@ -848,4 +728,3 @@
 #ifndef kMMEMaxRequestCount
 #define kMMEMaxRequestCount __NS_SYMBOL(kMMEMaxRequestCount)
 #endif
-
