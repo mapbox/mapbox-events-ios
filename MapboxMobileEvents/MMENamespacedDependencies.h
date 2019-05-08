@@ -128,6 +128,174 @@
 #define mme_linkNSDataCategory __NS_SYMBOL(mme_linkNSDataCategory)
 #endif
 
+#ifndef __copy_helper_block_e8_
+#define __copy_helper_block_e8_ __NS_SYMBOL(__copy_helper_block_e8_)
+#endif
+
+#ifndef __destroy_helper_block_e8_
+#define __destroy_helper_block_e8_ __NS_SYMBOL(__destroy_helper_block_e8_)
+#endif
+
+#ifndef __copy_helper_block_e8_32s
+#define __copy_helper_block_e8_32s __NS_SYMBOL(__copy_helper_block_e8_32s)
+#endif
+
+#ifndef __destroy_helper_block_e8_32s
+#define __destroy_helper_block_e8_32s __NS_SYMBOL(__destroy_helper_block_e8_32s)
+#endif
+
+#ifndef __copy_helper_block_e8_32b40s48s56s
+#define __copy_helper_block_e8_32b40s48s56s __NS_SYMBOL(__copy_helper_block_e8_32b40s48s56s)
+#endif
+
+#ifndef __destroy_helper_block_e8_32s40s48s56s
+#define __destroy_helper_block_e8_32s40s48s56s __NS_SYMBOL(__destroy_helper_block_e8_32s40s48s56s)
+#endif
+
+#ifndef __copy_helper_block_e8_32b40r
+#define __copy_helper_block_e8_32b40r __NS_SYMBOL(__copy_helper_block_e8_32b40r)
+#endif
+
+#ifndef __destroy_helper_block_e8_32s40r
+#define __destroy_helper_block_e8_32s40r __NS_SYMBOL(__destroy_helper_block_e8_32s40r)
+#endif
+
+#ifndef __copy_helper_block_e8_32s40s48b
+#define __copy_helper_block_e8_32s40s48b __NS_SYMBOL(__copy_helper_block_e8_32s40s48b)
+#endif
+
+#ifndef __copy_helper_block_e8_32w
+#define __copy_helper_block_e8_32w __NS_SYMBOL(__copy_helper_block_e8_32w)
+#endif
+
+#ifndef __destroy_helper_block_e8_32s40s48s
+#define __destroy_helper_block_e8_32s40s48s __NS_SYMBOL(__destroy_helper_block_e8_32s40s48s)
+#endif
+
+#ifndef __destroy_helper_block_e8_32w
+#define __destroy_helper_block_e8_32w __NS_SYMBOL(__destroy_helper_block_e8_32w)
+#endif
+
+#ifndef __copy_helper_block_e8_32s40s48s56b
+#define __copy_helper_block_e8_32s40s48s56b __NS_SYMBOL(__copy_helper_block_e8_32s40s48s56b)
+#endif
+
+#ifndef __destroy_helper_block_e8_32s40s48s56s
+#define __destroy_helper_block_e8_32s40s48s56s __NS_SYMBOL(__destroy_helper_block_e8_32s40s48s56s)
+#endif
+
+#ifndef __copy_helper_block_e8_32s40b48w
+#define __copy_helper_block_e8_32s40b48w __NS_SYMBOL(__copy_helper_block_e8_32s40b48w)
+#endif
+
+#ifndef __destroy_helper_block_e8_32s40s48w
+#define __destroy_helper_block_e8_32s40s48w __NS_SYMBOL(__destroy_helper_block_e8_32s40s48w)
+#endif
+
+#ifndef __copy_helper_block_e8_32s40s
+#define __copy_helper_block_e8_32s40s __NS_SYMBOL(__copy_helper_block_e8_32s40s)
+#endif
+
+#ifndef __destroy_helper_block_e8_32s40s
+#define __destroy_helper_block_e8_32s40s __NS_SYMBOL(__destroy_helper_block_e8_32s40s)
+#endif
+
+#ifndef __copy_helper_block_e8_32s
+#define __copy_helper_block_e8_32s __NS_SYMBOL(__copy_helper_block_e8_32s)
+#endif
+
+#ifndef __destroy_helper_block_e8_32s
+#define __destroy_helper_block_e8_32s __NS_SYMBOL(__destroy_helper_block_e8_32s)
+#endif
+
+#ifndef __copy_helper_block_e8_32s40s48b56s
+#define __copy_helper_block_e8_32s40s48b56s __NS_SYMBOL(__copy_helper_block_e8_32s40s48b56s)
+#endif
+
+#ifndef __copy_helper_block_e8_32s40w
+#define __copy_helper_block_e8_32s40w __NS_SYMBOL(__copy_helper_block_e8_32s40w)
+#endif
+
+#ifndef __destroy_helper_block_e8_32s40w
+#define __destroy_helper_block_e8_32s40w __NS_SYMBOL(__destroy_helper_block_e8_32s40w)
+#endif
+
+#ifndef __copy_helper_block_e8_32s40s48b
+#define __copy_helper_block_e8_32s40s48b __NS_SYMBOL(__copy_helper_block_e8_32s40s48b)
+#endif
+
+#ifndef __destroy_helper_block_e8_32s40s48s
+#define __destroy_helper_block_e8_32s40s48s __NS_SYMBOL(__destroy_helper_block_e8_32s40s48s)
+#endif
+
+#ifndef __clang_at_available_requires_core_foundation_framework
+#define __clang_at_available_requires_core_foundation_framework __NS_SYMBOL(__clang_at_available_requires_core_foundation_framework)
+#endif
+
+#ifndef __copy_helper_block_e8_32s40b
+#define __copy_helper_block_e8_32s40b __NS_SYMBOL(__copy_helper_block_e8_32s40b)
+#endif
+
+#ifndef __destroy_helper_block_e8_32s40s
+#define __destroy_helper_block_e8_32s40s __NS_SYMBOL(__destroy_helper_block_e8_32s40s)
+#endif
+
+#ifndef __copy_helper_block_e8_32s40b48s
+#define __copy_helper_block_e8_32s40b48s __NS_SYMBOL(__copy_helper_block_e8_32s40b48s)
+#endif
+
+#ifndef __destroy_helper_block_e8_32s40s48s
+#define __destroy_helper_block_e8_32s40s48s __NS_SYMBOL(__destroy_helper_block_e8_32s40s48s)
+#endif
+
+#ifndef __copy_helper_block_e8_32s40r48w
+#define __copy_helper_block_e8_32s40r48w __NS_SYMBOL(__copy_helper_block_e8_32s40r48w)
+#endif
+
+#ifndef __destroy_helper_block_e8_32s40r48w
+#define __destroy_helper_block_e8_32s40r48w __NS_SYMBOL(__destroy_helper_block_e8_32s40r48w)
+#endif
+
+#ifndef __copy_helper_block_e8_32s40s48w
+#define __copy_helper_block_e8_32s40s48w __NS_SYMBOL(__copy_helper_block_e8_32s40s48w)
+#endif
+
+#ifndef __destroy_helper_block_e8_32s40s48w
+#define __destroy_helper_block_e8_32s40s48w __NS_SYMBOL(__destroy_helper_block_e8_32s40s48w)
+#endif
+
+#ifndef __copy_helper_block_e8_32s
+#define __copy_helper_block_e8_32s __NS_SYMBOL(__copy_helper_block_e8_32s)
+#endif
+
+#ifndef __destroy_helper_block_e8_32s
+#define __destroy_helper_block_e8_32s __NS_SYMBOL(__destroy_helper_block_e8_32s)
+#endif
+
+#ifndef __copy_helper_block_e8_32s40s48r56r64r
+#define __copy_helper_block_e8_32s40s48r56r64r __NS_SYMBOL(__copy_helper_block_e8_32s40s48r56r64r)
+#endif
+
+#ifndef __destroy_helper_block_e8_32s40s48r56r64r
+#define __destroy_helper_block_e8_32s40s48r56r64r __NS_SYMBOL(__destroy_helper_block_e8_32s40s48r56r64r)
+#endif
+
+#ifndef __clang_at_available_requires_core_foundation_framework
+#define __clang_at_available_requires_core_foundation_framework __NS_SYMBOL(__clang_at_available_requires_core_foundation_framework)
+#endif
+
+#ifndef __copy_helper_block_e8_32b
+#define __copy_helper_block_e8_32b __NS_SYMBOL(__copy_helper_block_e8_32b)
+#endif
+
+#ifndef __destroy_helper_block_e8_32s
+#define __destroy_helper_block_e8_32s __NS_SYMBOL(__destroy_helper_block_e8_32s)
+#endif
+
+#ifndef __clang_at_available_requires_core_foundation_framework
+#define __clang_at_available_requires_core_foundation_framework __NS_SYMBOL(__clang_at_available_requires_core_foundation_framework)
+#endif
+
 // Externs
 #ifndef kMMEPinnedDomains
 #define kMMEPinnedDomains __NS_SYMBOL(kMMEPinnedDomains)
@@ -177,6 +345,10 @@
 #define MapboxMobileEventsStaticVersionNumber __NS_SYMBOL(MapboxMobileEventsStaticVersionNumber)
 #endif
 
+#ifndef __block_descriptor_32_e5_v8@?0l
+#define __block_descriptor_32_e5_v8@?0l __NS_SYMBOL(__block_descriptor_32_e5_v8@?0l)
+#endif
+
 #ifndef MMEApplicationStateForeground
 #define MMEApplicationStateForeground __NS_SYMBOL(MMEApplicationStateForeground)
 #endif
@@ -193,8 +365,32 @@
 #define MMEApplicationStateUnknown __NS_SYMBOL(MMEApplicationStateUnknown)
 #endif
 
+#ifndef __block_descriptor_40_e8_32s_e28_v24@?0@"NSError"8@"NSData"16l
+#define __block_descriptor_40_e8_32s_e28_v24@?0@"NSError"8@"NSData"16l __NS_SYMBOL(__block_descriptor_40_e8_32s_e28_v24@?0@"NSError"8@"NSData"16l)
+#endif
+
+#ifndef __block_descriptor_64_e8_32bs40s48s56s_e5_v8@?0l
+#define __block_descriptor_64_e8_32bs40s48s56s_e5_v8@?0l __NS_SYMBOL(__block_descriptor_64_e8_32bs40s48s56s_e5_v8@?0l)
+#endif
+
+#ifndef __block_descriptor_48_e8_32bs40r_e46_v32@?0@"NSData"8@"NSURLResponse"16@"NSError"24l
+#define __block_descriptor_48_e8_32bs40r_e46_v32@?0@"NSData"8@"NSURLResponse"16@"NSError"24l __NS_SYMBOL(__block_descriptor_48_e8_32bs40r_e46_v32@?0@"NSData"8@"NSURLResponse"16@"NSError"24l)
+#endif
+
+#ifndef __block_descriptor_56_e8_32s40s48bs_e5_v8@?0l
+#define __block_descriptor_56_e8_32s40s48bs_e5_v8@?0l __NS_SYMBOL(__block_descriptor_56_e8_32s40s48bs_e5_v8@?0l)
+#endif
+
+#ifndef __block_descriptor_56_e8_32s40bs48w_e5_v8@?0l
+#define __block_descriptor_56_e8_32s40bs48w_e5_v8@?0l __NS_SYMBOL(__block_descriptor_56_e8_32s40bs48w_e5_v8@?0l)
+#endif
+
 #ifndef kMMEReachabilityChangedNotification
 #define kMMEReachabilityChangedNotification __NS_SYMBOL(kMMEReachabilityChangedNotification)
+#endif
+
+#ifndef __block_descriptor_40_e8_32s_e5_v8@?0l
+#define __block_descriptor_40_e8_32s_e5_v8@?0l __NS_SYMBOL(__block_descriptor_40_e8_32s_e5_v8@?0l)
 #endif
 
 #ifndef MMELocationManagerDistanceFilter
@@ -481,6 +677,14 @@
 #define MMEEventKeyDevice __NS_SYMBOL(MMEEventKeyDevice)
 #endif
 
+#ifndef MMEEventKeySkuId
+#define MMEEventKeySkuId __NS_SYMBOL(MMEEventKeySkuId)
+#endif
+
+#ifndef MMELocationManagerRegionIdentifier
+#define MMELocationManagerRegionIdentifier __NS_SYMBOL(MMELocationManagerRegionIdentifier)
+#endif
+
 #ifndef MMEEventKeyEnabledTelemetry
 #define MMEEventKeyEnabledTelemetry __NS_SYMBOL(MMEEventKeyEnabledTelemetry)
 #endif
@@ -499,10 +703,6 @@
 
 #ifndef MMEEventKeyOrientation
 #define MMEEventKeyOrientation __NS_SYMBOL(MMEEventKeyOrientation)
-#endif
-
-#ifndef MMELocationManagerRegionIdentifier
-#define MMELocationManagerRegionIdentifier __NS_SYMBOL(MMELocationManagerRegionIdentifier)
 #endif
 
 #ifndef MMEEventKeyPluggedIn
@@ -725,6 +925,83 @@
 #define MMELoggerShareableHTML __NS_SYMBOL(MMELoggerShareableHTML)
 #endif
 
+#ifndef __block_descriptor_32_e5_v8@?0l
+#define __block_descriptor_32_e5_v8@?0l __NS_SYMBOL(__block_descriptor_32_e5_v8@?0l)
+#endif
+
+#ifndef __block_descriptor_48_e8_32s40s_e5_v8@?0l
+#define __block_descriptor_48_e8_32s40s_e5_v8@?0l __NS_SYMBOL(__block_descriptor_48_e8_32s40s_e5_v8@?0l)
+#endif
+
 #ifndef kMMEMaxRequestCount
 #define kMMEMaxRequestCount __NS_SYMBOL(kMMEMaxRequestCount)
 #endif
+
+#ifndef __block_descriptor_32_e5_v8@?0l
+#define __block_descriptor_32_e5_v8@?0l __NS_SYMBOL(__block_descriptor_32_e5_v8@?0l)
+#endif
+
+#ifndef __block_descriptor_40_e8__e5_v8@?0l
+#define __block_descriptor_40_e8__e5_v8@?0l __NS_SYMBOL(__block_descriptor_40_e8__e5_v8@?0l)
+#endif
+
+#ifndef __block_descriptor_48_e8_32s40bs_e5_v8@?0l
+#define __block_descriptor_48_e8_32s40bs_e5_v8@?0l __NS_SYMBOL(__block_descriptor_48_e8_32s40bs_e5_v8@?0l)
+#endif
+
+#ifndef __block_descriptor_56_e8_32s40bs48s_e5_v8@?0l
+#define __block_descriptor_56_e8_32s40bs48s_e5_v8@?0l __NS_SYMBOL(__block_descriptor_56_e8_32s40bs48s_e5_v8@?0l)
+#endif
+
+#ifndef __block_descriptor_56_e8_32s40r48w_e5_v8@?0l
+#define __block_descriptor_56_e8_32s40r48w_e5_v8@?0l __NS_SYMBOL(__block_descriptor_56_e8_32s40r48w_e5_v8@?0l)
+#endif
+
+#ifndef __block_descriptor_56_e8_32s40s48w_e5_v8@?0l
+#define __block_descriptor_56_e8_32s40s48w_e5_v8@?0l __NS_SYMBOL(__block_descriptor_56_e8_32s40s48w_e5_v8@?0l)
+#endif
+
+#ifndef __block_descriptor_72_e8_32s40s48r56r64r_e5_v8@?0l
+#define __block_descriptor_72_e8_32s40s48r56r64r_e5_v8@?0l __NS_SYMBOL(__block_descriptor_72_e8_32s40s48r56r64r_e5_v8@?0l)
+#endif
+
+#ifndef __block_descriptor_64_e8_32s40s48s56bs_e46_v32@?0@"NSData"8@"NSURLResponse"16@"NSError"24l
+#define __block_descriptor_64_e8_32s40s48s56bs_e46_v32@?0@"NSData"8@"NSURLResponse"16@"NSError"24l __NS_SYMBOL(__block_descriptor_64_e8_32s40s48s56bs_e46_v32@?0@"NSData"8@"NSURLResponse"16@"NSError"24l)
+#endif
+
+#ifndef __block_descriptor_64_e8_32s40s48bs56s_e46_v32@?0@"NSData"8@"NSURLResponse"16@"NSError"24l
+#define __block_descriptor_64_e8_32s40s48bs56s_e46_v32@?0@"NSData"8@"NSURLResponse"16@"NSError"24l __NS_SYMBOL(__block_descriptor_64_e8_32s40s48bs56s_e46_v32@?0@"NSData"8@"NSURLResponse"16@"NSError"24l)
+#endif
+
+#ifndef __block_descriptor_56_e8_32s40s48bs_e46_v32@?0@"NSData"8@"NSURLResponse"16@"NSError"24l
+#define __block_descriptor_56_e8_32s40s48bs_e46_v32@?0@"NSData"8@"NSURLResponse"16@"NSError"24l __NS_SYMBOL(__block_descriptor_56_e8_32s40s48bs_e46_v32@?0@"NSData"8@"NSURLResponse"16@"NSError"24l)
+#endif
+
+#ifndef __block_descriptor_40_e8_32s_e25_v32@?0@"MMEEvent"8Q16^B24l
+#define __block_descriptor_40_e8_32s_e25_v32@?0@"MMEEvent"8Q16^B24l __NS_SYMBOL(__block_descriptor_40_e8_32s_e25_v32@?0@"MMEEvent"8Q16^B24l)
+#endif
+
+#ifndef __block_descriptor_32_e5_v8@?0l
+#define __block_descriptor_32_e5_v8@?0l __NS_SYMBOL(__block_descriptor_32_e5_v8@?0l)
+#endif
+
+#ifndef __block_descriptor_40_e8_32w_e5_v8@?0l
+#define __block_descriptor_40_e8_32w_e5_v8@?0l __NS_SYMBOL(__block_descriptor_40_e8_32w_e5_v8@?0l)
+#endif
+
+#ifndef __block_descriptor_48_e8_32s40w_e5_v8@?0l
+#define __block_descriptor_48_e8_32s40w_e5_v8@?0l __NS_SYMBOL(__block_descriptor_48_e8_32s40w_e5_v8@?0l)
+#endif
+
+#ifndef __block_descriptor_48_e8_32w_e17_v16@?0@"NSError"8l
+#define __block_descriptor_48_e8_32w_e17_v16@?0@"NSError"8l __NS_SYMBOL(__block_descriptor_48_e8_32w_e17_v16@?0@"NSError"8l)
+#endif
+
+#ifndef __block_descriptor_40_e8_32w_e17_v16@?0@"NSError"8l
+#define __block_descriptor_40_e8_32w_e17_v16@?0@"NSError"8l __NS_SYMBOL(__block_descriptor_40_e8_32w_e17_v16@?0@"NSError"8l)
+#endif
+
+#ifndef __block_descriptor_40_e8_32bs_e17_v16@?0@"NSError"8l
+#define __block_descriptor_40_e8_32bs_e17_v16@?0@"NSError"8l __NS_SYMBOL(__block_descriptor_40_e8_32bs_e17_v16@?0@"NSError"8l)
+#endif
+
