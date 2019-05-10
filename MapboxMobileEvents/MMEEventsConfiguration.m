@@ -8,8 +8,8 @@ static NSString *const kMMECustomProfile = @"Custom";
 
 static const CLLocationDistance kHibernationRadiusDefault = 300.0;
 static const CLLocationDistance kHibernationRadiusWide = 1200.0;
-static const NSUInteger kEventFlushCountThresholdDefault = 180;
-static const NSUInteger kEventFlushSecondsThresholdDefault = 180;
+static const NSUInteger kEventFlushCountThresholdDefault = 10;
+static const NSUInteger kEventFlushSecondsThresholdDefault = 10;
 static const NSTimeInterval kInitDelayTimeInterval = 10;
 static const NSTimeInterval kInstanceIdentifierRotationTimeIntervalDefault = 24 * 3600;
 static const NSTimeInterval kConfigurationRotationTimeIntervalDefault = 24 * 3600; // 24 hours

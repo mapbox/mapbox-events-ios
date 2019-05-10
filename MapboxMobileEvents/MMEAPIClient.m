@@ -165,7 +165,7 @@ int const kMMEMaxRequestCount = 1000;
 
 #pragma mark - Utilities
 
-- (NSError *)statusErrorFromRequest:(nonnull NSURLRequest *)request andHTTPResponse:(nonnull NSHTTPURLResponse *)httpResponse {
+- (NSError *)statusErrorFromRequest:(NSURLRequest *)request andHTTPResponse:(NSHTTPURLResponse *)httpResponse {
     NSError *statusError = nil;
     if (httpResponse.statusCode >= 400) {
         NSString *descriptionFormat = @"The session data task failed. Original request was: %@";
