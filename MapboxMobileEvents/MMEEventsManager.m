@@ -74,6 +74,11 @@
 }
 
 - (void)initializeWithAccessToken:(NSString *)accessToken userAgentBase:(NSString *)userAgentBase hostSDKVersion:(NSString *)hostSDKVersion {
+    if (self.apiClient) {
+        [self setAccessToken:accessToken];
+        return;
+    }
+    
     self.apiClient = [[MMEAPIClient alloc] initWithAccessToken:accessToken
         userAgentBase:userAgentBase
         hostSDKVersion:hostSDKVersion];

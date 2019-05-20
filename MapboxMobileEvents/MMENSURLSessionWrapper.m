@@ -1,12 +1,20 @@
 #import "MMENSURLSessionWrapper.h"
+#import "MMEEventsManager.h"
 #import "MMECertPin.h"
 
+#pragma mark -
+
+@interface MMEEventsManager (Private)
+- (void)pushEvent:(MMEEvent *)event;
+@end
+
+#pragma mark -
 
 @interface MMENSURLSessionWrapper ()
 
-@property (nonatomic) NSURLSession *session;
 @property (nonatomic) dispatch_queue_t serialQueue;
 @property (nonatomic) MMECertPin *certPin;
+@property (nonatomic) NSURLSession *session;
 
 @end
 
@@ -24,6 +32,10 @@
 
 - (void)reconfigure:(MMEEventsConfiguration *)configuration {
     [self.certPin updateWithConfiguration:configuration];
+}
+
+-(void)dealloc {
+    [self.session invalidateAndCancel];
 }
 
 #pragma mark MMENSURLSessionWrapper
@@ -50,6 +62,13 @@
         __typeof__(self) strongSelf = weakSelf;
         [strongSelf.certPin handleChallenge:challenge completionHandler:completionHandler];
     });
+}
+
+-(void)URLSession:(NSURLSession *)session didBecomeInvalidWithError:(NSError *)error {
+    self.session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:nil];
+    if (error) {
+        [[MMEEventsManager sharedManager] pushEvent:[MMEEvent debugEventWithError:error]];
+    }
 }
 
 @end
