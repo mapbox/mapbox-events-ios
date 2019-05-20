@@ -307,6 +307,25 @@ describe(@"MMEEventsManager", ^{
                         locations = @[location()];
                     });
                     
+                    context(@"when the events manager is re-initialized", ^{
+                        __block NSString *capturedAccessToken;
+                        __block MMEEventsManager *capturedEventsManager;
+                        
+                        beforeEach(^{
+                            capturedEventsManager = eventsManager;
+                            capturedAccessToken = eventsManager.accessToken;
+                            [eventsManager initializeWithAccessToken:@"access-token-reinit" userAgentBase:@"user-agent-base" hostSDKVersion:@"host-sdk-version"];
+                        });
+                        
+                        it(@"should not be re-initalized", ^{
+                            eventsManager should equal(capturedEventsManager);
+                        });
+                        
+                        it(@"should change the access token", ^{
+                            eventsManager.accessToken should_not equal(capturedAccessToken);
+                        });
+                    });
+                    
                     context(@"when the event count threshold has not yet been reached and a location event is received", ^{
                         beforeEach(^{
                             spy_on(eventsManager.timerManager);
