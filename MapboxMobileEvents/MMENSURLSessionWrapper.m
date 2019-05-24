@@ -35,7 +35,7 @@
     [self.certPin updateWithConfiguration:configuration];
 }
 
--(void)dealloc {
+-(void)invalidate {
     [self.session invalidateAndCancel];
 }
 

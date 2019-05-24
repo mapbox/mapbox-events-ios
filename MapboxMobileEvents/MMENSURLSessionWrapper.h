@@ -11,6 +11,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)reconfigure:(MMEEventsConfiguration *)configuration;
 
+/*! @biref invalidate the session and release it's internal NSURLSession */
+- (void)invalidate;
+
 @end
 
 @interface MMENSURLSessionWrapper : NSObject <MMENSURLSessionWrapper, NSURLSessionDelegate>
