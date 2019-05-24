@@ -66,8 +66,8 @@
 }
 
 -(void)URLSession:(NSURLSession *)session didBecomeInvalidWithError:(NSError *)error {
-    self.session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:nil];
-    if (error) {
+    if (error) { // only recreate the session if the error was non-nil
+        self.session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:nil];
         [[MMEEventsManager sharedManager] pushEvent:[MMEEvent debugEventWithError:error]];
     }
 }

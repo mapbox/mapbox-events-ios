@@ -74,10 +74,10 @@ describe(@"MMEAPIClient", ^{
     describe(@"- URLSession:didBecomeInvalidWithError:", ^{
         __block NSURLSession *capturedSession;
         
-        context(@"when the session invalidates", ^{
+        context(@"when the session wrapper is invalidated", ^{
             beforeEach(^{
                 capturedSession = sessionWrapper.session;
-                [sessionWrapper.session invalidateAndCancel];
+                [sessionWrapper invalidate];
                 
                 dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
 
@@ -90,12 +90,12 @@ describe(@"MMEAPIClient", ^{
                 }
             });
             
-            it(@"should create a new session", ^{
-                sessionWrapper.session should_not equal(capturedSession);
+            it(@"should not create a new session", ^{
+                sessionWrapper.session should equal(capturedSession);
             });
             
-            it(@"should set new session's delegate", ^{
-                sessionWrapper.session.delegate should_not be_nil;
+            it(@"should clear the session's delegate", ^{
+                sessionWrapper.session.delegate should be_nil;
             });
             
             it(@"should set original session delegate to nil", ^{
