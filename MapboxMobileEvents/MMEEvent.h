@@ -54,6 +54,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Crash Events
 
+/*! @brief crashEventReporting:error:
+    @param eventsError error to report
+    @param createError pointer to an error creating the report
+    @return event
+*/
 + (instancetype)crashEventReporting:(NSError *)eventsError error:(NSError **)createError;
 
 #pragma mark - Debug Devents

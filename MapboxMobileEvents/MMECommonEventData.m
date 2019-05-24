@@ -74,7 +74,7 @@ NSString * const MMEApplicationStateUnknown = @"Unknown";
         }
 #else
         _vendorId = nil;
-        _iOSVersion = [MMECommonEventData sysInfoByName:"kern.osproductversion"];
+        _osVersion = NSProcessInfo.processInfo.operatingSystemVersionString;
         _scale = 0;
 #endif
     }

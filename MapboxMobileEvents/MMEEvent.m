@@ -27,6 +27,34 @@
     return nilAttributes;
 }
 
++ (NSString *)redactedStackFrame:(NSString*)stackFrame {
+    static NSArray<NSRegularExpression *>* allowedSymbols = nil;
+    if (!allowedSymbols) {
+        allowedSymbols = @[
+            [NSRegularExpression regularExpressionWithPattern:@"CoreFoundation" options:0 error:nil],
+            [NSRegularExpression regularExpressionWithPattern:@"GraphicsServices" options:0 error:nil],
+            [NSRegularExpression regularExpressionWithPattern:@"Foundation" options:0 error:nil],
+            [NSRegularExpression regularExpressionWithPattern:@"libobjc" options:0 error:nil],
+            [NSRegularExpression regularExpressionWithPattern:@"libdyld.dylib" options:0 error:nil],
+            [NSRegularExpression regularExpressionWithPattern:@"Mapbox" options:0 error:nil],
+            [NSRegularExpression regularExpressionWithPattern:@"MME" options:0 error:nil]
+        ];
+    }
+
+    BOOL shouldRedact = YES;
+    NSRange frameRange = NSMakeRange(0, stackFrame.length);
+
+    // check for each allowed symbol, if we find one then the redacted frame is
+    for (NSRegularExpression *expression in allowedSymbols) {
+        if ([expression numberOfMatchesInString:stackFrame options:0 range:frameRange]) {
+            shouldRedact = NO;
+            break; // for
+        }
+    }
+
+    return (shouldRedact ? @"-\tredacted" : stackFrame);
+}
+
 #pragma mark - Generic Events
 
 + (instancetype)eventWithAttributes:(NSDictionary *)attributes {
@@ -95,12 +123,11 @@
         NSUInteger stackHeight = errorException.callStackSymbols.count;
         NSUInteger index = 0;
         while (index < stackHeight) {
-            NSString *stackFrame = [NSString stringWithFormat:@"%@ %@",
-                errorException.callStackReturnAddresses[index], errorException.callStackSymbols[index]];
-            if (index > 0) {
+            NSString *stackSymbol = errorException.callStackSymbols[index];
+            [callStack appendString:[MMEEvent redactedStackFrame:stackSymbol]];
+            if (index < stackHeight) {
                 [callStack appendString:@"\n"];
             }
-            [callStack appendString:stackFrame];
             index++;
         }
         crashAttributes[MMEEventKeyStackTrace] = callStack;
