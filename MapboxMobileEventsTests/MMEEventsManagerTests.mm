@@ -37,6 +37,7 @@ using namespace Cedar::Doubles::Arguments;
 @property (nonatomic) id<MMEUIApplicationWrapper> application;
 @property (nonatomic) UIBackgroundTaskIdentifier backgroundTaskIdentifier;
 
+- (instancetype)initShared;
 - (void)pushEvent:(MMEEvent *)event;
 
 @end
@@ -80,7 +81,7 @@ describe(@"MMEEventsManager", ^{
 
     beforeEach(^{
         dispatchManager = [[MMEDispatchManagerFake alloc] init];
-        eventsManager = [[MMEEventsManager alloc] init];
+        eventsManager = [MMEEventsManager.alloc initShared];
 
         eventsManager.dispatchManager = dispatchManager;
         eventsManager.locationManager = nice_fake_for(@protocol(MMELocationManager));
@@ -112,7 +113,7 @@ describe(@"MMEEventsManager", ^{
                 NSDictionary *infoDictionary = @{ @"MMEEventsProfile" : @"Custom" };
                 bundle stub_method(@selector(infoDictionary)).and_return(infoDictionary);
 
-                eventsManager = [[MMEEventsManager alloc] init];
+                eventsManager = [MMEEventsManager.alloc initShared];
                 eventsManager.dispatchManager = dispatchManager;
 
                 [eventsManager initializeWithAccessToken:@"foo" userAgentBase:@"bar" hostSDKVersion:@"baz"];
@@ -125,7 +126,7 @@ describe(@"MMEEventsManager", ^{
 
         context(@"when no fancy value is set", ^{
             beforeEach(^{
-                eventsManager = [[MMEEventsManager alloc] init];
+                eventsManager = [MMEEventsManager.alloc initShared];
                 eventsManager.dispatchManager = dispatchManager;
 
                 [eventsManager initializeWithAccessToken:@"foo" userAgentBase:@"bar" hostSDKVersion:@"baz"];
@@ -409,7 +410,7 @@ describe(@"MMEEventsManager", ^{
                                 spy_on(timerManager);
                                 timerManager.target = eventsManager;
                                 timerManager.selector = @selector(sendTelemetryMetricsEvent);
-                                [MMEEventsManager sharedManager].timerManager = timerManager;
+                                MMEEventsManager.sharedManager.timerManager = timerManager;
                                 [timerManager triggerTimer];
                             });
                             
@@ -424,7 +425,7 @@ describe(@"MMEEventsManager", ^{
                                 spy_on(timerManager);
                                 timerManager.target = eventsManager;
                                 timerManager.selector = @selector(flush);
-                                [MMEEventsManager sharedManager].timerManager = timerManager;
+                                MMEEventsManager.sharedManager.timerManager = timerManager;
                                 [timerManager triggerTimer];
                             });
                             
@@ -1062,7 +1063,7 @@ describe(@"MMEEventsManager", ^{
             }];
 
             it(@"should not queue error events", ^{
-                [[MMEEventsManager sharedManager] pushEvent:[MMEEvent debugEventWithError:testError]];
+                [MMEEventsManager.sharedManager pushEvent:[MMEEvent debugEventWithError:testError]];
                 eventsManager.eventQueue.count should equal(0);
             });
         });
@@ -1071,7 +1072,7 @@ describe(@"MMEEventsManager", ^{
             NSException* testException = [NSException.alloc initWithName:@"TestExceptionName" reason:@"TestExceptionReason" userInfo:nil];
 
             it(@"should not queue exception events", ^{
-                [[MMEEventsManager sharedManager] pushEvent:[MMEEvent debugEventWithException:testException]];
+                [MMEEventsManager.sharedManager pushEvent:[MMEEvent debugEventWithException:testException]];
                 eventsManager.eventQueue.count should equal(0);
             });
         });

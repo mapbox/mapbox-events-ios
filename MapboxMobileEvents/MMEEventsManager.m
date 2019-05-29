@@ -53,13 +53,17 @@
     
     dispatch_once(&onceToken, ^{
         [MMECategoryLoader loadCategories];
-        _sharedManager = [[MMEEventsManager alloc] init];
+        _sharedManager = [MMEEventsManager.alloc initShared];
     });
     
     return _sharedManager;
 }
 
 - (instancetype)init {
+    return self.class.sharedManager;
+}
+
+- (instancetype)initShared {
     if (self = [super init]) {
         _metricsEnabled = YES;
         _locationMetricsEnabled = YES;
