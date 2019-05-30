@@ -56,7 +56,7 @@ Applications and frameworks which embed `MapboxMobileEvents.framework` can imple
 to be informned of any `NSError`s or `NSException`s the framework encounters. `NSException`s are are reported wrapped in an `NSError` 
 with the error code  `MMEErrorException` and the exception included in the user info dictionary under the key  `MMEErrorUnderlyingExceptionKey`.
 
-If a framework wishes to report errors via the mobile events API two conveniance methods are provided on `MMEEventsManager`:
+If a framework wishes to report errors via the mobile events API two convenience methods are provided on `MMEEventsManager`:
 
 ```objc
 NSError *reportableError = nil;
