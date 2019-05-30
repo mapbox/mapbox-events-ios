@@ -46,7 +46,7 @@ The MapboxMobileEvents frameworks strives to contain all internal exceptions and
 impacting the end users of applications which use the framework. The framework will attempt to report them to our backend, 
 in a redacted form, for analysis by Mapbox.
 
-Applications and frameworks which embed `MapboxMobileEvents.framework` can implemente the  `MMEEventsManagerDelegate` method:
+Applications and frameworks which embed `MapboxMobileEvents.framework` can implement the  `MMEEventsManagerDelegate` method:
 
 ```objc
 - (void)eventsManager:(MMEEventsManager *)eventsManager 
