@@ -18,7 +18,7 @@ Include `MapboxMobileEvents.framework` in your application, in the application d
 
 ```objc
 MMEEventsManager *manager = [MMEventsManager.sharedManager 
-    initilizeWithAccessToken:@"your-mapbox-token" 
+    initializeWithAccessToken:@"your-mapbox-token" 
     userAgentBase:@"user-agent-string"
     hostSDKVersion:@"1.0.0"];
 manager.delegate = self;
@@ -53,7 +53,7 @@ Applications and frameworks which embed `MapboxMobileEvents.framework` can imple
     didEncounterError:(NSError *)error;
 ```
 
-to be informned of any `NSError`s or `NSException`s the framework encounters. `NSException`s are are reported wrapped in an `NSError` 
+to be informed of any `NSError`s or `NSException`s the framework encounters. `NSException`s are reported wrapped in an `NSError` 
 with the error code  `MMEErrorException` and the exception included in the user info dictionary under the key  `MMEErrorUnderlyingExceptionKey`.
 
 If a framework wishes to report errors via the mobile events API two convenience methods are provided on `MMEEventsManager`:
