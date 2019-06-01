@@ -73,6 +73,17 @@ static CLLocation * location() {
 
 SPEC_BEGIN(MMEEventsManagerSpec)
 
+/* many of the tests use a manager which is not the shared manager,
+   in normal operation clietns should not use the private initShared method used for testsing */
+describe(@"MMEventsManager.sharedManager", ^{
+    MMEEventsManager *shared = MMEEventsManager.sharedManager;
+    MMEEventsManager *allocated = [MMEEventsManager.alloc init];
+
+    it(@"", ^{
+        shared should equal(allocated);
+    });
+});
+
 describe(@"MMEEventsManager", ^{
     
     __block MMEEventsManager *eventsManager;

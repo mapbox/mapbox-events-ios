@@ -669,8 +669,10 @@
 
 - (void)pushDebugEventWithAttributes:(MMEMapboxEventAttributes *)attributes {
     MMEMutableMapboxEventAttributes *combinedAttributes = [MMEMutableMapboxEventAttributes dictionaryWithDictionary:attributes];
-    [combinedAttributes setObject:[MMEDate.iso8601DateFormatter stringFromDate:[NSDate date]] forKey:@"created"];
-    [combinedAttributes setObject:self.uniqueIdentifer.rollingInstanceIdentifer forKey:@"instance"];
+    [combinedAttributes setObject:[MMEDate.iso8601DateFormatter stringFromDate:NSDate.date] forKey:@"created"];
+    if (self.uniqueIdentifer) {
+        [combinedAttributes setObject:self.uniqueIdentifer.rollingInstanceIdentifer forKey:@"instance"];
+    }
     MMEEvent *debugEvent = [MMEEvent debugEventWithAttributes:combinedAttributes];
     [MMEEventLogger.sharedLogger logEvent:debugEvent];
 }
