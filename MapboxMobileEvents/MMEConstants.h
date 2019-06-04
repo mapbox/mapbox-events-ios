@@ -158,17 +158,16 @@ extern NSString * const MMEEventKeyCustomData;
 /*! @brief NSErrorDomain for MapboxMobileEvents */
 extern NSErrorDomain const MMEErrorDomain;
 
-/*! @brief MMEErrorDomain No Error Code */
-extern NSInteger const MMENoError;
-
-/*! @brief MMEErrorDomain Min Error Code */
-extern NSInteger const MMEErrorMin;
-
-/*! @brief MMEErrorDomain Error Code for exceptions */
-extern NSInteger const MMEErrorException;
-
-/*! @brief MMEErrorDomain Error Code for intilizing events */
-extern NSInteger const MMEErrorEventInit;
+/*! @brief MMEErrorDomain Error Numbers
+    - MMENoError: No Error
+    - MMEErrorException for exceptions
+    - MMEErrorEventInit for errors when initlizing events
+*/
+typedef NS_ENUM(NSInteger, MMEErrorNumber) {
+    MMENoError = 0,
+    MMEErrorException = 10001,
+    MMEErrorEventInit = 10002
+};
 
 /*! @brief key for MMEErrorDomain userInfo dictionary containing the description of the error */
 extern NSString * const MMEErrorDescriptionKey;

@@ -155,16 +155,11 @@ NSString * const MMEEventKeyCustomData = @"threadDetails";
 
 NSErrorDomain const MMEErrorDomain = @"MMEErrorDomain";
 
-NSInteger const MMENoError = 0;
-NSInteger const MMEErrorMin = 10000;
-NSInteger const MMEErrorException = (MMEErrorMin + 1);
-NSInteger const MMEErrorEventInit = (MMEErrorMin + 2);
-
 NSString * const MMEErrorDescriptionKey = @"errorDescription";
 NSString * const MMEErrorEventAttributesKey = @"eventAttributes";
 NSString * const MMEErrorUnderlyingExceptionKey = @"underlyingException";
 
-#pragma mark - Deperecated
+#pragma mark - Deprecated
 
 NSString * const MMEEventKeyGestureID = MMEEventKeyGestureId;
 NSString * const MMEEventKeyVendorID = MMEEventKeyVendorId;
