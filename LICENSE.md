@@ -1,5 +1,5 @@
 
-mapbox-events-ios copyright (c) 2014-2017 Mapbox.
+mapbox-events-ios copyright (c) 2014-2019 Mapbox.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 

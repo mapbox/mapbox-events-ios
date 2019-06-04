@@ -27,6 +27,9 @@
 /*! @brief returns a date with the specified timeOffsetFromServer */
 + (MMEDate *)dateWithOffset:(NSTimeInterval)serverTimeFrame;
 
+/*! @brief return an MMEDate with the time specified in the provided date */
++ (MMEDate *)dateWithDate:(NSDate *)date;
+
 #pragma mark -
 
 - (MMEDate *)initWithOffset:(NSTimeInterval)serverTimeFrame;

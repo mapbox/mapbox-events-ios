@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "9C632266221377BF00653792"
-               BuildableName = "MapboxMobileEvents (All Targets)"
-               BlueprintName = "MapboxMobileEvents (All Targets)"
+               BlueprintIdentifier = "4085966E1ED08FF7003BD29D"
+               BuildableName = "resources.bundle"
+               BlueprintName = "resources"
                ReferencedContainer = "container:MapboxMobileEvents.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -45,9 +45,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "9C632266221377BF00653792"
-            BuildableName = "MapboxMobileEvents (All Targets)"
-            BlueprintName = "MapboxMobileEvents (All Targets)"
+            BlueprintIdentifier = "4085966E1ED08FF7003BD29D"
+            BuildableName = "resources.bundle"
+            BlueprintName = "resources"
             ReferencedContainer = "container:MapboxMobileEvents.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -63,9 +63,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "9C632266221377BF00653792"
-            BuildableName = "MapboxMobileEvents (All Targets)"
-            BlueprintName = "MapboxMobileEvents (All Targets)"
+            BlueprintIdentifier = "4085966E1ED08FF7003BD29D"
+            BuildableName = "resources.bundle"
+            BlueprintName = "resources"
             ReferencedContainer = "container:MapboxMobileEvents.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

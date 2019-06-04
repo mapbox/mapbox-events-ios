@@ -26,12 +26,43 @@ NSString * const MMEApplicationStateUnknown = @"Unknown";
     return results;
 }
 
++ (NSMutableDictionary *)commonEventData {
+    NSMutableDictionary *eventDictionary = NSMutableDictionary.new;
+    MMECommonEventData *eventData = MMECommonEventData.new;
+
+    if (eventData.model) {
+        eventDictionary[MMEEventKeyModel] = eventData.model;
+    }
+
+    if (eventData.platform) {
+        eventDictionary[MMEEventKeyPlatform] = eventData.platform;
+    }
+
+    if (eventData.vendorId) {
+        eventDictionary[MMEEventKeyVendorId] = eventData.vendorId;
+    }
+
+    if (eventData.osVersion) {
+        eventDictionary[MMEEventKeyOSVersion] = eventData.osVersion;
+    }
+
+    if (eventData.device) {
+        eventDictionary[MMEEventKeyDevice] = eventData.device;
+    }
+
+    if (eventData.scale) {
+        eventDictionary[MMEEventKeyAccessibilityFontScale] = @(eventData.scale);
+    }
+
+    return eventDictionary;
+}
+
 #pragma mark -
 
 - (instancetype)init {
     if (self = [super init]) {
         _model = [MMECommonEventData sysInfoByName:"hw.machine"];
-        _platform = [self platformInfo];
+        _platform = [MMECommonEventData platformInfo];
 #if TARGET_OS_IOS || TARGET_OS_TVOS
         _vendorId = UIDevice.currentDevice.identifierForVendor.UUIDString;
         _osVersion = [NSString stringWithFormat:@"%@ %@", UIDevice.currentDevice.systemName, UIDevice.currentDevice.systemVersion];
@@ -43,17 +74,16 @@ NSString * const MMEApplicationStateUnknown = @"Unknown";
         }
 #else
         _vendorId = nil;
-        _iOSVersion = nil;
+        _osVersion = NSProcessInfo.processInfo.operatingSystemVersionString;
         _scale = 0;
 #endif
     }
     return self;
 }
 
-
-- (NSString *)applicationState {
++ (NSString *)applicationState {
 #if TARGET_OS_IOS || TARGET_OS_TVOS
-    switch ([UIApplication sharedApplication].applicationState) {
+    switch (UIApplication.sharedApplication.applicationState) {
         case UIApplicationStateActive:
             return MMEApplicationStateForeground;
         case UIApplicationStateInactive:
@@ -68,11 +98,11 @@ NSString * const MMEApplicationStateUnknown = @"Unknown";
 #endif
 }
 
-- (NSString *)platformInfo {
++ (NSString *)platformInfo {
     NSString *result;
     #if TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR
         result = MMEEventKeyiOS;
-    #elif TARGET_OS_MAC
+    #elif TARGET_OS_MACOS
         result = MMEEventKeyMac;
     #else
         result = MMEEventUnknown;

@@ -16,6 +16,7 @@
 #import "CLLocationManager+MMEMobileEvents.h"
 #import "MMEUIApplicationWrapper.h"
 #import "MMEMetricsManager.h"
+#import "MMEDateFakes.h"
 
 using namespace Cedar::Matchers;
 using namespace Cedar::Doubles;
@@ -36,9 +37,20 @@ using namespace Cedar::Doubles::Arguments;
 @property (nonatomic) id<MMEUIApplicationWrapper> application;
 @property (nonatomic) UIBackgroundTaskIdentifier backgroundTaskIdentifier;
 
+- (instancetype)initShared;
 - (void)pushEvent:(MMEEvent *)event;
 
 @end
+
+#pragma mark -
+
+@interface MMEEvent (Tests)
+@property(nonatomic,retain) MMEDate *dateStorage;
+@property(nonatomic,retain) NSDictionary *attributesStorage;
+
+@end
+
+#pragma mark -
 
 static CLLocation * location() {
     CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(10, 10);
@@ -57,7 +69,20 @@ static CLLocation * location() {
                                         timestamp:timestamp];
 }
 
+#pragma mark -
+
 SPEC_BEGIN(MMEEventsManagerSpec)
+
+/* many of the tests use a manager which is not the shared manager,
+   in normal operation clietns should not use the private initShared method used for testsing */
+describe(@"MMEventsManager.sharedManager", ^{
+    MMEEventsManager *shared = MMEEventsManager.sharedManager;
+    MMEEventsManager *allocated = [MMEEventsManager.alloc init];
+
+    it(@"", ^{
+        shared should equal(allocated);
+    });
+});
 
 describe(@"MMEEventsManager", ^{
     
@@ -67,7 +92,7 @@ describe(@"MMEEventsManager", ^{
 
     beforeEach(^{
         dispatchManager = [[MMEDispatchManagerFake alloc] init];
-        eventsManager = [[MMEEventsManager alloc] init];
+        eventsManager = [MMEEventsManager.alloc initShared];
 
         eventsManager.dispatchManager = dispatchManager;
         eventsManager.locationManager = nice_fake_for(@protocol(MMELocationManager));
@@ -99,7 +124,7 @@ describe(@"MMEEventsManager", ^{
                 NSDictionary *infoDictionary = @{ @"MMEEventsProfile" : @"Custom" };
                 bundle stub_method(@selector(infoDictionary)).and_return(infoDictionary);
 
-                eventsManager = [[MMEEventsManager alloc] init];
+                eventsManager = [MMEEventsManager.alloc initShared];
                 eventsManager.dispatchManager = dispatchManager;
 
                 [eventsManager initializeWithAccessToken:@"foo" userAgentBase:@"bar" hostSDKVersion:@"baz"];
@@ -112,7 +137,7 @@ describe(@"MMEEventsManager", ^{
 
         context(@"when no fancy value is set", ^{
             beforeEach(^{
-                eventsManager = [[MMEEventsManager alloc] init];
+                eventsManager = [MMEEventsManager.alloc initShared];
                 eventsManager.dispatchManager = dispatchManager;
 
                 [eventsManager initializeWithAccessToken:@"foo" userAgentBase:@"bar" hostSDKVersion:@"baz"];
@@ -369,9 +394,12 @@ describe(@"MMEEventsManager", ^{
                                 MMEEvent *expectedEvent1 = [MMEEvent locationEventWithAttributes:eventAttributes
                                     instanceIdentifer:eventsManager.uniqueIdentifer.rollingInstanceIdentifer
                                     commonEventData:eventsManager.commonEventData];
+                                expectedEvent1.dateStorage = MMEDateFakes.earlier;
+
                                 MMEEvent *expectedEvent2 = [MMEEvent locationEventWithAttributes:eventAttributes
                                     instanceIdentifer:eventsManager.uniqueIdentifer.rollingInstanceIdentifer
                                     commonEventData:eventsManager.commonEventData];
+                                expectedEvent2.dateStorage = MMEDateFakes.earlier;
                                 
                                 eventsManager.apiClient should have_received(@selector(postEvents:completionHandler:)).with(@[expectedEvent1, expectedEvent2]).and_with(Arguments::anything);
                             });
@@ -393,14 +421,13 @@ describe(@"MMEEventsManager", ^{
                                 spy_on(timerManager);
                                 timerManager.target = eventsManager;
                                 timerManager.selector = @selector(sendTelemetryMetricsEvent);
-                                [MMEEventsManager sharedManager].timerManager = timerManager;
+                                MMEEventsManager.sharedManager.timerManager = timerManager;
                                 [timerManager triggerTimer];
                             });
                             
                             it(@"should attempt to post telemetryMetrics event", ^{
                                 eventsManager.apiClient should have_received(@selector(postEvents:completionHandler:)).with(@[telemetryMetricsEvent]).and_with(Arguments::anything);
                             });
-                            
                         });
                         
                         context(@"when no additional location events are received but the time threshold is reached", ^{
@@ -409,7 +436,7 @@ describe(@"MMEEventsManager", ^{
                                 spy_on(timerManager);
                                 timerManager.target = eventsManager;
                                 timerManager.selector = @selector(flush);
-                                [MMEEventsManager sharedManager].timerManager = timerManager;
+                                MMEEventsManager.sharedManager.timerManager = timerManager;
                                 [timerManager triggerTimer];
                             });
                             
@@ -426,6 +453,7 @@ describe(@"MMEEventsManager", ^{
                                 MMEEvent *expectedEvent1 = [MMEEvent locationEventWithAttributes:eventAttributes
                                     instanceIdentifer:eventsManager.uniqueIdentifer.rollingInstanceIdentifer
                                     commonEventData:eventsManager.commonEventData];
+                                expectedEvent1.dateStorage = MMEDateFakes.earlier;
                                 
                                 eventsManager.apiClient should have_received(@selector(postEvents:completionHandler:)).with(@[expectedEvent1]).and_with(Arguments::anything);
                             });
@@ -440,7 +468,7 @@ describe(@"MMEEventsManager", ^{
             
             context(@"when metrics are NOT enabled", ^{
                 beforeEach(^{
-                    eventsManager.metricsEnabledInSimulator = NO;
+                    eventsManager.metricsEnabled = NO; // disable in simulator and on device
                     [eventsManager pauseOrResumeMetricsCollectionIfRequired];
                 });
                 
@@ -482,7 +510,7 @@ describe(@"MMEEventsManager", ^{
             context(@"when metrics are NOT enabled", ^{
                 beforeEach(^{
                     eventsManager.apiClient = nice_fake_for(@protocol(MMEAPIClient));
-                    eventsManager.metricsEnabledInSimulator = NO;
+                    eventsManager.metricsEnabled = NO; // disable for simulator and real device
                 });
                 
                 context(@"when an api token is set and there are events to flush", ^{
@@ -708,7 +736,7 @@ describe(@"MMEEventsManager", ^{
                     NSDate *date = [NSDate dateWithTimeIntervalSince1970:1000];
                     [NSDate class] stub_method(@selector(date)).and_return(date);
                     
-                    eventsManager.metricsEnabledInSimulator = NO;
+                    eventsManager.metricsEnabled = NO; // on device or in simulator
                     
                     MMEAPIClientFake *fakeAPIClient = [[MMEAPIClientFake alloc] init];
                     spy_on(fakeAPIClient);
@@ -736,6 +764,7 @@ describe(@"MMEEventsManager", ^{
                                                                MMEEventKeySkuId: eventsManager.skuId ?: [NSNull null]
                                                                };
                     MMEEvent *expectedEvent = [MMEEvent turnstileEventWithAttributes:turnstileEventAttributes];
+                    expectedEvent.dateStorage = MMEDateFakes.earlier;
 
                     eventsManager.apiClient should have_received(@selector(postEvent:completionHandler:)).with(expectedEvent).and_with(Arguments::anything);
                 });
@@ -871,7 +900,7 @@ describe(@"MMEEventsManager", ^{
                 it(@"has the correct event", ^{
                     MMEEvent *expectedEvent = [MMEEvent mapTapEventWithDateString:dateString attributes:attributes];
                     MMEEvent *event = eventsManager.eventQueue.firstObject;
-                    expectedEvent.date = event.date;
+                    expectedEvent.dateStorage = event.dateStorage;
 
                     event should equal(expectedEvent);
                 });
@@ -885,7 +914,7 @@ describe(@"MMEEventsManager", ^{
                 it(@"has the correct event", ^{
                     MMEEvent *expectedEvent = [MMEEvent mapDragEndEventWithDateString:dateString attributes:attributes];
                     MMEEvent *event = eventsManager.eventQueue.firstObject;
-                    expectedEvent.date = event.date;
+                    expectedEvent.dateStorage = [MMEDate dateWithDate:event.date];
 
                     event should equal(expectedEvent);
                 });
@@ -899,7 +928,7 @@ describe(@"MMEEventsManager", ^{
                 it(@"has the correct event", ^{
                     MMEEvent *expectedEvent = [MMEEvent mapOfflineDownloadStartEventWithDateString:dateString attributes:attributes];
                     MMEEvent *event = eventsManager.eventQueue.firstObject;
-                    expectedEvent.date = event.date;
+                    expectedEvent.dateStorage = [MMEDate dateWithDate:event.date];
 
                     event should equal(expectedEvent);
                 });
@@ -913,7 +942,7 @@ describe(@"MMEEventsManager", ^{
                 it(@"has the correct event", ^{
                     MMEEvent *expectedEvent = [MMEEvent mapOfflineDownloadEndEventWithDateString:dateString attributes:attributes];
                     MMEEvent *event = eventsManager.eventQueue.firstObject;
-                    expectedEvent.date = event.date;
+                    expectedEvent.dateStorage = [MMEDate dateWithDate:event.date];
 
                     event should equal(expectedEvent);
                 });
@@ -929,7 +958,7 @@ describe(@"MMEEventsManager", ^{
                 it(@"has the correct event", ^{
                     MMEEvent *expectedEvent = [MMEEvent navigationEventWithName:navigationEventName attributes:attributes];
                     MMEEvent *event = eventsManager.eventQueue.firstObject;
-                    expectedEvent.date = event.date;
+                    expectedEvent.dateStorage = event.dateStorage;
 
                     event should equal(expectedEvent);
                 });
@@ -945,7 +974,7 @@ describe(@"MMEEventsManager", ^{
                 it(@"has the correct event", ^{
                     MMEEvent *expectedEvent = [MMEEvent visionEventWithName:visionEventName attributes:attributes];
                     MMEEvent *event = eventsManager.eventQueue.firstObject;
-                    expectedEvent.date = event.date;
+                    expectedEvent.dateStorage = event.dateStorage;
 
                     event should equal(expectedEvent);
                 });
@@ -961,7 +990,7 @@ describe(@"MMEEventsManager", ^{
                 it(@"has the correct event", ^{
                     MMEEvent *expectedEvent = [MMEEvent searchEventWithName:searchEventName attributes:attributes];
                     MMEEvent *event = eventsManager.eventQueue.firstObject;
-                    expectedEvent.date = event.date;
+                    expectedEvent.dateStorage = event.dateStorage;
 
                     event should equal(expectedEvent);
                 });
@@ -1009,7 +1038,7 @@ describe(@"MMEEventsManager", ^{
                 it(@"has the correct event", ^{
                     MMEEvent *expectedEvent = [MMEEvent mapLoadEventWithDateString:dateString commonEventData:commonEventData];
                     MMEEvent *event = eventsManager.eventQueue.firstObject;
-                    expectedEvent.date = event.date;
+                    expectedEvent.dateStorage = event.dateStorage;
 
                     event should equal(expectedEvent);
                 });
@@ -1045,7 +1074,7 @@ describe(@"MMEEventsManager", ^{
             }];
 
             it(@"should not queue error events", ^{
-                [[MMEEventsManager sharedManager] pushEvent:[MMEEvent debugEventWithError:testError]];
+                [MMEEventsManager.sharedManager pushEvent:[MMEEvent debugEventWithError:testError]];
                 eventsManager.eventQueue.count should equal(0);
             });
         });
@@ -1054,7 +1083,7 @@ describe(@"MMEEventsManager", ^{
             NSException* testException = [NSException.alloc initWithName:@"TestExceptionName" reason:@"TestExceptionReason" userInfo:nil];
 
             it(@"should not queue exception events", ^{
-                [[MMEEventsManager sharedManager] pushEvent:[MMEEvent debugEventWithException:testException]];
+                [MMEEventsManager.sharedManager pushEvent:[MMEEvent debugEventWithException:testException]];
                 eventsManager.eventQueue.count should equal(0);
             });
         });
@@ -1096,12 +1125,12 @@ describe(@"MMEEventsManager", ^{
                 MMEEvent *expectedVisitEvent = [MMEEvent visitEventWithAttributes:attributes];
                 MMEEvent *enqueueEvent = eventsManager.eventQueue.firstObject;
 
-                expectedVisitEvent.date = enqueueEvent.date;
+                expectedVisitEvent.dateStorage = enqueueEvent.dateStorage;
 
                 NSMutableDictionary *tempDict = [[NSMutableDictionary alloc] init];
                 [tempDict addEntriesFromDictionary:enqueueEvent.attributes];
                 [tempDict setObject:[MMEDate.iso8601DateFormatter stringFromDate:[location timestamp]] forKey:@"created"];
-                enqueueEvent.attributes = tempDict;
+                enqueueEvent.attributesStorage = tempDict;
                 
                 enqueueEvent should equal(expectedVisitEvent);
             });

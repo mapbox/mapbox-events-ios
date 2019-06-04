@@ -51,6 +51,12 @@ int const kMMEMaxRequestCount = 1000;
     return self;
 }
 
+- (void) dealloc {
+    [self.sessionWrapper invalidate];
+}
+
+#pragma mark -
+
 - (void)reconfigure:(MMEEventsConfiguration *)configuration {
     [self.sessionWrapper reconfigure:configuration];
 }

@@ -27,6 +27,7 @@
 
 #import <Foundation/Foundation.h>
 #import <SystemConfiguration/SystemConfiguration.h>
+#import "MMETypes.h"
 
 /**
  * Create NS_ENUM macro if it does not exist on the targeted version of iOS or OS X.
@@ -66,7 +67,7 @@ typedef void (^NetworkUnreachable)(MMEReachability * reachability);
 +(instancetype)reachabilityWithHostName:(NSString*)hostname;
 +(instancetype)reachabilityForInternetConnection;
 +(instancetype)reachabilityWithAddress:(void *)hostAddress;
-+(instancetype)reachabilityForLocalWiFi;
++(instancetype)reachabilityForLocalWiFi MME_DEPRECATED_MSG("the resulting object isn't particularly useful");
 
 -(instancetype)initWithReachabilityRef:(SCNetworkReachabilityRef)ref;
 

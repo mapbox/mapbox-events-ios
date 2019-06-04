@@ -74,30 +74,13 @@ describe(@"MMEAPIClient", ^{
     describe(@"- URLSession:didBecomeInvalidWithError:", ^{
         __block NSURLSession *capturedSession;
         
-        context(@"when the session invalidates", ^{
-            beforeEach(^{
-                capturedSession = sessionWrapper.session;
-                [sessionWrapper.session invalidateAndCancel];
-                
-                dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+        context(@"when the session wrapper is invalidated", ^{
+            capturedSession = sessionWrapper.session;
+            [sessionWrapper invalidate];
 
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, timeoutInNanoseconds), dispatch_get_main_queue(), ^{
-                    dispatch_semaphore_signal(semaphore);
-                });
+            // wait a second for the session to invalidate
+            [NSRunLoop.currentRunLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:1]];
 
-                while (dispatch_semaphore_wait(semaphore, DISPATCH_TIME_NOW)) {
-                    [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
-                }
-            });
-            
-            it(@"should create a new session", ^{
-                sessionWrapper.session should_not equal(capturedSession);
-            });
-            
-            it(@"should set new session's delegate", ^{
-                sessionWrapper.session.delegate should_not be_nil;
-            });
-            
             it(@"should set original session delegate to nil", ^{
                 capturedSession.delegate should be_nil;
             });
@@ -125,7 +108,6 @@ describe(@"MMEAPIClient", ^{
                 while (dispatch_semaphore_wait(semaphore, DISPATCH_TIME_NOW)) {
                     [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:10]];
                 }
-                
             });
             
             it(@"should be on main queue", ^{

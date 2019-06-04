@@ -1,4 +1,5 @@
 #import <Foundation/Foundation.h>
+#import "MMETypes.h"
 
 extern NSString * const MMEAPIClientBaseURL;
 extern NSString * const MMEAPIClientBaseAPIURL;
@@ -14,7 +15,6 @@ extern NSString * const MMEAPIClientAttachmentsHeaderFieldContentTypeValue;
 extern NSString * const MMEAPIClientHeaderFieldContentEncodingKey;
 extern NSString * const MMEAPIClientHTTPMethodPost;
 extern NSString * const MMEAPIClientHTTPMethodGet;
-extern NSString * const MMEErrorDomain;
 
 // Debug types
 extern NSString * const MMEDebugEventType;
@@ -61,11 +61,11 @@ extern NSString * const MMEEventKeyLongitude;
 extern NSString * const MMEEventKeyZoomLevel;
 extern NSString * const MMEEventKeyMaxZoomLevel;
 extern NSString * const MMEEventKeyMinZoomLevel;
-extern NSString * const MMEEventKeyGestureID;
+extern NSString * const MMEEventKeyGestureId;
 extern NSString * const MMEEventKeyEvent;
 extern NSString * const MMEEventKeyCreated;
 extern NSString * const MMEEventKeyStyleURL;
-extern NSString * const MMEEventKeyVendorID;
+extern NSString * const MMEEventKeyVendorId;
 extern NSString * const MMEEventKeyModel;
 extern NSString * const MMEEventKeyDevice;
 extern NSString * const MMEEventKeySkuId;
@@ -135,13 +135,56 @@ extern NSString * const MMEEventUnknown;
 
 extern NSString * const MMEResponseKey;
 
-// SDK event source
+/*! @brief SDK event source */
 extern NSString * const MMEEventSource;
 
-// Log reporter HTML
-extern NSString * const MMELoggerHTML;
-extern NSString * const MMELoggerShareableHTML;
+#pragma mark - mobile.crash Keys
 
-@interface MMEConstants: NSObject
+extern NSString * const MMEEventMobileCrash;
+extern NSString * const MMEEventKeyOSVersion;
+extern NSString * const MMEEventKeyBuildType;
+extern NSString * const MMEEventKeyIsSilentCrash;
+extern NSString * const MMEEventKeyStackTrace;
+extern NSString * const MMEEventKeyStackTraceHash;
+extern NSString * const MMEEventKeyInstallationId;
+extern NSString * const MMEEventKeyThreadDetails;
+extern NSString * const MMEEventKeyAppId;
+extern NSString * const MMEEventKeyAppVersion;
+extern NSString * const MMEEventKeyAppStartDate;
+extern NSString * const MMEEventKeyCustomData;
 
-@end
+#pragma mark - MMEErrorDomain
+
+/*! @brief NSErrorDomain for MapboxMobileEvents */
+extern NSErrorDomain const MMEErrorDomain;
+
+/*! @brief MMEErrorDomain Error Numbers
+    - MMENoError: No Error
+    - MMEErrorException for exceptions
+    - MMEErrorEventInit for errors when initlizing events
+*/
+typedef NS_ENUM(NSInteger, MMEErrorNumber) {
+    MMENoError = 0,
+    MMEErrorException = 10001,
+    MMEErrorEventInit = 10002
+};
+
+/*! @brief key for MMEErrorDomain userInfo dictionary containing the description of the error */
+extern NSString * const MMEErrorDescriptionKey;
+
+/*! @brief key for MMEErrorEventInit userInfo dictionary containing the attributes which failed to create the event */
+extern NSString * const MMEErrorEventAttributesKey;
+
+/*! @brief key for MMEErrorDomain userInfo dictionary containing the underlying exception which triggered the error */
+extern NSString * const MMEErrorUnderlyingExceptionKey;
+
+#pragma mark - Deprecated
+
+extern NSString * const MMEEventKeyVendorID MME_DEPRECATED_MSG("Use MMEEventKeyVendorId");
+extern NSString * const MMEEventKeyGestureID MME_DEPRECATED_MSG("Use MMEEventKeyGestureId");
+extern NSString * const MMEEventKeyInstallationID MME_DEPRECATED_MSG("Use MMEEventKeyInstallationId");
+extern NSString * const MMEEventKeyAppID MME_DEPRECATED_MSG("Use MMEEventKeyInstallationId");
+
+extern NSString * const MMELoggerHTML MME_DEPRECATED;
+extern NSString * const MMELoggerShareableHTML MME_DEPRECATED;
+

@@ -31,10 +31,6 @@
 #define MMEConfigurator __NS_SYMBOL(MMEConfigurator)
 #endif
 
-#ifndef MMEConstants
-#define MMEConstants __NS_SYMBOL(MMEConstants)
-#endif
-
 #ifndef MMEDate
 #define MMEDate __NS_SYMBOL(MMEDate)
 #endif
@@ -99,10 +95,6 @@
 #define MMETimerManager __NS_SYMBOL(MMETimerManager)
 #endif
 
-#ifndef MMETypes
-#define MMETypes __NS_SYMBOL(MMETypes)
-#endif
-
 #ifndef MMEUIApplicationWrapper
 #define MMEUIApplicationWrapper __NS_SYMBOL(MMEUIApplicationWrapper)
 #endif
@@ -126,6 +118,10 @@
 
 #ifndef mme_linkNSDataCategory
 #define mme_linkNSDataCategory __NS_SYMBOL(mme_linkNSDataCategory)
+#endif
+
+#ifndef mme_linkUIKitCategories
+#define mme_linkUIKitCategories __NS_SYMBOL(mme_linkUIKitCategories)
 #endif
 
 // Externs
@@ -205,6 +201,10 @@
 #define MMERadiusAccuracyMax __NS_SYMBOL(MMERadiusAccuracyMax)
 #endif
 
+#ifndef MMELocationManagerRegionIdentifier
+#define MMELocationManagerRegionIdentifier __NS_SYMBOL(MMELocationManagerRegionIdentifier)
+#endif
+
 #ifndef MMEAPIClientBaseURL
 #define MMEAPIClientBaseURL __NS_SYMBOL(MMEAPIClientBaseURL)
 #endif
@@ -259,10 +259,6 @@
 
 #ifndef MMEAPIClientHTTPMethodGet
 #define MMEAPIClientHTTPMethodGet __NS_SYMBOL(MMEAPIClientHTTPMethodGet)
-#endif
-
-#ifndef MMEErrorDomain
-#define MMEErrorDomain __NS_SYMBOL(MMEErrorDomain)
 #endif
 
 #ifndef MMEResponseKey
@@ -433,8 +429,8 @@
 #define MMEEventKeyCourse __NS_SYMBOL(MMEEventKeyCourse)
 #endif
 
-#ifndef MMEEventKeyGestureID
-#define MMEEventKeyGestureID __NS_SYMBOL(MMEEventKeyGestureID)
+#ifndef MMEEventKeyGestureId
+#define MMEEventKeyGestureId __NS_SYMBOL(MMEEventKeyGestureId)
 #endif
 
 #ifndef MMEEventHorizontalAccuracy
@@ -469,8 +465,8 @@
 #define MMEEventKeyCreated __NS_SYMBOL(MMEEventKeyCreated)
 #endif
 
-#ifndef MMEEventKeyVendorID
-#define MMEEventKeyVendorID __NS_SYMBOL(MMEEventKeyVendorID)
+#ifndef MMEEventKeyVendorId
+#define MMEEventKeyVendorId __NS_SYMBOL(MMEEventKeyVendorId)
 #endif
 
 #ifndef MMEEventKeyModel
@@ -479,6 +475,10 @@
 
 #ifndef MMEEventKeyDevice
 #define MMEEventKeyDevice __NS_SYMBOL(MMEEventKeyDevice)
+#endif
+
+#ifndef MMEEventKeySkuId
+#define MMEEventKeySkuId __NS_SYMBOL(MMEEventKeySkuId)
 #endif
 
 #ifndef MMEEventKeyEnabledTelemetry
@@ -499,10 +499,6 @@
 
 #ifndef MMEEventKeyOrientation
 #define MMEEventKeyOrientation __NS_SYMBOL(MMEEventKeyOrientation)
-#endif
-
-#ifndef MMELocationManagerRegionIdentifier
-#define MMELocationManagerRegionIdentifier __NS_SYMBOL(MMELocationManagerRegionIdentifier)
 #endif
 
 #ifndef MMEEventKeyPluggedIn
@@ -717,6 +713,86 @@
 #define MMEEventSource __NS_SYMBOL(MMEEventSource)
 #endif
 
+#ifndef MMEEventMobileCrash
+#define MMEEventMobileCrash __NS_SYMBOL(MMEEventMobileCrash)
+#endif
+
+#ifndef MMEEventKeyOSVersion
+#define MMEEventKeyOSVersion __NS_SYMBOL(MMEEventKeyOSVersion)
+#endif
+
+#ifndef MMEEventKeyBuildType
+#define MMEEventKeyBuildType __NS_SYMBOL(MMEEventKeyBuildType)
+#endif
+
+#ifndef MMEEventKeyIsSilentCrash
+#define MMEEventKeyIsSilentCrash __NS_SYMBOL(MMEEventKeyIsSilentCrash)
+#endif
+
+#ifndef MMEEventKeyStackTrace
+#define MMEEventKeyStackTrace __NS_SYMBOL(MMEEventKeyStackTrace)
+#endif
+
+#ifndef MMEEventKeyStackTraceHash
+#define MMEEventKeyStackTraceHash __NS_SYMBOL(MMEEventKeyStackTraceHash)
+#endif
+
+#ifndef MMEEventKeyInstallationId
+#define MMEEventKeyInstallationId __NS_SYMBOL(MMEEventKeyInstallationId)
+#endif
+
+#ifndef MMEEventKeyThreadDetails
+#define MMEEventKeyThreadDetails __NS_SYMBOL(MMEEventKeyThreadDetails)
+#endif
+
+#ifndef MMEEventKeyAppId
+#define MMEEventKeyAppId __NS_SYMBOL(MMEEventKeyAppId)
+#endif
+
+#ifndef MMEEventKeyAppVersion
+#define MMEEventKeyAppVersion __NS_SYMBOL(MMEEventKeyAppVersion)
+#endif
+
+#ifndef MMEEventKeyAppStartDate
+#define MMEEventKeyAppStartDate __NS_SYMBOL(MMEEventKeyAppStartDate)
+#endif
+
+#ifndef MMEEventKeyCustomData
+#define MMEEventKeyCustomData __NS_SYMBOL(MMEEventKeyCustomData)
+#endif
+
+#ifndef MMEErrorDomain
+#define MMEErrorDomain __NS_SYMBOL(MMEErrorDomain)
+#endif
+
+#ifndef MMEErrorDescriptionKey
+#define MMEErrorDescriptionKey __NS_SYMBOL(MMEErrorDescriptionKey)
+#endif
+
+#ifndef MMEErrorEventAttributesKey
+#define MMEErrorEventAttributesKey __NS_SYMBOL(MMEErrorEventAttributesKey)
+#endif
+
+#ifndef MMEErrorUnderlyingExceptionKey
+#define MMEErrorUnderlyingExceptionKey __NS_SYMBOL(MMEErrorUnderlyingExceptionKey)
+#endif
+
+#ifndef MMEEventKeyGestureID
+#define MMEEventKeyGestureID __NS_SYMBOL(MMEEventKeyGestureID)
+#endif
+
+#ifndef MMEEventKeyVendorID
+#define MMEEventKeyVendorID __NS_SYMBOL(MMEEventKeyVendorID)
+#endif
+
+#ifndef MMEEventKeyInstallationID
+#define MMEEventKeyInstallationID __NS_SYMBOL(MMEEventKeyInstallationID)
+#endif
+
+#ifndef MMEEventKeyAppID
+#define MMEEventKeyAppID __NS_SYMBOL(MMEEventKeyAppID)
+#endif
+
 #ifndef MMELoggerHTML
 #define MMELoggerHTML __NS_SYMBOL(MMELoggerHTML)
 #endif
@@ -725,6 +801,23 @@
 #define MMELoggerShareableHTML __NS_SYMBOL(MMELoggerShareableHTML)
 #endif
 
+#ifndef MMENoError
+#define MMENoError __NS_SYMBOL(MMENoError)
+#endif
+
+#ifndef MMEErrorMin
+#define MMEErrorMin __NS_SYMBOL(MMEErrorMin)
+#endif
+
+#ifndef MMEErrorException
+#define MMEErrorException __NS_SYMBOL(MMEErrorException)
+#endif
+
+#ifndef MMEErrorEventInit
+#define MMEErrorEventInit __NS_SYMBOL(MMEErrorEventInit)
+#endif
+
 #ifndef kMMEMaxRequestCount
 #define kMMEMaxRequestCount __NS_SYMBOL(kMMEMaxRequestCount)
 #endif
+

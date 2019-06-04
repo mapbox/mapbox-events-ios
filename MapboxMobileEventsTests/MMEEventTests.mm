@@ -2,9 +2,15 @@
 
 #import "MMEDate.h"
 #import "MMEEvent.h"
+#import "MMEConstants.h"
+#import "MMEExceptionalDictionary.h"
 
 using namespace Cedar::Matchers;
 using namespace Cedar::Doubles;
+
+@interface MMEEvent ()
++ (NSDictionary *)nilAttributes;
+@end
 
 SPEC_BEGIN(MMEEventSpec)
 
@@ -28,52 +34,59 @@ describe(@"MMEEvent", ^{
             event.name should equal(testName);
         });
 
-        it(@"should have the test event attrs", ^{
-            event.attributes should equal(testAttrs);
+        it(@"should have all the test event attrs", ^{
+            for (NSString *key in testAttrs.allKeys) {
+                id value = event.attributes[key];
+                value should_not be_nil;
+                testAttrs[key] should equal(value);
+            }
         });
     });
 
     context(@"NSSecureCoding of MMEEvent", ^{
         MMEEvent *event = [MMEEvent eventWithName:testName attributes:testAttrs];
+        NSKeyedArchiver *archiver = [NSKeyedArchiver new];
+        archiver.requiresSecureCoding = YES;
+        [archiver encodeObject:event forKey:NSKeyedArchiveRootObjectKey];
+        NSData *eventData = archiver.encodedData;
+
+        it(@"should encode to eventData", ^{
+            eventData should_not be_nil;
+            eventData.length should be_greater_than(0);
+        });
+
+        it(@"should decode from eventData", ^{
+            NSKeyedUnarchiver *unarchiver = [NSKeyedUnarchiver.alloc initForReadingWithData:eventData];
+            unarchiver.requiresSecureCoding = YES;
+            MMEEvent *unarchived = [unarchiver decodeObjectOfClass:MMEEvent.class forKey:NSKeyedArchiveRootObjectKey];
+
+            unarchived should_not be_nil;
+            unarchived should equal(event);
+        });
+    });
+
+    context(@"NSKeyedArchiver", ^{
+        MMEEvent *event = [MMEEvent eventWithName:testName attributes:testAttrs];
         NSString *tempFile = [NSTemporaryDirectory() stringByAppendingPathComponent:@"MMEEvent-test.data"];
+
         if ([NSFileManager.defaultManager fileExistsAtPath:tempFile]) {
             [NSFileManager.defaultManager removeItemAtPath:tempFile error:nil];
         }
 
-        it(@"should archive to data", ^{
-            NSKeyedArchiver *archiver = [NSKeyedArchiver new];
-            archiver.requiresSecureCoding = YES;
-            [archiver encodeObject:event forKey:NSKeyedArchiveRootObjectKey];
-            NSData* eventData = archiver.encodedData;
-
-            it(@"should encode to eventData", ^{
-                eventData should_not be_nil;
-                eventData.length should be_greater_than(0);
-            });
-
-            it(@"should decode from eventData", ^{
-                NSKeyedUnarchiver *unarchiver = [NSKeyedUnarchiver.alloc initForReadingWithData:eventData];
-                unarchiver.requiresSecureCoding = YES;
-                MMEEvent *unarchived = [unarchiver decodeObjectOfClass:MMEDate.class forKey:NSKeyedArchiveRootObjectKey];
-
-                unarchived should_not be_nil;
-                unarchived should equal(event);
-            });
-        });
+        [NSKeyedArchiver archiveRootObject:event toFile:tempFile];
 
         it(@"should write encoded data to a file", ^{
-            [NSKeyedArchiver archiveRootObject:event toFile:tempFile];
             [NSFileManager.defaultManager fileExistsAtPath:tempFile] should be_truthy;
+        });
 
-            it(@"should read data and decode from a file", ^{
-                NSData *thenData = [NSData dataWithContentsOfFile:tempFile];
-                NSKeyedUnarchiver* unarchiver = [NSKeyedUnarchiver.alloc initForReadingWithData:thenData];
-                unarchiver.requiresSecureCoding = YES;
-                MMEEvent *unarchived = [unarchiver decodeObjectOfClass:MMEDate.class forKey:NSKeyedArchiveRootObjectKey];
+        it(@"should read encoded data from a file", ^{
+            NSData *thenData = [NSData dataWithContentsOfFile:tempFile];
+            NSKeyedUnarchiver* unarchiver = [NSKeyedUnarchiver.alloc initForReadingWithData:thenData];
+            unarchiver.requiresSecureCoding = YES;
+            MMEEvent *unarchived = [unarchiver decodeObjectOfClass:MMEEvent.class forKey:NSKeyedArchiveRootObjectKey];
 
-                unarchived should_not be_nil;
-                unarchived should equal(event);
-            });
+            unarchived should_not be_nil;
+            unarchived should equal(event);
         });
     });
 
@@ -102,13 +115,6 @@ describe(@"MMEEvent", ^{
 
             errorEventWithAllInfo should_not be_nil;
         });
-
-        it(@"should create an MMEEevent from a nil error", ^{
-            MMEEvent *errorEventWithNilError = [MMEEvent debugEventWithError:nil];
-
-            errorEventWithNilError should_not be_nil;
-        });
-
     });
 
     context(@"debugEventWithException", ^{
@@ -127,6 +133,100 @@ describe(@"MMEEvent", ^{
             MMEEvent *exceptionEventWithAllInfo = [MMEEvent debugEventWithException:exceptionWithAllInfo];
 
             exceptionEventWithAllInfo should_not be_nil;
+        });
+    });
+
+    context(@"eventWithAttributes:error:", ^{
+        it(@"should not init with invalid attributes", ^{
+            NSError *error = nil;
+            MMEEvent *invalid = [MMEEvent eventWithAttributes:@{@"Invalid": [NSError errorWithDomain:NSCocoaErrorDomain code:0 userInfo:nil]} error:&error];
+
+            invalid should be_nil;
+            error should_not be_nil;
+            error.code should equal(MMEErrorEventInit);
+        });
+
+        it(@"should init with nil attributes for initWithCoder:", ^{
+            NSError *error = nil;
+            MMEEvent *invalid = [MMEEvent eventWithAttributes:MMEEvent.nilAttributes error:&error];
+
+            invalid.attributes should be_nil;
+            error should be_nil;
+        });
+
+        it(@"should not init without MMEEventKeyEvent", ^{
+            NSError *error = nil;
+            MMEEvent *invalid = [MMEEvent eventWithAttributes:@{@"foo":@"bar"} error:&error];
+
+            invalid should be_nil;
+            error should_not be_nil;
+            error.code should equal(MMEErrorEventInit);
+        });
+
+        it(@"should contain an exceptional dictionary", ^{
+            NSError *error = nil;
+            MMEEvent *exceptional = [MMEEvent eventWithAttributes:[MMEExceptionalDictionary dictionaryWithDictionary:@{@"foo":@"bar"}] error:&error];
+
+            exceptional should be_nil;
+            error should_not be_nil;
+            error.code should equal(MMEErrorEventInit);
+        });
+    });
+
+    context(@"eventWithAttributes:", ^{
+        MMEEvent *attributed = [MMEEvent eventWithAttributes:@{@"invalid":@"attributes"}];
+
+        it(@"should return nil with invalid attributes:", ^{
+            attributed should be_nil;
+        });
+    });
+
+    context(@"carplayEvent", ^{
+        MMEEvent *carplay = [MMEEvent carplayEventWithName:MMEventTypeNavigationCarplayConnect attributes:testAttrs];
+
+        it(@"should create a carplay event", ^{
+            carplay should_not be_nil;
+        });
+    });
+
+    context(@"isEqualToEvent:", ^{
+        NSDictionary *eventAttributes = @{MMEEventKeyEvent: @"test.event"};
+        MMEEvent *firstEvent = [MMEEvent eventWithAttributes:eventAttributes];
+        MMEEvent *secondEvent = [MMEEvent eventWithAttributes:eventAttributes];
+
+        it(@"should not be true for two consective events with the same attributes, or for nil", ^{
+            [firstEvent isEqual:secondEvent] should_not be_truthy;
+        });
+
+        it(@"should be false for nil", ^{
+            [firstEvent isEqual:nil] should_not be_truthy;
+        });
+
+        it(@"should be true in the identity case", ^{
+            [firstEvent isEqual:firstEvent] should be_truthy;
+        });
+
+        it(@"should be false for an object of a different class", ^{
+            [firstEvent isEqual:eventAttributes] should_not be_truthy;
+        });
+    });
+
+    context(@"hash:", ^{
+        it(@"should compute a non-0 hash", ^{
+            MMEEvent *hashEvent = [MMEEvent eventWithAttributes:@{MMEEventKeyEvent: @"test.event"}];
+            NSUInteger hashcode = hashEvent.hash;
+
+            hashcode should_not equal(0);
+        });
+    });
+
+    context(@"NSCopying", ^{
+        it(@"should create an isEqual: but not identity copy", ^{
+            MMEEvent *original = [MMEEvent eventWithAttributes:@{MMEEventKeyEvent: @"test.event"}];
+            MMEEvent *duplicate = original.copy;
+
+            [original isEqual:duplicate] should be_truthy;
+            (original == duplicate) should_not be_truthy;
         });
     });
 });

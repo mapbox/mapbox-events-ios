@@ -27,7 +27,7 @@ using namespace Cedar::Doubles;
 
 @interface MMECertPin (CertPinTest)
 
-@property (nonatomic) NSURLSessionAuthChallengeDisposition lastAuthChanllengeDisposition;
+@property (nonatomic) NSURLSessionAuthChallengeDisposition lastAuthChallengeDisposition;
 
 @end
 
@@ -71,7 +71,7 @@ describe(@"MMEAPIClientCertPin", ^{
 
         [apiClient postEvent:event completionHandler:^(NSError * _Nullable error) {
             error should be_nil;
-            sessionWrapper.certPin.lastAuthChanllengeDisposition should equal(NSURLSessionAuthChallengeUseCredential);
+            sessionWrapper.certPin.lastAuthChallengeDisposition should equal(NSURLSessionAuthChallengeUseCredential);
         }];
     });
 
@@ -84,7 +84,7 @@ describe(@"MMEAPIClientCertPin", ^{
 
         [apiClient getConfigurationWithCompletionHandler:^(NSError * _Nullable error, NSData * _Nullable data) {
             error should be_nil;
-            sessionWrapper.certPin.lastAuthChanllengeDisposition should equal(NSURLSessionAuthChallengePerformDefaultHandling);
+            sessionWrapper.certPin.lastAuthChallengeDisposition should equal(NSURLSessionAuthChallengePerformDefaultHandling);
         }];
     });
 

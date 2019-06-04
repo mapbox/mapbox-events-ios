@@ -1,6 +1,7 @@
 #import "MMENSURLSessionWrapper.h"
 #import "MMEEventsManager.h"
 #import "MMECertPin.h"
+#import "MMEEvent.h"
 
 #pragma mark -
 
@@ -25,7 +26,7 @@
     if (self) {
         _session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:nil];
         _serialQueue = dispatch_queue_create([[NSString stringWithFormat:@"%@.events.serial", NSStringFromClass([self class])] UTF8String], DISPATCH_QUEUE_SERIAL);
-        _certPin = [[MMECertPin alloc]init];
+        _certPin = [[MMECertPin alloc] init];
     }
     return self;
 }
@@ -34,7 +35,7 @@
     [self.certPin updateWithConfiguration:configuration];
 }
 
--(void)dealloc {
+-(void)invalidate {
     [self.session invalidateAndCancel];
 }
 
@@ -65,9 +66,12 @@
 }
 
 -(void)URLSession:(NSURLSession *)session didBecomeInvalidWithError:(NSError *)error {
-    self.session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:nil];
-    if (error) {
+    if (error) { // only recreate the session if the error was non-nil
+        self.session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:nil];
         [[MMEEventsManager sharedManager] pushEvent:[MMEEvent debugEventWithError:error]];
+    }
+    else { // release the session object
+        self.session = nil;
     }
 }
 
