@@ -93,7 +93,11 @@
     // start with common event data
     NSMutableDictionary *crashAttributes = MMECommonEventData.commonEventData;
     crashAttributes[MMEEventKeyEvent] = MMEEventMobileCrash;
-    crashAttributes[MMEEventKeyBuildType] = (DEBUG ? @"debug" : @"release");
+#if DEBUG
+    crashAttributes[MMEEventKeyBuildType] = @"debug";
+#else
+    crashAttributes[MMEEventKeyBuildType] = @"release";
+#endif
     crashAttributes[MMEEventKeyIsSilentCrash] = @"yes";
     crashAttributes[MMEEventSDKIdentifier] = [NSString stringWithFormat:@"%@-%@",
         MMEEventsManager.sharedManager.userAgentBase,

@@ -801,22 +801,6 @@
 #define MMELoggerShareableHTML __NS_SYMBOL(MMELoggerShareableHTML)
 #endif
 
-#ifndef MMENoError
-#define MMENoError __NS_SYMBOL(MMENoError)
-#endif
-
-#ifndef MMEErrorMin
-#define MMEErrorMin __NS_SYMBOL(MMEErrorMin)
-#endif
-
-#ifndef MMEErrorException
-#define MMEErrorException __NS_SYMBOL(MMEErrorException)
-#endif
-
-#ifndef MMEErrorEventInit
-#define MMEErrorEventInit __NS_SYMBOL(MMEErrorEventInit)
-#endif
-
 #ifndef kMMEMaxRequestCount
 #define kMMEMaxRequestCount __NS_SYMBOL(kMMEMaxRequestCount)
 #endif
