@@ -167,6 +167,7 @@ bash "$setupDelaysForXCTestObservation" \
 ###########################################################################################################################
 
 print_heading "4) Build scheme"
+echo "xcodebuild -project $appWorkspace -scheme $appScheme -destination $destination -derivedDataPath $buildDir build-for-testing $buildLogPath"
 
 xcodebuild -project "$appWorkspace" \
 	   	   -scheme "$appScheme" \
@@ -175,6 +176,7 @@ xcodebuild -project "$appWorkspace" \
 		   build-for-testing \
 		   > "$buildLogPath" \
 		   2>&1
+
 exit_if_last_command_failed
 
 ##########################################################################################################################

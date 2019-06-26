@@ -1,5 +1,6 @@
 #import <XCTest/XCTest.h>
-#import <MapboxMobileEvents/>
+@import CoreLocation;
+@import MapboxMobileEvents;
 
 @interface MMETestHostUITests : XCTestCase
 
@@ -28,8 +29,8 @@
 }
 
 - (void)leaksTest {
-    self.locationManager  = [[CLLocationManager alloc] init];
-    [self.locationManager requestAlwaysAuthorization];
+    CLLocationManager *locationManager = [[CLLocationManager alloc] init];
+    [locationManager requestAlwaysAuthorization];
     // Do any additional setup after loading the view.
     [MMEEventsManager.sharedManager initializeWithAccessToken:@"pk.eyJ1IjoicmNsZWVkZXYiLCJhIjoiY2plaXFraWZ5MXFsejJxbGloZjJ0NGxrbiJ9.7hPRHHLNZLEhREJ963veeQ" userAgentBase:@"rcleetest" hostSDKVersion:@"0.0.0"];
     MMEEventsManager.sharedManager.baseURL = [NSURL URLWithString:@"https://api-events-staging.tilestream.net"];

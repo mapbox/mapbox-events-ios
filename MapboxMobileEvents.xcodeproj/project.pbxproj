@@ -129,23 +129,7 @@
 		AC56F8C422C1518E005CF6FA /* makefile.make in Resources */ = {isa = PBXBuildFile; fileRef = AC56F8C322C1518E005CF6FA /* makefile.make */; };
 		AC56F8CC22C15FA8005CF6FA /* MMETestHostUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = AC56F8CB22C15FA8005CF6FA /* MMETestHostUITests.m */; };
 		AC56F8D422C2C86E005CF6FA /* check_memory_leaks in Resources */ = {isa = PBXBuildFile; fileRef = AC56F8D322C2C86E005CF6FA /* check_memory_leaks */; };
-		AC56F8F222C2C888005CF6FA /* start in Resources */ = {isa = PBXBuildFile; fileRef = AC56F8D622C2C887005CF6FA /* start */; };
-		AC56F8F322C2C888005CF6FA /* setup_delays_for_xctestobservation in Resources */ = {isa = PBXBuildFile; fileRef = AC56F8D822C2C887005CF6FA /* setup_delays_for_xctestobservation */; };
-		AC56F8F422C2C888005CF6FA /* ParsedTraceToStatistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC56F8D922C2C887005CF6FA /* ParsedTraceToStatistics.swift */; };
-		AC56F8F522C2C888005CF6FA /* leaks_immediate_recording.tracetemplate in Resources */ = {isa = PBXBuildFile; fileRef = AC56F8DB22C2C887005CF6FA /* leaks_immediate_recording.tracetemplate */; };
-		AC56F8F622C2C888005CF6FA /* leaks_defered_recording.tracetemplate in Resources */ = {isa = PBXBuildFile; fileRef = AC56F8DC22C2C887005CF6FA /* leaks_defered_recording.tracetemplate */; };
-		AC56F8F722C2C888005CF6FA /* energy_efficiency.tracetemplate in Resources */ = {isa = PBXBuildFile; fileRef = AC56F8DD22C2C887005CF6FA /* energy_efficiency.tracetemplate */; };
-		AC56F8F822C2C888005CF6FA /* leaks_immediate_recording2.tracetemplate in Resources */ = {isa = PBXBuildFile; fileRef = AC56F8DE22C2C887005CF6FA /* leaks_immediate_recording2.tracetemplate */; };
-		AC56F8F922C2C888005CF6FA /* record_xctestrun_with_instruments in Resources */ = {isa = PBXBuildFile; fileRef = AC56F8DF22C2C887005CF6FA /* record_xctestrun_with_instruments */; };
-		AC56F8FA22C2C888005CF6FA /* MeasureStatisticsNovelty.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC56F8E022C2C887005CF6FA /* MeasureStatisticsNovelty.swift */; };
-		AC56F8FB22C2C888005CF6FA /* TraceUtility in Resources */ = {isa = PBXBuildFile; fileRef = AC56F8E322C2C887005CF6FA /* TraceUtility */; };
-		AC56F8FC22C2C888005CF6FA /* leak.raw.trace in Resources */ = {isa = PBXBuildFile; fileRef = AC56F8E422C2C888005CF6FA /* leak.raw.trace */; };
-		AC56F8FD22C2C888005CF6FA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = AC56F8E722C2C888005CF6FA /* main.m */; };
-		AC56F8FE22C2C888005CF6FA /* InstrumentsPrivateHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = AC56F8E822C2C888005CF6FA /* InstrumentsPrivateHeader.h */; };
-		AC56F8FF22C2C888005CF6FA /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = AC56F8E922C2C888005CF6FA /* LICENSE */; };
-		AC56F90022C2C888005CF6FA /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = AC56F8EA22C2C888005CF6FA /* README.md */; };
-		AC56F90122C2C888005CF6FA /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = AC56F8EB22C2C888005CF6FA /* .gitignore */; };
-		AC56F90422C2CE38005CF6FA /* PrincipalClass.m in Sources */ = {isa = PBXBuildFile; fileRef = AC56F90322C2CE38005CF6FA /* PrincipalClass.m */; };
+		AC56F90822C3C2C0005CF6FA /* PrincipalClass.m in Sources */ = {isa = PBXBuildFile; fileRef = AC56F90322C2CE38005CF6FA /* PrincipalClass.m */; };
 		AC611F271FCDED2F00ABBF6D /* MMEEventLogReportViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = AC611F251FCDED2F00ABBF6D /* MMEEventLogReportViewController.h */; };
 		AC611F281FCDED2F00ABBF6D /* MMEEventLogReportViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AC611F261FCDED2F00ABBF6D /* MMEEventLogReportViewController.m */; };
 		AC61FA09216BE7A0008519F5 /* MMEMetricsManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = AC61FA08216BE7A0008519F5 /* MMEMetricsManager.mm */; };
@@ -219,13 +203,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 9C65A2652256C110006E3FED;
 			remoteInfo = MMETestHost;
-		};
-		AC56F8F022C2C888005CF6FA /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = AC56F8EC22C2C888005CF6FA /* TraceUtility.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = FECBF47F1B9D577200D653A7;
-			remoteInfo = TraceUtility;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -370,23 +347,6 @@
 		AC56F8CB22C15FA8005CF6FA /* MMETestHostUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMETestHostUITests.m; sourceTree = "<group>"; };
 		AC56F8CD22C15FA8005CF6FA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AC56F8D322C2C86E005CF6FA /* check_memory_leaks */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = check_memory_leaks; path = scripts/check_memory_leaks; sourceTree = "<group>"; };
-		AC56F8D622C2C887005CF6FA /* start */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = start; sourceTree = "<group>"; };
-		AC56F8D822C2C887005CF6FA /* setup_delays_for_xctestobservation */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = setup_delays_for_xctestobservation; sourceTree = "<group>"; };
-		AC56F8D922C2C887005CF6FA /* ParsedTraceToStatistics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParsedTraceToStatistics.swift; sourceTree = "<group>"; };
-		AC56F8DB22C2C887005CF6FA /* leaks_immediate_recording.tracetemplate */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = leaks_immediate_recording.tracetemplate; sourceTree = "<group>"; };
-		AC56F8DC22C2C887005CF6FA /* leaks_defered_recording.tracetemplate */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = leaks_defered_recording.tracetemplate; sourceTree = "<group>"; };
-		AC56F8DD22C2C887005CF6FA /* energy_efficiency.tracetemplate */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = energy_efficiency.tracetemplate; sourceTree = "<group>"; };
-		AC56F8DE22C2C887005CF6FA /* leaks_immediate_recording2.tracetemplate */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = leaks_immediate_recording2.tracetemplate; sourceTree = "<group>"; };
-		AC56F8DF22C2C887005CF6FA /* record_xctestrun_with_instruments */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = record_xctestrun_with_instruments; sourceTree = "<group>"; };
-		AC56F8E022C2C887005CF6FA /* MeasureStatisticsNovelty.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeasureStatisticsNovelty.swift; sourceTree = "<group>"; };
-		AC56F8E322C2C887005CF6FA /* TraceUtility */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = TraceUtility; sourceTree = "<group>"; };
-		AC56F8E422C2C888005CF6FA /* leak.raw.trace */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = leak.raw.trace; sourceTree = "<group>"; };
-		AC56F8E722C2C888005CF6FA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		AC56F8E822C2C888005CF6FA /* InstrumentsPrivateHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InstrumentsPrivateHeader.h; sourceTree = "<group>"; };
-		AC56F8E922C2C888005CF6FA /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
-		AC56F8EA22C2C888005CF6FA /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		AC56F8EB22C2C888005CF6FA /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
-		AC56F8EC22C2C888005CF6FA /* TraceUtility.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = TraceUtility.xcodeproj; sourceTree = "<group>"; };
 		AC56F90322C2CE38005CF6FA /* PrincipalClass.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PrincipalClass.m; sourceTree = "<group>"; };
 		AC611F251FCDED2F00ABBF6D /* MMEEventLogReportViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEEventLogReportViewController.h; sourceTree = "<group>"; };
 		AC611F261FCDED2F00ABBF6D /* MMEEventLogReportViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEEventLogReportViewController.m; sourceTree = "<group>"; };
@@ -480,7 +440,6 @@
 				9C6D9882221F37A200679292 /* Packaging */,
 				404807BA1EA186D8008A6D50 /* Products */,
 				408596701ED08FF7003BD29D /* resources */,
-				AC56F8D522C2C887005CF6FA /* memory-leak-tester */,
 				AC56F8D322C2C86E005CF6FA /* check_memory_leaks */,
 				9C65A2CB2282081A006E3FED /* scripts */,
 			);
@@ -717,87 +676,6 @@
 			path = MMETestHostUITests;
 			sourceTree = "<group>";
 		};
-		AC56F8D522C2C887005CF6FA /* memory-leak-tester */ = {
-			isa = PBXGroup;
-			children = (
-				AC56F8D622C2C887005CF6FA /* start */,
-				AC56F8D722C2C887005CF6FA /* helpers */,
-			);
-			name = "memory-leak-tester";
-			path = "scripts/memory-leak-tester";
-			sourceTree = "<group>";
-		};
-		AC56F8D722C2C887005CF6FA /* helpers */ = {
-			isa = PBXGroup;
-			children = (
-				AC56F8D822C2C887005CF6FA /* setup_delays_for_xctestobservation */,
-				AC56F8D922C2C887005CF6FA /* ParsedTraceToStatistics.swift */,
-				AC56F8DA22C2C887005CF6FA /* InstrumentsTraceTemplates */,
-				AC56F8DF22C2C887005CF6FA /* record_xctestrun_with_instruments */,
-				AC56F8E022C2C887005CF6FA /* MeasureStatisticsNovelty.swift */,
-				AC56F8E122C2C887005CF6FA /* TraceUtilityFork */,
-			);
-			path = helpers;
-			sourceTree = "<group>";
-		};
-		AC56F8DA22C2C887005CF6FA /* InstrumentsTraceTemplates */ = {
-			isa = PBXGroup;
-			children = (
-				AC56F8DB22C2C887005CF6FA /* leaks_immediate_recording.tracetemplate */,
-				AC56F8DC22C2C887005CF6FA /* leaks_defered_recording.tracetemplate */,
-				AC56F8DD22C2C887005CF6FA /* energy_efficiency.tracetemplate */,
-				AC56F8DE22C2C887005CF6FA /* leaks_immediate_recording2.tracetemplate */,
-			);
-			path = InstrumentsTraceTemplates;
-			sourceTree = "<group>";
-		};
-		AC56F8E122C2C887005CF6FA /* TraceUtilityFork */ = {
-			isa = PBXGroup;
-			children = (
-				AC56F8E222C2C887005CF6FA /* bin */,
-				AC56F8E522C2C888005CF6FA /* src */,
-			);
-			path = TraceUtilityFork;
-			sourceTree = "<group>";
-		};
-		AC56F8E222C2C887005CF6FA /* bin */ = {
-			isa = PBXGroup;
-			children = (
-				AC56F8E322C2C887005CF6FA /* TraceUtility */,
-				AC56F8E422C2C888005CF6FA /* leak.raw.trace */,
-			);
-			path = bin;
-			sourceTree = "<group>";
-		};
-		AC56F8E522C2C888005CF6FA /* src */ = {
-			isa = PBXGroup;
-			children = (
-				AC56F8E622C2C888005CF6FA /* TraceUtility */,
-				AC56F8E922C2C888005CF6FA /* LICENSE */,
-				AC56F8EA22C2C888005CF6FA /* README.md */,
-				AC56F8EB22C2C888005CF6FA /* .gitignore */,
-				AC56F8EC22C2C888005CF6FA /* TraceUtility.xcodeproj */,
-			);
-			path = src;
-			sourceTree = "<group>";
-		};
-		AC56F8E622C2C888005CF6FA /* TraceUtility */ = {
-			isa = PBXGroup;
-			children = (
-				AC56F8E722C2C888005CF6FA /* main.m */,
-				AC56F8E822C2C888005CF6FA /* InstrumentsPrivateHeader.h */,
-			);
-			path = TraceUtility;
-			sourceTree = "<group>";
-		};
-		AC56F8ED22C2C888005CF6FA /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				AC56F8F122C2C888005CF6FA /* TraceUtility */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -805,7 +683,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AC56F8FE22C2C888005CF6FA /* InstrumentsPrivateHeader.h in Headers */,
 				404807CA1EA186D8008A6D50 /* MapboxMobileEvents.h in Headers */,
 				40C9E27F1EA5473F00744FE7 /* MMELocationManager.h in Headers */,
 				40F16C811F02DA9F00DF338D /* MMEDate.h in Headers */,
@@ -998,6 +875,7 @@
 					AC56F8C822C15FA8005CF6FA = {
 						CreatedOnToolsVersion = 10.2.1;
 						DevelopmentTeam = GJZR2MEM28;
+						LastSwiftMigration = 1020;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 9C65A2652256C110006E3FED;
 					};
@@ -1014,12 +892,6 @@
 			mainGroup = 404807AF1EA186D8008A6D50;
 			productRefGroup = 404807BA1EA186D8008A6D50 /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = AC56F8ED22C2C888005CF6FA /* Products */;
-					ProjectRef = AC56F8EC22C2C888005CF6FA /* TraceUtility.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				9C632266221377BF00653792 /* MapboxMobileEvents (All Targets) */,
@@ -1033,34 +905,12 @@
 		};
 /* End PBXProject section */
 
-/* Begin PBXReferenceProxy section */
-		AC56F8F122C2C888005CF6FA /* TraceUtility */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.executable";
-			path = TraceUtility;
-			remoteRef = AC56F8F022C2C888005CF6FA /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
-
 /* Begin PBXResourcesBuildPhase section */
 		404807B71EA186D8008A6D50 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AC56F8F622C2C888005CF6FA /* leaks_defered_recording.tracetemplate in Resources */,
-				AC56F8FC22C2C888005CF6FA /* leak.raw.trace in Resources */,
-				AC56F8F322C2C888005CF6FA /* setup_delays_for_xctestobservation in Resources */,
-				AC56F8F222C2C888005CF6FA /* start in Resources */,
-				AC56F90022C2C888005CF6FA /* README.md in Resources */,
-				AC56F8FB22C2C888005CF6FA /* TraceUtility in Resources */,
-				AC56F8F722C2C888005CF6FA /* energy_efficiency.tracetemplate in Resources */,
-				AC56F8FF22C2C888005CF6FA /* LICENSE in Resources */,
-				AC56F90122C2C888005CF6FA /* .gitignore in Resources */,
-				AC56F8F922C2C888005CF6FA /* record_xctestrun_with_instruments in Resources */,
 				AC56F8C422C1518E005CF6FA /* makefile.make in Resources */,
-				AC56F8F822C2C888005CF6FA /* leaks_immediate_recording2.tracetemplate in Resources */,
-				AC56F8F522C2C888005CF6FA /* leaks_immediate_recording.tracetemplate in Resources */,
 				AC56F8D422C2C86E005CF6FA /* check_memory_leaks in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1136,15 +986,12 @@
 				4036EFBF1ED37D56009C40BA /* MMEEventLogger.m in Sources */,
 				AC1B091222137BB000DB56C8 /* CLLocationManager+MMEMobileEvents.m in Sources */,
 				CF93A6582241EDD500BBA199 /* MMECertPin.m in Sources */,
-				AC56F8FD22C2C888005CF6FA /* main.m in Sources */,
 				40FB43781EF9EA7800EC5BC0 /* MMEEventsConfiguration.m in Sources */,
 				40AE585F1EA93B3A0046B437 /* MMECommonEventData.m in Sources */,
 				CF93A65F2244C01300BBA199 /* MMEPinningConfigurationProvider.m in Sources */,
 				40F133531F20051E007B4096 /* NSData+MMEGZIP.m in Sources */,
-				AC56F8FA22C2C888005CF6FA /* MeasureStatisticsNovelty.swift in Sources */,
 				40FB437D1EFAFAE900EC5BC0 /* MMETimerManager.m in Sources */,
 				9C65A28C225D41F2006E3FED /* UIKit+MMEMobileEvents.m in Sources */,
-				AC56F8F422C2C888005CF6FA /* ParsedTraceToStatistics.swift in Sources */,
 				403835031F7AF145004205B9 /* MMEDependencyManager.m in Sources */,
 				40AE58721EAA87960046B437 /* MMEAPIClient.m in Sources */,
 				40F16C971F04514100DF338D /* MMEReachability.m in Sources */,
@@ -1242,7 +1089,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AC56F8CC22C15FA8005CF6FA /* MMETestHostUITests.m in Sources */,
-				AC56F90422C2CE38005CF6FA /* PrincipalClass.m in Sources */,
+				AC56F90822C3C2C0005CF6FA /* PrincipalClass.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1363,6 +1210,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = "";
 				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -1420,6 +1268,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_CFLAGS = "";
 				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1431,6 +1280,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -1488,7 +1338,6 @@
 		404807D11EA186D8008A6D50 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1511,7 +1360,6 @@
 		404807D21EA186D8008A6D50 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1605,7 +1453,6 @@
 		9C65A27A2256C112006E3FED /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_ENABLE_OBJC_WEAK = YES;
@@ -1629,7 +1476,6 @@
 		9C65A27B2256C112006E3FED /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_ENABLE_OBJC_WEAK = YES;
@@ -1653,6 +1499,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -1666,6 +1513,9 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MMETestHostUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "scripts/memory-leak-tester/helpers/MMETestHostUITests-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = MMETestHost;
 			};
@@ -1675,6 +1525,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -1687,6 +1538,8 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MMETestHostUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "scripts/memory-leak-tester/helpers/MMETestHostUITests-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = MMETestHost;
 			};

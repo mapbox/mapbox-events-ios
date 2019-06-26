@@ -9,22 +9,11 @@
 @implementation PrincipalClass
 
 - (instancetype)init {
-    
-}
-
-@end
-
-@implementation NSObject (PrincipalClass)
-
-import Foundation
-import XCTest
-
-class PrincipalClass: NSObject, XCTestObservation {
-    override init() {
-        super.init()
-        XCTestObservationCenter.shared.addTestObserver(self)
+    self = [super init];
+    if (self) {
+        [XCTestObservationCenter.sharedTestObservationCenter addTestObserver:self];
     }
+    return self;
 }
-
 
 @end
