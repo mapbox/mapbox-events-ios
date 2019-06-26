@@ -1,0 +1,50 @@
+#!/bin/bash
+
+###########################################################################################################################
+
+readonly PROGNAME=$(basename $0)
+
+# read parameters
+
+if [ $# -ne 8 ]; then
+	printf "\nusage: $PROGNAME [appName] [appRunnerName] [reportsDir] [buildDir] [deviceID] [testName] [VERBOSE] [KEEP_RAW_REPORT_DATA]"
+	printf "\n\n"
+	exit 1;
+fi
+
+appName="$1"
+appRunnerName="$2"
+reportsDir="$3"
+buildDir="$4"
+deviceID="$5"
+testName="$6"
+VERBOSE="$7"
+KEEP_RAW_REPORT_DATA="$8"
+
+# current script directory
+
+scriptDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# ait settings
+
+instrumentsTemplateName="leaks_immediate_recording"
+instrumentsTraceTemplate="$scriptDir/InstrumentsTraceTemplates/$instrumentsTemplateName"
+# instrumentsTraceTemplate="Leaks"
+traceParseUtility="$scriptDir/TraceUtilityFork/bin/TraceUtility"
+traceParsedPath="$reportsDir/test.parsed.plist"
+traceRawPath="$scriptDir/TraceUtilityFork/bin/leak.raw.trace"
+
+testPIDTimeout=30
+scriptTimeout=600 # 30 minutes
+
+
+# Functions
+
+##################################################################################
+
+print_heading "9) Parse trace file"
+chmod +x "$traceParseUtility"
+"$traceParseUtility" "$traceRawPath" "$traceParsedPath" 1> /dev/null
+exit_if_last_command_failed
+
+exit $?

@@ -1,0 +1,5 @@
+2019-06-26 10:06:36.536 xcodebuild[73897:17716904] [MT] PluginLoading: Required plug-in compatibility UUID 72F7D751-F810-43B8-A53F-1F1DFD74FC54 for plug-in at path '~/Library/Application Support/Developer/Shared/Xcode/Plug-ins/DerivedData Exterminator.xcplugin' not present in DVTPlugInCompatibilityUUIDs
+User defaults from command line:
+    IDEDerivedDataPathOverride = /Users/randalllee/workspace/mapbox-events-ios/scripts/.memory-leak-tester-build
+
+xcodebuild: error: '/Users/randalllee/workspace/mapbox-events-ios/scripts/app/MapboxMobileEvents' does not exist.
