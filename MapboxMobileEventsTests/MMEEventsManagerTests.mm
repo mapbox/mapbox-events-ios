@@ -44,6 +44,18 @@ using namespace Cedar::Doubles::Arguments;
 
 #pragma mark -
 
+@interface MMEeventsManagerSubclass : MMEEventsManager
+
+@end
+
+#pragma mark -
+
+@implementation MMEeventsManagerSubclass
+
+@end
+
+#pragma mark -
+
 @interface MMEEvent (Tests)
 @property(nonatomic,retain) MMEDate *dateStorage;
 @property(nonatomic,retain) NSDictionary *attributesStorage;
@@ -71,16 +83,29 @@ static CLLocation * location() {
 
 #pragma mark -
 
+
 SPEC_BEGIN(MMEEventsManagerSpec)
 
-/* many of the tests use a manager which is not the shared manager,
-   in normal operation clietns should not use the private initShared method used for testsing */
+/* many of the tests use a manager which is not the sharedManager,
+   in normal operation clients should not use the private initShared method
+   tests which want a standalone instance should use `[MMEEventsManager.alloc sharedInit]` */
 describe(@"MMEventsManager.sharedManager", ^{
-    MMEEventsManager *shared = MMEEventsManager.sharedManager;
     MMEEventsManager *allocated = [MMEEventsManager.alloc init];
 
-    it(@"", ^{
-        shared should equal(allocated);
+    it(@"should be the sharedManager", ^{
+        allocated should equal(MMEEventsManager.sharedManager);
+    });
+});
+
+#pragma mark -
+
+/* this test shows how to create a custom subclass of MMEventsManager and get
+    a standalong instace of it by using the private `initShared` initilizer */
+describe(@"MMEventsManager subclass for testing", ^{
+    MMEeventsManagerSubclass *subclass = [MMEeventsManagerSubclass.alloc initShared];
+
+    it (@"should not be the sharedManager", ^{
+        subclass should_not equal(MMEEventsManager.sharedManager);
     });
 });
 
