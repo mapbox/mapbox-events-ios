@@ -357,38 +357,6 @@
 #define MMEventTypeOfflineDownloadEnd __NS_SYMBOL(MMEventTypeOfflineDownloadEnd)
 #endif
 
-#ifndef MMEEventGestureSingleTap
-#define MMEEventGestureSingleTap __NS_SYMBOL(MMEEventGestureSingleTap)
-#endif
-
-#ifndef MMEEventGestureDoubleTap
-#define MMEEventGestureDoubleTap __NS_SYMBOL(MMEEventGestureDoubleTap)
-#endif
-
-#ifndef MMEEventGestureTwoFingerSingleTap
-#define MMEEventGestureTwoFingerSingleTap __NS_SYMBOL(MMEEventGestureTwoFingerSingleTap)
-#endif
-
-#ifndef MMEEventGestureQuickZoom
-#define MMEEventGestureQuickZoom __NS_SYMBOL(MMEEventGestureQuickZoom)
-#endif
-
-#ifndef MMEEventGesturePanStart
-#define MMEEventGesturePanStart __NS_SYMBOL(MMEEventGesturePanStart)
-#endif
-
-#ifndef MMEEventGesturePinchStart
-#define MMEEventGesturePinchStart __NS_SYMBOL(MMEEventGesturePinchStart)
-#endif
-
-#ifndef MMEEventGestureRotateStart
-#define MMEEventGestureRotateStart __NS_SYMBOL(MMEEventGestureRotateStart)
-#endif
-
-#ifndef MMEEventGesturePitchStart
-#define MMEEventGesturePitchStart __NS_SYMBOL(MMEEventGesturePitchStart)
-#endif
-
 #ifndef MMEEventKeyArrivalDate
 #define MMEEventKeyArrivalDate __NS_SYMBOL(MMEEventKeyArrivalDate)
 #endif
@@ -427,10 +395,6 @@
 
 #ifndef MMEEventKeyCourse
 #define MMEEventKeyCourse __NS_SYMBOL(MMEEventKeyCourse)
-#endif
-
-#ifndef MMEEventKeyGestureId
-#define MMEEventKeyGestureId __NS_SYMBOL(MMEEventKeyGestureId)
 #endif
 
 #ifndef MMEEventHorizontalAccuracy
@@ -777,10 +741,6 @@
 #define MMEErrorUnderlyingExceptionKey __NS_SYMBOL(MMEErrorUnderlyingExceptionKey)
 #endif
 
-#ifndef MMEEventKeyGestureID
-#define MMEEventKeyGestureID __NS_SYMBOL(MMEEventKeyGestureID)
-#endif
-
 #ifndef MMEEventKeyVendorID
 #define MMEEventKeyVendorID __NS_SYMBOL(MMEEventKeyVendorID)
 #endif
@@ -799,6 +759,46 @@
 
 #ifndef MMELoggerShareableHTML
 #define MMELoggerShareableHTML __NS_SYMBOL(MMELoggerShareableHTML)
+#endif
+
+#ifndef MMEEventKeyGestureId
+#define MMEEventKeyGestureId __NS_SYMBOL(MMEEventKeyGestureId)
+#endif
+
+#ifndef MMEEventKeyGestureID
+#define MMEEventKeyGestureID __NS_SYMBOL(MMEEventKeyGestureID)
+#endif
+
+#ifndef MMEEventGestureSingleTap
+#define MMEEventGestureSingleTap __NS_SYMBOL(MMEEventGestureSingleTap)
+#endif
+
+#ifndef MMEEventGestureDoubleTap
+#define MMEEventGestureDoubleTap __NS_SYMBOL(MMEEventGestureDoubleTap)
+#endif
+
+#ifndef MMEEventGestureTwoFingerSingleTap
+#define MMEEventGestureTwoFingerSingleTap __NS_SYMBOL(MMEEventGestureTwoFingerSingleTap)
+#endif
+
+#ifndef MMEEventGestureQuickZoom
+#define MMEEventGestureQuickZoom __NS_SYMBOL(MMEEventGestureQuickZoom)
+#endif
+
+#ifndef MMEEventGesturePanStart
+#define MMEEventGesturePanStart __NS_SYMBOL(MMEEventGesturePanStart)
+#endif
+
+#ifndef MMEEventGesturePinchStart
+#define MMEEventGesturePinchStart __NS_SYMBOL(MMEEventGesturePinchStart)
+#endif
+
+#ifndef MMEEventGestureRotateStart
+#define MMEEventGestureRotateStart __NS_SYMBOL(MMEEventGestureRotateStart)
+#endif
+
+#ifndef MMEEventGesturePitchStart
+#define MMEEventGesturePitchStart __NS_SYMBOL(MMEEventGesturePitchStart)
 #endif
 
 #ifndef kMMEMaxRequestCount

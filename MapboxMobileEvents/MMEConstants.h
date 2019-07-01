@@ -43,16 +43,6 @@ extern NSString * const MMEEventTypeLocalDebug;
 extern NSString * const MMEventTypeOfflineDownloadStart;
 extern NSString * const MMEventTypeOfflineDownloadEnd;
 
-// Gestures
-extern NSString * const MMEEventGestureSingleTap;
-extern NSString * const MMEEventGestureDoubleTap;
-extern NSString * const MMEEventGestureTwoFingerSingleTap;
-extern NSString * const MMEEventGestureQuickZoom;
-extern NSString * const MMEEventGesturePanStart;
-extern NSString * const MMEEventGesturePinchStart;
-extern NSString * const MMEEventGestureRotateStart;
-extern NSString * const MMEEventGesturePitchStart;
-
 // Event keys
 extern NSString * const MMEEventKeyArrivalDate;
 extern NSString * const MMEEventKeyDepartureDate;
@@ -61,7 +51,6 @@ extern NSString * const MMEEventKeyLongitude;
 extern NSString * const MMEEventKeyZoomLevel;
 extern NSString * const MMEEventKeyMaxZoomLevel;
 extern NSString * const MMEEventKeyMinZoomLevel;
-extern NSString * const MMEEventKeyGestureId;
 extern NSString * const MMEEventKeyEvent;
 extern NSString * const MMEEventKeyCreated;
 extern NSString * const MMEEventKeyStyleURL;
@@ -181,10 +170,19 @@ extern NSString * const MMEErrorUnderlyingExceptionKey;
 #pragma mark - Deprecated
 
 extern NSString * const MMEEventKeyVendorID MME_DEPRECATED_MSG("Use MMEEventKeyVendorId");
-extern NSString * const MMEEventKeyGestureID MME_DEPRECATED_MSG("Use MMEEventKeyGestureId");
 extern NSString * const MMEEventKeyInstallationID MME_DEPRECATED_MSG("Use MMEEventKeyInstallationId");
 extern NSString * const MMEEventKeyAppID MME_DEPRECATED_MSG("Use MMEEventKeyInstallationId");
 
 extern NSString * const MMELoggerHTML MME_DEPRECATED;
 extern NSString * const MMELoggerShareableHTML MME_DEPRECATED;
 
+extern NSString * const MMEEventKeyGestureId MME_DEPRECATED;
+extern NSString * const MMEEventKeyGestureID MME_DEPRECATED;
+extern NSString * const MMEEventGestureSingleTap MME_DEPRECATED;
+extern NSString * const MMEEventGestureDoubleTap MME_DEPRECATED;
+extern NSString * const MMEEventGestureTwoFingerSingleTap MME_DEPRECATED;
+extern NSString * const MMEEventGestureQuickZoom MME_DEPRECATED;
+extern NSString * const MMEEventGesturePanStart MME_DEPRECATED;
+extern NSString * const MMEEventGesturePinchStart MME_DEPRECATED;
+extern NSString * const MMEEventGestureRotateStart MME_DEPRECATED;
+extern NSString * const MMEEventGesturePitchStart MME_DEPRECATED;
