@@ -273,15 +273,8 @@
     NSString *metricsDate = [MMEDate.iso8601DateFormatter stringFromDate:NSDate.date];
     MMEEvent *telemetryMetrics = [MMEEvent telemetryMetricsEventWithDateString:metricsDate attributes:self.attributes];
 
-    if (zeroHour.timeIntervalSinceNow > 0) { // it's not time to send metrics yet, write them to a pending file
-        NSString *debugDescription = [NSString stringWithFormat:@"TelemetryMetrics event isn't ready to be sent; writing to %@ and waiting until %@ to send",
-            MMEMetricsManager.pendingMetricsEventPath, zeroHour];
-        
-        [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-            MMEDebugEventType: MMEDebugEventTypeTelemetryMetrics,
-            MMEEventKeyLocalDebugDescription: debugDescription}];
-
-        if (@available(iOS 10.0, macos 10.12, tvOS 10.0, watchOS 3.0, *)) {
+    if (zeroHour.timeIntervalSinceNow > 0) { // it's not time to send metrics yet
+        if (@available(iOS 10.0, macos 10.12, tvOS 10.0, watchOS 3.0, *)) { // write them to a pending file
             [MMEMetricsManager deletePendingMetricsEventFile];
 
             if ([MMEMetricsManager createFrameworkMetricsEventDir]) {
@@ -291,7 +284,7 @@
                     [archiver encodeObject:telemetryMetrics forKey:NSKeyedArchiveRootObjectKey];
 
                     if (![archiver.encodedData writeToFile:MMEMetricsManager.pendingMetricsEventPath atomically:YES]) {
-                        debugDescription = [NSString stringWithFormat:@"Failed to archiveRootObject: %@ toFile: %@",
+                        NSString *debugDescription = [NSString stringWithFormat:@"Failed to archiveRootObject: %@ toFile: %@",
                             telemetryMetrics, MMEMetricsManager.pendingMetricsEventPath];
                         [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
                             MMEDebugEventType: MMEDebugEventTypeTelemetryMetrics,

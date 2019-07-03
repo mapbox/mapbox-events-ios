@@ -67,19 +67,19 @@ NS_ASSUME_NONNULL_BEGIN
     @param attributes attrs
     @return event
 */
-+ (instancetype)debugEventWithAttributes:(NSDictionary *)attributes;
++ (instancetype)debugEventWithAttributes:(NSDictionary *)attributes MME_DEPRECATED;
 
 /*! @brief debugEventWithError: debug logging event with the error provided
     @param error error
     @return event
 */
-+ (instancetype)debugEventWithError:(NSError *)error;
++ (instancetype)debugEventWithError:(NSError *)error MME_DEPRECATED;
 
 /*! @brief debugEventWithException: debug logging event the the exception provided
     @param except exception
     @return event
 */
-+ (instancetype)debugEventWithException:(NSException *)except;
++ (instancetype)debugEventWithException:(NSException *)except MME_DEPRECATED;
 
 #pragma mark - Deprecated
 

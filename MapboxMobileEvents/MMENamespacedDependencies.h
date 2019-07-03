@@ -409,6 +409,10 @@
 #define MMEEventKeyErrorCode __NS_SYMBOL(MMEEventKeyErrorCode)
 #endif
 
+#ifndef MMEEventKeyErrorDomain
+#define MMEEventKeyErrorDomain __NS_SYMBOL(MMEEventKeyErrorDomain)
+#endif
+
 #ifndef MMEEventKeyErrorDescription
 #define MMEEventKeyErrorDescription __NS_SYMBOL(MMEEventKeyErrorDescription)
 #endif
@@ -419,6 +423,10 @@
 
 #ifndef MMEEventKeyErrorNoReason
 #define MMEEventKeyErrorNoReason __NS_SYMBOL(MMEEventKeyErrorNoReason)
+#endif
+
+#ifndef MMEEventKeyErrorNoDomain
+#define MMEEventKeyErrorNoDomain __NS_SYMBOL(MMEEventKeyErrorNoDomain)
 #endif
 
 #ifndef MMEEventKeyEvent
@@ -729,16 +737,16 @@
 #define MMEErrorDomain __NS_SYMBOL(MMEErrorDomain)
 #endif
 
-#ifndef MMEErrorDescriptionKey
-#define MMEErrorDescriptionKey __NS_SYMBOL(MMEErrorDescriptionKey)
-#endif
-
 #ifndef MMEErrorEventAttributesKey
 #define MMEErrorEventAttributesKey __NS_SYMBOL(MMEErrorEventAttributesKey)
 #endif
 
 #ifndef MMEErrorUnderlyingExceptionKey
 #define MMEErrorUnderlyingExceptionKey __NS_SYMBOL(MMEErrorUnderlyingExceptionKey)
+#endif
+
+#ifndef MMEErrorDescriptionKey
+#define MMEErrorDescriptionKey __NS_SYMBOL(MMEErrorDescriptionKey)
 #endif
 
 #ifndef MMEEventKeyVendorID

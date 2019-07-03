@@ -26,20 +26,12 @@ NSString * const MMEApplicationStateUnknown = @"Unknown";
     return results;
 }
 
-+ (NSMutableDictionary *)commonEventData {
++ (NSMutableDictionary *)commonCrashEventData {
     NSMutableDictionary *eventDictionary = NSMutableDictionary.new;
     MMECommonEventData *eventData = MMECommonEventData.new;
 
     if (eventData.model) {
         eventDictionary[MMEEventKeyModel] = eventData.model;
-    }
-
-    if (eventData.platform) {
-        eventDictionary[MMEEventKeyPlatform] = eventData.platform;
-    }
-
-    if (eventData.vendorId) {
-        eventDictionary[MMEEventKeyVendorId] = eventData.vendorId;
     }
 
     if (eventData.osVersion) {
@@ -48,10 +40,6 @@ NSString * const MMEApplicationStateUnknown = @"Unknown";
 
     if (eventData.device) {
         eventDictionary[MMEEventKeyDevice] = eventData.device;
-    }
-
-    if (eventData.scale) {
-        eventDictionary[MMEEventKeyAccessibilityFontScale] = @(eventData.scale);
     }
 
     return eventDictionary;
@@ -66,7 +54,7 @@ NSString * const MMEApplicationStateUnknown = @"Unknown";
 #if TARGET_OS_IOS || TARGET_OS_TVOS
         _vendorId = UIDevice.currentDevice.identifierForVendor.UUIDString;
         _osVersion = [NSString stringWithFormat:@"%@ %@", UIDevice.currentDevice.systemName, UIDevice.currentDevice.systemVersion];
-        _device = UIDevice.currentDevice.name;
+        _device = UIDevice.currentDevice.model;
         if ([UIScreen instancesRespondToSelector:@selector(nativeScale)]) {
             _scale = UIScreen.mainScreen.nativeScale;
         } else {

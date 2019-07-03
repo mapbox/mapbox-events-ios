@@ -9,6 +9,8 @@
 #import "UIKit+MMEMobileEvents.h"
 #endif
 
+#import <CommonCrypto/CommonDigest.h>
+
 @interface MMEEvent ()
 @property(nonatomic,retain) MMEDate *dateStorage;
 @property(nonatomic,retain) NSDictionary *attributesStorage;
@@ -91,7 +93,7 @@
 
 + (instancetype)crashEventReporting:(NSError *)eventsError error:(NSError **)createError {
     // start with common event data
-    NSMutableDictionary *crashAttributes = MMECommonEventData.commonEventData;
+    NSMutableDictionary *crashAttributes = MMECommonEventData.commonCrashEventData;
     crashAttributes[MMEEventKeyEvent] = MMEEventMobileCrash;
 #if DEBUG
     crashAttributes[MMEEventKeyBuildType] = @"debug";
@@ -102,9 +104,6 @@
     crashAttributes[MMEEventSDKIdentifier] = [NSString stringWithFormat:@"%@-%@",
         MMEEventsManager.sharedManager.userAgentBase,
         MMEEventsManager.sharedManager.hostSDKVersion];
-    crashAttributes[MMEEventKeyStackTraceHash] = [NSString stringWithFormat:@"%@/%ld %@ %@", eventsError.domain, (long)eventsError.code,
-        (eventsError.localizedDescription ?: @"") ,
-        (eventsError.localizedFailureReason ?: MMEEventKeyErrorNoReason)];
     crashAttributes[MMEEventKeyAppID] = (NSBundle.mainBundle.bundleIdentifier ?: @"unknown");
     crashAttributes[MMEEventKeyAppVersion] = [NSString stringWithFormat:@"%@ %@",
         NSBundle.mainBundle.infoDictionary[@"CFBundleShortVersionString"],
@@ -135,6 +134,27 @@
             index++;
         }
         crashAttributes[MMEEventKeyStackTrace] = callStack;
+
+        /* compute a hash of the full trace */
+        NSData *callstackDigest = [[errorException.callStackSymbols componentsJoinedByString:@"+"] dataUsingEncoding:NSUTF8StringEncoding];
+        if (callstackDigest) {
+            uint8_t digest[CC_SHA224_DIGEST_LENGTH];
+            CC_SHA224(callstackDigest.bytes, (unsigned)callstackDigest.length, digest);
+            NSMutableString* output = [NSMutableString stringWithCapacity:CC_SHA224_BLOCK_BYTES];
+            for(int i = 0; i < CC_SHA224_DIGEST_LENGTH; i++) {
+                [output appendFormat:@"%02x", digest[i]];
+            }
+
+            if (output) {
+                crashAttributes[MMEEventKeyStackTraceHash] = output;
+            }
+        }
+    }
+    else {
+        crashAttributes[MMEEventKeyStackTrace] = [NSString stringWithFormat:@"%@/%ld %@ %@",
+            eventsError.domain, (long)eventsError.code,
+            (eventsError.localizedDescription ?: @"") ,
+            (eventsError.localizedFailureReason ?: MMEEventKeyErrorNoReason)];
     }
 
     return [MMEEvent eventWithAttributes:crashAttributes error:createError];
@@ -152,6 +172,7 @@
 + (instancetype)debugEventWithError:(NSError*) error {
     NSMutableDictionary* eventAttributes = [NSMutableDictionary dictionaryWithObject:MMEDebugEventTypeError forKey:MMEDebugEventType];
     eventAttributes[MMEEventKeyErrorCode] = @(error.code);
+    eventAttributes[MMEEventKeyErrorDomain] = (error.domain ?: MMEEventKeyErrorNoDomain);
     eventAttributes[MMEEventKeyErrorDescription] = (error.localizedDescription ?: error.description);
     eventAttributes[MMEEventKeyErrorFailureReason] = (error.localizedFailureReason ?: MMEEventKeyErrorNoReason);
 
@@ -296,41 +317,41 @@
 }
 
 - (instancetype)initWithAttributes:(NSDictionary *)eventAttributes error:(NSError **)error {
-    if (eventAttributes == MMEEvent.nilAttributes) { // special case for initFromCoder
-        self = [super init];
-    }
-    else if ([NSJSONSerialization isValidJSONObject:eventAttributes]) {
-        if (![eventAttributes.allKeys containsObject:MMEEventKeyEvent]) { // is required
-            *error = [NSError errorWithDomain:MMEErrorDomain code:MMEErrorEventInit userInfo:@{
-                MMEErrorDescriptionKey: @"eventAttributes does not contain MMEEventKeyEvent",
-                MMEErrorEventAttributesKey: eventAttributes
-            }];
-            self = nil;
+    @try {
+        if (eventAttributes == MMEEvent.nilAttributes) { // special case for initFromCoder
+            self = [super init];
         }
-        else if (self = [super init]) {
-            @try {
-                _dateStorage = MMEDate.date;
-                NSMutableDictionary* eventAttributesStorage = [eventAttributes mutableCopy];
-
-                if (![eventAttributesStorage.allKeys containsObject:MMEEventKeyCreated]) {
-                    eventAttributesStorage[MMEEventKeyCreated] = [MMEDate.iso8601DateFormatter stringFromDate:_dateStorage];
-                }
-
-                self.attributesStorage = eventAttributesStorage;
-            }
-            @catch(NSException* eventAttributesException) {
-                *error = [NSError errorWithDomain:MMEErrorDomain code:MMEErrorEventInit userInfo:@{
-                    MMEErrorDescriptionKey: @"exception processing eventAttributes",
-                    MMEErrorUnderlyingExceptionKey: eventAttributesException,
+        else if ([NSJSONSerialization isValidJSONObject:eventAttributes]) {
+            if (![eventAttributes.allKeys containsObject:MMEEventKeyEvent]) { // is required
+                *error = [NSError errorWithDomain:MMEErrorDomain code:MMEErrorEventInitMissingKey userInfo:@{
+                    NSLocalizedDescriptionKey: @"eventAttributes does not contain MMEEventKeyEvent",
                     MMEErrorEventAttributesKey: eventAttributes
                 }];
                 self = nil;
             }
+            else if (self = [super init]) {
+                    _dateStorage = MMEDate.date;
+                    NSMutableDictionary* eventAttributesStorage = [eventAttributes mutableCopy];
+
+                    if (![eventAttributesStorage.allKeys containsObject:MMEEventKeyCreated]) {
+                        eventAttributesStorage[MMEEventKeyCreated] = [MMEDate.iso8601DateFormatter stringFromDate:_dateStorage];
+                    }
+
+                    self.attributesStorage = eventAttributesStorage;
+            }
+        }
+        else {
+            *error = [NSError errorWithDomain:MMEErrorDomain code:MMEErrorEventInitInvalid userInfo:@{
+                NSLocalizedDescriptionKey: @"eventAttributes is not a valid JSON Object",
+                MMEErrorEventAttributesKey: eventAttributes
+            }];
+            self = nil;
         }
     }
-    else {
-        *error = [NSError errorWithDomain:MMEErrorDomain code:MMEErrorEventInit userInfo:@{
-            MMEErrorDescriptionKey: @"eventAttributes is not a valid JSON Object",
+    @catch(NSException* eventAttributesException) {
+        *error = [NSError errorWithDomain:MMEErrorDomain code:MMEErrorEventInitException userInfo:@{
+            NSLocalizedDescriptionKey: @"exception processing eventAttributes",
+            MMEErrorUnderlyingExceptionKey: eventAttributesException,
             MMEErrorEventAttributesKey: eventAttributes
         }];
         self = nil;
