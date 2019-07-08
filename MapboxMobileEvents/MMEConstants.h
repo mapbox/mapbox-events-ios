@@ -77,9 +77,11 @@ extern NSString * const MMEEventSDKIdentifier;
 extern NSString * const MMEEventSDKVersion;
 extern NSString * const MMEEventKeyLocalDebugDescription;
 extern NSString * const MMEEventKeyErrorCode;
+extern NSString * const MMEEventKeyErrorDomain;
 extern NSString * const MMEEventKeyErrorDescription;
 extern NSString * const MMEEventKeyErrorFailureReason;
 extern NSString * const MMEEventKeyErrorNoReason;
+extern NSString * const MMEEventKeyErrorNoDomain;
 extern NSString * const MMEEventKeyFailedRequests;
 extern NSString * const MMEEventKeyHeader;
 extern NSString * const MMEEventKeyPlatform;
@@ -151,15 +153,18 @@ extern NSErrorDomain const MMEErrorDomain;
     - MMENoError: No Error
     - MMEErrorException for exceptions
     - MMEErrorEventInit for errors when initlizing events
+    - MMEErrorEventInitMissingKey if the event attributes dictionary does not include the event key,
+    - MMEErrorEventInitException if an exception occured durring initWithAttributes:error:,
+    - MMEErrorEventInitInvalid if the provided eventAttributes cannot be converted to JSON objects
 */
 typedef NS_ENUM(NSInteger, MMEErrorNumber) {
     MMENoError = 0,
     MMEErrorException = 10001,
-    MMEErrorEventInit = 10002
+    MMEErrorEventInit = 10002,
+    MMEErrorEventInitMissingKey = 10003,
+    MMEErrorEventInitException  = 10004,
+    MMEErrorEventInitInvalid    = 10005
 };
-
-/*! @brief key for MMEErrorDomain userInfo dictionary containing the description of the error */
-extern NSString * const MMEErrorDescriptionKey;
 
 /*! @brief key for MMEErrorEventInit userInfo dictionary containing the attributes which failed to create the event */
 extern NSString * const MMEErrorEventAttributesKey;
@@ -168,6 +173,8 @@ extern NSString * const MMEErrorEventAttributesKey;
 extern NSString * const MMEErrorUnderlyingExceptionKey;
 
 #pragma mark - Deprecated
+
+extern NSString * const MMEErrorDescriptionKey; MME_DEPRECATED_MSG("Use NSLocalizedDescriptionKey")
 
 extern NSString * const MMEEventKeyVendorID MME_DEPRECATED_MSG("Use MMEEventKeyVendorId");
 extern NSString * const MMEEventKeyInstallationID MME_DEPRECATED_MSG("Use MMEEventKeyInstallationId");

@@ -15,8 +15,8 @@ extern NSString * const MMEApplicationStateUnknown;
 @property (nonatomic) NSString * device;
 @property (nonatomic) CGFloat scale;
 
-/*! @return a mutable dictionary of common event data */
-+ (NSMutableDictionary *)commonEventData;
+/*! @returns a mutable dictionary of common event data, suitable for crash reports v2 schema */
++ (NSMutableDictionary *)commonCrashEventData;
 
 /*! @return the application state as a string */
 + (NSString *)applicationState;

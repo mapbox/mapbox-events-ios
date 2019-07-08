@@ -143,7 +143,7 @@ describe(@"MMEEvent", ^{
 
             invalid should be_nil;
             error should_not be_nil;
-            error.code should equal(MMEErrorEventInit);
+            error.code should equal(MMEErrorEventInitInvalid);
         });
 
         it(@"should init with nil attributes for initWithCoder:", ^{
@@ -160,16 +160,16 @@ describe(@"MMEEvent", ^{
 
             invalid should be_nil;
             error should_not be_nil;
-            error.code should equal(MMEErrorEventInit);
+            error.code should equal(MMEErrorEventInitMissingKey);
         });
 
         it(@"should contain an exceptional dictionary", ^{
             NSError *error = nil;
-            MMEEvent *exceptional = [MMEEvent eventWithAttributes:[MMEExceptionalDictionary dictionaryWithDictionary:@{@"foo":@"bar"}] error:&error];
+            MMEEvent *exceptional = [MMEEvent eventWithAttributes:[MMEExceptionalDictionary dictionaryWithDictionary:@{MMEEventKeyEvent:@"exception"}] error:&error];
 
             exceptional should be_nil;
             error should_not be_nil;
-            error.code should equal(MMEErrorEventInit);
+            error.code should equal(MMEErrorEventInitException);
         });
     });
 

@@ -54,9 +54,11 @@ NSString * const MMEEventKeyCourse = @"course";
 NSString * const MMEEventHorizontalAccuracy = @"horizontalAccuracy";
 NSString * const MMEEventKeyLocalDebugDescription = @"debug.description";
 NSString * const MMEEventKeyErrorCode = @"error.code";
+NSString * const MMEEventKeyErrorDomain = @"error.domain";
 NSString * const MMEEventKeyErrorDescription = @"error.description";
 NSString * const MMEEventKeyErrorFailureReason = @"error.failureReason";
 NSString * const MMEEventKeyErrorNoReason = @"No Reason";
+NSString * const MMEEventKeyErrorNoDomain = @"No Domain";
 NSString * const MMEEventKeyEvent = @"event";
 NSString * const MMEEventKeyCreated = @"created";
 NSString * const MMEEventKeyVendorId = @"userId";
@@ -145,12 +147,12 @@ NSString * const MMEEventKeyCustomData = @"threadDetails";
 
 NSErrorDomain const MMEErrorDomain = @"MMEErrorDomain";
 
-NSString * const MMEErrorDescriptionKey = @"errorDescription";
 NSString * const MMEErrorEventAttributesKey = @"eventAttributes";
 NSString * const MMEErrorUnderlyingExceptionKey = @"underlyingException";
 
 #pragma mark - Deprecated
 
+NSString * const MMEErrorDescriptionKey = @"errorDescription";
 NSString * const MMEEventKeyVendorID = MMEEventKeyVendorId;
 NSString * const MMEEventKeyInstallationID = MMEEventKeyInstallationId;
 NSString * const MMEEventKeyAppID = MMEEventKeyAppId;

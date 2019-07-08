@@ -237,12 +237,7 @@
 
 - (void)flush {
     @try {
-        [self sendTelemetryMetricsEvent];
-
         if (self.paused) {
-            [self pushDebugEventWithAttributes:@{
-                MMEDebugEventType: MMEDebugEventTypeFlush,
-                MMEEventKeyLocalDebugDescription: @"Aborting flushing of event queue because collection is paused."}];
             return;
         }
 
@@ -254,6 +249,7 @@
             return;
         }
 
+        [self sendTelemetryMetricsEvent];
         NSArray *events = [self.eventQueue copy];
         [self postEvents:events];
         [self resetEventQueuing];
@@ -288,10 +284,7 @@
                 __strong __typeof__(weakSelf) strongSelf = weakSelf;
 
                 if (error) {
-                    [strongSelf pushDebugEventWithAttributes:@{
-                        MMEDebugEventType: MMEDebugEventTypePostFailed,
-                        MMEEventKeyLocalDebugDescription: @"Network error",
-                        @"error": error}];
+                    [MMEEventsManager.sharedManager pushEvent:[MMEEvent debugEventWithError:error]];
                 } else {
                     [strongSelf pushDebugEventWithAttributes:@{
                         MMEDebugEventType: MMEDebugEventTypePost,
@@ -563,7 +556,7 @@
 
 - (MMEEvent *)reportException:(NSException *)exception {
     NSError *exceptionalError = [NSError errorWithDomain:MMEErrorDomain code:MMEErrorException userInfo:@{
-        MMEErrorDescriptionKey: @"Exception Report",
+        NSLocalizedDescriptionKey: @"Exception Report",
         MMEErrorUnderlyingExceptionKey: exception
     }];
 
