@@ -325,7 +325,7 @@
             if (![eventAttributes.allKeys containsObject:MMEEventKeyEvent]) { // is required
                 *error = [NSError errorWithDomain:MMEErrorDomain code:MMEErrorEventInitMissingKey userInfo:@{
                     NSLocalizedDescriptionKey: @"eventAttributes does not contain MMEEventKeyEvent",
-                    MMEErrorEventAttributesKey: eventAttributes
+                    MMEErrorEventAttributesKey: eventAttributes ?: NSNull.null
                 }];
                 self = nil;
             }
@@ -343,7 +343,7 @@
         else {
             *error = [NSError errorWithDomain:MMEErrorDomain code:MMEErrorEventInitInvalid userInfo:@{
                 NSLocalizedDescriptionKey: @"eventAttributes is not a valid JSON Object",
-                MMEErrorEventAttributesKey: eventAttributes
+                MMEErrorEventAttributesKey: eventAttributes ?: NSNull.null
             }];
             self = nil;
         }
@@ -352,7 +352,7 @@
         *error = [NSError errorWithDomain:MMEErrorDomain code:MMEErrorEventInitException userInfo:@{
             NSLocalizedDescriptionKey: @"exception processing eventAttributes",
             MMEErrorUnderlyingExceptionKey: eventAttributesException,
-            MMEErrorEventAttributesKey: eventAttributes
+            MMEErrorEventAttributesKey: eventAttributes ?: NSNull.null
         }];
         self = nil;
     }
