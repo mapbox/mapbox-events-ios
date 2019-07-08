@@ -86,8 +86,8 @@
         for (NSString *excludeSubdomains in _excludeSubdomainsSet) {
             if ([challenge.protectionSpace.host isEqualToString:excludeSubdomains]) {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    self.lastAuthChallengeDisposition = NSURLSessionAuthChallengePerformDefaultHandling;
-                    completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
+                    self.lastAuthChallengeDisposition = NSURLSessionAuthChallengeUseCredential;
+                    completionHandler(NSURLSessionAuthChallengeUseCredential, [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust]);
                 });
                 
                 NSString *debugDescription = [NSString stringWithFormat:@"Excluded subdomain(s): %@", excludeSubdomains];
