@@ -341,14 +341,6 @@
 #define MMEEventTypeMapLoad __NS_SYMBOL(MMEEventTypeMapLoad)
 #endif
 
-#ifndef MMEEventTypeMapTap
-#define MMEEventTypeMapTap __NS_SYMBOL(MMEEventTypeMapTap)
-#endif
-
-#ifndef MMEEventTypeMapDragEnd
-#define MMEEventTypeMapDragEnd __NS_SYMBOL(MMEEventTypeMapDragEnd)
-#endif
-
 #ifndef MMEventTypeOfflineDownloadStart
 #define MMEventTypeOfflineDownloadStart __NS_SYMBOL(MMEventTypeOfflineDownloadStart)
 #endif
@@ -807,6 +799,14 @@
 
 #ifndef MMEEventGesturePitchStart
 #define MMEEventGesturePitchStart __NS_SYMBOL(MMEEventGesturePitchStart)
+#endif
+
+#ifndef MMEEventTypeMapTap
+#define MMEEventTypeMapTap __NS_SYMBOL(MMEEventTypeMapTap)
+#endif
+
+#ifndef MMEEventTypeMapDragEnd
+#define MMEEventTypeMapDragEnd __NS_SYMBOL(MMEEventTypeMapDragEnd)
 #endif
 
 #ifndef kMMEMaxRequestCount
