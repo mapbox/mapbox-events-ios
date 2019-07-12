@@ -187,7 +187,7 @@
     return [self debugEventWithAttributes:eventAttributes];
 }
 
-#pragma mark - Deperecated
+#pragma mark - Deprecated
 
 + (instancetype)eventWithDate:(NSDate *)eventDate name:(NSString *)eventName attributes:(NSDictionary *)attributes {
     NSMutableDictionary *eventAttributes = attributes.mutableCopy;

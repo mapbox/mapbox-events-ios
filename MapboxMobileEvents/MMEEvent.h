@@ -138,16 +138,16 @@ NS_ASSUME_NONNULL_BEGIN
     MME_DEPRECATED_GOTO("use eventWithAttributes:error:", "-eventWithAttributes:error:");
 
 /*! @brief deprecated in MabboxMobileEvents 1.0.0 or later
-    @note please use eventWithName:attributes:
+    @note map gesture events are no longer supported
 */
 + (instancetype)mapTapEventWithDateString:(NSString *)dateString attributes:(NSDictionary *)attributes
-    MME_DEPRECATED_GOTO("use eventWithAttributes:error:", "-eventWithAttributes:error:");
+    MME_DEPRECATED_MSG("map gesture events are no longer supported");
 
 /*! @brief deprecated in MabboxMobileEvents 1.0.0 or later
-    @note please use eventWithName:attributes:
+    @note map gesture events are no longer supported
 */
 + (instancetype)mapDragEndEventWithDateString:(NSString *)dateString attributes:(NSDictionary *)attributes
-    MME_DEPRECATED_GOTO("use eventWithAttributes:error:", "-eventWithAttributes:error:");
+    MME_DEPRECATED_MSG("map gesture events are no longer supported");
 
 /*! @brief deprecated in MabboxMobileEvents 1.0.0 or later
     @note please use eventWithName:attributes:
