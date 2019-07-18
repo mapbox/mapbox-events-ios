@@ -35,7 +35,7 @@ NSString * const MMEApplicationStateUnknown = @"Unknown";
 #if TARGET_OS_IOS || TARGET_OS_TVOS
         _vendorId = UIDevice.currentDevice.identifierForVendor.UUIDString;
         _osVersion = [NSString stringWithFormat:@"%@ %@", UIDevice.currentDevice.systemName, UIDevice.currentDevice.systemVersion];
-        _device = UIDevice.currentDevice.name;
+        _device = UIDevice.currentDevice.model;
         if ([UIScreen instancesRespondToSelector:@selector(nativeScale)]) {
             _scale = UIScreen.mainScreen.nativeScale;
         } else {
