@@ -1074,7 +1074,8 @@ describe(@"MMEEventsManager", ^{
             }];
 
             it(@"should not queue error events", ^{
-                [eventsManager pushEvent:[MMEEvent debugEventWithError:testError]];
+                MMEEvent *errorEvent = [MMEEvent debugEventWithError:testError];
+                [eventsManager pushEvent:errorEvent];
                 eventsManager.eventQueue.count should equal(0);
             });
         });
@@ -1083,7 +1084,8 @@ describe(@"MMEEventsManager", ^{
             NSException *testException = [NSException.alloc initWithName:@"TestExceptionName" reason:@"TestExceptionReason" userInfo:nil];
 
             it(@"should not queue exception events", ^{
-                [eventsManager pushEvent:[MMEEvent debugEventWithException:testException]];
+                MMEEvent *exceptionEvent = [MMEEvent debugEventWithException:testException];
+                [eventsManager pushEvent:exceptionEvent];
                 eventsManager.eventQueue.count should equal(0);
             });
         });

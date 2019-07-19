@@ -420,7 +420,7 @@
             __strong __typeof__(weakSelf) strongSelf = weakSelf;
 
             if (error) {
-                [strongSelf pushEvent:[MMEEvent debugEventWithError:error]];
+                [MMEEventLogger.sharedLogger logEvent:[MMEEvent debugEventWithError:error]];
                 return;
             }
 
@@ -544,7 +544,7 @@
             [self pushEvent:errorEvent];
         }
         else {
-            [self pushEvent:[MMEEvent debugEventWithError:createError]];
+            [MMEEventLogger.sharedLogger logEvent:[MMEEvent debugEventWithError:createError]];
         }
     }
     @catch(NSException *except) {

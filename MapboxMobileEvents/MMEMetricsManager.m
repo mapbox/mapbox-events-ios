@@ -318,7 +318,7 @@
         if (jsonData) {
             jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
         } else if (jsonError) {
-            [[MMEEventsManager sharedManager] pushEvent:[MMEEvent debugEventWithError:jsonError]];
+            [MMEEventLogger.sharedLogger logEvent:[MMEEvent debugEventWithError:jsonError]];
         }
         return jsonString;
     }
