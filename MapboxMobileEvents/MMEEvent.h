@@ -75,7 +75,7 @@ NS_ASSUME_NONNULL_BEGIN
 */
 + (instancetype)debugEventWithError:(NSError *)error MME_DEPRECATED;
 
-/*! @brief debugEventWithException: debug logging event the the exception provided
+/*! @brief debugEventWithException: debug logging event with the exception provided
     @param except exception
     @return event
 */

@@ -74,12 +74,12 @@ static CLLocation * location() {
 SPEC_BEGIN(MMEEventsManagerSpec)
 
 /* many of the tests use a manager which is not the shared manager,
-   in normal operation clietns should not use the private initShared method used for testsing */
-describe(@"MMEventsManager.sharedManager", ^{
+   in normal operation clietns should not use the private initShared method used for testing */
+describe(@"MMEEventsManager.sharedManager", ^{
     MMEEventsManager *shared = MMEEventsManager.sharedManager;
     MMEEventsManager *allocated = [MMEEventsManager.alloc init];
 
-    it(@"", ^{
+    it(@"should equal the allocated manager", ^{
         shared should equal(allocated);
     });
 });
@@ -421,7 +421,7 @@ describe(@"MMEEventsManager", ^{
                                 spy_on(timerManager);
                                 timerManager.target = eventsManager;
                                 timerManager.selector = @selector(sendTelemetryMetricsEvent);
-                                MMEEventsManager.sharedManager.timerManager = timerManager;
+                                eventsManager.timerManager = timerManager;
                                 [timerManager triggerTimer];
                             });
                             
@@ -436,7 +436,7 @@ describe(@"MMEEventsManager", ^{
                                 spy_on(timerManager);
                                 timerManager.target = eventsManager;
                                 timerManager.selector = @selector(flush);
-                                MMEEventsManager.sharedManager.timerManager = timerManager;
+                                eventsManager.timerManager = timerManager;
                                 [timerManager triggerTimer];
                             });
                             
@@ -1068,22 +1068,22 @@ describe(@"MMEEventsManager", ^{
         });
 
         context(@"when an error event is pushed", ^{
-            NSError* testError = [NSError.alloc initWithDomain:NSCocoaErrorDomain code:999 userInfo:@{
+            NSError *testError = [NSError.alloc initWithDomain:NSCocoaErrorDomain code:999 userInfo:@{
                 NSLocalizedDescriptionKey: @"Test Error Description",
                 NSLocalizedFailureReasonErrorKey: @"Test Error Failure Reason"
             }];
 
             it(@"should not queue error events", ^{
-                [MMEEventsManager.sharedManager pushEvent:[MMEEvent debugEventWithError:testError]];
+                [eventsManager pushEvent:[MMEEvent debugEventWithError:testError]];
                 eventsManager.eventQueue.count should equal(0);
             });
         });
 
         context(@"when an exception event is pushed", ^{
-            NSException* testException = [NSException.alloc initWithName:@"TestExceptionName" reason:@"TestExceptionReason" userInfo:nil];
+            NSException *testException = [NSException.alloc initWithName:@"TestExceptionName" reason:@"TestExceptionReason" userInfo:nil];
 
             it(@"should not queue exception events", ^{
-                [MMEEventsManager.sharedManager pushEvent:[MMEEvent debugEventWithException:testException]];
+                [eventsManager pushEvent:[MMEEvent debugEventWithException:testException]];
                 eventsManager.eventQueue.count should equal(0);
             });
         });
