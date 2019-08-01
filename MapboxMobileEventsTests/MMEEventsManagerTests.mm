@@ -50,7 +50,7 @@ using namespace Cedar::Doubles::Arguments;
 
 #pragma mark -
 
-@implementation MMEeventsManagerSubclass
+@implementation MMEEventsManagerSubclass
 
 @end
 
@@ -100,9 +100,9 @@ describe(@"MMEventsManager.sharedManager", ^{
 #pragma mark -
 
 /* this test shows how to create a custom subclass of MMEventsManager and get
-    a standalong instace of it by using the private `initShared` initilizer */
+    a standalone instace of it by using the private `initShared` initilizer */
 describe(@"MMEventsManager subclass for testing", ^{
-    MMEeventsManagerSubclass *subclass = [MMEeventsManagerSubclass.alloc initShared];
+    MMEEventsManagerSubclass *subclass = [MMEEventsManagerSubclass.alloc initShared];
 
     it (@"should not be the sharedManager", ^{
         subclass should_not equal(MMEEventsManager.sharedManager);
