@@ -1,5 +1,6 @@
 #import <Cedar/Cedar.h>
-#import "MMEEventsManager.h"
+#import <MapboxMobileEvents/MapboxMobileEvents.h>
+
 #import "MMEConstants.h"
 #import "MMEUniqueIdentifier.h"
 #import "MMEEventsConfiguration.h"
@@ -44,7 +45,7 @@ using namespace Cedar::Doubles::Arguments;
 
 #pragma mark -
 
-@interface MMEeventsManagerSubclass : MMEEventsManager
+@interface MMEEventsManagerSubclass : MMEEventsManager
 
 @end
 
