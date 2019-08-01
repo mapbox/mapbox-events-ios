@@ -90,7 +90,7 @@ SPEC_BEGIN(MMEEventsManagerSpec)
 /* many of the tests use a manager which is not the sharedManager,
    in normal operation clients should not use the private initShared method
    tests which want a standalone instance should use `[MMEEventsManager.alloc sharedInit]` */
-describe(@"MMEventsManager.sharedManager", ^{
+describe(@"MMEEventsManager.sharedManager", ^{
     MMEEventsManager *allocated = [MMEEventsManager.alloc init];
 
     it(@"should be the sharedManager", ^{
@@ -102,7 +102,7 @@ describe(@"MMEventsManager.sharedManager", ^{
 
 /* this test shows how to create a custom subclass of MMEventsManager and get
     a standalone instace of it by using the private `initShared` initilizer */
-describe(@"MMEventsManager subclass for testing", ^{
+describe(@"MMEEventsManager subclass for testing", ^{
     MMEEventsManagerSubclass *subclass = [MMEEventsManagerSubclass.alloc initShared];
 
     it (@"should not be the sharedManager", ^{
