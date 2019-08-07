@@ -10,6 +10,7 @@ static const NSTimeInterval MMELocationManagerHibernationTimeout = 300.0;
 static const NSTimeInterval MMELocationManagerHibernationPollInterval = 5.0;
 
 const CLLocationDistance MMELocationManagerDistanceFilter = 5.0;
+const CLLocationDistance MMELocationManagerRegionCenterDistanceFilter = 5.0;
 const CLLocationDistance MMERadiusAccuracyMax = 300.0;
 
 NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegionIdentifier.fence.center";
@@ -197,13 +198,26 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
     if (location.speed > 0.0) {
         [self startBackgroundTimeoutTimer];
     }
-    if ([self.locationManager.monitoredRegions anyObject] == nil || location.horizontalAccuracy < MMERadiusAccuracyMax) {
+    if ([self.locationManager.monitoredRegions anyObject] == nil) {
         [self establishRegionMonitoringForLocation:location];
     }
     if ([self.delegate respondsToSelector:@selector(locationManager:didUpdateLocations:)]) {
         [self.delegate locationManager:self didUpdateLocations:locations];
     }
     [[MMEMetricsManager sharedManager] updateCoordinate:location.coordinate];
+    
+    if (location.horizontalAccuracy < MMERadiusAccuracyMax) {
+        for(CLRegion *region in self.locationManager.monitoredRegions) {
+            if([region.identifier isEqualToString:MMELocationManagerRegionIdentifier]) {
+                CLCircularRegion *circularRegion = (CLCircularRegion *)region;
+                CLLocation *regionCenterLocation = [[CLLocation alloc] initWithLatitude:circularRegion.center.latitude longitude:circularRegion.center.longitude];
+                if ([regionCenterLocation distanceFromLocation:location] > MMELocationManagerRegionCenterDistanceFilter) {
+                    [self establishRegionMonitoringForLocation:location];
+                }
+                return;
+            }
+        }
+    }
 }
 
 - (void)locationManager:(CLLocationManager *)locationManager didExitRegion:(CLRegion *)region {
