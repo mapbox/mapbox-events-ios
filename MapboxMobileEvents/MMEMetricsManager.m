@@ -126,9 +126,16 @@
         self.metrics.eventCountTotal += (int)eventQueue.count;
         
         for (MMEEvent *event in eventQueue) {
-            NSNumber *eventCount = [self.metrics.eventCountPerType objectForKey:event.name];
-            eventCount = [NSNumber numberWithInteger:[eventCount integerValue] + 1];
-            [self.metrics.eventCountPerType setObject:eventCount forKey:event.name];
+            if (event.name) {
+                NSNumber *eventCount = [self.metrics.eventCountPerType objectForKey:event.name];
+                eventCount = [NSNumber numberWithInteger:[eventCount integerValue] + 1];
+                [self.metrics.eventCountPerType setObject:eventCount forKey:event.name];
+            } else {
+                NSString *errorString = [[NSString alloc] initWithFormat:@"%@ nil event name when counting events",
+                                         NSStringFromClass(self.class)];
+                NSError *encodingError = [NSError errorWithDomain:MMEErrorDomain code:MMEErrorEventCounting userInfo:@{MMEErrorDescriptionKey: errorString}];
+                [MMEEventsManager.sharedManager reportError:encodingError];
+            }
         }
     }
 }
@@ -263,6 +270,11 @@
         @catch (NSException *exception) {
             [MMEEventLogger.sharedLogger logEvent:[MMEEvent debugEventWithException:exception]];
         }
+    }
+    
+    //decoding failed; deleting metrics event
+    if (pending == nil) {
+        [MMEMetricsManager deletePendingMetricsEventFile];
     }
 
     return pending;

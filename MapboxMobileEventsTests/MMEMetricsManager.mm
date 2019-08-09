@@ -6,6 +6,13 @@
 #import "MMEMetricsManager.h"
 #import "MMEConstants.h"
 #import "MMEReachability.h"
+#import "MMEEventFake.h"
+
+@interface MMEMetricsManager (Private)
+
++ (NSString *)pendingMetricsEventPath;
+
+@end
 
 using namespace Cedar::Matchers;
 using namespace Cedar::Doubles;
@@ -247,7 +254,21 @@ describe(@"MMEMetricsManager", ^{
                 [manager attributes] should_not be_nil;
             });
         });
-        
+        context(@"when storing an event from a future event version", ^{
+            it(@"should encode event into memory and return nil when calling loadPendingTelemetryMetricsEvent", ^{
+                MMEEventFake *futureVersionEvent = [MMEEventFake eventWithName:@"testName" attributes:@{@"aniceattribute":@"aniceattribute"}];
+                
+                NSString *pendingMetricFilePath = MMEMetricsManager.pendingMetricsEventPath;
+                
+                NSKeyedArchiver *archiver = [NSKeyedArchiver new];
+                archiver.requiresSecureCoding = YES;
+                [archiver encodeObject:futureVersionEvent forKey:NSKeyedArchiveRootObjectKey];
+                
+                [archiver.encodedData writeToFile:pendingMetricFilePath atomically:YES];
+                
+                [manager loadPendingTelemetryMetricsEvent] should be_nil;
+            });
+        });
     });
 });
 
