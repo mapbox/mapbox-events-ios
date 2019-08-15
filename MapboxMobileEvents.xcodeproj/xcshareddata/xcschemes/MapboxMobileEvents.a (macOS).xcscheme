@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "9C632266221377BF00653792"
-               BuildableName = "MapboxMobileEvents (All Targets)"
-               BlueprintName = "MapboxMobileEvents (All Targets)"
+               BlueprintIdentifier = "9C4E629E2305D85D007C1A8B"
+               BuildableName = "libMapboxMobileEvents.a"
+               BlueprintName = "MapboxMobileEvents.a (macOS)"
                ReferencedContainer = "container:MapboxMobileEvents.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -45,9 +45,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "9C632266221377BF00653792"
-            BuildableName = "MapboxMobileEvents (All Targets)"
-            BlueprintName = "MapboxMobileEvents (All Targets)"
+            BlueprintIdentifier = "9C4E629E2305D85D007C1A8B"
+            BuildableName = "libMapboxMobileEvents.a"
+            BlueprintName = "MapboxMobileEvents.a (macOS)"
             ReferencedContainer = "container:MapboxMobileEvents.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -63,9 +63,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "9C632266221377BF00653792"
-            BuildableName = "MapboxMobileEvents (All Targets)"
-            BlueprintName = "MapboxMobileEvents (All Targets)"
+            BlueprintIdentifier = "9C4E629E2305D85D007C1A8B"
+            BuildableName = "libMapboxMobileEvents.a"
+            BlueprintName = "MapboxMobileEvents.a (macOS)"
             ReferencedContainer = "container:MapboxMobileEvents.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
