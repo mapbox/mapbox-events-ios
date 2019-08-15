@@ -6,12 +6,14 @@
 #import "MMEMetricsManager.h"
 #import "MMEEventsManager.h"
 
+#if !TARGET_OS_OSX
+@import MobileCoreServices;
+#endif
+
 typedef NS_ENUM(NSInteger, MMEErrorCode) {
     MMESessionFailedError,
     MMEUnexpectedResponseError
 };
-
-@import MobileCoreServices;
 
 #pragma mark -
 

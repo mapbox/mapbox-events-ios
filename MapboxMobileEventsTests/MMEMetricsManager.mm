@@ -6,6 +6,7 @@
 #import "MMEMetricsManager.h"
 #import "MMEConstants.h"
 #import "MMEReachability.h"
+#import "MMEMetrics.h"
 
 using namespace Cedar::Matchers;
 using namespace Cedar::Doubles;

@@ -1,5 +1,4 @@
 #import <Foundation/Foundation.h>
-#import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
 #import "MMEEventsConfiguration.h"
 
@@ -44,6 +43,8 @@ extern NSString * const MMELocationManagerRegionIdentifier;
 - (void)locationManagerBackgroundLocationUpdatesDidTimeout:(MMELocationManager *)locationManager;
 - (void)locationManagerBackgroundLocationUpdatesDidAutomaticallyPause:(MMELocationManager *)locationManager;
 - (void)locationManagerDidStopLocationUpdates:(MMELocationManager *)locationManager;
+#if !TARGET_OS_TV && !TARGET_OS_WATCH && !TARGET_OS_OSX
 - (void)locationManager:(MMELocationManager *)locationManager didVisit:(CLVisit *)visit;
+#endif
 
 @end

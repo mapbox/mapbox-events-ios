@@ -25,9 +25,11 @@
  POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import <Foundation/Foundation.h>
-#import <SystemConfiguration/SystemConfiguration.h>
 #import "MMETypes.h"
+
+#if !TARGET_OS_WATCH
+#import <SystemConfiguration/SystemConfiguration.h>
+#endif
 
 /**
  * Create NS_ENUM macro if it does not exist on the targeted version of iOS or OS X.

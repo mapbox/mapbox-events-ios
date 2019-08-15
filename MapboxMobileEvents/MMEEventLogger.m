@@ -1,9 +1,6 @@
 #import "MMEEventLogger.h"
 #import "MMEEvent.h"
-#import "MMEEventLogReportViewController.h"
-#import "MMEUINavigation.h"
 #import "MMEDate.h"
-#import <WebKit/WebKit.h>
 
 @interface MMEEventLogger()
 
@@ -106,7 +103,11 @@
                 [fileHandle seekToEndOfFile];
                 [fileHandle writeData:[jsonString dataUsingEncoding:NSUTF8StringEncoding]];
             } else {
-                [fileManager createFileAtPath:logFilePath contents:[jsonString dataUsingEncoding:NSUTF8StringEncoding] attributes:@{ NSFileProtectionKey: NSFileProtectionCompleteUntilFirstUserAuthentication }];
+                NSDictionary *fileAttrs = nil;
+#if TARGET_OS_IOS
+                fileAttrs = @{ NSFileProtectionKey: NSFileProtectionCompleteUntilFirstUserAuthentication };
+#endif
+                [fileManager createFileAtPath:logFilePath contents:[jsonString dataUsingEncoding:NSUTF8StringEncoding] attributes:fileAttrs];
             }
         }
     });
@@ -114,6 +115,7 @@
 
 #pragma mark - HTML Generation
 
+#if HTML_GENERATION
 - (void)readAndDisplayLogFileFromDate:(NSDate *)logDate {
     MMEEventLogReportViewController *logVC = [[MMEEventLogReportViewController alloc] init];
     
@@ -189,6 +191,7 @@
     }
     return nil;
 }
+#endif
 
 @end
 

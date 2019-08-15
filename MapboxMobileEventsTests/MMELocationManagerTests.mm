@@ -1,7 +1,6 @@
 #import <Cedar/Cedar.h>
 #import "MMELocationManager.h"
 #import "MMEDependencyManager.h"
-#import "MMEUIApplicationWrapper.h"
 #import "MMEEventsConfiguration.h"
 #import <CoreLocation/CoreLocation.h>
 
@@ -14,7 +13,6 @@ using namespace Cedar::Doubles;
 @property (nonatomic) NSTimer *backgroundLocationServiceTimeoutTimer;
 @property (nonatomic) NSDate *backgroundLocationServiceTimeoutAllowedDate;
 @property (nonatomic) CLLocationManager *locationManager;
-@property (nonatomic) id<MMEUIApplicationWrapper> application;
 
 - (void)timeoutAllowedCheck;
 - (void)stopMonitoringRegions;
@@ -293,8 +291,8 @@ describe(@"MMELocationManager", ^{
                 locationManager = [[MMELocationManager alloc] init];
                 locationManager.delegate = nice_fake_for(@protocol(MMELocationManagerDelegate));
                 
-                spy_on(locationManager.application);
-                locationManager.application stub_method(@selector(applicationState)).and_return(UIApplicationStateBackground);
+                spy_on(UIApplication.sharedApplication);
+                UIApplication.sharedApplication stub_method(@selector(applicationState)).and_return(UIApplicationStateBackground);
                 
                 [locationManager startUpdatingLocation];
             });

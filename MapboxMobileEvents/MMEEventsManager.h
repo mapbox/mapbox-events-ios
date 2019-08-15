@@ -104,7 +104,9 @@ NS_ASSUME_NONNULL_BEGIN
 */
 - (void)postMetadata:(NSArray *)metadata filePaths:(NSArray *)filePaths completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler;
 
+#if HTML_GENERATION
 - (void)displayLogFileFromDate:(NSDate *)logDate MME_DEPRECATED;
+#endif
 
 #pragma mark - Error & Exception Reporting
 

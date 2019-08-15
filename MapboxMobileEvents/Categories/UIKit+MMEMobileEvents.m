@@ -11,7 +11,8 @@ void mme_linkUIKitCategories(){};
 @implementation UIDevice (MMEMobileEvents)
 
 - (NSString *)mme_deviceOrientation {
-    NSString *result;
+    NSString *result = @"Unknown";
+#if !TARGET_OS_TV
     switch (self.orientation) {
         case UIDeviceOrientationUnknown:
             result = @"Unknown";
@@ -35,9 +36,10 @@ void mme_linkUIKitCategories(){};
             result = @"FaceDown";
             break;
         default:
-            result = @"Default - Unknown";
+            result = @"Unknown";
             break;
     }
+#endif
     return result;
 }
 

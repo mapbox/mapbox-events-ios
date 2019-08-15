@@ -1,5 +1,4 @@
 #import <Foundation/Foundation.h>
-#import <UIKit/UIKit.h>
 #import "MMETypes.h"
 
 @class MMEEvent;
@@ -13,8 +12,11 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)sharedLogger;
 
 - (void)logEvent:(MMEEvent *)event;
-- (void)readAndDisplayLogFileFromDate:(NSDate *)logDate;
 - (void)pushDebugEventWithAttributes:(MMEMapboxEventAttributes *)attributes;
+
+#if HTML_GENERATION
+- (void)readAndDisplayLogFileFromDate:(NSDate *)logDate;
+#endif
 
 @end
 

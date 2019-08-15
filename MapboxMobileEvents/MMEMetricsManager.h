@@ -1,6 +1,8 @@
 #import <Foundation/Foundation.h>
-#import "MMEMetrics.h"
-#import "MMEEvent.h"
+#import <CoreLocation/CoreLocation.h>
+
+@class MMEEvent;
+@class MMEMetrics;
 
 NS_ASSUME_NONNULL_BEGIN
 

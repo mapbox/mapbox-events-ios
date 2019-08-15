@@ -1,4 +1,5 @@
 #import <Foundation/Foundation.h>
+#import <TargetConditionals.h>
 
 #ifndef NS_ARRAY_OF
     // Foundation collection classes adopted lightweight generics in iOS 9.0 and OS X 10.11 SDKs.

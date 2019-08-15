@@ -2,10 +2,13 @@
 #import "MMEDate.h"
 #import "MMEConstants.h"
 #import "MMECommonEventData.h"
-#import "MMEReachability.h"
 #import "MMEEventsManager.h"
 
-#if TARGET_OS_IOS || TARGET_OS_TVOS
+#if !TARGET_OS_WATCH
+#import "MMEReachability.h"
+#endif
+
+#if TARGET_OS_IOS || TARGET_OS_TV
 #import "UIKit+MMEMobileEvents.h"
 #endif
 
@@ -230,11 +233,14 @@
     eventAttributes[MMEEventKeyModel] = commonEventData.model;
     eventAttributes[MMEEventKeyOperatingSystem] = commonEventData.osVersion;
     eventAttributes[MMEEventKeyResolution] = @(commonEventData.scale);
-#if TARGET_OS_IOS || TARGET_OS_TVOS
+#if TARGET_OS_IOS || TARGET_OS_TV
     eventAttributes[MMEEventKeyAccessibilityFontScale] = @(UIApplication.sharedApplication.mme_contentSizeScale);
     eventAttributes[MMEEventKeyOrientation] = UIDevice.currentDevice.mme_deviceOrientation;
 #endif
+
+#if !TARGET_OS_WATCH
     eventAttributes[MMEEventKeyWifi] = @(MMEReachability.reachabilityForLocalWiFi.isReachableViaWiFi);
+#endif
 
     return [MMEEvent eventWithAttributes:eventAttributes];
 }
@@ -243,10 +249,13 @@
     NSMutableDictionary *eventAttributes = attributes.mutableCopy;
     eventAttributes[MMEEventKeyEvent] = MMEEventTypeMapTap;
     eventAttributes[MMEEventKeyCreated] = dateString;
-#if TARGET_OS_IOS || TARGET_OS_TVOS
+#if TARGET_OS_IOS || TARGET_OS_TV
     eventAttributes[MMEEventKeyOrientation] = UIDevice.currentDevice.mme_deviceOrientation;
 #endif
+
+#if !TARGET_OS_WATCH
     eventAttributes[MMEEventKeyWifi] = @(MMEReachability.reachabilityForLocalWiFi.isReachableViaWiFi);
+#endif
 
     return [MMEEvent eventWithAttributes:eventAttributes];
 }
@@ -255,10 +264,13 @@
     NSMutableDictionary *eventAttributes = attributes.mutableCopy;
     eventAttributes[MMEEventKeyEvent] = MMEEventTypeMapDragEnd;
     eventAttributes[MMEEventKeyCreated] = dateString;
-#if TARGET_OS_IOS || TARGET_OS_TVOS
+#if TARGET_OS_IOS || TARGET_OS_TV
     eventAttributes[MMEEventKeyOrientation] = UIDevice.currentDevice.mme_deviceOrientation;
 #endif
+
+#if !TARGET_OS_WATCH
     eventAttributes[MMEEventKeyWifi] = @(MMEReachability.reachabilityForLocalWiFi.isReachableViaWiFi);
+#endif
 
     return [MMEEvent eventWithAttributes:eventAttributes];
 }

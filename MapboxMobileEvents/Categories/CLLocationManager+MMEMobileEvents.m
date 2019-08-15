@@ -22,9 +22,11 @@ void mme_linkCLLocationManagerCategory(){}
         case kCLAuthorizationStatusAuthorizedAlways:
             statusString = MMEEventStatusAuthorizedAlways;
             break;
+#if !TARGET_OS_OSX
         case kCLAuthorizationStatusAuthorizedWhenInUse:
             statusString = MMEEventStatusAuthorizedWhenInUse;
             break;
+#endif
         default:
             statusString = MMEEventUnknown;
             break;

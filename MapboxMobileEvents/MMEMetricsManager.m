@@ -1,11 +1,17 @@
 #import "MMEMetricsManager.h"
-#import "MMEReachability.h"
+
+#import "MMEAPIClient.h"
+#import "MMECommonEventData.h"
 #import "MMEConstants.h"
 #import "MMEDate.h"
+#import "MMEEvent.h"
 #import "MMEEventLogger.h"
 #import "MMEEventsManager.h"
-#import "MMECommonEventData.h"
-#import "MMEAPIClient.h"
+#import "MMEMetrics.h"
+
+#if !TARGET_OS_WATCH
+#import "MMEReachability.h"
+#endif
 
 #pragma mark -
 
@@ -178,19 +184,23 @@
 }
 
 - (void)updateSentBytes:(NSUInteger)bytes {
+#if !TARGET_OS_WATCH
     if ([[MMEReachability reachabilityForLocalWiFi] isReachableViaWiFi]) {
         self.metrics.wifiBytesSent += bytes;
     } else {
         self.metrics.cellBytesSent += bytes;
     }
+#endif
 }
 
 - (void)updateReceivedBytes:(NSUInteger)bytes {
+#if !TARGET_OS_WATCH
     if ([[MMEReachability reachabilityForLocalWiFi] isReachableViaWiFi]) {
         self.metrics.wifiBytesReceived += bytes;
     } else {
         self.metrics.cellBytesReceived += bytes;
     }
+#endif
 }
 
 - (void)incrementAppWakeUpCount {

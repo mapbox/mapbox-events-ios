@@ -1,9 +1,12 @@
+#import "MMETypes.h"
 #import "MMELocationManager.h"
-#import "MMEUIApplicationWrapper.h"
 #import "MMEDependencyManager.h"
 #import "MMEEventsConfiguration.h"
 #import "MMEMetricsManager.h"
 #import <CoreLocation/CoreLocation.h>
+#if TARGET_OS_IOS || TARGET_OS_TV
+#import <UIKit/UIKit.h>
+#endif
 
 static const NSTimeInterval MMELocationManagerHibernationTimeout = 300.0;
 static const NSTimeInterval MMELocationManagerHibernationPollInterval = 5.0;
@@ -15,7 +18,6 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
 
 @interface MMELocationManager () <CLLocationManagerDelegate>
 
-@property (nonatomic) id<MMEUIApplicationWrapper> application;
 @property (nonatomic) CLLocationManager *locationManager;
 @property (nonatomic, getter=isUpdatingLocation, readwrite) BOOL updatingLocation;
 @property (nonatomic) NSDate *backgroundLocationServiceTimeoutAllowedDate;
@@ -34,7 +36,6 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
 - (instancetype)init {
     self = [super init];
     if (self) {
-        _application = [[MMEUIApplicationWrapper alloc] init];
         NSArray *backgroundModes = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UIBackgroundModes"];
         _hostAppHasBackgroundCapability = [backgroundModes containsObject:@"location"];
         _configuration = [MMEEventsConfiguration configuration];
@@ -62,8 +63,10 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
 - (void)stopUpdatingLocation {
     if ([self isUpdatingLocation]) {
         [self.locationManager stopUpdatingLocation];
+#if !TARGET_OS_WATCH && !TARGET_OS_TV && !TARGET_OS_OSX
         [self.locationManager stopMonitoringSignificantLocationChanges];
         [self.locationManager stopMonitoringVisits];
+#endif
         self.updatingLocation = NO;
         if ([self.delegate respondsToSelector:@selector(locationManagerDidStopLocationUpdates:)]) {
             [self.delegate locationManagerDidStopLocationUpdates:self];
@@ -81,22 +84,26 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
 }
 
 - (void)stopMonitoringRegions {
+#if !TARGET_OS_WATCH && !TARGET_OS_TV
     for(CLRegion *region in self.locationManager.monitoredRegions) {
         if([region.identifier isEqualToString:MMELocationManagerRegionIdentifier]) {
             [self.locationManager stopMonitoringForRegion:region];
         }
     }
+#endif
 }
 
 - (void)setMetricsEnabledForInUsePermissions:(BOOL)metricsEnabledForInUsePermissions {
     _metricsEnabledForInUsePermissions = metricsEnabledForInUsePermissions;
     
+#if !TARGET_OS_OSX && !TARGET_OS_TV
     CLAuthorizationStatus authorizationStatus = [CLLocationManager authorizationStatus];
     if (authorizationStatus == kCLAuthorizationStatusAuthorizedWhenInUse && self.hostAppHasBackgroundCapability) {
         if (@available(iOS 9.0, *)) {
             self.locationManager.allowsBackgroundLocationUpdates = self.isMetricsEnabledForInUsePermissions;
         }
     }
+#endif
 }
 
 #pragma mark - Utilities
@@ -112,16 +119,24 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
     
     BOOL authorizedAlways = authorizationStatus == kCLAuthorizationStatusAuthorizedAlways;
     
+#if TARGET_OS_OSX
+    if (authorizedAlways) {
+#else
     if (authorizedAlways || authorizationStatus == kCLAuthorizationStatusAuthorizedWhenInUse) {
+#endif
         
         // If the host app can run in the background with `always` location permissions then allow background
         // updates and start the significant location change service and background timeout timer
         if (authorizedAlways && self.hostAppHasBackgroundCapability) {
+#if !TARGET_OS_WATCH && !TARGET_OS_TV
             [self.locationManager startMonitoringSignificantLocationChanges];
+#endif
             [self startBackgroundTimeoutTimer];
+#if !TARGET_OS_TV && !TARGET_OS_OSX
             if (@available(iOS 9.0, *)) {
                 self.locationManager.allowsBackgroundLocationUpdates = YES;
             }
+#endif
         }
         
         // If authorization status is when in use specifically, allow background location updates based on
@@ -129,17 +144,23 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
         // background timer (just above) since all use cases for background collection with in use only
         // permissions involve navigation where a user would want and expect the app to be running / navigating
         // even if it is not in the foreground
+#if !TARGET_OS_TV && !TARGET_OS_OSX
         if (authorizationStatus == kCLAuthorizationStatusAuthorizedWhenInUse && self.hostAppHasBackgroundCapability) {
             if (@available(iOS 9.0, *)) {
                 self.locationManager.allowsBackgroundLocationUpdates = self.isMetricsEnabledForInUsePermissions;
             }
         }
-        
+#endif
+
+#if !TARGET_OS_WATCH && !TARGET_OS_TV && !TARGET_OS_OSX
         if (authorizedAlways) {
             [self.locationManager startMonitoringVisits];
         }
+#endif
 
+#if !TARGET_OS_TV
         [self.locationManager startUpdatingLocation];
+#endif
         self.updatingLocation = YES;
         
         if ([self.delegate respondsToSelector:@selector(locationManagerDidStartLocationUpdates:)]) {
@@ -152,12 +173,14 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
     if (!self.isUpdatingLocation) {
         return;
     }
-    
-    if (self.application.applicationState == UIApplicationStateActive ||
-        self.application.applicationState == UIApplicationStateInactive ) {
+
+#if !TARGET_OS_WATCH && !TARGET_OS_OSX
+    if (UIApplication.sharedApplication.applicationState == UIApplicationStateActive ||
+        UIApplication.sharedApplication.applicationState == UIApplicationStateInactive ) {
         [self startBackgroundTimeoutTimer];
         return;
     }
+#endif
     
     NSTimeInterval timeIntervalSinceTimeoutAllowed = [[NSDate date] timeIntervalSinceDate:self.backgroundLocationServiceTimeoutAllowedDate];
     if (timeIntervalSinceTimeoutAllowed > 0) {
@@ -180,14 +203,20 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
     CLCircularRegion *region = [[CLCircularRegion alloc] initWithCenter:location.coordinate radius:self.configuration.locationManagerHibernationRadius identifier:MMELocationManagerRegionIdentifier];
     region.notifyOnEntry = NO;
     region.notifyOnExit = YES;
+#if !TARGET_OS_WATCH && !TARGET_OS_TV
     [self.locationManager startMonitoringForRegion:region];
+#endif
 }
 
 #pragma mark - CLLocationManagerDelegate
 
 - (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
+#if TARGET_OS_OSX
+    if (status == kCLAuthorizationStatusAuthorizedAlways) {
+#else
     if (status == kCLAuthorizationStatusAuthorizedAlways ||
         status == kCLAuthorizationStatusAuthorizedWhenInUse) {
+#endif
         [self startUpdatingLocation];
     } else {
         [self stopUpdatingLocation];
@@ -196,18 +225,25 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
 
 - (void)locationManager:(CLLocationManager *)locationManager didUpdateLocations:(NSArray<CLLocation *> *)locations {
     CLLocation *location = locations.lastObject;
+#if !TARGET_OS_TV
     if (location.speed > 0.0) {
         [self startBackgroundTimeoutTimer];
     }
+#endif
+
+#if !TARGET_OS_WATCH && !TARGET_OS_TV && !TARGET_OS_OSX
     if ([self.locationManager.monitoredRegions anyObject] == nil || location.horizontalAccuracy < MMERadiusAccuracyMax) {
         [self establishRegionMonitoringForLocation:location];
     }
+#endif
+
     if ([self.delegate respondsToSelector:@selector(locationManager:didUpdateLocations:)]) {
         [self.delegate locationManager:self didUpdateLocations:locations];
     }
     [[MMEMetricsManager sharedManager] updateCoordinate:location.coordinate];
 }
 
+#if !TARGET_OS_WATCH && !TARGET_OS_TV && !TARGET_OS_OSX
 - (void)locationManager:(CLLocationManager *)locationManager didExitRegion:(CLRegion *)region {
     [self startBackgroundTimeoutTimer];
     [self.locationManager startUpdatingLocation];
@@ -225,6 +261,7 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
         [self.delegate locationManagerBackgroundLocationUpdatesDidAutomaticallyPause:self];
     }
 }
+#endif
 
 @end
 

@@ -1,10 +1,11 @@
-#import <CoreLocation/CoreLocation.h>
-#import <CoreFoundation/CoreFoundation.h>
+#import "MMETypes.h"
 #if TARGET_OS_MACOS
 #import <Cocoa/Cocoa.h>
-#elif TARGET_OS_IOS || TARGET_OS_TVOS
+#elif TARGET_OS_IOS || TARGET_OS_TV
 #import <UIKit/UIKit.h>
 #endif
+#import <CoreLocation/CoreLocation.h>
+#import <CoreFoundation/CoreFoundation.h>
 
 #import "CLLocation+MMEMobileEvents.h"
 #import "CLLocationManager+MMEMobileEvents.h"
@@ -23,7 +24,6 @@
 #import "MMELocationManager.h"
 #import "MMEMetricsManager.h"
 #import "MMETimerManager.h"
-#import "MMEUIApplicationWrapper.h"
 #import "MMEUniqueIdentifier.h"
 
 @interface MMEEventsManager () <MMELocationManagerDelegate, MMEConfiguratorDelegate>
@@ -39,9 +39,10 @@
 @property (nonatomic) MMETimerManager *timerManager;
 @property (nonatomic) MMEDispatchManager *dispatchManager;
 @property (nonatomic, getter=isPaused) BOOL paused;
-@property (nonatomic) id<MMEUIApplicationWrapper> application;
 @property (nonatomic, getter=isLocationMetricsEnabled) BOOL locationMetricsEnabled;
+#if TARGET_OS_IOS && !TARGET_OS_WATCH
 @property (nonatomic) UIBackgroundTaskIdentifier backgroundTaskIdentifier;
+#endif
 
 @end
 
@@ -74,7 +75,6 @@
         _configuration = [MMEEventsConfiguration configuration];
         _configurationUpdater = [[MMEConfigurator alloc] initWithTimeInterval:_configuration.configurationRotationTimeInterval];
         _uniqueIdentifer = [[MMEUniqueIdentifier alloc] initWithTimeInterval:_configuration.instanceIdentifierRotationTimeInterval];
-        _application = [[MMEUIApplicationWrapper alloc] init];
         _dispatchManager = [[MMEDispatchManager alloc] init];
     }
     return self;
@@ -107,6 +107,7 @@
                 return;
             }
 
+#if !TARGET_OS_WATCH && !TARGET_OS_OSX
             [NSNotificationCenter.defaultCenter addObserver:strongSelf
                 selector:@selector(pauseOrResumeMetricsCollectionIfRequired)
                 name:UIApplicationDidEnterBackgroundNotification
@@ -115,13 +116,16 @@
                 selector:@selector(pauseOrResumeMetricsCollectionIfRequired)
                 name:UIApplicationDidBecomeActiveNotification
                 object:nil];
+#endif
 
+#if !TARGET_OS_OSX
             if (@available(iOS 9.0, *)) {
                 [NSNotificationCenter.defaultCenter addObserver:strongSelf
                     selector:@selector(powerStateDidChange:)
                     name:NSProcessInfoPowerStateDidChangeNotification
                     object:nil];
             }
+#endif
 
             strongSelf.paused = YES;
             strongSelf.locationManager = [[MMELocationManager alloc] init];
@@ -197,18 +201,19 @@
 
 - (void)pauseOrResumeMetricsCollectionIfRequired {
     @try {
+#if TARGET_OS_IOS && !TARGET_OS_WATCH
         // Prevent blue status bar when host app has `when in use` permission only and it is not in foreground
         if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedWhenInUse &&
-            self.application.applicationState == UIApplicationStateBackground &&
+            UIApplication.sharedApplication.applicationState == UIApplicationStateBackground &&
             !self.isMetricsEnabledForInUsePermissions) {
             if (_backgroundTaskIdentifier == UIBackgroundTaskInvalid) {
                 __weak __typeof__(self) weakSelf = self;
-                _backgroundTaskIdentifier = [self.application beginBackgroundTaskWithExpirationHandler:^{
+                _backgroundTaskIdentifier = [UIApplication.sharedApplication beginBackgroundTaskWithExpirationHandler:^{
                     __strong __typeof__(weakSelf) strongSelf = weakSelf;
                     [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeBackgroundTask,
                                                          MMEEventKeyLocalDebugDescription: @"Ending background task",
                                                          @"Identifier": @(strongSelf.backgroundTaskIdentifier)}];
-                    [self.application endBackgroundTask:strongSelf.backgroundTaskIdentifier];
+                    [UIApplication.sharedApplication endBackgroundTask:strongSelf.backgroundTaskIdentifier];
                     strongSelf.backgroundTaskIdentifier = UIBackgroundTaskInvalid;
                 }];
                 [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeBackgroundTask,
@@ -220,6 +225,7 @@
             [self pauseMetricsCollection];
             return;
         }
+#endif
 
         // Toggle pause based on current pause state, user opt-out state, and low-power state.
         if (self.paused && [self isEnabled]) {
@@ -292,14 +298,16 @@
                         @"debug.eventsCount": @(eventsCount)}];
                 }
 
+#if TARGET_OS_IOS && !TARGET_OS_WATCH
                 if (strongSelf.backgroundTaskIdentifier != UIBackgroundTaskInvalid) {
                     [strongSelf pushDebugEventWithAttributes:@{
                         MMEDebugEventType: MMEDebugEventTypeBackgroundTask,
                         MMEEventKeyLocalDebugDescription: @"Ending background task",
                         @"Identifier": @(strongSelf.backgroundTaskIdentifier)}];
-                    [strongSelf.application endBackgroundTask:strongSelf.backgroundTaskIdentifier];
+                    [UIApplication.sharedApplication endBackgroundTask:strongSelf.backgroundTaskIdentifier];
                     strongSelf.backgroundTaskIdentifier = UIBackgroundTaskInvalid;
                 }
+#endif
             }
             @catch(NSException *except) {
                 [self reportException:except];
@@ -670,9 +678,11 @@
     [MMEEventLogger.sharedLogger logEvent:debugEvent];
 }
 
+#if HTML_GENERATION
 - (void)displayLogFileFromDate:(NSDate *)logDate {
     [MMEEventLogger.sharedLogger readAndDisplayLogFileFromDate:logDate];
 }
+#endif
 
 #pragma mark - MMEConfiguratorDelegate
 
@@ -746,6 +756,7 @@
         MMEEventKeyLocalDebugDescription: @"Location manager stopped location updates"}];
 }
 
+#if !TARGET_OS_WATCH && !TARGET_OS_TV && !TARGET_OS_OSX
 - (void)locationManager:(MMELocationManager *)locationManager didVisit:(CLVisit *)visit {
     [self pushDebugEventWithAttributes:@{
         MMEDebugEventType: MMEDebugEventTypeLocationManager,
@@ -766,5 +777,6 @@
         [self.delegate eventsManager:self didVisit:visit];
     }
 }
+#endif
 
 @end

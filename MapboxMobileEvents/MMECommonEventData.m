@@ -1,7 +1,7 @@
 #import "MMECommonEventData.h"
 #import "MMEConstants.h"
 
-#if TARGET_OS_IOS || TARGET_OS_TVOS
+#if TARGET_OS_IOS || TARGET_OS_TV
 #import <UIKit/UIKit.h>
 #endif
 #include <sys/sysctl.h>
@@ -51,7 +51,7 @@ NSString * const MMEApplicationStateUnknown = @"Unknown";
     if (self = [super init]) {
         _model = [MMECommonEventData sysInfoByName:"hw.machine"];
         _platform = [MMECommonEventData platformInfo];
-#if TARGET_OS_IOS || TARGET_OS_TVOS
+#if TARGET_OS_IOS || TARGET_OS_TV
         _vendorId = UIDevice.currentDevice.identifierForVendor.UUIDString;
         _osVersion = [NSString stringWithFormat:@"%@ %@", UIDevice.currentDevice.systemName, UIDevice.currentDevice.systemVersion];
         _device = UIDevice.currentDevice.model;
@@ -70,7 +70,7 @@ NSString * const MMEApplicationStateUnknown = @"Unknown";
 }
 
 + (NSString *)applicationState {
-#if TARGET_OS_IOS || TARGET_OS_TVOS
+#if TARGET_OS_IOS || TARGET_OS_TV
     switch (UIApplication.sharedApplication.applicationState) {
         case UIApplicationStateActive:
             return MMEApplicationStateForeground;

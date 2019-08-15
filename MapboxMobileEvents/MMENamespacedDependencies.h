@@ -95,10 +95,6 @@
 #define MMETimerManager __NS_SYMBOL(MMETimerManager)
 #endif
 
-#ifndef MMEUIApplicationWrapper
-#define MMEUIApplicationWrapper __NS_SYMBOL(MMEUIApplicationWrapper)
-#endif
-
 #ifndef MMEUINavigation
 #define MMEUINavigation __NS_SYMBOL(MMEUINavigation)
 #endif
@@ -135,10 +131,6 @@
 
 #ifndef kMMEExcludeSubdomainFromParentPolicy
 #define kMMEExcludeSubdomainFromParentPolicy __NS_SYMBOL(kMMEExcludeSubdomainFromParentPolicy)
-#endif
-
-#ifndef MMEUIApplicationWrapper
-#define MMEUIApplicationWrapper __NS_SYMBOL(MMEUIApplicationWrapper)
 #endif
 
 #ifndef MMEUniqueIdentifer
