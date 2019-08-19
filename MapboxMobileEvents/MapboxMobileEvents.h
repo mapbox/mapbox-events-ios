@@ -1,3 +1,4 @@
+#import <Foundation/Foundation.h>
 
 //! Project version number for MapboxMobileEvents.
 FOUNDATION_EXPORT double MapboxMobileEventsVersionNumber;
