@@ -4,6 +4,8 @@
 #import "MMEEvent.h"
 #import "MMEConstants.h"
 #import "MMEExceptionalDictionary.h"
+#import "MMEMetricsManager.h"
+#import "MMEEventFake.h"
 
 using namespace Cedar::Matchers;
 using namespace Cedar::Doubles;
@@ -62,6 +64,25 @@ describe(@"MMEEvent", ^{
 
             unarchived should_not be_nil;
             unarchived should equal(event);
+        });
+        
+        
+        it(@"should encode event into memory and decode as nil when version of encoded event is greater than our current MMEEventVersion", ^{
+            
+            //uses MMEEventFake to override `encodeWithCoder:`
+            MMEEventFake *futureVersionEvent = [MMEEventFake eventWithName:testName attributes:testAttrs];
+            
+            NSKeyedArchiver *archiver = [NSKeyedArchiver new];
+            archiver.requiresSecureCoding = YES;
+            [archiver encodeObject:futureVersionEvent forKey:NSKeyedArchiveRootObjectKey];
+            NSData *eventData = archiver.encodedData;
+            
+            NSKeyedUnarchiver *unarchiver = [NSKeyedUnarchiver.alloc initForReadingWithData:eventData];
+            unarchiver.requiresSecureCoding = YES;
+            
+            MMEEventFake *unarchived = [unarchiver decodeObjectOfClass:MMEEventFake.class forKey:NSKeyedArchiveRootObjectKey];
+            
+            unarchived should be_nil;
         });
     });
 

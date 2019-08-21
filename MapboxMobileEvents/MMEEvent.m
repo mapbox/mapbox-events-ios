@@ -61,7 +61,7 @@
 
 + (instancetype)eventWithAttributes:(NSDictionary *)attributes {
     NSError *eventError = nil;
-    MMEEvent *newEvent = [MMEEvent eventWithAttributes:attributes error:&eventError];
+    MMEEvent *newEvent = [self eventWithAttributes:attributes error:&eventError];
     if (eventError != nil) {
         [MMEEventsManager.sharedManager reportError:eventError];
     }
@@ -70,7 +70,7 @@
 }
 
 + (instancetype)eventWithAttributes:(NSDictionary *)attributes error:(NSError **)error {
-    return [MMEEvent.alloc initWithAttributes:attributes error:error];
+    return [self.alloc initWithAttributes:attributes error:error];
 }
 
 #pragma mark - Custom Events
@@ -79,14 +79,14 @@
     NSMutableDictionary *eventAttributes = attributes.mutableCopy;
     eventAttributes[MMEEventKeyEvent] = MMEEventTypeAppUserTurnstile;
 
-    return [MMEEvent eventWithAttributes:eventAttributes];
+    return [self eventWithAttributes:eventAttributes];
 }
 
 + (instancetype)visitEventWithAttributes:(NSDictionary *)attributes {
     NSMutableDictionary *eventAttributes = attributes.mutableCopy;
     eventAttributes[MMEEventKeyEvent] = MMEEventTypeVisit;
 
-    return [MMEEvent eventWithAttributes:eventAttributes];
+    return [self eventWithAttributes:eventAttributes];
 }
 
 #pragma mark - Crash Events
@@ -194,11 +194,11 @@
     eventAttributes[MMEEventKeyCreated] = [MMEDate.iso8601DateFormatter stringFromDate:eventDate];
     eventAttributes[MMEEventKeyEvent] = eventName;
 
-    return [MMEEvent eventWithAttributes:eventAttributes];
+    return [self eventWithAttributes:eventAttributes];
 }
 
 + (instancetype)eventWithName:(NSString *)eventName attributes:(NSDictionary *)attributes {
-    return [MMEEvent eventWithDate:MMEDate.date name:eventName attributes:attributes];
+    return [self eventWithDate:MMEDate.date name:eventName attributes:attributes];
 }
 
 + (instancetype)telemetryMetricsEventWithDateString:(NSString *)dateString attributes:(NSDictionary *)attributes {
@@ -206,7 +206,7 @@
     eventAttributes[MMEEventKeyEvent] = MMEEventTypeTelemetryMetrics;
     eventAttributes[MMEEventKeyCreated] = dateString;
 
-    return [MMEEvent eventWithAttributes:eventAttributes];
+    return [self eventWithAttributes:eventAttributes];
 }
 
 + (instancetype)locationEventWithAttributes:(NSDictionary *)attributes instanceIdentifer:(NSString *)instanceIdentifer commonEventData:(MMECommonEventData *)commonEventData {
@@ -219,7 +219,7 @@
         eventAttributes[MMEEventKeyApplicationState] = MMECommonEventData.applicationState;
     }
 
-    return [MMEEvent eventWithAttributes:eventAttributes];
+    return [self eventWithAttributes:eventAttributes];
 }
 
 + (instancetype)mapLoadEventWithDateString:(NSString *)dateString commonEventData:(MMECommonEventData *)commonEventData {
@@ -300,7 +300,7 @@
     eventAttributes[MMEEventKeyEvent] = name;
     eventAttributes[MMEEventKeyCreated] = dateString;
 
-    return [MMEEvent eventWithAttributes:eventAttributes];
+    return [self eventWithAttributes:eventAttributes];
 }
 
 #pragma mark - NSSecureCoding
@@ -431,12 +431,17 @@ static NSString * const MMEEventAttributesKey = @"MMEEventAttributes";
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
     if (self = [self init]) {
         NSInteger encodedVersion = [aDecoder decodeIntegerForKey:MMEEventVersionKey];
-        _dateStorage = [aDecoder decodeObjectOfClass:MMEDate.class forKey:MMEEventDateKey];
-        _attributesStorage = [aDecoder decodeObjectOfClass:NSDictionary.class forKey:MMEEventAttributesKey];
+        
         if (encodedVersion > MMEEventVersion2) {
-            NSLog(@"%@ WARNING encodedVersion %li > MMEEventVersion %li",
-                NSStringFromClass(self.class), (long)encodedVersion, (long)MMEEventVersion1);
+            NSString *errorString = [[NSString alloc] initWithFormat:@"%@ %@ encodedVersion %li > MMEEventVersion %li",
+                                     self.name ?: @"nil", NSStringFromClass(self.class), (long)encodedVersion, (long)MMEEventVersion1];
+            NSError *encodingError = [NSError errorWithDomain:MMEErrorDomain code:MMEErrorEventEncoding userInfo:@{MMEErrorDescriptionKey: errorString}];
+            [MMEEventsManager.sharedManager reportError:encodingError];
+            return nil;
         }
+        
+        _attributesStorage = [aDecoder decodeObjectOfClass:NSDictionary.class forKey:MMEEventAttributesKey];
+        _dateStorage = [aDecoder decodeObjectOfClass:MMEDate.class forKey:MMEEventDateKey];
     }
 
     return self;
