@@ -1,5 +1,5 @@
 #import <Foundation/Foundation.h>
-#import <CoreLocation/Corelocation.h>
+#import <CoreLocation/CoreLocation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
