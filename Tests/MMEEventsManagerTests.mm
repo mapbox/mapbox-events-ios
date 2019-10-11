@@ -1,4 +1,6 @@
 #import <Cedar/Cedar.h>
+
+#import "MMEEvent.h"
 #import "MMEEventsManager.h"
 #import "MMEConstants.h"
 #import "MMEUniqueIdentifier.h"

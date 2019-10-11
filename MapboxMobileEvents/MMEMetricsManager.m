@@ -3,6 +3,7 @@
 #import "MMEConstants.h"
 #import "MMEDate.h"
 #import "MMEEventLogger.h"
+#import "MMEEvent.h"
 #import "MMEEventsManager.h"
 #import "MMECommonEventData.h"
 #import "MMEAPIClient.h"

@@ -1,8 +1,9 @@
 #import <Foundation/Foundation.h>
 #import "MMEMetrics.h"
-#import "MMEEvent.h"
 
 NS_ASSUME_NONNULL_BEGIN
+
+@class MMEEvent;
 
 @interface MMEMetricsManager : NSObject
 

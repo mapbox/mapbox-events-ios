@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "408596521ED084C0003BD29D"
-               BuildableName = "libMapboxMobileEventsStatic.a"
-               BlueprintName = "MapboxMobileEventsStatic"
+               BuildableName = "libMapboxMobileEvents.a"
+               BlueprintName = "libMapboxMobileEvents"
                ReferencedContainer = "container:MapboxMobileEvents.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -28,9 +28,27 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "9CDC34C223502F8700852FF0"
+               BuildableName = "MMECedarTests.xctest"
+               BlueprintName = "MMECedarTests"
+               ReferencedContainer = "container:MapboxMobileEvents.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "404807C11EA186D8008A6D50"
+               BuildableName = "MMEXCTests.xctest"
+               BlueprintName = "MMEXCTests"
+               ReferencedContainer = "container:MapboxMobileEvents.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -46,13 +64,11 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "408596521ED084C0003BD29D"
-            BuildableName = "libMapboxMobileEventsStatic.a"
-            BlueprintName = "MapboxMobileEventsStatic"
+            BuildableName = "libMapboxMobileEvents.a"
+            BlueprintName = "libMapboxMobileEvents"
             ReferencedContainer = "container:MapboxMobileEvents.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -64,8 +80,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "408596521ED084C0003BD29D"
-            BuildableName = "libMapboxMobileEventsStatic.a"
-            BlueprintName = "MapboxMobileEventsStatic"
+            BuildableName = "libMapboxMobileEvents.a"
+            BlueprintName = "libMapboxMobileEvents"
             ReferencedContainer = "container:MapboxMobileEvents.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
