@@ -26,8 +26,17 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      codeCoverageEnabled = "YES"
-      shouldUseLaunchSchemeArgsEnv = "YES">
+      shouldUseLaunchSchemeArgsEnv = "YES"
+      codeCoverageEnabled = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "404807B81EA186D8008A6D50"
+            BuildableName = "MapboxMobileEvents.framework"
+            BlueprintName = "MapboxMobileEvents"
+            ReferencedContainer = "container:MapboxMobileEvents.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <Testables>
          <TestableReference
             skipped = "NO">
@@ -40,49 +49,14 @@
             </BuildableReference>
             <SkippedTests>
                <Test
-                  Identifier = "MMEAPIClientTests">
+                  Identifier = "_MMEAPIClientSpec/_URLSessiondidReceiveChallengecompletionHandler_when_using_a_background_thread_should_equal_expected_DefaultHandling_disposition">
                </Test>
                <Test
-                  Identifier = "MMEEventsManagerTests">
-               </Test>
-               <Test
-                  Identifier = "MMELocationManagerTests">
-               </Test>
-               <Test
-                  Identifier = "MMELocationManagerTests/testAsDelegateForLocationManagerWrapperAuthorizationStatusChangeToAlways">
-               </Test>
-               <Test
-                  Identifier = "MMELocationManagerTests/testAsDelegateForLocationManagerWrapperAuthorizationStatusChangeToWhenInUse">
-               </Test>
-               <Test
-                  Identifier = "MMELocationManagerTests/testStartUpdatingLocationWhenHostAppHasNoBackgroundCapabilityAndAlwaysPermissions">
-               </Test>
-               <Test
-                  Identifier = "MMELocationManagerTests/testStartUpdatingLocationWhenHostAppHasWhenInUsePermissions">
-               </Test>
-               <Test
-                  Identifier = "MMENSDateWrapperTests">
-               </Test>
-               <Test
-                  Identifier = "MMETimerManagerTests">
-               </Test>
-               <Test
-                  Identifier = "MMEUniqueIdentifierTests">
+                  Identifier = "_MMEEventsManagerSpec/_pushEvent_when_an_exception_event_is_pushed_should_not_queue_exception_events">
                </Test>
             </SkippedTests>
          </TestableReference>
       </Testables>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "404807B81EA186D8008A6D50"
-            BuildableName = "MapboxMobileEvents.framework"
-            BlueprintName = "MapboxMobileEvents"
-            ReferencedContainer = "container:MapboxMobileEvents.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -103,8 +77,6 @@
             ReferencedContainer = "container:MapboxMobileEvents.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
