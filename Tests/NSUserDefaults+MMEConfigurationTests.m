@@ -7,14 +7,7 @@
 
 
 @interface MMENSUserDefaultsTests : XCTestCase
-
 @property (nonatomic) NSMutableDictionary *mutableDomain;
-
-@end
-
-@interface NSUserDefaults (Test)
-
-- (void)mme_updateFromConfigServiceData:(NSData *)configData;
 
 @end
 
