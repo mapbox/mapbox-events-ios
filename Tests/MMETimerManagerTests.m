@@ -1,18 +1,20 @@
-#import <XCTest/XCTest.h>
+@import XCTest;
 
 #import "MMETimerManager.h"
 
-@interface MMETimerManagerTests : XCTestCase
+@interface MMETimerManager (Test)
+@property (nonatomic) NSTimer *timer;
 
+@end
+
+// MARK: -
+
+@interface MMETimerManagerTests : XCTestCase
 @property (nonatomic) XCTestExpectation *timerSelectorCompletionExpectation;
 
 @end
 
-@interface MMETimerManager (Test)
-
-@property (nonatomic) NSTimer *timer;
-
-@end
+// MARK: -
 
 @implementation MMETimerManagerTests
 
@@ -27,7 +29,7 @@
     MMETimerManager *timerManager = [[MMETimerManager alloc] initWithTimeInterval:1 target:self selector:@selector(workToDoWhenTimerCompletes)];
     [timerManager start];
     
-    [self waitForExpectations:@[self.timerSelectorCompletionExpectation] timeout:2];
+    [self waitForExpectations:@[self.timerSelectorCompletionExpectation] timeout:10];
     
     [timerManager cancel];
     XCTAssertNil(timerManager.timer);

@@ -12,6 +12,8 @@ extern NSString * const MMEExcludeSubdomainFromParentPolicy;
 
 // MARK: -
 
+@class MMEDate;
+
 @interface NSUserDefaults (MMEConfiguration)
 
 /// the shared NSUserDefaults object with the MMEConfigurationDomain loaded and our defaults registered
@@ -53,6 +55,8 @@ extern NSString * const MMEExcludeSubdomainFromParentPolicy;
 @property (nonatomic, readonly) NSURL *mme_eventsServiceURL;
 
 @property (nonatomic, readonly) NSURL *mme_configServiceURL;
+
+@property (nonatomic, setter=mme_setConfigUpdateDate:) MMEDate *mme_configUpdateDate;
 
 @property (nonatomic, readonly) NSString *mme_userAgentString;
 

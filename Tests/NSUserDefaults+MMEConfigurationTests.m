@@ -4,7 +4,7 @@
 #import "MMEBundleInfoFake.h"
 #import "NSUserDefaults+MMEConfiguration.h"
 #import "NSUserDefaults+MMEConfiguration_Private.h"
-
+#import "MMEDate.h"
 
 @interface MMENSUserDefaultsTests : XCTestCase
 @property (nonatomic) NSMutableDictionary *mutableDomain;
@@ -151,6 +151,10 @@
 
 // MARK: - Service Configuration
 
+- (void)testConfigUpdate {
+    [NSUserDefaults.mme_configuration mme_setConfigUpdateDate:[MMEDate date]];
+    XCTAssertNotNil(NSUserDefaults.mme_configuration.mme_configUpdateDate);
+}
     
 - (void)testEventsServiceURLDefault {
     XCTAssert([NSUserDefaults.mme_configuration.mme_eventsServiceURL.absoluteString isEqualToString:MMEAPIClientBaseURL]);

@@ -1,14 +1,13 @@
 #import <CommonCrypto/CommonDigest.h>
 
 #import "MMECertPin.h"
-#import "MMEPinningConfigurationProvider.h"
-#import "MMEEventsConfiguration.h"
 #import "MMEEventLogger.h"
 #import "MMEConstants.h"
 
+#import "NSUserDefaults+MMEConfiguration.h"
+
 @interface MMECertPin()
 
-@property (nonatomic) MMEPinningConfigurationProvider *pinningConfigProvider;
 @property (nonatomic) NSMutableSet<NSData *> *serverSSLPinsSet;
 @property (nonatomic) NSMutableDictionary<NSData *, NSData *> *publicKeyInfoHashesCache;
 @property (nonatomic) NSMutableSet<NSString *> *excludeSubdomainsSet;
@@ -22,60 +21,13 @@
 
 - (instancetype)init {
     if (self = [super init]) {
-        _pinningConfigProvider = [MMEPinningConfigurationProvider pinningConfigProviderWithConfiguration:nil];
         _serverSSLPinsSet = [NSMutableSet set];
         _excludeSubdomainsSet = [NSMutableSet set];
         _publicKeyInfoHashesCache = [NSMutableDictionary dictionary];
         _lockQueue = dispatch_queue_create("MMECertHashLock", DISPATCH_QUEUE_CONCURRENT);
-
-        [self updateSSLPinSet];
     }
 
     return self;
-}
-
-- (void) updateSSLPinSet {
-    [self.serverSSLPinsSet removeAllObjects];
-    [self.publicKeyInfoHashesCache removeAllObjects];
-    
-    [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeCertPinning,
-                                                                MMEEventKeyLocalDebugDescription: @"Updating SSL pin set..."}];
-
-    if ([self.pinningConfigProvider.pinningConfig.allKeys containsObject:kMMEPinnedDomains]) {
-        NSDictionary *configPinnedDomains = self.pinningConfigProvider.pinningConfig[kMMEPinnedDomains];
-
-        for (NSString *pinnedDomain in configPinnedDomains.allKeys) {
-            NSDictionary *pinnedDomainConfig = configPinnedDomains[pinnedDomain];
-
-            if ([pinnedDomainConfig.allKeys containsObject:kMMEPublicKeyHashes]) {
-                for (NSString *pinnedKeyHashBase64 in pinnedDomainConfig[kMMEPublicKeyHashes]) {
-                    NSData *pinnedKeyHash = [[NSData alloc] initWithBase64EncodedString:pinnedKeyHashBase64 options:(NSDataBase64DecodingOptions)0];
-                    if ([pinnedKeyHash length] != CC_SHA256_DIGEST_LENGTH){
-                        // The subject public key info hash doesn't have a valid size
-                        [NSException raise:@"Hash value invalid" format:@"Hash value invalid: %@", pinnedKeyHash];
-                    }
-                    [_serverSSLPinsSet addObject:pinnedKeyHash];
-                }
-            }
-
-            if ([pinnedDomainConfig.allKeys containsObject:kMMEExcludeSubdomainFromParentPolicy]
-             && [pinnedDomainConfig[kMMEExcludeSubdomainFromParentPolicy] boolValue]) {
-                [_excludeSubdomainsSet addObject:pinnedDomain];
-            }
-        }
-    }
-}
-
-- (void) updateWithConfiguration:(MMEEventsConfiguration *)configuration {
-    if (configuration && configuration.blacklist && configuration.blacklist.count > 0) {
-        NSString *debugDescription = [NSString stringWithFormat:@"blacklisted hash(s) found: %@", configuration.blacklist];
-        [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeCertPinning,
-                                                                    MMEEventKeyLocalDebugDescription: debugDescription}];
-        
-        self.pinningConfigProvider = [MMEPinningConfigurationProvider pinningConfigProviderWithConfiguration:configuration];
-
-        [self updateSSLPinSet];
-    }
 }
 
 - (void) handleChallenge:(NSURLAuthenticationChallenge * _Nonnull)challenge completionHandler:(void (^ _Nonnull)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential * _Nullable credential))completionHandler{

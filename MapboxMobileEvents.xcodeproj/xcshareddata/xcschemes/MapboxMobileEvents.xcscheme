@@ -25,7 +25,7 @@
             buildForRunning = "NO"
             buildForProfiling = "NO"
             buildForArchiving = "NO"
-            buildForAnalyzing = "YES">
+            buildForAnalyzing = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "404807C11EA186D8008A6D50"
@@ -39,7 +39,7 @@
             buildForRunning = "NO"
             buildForProfiling = "NO"
             buildForArchiving = "NO"
-            buildForAnalyzing = "YES">
+            buildForAnalyzing = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "9CDC34C223502F8700852FF0"
@@ -53,7 +53,7 @@
             buildForRunning = "NO"
             buildForProfiling = "NO"
             buildForArchiving = "NO"
-            buildForAnalyzing = "YES">
+            buildForAnalyzing = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "9C65A2652256C110006E3FED"
@@ -92,14 +92,6 @@
                BlueprintName = "MMEXCTests"
                ReferencedContainer = "container:MapboxMobileEvents.xcodeproj">
             </BuildableReference>
-            <SkippedTests>
-               <Test
-                  Identifier = "_MMEAPIClientSpec/_URLSessiondidReceiveChallengecompletionHandler_when_using_a_background_thread_should_equal_expected_DefaultHandling_disposition">
-               </Test>
-               <Test
-                  Identifier = "_MMEEventsManagerSpec/_pushEvent_when_an_exception_event_is_pushed_should_not_queue_exception_events">
-               </Test>
-            </SkippedTests>
          </TestableReference>
          <TestableReference
             skipped = "NO">

@@ -62,6 +62,17 @@ static NSTimeInterval _timeOffsetFromServer = 0.0; // TODO maintain a list of MM
     return _logDateFormatter;
 }
 
++ (NSDateFormatter *)HTTPDateFormatter {
+    static NSDateFormatter *_httpDateFormatter;
+    
+    if (!_httpDateFormatter) {
+        _httpDateFormatter = [[NSDateFormatter alloc] init];
+        [_httpDateFormatter setDateFormat:@"E, d MMM yyyy HH:mm:ss Z"];
+    }
+
+    return _httpDateFormatter;
+}
+
 + (MMEDate *)dateWithRecordedOffset {
     return [MMEDate dateWithOffset:MMEDate.recordedTimeOffsetFromServer];
 }

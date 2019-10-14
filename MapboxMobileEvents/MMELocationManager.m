@@ -1,9 +1,10 @@
-#import "MMELocationManager.h"
-#import "MMEUIApplicationWrapper.h"
-#import "MMEDependencyManager.h"
-#import "MMEEventsConfiguration.h"
-#import "MMEMetricsManager.h"
 #import <CoreLocation/CoreLocation.h>
+
+#import "MMEDependencyManager.h"
+#import "MMELocationManager.h"
+#import "MMEMetricsManager.h"
+#import "MMEUIApplicationWrapper.h"
+#import "NSUserDefaults+MMEConfiguration.h"
 
 static const NSTimeInterval MMELocationManagerHibernationTimeout = 300.0;
 static const NSTimeInterval MMELocationManagerHibernationPollInterval = 5.0;
@@ -21,7 +22,6 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
 @property (nonatomic) NSDate *backgroundLocationServiceTimeoutAllowedDate;
 @property (nonatomic) NSTimer *backgroundLocationServiceTimeoutTimer;
 @property (nonatomic) BOOL hostAppHasBackgroundCapability;
-@property (nonatomic) MMEEventsConfiguration *configuration;
 
 @end
 
@@ -37,13 +37,8 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
         _application = [[MMEUIApplicationWrapper alloc] init];
         NSArray *backgroundModes = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UIBackgroundModes"];
         _hostAppHasBackgroundCapability = [backgroundModes containsObject:@"location"];
-        _configuration = [MMEEventsConfiguration configuration];
     }
     return self;
-}
-
-- (void)reconfigure:(MMEEventsConfiguration *)configuration {
-    self.configuration = configuration;
 }
 
 - (void)startUpdatingLocation {
@@ -177,7 +172,10 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
 }
 
 - (void)establishRegionMonitoringForLocation:(CLLocation *)location {
-    CLCircularRegion *region = [[CLCircularRegion alloc] initWithCenter:location.coordinate radius:self.configuration.locationManagerHibernationRadius identifier:MMELocationManagerRegionIdentifier];
+    CLCircularRegion *region = [CLCircularRegion.alloc
+        initWithCenter:location.coordinate
+        radius:NSUserDefaults.mme_configuration.mme_backgroundGeofence
+        identifier:MMELocationManagerRegionIdentifier];
     region.notifyOnEntry = NO;
     region.notifyOnExit = YES;
     [self.locationManager startMonitoringForRegion:region];

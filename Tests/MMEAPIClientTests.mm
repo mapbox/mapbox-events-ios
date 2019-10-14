@@ -1,5 +1,6 @@
-#import <Cedar/Cedar.h>
-#import <Foundation/Foundation.h>
+@import Cedar;
+@import Foundation;
+
 #import "MMEAPIClient.h"
 #import "MMEConstants.h"
 #import "MMEEvent.h"
@@ -7,6 +8,9 @@
 #import "MMENSURLSessionWrapperFake.h"
 #import "MMEAPIClientFake.h"
 #import "MMECertPin.h"
+#import "MMERunningLock.h"
+
+#import "NSUserDefaults+MMEConfiguration.h"
 
 @interface MMENSURLSessionWrapper (Private)
 @property (nonatomic) NSURLSession *session;
@@ -18,22 +22,21 @@ using namespace Cedar::Doubles;
 @interface DelegateTestClass : NSObject<NSURLConnectionDelegate, NSURLAuthenticationChallengeSender>
 @end
 
+// MARK: -
+
 @interface MMEAPIClient (Tests)
-
 @property (nonatomic) id<MMENSURLSessionWrapper> sessionWrapper;
-@property (nonatomic) BOOL usesTestServer;
-@property (nonatomic) NSBundle *applicationBundle;
-@property (nonatomic, copy) NSString *userAgent;
-
-- (void)setupUserAgent;
 
 @end
 
-@interface MMENSURLSessionWrapper (MMEAPIClientTests)
+// MARK: -
 
+@interface MMENSURLSessionWrapper (MMEAPIClientTests)
 @property (nonatomic) MMECertPin *certPin;
 
 @end
+
+// MARK: -
 
 SPEC_BEGIN(MMEAPIClientSpec)
 
@@ -45,9 +48,7 @@ describe(@"MMEAPIClient", ^{
     __block NSURLSession *urlSession;
     __block NSURLAuthenticationChallenge *challenge;
     id<CedarDouble> delegateFake = fake_for(@protocol(NSURLAuthenticationChallengeSender));
-    
-    int64_t timeoutInNanoseconds = 1000000000;
-    
+        
     beforeEach(^{
         apiClient = [[MMEAPIClient alloc] initWithAccessToken:@"access-token"
                                                 userAgentBase:@"user-agent-base"
@@ -66,11 +67,7 @@ describe(@"MMEAPIClient", ^{
         apiClient.sessionWrapper should_not be_nil;
         apiClient.sessionWrapper should be_instance_of([MMENSURLSessionWrapper class]);
     });
-    
-    it(@"uses the default base URL value", ^{
-        apiClient.baseURL should equal([NSURL URLWithString:MMEAPIClientBaseURL]);
-    });
-    
+        
     describe(@"- URLSession:didBecomeInvalidWithError:", ^{
         __block NSURLSession *capturedSession;
         
@@ -92,22 +89,14 @@ describe(@"MMEAPIClient", ^{
         
         context(@"when the pinning validator does not handle the challenge", ^{
             beforeEach(^{
-                
-                dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-                
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, timeoutInNanoseconds), dispatch_get_main_queue(), ^{
-                    dispatch_semaphore_signal(semaphore);
-                });
-                
+                MMERunningLock *lock = MMERunningLock.lockedRunningLock;
                 [sessionWrapper URLSession:urlSession didReceiveChallenge:challenge completionHandler:^(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential * _Nullable credential) {
                     isMainThread = [NSThread isMainThread];
                     receivedDisposition = disposition;
-                    dispatch_semaphore_signal(semaphore);
+                    [lock unlock];
                 }];
                 
-                while (dispatch_semaphore_wait(semaphore, DISPATCH_TIME_NOW)) {
-                    [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:10]];
-                }
+                [lock runUntilTimeout:10] should be_truthy;
             });
             
             it(@"should be on main queue", ^{
@@ -117,7 +106,6 @@ describe(@"MMEAPIClient", ^{
             it(@"should call the completion with the cancel disposition", ^{
                 receivedDisposition should equal(NSURLSessionAuthChallengeCancelAuthenticationChallenge);
             });
-            
         });
         
         context(@"when using a background thread", ^{
@@ -125,24 +113,17 @@ describe(@"MMEAPIClient", ^{
             
             beforeEach(^{
                 
-                dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-                
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, timeoutInNanoseconds), dispatch_get_main_queue(), ^{
-                    dispatch_semaphore_signal(semaphore);
-                });
-                
+                MMERunningLock *lock = MMERunningLock.lockedRunningLock;
+
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                     [sessionWrapper URLSession:urlSession didReceiveChallenge:challenge completionHandler:^(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential * _Nullable credential) {
                         isMainThread = [NSThread isMainThread];
                         receivedDisposition = disposition;
-                        dispatch_semaphore_signal(semaphore);
+                        [lock unlock];
                     }];
                 });
                 
-                while (dispatch_semaphore_wait(semaphore, DISPATCH_TIME_NOW)) {
-                    [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:10]];
-                }
-
+                [lock runUntilTimeout:10] should be_truthy;
             });
             
             it(@"should be main thread", ^{
@@ -155,82 +136,8 @@ describe(@"MMEAPIClient", ^{
         });
     });
     
-    describe(@"- setBaseURL", ^{
-        
-        context(@"when the URL string is secure", ^{
-            __block NSString *testURLString = @"https://test.com";
-            
-            beforeEach(^{
-                apiClient.baseURL = [NSURL URLWithString:testURLString];
-            });
-            
-            it(@"uses the passed in value", ^{
-                apiClient.baseURL should equal([NSURL URLWithString:testURLString]);
-            });
-            
-            context(@"when the URL is reset with a nil value", ^{
-                beforeEach(^{
-                    apiClient.baseURL = nil;
-                });
-                
-                it(@"use the default base URL value", ^{
-                    apiClient.baseURL should equal([NSURL URLWithString:MMEAPIClientBaseURL]);
-                });
-            });
-        });
-        
-        context(@"when the URL is not secure", ^{
-            __block NSString *badTestURLString = @"http://test.com";
-            
-            beforeEach(^{
-                apiClient.baseURL = [NSURL URLWithString:badTestURLString];
-            });
-            
-            it(@"ignores the insecure URL and uses the default base URL value", ^{
-                apiClient.baseURL should equal([NSURL URLWithString:MMEAPIClientBaseURL]);
-            });
-        });
-        
-        context(@"when plist configured API endpoint to China API", ^{
-            beforeEach(^{
-                spy_on([NSBundle mainBundle]);
-                [NSBundle mainBundle] stub_method(@selector(objectForInfoDictionaryKey:)).with(@"MGLMapboxAPIBaseURL").and_return(MMEAPIClientBaseChinaAPIURL);
-                apiClient.baseURL = nil;
-            });
-
-            it(@"auto switch the events endpoint to China events API", ^{
-                apiClient.baseURL should equal([NSURL URLWithString:MMEAPIClientBaseChinaEventsURL]);
-            });
-        });
-
-        context(@"when setting up user agent", ^{
-            __block NSString *expectedUserAgent;
-
-            beforeEach(^{
-                apiClient = [[MMEAPIClient alloc] initWithAccessToken:@"access-token"
-                                                        userAgentBase:@"user-agent-base"
-                                                       hostSDKVersion:@"host-sdk-1"];
-                
-                NSBundle *fakeApplicationBundle = [NSBundle bundleForClass:[MMEAPIClientSpec class]];
-                apiClient.applicationBundle = fakeApplicationBundle;
-                [apiClient setupUserAgent];
-
-                NSString *appName = [fakeApplicationBundle objectForInfoDictionaryKey:@"CFBundleIdentifier"];
-                NSString *appVersion = [fakeApplicationBundle objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
-                NSString *appBuildNumber = [fakeApplicationBundle objectForInfoDictionaryKey:@"CFBundleVersion"];
-
-                expectedUserAgent = [NSString stringWithFormat:@"%@/%@/%@ %@/%@", appName, appVersion, appBuildNumber, apiClient.userAgentBase, apiClient.hostSDKVersion];                
-            });
-
-            it(@"should equal expectedUserAgent", ^{
-                expectedUserAgent should equal(apiClient.userAgent);
-            });
-        });
-    });
-    
     describe(@"- getConfigurationWithCompletionHandler:", ^{
         __block MMENSURLSessionWrapperFake *sessionWrapperFake;
-        __block NSError *capturedError;
         
         beforeEach(^{
             sessionWrapperFake = [[MMENSURLSessionWrapperFake alloc] init];
@@ -238,34 +145,8 @@ describe(@"MMEAPIClient", ^{
             
             apiClient.sessionWrapper = sessionWrapperFake;
         });
-        
-        context(@"when getting configuration", ^{
-            __block NSError *error;
-            
-            beforeEach(^{
-                [apiClient getConfigurationWithCompletionHandler:^(NSError * _Nullable error, NSData * _Nullable data) {
-                    capturedError = error;
-                }];
-            });
-            
-            context(@"when network is offline", ^{
-                beforeEach(^{
-                    error = [NSError errorWithDomain:@"test" code:42 userInfo:nil];
-                    NSHTTPURLResponse *responseFake = nil;
-                    NSURLRequest *requestFake = [[NSURLRequest alloc] initWithURL:apiClient.baseURL];
-                    
-                    [sessionWrapperFake completeProcessingWithData:nil response:responseFake error:error];
-                    [apiClient statusErrorFromRequest:requestFake andHTTPResponse:responseFake] should be_nil;
-                    [apiClient unexpectedResponseErrorfromRequest:requestFake andResponse:responseFake] should_not be_nil;
-                });
-                
-                it(@"should equal completed process error", ^{
-                    capturedError should equal(error);
-                });
-            });
-        });
     });
-    
+        
     describe(@"- postEvent:completionHandler:", ^{
         __block MMEEvent *event;
         __block MMENSURLSessionWrapperFake *sessionWrapperFake;
@@ -304,7 +185,7 @@ describe(@"MMEAPIClient", ^{
                 
                 beforeEach(^{
                     error = [NSError errorWithDomain:@"test" code:42 userInfo:nil];
-                    NSHTTPURLResponse *responseFake = [[NSHTTPURLResponse alloc] initWithURL:apiClient.baseURL statusCode:400 HTTPVersion:nil headerFields:nil];
+                    NSHTTPURLResponse *responseFake = [[NSHTTPURLResponse alloc] initWithURL:NSUserDefaults.mme_configuration.mme_eventsServiceURL statusCode:400 HTTPVersion:nil headerFields:nil];
                     [sessionWrapperFake completeProcessingWithData:nil response:responseFake error:error];
                 });
                 
@@ -333,7 +214,7 @@ describe(@"MMEAPIClient", ^{
             
             beforeEach(^{
                 NSString *stagingAccessToken = @"staging-access-token";
-                apiClient.accessToken = stagingAccessToken;
+                NSUserDefaults.mme_configuration.mme_accessToken = stagingAccessToken;
                 [apiClient postEvent:event completionHandler:nil];
                 
                 expectedURLString = [NSString stringWithFormat:@"%@/%@?access_token=%@", MMEAPIClientBaseURL, MMEAPIClientEventsPath, stagingAccessToken];
@@ -342,10 +223,11 @@ describe(@"MMEAPIClient", ^{
             it(@"should receive processRequest:completionHandler", ^{
                 sessionWrapperFake should have_received(@selector(processRequest:completionHandler:));
             });
-            
+
             it(@"should be created properly", ^{
                 sessionWrapperFake.request.URL.absoluteString should equal(expectedURLString);
             });
+
         });
         
         context(@"when posting two events", ^{

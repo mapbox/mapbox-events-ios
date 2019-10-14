@@ -1,5 +1,6 @@
 #import "MMETestStub.h"
 #import "MMEAPIClient.h"
+#import "MMEAPIClient_Private.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

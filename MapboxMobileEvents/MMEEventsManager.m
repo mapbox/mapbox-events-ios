@@ -6,36 +6,34 @@
 #import <UIKit/UIKit.h>
 #endif
 
-#import "CLLocation+MMEMobileEvents.h"
-#import "CLLocationManager+MMEMobileEvents.h"
-
+#import "MMEEventsManager.h"
+#import "MMEEventsManager_Private.h"
 #import "MMEAPIClient.h"
+#import "MMEAPIClient_Private.h"
 #import "MMECategoryLoader.h"
 #import "MMECommonEventData.h"
-#import "MMEConfigurator.h"
 #import "MMEConstants.h"
 #import "MMEDate.h"
 #import "MMEDispatchManager.h"
 #import "MMEEvent.h"
 #import "MMEEventLogger.h"
-#import "MMEEventsConfiguration.h"
-#import "MMEEventsManager.h"
 #import "MMELocationManager.h"
 #import "MMEMetricsManager.h"
 #import "MMETimerManager.h"
 #import "MMEUIApplicationWrapper.h"
 #import "MMEUniqueIdentifier.h"
 
-@interface MMEEventsManager () <MMELocationManagerDelegate, MMEConfiguratorDelegate>
+#import "CLLocation+MMEMobileEvents.h"
+#import "CLLocationManager+MMEMobileEvents.h"
+#import "NSUserDefaults+MMEConfiguration.h"
+
+@interface MMEEventsManager () <MMELocationManagerDelegate>
 
 @property (nonatomic) id<MMELocationManager> locationManager;
-@property (nonatomic) id<MMEAPIClient> apiClient;
 @property (nonatomic) NS_MUTABLE_ARRAY_OF(MMEEvent *) *eventQueue;
 @property (nonatomic) id<MMEUniqueIdentifer> uniqueIdentifer;
 @property (nonatomic) MMECommonEventData *commonEventData;
 @property (nonatomic) NSDate *nextTurnstileSendDate;
-@property (nonatomic) MMEEventsConfiguration *configuration;
-@property (nonatomic) MMEConfigurator *configurationUpdater;
 @property (nonatomic) MMETimerManager *timerManager;
 @property (nonatomic) MMEDispatchManager *dispatchManager;
 @property (nonatomic, getter=isPaused) BOOL paused;
@@ -44,6 +42,8 @@
 @property (nonatomic) UIBackgroundTaskIdentifier backgroundTaskIdentifier;
 
 @end
+
+// MARK: -
 
 @implementation MMEEventsManager
 
@@ -71,9 +71,7 @@
         _accountType = 0;
         _eventQueue = [NSMutableArray array];
         _commonEventData = [[MMECommonEventData alloc] init];
-        _configuration = [MMEEventsConfiguration configuration];
-        _configurationUpdater = [[MMEConfigurator alloc] initWithTimeInterval:_configuration.configurationRotationTimeInterval];
-        _uniqueIdentifer = [[MMEUniqueIdentifier alloc] initWithTimeInterval:_configuration.instanceIdentifierRotationTimeInterval];
+        _uniqueIdentifer = [[MMEUniqueIdentifier alloc] initWithTimeInterval:NSUserDefaults.mme_configuration.mme_identifierRotationInterval];
         _application = [[MMEUIApplicationWrapper alloc] init];
         _dispatchManager = [[MMEDispatchManager alloc] init];
     }
@@ -88,14 +86,13 @@
 - (void)initializeWithAccessToken:(NSString *)accessToken userAgentBase:(NSString *)userAgentBase hostSDKVersion:(NSString *)hostSDKVersion {
     @try {
         if (self.apiClient) {
-            [self setAccessToken:accessToken];
+            [NSUserDefaults.mme_configuration mme_setAccessToken:accessToken];
             return;
         }
 
         self.apiClient = [[MMEAPIClient alloc] initWithAccessToken:accessToken
             userAgentBase:userAgentBase
             hostSDKVersion:hostSDKVersion];
-        self.configurationUpdater.delegate = self;
 
         [self sendPendingTelemetryMetricsEvent];
 
@@ -129,10 +126,13 @@
             strongSelf.locationManager.metricsEnabledForInUsePermissions = strongSelf.metricsEnabledForInUsePermissions;
             [strongSelf resumeMetricsCollection];
 
-            strongSelf.timerManager = [[MMETimerManager alloc] initWithTimeInterval:strongSelf.configuration.eventFlushSecondsThreshold target:strongSelf selector:@selector(flush)];
+            strongSelf.timerManager = [[MMETimerManager alloc]
+                initWithTimeInterval:NSUserDefaults.mme_configuration.mme_eventFlushInterval
+                target:strongSelf
+                selector:@selector(flush)];
         };
 
-        [self.dispatchManager scheduleBlock:initialization afterDelay:self.configuration.initializationDelay];
+        [self.dispatchManager scheduleBlock:initialization afterDelay:NSUserDefaults.mme_configuration.mme_startupDelay];
     }
     @catch(NSException *except) {
         [self reportException:except];
@@ -142,27 +142,24 @@
 #pragma mark - Properties
 
 - (void)setAccessToken:(NSString *)accessToken {
-    self.apiClient.accessToken = accessToken;
+    [NSUserDefaults.mme_configuration mme_setAccessToken:accessToken];
 }
 
 - (NSString *)accessToken {
-    return self.apiClient.accessToken;
-}
-
-- (void)setBaseURL:(NSURL *)baseURL {
-    self.apiClient.baseURL = baseURL;
+    return NSUserDefaults.mme_configuration.mme_accessToken;
 }
 
 - (NSURL *)baseURL {
-    return self.apiClient.baseURL;
+    _baseURL = NSUserDefaults.mme_configuration.mme_eventsServiceURL;
+    return _baseURL;
 }
 
 - (NSString *)userAgentBase {
-    return self.apiClient.userAgentBase;
+    return NSUserDefaults.mme_configuration.mme_legacyUserAgentBase;
 }
 
 - (NSString *)hostSDKVersion {
-    return self.apiClient.hostSDKVersion;
+    return NSUserDefaults.mme_configuration.mme_legacyHostSDKVersion;
 }
 
 #pragma mark - Enable/Disable
@@ -200,7 +197,8 @@
         // Prevent blue status bar when host app has `when in use` permission only and it is not in foreground
         if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedWhenInUse &&
             self.application.applicationState == UIApplicationStateBackground &&
-            !self.isMetricsEnabledForInUsePermissions) {
+            !self.isMetricsEnabledForInUsePermissions &&
+            NSUserDefaults.mme_configuration.mme_isCollectionEnabledInBackground) {
             if (_backgroundTaskIdentifier == UIBackgroundTaskInvalid) {
                 __weak __typeof__(self) weakSelf = self;
                 _backgroundTaskIdentifier = [self.application beginBackgroundTaskWithExpirationHandler:^{
@@ -241,7 +239,7 @@
             return;
         }
 
-        if (self.apiClient.accessToken == nil) {
+        if (NSUserDefaults.mme_configuration.mme_accessToken == nil) {
             return;
         }
 
@@ -313,8 +311,6 @@
 
 - (void)sendTurnstileEvent {
     @try {
-        [self.configurationUpdater updateConfigurationFromAPIClient:self.apiClient];
-
         if (self.nextTurnstileSendDate && ([NSDate.date timeIntervalSinceDate:self.nextTurnstileSendDate] < 0)) {
             NSString *debugDescription = [NSString stringWithFormat:@"Turnstile event already sent; waiting until %@ to send another one", self.nextTurnstileSendDate];
             [self pushDebugEventWithAttributes:@{
@@ -323,21 +319,21 @@
             return;
         }
 
-        if (!self.apiClient.accessToken) {
+        if (!NSUserDefaults.mme_configuration.mme_accessToken) {
             [self pushDebugEventWithAttributes:@{
                 MMEDebugEventType: MMEDebugEventTypeTurnstileFailed,
                 MMEEventKeyLocalDebugDescription: @"No access token sent, can not send turntile event"}];
             return;
         }
 
-        if (!self.apiClient.userAgentBase) {
+        if (!NSUserDefaults.mme_configuration.mme_legacyUserAgentBase) {
             [self pushDebugEventWithAttributes:@{
                 MMEDebugEventType: MMEDebugEventTypeTurnstileFailed,
                 MMEEventKeyLocalDebugDescription: @"No user agent base set, can not send turntile event"}];
             return;
         }
 
-        if (!self.apiClient.hostSDKVersion) {
+        if (!NSUserDefaults.mme_configuration.mme_legacyHostSDKVersion) {
             [self pushDebugEventWithAttributes:@{
                 MMEDebugEventType: MMEDebugEventTypeTurnstileFailed,
                 MMEEventKeyLocalDebugDescription: @"No host SDK version set, can not send turntile event"}];
@@ -370,8 +366,8 @@
                                                    // MMEEventKeyDevice is synonomous with MMEEventKeyModel but the server will only accept "device" in turnstile events
                                                    MMEEventKeyDevice: self.commonEventData.model,
                                                    MMEEventKeyOperatingSystem: self.commonEventData.osVersion,
-                                                   MMEEventSDKIdentifier: self.apiClient.userAgentBase,
-                                                   MMEEventSDKVersion: self.apiClient.hostSDKVersion,
+                                                   MMEEventSDKIdentifier: NSUserDefaults.mme_configuration.mme_legacyUserAgentBase,
+                                                   MMEEventSDKVersion: NSUserDefaults.mme_configuration.mme_legacyHostSDKVersion,
                                                    MMEEventKeyEnabledTelemetry: @([self isEnabled]),
                                                    MMEEventKeyLocationEnabled: @([CLLocationManager locationServicesEnabled]),
                                                    MMEEventKeyLocationAuthorization: [CLLocationManager mme_authorizationStatusString],
@@ -650,7 +646,7 @@
         MMEDebugEventType: MMEDebugEventTypePush,
         MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Added event to event queue; event queue now has %ld events", (long)self.eventQueue.count]}];
     
-    if (self.eventQueue.count >= self.configuration.eventFlushCountThreshold) {
+    if (self.eventQueue.count >= NSUserDefaults.mme_configuration.mme_eventFlushCount) {
         [self flush];
         [self resetEventQueuing];
     }
@@ -672,29 +668,6 @@
 
 - (void)displayLogFileFromDate:(NSDate *)logDate {
     [MMEEventLogger.sharedLogger readAndDisplayLogFileFromDate:logDate];
-}
-
-#pragma mark - MMEConfiguratorDelegate
-
-- (void)configurator:(id)updater didUpdate:(MMEEventsConfiguration *)configuration {
-    self.configuration = configuration;
-
-    if ([self.apiClient respondsToSelector:@selector(reconfigure:)]) {
-        [self.apiClient reconfigure:configuration];
-    }
-
-    if ([self.locationManager respondsToSelector:@selector(reconfigure:)]) {
-        [self.locationManager reconfigure:configuration];
-    }
-    
-    self.configurationUpdater.timeInterval = configuration.configurationRotationTimeInterval;
-    self.uniqueIdentifer.timeInterval = configuration.instanceIdentifierRotationTimeInterval;
-
-    if (self.timerManager && configuration.eventFlushSecondsThreshold != self.timerManager.timeInterval) {
-        [self.timerManager cancel];
-        self.timerManager = [[MMETimerManager alloc] initWithTimeInterval:self.configuration.eventFlushSecondsThreshold target:self selector:@selector(flush)];
-        [self.timerManager start];
-    }
 }
 
 #pragma mark - MMELocationManagerDelegate

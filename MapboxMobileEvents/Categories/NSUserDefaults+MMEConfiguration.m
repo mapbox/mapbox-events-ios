@@ -1,8 +1,17 @@
 #import "NSUserDefaults+MMEConfiguration.h"
 #import "NSUserDefaults+MMEConfiguration_Private.h"
 #import "MMEConstants.h"
+#import "MMEDate.h"
 
 NS_ASSUME_NONNULL_BEGIN
+
+// MARK: Constants
+
+NSString * const MMEPinnedDomains = @"MMEPinnedDomains";
+NSString * const MMEPublicKeyHashes = @"MMEPublicKeyHashes";
+NSString * const MMEExcludeSubdomainFromParentPolicy = @"MMEExcludeSubdomainFromParentPolicy";
+
+// MARK: -
 
 @implementation NSUserDefaults (MME)
 
@@ -10,65 +19,8 @@ NS_ASSUME_NONNULL_BEGIN
     static NSUserDefaults *eventsConfiguration = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        // initialize our defaults with the MMEConfigurationDomain suite
         eventsConfiguration = [NSUserDefaults.alloc initWithSuiteName:MMEConfigurationDomain];
-        [eventsConfiguration addSuiteNamed:MMEConfigurationVolatileDomain];
-
-        // check for Info.plist keys which change various configuration values
-        CLLocationDistance backgroundGeofence = 300.0; // Meters
-        NSTimeInterval startupDelay = 10;
-        
-        NSString *profileName = (NSString*)[NSBundle.mme_mainBundle objectForInfoDictionaryKey:MMEEventsProfile];
-        if ([profileName isEqualToString:MMEEventsProfile]) {
-            id customRadiusNumber = [NSBundle.mme_mainBundle objectForInfoDictionaryKey:MMEEventsProfile];
-            if ([customRadiusNumber isKindOfClass:NSNumber.class]) {
-                CLLocationDistance infoGeofence = [customRadiusNumber doubleValue];
-                
-                if (infoGeofence >= MMECustomGeofenceRadiusMinimum
-                 && infoGeofence <= MMECustomGeofenceRadiusMaximum) {
-                    backgroundGeofence = infoGeofence;
-                }
-                else NSLog(@"WARNING Mapbox Mobile Events Profile has invalid geofence radius: %@", customRadiusNumber);
-            }
-            else NSLog(@"WARNING Mapbox Mobile Events Profile has invalid geofence: %@", customRadiusNumber);
-
-            id startupDelayNumber = [NSBundle.mme_mainBundle objectForInfoDictionaryKey:MMEStartupDelay];
-            if ([startupDelayNumber isKindOfClass:NSNumber.class]) {
-                NSTimeInterval infoDelay = [startupDelayNumber doubleValue];
-                
-                if (infoDelay > 0 && infoDelay <= MMEStartupDelayMaximum) {
-                    startupDelay = infoDelay;
-                }
-                else NSLog(@"WARNING Mapbox Mobile Events Profile has invalid startup delay: %@", startupDelayNumber);
-            }
-            else NSLog(@"WARNING Mapbox Mobile Events Profile has invalid startup delay: %@", startupDelayNumber);
-        }
-
-        id accountType = [NSBundle.mme_mainBundle objectForInfoDictionaryKey:MMEAccountType];
-        if ([accountType isKindOfClass:NSNumber.class]) {
-            [eventsConfiguration mme_updateFromAccountType:[accountType integerValue]];
-        }
-        
-        // legacy user agent string
-        id userAgentBase = [NSBundle.mme_mainBundle objectForInfoDictionaryKey:@"MMEMapboxUserAgentBase"];
-        if ([userAgentBase isKindOfClass:NSString.class]) {
-            eventsConfiguration.mme_legacyUserAgentBase = userAgentBase;
-        }
-        
-        id hostSDKVersion = [NSBundle.mainBundle objectForInfoDictionaryKey:@"MMEMapboxHostSDKVersion"];
-        if ([hostSDKVersion isKindOfClass:NSString.class]) {
-            eventsConfiguration.mme_legacyHostSDKVersion = hostSDKVersion;
-        }
-
-        [eventsConfiguration registerDefaults:@{
-            MMEStartupDelay: @(startupDelay), // seconds
-            MMEBackgroundGeofence: @(backgroundGeofence), // meters
-            MMEEventFlushCount: @(10), // events
-            MMEEventFlushInterval: @(10), // seconds
-            MMEIdentifierRotationInterval: @(24 * 60 * 60), // 24 hours
-            MMEConfigurationUpdateInterval: @(24 * 60 * 60), // 24 hours
-            MMEBackgroundStartupDelay: @(15.0), // seconds
-        }];
+        [eventsConfiguration mme_registerDefaults];
     });
 
     return eventsConfiguration;
@@ -77,6 +29,66 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)mme_resetConfiguration {
     [NSUserDefaults.mme_configuration setPersistentDomain:@{} forName:MMEConfigurationDomain];
     [NSUserDefaults.mme_configuration setVolatileDomain:@{} forName:MMEConfigurationVolatileDomain];
+}
+
+// MARK: - Register Defaults
+
+/// check for Info.plist keys which change various default configuration values
+- (void)mme_registerDefaults {
+    CLLocationDistance backgroundGeofence = 300.0; // Meters
+    NSTimeInterval startupDelay = 1;
+    
+    NSString *profileName = (NSString*)[NSBundle.mme_mainBundle objectForInfoDictionaryKey:MMEEventsProfile];
+    if ([profileName isEqualToString:MMECustomProfile]) {
+        id customRadiusNumber = [NSBundle.mme_mainBundle objectForInfoDictionaryKey:MMECustomGeofenceRadius];
+        if ([customRadiusNumber isKindOfClass:NSNumber.class]) {
+            CLLocationDistance infoGeofence = [customRadiusNumber doubleValue];
+            
+            if (infoGeofence >= MMECustomGeofenceRadiusMinimum
+             && infoGeofence <= MMECustomGeofenceRadiusMaximum) {
+                backgroundGeofence = infoGeofence;
+            }
+            else NSLog(@"WARNING Mapbox Mobile Events Profile has invalid geofence radius: %@", customRadiusNumber);
+        }
+        else NSLog(@"WARNING Mapbox Mobile Events Profile has invalid geofence: %@", customRadiusNumber);
+
+        id startupDelayNumber = [NSBundle.mme_mainBundle objectForInfoDictionaryKey:MMEStartupDelay];
+        if ([startupDelayNumber isKindOfClass:NSNumber.class]) {
+            NSTimeInterval infoDelay = [startupDelayNumber doubleValue];
+            
+            if (infoDelay > 0 && infoDelay <= MMEStartupDelayMaximum) {
+                startupDelay = infoDelay;
+            }
+            else NSLog(@"WARNING Mapbox Mobile Events Profile has invalid startup delay: %@", startupDelayNumber);
+        }
+        else NSLog(@"WARNING Mapbox Mobile Events Profile has invalid startup delay: %@", startupDelayNumber);
+    }
+
+    id accountType = [NSBundle.mme_mainBundle objectForInfoDictionaryKey:MMEAccountType];
+    if ([accountType isKindOfClass:NSNumber.class]) {
+        [self mme_updateFromAccountType:[accountType integerValue]];
+    }
+    
+    // legacy user agent string
+    id userAgentBase = [NSBundle.mme_mainBundle objectForInfoDictionaryKey:@"MMEMapboxUserAgentBase"];
+    if ([userAgentBase isKindOfClass:NSString.class]) {
+        self.mme_legacyUserAgentBase = userAgentBase;
+    }
+    
+    id hostSDKVersion = [NSBundle.mainBundle objectForInfoDictionaryKey:@"MMEMapboxHostSDKVersion"];
+    if ([hostSDKVersion isKindOfClass:NSString.class]) {
+        self.mme_legacyHostSDKVersion = hostSDKVersion;
+    }
+
+    [self registerDefaults:@{
+        MMEStartupDelay: @(startupDelay), // seconds
+        MMEBackgroundGeofence: @(backgroundGeofence), // meters
+        MMEEventFlushCount: @(10), // events
+        MMEEventFlushInterval: @(10), // seconds
+        MMEIdentifierRotationInterval: @(24 * 60 * 60), // 24 hours
+        MMEConfigurationUpdateInterval: @(24 * 60 * 60), // 24 hours
+        MMEBackgroundStartupDelay: @(15.0), // seconds
+    }];
 }
 
 // MARK: - Volitile Domain
@@ -212,10 +224,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSURL *)mme_configServiceURL {
     NSURL *configServiceURL = nil;
-    NSString *infoConfigServiceURL = [NSBundle.mme_mainBundle objectForInfoDictionaryKey:MMEConfigServiceURL];
+    id infoPlistObject = [NSBundle.mme_mainBundle objectForInfoDictionaryKey:MMEConfigServiceURL];
     
-    if (infoConfigServiceURL) {
-        configServiceURL = [NSURL URLWithString:infoConfigServiceURL];
+    if ([infoPlistObject isKindOfClass:NSURL.class]) {
+        configServiceURL = infoPlistObject;
+    }
+    else if ([infoPlistObject isKindOfClass:NSString.class]) {
+        configServiceURL = [NSURL URLWithString:infoPlistObject];
     }
     else if ([self mme_isCNRegion]) {
         configServiceURL = [NSURL URLWithString:MMEAPIClientBaseChinaConfigURL];
@@ -225,6 +240,33 @@ NS_ASSUME_NONNULL_BEGIN
     }
     
     return configServiceURL;
+}
+
+- (MMEDate *)mme_configUpdateDate {
+    MMEDate *updateTime = (MMEDate *)[self mme_objectForVolatileKey:MMEConfigUpdateDate];
+    if (!updateTime) { // try loading from the persistant domain
+        NSData *updateData = [self objectForKey:MMEConfigUpdateData];
+        if (updateData) { // unarchive the data, saving the MMEDate in the volatile domain
+            NSKeyedUnarchiver* unarchiver = [NSKeyedUnarchiver.alloc initForReadingWithData:updateData];
+            unarchiver.requiresSecureCoding = YES;
+            updateTime = [unarchiver decodeObjectOfClass:MMEDate.class forKey:NSKeyedArchiveRootObjectKey];
+        } // else nil
+    }
+    return updateTime;
+}
+
+- (void)mme_setConfigUpdateDate:(MMEDate *)updateTime {
+    if (updateTime ) {
+        if (updateTime.timeIntervalSinceNow <= 0) { // updates always happen in the past
+            NSKeyedArchiver *archiver = [NSKeyedArchiver new];
+            archiver.requiresSecureCoding = YES;
+            [archiver encodeObject:updateTime forKey:NSKeyedArchiveRootObjectKey];
+            NSData *updateData = archiver.encodedData;
+            [self mme_setObject:updateData forPersistantKey:MMEConfigUpdateData];
+            [self mme_setObject:updateTime forVolatileKey:MMEConfigUpdateDate];
+        }
+        else NSLog(@"WARNING Mapbox Mobile Events Config Update Date cannot be set to a future date: %@", updateTime);
+    }
 }
 
 - (NSString *)mme_userAgentString {
@@ -286,7 +328,14 @@ NS_ASSUME_NONNULL_BEGIN
 // MARK: - Background Collection
 
 - (BOOL)mme_isCollectionEnabledInBackground {
-    return ![self boolForKey:MMECollectionDisabledInBackground];
+    BOOL collectionEnabled = self.mme_isCollectionEnabled;
+    if (collectionEnabled) { // check to see if it's seperately disabled
+        id collectionDisabled = [self objectForKey:MMECollectionDisabledInBackground];
+        if (collectionDisabled && [collectionDisabled isKindOfClass:NSNumber.class]) { //
+            collectionEnabled = ![(NSNumber *)collectionDisabled boolValue];
+        }
+    }
+    return collectionEnabled;
 }
 
 - (NSTimeInterval)mme_backgroundStartupDelay {

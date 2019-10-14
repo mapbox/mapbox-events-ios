@@ -40,6 +40,18 @@ eventsManager.isDebugLoggingEnabled = (DEBUG ? true : false)
 eventsManager.sendTurnstileEvent()
 ```
 
+### 🗺 Foreground and Background Location Collection
+
+The MapboxMobileEvents frameworks collect location data to help us improve the map. We strive to maintain a low power and network usage profile for this collection and take great care to anonymize all data in accordance with our [privacy policy](https://www.mapbox.com/legal/privacy).
+
+The use of Mapbox SDKs and APIs on mobile devices are governed by our 
+[Terms of Service](https://www.mapbox.com/legal/tos#[MomMom]) which requires your app not interfere with or limit the data that the Mapbox SDK sends to us, whether by modifying the SDK or by other means. If your application requires different terms, please contact [Mapbox Sales](https://www.mapbox.com/contact/sales/).
+
+#### Background Location in iOS 13
+
+If your application enables background location, the MapboxMobileEvents framework collects telemetry in the background using a passive method which allows for very low power usage. If your application does not use background location, make sure that the permissions keys for it are removed in the `Info.plist`:
+`NSLocationAlwaysAndWhenInUseUsageDescription`, `NSLocationAlwaysUsageDescription`, as well as  the `UIBackgroundMode` `location`.
+
 ### ⚠️ Error and Exception Handling and Reporting
 
 The MapboxMobileEvents frameworks strives to contain all internal exceptions and errors in an effort to prevent errors from directly 

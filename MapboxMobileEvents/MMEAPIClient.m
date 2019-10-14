@@ -1,10 +1,17 @@
 #import "MMEAPIClient.h"
+#import "MMEAPIClient_Private.h"
 #import "MMEConstants.h"
 #import "MMENSURLSessionWrapper.h"
+#import "MMEDate.h"
 #import "MMEEvent.h"
-#import "NSData+MMEGZIP.h"
 #import "MMEMetricsManager.h"
 #import "MMEEventsManager.h"
+#import "MMEEventsManager_Private.h"
+#import "NSData+MMEGZIP.h"
+#import "NSUserDefaults+MMEConfiguration.h"
+#import "NSUserDefaults+MMEConfiguration_Private.h"
+
+static NSString * const MMEMapboxAgent = @"X-Mapbox-Agent";
 
 typedef NS_ENUM(NSInteger, MMEErrorCode) {
     MMESessionFailedError,
@@ -15,14 +22,8 @@ typedef NS_ENUM(NSInteger, MMEErrorCode) {
 
 #pragma mark -
 
-@interface MMEEventsManager (Private)
-- (void)pushEvent:(MMEEvent *)event;
-@end
-
-#pragma mark -
-
 @interface MMEAPIClient ()
-
+@property (nonatomic, retain) NSTimer *configurationUpdateTimer;
 @property (nonatomic) id<MMENSURLSessionWrapper> sessionWrapper;
 @property (nonatomic) NSBundle *applicationBundle;
 
@@ -34,32 +35,24 @@ int const kMMEMaxRequestCount = 1000;
 
 @implementation MMEAPIClient
 
-@synthesize userAgent;
-
 - (instancetype)initWithAccessToken:(NSString *)accessToken userAgentBase:(NSString *)userAgentBase hostSDKVersion:(NSString *)hostSDKVersion {
     self = [super init];
     if (self) {
-        _accessToken = accessToken;
-        _userAgentBase = userAgentBase;
-        _hostSDKVersion = hostSDKVersion;
+        [NSUserDefaults.mme_configuration mme_setAccessToken:accessToken];
+        [NSUserDefaults.mme_configuration mme_setLegacyUserAgentBase:userAgentBase];
+        [NSUserDefaults.mme_configuration mme_setLegacyHostSDKVersion:hostSDKVersion];
         _sessionWrapper = [[MMENSURLSessionWrapper alloc] init];
-        _applicationBundle = [NSBundle mainBundle];
-        
-        [self setBaseURL:nil];
-        [self setupUserAgent];
+        [self startGettingConfigUpdates];
     }
     return self;
 }
 
 - (void) dealloc {
+    [self stopGettingConfigUpdates];
     [self.sessionWrapper invalidate];
 }
 
-#pragma mark -
-
-- (void)reconfigure:(MMEEventsConfiguration *)configuration {
-    [self.sessionWrapper reconfigure:configuration];
-}
+// MARK: - Events Service
 
 - (NSArray *)batchFromEvents:(NSArray *)events {
     NSMutableArray *eventBatches = [[NSMutableArray alloc] init];
@@ -93,7 +86,7 @@ int const kMMEMaxRequestCount = 1000;
                     NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
                     statusError = [self statusErrorFromRequest:request andHTTPResponse:httpResponse];
                 } else {
-                    statusError = [self unexpectedResponseErrorfromRequest:request andResponse:response];
+                    statusError = [self unexpectedResponseErrorFromRequest:request andResponse:response];
                 }
                 error = error ?: statusError;
                 
@@ -113,6 +106,8 @@ int const kMMEMaxRequestCount = 1000;
 - (void)postEvent:(MMEEvent *)event completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
     [self postEvents:@[event] completionHandler:completionHandler];
 }
+
+// MARK: - Metadata Service
 
 - (void)postMetadata:(NSArray *)metadata filePaths:(NSArray *)filePaths completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
     
@@ -136,37 +131,75 @@ int const kMMEMaxRequestCount = 1000;
     }];
 }
 
-- (void)getConfigurationWithCompletionHandler:(nullable void (^)(NSError * _Nullable error, NSData * _Nullable data))completionHandler {
-    NSURLRequest *request = [self requestForConfiguration];
+// MARK: - Configuration Service
+
+- (void)startGettingConfigUpdates {
+    if (self.isGettingConfigUpdates) {
+        [self stopGettingConfigUpdates];
+    }
     
-    [self.sessionWrapper processRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        [MMEMetricsManager.sharedManager updateReceivedBytes:data.length];
-        
-        NSError *statusError = nil;
-        if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
-            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-            statusError = [self statusErrorFromRequest:request andHTTPResponse:httpResponse];
-        } else {
-            statusError = [self unexpectedResponseErrorfromRequest:request andResponse:response];
-        }
-        if (completionHandler) {
-            error = error ?: statusError;
-            completionHandler(error, data);
+    self.configurationUpdateTimer = [NSTimer
+        scheduledTimerWithTimeInterval:NSUserDefaults.mme_configuration.mme_configUpdateInterval
+        repeats:YES
+        block:^(NSTimer * _Nonnull timer) {
+            NSURLRequest *request = [self requestForConfiguration];
             
-            [MMEMetricsManager.sharedManager updateMetricsFromEventCount:0 request:request error:error];
-        }
-        [MMEMetricsManager.sharedManager generateTelemetryMetricsEvent];
-    }];
+            [self.sessionWrapper processRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+                [MMEMetricsManager.sharedManager updateReceivedBytes:data.length];
+                NSHTTPURLResponse *httpResponse = nil;
+                NSError *statusError = nil;
+                if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
+                    httpResponse = (NSHTTPURLResponse *)response;
+                    statusError = [self statusErrorFromRequest:request andHTTPResponse:httpResponse];
+                } else {
+                    statusError = [self unexpectedResponseErrorFromRequest:request andResponse:response];
+                }
+                
+                if (statusError) {
+                    [MMEEventsManager.sharedManager reportError:statusError];
+                }
+                else if (data) {
+                    NSError *configError = [NSUserDefaults.mme_configuration mme_updateFromConfigServiceData:data];
+                    if (configError) {
+                        [MMEEventsManager.sharedManager reportError:configError];
+                    }
+                    
+                    // check for time-offset from the server
+                    NSString *dateHeader = httpResponse.allHeaderFields[@"Date"];
+                    if (dateHeader) {
+                        // parse the server date, compute the offset
+                        NSDate *date = [MMEDate.HTTPDateFormatter dateFromString:dateHeader];
+                        if (date) {
+                            [MMEDate recordTimeOffsetFromServer:date];
+                        } // else failed to parse date
+                    }
+                    
+                    NSUserDefaults.mme_configuration.mme_configUpdateDate = MMEDate.date;
+                }
+
+                [MMEMetricsManager.sharedManager updateMetricsFromEventCount:0 request:request error:error];
+                [MMEMetricsManager.sharedManager generateTelemetryMetricsEvent];
+            }];
+        }];
+    
+    // be power conscious and give this timer a minute of slack so it can be coalesced
+    self.configurationUpdateTimer.tolerance = 60;
+
+    // check to see if time since the last update is greater than our update interval
+    if (!NSUserDefaults.mme_configuration.mme_configUpdateDate // we've never updated
+     || (fabs(NSUserDefaults.mme_configuration.mme_configUpdateDate.timeIntervalSinceNow)
+      > NSUserDefaults.mme_configuration.mme_configUpdateInterval)) { // or it's been a while
+        [self.configurationUpdateTimer fire]; // update now
+    }
 }
 
-- (void)setBaseURL:(NSURL *)baseURL {
-    if (baseURL && [baseURL.scheme isEqualToString:@"https"]) {
-        _baseURL = baseURL;
-    } else if ([[_applicationBundle objectForInfoDictionaryKey:@"MGLMapboxAPIBaseURL"] isEqualToString:MMEAPIClientBaseChinaAPIURL]) {
-        _baseURL = [NSURL URLWithString:MMEAPIClientBaseChinaEventsURL];
-    } else {
-        _baseURL = [NSURL URLWithString:MMEAPIClientBaseURL];
-    }
+- (void)stopGettingConfigUpdates {
+    [self.configurationUpdateTimer invalidate];
+    self.configurationUpdateTimer = nil;
+}
+
+- (BOOL)isGettingConfigUpdates {
+    return self.configurationUpdateTimer.isValid;
 }
 
 #pragma mark - Utilities
@@ -188,7 +221,7 @@ int const kMMEMaxRequestCount = 1000;
     return statusError;
 }
 
-- (NSError *)unexpectedResponseErrorfromRequest:(nonnull NSURLRequest *)request andResponse:(NSURLResponse *)response {
+- (NSError *)unexpectedResponseErrorFromRequest:(nonnull NSURLRequest *)request andResponse:(NSURLResponse *)response {
     NSString *descriptionFormat = @"The session data task failed. Original request was: %@";
     NSString *description = [NSString stringWithFormat:descriptionFormat, request ?: [NSNull null]];
     NSString *reason = @"Unexpected response";
@@ -202,28 +235,27 @@ int const kMMEMaxRequestCount = 1000;
 }
 
 - (NSURLRequest *)requestForConfiguration {
+    NSString *path = [NSString stringWithFormat:@"%@?access_token=%@", MMEAPIClientEventsConfigPath, NSUserDefaults.mme_configuration.mme_accessToken];
+    NSURL *configServiceURL = [NSURL URLWithString:path relativeToURL:NSUserDefaults.mme_configuration.mme_configServiceURL];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:configServiceURL];
     
-    NSString *path = [NSString stringWithFormat:@"%@?access_token=%@", MMEAPIClientEventsConfigPath, [self accessToken]];
-    
-    NSURL *url = [NSURL URLWithString:path relativeToURL:[NSURL URLWithString:MMEAPIClientBaseAPIURL]];
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
-    
-    [request setValue:self.userAgent forHTTPHeaderField:MMEAPIClientHeaderFieldUserAgentKey];
+    [request setValue:NSUserDefaults.mme_configuration.mme_userAgentString forHTTPHeaderField:MMEAPIClientHeaderFieldUserAgentKey];
     [request setValue:MMEAPIClientHeaderFieldContentTypeValue forHTTPHeaderField:MMEAPIClientHeaderFieldContentTypeKey];
-    [request setHTTPMethod:MMEAPIClientHTTPMethodGet];
+    [request setHTTPMethod:MMEAPIClientHTTPMethodPost];
     
     return request;
 }
 
 - (NSURLRequest *)requestForBinary:(NSData *)binaryData boundary:(NSString *)boundary {
-    NSString *path = [NSString stringWithFormat:@"%@?access_token=%@", MMEAPIClientAttachmentsPath, [self accessToken]];
+    NSString *path = [NSString stringWithFormat:@"%@?access_token=%@", MMEAPIClientAttachmentsPath, NSUserDefaults.mme_configuration.mme_accessToken];
     
-    NSURL *url = [NSURL URLWithString:path relativeToURL:self.baseURL];
+    NSURL *url = [NSURL URLWithString:path relativeToURL:NSUserDefaults.mme_configuration.mme_eventsServiceURL];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     
     NSString *contentType = [NSString stringWithFormat:@"%@; boundary=\"%@\"",MMEAPIClientAttachmentsHeaderFieldContentTypeValue,boundary];
     
-    [request setValue:self.userAgent forHTTPHeaderField:MMEAPIClientHeaderFieldUserAgentKey];
+    [request setValue:NSUserDefaults.mme_configuration.mme_userAgentString forHTTPHeaderField:MMEMapboxAgent];
+    [request setValue:NSUserDefaults.mme_configuration.mme_legacyUserAgentString forHTTPHeaderField:MMEAPIClientHeaderFieldUserAgentKey];
     [request setValue:contentType forHTTPHeaderField:MMEAPIClientHeaderFieldContentTypeKey];
     [request setHTTPMethod:MMEAPIClientHTTPMethodPost];
     
@@ -234,12 +266,13 @@ int const kMMEMaxRequestCount = 1000;
 }
 
 - (NSURLRequest *)requestForEvents:(NSArray *)events {
-    NSString *path = [NSString stringWithFormat:@"%@?access_token=%@", MMEAPIClientEventsPath, [self accessToken]];
+    NSString *path = [NSString stringWithFormat:@"%@?access_token=%@", MMEAPIClientEventsPath, NSUserDefaults.mme_configuration.mme_accessToken];
 
-    NSURL *url = [NSURL URLWithString:path relativeToURL:self.baseURL];
+    NSURL *url = [NSURL URLWithString:path relativeToURL:NSUserDefaults.mme_configuration.mme_eventsServiceURL];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
 
-    [request setValue:self.userAgent forHTTPHeaderField:MMEAPIClientHeaderFieldUserAgentKey];
+    [request setValue:NSUserDefaults.mme_configuration.mme_userAgentString forHTTPHeaderField:MMEMapboxAgent];
+    [request setValue:NSUserDefaults.mme_configuration.mme_legacyUserAgentString forHTTPHeaderField:MMEAPIClientHeaderFieldUserAgentKey];
     [request setValue:MMEAPIClientHeaderFieldContentTypeValue forHTTPHeaderField:MMEAPIClientHeaderFieldContentTypeKey];
     [request setHTTPMethod:MMEAPIClientHTTPMethodPost];
 
@@ -253,7 +286,7 @@ int const kMMEMaxRequestCount = 1000;
     NSError* jsonError = nil;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:eventAttributes options:0 error:&jsonError];
 
-    if (jsonData) { // we were able to convert the eventAttrubutes, attempt compresison
+    if (jsonData) { // we were able to convert the eventAttributes, attempt compression
         // Compressing less than 2 events can have a negative impact on the size.
         if (events.count >= 2) {
             NSData *compressedData = [jsonData mme_gzippedData];
@@ -264,7 +297,7 @@ int const kMMEMaxRequestCount = 1000;
             [request setHTTPBody:jsonData];
         }
     } else if (jsonError) {
-        [[MMEEventsManager sharedManager] pushEvent:[MMEEvent debugEventWithError:jsonError]];
+        [MMEEventsManager.sharedManager pushEvent:[MMEEvent debugEventWithError:jsonError]];
 
         return nil;
     }
@@ -299,7 +332,7 @@ int const kMMEMaxRequestCount = 1000;
         [httpBody appendData:jsonData];
         [httpBody appendData:[[NSString stringWithFormat:@"\r\n\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
     } else if (jsonError) {
-        [[MMEEventsManager sharedManager] pushEvent:[MMEEvent debugEventWithError:jsonError]];
+        [MMEEventsManager.sharedManager pushEvent:[MMEEvent debugEventWithError:jsonError]];
     }
 
     for (NSString *path in filePaths) { // add a file part for each
@@ -317,20 +350,6 @@ int const kMMEMaxRequestCount = 1000;
     [httpBody appendData:[[NSString stringWithFormat:@"--%@--\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
     
     return httpBody;
-}
-
-- (void)setupUserAgent {
-    if ([self.applicationBundle objectForInfoDictionaryKey:@"MMEMapboxUserAgentBase"]) {
-        self.userAgentBase = [self.applicationBundle objectForInfoDictionaryKey:@"MMEMapboxUserAgentBase"];
-    }
-    if ([self.applicationBundle objectForInfoDictionaryKey:@"MMEMapboxHostSDKVersion"]) {
-        self.hostSDKVersion = [self.applicationBundle objectForInfoDictionaryKey:@"MMEMapboxHostSDKVersion"];
-    }
-    
-    NSString *appName = [self.applicationBundle objectForInfoDictionaryKey:@"CFBundleIdentifier"];
-    NSString *appVersion = [self.applicationBundle objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
-    NSString *appBuildNumber = [self.applicationBundle objectForInfoDictionaryKey:@"CFBundleVersion"];
-    self.userAgent = [NSString stringWithFormat:@"%@/%@/%@ %@/%@", appName, appVersion, appBuildNumber, self.userAgentBase, self.hostSDKVersion];
 }
 
 @end

@@ -7,6 +7,8 @@
 #import "MMEEventsManager.h"
 #import "MMECommonEventData.h"
 #import "MMEAPIClient.h"
+#import "MMEAPIClient_Private.h"
+#import "NSUserDefaults+MMEConfiguration.h"
 
 #pragma mark -
 
@@ -15,7 +17,7 @@
 - (void)pushEvent:(MMEEvent *)event;
 
 @property (nonatomic) MMECommonEventData *commonEventData;
-@property (nonatomic) id<MMEAPIClient> apiClient;
+@property (nonatomic) MMEAPIClient *apiClient;
 
 @end
 
@@ -251,9 +253,9 @@
     attributes[MMEEventKeyPlatform] = [MMEEventsManager sharedManager].commonEventData.platform;
     attributes[MMEEventKeyDevice] = [MMEEventsManager sharedManager].commonEventData.device;
     
-    attributes[MMEEventSDKIdentifier] = [MMEEventsManager sharedManager].apiClient.userAgentBase;
-    attributes[MMEEventSDKVersion] = [MMEEventsManager sharedManager].apiClient.hostSDKVersion;
-    attributes[MMEEventKeyUserAgent] = [MMEEventsManager sharedManager].apiClient.userAgent;
+    attributes[MMEEventSDKIdentifier] = NSUserDefaults.mme_configuration.mme_legacyUserAgentBase;
+    attributes[MMEEventSDKVersion] = NSUserDefaults.mme_configuration.mme_legacyHostSDKVersion;
+    attributes[MMEEventKeyUserAgent] = NSUserDefaults.mme_configuration.mme_userAgentString;
 
     return attributes;
 }
