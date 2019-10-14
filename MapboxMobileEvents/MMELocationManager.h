@@ -1,7 +1,6 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
-#import "MMEEventsConfiguration.h"
 
 @protocol MMELocationManagerDelegate;
 
@@ -14,11 +13,9 @@
 - (void)startUpdatingLocation;
 - (void)stopUpdatingLocation;
 
-@optional
-
-- (void)reconfigure:(MMEEventsConfiguration *)configuration;
-
 @end
+
+// MARK: -
 
 extern const CLLocationDistance MMELocationManagerDistanceFilter;
 extern const CLLocationDistance MMELocationManagerHibernationRadius;
@@ -34,6 +31,8 @@ extern NSString * const MMELocationManagerRegionIdentifier;
 - (void)stopUpdatingLocation;
 
 @end
+
+// MARK: -
 
 @protocol MMELocationManagerDelegate <NSObject>
 

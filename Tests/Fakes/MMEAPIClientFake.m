@@ -3,9 +3,6 @@
 
 @implementation MMEAPIClientFake
 
-@synthesize baseURL;
-@synthesize userAgent;
-
 - (void)setBaseURL:(NSURL *)baseURL { /* Intentionlly blank to work around compiler warning for null resettable */ }
 
 - (void)postEvents:(NSArray *)events completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {

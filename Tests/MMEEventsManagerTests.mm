@@ -1,24 +1,28 @@
-#import <Cedar/Cedar.h>
+@import Cedar;
 
 #import "MMEEvent.h"
 #import "MMEEventsManager.h"
 #import "MMEConstants.h"
 #import "MMEUniqueIdentifier.h"
-#import "MMEEventsConfiguration.h"
 #import "MMEDate.h"
 #import "MMELocationManager.h"
 #import "MMEAPIClient.h"
+#import "MMEAPIClient_Private.h"
 #import "MMETimerManager.h"
 #import "MMEDispatchManagerFake.h"
 #import "MMETimerManagerFake.h"
 #import "MMEAPIClientFake.h"
 #import "MMECommonEventData.h"
 #import "MMEUIApplicationWrapperFake.h"
-#import "CLLocation+MMEMobileEvents.h"
-#import "CLLocationManager+MMEMobileEvents.h"
 #import "MMEUIApplicationWrapper.h"
 #import "MMEMetricsManager.h"
 #import "MMEDateFakes.h"
+#import "MMEBundleInfoFake.h"
+
+#import "CLLocation+MMEMobileEvents.h"
+#import "CLLocationManager+MMEMobileEvents.h"
+#import "NSUserDefaults+MMEConfiguration.h"
+#import "NSUserDefaults+MMEConfiguration_Private.h"
 
 using namespace Cedar::Matchers;
 using namespace Cedar::Doubles;
@@ -27,7 +31,6 @@ using namespace Cedar::Doubles::Arguments;
 @interface MMEEventsManager (Tests) <MMELocationManagerDelegate>
 
 @property (nonatomic) NS_MUTABLE_ARRAY_OF(MMEEvent *) *eventQueue;
-@property (nonatomic) MMEEventsConfiguration *configuration;
 @property (nonatomic, getter=isPaused) BOOL paused;
 @property (nonatomic) MMECommonEventData *commonEventData;
 @property (nonatomic) id<MMELocationManager> locationManager;
@@ -89,7 +92,6 @@ describe(@"MMEventsManager.sharedManager", ^{
 describe(@"MMEEventsManager", ^{
     
     __block MMEEventsManager *eventsManager;
-    __block MMEEventsConfiguration *configuration;
     __block MMEDispatchManagerFake *dispatchManager;
 
     beforeEach(^{
@@ -101,9 +103,8 @@ describe(@"MMEEventsManager", ^{
 
         [eventsManager.eventQueue removeAllObjects];
 
-        configuration = [[MMEEventsConfiguration alloc] init];
-        configuration.eventFlushCountThreshold = 1000;
-        eventsManager.configuration = configuration;
+        spy_on(NSUserDefaults.mme_configuration);
+        NSUserDefaults.mme_configuration stub_method(@selector(mme_eventFlushCount)).and_return((unsigned long)1000);
     });
 
     it(@"sets common event data", ^{
@@ -111,65 +112,124 @@ describe(@"MMEEventsManager", ^{
     });
 
     describe(@"-initializeWithAccessToken:userAgentBase:hostSDKVersion:", ^{
-        NSBundle *bundle = [NSBundle mainBundle];
-
-        beforeEach(^{
-            spy_on(bundle);
-        });
-
-        afterEach(^{
-            stop_spying_on(bundle);
-        });
-
         context(@"when the custom events profile is set", ^{
             beforeEach(^{
-                NSDictionary *infoDictionary = @{ @"MMEEventsProfile" : @"Custom" };
-                bundle stub_method(@selector(infoDictionary)).and_return(infoDictionary);
+                NSBundle.mme_mainBundle = [MMEBundleInfoFake bundleWithFakeInfo:@{
+                    MMEEventsProfile : MMECustomProfile,
+                    MMEStartupDelay: @10,
+                    MMECustomGeofenceRadius: @1200
+                }];
+                [NSUserDefaults.mme_configuration mme_registerDefaults];
+                
+                eventsManager = [MMEEventsManager.alloc initShared];
+                eventsManager.dispatchManager = dispatchManager;
+                [eventsManager initializeWithAccessToken:@"foo" userAgentBase:@"bar" hostSDKVersion:@"baz"];
+            });
+            
+            it(@"should schedule the initialization work with a 10 second delay", ^{
+                dispatchManager.delay should equal(10);
+            });
+
+            it(@"should set the sttartup delay to a 10 second delay", ^{
+                NSUserDefaults.mme_configuration.mme_startupDelay should equal(10);
+            });
+            
+            it(@"should allow for custom geofence radius", ^{
+                NSUserDefaults.mme_configuration.mme_backgroundGeofence should equal(1200);
+            });
+        });
+    
+        context(@"when the custom events profile is set over the max values allowed", ^{
+            beforeEach(^{
+                NSBundle.mme_mainBundle = [MMEBundleInfoFake bundleWithFakeInfo:@{
+                    MMEEventsProfile: MMECustomProfile,
+                    MMEStartupDelay : @9001,
+                    MMECustomGeofenceRadius: @9001
+                }];
+                [NSUserDefaults.mme_configuration mme_registerDefaults];
 
                 eventsManager = [MMEEventsManager.alloc initShared];
                 eventsManager.dispatchManager = dispatchManager;
-
                 [eventsManager initializeWithAccessToken:@"foo" userAgentBase:@"bar" hostSDKVersion:@"baz"];
             });
 
-            it(@"should schedule the initialization work with a 10 second delay", ^{
-                dispatchManager.delay should equal(10);
+            it(@"should schedule the initialization work with a 1 second delay", ^{
+                dispatchManager.delay should equal(1);
+            });
+            
+            it(@"should revert the sttartup delay to default 1 second delay", ^{
+                NSUserDefaults.mme_configuration.mme_startupDelay should equal(1);
+            });
+            
+            it(@"should revert custom geofence radius to default", ^{
+                NSUserDefaults.mme_configuration.mme_backgroundGeofence should equal(300);
+            });
+        });
+    
+        context(@"when the custom events profile is set under the minimum values allowed", ^{
+            beforeEach(^{
+                NSBundle.mme_mainBundle = [MMEBundleInfoFake bundleWithFakeInfo:@{
+                    MMEEventsProfile: MMECustomProfile,
+                    MMEStartupDelay: @-42,
+                    MMECustomGeofenceRadius : @9
+                }];
+                [NSUserDefaults.mme_configuration mme_registerDefaults];
+
+                eventsManager = [MMEEventsManager.alloc initShared];
+                eventsManager.dispatchManager = dispatchManager;
+                [eventsManager initializeWithAccessToken:@"foo" userAgentBase:@"bar" hostSDKVersion:@"baz"];
+            });
+            
+            it(@"should have the default startup delay", ^{
+                NSUserDefaults.mme_configuration.mme_startupDelay should equal(1);
             });
         });
 
         context(@"when no fancy value is set", ^{
             beforeEach(^{
+                NSBundle.mme_mainBundle = nil;
+                [NSUserDefaults.mme_configuration mme_registerDefaults];
+
                 eventsManager = [MMEEventsManager.alloc initShared];
                 eventsManager.dispatchManager = dispatchManager;
+                [eventsManager initializeWithAccessToken:@"foo" userAgentBase:@"bar" hostSDKVersion:@"baz"];
+            });
+            
+            it(@"should schedule the initialization work with a 1 second delay", ^{
+                dispatchManager.delay should equal(1);
+            });
 
+            it(@"should revert the sttartup delay to default 1 second delay", ^{
+                NSUserDefaults.mme_configuration.mme_startupDelay should equal(1);
+            });
+            
+            it(@"should revert custom geofence radius to default", ^{
+                NSUserDefaults.mme_configuration.mme_backgroundGeofence should equal(300);
+            });
+        });
+
+        context(@"when no profile is set", ^{
+            beforeEach(^{
+                NSBundle.mme_mainBundle = nil;
+                [NSUserDefaults.mme_configuration mme_registerDefaults];
+
+                eventsManager = [MMEEventsManager.alloc initShared];
+                eventsManager.dispatchManager = dispatchManager;
+                
                 [eventsManager initializeWithAccessToken:@"foo" userAgentBase:@"bar" hostSDKVersion:@"baz"];
             });
 
-            it(@"should schedule the initialization work without a delay", ^{
-                dispatchManager.delay should equal(0);
+            it(@"should schedule the initialization work with a 1 second delay", ^{
+                dispatchManager.delay should equal(1);
             });
-        });
-    });
-
-    describe(@"- setConfiguration", ^{
-        beforeEach(^{
-            eventsManager.configuration = [MMEEventsConfiguration configuration];
-        });
-
-        it(@"should set the radius for configuration", ^{
-            eventsManager.configuration.locationManagerHibernationRadius should_not equal(0);
-        });
-        
-        it(@"should set the eventFlushCountThreshold", ^{
-            eventsManager.configuration.eventFlushCountThreshold should_not equal(0);
-        });
-        
-        it(@"should set the eventFlushSecondsThreshold", ^{
-            eventsManager.configuration.eventFlushSecondsThreshold should_not equal(0);
-        });
-        
-        it(@"should set the instanceIdentifierRotationTimeInterval", ^{
-            eventsManager.configuration.instanceIdentifierRotationTimeInterval should_not equal(0);
+            
+            it(@"should revert the sttartup delay to default 1 second delay", ^{
+                NSUserDefaults.mme_configuration.mme_startupDelay should equal(1);
+            });
+            
+            it(@"should revert custom geofence radius to default", ^{
+                NSUserDefaults.mme_configuration.mme_backgroundGeofence should equal(300);
+            });
         });
     });
     
@@ -200,34 +260,10 @@ describe(@"MMEEventsManager", ^{
         });
         
         it(@"sets the access token on the api client", ^{
-            eventsManager.apiClient.accessToken should equal(newAccessToken);
+            NSUserDefaults.mme_configuration.mme_accessToken should equal(newAccessToken);
         });
     });
-    
-    describe(@"- setBaseURL", ^{
-        __block NSURL *testURL = [NSURL URLWithString:@"https://test.com"];
         
-        beforeEach(^{
-            [eventsManager initializeWithAccessToken:@"first-access-token" userAgentBase:@"user-agent-base" hostSDKVersion:@"host-version"];
-            eventsManager.baseURL should equal([NSURL URLWithString:MMEAPIClientBaseURL]);
-            eventsManager.baseURL = testURL;
-        });
-        
-        it(@"has the correct API client", ^{
-            eventsManager.baseURL should equal(testURL);
-        });
-        
-        context(@"when the url is reset with a nil value", ^{
-            beforeEach(^{
-                eventsManager.baseURL = nil;
-            });
-            
-            it(@"has the default value", ^{
-               eventsManager.baseURL should equal([NSURL URLWithString:MMEAPIClientBaseURL]);
-            });
-        });
-    });
-    
     describe(@"- pauseOrResumeMetricsCollectionIfRequired", ^{
         
         context(@"when the location manager authorization is set to when in use, metrics enabled is false, and events are queued", ^{
@@ -249,7 +285,7 @@ describe(@"MMEEventsManager", ^{
                 
                 apiClientWrapperFake = [[MMEAPIClientFake alloc] init];
                 spy_on(apiClientWrapperFake);
-                apiClientWrapperFake stub_method(@selector(accessToken)).and_return(@"access-token");
+                [NSUserDefaults.mme_configuration mme_setAccessToken:@"access-token"];
                 eventsManager.apiClient = apiClientWrapperFake;
                 
                 eventsManager.paused = NO;
@@ -356,11 +392,8 @@ describe(@"MMEEventsManager", ^{
                     context(@"when the event count threshold has not yet been reached and a location event is received", ^{
                         beforeEach(^{
                             spy_on(eventsManager.timerManager);
-                            
-                            MMEEventsConfiguration *configuration = [[MMEEventsConfiguration alloc] init];
-                            configuration.eventFlushCountThreshold = 2; // set a low value to make it easy to cross threshold in the test
-                            eventsManager.configuration = configuration;
-                            
+                            spy_on(NSUserDefaults.mme_configuration);
+                            NSUserDefaults.mme_configuration stub_method(@selector(mme_eventFlushCount)).again().and_return((unsigned long)2); // set a low value to make it easy to cross threshold in the test
                             eventsManager.delegate = nice_fake_for(@protocol(MMEEventsManagerDelegate));
                             
                             [eventsManager locationManager:nil didUpdateLocations:locations];
@@ -517,7 +550,7 @@ describe(@"MMEEventsManager", ^{
                 
                 context(@"when an api token is set and there are events to flush", ^{
                     beforeEach(^{
-                        eventsManager.apiClient stub_method(@selector(accessToken)).and_return(@"access-token");
+                        NSUserDefaults.mme_configuration.mme_accessToken = @"access-token";
                         [eventsManager enqueueEventWithName:MMEEventTypeMapLoad];
                         [eventsManager pauseOrResumeMetricsCollectionIfRequired];
                     });
@@ -540,7 +573,7 @@ describe(@"MMEEventsManager", ^{
                 beforeEach(^{
                     eventsManager.metricsEnabledInSimulator = YES;
                     eventsManager.apiClient = nice_fake_for(@protocol(MMEAPIClient));
-                    eventsManager.apiClient stub_method(@selector(accessToken)).and_return(@"access-token");
+                    NSUserDefaults.mme_configuration.mme_accessToken = @"access-token";
                     [eventsManager enqueueEventWithName:MMEEventTypeMapLoad];
                     spy_on([NSProcessInfo processInfo]);
                     [NSProcessInfo processInfo] stub_method(@selector(isLowPowerModeEnabled)).and_return(YES);
@@ -565,7 +598,7 @@ describe(@"MMEEventsManager", ^{
     describe(@"- flush", ^{
         
         beforeEach(^{
-            MMEAPIClient *apiClient = nice_fake_for(@protocol(MMEAPIClient));
+            id<MMEAPIClient> apiClient = nice_fake_for(@protocol(MMEAPIClient));
             eventsManager.apiClient = apiClient;
         });
         
@@ -586,7 +619,8 @@ describe(@"MMEEventsManager", ^{
             
             context(@"when no access token has been set", ^{
                 beforeEach(^{
-                    eventsManager.apiClient stub_method(@selector(accessToken)).and_return(nil);
+                    spy_on(NSUserDefaults.mme_configuration);
+                    NSUserDefaults.mme_configuration stub_method(@selector(mme_accessToken)).and_return(nil);
                     [eventsManager flush];
                 });
                 
@@ -597,7 +631,7 @@ describe(@"MMEEventsManager", ^{
             
             context(@"when an access token has been set", ^{
                 beforeEach(^{
-                    eventsManager.apiClient stub_method(@selector(accessToken)).and_return(@"access-token");
+                    NSUserDefaults.mme_configuration.mme_accessToken = @"access-token";
                 });
                 
                 context(@"when there are no events in the queue", ^{
@@ -649,10 +683,11 @@ describe(@"MMEEventsManager", ^{
                 beforeEach(^{
                     MMEAPIClientFake *fakeAPIClient = [[MMEAPIClientFake alloc] init];
                     spy_on(fakeAPIClient);
+                    spy_on(NSUserDefaults.mme_configuration);
                     
-                    fakeAPIClient.accessToken = @"access-token";
-                    fakeAPIClient.userAgentBase = @"user-agent-base";
-                    fakeAPIClient.hostSDKVersion = @"host-sdk-version";
+                    NSUserDefaults.mme_configuration.mme_accessToken = @"access-token";
+                    NSUserDefaults.mme_configuration.mme_legacyUserAgentBase = @"user-agent-base";
+                    NSUserDefaults.mme_configuration.mme_legacyHostSDKVersion = @"host-sdk-version";
                     
                     eventsManager.apiClient = fakeAPIClient;
                     
@@ -667,7 +702,7 @@ describe(@"MMEEventsManager", ^{
                 
                 context(@"when the events manager's api client does not have an access token set", ^{
                     beforeEach(^{
-                        eventsManager.apiClient stub_method(@selector(accessToken)).and_return(nil);
+                        NSUserDefaults.mme_configuration stub_method(@selector(mme_accessToken)).and_return(nil);
                         [eventsManager sendTurnstileEvent];
                     });
                     
@@ -678,7 +713,7 @@ describe(@"MMEEventsManager", ^{
                 
                 context(@"when the events manager's api client does not have a user agent base set", ^{
                     beforeEach(^{
-                        eventsManager.apiClient stub_method(@selector(userAgentBase)).and_return(nil);
+                        NSUserDefaults.mme_configuration stub_method(@selector(mme_legacyUserAgentBase)).and_return(nil);
                         [eventsManager sendTurnstileEvent];
                     });
                     
@@ -689,7 +724,7 @@ describe(@"MMEEventsManager", ^{
                 
                 context(@"when the events manager's api client does not have a host sdk version set", ^{
                     beforeEach(^{
-                        eventsManager.apiClient stub_method(@selector(hostSDKVersion)).and_return(nil);
+                        NSUserDefaults.mme_configuration stub_method(@selector(mme_legacyHostSDKVersion)).and_return(nil);
                         [eventsManager sendTurnstileEvent];
                     });
                     
@@ -743,9 +778,9 @@ describe(@"MMEEventsManager", ^{
                     MMEAPIClientFake *fakeAPIClient = [[MMEAPIClientFake alloc] init];
                     spy_on(fakeAPIClient);
                     
-                    fakeAPIClient.accessToken = @"access-token";
-                    fakeAPIClient.userAgentBase = @"user-agent-base";
-                    fakeAPIClient.hostSDKVersion = @"host-sdk-version";
+                    NSUserDefaults.mme_configuration.mme_accessToken = @"access-token";
+                    NSUserDefaults.mme_configuration.mme_legacyUserAgentBase = @"user-agent-base";
+                    NSUserDefaults.mme_configuration.mme_legacyHostSDKVersion = @"host-sdk-version";
                     
                     eventsManager.apiClient = fakeAPIClient;
                     
@@ -758,8 +793,8 @@ describe(@"MMEEventsManager", ^{
                                                                MMEEventKeyVendorID: eventsManager.commonEventData.vendorId,
                                                                MMEEventKeyDevice: eventsManager.commonEventData.model,
                                                                MMEEventKeyOperatingSystem: eventsManager.commonEventData.osVersion,
-                                                               MMEEventSDKIdentifier: eventsManager.apiClient.userAgentBase,
-                                                               MMEEventSDKVersion: eventsManager.apiClient.hostSDKVersion,
+                                                               MMEEventSDKIdentifier: NSUserDefaults.mme_configuration.mme_legacyUserAgentBase,
+                                                               MMEEventSDKVersion: NSUserDefaults.mme_configuration.mme_legacyHostSDKVersion,
                                                                MMEEventKeyEnabledTelemetry: @NO,
                                                                MMEEventKeyLocationEnabled: @([CLLocationManager locationServicesEnabled]),
                                                                MMEEventKeyLocationAuthorization: [CLLocationManager mme_authorizationStatusString],
@@ -780,10 +815,11 @@ describe(@"MMEEventsManager", ^{
                 
                 MMEAPIClientFake *fakeAPIClient = [[MMEAPIClientFake alloc] init];
                 spy_on(fakeAPIClient);
-                fakeAPIClient.accessToken = @"access-token";
-                fakeAPIClient.userAgentBase = @"user-agent-base";
-                fakeAPIClient.hostSDKVersion = @"host-sdk-version";
                 eventsManager.apiClient = fakeAPIClient;
+                
+                NSUserDefaults.mme_configuration.mme_accessToken = @"access-token";
+                NSUserDefaults.mme_configuration.mme_legacyUserAgentBase = @"user-agent-base";
+                NSUserDefaults.mme_configuration.mme_legacyHostSDKVersion = @"host-sdk-version";
                 
                 spy_on([NSDate class]);
             });
@@ -832,10 +868,11 @@ describe(@"MMEEventsManager", ^{
                 
                 MMEAPIClientFake *fakeAPIClient = [[MMEAPIClientFake alloc] init];
                 spy_on(fakeAPIClient);
-                fakeAPIClient.accessToken = @"access-token";
-                fakeAPIClient.userAgentBase = @"user-agent-base";
-                fakeAPIClient.hostSDKVersion = @"host-sdk-version";
                 eventsManager.apiClient = fakeAPIClient;
+                
+                NSUserDefaults.mme_configuration.mme_accessToken = @"access-token";
+                NSUserDefaults.mme_configuration.mme_legacyUserAgentBase = @"user-agent-base";
+                NSUserDefaults.mme_configuration.mme_legacyHostSDKVersion = @"host-sdk-version";
                 
                 spy_on([MMEMetricsManager sharedManager].metrics);
             });

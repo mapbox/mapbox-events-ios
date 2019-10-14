@@ -3,10 +3,13 @@
 
 #import "MMETypes.h"
 
-@class MMEEvent;
-@protocol MMEEventsManagerDelegate;
-
 NS_ASSUME_NONNULL_BEGIN
+
+@class MMEEvent;
+@class MMEAPIClient;
+@protocol MMEAPIClient;
+
+@protocol MMEEventsManagerDelegate;
 
 /*! @brief Mapbox Mobile Events Manager */
 @interface MMEEventsManager : NSObject
@@ -46,6 +49,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 /*! @brief accountType */
 @property (nonatomic) NSInteger accountType;
+
+@property (nonatomic) id<MMEAPIClient> apiClient MME_DEPRECATED;
 
 #pragma mark -
 

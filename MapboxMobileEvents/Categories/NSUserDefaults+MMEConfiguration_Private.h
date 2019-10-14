@@ -21,6 +21,7 @@ static MMEPersistentKey * const MMEBackgroundStartupDelay = @"MMEBackgroundStart
 static MMEPersistentKey * const MMEBackgroundGeofence = @"MMEBackgroundGeofence";
 static MMEPersistentKey * const MMECertificateRevocationList = @"MMECertificateRevocationList";
 static MMEPersistentKey * const MMEConfigEventTag = @"MMEConfigEventTag";
+static MMEPersistentKey * const MMEConfigUpdateData = @"MMEConfigUpdateData";
 
 // MARK: - MMEConfigurationVolatileDomain
 
@@ -31,6 +32,7 @@ static MMEVolatileKey * const MMEAccessToken = @"MMEAccessToken";
 static MMEVolatileKey * const MMELegacyUserAgent = @"MMELegacyUserAgent";
 static MMEVolatileKey * const MMELegacyUserAgentBase = @"MMELegacyUserAgentBase";
 static MMEVolatileKey * const MMELegacyHostSDKVersion = @"MMELegacyHostSDKVersion";
+static MMEVolatileKey * const MMEConfigUpdateDate = @"MMEConfigUpdateDate";
 
 // MARK: - Info.plist Keys
 
@@ -82,20 +84,15 @@ static CLLocationDistance const MMECustomGeofenceRadiusMinimum = 300.0;
 static CLLocationDistance const MMECustomGeofenceRadiusMaximum = 1200.0;
 static NSTimeInterval const MMEStartupDelayMaximum = 100;
 
-// MARK: - Certificate Pinning
-
-NSString * const MMEPinnedDomains = @"MMEPinnedDomains";
-NSString * const MMEPublicKeyHashes = @"MMEPublicKeyHashes";
-NSString * const MMEExcludeSubdomainFromParentPolicy = @"MMEExcludeSubdomainFromParentPolicy";
-
 // MARK: -
 
 @interface NSUserDefaults (MMEConfiguration_Private)
 
 + (void)mme_resetConfiguration;
 
-// MARK: - Configuration Service
+// MARK: -
 
+- (void)mme_registerDefaults;
 - (NSError *)mme_updateFromConfigServiceData:(NSData *)configData;
 
 @end
@@ -103,7 +100,6 @@ NSString * const MMEExcludeSubdomainFromParentPolicy = @"MMEExcludeSubdomainFrom
 // MARK: -
 
 @interface NSBundle (MMEConfiguration_Private)
-
 @property(class, nonatomic, null_resettable, setter=mme_setMainBundle:) NSBundle *mme_mainBundle;
 
 @end

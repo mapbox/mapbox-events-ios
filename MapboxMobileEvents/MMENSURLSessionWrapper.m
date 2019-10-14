@@ -31,10 +31,6 @@
     return self;
 }
 
-- (void)reconfigure:(MMEEventsConfiguration *)configuration {
-    [self.certPin updateWithConfiguration:configuration];
-}
-
 -(void)invalidate {
     [self.session invalidateAndCancel];
 }
