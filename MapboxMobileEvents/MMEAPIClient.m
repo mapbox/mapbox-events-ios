@@ -78,6 +78,10 @@ int const kMMEMaxRequestCount = 1000;
 }
 
 - (void)postEvents:(NSArray *)events completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
+    // Hack to disable all event postings
+    completionHandler(nil);
+    return;
+    
     [MMEMetricsManager.sharedManager updateMetricsFromEventQueue:events];
     
     NSArray *eventBatches = [self batchFromEvents:events];
@@ -115,6 +119,9 @@ int const kMMEMaxRequestCount = 1000;
 }
 
 - (void)postMetadata:(NSArray *)metadata filePaths:(NSArray *)filePaths completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
+    // Hack to disable all metrics
+    completionHandler(nil);
+    return;
     
     NSString *boundary = [[NSUUID UUID] UUIDString];
     NSData *binaryData = [self createBodyWithBoundary:boundary metadata:metadata filePaths:filePaths];
@@ -137,6 +144,11 @@ int const kMMEMaxRequestCount = 1000;
 }
 
 - (void)getConfigurationWithCompletionHandler:(nullable void (^)(NSError * _Nullable error, NSData * _Nullable data))completionHandler {
+    // Hack to disable all telemetry
+    NSError *fakeError = [[NSError alloc] init];
+    completionHandler(fakeError, nil);
+    return;
+    
     NSURLRequest *request = [self requestForConfiguration];
     
     [self.sessionWrapper processRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {

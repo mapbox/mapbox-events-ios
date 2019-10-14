@@ -566,6 +566,9 @@
 #pragma mark - Internal API
 
 - (BOOL)isEnabled {
+    // Hack to disable all metrics
+    return NO;
+    
     BOOL isPowerModeCompatibleWithCollection = YES;
     
 // Only check power mode if compiling with the iOS 9+ SDK and, at runtime, if the API exists
