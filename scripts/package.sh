@@ -14,6 +14,7 @@ JOBS=`sysctl -n hw.ncpu`
 NAME_PATH=build/namespace/header
 NAME_HEADER=${NAME_PATH}/MMENamespacedDependencies.h
 PREFIX="MGL"
+INFO_PLIST=MapboxMobileEvents/Info.plist
 
 function step { >&2 echo -e "\033[1m\033[36m* [`date +%H:%M:%S`] $@\033[0m"; }
 function finish { >&2 echo -en "\033[0m"; }
@@ -111,7 +112,7 @@ function create_static_library() {
     cp MapboxMobileEvents/MapboxMobileEvents.h ${OUTPUT}/include/MapboxMobileEvents/MapboxMobileEvents.h
 
     step "Copying plist"
-    cp MapboxMobileEvents/Info.plist ${OUTPUT}/Info.plist
+    cp ./${INFO_PLIST} ${OUTPUT}/Info.plist
 
     step "Compressing"
     mv build/namespace/static build/namespace/mapbox-events-ios-static
@@ -138,7 +139,7 @@ function package_namespace_header() {
 }
 
 function get_current_version_number() {
-    currentVersion=$(/usr/libexec/PlistBuddy -c "Print CFBundleShortVersionString" ./MapboxMobileEvents/Info.plist)
+    currentVersion=$(/usr/libexec/PlistBuddy -c "Print CFBundleShortVersionString" ./${INFO_PLIST})
     echo $currentVersion
 }
 
@@ -148,10 +149,8 @@ function tag_version_manual() {
     read  -rep $"This will version with $1 (previous version was $previousVersionNumber); do you want to proceed? (y or n): " REPLY
     if [ "$REPLY" = "y" ]; then
         step "Updating plist and podspec files for version: $1"
-        projectPlist="./MapboxMobileEvents/Info.plist"
-        resourcesPlist="./resources/Info.plist"
+        projectPlist="$INFO_PLIST"
         /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $1" $projectPlist
-        /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $1" $resourcesPlist
         sed -e "s/$previousVersionNumber/$1/g" MapboxMobileEvents.podspec > temp.podspec && mv temp.podspec MapboxMobileEvents.podspec
 
         step "Making commit for version: $1"
