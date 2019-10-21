@@ -256,16 +256,18 @@ NSString * const MMEExcludeSubdomainFromParentPolicy = @"MMEExcludeSubdomainFrom
 }
 
 - (void)mme_setConfigUpdateDate:(MMEDate *)updateTime {
-    if (updateTime ) {
-        if (updateTime.timeIntervalSinceNow <= 0) { // updates always happen in the past
-            NSKeyedArchiver *archiver = [NSKeyedArchiver new];
-            archiver.requiresSecureCoding = YES;
-            [archiver encodeObject:updateTime forKey:NSKeyedArchiveRootObjectKey];
-            NSData *updateData = archiver.encodedData;
-            [self mme_setObject:updateData forPersistantKey:MMEConfigUpdateData];
-            [self mme_setObject:updateTime forVolatileKey:MMEConfigUpdateDate];
+    if (@available(iOS 10.0, macos 10.12, tvOS 10.0, watchOS 3.0, *)) {
+        if (updateTime) {
+            if (updateTime.timeIntervalSinceNow <= 0) { // updates always happen in the past
+                NSKeyedArchiver *archiver = [NSKeyedArchiver new];
+                archiver.requiresSecureCoding = YES;
+                [archiver encodeObject:updateTime forKey:NSKeyedArchiveRootObjectKey];
+                NSData *updateData = archiver.encodedData;
+                [self mme_setObject:updateData forPersistantKey:MMEConfigUpdateData];
+                [self mme_setObject:updateTime forVolatileKey:MMEConfigUpdateDate];
+            }
+            else NSLog(@"WARNING Mapbox Mobile Events Config Update Date cannot be set to a future date: %@", updateTime);
         }
-        else NSLog(@"WARNING Mapbox Mobile Events Config Update Date cannot be set to a future date: %@", updateTime);
     }
 }
 
