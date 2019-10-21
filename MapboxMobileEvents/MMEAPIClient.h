@@ -4,7 +4,6 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class MMEEvent;
-@protocol MMEAPIClient;
 
 @interface MMEAPIClient : NSObject
 /// Are we currently getting configuration updates?

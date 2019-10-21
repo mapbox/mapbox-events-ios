@@ -137,59 +137,61 @@ int const kMMEMaxRequestCount = 1000;
     if (self.isGettingConfigUpdates) {
         [self stopGettingConfigUpdates];
     }
-    
-    self.configurationUpdateTimer = [NSTimer
-        scheduledTimerWithTimeInterval:NSUserDefaults.mme_configuration.mme_configUpdateInterval
-        repeats:YES
-        block:^(NSTimer * _Nonnull timer) {
-            NSURLRequest *request = [self requestForConfiguration];
-            
-            [self.sessionWrapper processRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-                [MMEMetricsManager.sharedManager updateReceivedBytes:data.length];
-                NSHTTPURLResponse *httpResponse = nil;
-                NSError *statusError = nil;
-                if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
-                    httpResponse = (NSHTTPURLResponse *)response;
-                    statusError = [self statusErrorFromRequest:request andHTTPResponse:httpResponse];
-                } else {
-                    statusError = [self unexpectedResponseErrorFromRequest:request andResponse:response];
-                }
+
+    if (@available(iOS 10.0, macos 10.12, tvOS 10.0, watchOS 3.0, *)) {
+        self.configurationUpdateTimer = [NSTimer
+            scheduledTimerWithTimeInterval:NSUserDefaults.mme_configuration.mme_configUpdateInterval
+            repeats:YES
+            block:^(NSTimer * _Nonnull timer) {
+                NSURLRequest *request = [self requestForConfiguration];
                 
-                if (statusError) {
-                    [MMEEventsManager.sharedManager reportError:statusError];
-                }
-                else if (data) {
-                    NSError *configError = [NSUserDefaults.mme_configuration mme_updateFromConfigServiceData:data];
-                    if (configError) {
-                        [MMEEventsManager.sharedManager reportError:configError];
+                [self.sessionWrapper processRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+                    [MMEMetricsManager.sharedManager updateReceivedBytes:data.length];
+                    NSHTTPURLResponse *httpResponse = nil;
+                    NSError *statusError = nil;
+                    if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
+                        httpResponse = (NSHTTPURLResponse *)response;
+                        statusError = [self statusErrorFromRequest:request andHTTPResponse:httpResponse];
+                    } else {
+                        statusError = [self unexpectedResponseErrorFromRequest:request andResponse:response];
                     }
                     
-                    // check for time-offset from the server
-                    NSString *dateHeader = httpResponse.allHeaderFields[@"Date"];
-                    if (dateHeader) {
-                        // parse the server date, compute the offset
-                        NSDate *date = [MMEDate.HTTPDateFormatter dateFromString:dateHeader];
-                        if (date) {
-                            [MMEDate recordTimeOffsetFromServer:date];
-                        } // else failed to parse date
+                    if (statusError) {
+                        [MMEEventsManager.sharedManager reportError:statusError];
                     }
-                    
-                    NSUserDefaults.mme_configuration.mme_configUpdateDate = MMEDate.date;
-                }
+                    else if (data) {
+                        NSError *configError = [NSUserDefaults.mme_configuration mme_updateFromConfigServiceData:data];
+                        if (configError) {
+                            [MMEEventsManager.sharedManager reportError:configError];
+                        }
+                        
+                        // check for time-offset from the server
+                        NSString *dateHeader = httpResponse.allHeaderFields[@"Date"];
+                        if (dateHeader) {
+                            // parse the server date, compute the offset
+                            NSDate *date = [MMEDate.HTTPDateFormatter dateFromString:dateHeader];
+                            if (date) {
+                                [MMEDate recordTimeOffsetFromServer:date];
+                            } // else failed to parse date
+                        }
+                        
+                        NSUserDefaults.mme_configuration.mme_configUpdateDate = MMEDate.date;
+                    }
 
-                [MMEMetricsManager.sharedManager updateMetricsFromEventCount:0 request:request error:error];
-                [MMEMetricsManager.sharedManager generateTelemetryMetricsEvent];
+                    [MMEMetricsManager.sharedManager updateMetricsFromEventCount:0 request:request error:error];
+                    [MMEMetricsManager.sharedManager generateTelemetryMetricsEvent];
+                }];
             }];
-        }];
-    
-    // be power conscious and give this timer a minute of slack so it can be coalesced
-    self.configurationUpdateTimer.tolerance = 60;
+        
+        // be power conscious and give this timer a minute of slack so it can be coalesced
+        self.configurationUpdateTimer.tolerance = 60;
 
-    // check to see if time since the last update is greater than our update interval
-    if (!NSUserDefaults.mme_configuration.mme_configUpdateDate // we've never updated
-     || (fabs(NSUserDefaults.mme_configuration.mme_configUpdateDate.timeIntervalSinceNow)
-      > NSUserDefaults.mme_configuration.mme_configUpdateInterval)) { // or it's been a while
-        [self.configurationUpdateTimer fire]; // update now
+        // check to see if time since the last update is greater than our update interval
+        if (!NSUserDefaults.mme_configuration.mme_configUpdateDate // we've never updated
+         || (fabs(NSUserDefaults.mme_configuration.mme_configUpdateDate.timeIntervalSinceNow)
+          > NSUserDefaults.mme_configuration.mme_configUpdateInterval)) { // or it's been a while
+            [self.configurationUpdateTimer fire]; // update now
+        }
     }
 }
 
