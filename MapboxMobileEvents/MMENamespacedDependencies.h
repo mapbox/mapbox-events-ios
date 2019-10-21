@@ -1,5 +1,5 @@
 // This namespaced header is generated.
-// Add source files to the MapboxMobileEventsStatic target, then run `make name-header`.
+// Add source files to the libMapboxMobileEvents target, then run `make name-header`.
 
 #ifndef __NS_SYMBOL
 // We need to have multiple levels of macros here so that __NAMESPACE_PREFIX_ is
@@ -27,10 +27,6 @@
 #define MMECommonEventData __NS_SYMBOL(MMECommonEventData)
 #endif
 
-#ifndef MMEConfigurator
-#define MMEConfigurator __NS_SYMBOL(MMEConfigurator)
-#endif
-
 #ifndef MMEDate
 #define MMEDate __NS_SYMBOL(MMEDate)
 #endif
@@ -55,16 +51,8 @@
 #define MMEEventLogger __NS_SYMBOL(MMEEventLogger)
 #endif
 
-#ifndef MMEEventsConfiguration
-#define MMEEventsConfiguration __NS_SYMBOL(MMEEventsConfiguration)
-#endif
-
 #ifndef MMEEventsManager
 #define MMEEventsManager __NS_SYMBOL(MMEEventsManager)
-#endif
-
-#ifndef MMEHashProvider
-#define MMEHashProvider __NS_SYMBOL(MMEHashProvider)
 #endif
 
 #ifndef MMELocationManager
@@ -81,10 +69,6 @@
 
 #ifndef MMENSURLSessionWrapper
 #define MMENSURLSessionWrapper __NS_SYMBOL(MMENSURLSessionWrapper)
-#endif
-
-#ifndef MMEPinningConfigurationProvider
-#define MMEPinningConfigurationProvider __NS_SYMBOL(MMEPinningConfigurationProvider)
 #endif
 
 #ifndef MMEReachability
@@ -125,18 +109,27 @@
 #endif
 
 // Externs
-#ifndef kMMEPinnedDomains
-#define kMMEPinnedDomains __NS_SYMBOL(kMMEPinnedDomains)
+#ifndef _OBJC_PROTOCOL_$_MMEUIApplicationWrapper
+#define _OBJC_PROTOCOL_$_MMEUIApplicationWrapper __NS_SYMBOL(_OBJC_PROTOCOL_$_MMEUIApplicationWrapper)
 #endif
 
-#ifndef kMMEPublicKeyHashes
-#define kMMEPublicKeyHashes __NS_SYMBOL(kMMEPublicKeyHashes)
+#ifndef _OBJC_PROTOCOL_$_MMEUniqueIdentifer
+#define _OBJC_PROTOCOL_$_MMEUniqueIdentifer __NS_SYMBOL(_OBJC_PROTOCOL_$_MMEUniqueIdentifer)
 #endif
 
-#ifndef kMMEExcludeSubdomainFromParentPolicy
-#define kMMEExcludeSubdomainFromParentPolicy __NS_SYMBOL(kMMEExcludeSubdomainFromParentPolicy)
+#ifndef _OBJC_PROTOCOL_$_MMENSURLSessionWrapper
+#define _OBJC_PROTOCOL_$_MMENSURLSessionWrapper __NS_SYMBOL(_OBJC_PROTOCOL_$_MMENSURLSessionWrapper)
 #endif
 
+#ifndef _OBJC_PROTOCOL_$_MMELocationManager
+#define _OBJC_PROTOCOL_$_MMELocationManager __NS_SYMBOL(_OBJC_PROTOCOL_$_MMELocationManager)
+#endif
+
+#ifndef _OBJC_PROTOCOL_$_MMELocationManagerDelegate
+#define _OBJC_PROTOCOL_$_MMELocationManagerDelegate __NS_SYMBOL(_OBJC_PROTOCOL_$_MMELocationManagerDelegate)
+#endif
+
+// Protocols
 #ifndef MMEUIApplicationWrapper
 #define MMEUIApplicationWrapper __NS_SYMBOL(MMEUIApplicationWrapper)
 #endif
@@ -153,26 +146,11 @@
 #define MMELocationManager __NS_SYMBOL(MMELocationManager)
 #endif
 
-#ifndef MMEAPIClient
-#define MMEAPIClient __NS_SYMBOL(MMEAPIClient)
-#endif
-
 #ifndef MMELocationManagerDelegate
 #define MMELocationManagerDelegate __NS_SYMBOL(MMELocationManagerDelegate)
 #endif
 
-#ifndef MMEConfiguratorDelegate
-#define MMEConfiguratorDelegate __NS_SYMBOL(MMEConfiguratorDelegate)
-#endif
-
-#ifndef MapboxMobileEventsStaticVersionString
-#define MapboxMobileEventsStaticVersionString __NS_SYMBOL(MapboxMobileEventsStaticVersionString)
-#endif
-
-#ifndef MapboxMobileEventsStaticVersionNumber
-#define MapboxMobileEventsStaticVersionNumber __NS_SYMBOL(MapboxMobileEventsStaticVersionNumber)
-#endif
-
+// Constants
 #ifndef MMEApplicationStateForeground
 #define MMEApplicationStateForeground __NS_SYMBOL(MMEApplicationStateForeground)
 #endif
@@ -189,20 +167,16 @@
 #define MMEApplicationStateUnknown __NS_SYMBOL(MMEApplicationStateUnknown)
 #endif
 
-#ifndef kMMEReachabilityChangedNotification
-#define kMMEReachabilityChangedNotification __NS_SYMBOL(kMMEReachabilityChangedNotification)
-#endif
-
 #ifndef MMELocationManagerDistanceFilter
 #define MMELocationManagerDistanceFilter __NS_SYMBOL(MMELocationManagerDistanceFilter)
 #endif
 
-#ifndef MMERadiusAccuracyMax
-#define MMERadiusAccuracyMax __NS_SYMBOL(MMERadiusAccuracyMax)
+#ifndef MMELocationManagerRegionCenterDistanceFilter
+#define MMELocationManagerRegionCenterDistanceFilter __NS_SYMBOL(MMELocationManagerRegionCenterDistanceFilter)
 #endif
 
-#ifndef MMELocationManagerRegionIdentifier
-#define MMELocationManagerRegionIdentifier __NS_SYMBOL(MMELocationManagerRegionIdentifier)
+#ifndef MMERadiusAccuracyMax
+#define MMERadiusAccuracyMax __NS_SYMBOL(MMERadiusAccuracyMax)
 #endif
 
 #ifndef MMEAPIClientBaseURL
@@ -435,6 +409,10 @@
 
 #ifndef MMEEventKeyModel
 #define MMEEventKeyModel __NS_SYMBOL(MMEEventKeyModel)
+#endif
+
+#ifndef MMELocationManagerRegionIdentifier
+#define MMELocationManagerRegionIdentifier __NS_SYMBOL(MMELocationManagerRegionIdentifier)
 #endif
 
 #ifndef MMEEventKeyDevice
@@ -807,9 +785,5 @@
 
 #ifndef MMEEventTypeMapDragEnd
 #define MMEEventTypeMapDragEnd __NS_SYMBOL(MMEEventTypeMapDragEnd)
-#endif
-
-#ifndef kMMEMaxRequestCount
-#define kMMEMaxRequestCount __NS_SYMBOL(kMMEMaxRequestCount)
 #endif
 
