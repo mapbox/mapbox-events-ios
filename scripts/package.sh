@@ -3,15 +3,16 @@
 set -e
 set -o pipefail
 set -u
+# set -v
 
 DERIVED_DATA='build'
 PRODUCTS=${DERIVED_DATA}/Build/Products
 OUTPUT=build/namespace/static
-SCHEME='MapboxMobileEventsStatic'
+SCHEME='libMapboxMobileEvents'
 BUILDTYPE=${BUILDTYPE:-Debug}
 JOBS=`sysctl -n hw.ncpu`
 NAME_PATH=build/namespace/header
-NAME_HEADER=build/namespace/header/MMENamespacedDependencies.h
+NAME_HEADER=${NAME_PATH}/MMENamespacedDependencies.h
 PREFIX="MGL"
 
 function step { >&2 echo -e "\033[1m\033[36m* [`date +%H:%M:%S`] $@\033[0m"; }
@@ -24,7 +25,7 @@ function generate_namespace_header {
 
     echo "Generating $NAME_HEADER from $1"
     echo "// This namespaced header is generated.
-// Add source files to the MapboxMobileEventsStatic target, then run \`make name-header\`.
+// Add source files to the libMapboxMobileEvents target, then run \`make name-header\`.
 
 #ifndef __NS_SYMBOL
 // We need to have multiple levels of macros here so that __NAMESPACE_PREFIX_ is
@@ -38,58 +39,38 @@ function generate_namespace_header {
 
     echo "// Classes" >> $NAME_HEADER
     nm $1 -j | sort | uniq | grep "^_OBJC_CLASS_\$_" \
-        | grep -v "\$_AGSGT" \
-        | grep -v "\$_CL" \
-        | grep -v "\$_NS" \
-        | grep -v "\$_UI" \
-        | grep -v "\$___block" \
-        | grep -v "\$___clang" \
-        | grep -v "\$___copy" \
-        | grep -v "\$___destroy" \
+        | grep -i "\$_MME" \
         | sed -e 's/_OBJC_CLASS_\$_\(.*\)/#ifndef \1\'$'\n''#define \1 __NS_SYMBOL(\1)\'$'\n''#endif\'$'\n''/g' >> $NAME_HEADER
 
+    echo "// Functions"
     echo "// Functions" >> $NAME_HEADER
+    
     nm $1 | sort | uniq | grep " T " | cut -d' ' -f3 \
-        | grep -v "\$_NS" \
-        | grep -v "\$_UI" \
-        | grep -v "___block" \
-        | grep -v "___clang" \
-        | grep -v "___copy" \
-        | grep -v "___destroy" \
+        | grep -i "_mme" \
         | sed -e 's/_\(.*\)/#ifndef \1\'$'\n''#define \1 __NS_SYMBOL(\1)\'$'\n''#endif\'$'\n''/g' >> $NAME_HEADER
 
+    echo "// Externs"
     echo "// Externs" >> $NAME_HEADER
     
     nm $1 | sort | uniq | grep " D " | cut -d' ' -f3 \
         | grep -v "l_OBJC_PROTOCOL" \
-        | grep -v "\$_NS" \
-        | grep -v "\$_UI" \
-        | grep -v "___block" \
-        | grep -v "___clang" \
-        | grep -v "___copy" \
-        | grep -v "___destroy" \
+        | grep -i "\$_MME" \
         | sed -e 's/_\(.*\)/#ifndef \1\'$'\n''#define \1 __NS_SYMBOL(\1)\'$'\n''#endif\'$'\n''/g' >> $NAME_HEADER
 
+    echo "// Protocols"
+    echo "// Protocols" >> $NAME_HEADER
+
     nm $1 | sort | uniq | grep " D " | cut -d' ' -f3 \
-        | grep "l_OBJC_PROTOCOL" \
-        | grep -v "\$_NS" \
-        | grep -v "\$_UI" \
-        | grep -v "\$_CL" \
-        | grep -v "___block" \
-        | grep -v "___clang" \
-        | grep -v "___copy" \
-        | grep -v "___destroy" \
-        | sed -e 's/l_OBJC_PROTOCOL_\$_\(.*\)/#ifndef \1\'$'\n''#define \1 __NS_SYMBOL(\1)\'$'\n''#endif\'$'\n''/g' >> $NAME_HEADER
+        | grep "__OBJC_PROTOCOL" \
+        | grep -i "\$_MME" \
+        | sed -e 's/__OBJC_PROTOCOL_\$_\(.*\)/#ifndef \1\'$'\n''#define \1 __NS_SYMBOL(\1)\'$'\n''#endif\'$'\n''/g' >> $NAME_HEADER
+
+    echo "// Constants"
+    echo "// Constants" >> $NAME_HEADER
 
     nm $1 | sort | uniq | grep " S " | cut -d' ' -f3 \
         | grep -v "OBJC_" \
-        | grep -v ".eh" \
-        | grep -v "\$_NS" \
-        | grep -v "\$_UI" \
-        | grep -v "___block" \
-        | grep -v "___clang" \
-        | grep -v "___copy" \
-        | grep -v "___destroy" \
+        | grep -i "_MME" \
         | sed -e 's/_\(.*\)/#ifndef \1\'$'\n''#define \1 __NS_SYMBOL(\1)\'$'\n''#endif\'$'\n''/g' >> $NAME_HEADER
 }
 
@@ -118,8 +99,8 @@ function create_static_library() {
     step "Creating fat static binary for iphonesimulator iphoneos"
     mkdir -p ${OUTPUT} && touch ${OUTPUT}/libMapboxEvents.a
     libtool -static -no_warning_for_no_symbols -o ${OUTPUT}/libMapboxEvents.a \
-        ${PRODUCTS}/${BUILDTYPE}-iphoneos/libMapboxMobileEventsStatic.a \
-        ${PRODUCTS}/${BUILDTYPE}-iphonesimulator/libMapboxMobileEventsStatic.a
+        ${PRODUCTS}/${BUILDTYPE}-iphoneos/libMapboxMobileEvents.a \
+        ${PRODUCTS}/${BUILDTYPE}-iphonesimulator/libMapboxMobileEvents.a
 
     step "Copying header files"
     mkdir -p ${OUTPUT}/include/MapboxMobileEvents
@@ -150,7 +131,7 @@ function package_namespace_header() {
     build iphonesimulator
 
     step "Generating namespaced header"
-    generate_namespace_header $PRODUCTS/${BUILDTYPE}-iphonesimulator/libMapboxMobileEventsStatic.a
+    generate_namespace_header $PRODUCTS/${BUILDTYPE}-iphonesimulator/libMapboxMobileEvents.a
 
     step "Copy namespaced header to project"
     cp $NAME_HEADER MapboxMobileEvents/MMENamespacedDependencies.h
