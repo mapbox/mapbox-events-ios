@@ -530,7 +530,6 @@ NS_ASSUME_NONNULL_BEGIN
         if ([configCRL isKindOfClass:NSArray.class]) {
             if ([configCRL count] > 0) {
                 for (NSString *publicKeyHash in configCRL) {
-                    //TODO: add to unit test on all hashes
                     NSData *pinnedKeyHash = [[NSData alloc] initWithBase64EncodedString:publicKeyHash options:(NSDataBase64DecodingOptions)0];
                     if ([pinnedKeyHash length] != CC_SHA256_DIGEST_LENGTH){
                         // The subject public key info hash doesn't have a valid size
