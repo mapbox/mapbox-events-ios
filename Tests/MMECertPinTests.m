@@ -2,6 +2,8 @@
 @import Foundation;
 @import Security;
 
+#import <CommonCrypto/CommonDigest.h>
+
 #import "MMEAPIClient.h"
 #import "MMEAPIClient_Private.h"
 #import "MMEAPIClientFake.h"
@@ -61,12 +63,12 @@
 
 - (void)test001_checkCNHashCount {
     NSArray *cnHashes = NSUserDefaults.mme_configuration.mme_certificatePinningConfig[@"events.mapbox.cn"];
-    XCTAssert(cnHashes.count ==54);
+    XCTAssert(cnHashes.count == 54);
 }
 
 -(void)test002_checkCOMHashCount {
     NSArray *comHashes = NSUserDefaults.mme_configuration.mme_certificatePinningConfig[@"events.mapbox.com"];
-    XCTAssert(comHashes.count ==54);
+    XCTAssert(comHashes.count == 54);
 }
     
 -(void)test003_countCNHashesWithBlacklist {
@@ -89,6 +91,34 @@
 
     NSArray *comHashes = NSUserDefaults.mme_configuration.mme_certificatePinningConfig[@"events.mapbox.com"];
     XCTAssert(comHashes.count == 53);
+}
+
+-(void)test005_validateCNHashes {
+    NSArray *cnHashes = NSUserDefaults.mme_configuration.mme_certificatePinningConfig[@"events.mapbox.cn"];
+    NSMutableArray *invalidHashes = [[NSMutableArray alloc] init];
+    
+    for (NSString *publicKeyHash in cnHashes) {
+        NSData *pinnedKeyHash = [[NSData alloc] initWithBase64EncodedString:publicKeyHash options:(NSDataBase64DecodingOptions)0];
+        if ([pinnedKeyHash length] != CC_SHA256_DIGEST_LENGTH){
+            // The subject public key info hash doesn't have a valid size
+            [invalidHashes addObject:publicKeyHash];
+        }
+    }
+    XCTAssert(invalidHashes.count == 0);
+}
+
+-(void)test006_validateCOMHashes {
+    NSArray *comHashes = NSUserDefaults.mme_configuration.mme_certificatePinningConfig[@"events.mapbox.com"];
+    NSMutableArray *invalidHashes = [[NSMutableArray alloc] init];
+    
+    for (NSString *publicKeyHash in comHashes) {
+        NSData *pinnedKeyHash = [[NSData alloc] initWithBase64EncodedString:publicKeyHash options:(NSDataBase64DecodingOptions)0];
+        if ([pinnedKeyHash length] != CC_SHA256_DIGEST_LENGTH){
+            // The subject public key info hash doesn't have a valid size
+            [invalidHashes addObject:publicKeyHash];
+        }
+    }
+    XCTAssert(invalidHashes.count == 0);
 }
 
 @end
