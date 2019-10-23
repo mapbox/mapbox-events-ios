@@ -350,6 +350,14 @@ NSString * const MMEExcludeSubdomainFromParentPolicy = @"MMEExcludeSubdomainFrom
 
 // MARK: - Certificate Pinning and Revocation
 
+- (BOOL)mme_shouldUpdateSSL {
+    return [self boolForKey:MMEShouldUpdateSSL];
+}
+
+- (void)mme_setShouldUpdateSSL:(BOOL)shouldUpdateSSL {
+    [self mme_setObject:@(shouldUpdateSSL) forVolatileKey:MMEShouldUpdateSSL];
+}
+
 - (NSArray<NSString *>*)mme_certificateRevocationList {
     NSArray<NSString *>* crl = @[];
     id crlObject = [self objectForKey:MMECertificateRevocationList];
@@ -542,6 +550,7 @@ NSString * const MMEExcludeSubdomainFromParentPolicy = @"MMEExcludeSubdomainFrom
         if ([configCRL isKindOfClass:NSArray.class]) {
             if ([configCRL count] > 0) {
                 [self mme_setObject:configCRL forPersistantKey:MMECertificateRevocationList];
+                [self mme_setObject:[NSNumber numberWithBool:YES] forVolatileKey:MMEShouldUpdateSSL];
             }
         }
         

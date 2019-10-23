@@ -78,6 +78,10 @@ static NSString * const MMEConfigGFOKey = @"gfo"; // geo-fence option
 static NSString * const MMEConfigBSOKey = @"bso"; // background startup option
 static NSString * const MMEConfigTagKey = @"tag"; // event tag
 
+// MARK: - Flags
+
+static NSString * const MMEShouldUpdateSSL = @"MMEShouldUpdateSSL"; // SSL Update Flag
+
 // MARK: - Limits
 
 static CLLocationDistance const MMECustomGeofenceRadiusMinimum = 300.0;

@@ -25,12 +25,50 @@
         _excludeSubdomainsSet = [NSMutableSet set];
         _publicKeyInfoHashesCache = [NSMutableDictionary dictionary];
         _lockQueue = dispatch_queue_create("MMECertHashLock", DISPATCH_QUEUE_CONCURRENT);
+        [self updateSSLPinSet];
     }
 
     return self;
 }
 
+- (void) updateSSLPinSet {
+    [self.serverSSLPinsSet removeAllObjects];
+    [self.publicKeyInfoHashesCache removeAllObjects];
+    [NSUserDefaults.mme_configuration mme_setShouldUpdateSSL:NO];
+    
+    [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeCertPinning,
+                                                                MMEEventKeyLocalDebugDescription: @"Updating SSL pin set..."}];
+
+    if ([NSUserDefaults.mme_configuration.mme_certificatePinningConfig.allKeys containsObject:MMEPinnedDomains]) {
+        NSDictionary *configPinnedDomains = NSUserDefaults.mme_configuration.mme_certificatePinningConfig[MMEPinnedDomains];
+
+        for (NSString *pinnedDomain in configPinnedDomains.allKeys) {
+            NSDictionary *pinnedDomainConfig = configPinnedDomains[pinnedDomain];
+
+            if ([pinnedDomainConfig.allKeys containsObject:MMEPublicKeyHashes]) {
+                for (NSString *pinnedKeyHashBase64 in pinnedDomainConfig[MMEPublicKeyHashes]) {
+                    NSData *pinnedKeyHash = [[NSData alloc] initWithBase64EncodedString:pinnedKeyHashBase64 options:(NSDataBase64DecodingOptions)0];
+                    if ([pinnedKeyHash length] != CC_SHA256_DIGEST_LENGTH){
+                        // The subject public key info hash doesn't have a valid size
+                        [NSException raise:@"Hash value invalid" format:@"Hash value invalid: %@", pinnedKeyHash];
+                    }
+                    [_serverSSLPinsSet addObject:pinnedKeyHash];
+                }
+            }
+
+            if ([pinnedDomainConfig.allKeys containsObject:MMEExcludeSubdomainFromParentPolicy]
+             && [pinnedDomainConfig[MMEExcludeSubdomainFromParentPolicy] boolValue]) {
+                [_excludeSubdomainsSet addObject:pinnedDomain];
+            }
+        }
+    }
+}
+
 - (void) handleChallenge:(NSURLAuthenticationChallenge * _Nonnull)challenge completionHandler:(void (^ _Nonnull)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential * _Nullable credential))completionHandler{
+    
+    if (NSUserDefaults.mme_configuration.mme_shouldUpdateSSL == YES) {
+        [self updateSSLPinSet];
+    }
     
     if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
         

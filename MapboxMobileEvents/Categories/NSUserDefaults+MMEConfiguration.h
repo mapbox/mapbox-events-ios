@@ -83,6 +83,9 @@ extern NSString * const MMEExcludeSubdomainFromParentPolicy;
 
 // MARK: - Certificate Pinning and Revocation
 
+// This property is volatile
+@property (nonatomic, setter=mme_setShouldUpdateSSL:) BOOL mme_shouldUpdateSSL;
+
 /// An array of revoked public key hashes
 @property (nonatomic, readonly) NSArray<NSString *>*mme_certificateRevocationList;
 
