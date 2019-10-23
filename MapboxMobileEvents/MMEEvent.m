@@ -1,3 +1,5 @@
+#import <CommonCrypto/CommonDigest.h>
+
 #import "MMEEvent.h"
 #import "MMEDate.h"
 #import "MMEConstants.h"
@@ -5,15 +7,15 @@
 #import "MMEReachability.h"
 #import "MMEEventsManager.h"
 
+#import "NSUserDefaults+MMEConfiguration.h"
 #if TARGET_OS_IOS || TARGET_OS_TVOS
 #import "UIKit+MMEMobileEvents.h"
 #endif
 
-#import <CommonCrypto/CommonDigest.h>
 
 @interface MMEEvent ()
-@property(nonatomic,retain) MMEDate *dateStorage;
-@property(nonatomic,retain) NSDictionary *attributesStorage;
+@property(nonatomic) MMEDate *dateStorage;
+@property(nonatomic) NSDictionary *attributesStorage;
 
 @end
 
@@ -101,9 +103,7 @@
     crashAttributes[MMEEventKeyBuildType] = @"release";
 #endif
     crashAttributes[MMEEventKeyIsSilentCrash] = @"yes";
-    crashAttributes[MMEEventSDKIdentifier] = [NSString stringWithFormat:@"%@-%@",
-        MMEEventsManager.sharedManager.userAgentBase,
-        MMEEventsManager.sharedManager.hostSDKVersion];
+    crashAttributes[MMEEventSDKIdentifier] = NSUserDefaults.mme_configuration.mme_userAgentString;
     crashAttributes[MMEEventKeyAppID] = (NSBundle.mainBundle.bundleIdentifier ?: @"unknown");
     crashAttributes[MMEEventKeyAppVersion] = [NSString stringWithFormat:@"%@ %@",
         NSBundle.mainBundle.infoDictionary[@"CFBundleShortVersionString"],

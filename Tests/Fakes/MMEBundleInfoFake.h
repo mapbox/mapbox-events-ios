@@ -3,7 +3,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface MMEBundleInfoFake : NSBundle
-@property(nonatomic, retain) NSDictionary *infoDictionaryFake;
+@property(nonatomic) NSDictionary *infoDictionaryFake;
 
 + (MMEBundleInfoFake *)bundleWithFakeInfo:(NSDictionary *)fakeInfo;
 

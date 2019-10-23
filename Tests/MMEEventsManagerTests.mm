@@ -50,8 +50,8 @@ using namespace Cedar::Doubles::Arguments;
 #pragma mark -
 
 @interface MMEEvent (Tests)
-@property(nonatomic,retain) MMEDate *dateStorage;
-@property(nonatomic,retain) NSDictionary *attributesStorage;
+@property(nonatomic) MMEDate *dateStorage;
+@property(nonatomic) NSDictionary *attributesStorage;
 
 @end
 
@@ -251,19 +251,6 @@ describe(@"MMEEventsManager", ^{
         });
     });
     
-    describe(@"- setAccessToken", ^{
-        __block NSString *newAccessToken = @"new-access-token";
-        
-        beforeEach(^{
-            [eventsManager initializeWithAccessToken:@"first-access-token" userAgentBase:@"user-agent-base" hostSDKVersion:@"host-version"];
-            eventsManager.accessToken = newAccessToken;
-        });
-        
-        it(@"sets the access token on the api client", ^{
-            NSUserDefaults.mme_configuration.mme_accessToken should equal(newAccessToken);
-        });
-    });
-        
     describe(@"- pauseOrResumeMetricsCollectionIfRequired", ^{
         
         context(@"when the location manager authorization is set to when in use, metrics enabled is false, and events are queued", ^{
@@ -281,7 +268,7 @@ describe(@"MMEEventsManager", ^{
                 
                 applicationFake.backgroundTaskIdentifier = 42;
                 
-                eventsManager.metricsEnabledForInUsePermissions = NO;
+                NSUserDefaults.mme_configuration.mme_isCollectionEnabled = NO;
                 
                 apiClientWrapperFake = [[MMEAPIClientFake alloc] init];
                 spy_on(apiClientWrapperFake);
@@ -349,7 +336,6 @@ describe(@"MMEEventsManager", ^{
             
             context(@"when metrics are enabled", ^{
                 beforeEach(^{
-                    eventsManager.metricsEnabledInSimulator = YES;
                     [eventsManager pauseOrResumeMetricsCollectionIfRequired];
                 });
                 
@@ -376,7 +362,7 @@ describe(@"MMEEventsManager", ^{
                         
                         beforeEach(^{
                             capturedEventsManager = eventsManager;
-                            capturedAccessToken = eventsManager.accessToken;
+                            capturedAccessToken = NSUserDefaults.mme_configuration.mme_accessToken;
                             [eventsManager initializeWithAccessToken:@"access-token-reinit" userAgentBase:@"user-agent-base" hostSDKVersion:@"host-sdk-version"];
                         });
                         
@@ -385,7 +371,7 @@ describe(@"MMEEventsManager", ^{
                         });
                         
                         it(@"should change the access token", ^{
-                            eventsManager.accessToken should_not equal(capturedAccessToken);
+                            NSUserDefaults.mme_configuration.mme_accessToken should_not equal(capturedAccessToken);
                         });
                     });
                     
@@ -504,7 +490,7 @@ describe(@"MMEEventsManager", ^{
             
             context(@"when metrics are NOT enabled", ^{
                 beforeEach(^{
-                    eventsManager.metricsEnabled = NO; // disable in simulator and on device
+                    NSUserDefaults.mme_configuration.mme_isCollectionEnabled = NO; // disable in simulator and on device
                     [eventsManager pauseOrResumeMetricsCollectionIfRequired];
                 });
                 
@@ -526,7 +512,6 @@ describe(@"MMEEventsManager", ^{
             context(@"when metrics are enabled", ^{
                 beforeEach(^{
                     eventsManager.apiClient = nice_fake_for(@protocol(MMEAPIClient));
-                    eventsManager.metricsEnabledInSimulator = YES;
                     [eventsManager pauseOrResumeMetricsCollectionIfRequired];
                 });
                 
@@ -546,7 +531,7 @@ describe(@"MMEEventsManager", ^{
             context(@"when metrics are NOT enabled", ^{
                 beforeEach(^{
                     eventsManager.apiClient = nice_fake_for(@protocol(MMEAPIClient));
-                    eventsManager.metricsEnabled = NO; // disable for simulator and real device
+                    NSUserDefaults.mme_configuration.mme_isCollectionEnabled = NO; // disable for simulator and real device
                 });
                 
                 context(@"when an api token is set and there are events to flush", ^{
@@ -572,7 +557,6 @@ describe(@"MMEEventsManager", ^{
             
             context(@"when metrics low power mode is enabled", ^{
                 beforeEach(^{
-                    eventsManager.metricsEnabledInSimulator = YES;
                     eventsManager.apiClient = nice_fake_for(@protocol(MMEAPIClient));
                     NSUserDefaults.mme_configuration.mme_accessToken = @"access-token";
                     [eventsManager enqueueEventWithName:MMEEventTypeMapLoad];
@@ -620,8 +604,7 @@ describe(@"MMEEventsManager", ^{
             
             context(@"when no access token has been set", ^{
                 beforeEach(^{
-                    spy_on(NSUserDefaults.mme_configuration);
-                    NSUserDefaults.mme_configuration stub_method(@selector(mme_accessToken)).and_return(nil);
+                    [NSUserDefaults.mme_configuration mme_deleteObjectForVolatileKey:MMEAccessToken];
                     [eventsManager flush];
                 });
                 
@@ -684,7 +667,6 @@ describe(@"MMEEventsManager", ^{
                 beforeEach(^{
                     MMEAPIClientFake *fakeAPIClient = [[MMEAPIClientFake alloc] init];
                     spy_on(fakeAPIClient);
-                    spy_on(NSUserDefaults.mme_configuration);
                     
                     NSUserDefaults.mme_configuration.mme_accessToken = @"access-token";
                     NSUserDefaults.mme_configuration.mme_legacyUserAgentBase = @"user-agent-base";
@@ -703,7 +685,7 @@ describe(@"MMEEventsManager", ^{
                 
                 context(@"when the events manager's api client does not have an access token set", ^{
                     beforeEach(^{
-                        NSUserDefaults.mme_configuration stub_method(@selector(mme_accessToken)).and_return(nil);
+                        [NSUserDefaults.mme_configuration mme_deleteObjectForVolatileKey:MMEAccessToken];
                         [eventsManager sendTurnstileEvent];
                     });
                     
@@ -714,7 +696,8 @@ describe(@"MMEEventsManager", ^{
                 
                 context(@"when the events manager's api client does not have a user agent base set", ^{
                     beforeEach(^{
-                        NSUserDefaults.mme_configuration stub_method(@selector(mme_legacyUserAgentBase)).and_return(nil);
+                        [NSUserDefaults.mme_configuration mme_deleteObjectForVolatileKey:MMELegacyUserAgentBase];
+                        [NSUserDefaults.mme_configuration mme_deleteObjectForVolatileKey:MMELegacyUserAgent];
                         [eventsManager sendTurnstileEvent];
                     });
                     
@@ -774,7 +757,7 @@ describe(@"MMEEventsManager", ^{
                     NSDate *date = [NSDate dateWithTimeIntervalSince1970:1000];
                     [NSDate class] stub_method(@selector(date)).and_return(date);
                     
-                    eventsManager.metricsEnabled = NO; // on device or in simulator
+                    NSUserDefaults.mme_configuration.mme_isCollectionEnabled = NO; // on device or in simulator
                     
                     MMEAPIClientFake *fakeAPIClient = [[MMEAPIClientFake alloc] init];
                     spy_on(fakeAPIClient);

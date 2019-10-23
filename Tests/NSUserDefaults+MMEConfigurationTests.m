@@ -26,11 +26,13 @@
         MMEIdentifierRotationInterval: @(MMEIdentifierRotationIntervalDefault), // 24 hours
         MMEConfigurationUpdateInterval: @(MMEConfigurationUpdateIntervalDefault), // 24 hours
         MMEBackgroundStartupDelay: @(MMEBackgroundStartupDelayDefault), // seconds
-        MMECertificateRevocationList: @[@"badcert",@"badcert"],
         MMECollectionDisabled: @NO,
         MMECollectionEnabledInSimulator: @YES,
         MMECollectionDisabledInBackground: @YES,
-        MMEConfigEventTag: @"tag"
+        MMEConfigEventTag: @"tag",
+        MMECertificateRevocationList:@[
+            @"T4XyKSRwZ5icOqGmJUXiDYGa+SaXKTGQXZwhqpwNTEo=",
+            @"KlV7emqpeM6V2MtDEzSDzcIob6VwkdWHiVsNQQzTIeo="]
     };
 
     [NSBundle mme_setMainBundle:nil];
@@ -116,18 +118,30 @@
 
 // MARK: - Utilities
 
+- (void)testInvalidCRL {
+    NSDictionary *jsonDict = @{MMEConfigCRLKey: @[@"not-a-key-hash"]};
+    NSError *jsonError = nil;
+    NSData *data = [NSJSONSerialization dataWithJSONObject:jsonDict options:NSJSONWritingPrettyPrinted error:&jsonError];
+    NSError *updateError = [NSUserDefaults.mme_configuration mme_updateFromConfigServiceData:data];
+    XCTAssertNil(jsonError);
+    XCTAssertNotNil(updateError);
+}
+
 - (void)testUpdateFromConfigServiceData {
-    NSDictionary *jsonDict = @{MMEConfigCRLKey: @[@"revoked",@"certs",@"are",@"bad"],
+    NSDictionary *jsonDict = @{MMEConfigCRLKey: @[],
                                MMEConfigTTOKey: @2,
                                MMEConfigGFOKey: @500,
                                MMEConfigBSOKey: @10,
                                MMEConfigTagKey: @"TAG"
     };
-    NSData *data = [NSJSONSerialization dataWithJSONObject:jsonDict options:NSJSONWritingPrettyPrinted error:nil];
-    
+    NSError *updateError = nil;
+    NSData *data = [NSJSONSerialization dataWithJSONObject:jsonDict options:NSJSONWritingPrettyPrinted error:&updateError];
+
     [NSUserDefaults.mme_configuration mme_updateFromConfigServiceData:data];
+    XCTAssertNil(updateError);
+    XCTAssertNotNil(data);
     XCTAssert(NSUserDefaults.mme_configuration.mme_backgroundGeofence == 500);
-    XCTAssert(NSUserDefaults.mme_configuration.mme_certificateRevocationList.count == 4);
+    XCTAssert(NSUserDefaults.mme_configuration.mme_certificateRevocationList.count == 0);
     XCTAssertFalse(NSUserDefaults.mme_configuration.mme_isCollectionEnabledInBackground);
     XCTAssert(NSUserDefaults.mme_configuration.mme_backgroundStartupDelay == 10);
     XCTAssert([NSUserDefaults.mme_configuration.mme_eventTag isEqualToString:@"TAG"]);
@@ -158,17 +172,6 @@
     
 - (void)testEventsServiceURLDefault {
     XCTAssert([NSUserDefaults.mme_configuration.mme_eventsServiceURL.absoluteString isEqualToString:MMEAPIClientBaseURL]);
-}
-
-- (void)testServerSSLPinSet {
-    XCTAssert(NSUserDefaults.mme_configuration.mme_serverSSLPinSet.count > 0);
-}
-
-- (void)testServerSSLPinSetIsReset {
-    // Count of CN and COM hashes
-    XCTAssert(NSUserDefaults.mme_configuration.mme_serverSSLPinSet.count == 108);
-    [NSUserDefaults.mme_configuration mme_setServerSSLPinSet:[NSMutableSet set]];
-    XCTAssert(NSUserDefaults.mme_configuration.mme_serverSSLPinSet.count == 108);
 }
 
 - (void)testEventsServiceURLOverride {

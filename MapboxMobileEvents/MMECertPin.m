@@ -58,15 +58,18 @@
             for (int lc = 0; lc < numKeys; lc++) {
                 SecCertificateRef remoteCertificate = SecTrustGetCertificateAtIndex(serverTrust, lc);
                 NSData *remoteCertificatePublicKeyHash = [self hashSubjectPublicKeyInfoFromCertificate:remoteCertificate];
+                NSString *publicKeyHashString = [remoteCertificatePublicKeyHash base64EncodedStringWithOptions:0];
+                NSArray *pinnedHashStrings = NSUserDefaults.mme_configuration.mme_certificatePinningConfig[challenge.protectionSpace.host];
                 
-                if ([NSUserDefaults.mme_configuration.mme_serverSSLPinSet containsObject:remoteCertificatePublicKeyHash]) {
+                if ([pinnedHashStrings containsObject:publicKeyHashString]) {
                     dispatch_async(dispatch_get_main_queue(), ^{
                         self.lastAuthChallengeDisposition = NSURLSessionAuthChallengeUseCredential;
                         completionHandler(NSURLSessionAuthChallengeUseCredential, [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust]);
                     });
                     
-                    [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeCertPinning,
-                                                                                MMEEventKeyLocalDebugDescription: @"Certificate found and accepted trust!"}];
+                    [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
+                        MMEDebugEventType: MMEDebugEventTypeCertPinning,
+                        MMEEventKeyLocalDebugDescription: @"Certificate found and accepted trust!"}];
                     
                     found = YES;
                     break;

@@ -1,7 +1,7 @@
 #import "MMEExceptionalDictionary.h"
 
 @interface MMEExceptionalDictionary ()
-@property(nonatomic,retain) NSDictionary* inner;
+@property(nonatomic) NSDictionary* inner;
 
 @end
 

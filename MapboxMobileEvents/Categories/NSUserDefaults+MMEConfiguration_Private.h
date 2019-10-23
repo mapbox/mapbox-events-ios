@@ -33,7 +33,6 @@ static MMEVolatileKey * const MMELegacyUserAgent = @"MMELegacyUserAgent";
 static MMEVolatileKey * const MMELegacyUserAgentBase = @"MMELegacyUserAgentBase";
 static MMEVolatileKey * const MMELegacyHostSDKVersion = @"MMELegacyHostSDKVersion";
 static MMEVolatileKey * const MMEConfigUpdateDate = @"MMEConfigUpdateDate";
-static MMEVolatileKey * const MMEServerSSLPinSet = @"MMEServerSSLPinSet";
 
 // MARK: - Info.plist Keys
 
@@ -105,6 +104,9 @@ static NSTimeInterval const MMEStartupDelayMaximum = 100;
 
 - (void)mme_registerDefaults;
 - (NSError *)mme_updateFromConfigServiceData:(NSData *)configData;
+
+- (void)mme_deleteObjectForVolatileKey:(MMEVolatileKey *)key;
+- (void)mme_deleteObjectPersistentKey:(MMEPersistentKey *)key;
 
 @end
 
