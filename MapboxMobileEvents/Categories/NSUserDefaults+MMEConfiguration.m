@@ -79,8 +79,8 @@ NS_ASSUME_NONNULL_BEGIN
     [self registerDefaults:@{
         MMEStartupDelay: @(startupDelay), // seconds
         MMEBackgroundGeofence: @(backgroundGeofence), // meters
-        MMEEventFlushCount: @(10), // events
-        MMEEventFlushInterval: @(10), // seconds
+        MMEEventFlushCount: @(180), // events
+        MMEEventFlushInterval: @(180), // seconds
         MMEIdentifierRotationInterval: @(24 * 60 * 60), // 24 hours
         MMEConfigurationUpdateInterval: @(24 * 60 * 60), // 24 hours
         MMEBackgroundStartupDelay: @(15.0), // seconds
