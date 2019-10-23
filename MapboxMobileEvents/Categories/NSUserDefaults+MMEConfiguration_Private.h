@@ -79,6 +79,16 @@ static NSString * const MMEConfigGFOKey = @"gfo"; // geo-fence option
 static NSString * const MMEConfigBSOKey = @"bso"; // background startup option
 static NSString * const MMEConfigTagKey = @"tag"; // event tag
 
+// MARK: - Constants
+
+static int const MMEEventFlushCount = 180; // events
+static NSTimeInterval const MMEEventFlushInterval = 180; // seconds
+static NSTimeInterval const MMEIdentifierRotationInterval = 24 * 60 * 60; // 24 hours
+static NSTimeInterval const MMEConfigurationUpdateInterval = 24 * 60 * 60; // 24 hours
+static NSTimeInterval const MMEBackgroundStartupDelay = 15.0; // seconds
+static NSTimeInterval const MMEStartupDelay = 1;
+static CLLocationDistance const MMEBackgroundGeofence = 300.0; // Meters
+
 // MARK: - Limits
 
 static CLLocationDistance const MMECustomGeofenceRadiusMinimum = 300.0;
