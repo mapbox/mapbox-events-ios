@@ -70,10 +70,8 @@
 
 - (instancetype)initShared {
     if (self = [super init]) {
-        _metricsEnabled = YES;
         _locationMetricsEnabled = YES;
         _paused = YES;
-        _accountType = 0;
         _eventQueue = [NSMutableArray array];
         _commonEventData = [[MMECommonEventData alloc] init];
         _uniqueIdentifer = [[MMEUniqueIdentifier alloc] initWithTimeInterval:NSUserDefaults.mme_configuration.mme_identifierRotationInterval];
@@ -128,7 +126,6 @@
             strongSelf.paused = YES;
             strongSelf.locationManager = [[MMELocationManager alloc] init];
             strongSelf.locationManager.delegate = strongSelf;
-            strongSelf.locationManager.metricsEnabledForInUsePermissions = strongSelf.metricsEnabledForInUsePermissions;
             [strongSelf resumeMetricsCollection];
 
             strongSelf.timerManager = [[MMETimerManager alloc]
@@ -144,39 +141,11 @@
     }
 }
 
-#pragma mark - Properties
-
-- (void)setAccessToken:(NSString *)accessToken {
-    [NSUserDefaults.mme_configuration mme_setAccessToken:accessToken];
-}
-
-- (NSString *)accessToken {
-    return NSUserDefaults.mme_configuration.mme_accessToken;
-}
-
-- (NSURL *)baseURL {
-    _baseURL = NSUserDefaults.mme_configuration.mme_eventsServiceURL;
-    return _baseURL;
-}
-
-- (NSString *)userAgentBase {
-    return NSUserDefaults.mme_configuration.mme_legacyUserAgentBase;
-}
-
-- (NSString *)hostSDKVersion {
-    return NSUserDefaults.mme_configuration.mme_legacyHostSDKVersion;
-}
-
 #pragma mark - Enable/Disable
-
-- (void)setMetricsEnabledForInUsePermissions:(BOOL)metricsEnabledForInUsePermissions {
-    _metricsEnabledForInUsePermissions = metricsEnabledForInUsePermissions;
-    self.locationManager.metricsEnabledForInUsePermissions = metricsEnabledForInUsePermissions;
-}
 
 - (void)disableLocationMetrics {
     @try {
-        self.locationMetricsEnabled = NO;
+        NSUserDefaults.mme_configuration.mme_isCollectionEnabled = NO;
         [self.locationManager stopUpdatingLocation];
     }
     @catch (NSException *except) {
@@ -200,10 +169,9 @@
 - (void)pauseOrResumeMetricsCollectionIfRequired {
     @try {
         // Prevent blue status bar when host app has `when in use` permission only and it is not in foreground
-        if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedWhenInUse &&
-            self.application.applicationState == UIApplicationStateBackground &&
-            !self.isMetricsEnabledForInUsePermissions &&
-            NSUserDefaults.mme_configuration.mme_isCollectionEnabledInBackground) {
+        if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedWhenInUse
+         && self.application.applicationState == UIApplicationStateBackground
+         && NSUserDefaults.mme_configuration.mme_isCollectionEnabledInBackground) {
             if (_backgroundTaskIdentifier == UIBackgroundTaskInvalid) {
                 __weak __typeof__(self) weakSelf = self;
                 _backgroundTaskIdentifier = [self.application beginBackgroundTaskWithExpirationHandler:^{
@@ -225,9 +193,9 @@
         }
 
         // Toggle pause based on current pause state, user opt-out state, and low-power state.
-        if (self.paused && [self isEnabled]) {
+        if (self.paused && NSUserDefaults.mme_configuration.mme_isCollectionEnabled) {
             [self resumeMetricsCollection];
-        } else if (!self.paused && ![self isEnabled]) {
+        } else if (!self.paused && !NSUserDefaults.mme_configuration.mme_isCollectionEnabled) {
             [self flush];
             [self resetEventQueuing];
             [self pauseMetricsCollection];
@@ -365,19 +333,20 @@
             return;
         }
 
-        NSDictionary *turnstileEventAttributes = @{MMEEventKeyEvent: MMEEventTypeAppUserTurnstile,
-                                                   MMEEventKeyCreated: [MMEDate.iso8601DateFormatter stringFromDate:[NSDate date]],
-                                                   MMEEventKeyVendorID: self.commonEventData.vendorId,
-                                                   // MMEEventKeyDevice is synonomous with MMEEventKeyModel but the server will only accept "device" in turnstile events
-                                                   MMEEventKeyDevice: self.commonEventData.model,
-                                                   MMEEventKeyOperatingSystem: self.commonEventData.osVersion,
-                                                   MMEEventSDKIdentifier: NSUserDefaults.mme_configuration.mme_legacyUserAgentBase,
-                                                   MMEEventSDKVersion: NSUserDefaults.mme_configuration.mme_legacyHostSDKVersion,
-                                                   MMEEventKeyEnabledTelemetry: @([self isEnabled]),
-                                                   MMEEventKeyLocationEnabled: @([CLLocationManager locationServicesEnabled]),
-                                                   MMEEventKeyLocationAuthorization: [CLLocationManager mme_authorizationStatusString],
-                                                   MMEEventKeySkuId: self.skuId ?: [NSNull null]
-                                                   };
+        NSDictionary *turnstileEventAttributes = @{
+            MMEEventKeyEvent: MMEEventTypeAppUserTurnstile,
+            MMEEventKeyCreated: [MMEDate.iso8601DateFormatter stringFromDate:[NSDate date]],
+            MMEEventKeyVendorID: self.commonEventData.vendorId,
+            // MMEEventKeyDevice is synonomous with MMEEventKeyModel but the server will only accept "device" in turnstile events
+            MMEEventKeyDevice: self.commonEventData.model,
+            MMEEventKeyOperatingSystem: self.commonEventData.osVersion,
+            MMEEventSDKIdentifier: NSUserDefaults.mme_configuration.mme_legacyUserAgentBase,
+            MMEEventSDKVersion: NSUserDefaults.mme_configuration.mme_legacyHostSDKVersion,
+            MMEEventKeyEnabledTelemetry: @(NSUserDefaults.mme_configuration.mme_isCollectionEnabled),
+            MMEEventKeyLocationEnabled: @(CLLocationManager.locationServicesEnabled),
+            MMEEventKeyLocationAuthorization: CLLocationManager.mme_authorizationStatusString,
+            MMEEventKeySkuId: self.skuId ?: NSNull.null
+       };
 
         MMEEvent *turnstileEvent = [MMEEvent turnstileEventWithAttributes:turnstileEventAttributes];
         [self pushDebugEventWithAttributes:@{
@@ -566,26 +535,6 @@
 
 #pragma mark - Internal API
 
-- (BOOL)isEnabled {
-    BOOL isPowerModeCompatibleWithCollection = YES;
-    
-// Only check power mode if compiling with the iOS 9+ SDK and, at runtime, if the API exists
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 90000
-    if ([NSProcessInfo instancesRespondToSelector:@selector(isLowPowerModeEnabled)]) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpartial-availability"
-        isPowerModeCompatibleWithCollection = ![[NSProcessInfo processInfo] isLowPowerModeEnabled];
-#pragma clang diagnostic pop
-    }
-#endif
-    
-#if TARGET_OS_SIMULATOR
-    return self.isMetricsEnabled && self.accountType == 0 && self.metricsEnabledInSimulator && isPowerModeCompatibleWithCollection;
-#else
-    return self.isMetricsEnabled && self.accountType == 0 && isPowerModeCompatibleWithCollection;
-#endif
-}
-
 - (void)pauseMetricsCollection {
     [self pushDebugEventWithAttributes:@{
         MMEDebugEventType: MMEDebugEventTypeMetricCollection,
@@ -613,7 +562,7 @@
         MMEDebugEventType: MMEDebugEventTypeMetricCollection,
         MMEEventKeyLocalDebugDescription: @"Resuming metrics collection..."}];
 
-    if (!self.isPaused || ![self isEnabled]) {
+    if (!self.isPaused || !NSUserDefaults.mme_configuration.mme_isCollectionEnabled) {
         [self pushDebugEventWithAttributes:@{
             MMEDebugEventType: MMEDebugEventTypeMetricCollection,
             MMEEventKeyLocalDebugDescription: @"Already running"}];

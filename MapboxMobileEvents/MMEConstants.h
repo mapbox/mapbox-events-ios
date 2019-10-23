@@ -156,14 +156,15 @@ extern NSErrorDomain const MMEErrorDomain;
     - MMEErrorEventInitInvalid if the provided eventAttributes cannot be converted to JSON objects
 */
 typedef NS_ENUM(NSInteger, MMEErrorNumber) {
-    MMENoError = 0,
-    MMEErrorException = 10001,
-    MMEErrorEventInit = 10002,
+    MMENoError                  = 0,
+    MMEErrorException           = 10001,
+    MMEErrorEventInit           = 10002,
     MMEErrorEventInitMissingKey = 10003,
     MMEErrorEventInitException  = 10004,
     MMEErrorEventInitInvalid    = 10005,
-    MMEErrorEventEncoding = 10006,
-    MMEErrorEventCounting = 10007
+    MMEErrorEventEncoding       = 10006,
+    MMEErrorEventCounting       = 10007,
+    MMEErrorConfigUpdateError   = 10008
 };
 
 /*! @brief key for MMEErrorEventInit userInfo dictionary containing the attributes which failed to create the event */

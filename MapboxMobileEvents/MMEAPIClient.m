@@ -23,7 +23,7 @@ typedef NS_ENUM(NSInteger, MMEErrorCode) {
 #pragma mark -
 
 @interface MMEAPIClient ()
-@property (nonatomic, retain) NSTimer *configurationUpdateTimer;
+@property (nonatomic) NSTimer *configurationUpdateTimer;
 @property (nonatomic) id<MMENSURLSessionWrapper> sessionWrapper;
 @property (nonatomic) NSBundle *applicationBundle;
 

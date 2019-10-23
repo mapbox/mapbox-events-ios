@@ -33,6 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)mme_registerDefaults {
     CLLocationDistance backgroundGeofence = MMEBackgroundGeofenceDefault;
     NSTimeInterval startupDelay = MMEStartupDelayDefault;
+    BOOL collectionEnabledInSimulator = NO;
     
     NSString *profileName = (NSString*)[NSBundle.mme_mainBundle objectForInfoDictionaryKey:MMEEventsProfile];
     if ([profileName isEqualToString:MMECustomProfile]) {
@@ -71,9 +72,14 @@ NS_ASSUME_NONNULL_BEGIN
         self.mme_legacyUserAgentBase = userAgentBase;
     }
     
-    id hostSDKVersion = [NSBundle.mainBundle objectForInfoDictionaryKey:@"MMEMapboxHostSDKVersion"];
+    id hostSDKVersion = [NSBundle.mme_mainBundle objectForInfoDictionaryKey:@"MMEMapboxHostSDKVersion"];
     if ([hostSDKVersion isKindOfClass:NSString.class]) {
         self.mme_legacyHostSDKVersion = hostSDKVersion;
+    }
+    
+    id infoCollectionEnabledInSimulator = [NSBundle.mme_mainBundle objectForInfoDictionaryKey:MMECollectionEnabledInSimulator];
+    if ([infoCollectionEnabledInSimulator isKindOfClass:NSNumber.class]) {
+        collectionEnabledInSimulator = [infoCollectionEnabledInSimulator boolValue];
     }
 
     [self registerDefaults:@{
@@ -84,6 +90,7 @@ NS_ASSUME_NONNULL_BEGIN
         MMEIdentifierRotationInterval: @(MMEIdentifierRotationIntervalDefault), // 24 hours
         MMEConfigurationUpdateInterval: @(MMEConfigurationUpdateIntervalDefault), // 24 hours
         MMEBackgroundStartupDelay: @(MMEBackgroundStartupDelayDefault), // seconds
+        MMECollectionEnabledInSimulator: @(collectionEnabledInSimulator) // boolean
     }];
 }
 
@@ -109,22 +116,22 @@ NS_ASSUME_NONNULL_BEGIN
     [self setVolatileDomain:volatileDomain forName:MMEConfigurationVolatileDomain];
 }
 
-// MARK: - Persistant Domain
+// MARK: - Persistent Domain
 
-- (NSDictionary*)mme_persistantDomain {
+- (NSDictionary*)mme_PersistentDomain {
     return [self persistentDomainForName:MMEConfigurationDomain] ?: NSDictionary.new;
 }
 
-- (void)mme_setObject:(id)value forPersistantKey:(MMEPersistentKey *)key {
-    NSMutableDictionary *persistantDomain = self.mme_persistantDomain.mutableCopy;
-    persistantDomain[key] = value;
-    [self setPersistentDomain:persistantDomain forName:MMEConfigurationDomain];
+- (void)mme_setObject:(id)value forPersistentKey:(MMEPersistentKey *)key {
+    NSMutableDictionary *PersistentDomain = self.mme_PersistentDomain.mutableCopy;
+    PersistentDomain[key] = value;
+    [self setPersistentDomain:PersistentDomain forName:MMEConfigurationDomain];
 }
 
-- (void)mme_deleteObjectPersistantKey:(MMEVolatileKey *)key {
-    NSMutableDictionary *persistantDomain = self.mme_persistantDomain.mutableCopy;
-    [persistantDomain removeObjectForKey:key];
-    [self setPersistentDomain:persistantDomain forName:MMEConfigurationDomain];
+- (void)mme_deleteObjectPersistentKey:(MMEPersistentKey *)key {
+    NSMutableDictionary *PersistentDomain = self.mme_PersistentDomain.mutableCopy;
+    [PersistentDomain removeObjectForKey:key];
+    [self setPersistentDomain:PersistentDomain forName:MMEConfigurationDomain];
 }
 
 // MARK: - Event Manager Configuration
@@ -240,7 +247,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (MMEDate *)mme_configUpdateDate {
     MMEDate *updateTime = (MMEDate *)[self mme_objectForVolatileKey:MMEConfigUpdateDate];
-    if (!updateTime) { // try loading from the persistant domain
+    if (!updateTime) { // try loading from the Persistent domain
         NSData *updateData = [self objectForKey:MMEConfigUpdateData];
         if (updateData) { // unarchive the data, saving the MMEDate in the volatile domain
             NSKeyedUnarchiver* unarchiver = [NSKeyedUnarchiver.alloc initForReadingWithData:updateData];
@@ -259,7 +266,7 @@ NS_ASSUME_NONNULL_BEGIN
                 archiver.requiresSecureCoding = YES;
                 [archiver encodeObject:updateTime forKey:NSKeyedArchiveRootObjectKey];
                 NSData *updateData = archiver.encodedData;
-                [self mme_setObject:updateData forPersistantKey:MMEConfigUpdateData];
+                [self mme_setObject:updateData forPersistentKey:MMEConfigUpdateData];
                 [self mme_setObject:updateTime forVolatileKey:MMEConfigUpdateDate];
             }
             else NSLog(@"WARNING Mapbox Mobile Events Config Update Date cannot be set to a future date: %@", updateTime);
@@ -312,11 +319,27 @@ NS_ASSUME_NONNULL_BEGIN
 // MARK: - Location Collection
 
 - (BOOL)mme_isCollectionEnabled {
-    return ![self boolForKey:MMECollectionDisabled];
+    BOOL collectionEnabled = ![self boolForKey:MMECollectionDisabled];
+    
+#if TARGET_OS_SIMULATOR
+    // disable collection in the simulator unless explicitly enabled for testing
+    if (!self.mme_isCollectionEnabledInSimulator) {
+        collectionEnabled = NO;
+    }
+#endif
+
+    // if not explicitly disabled, or in simulator, check for low power mode
+    if (@available(iOS 9.0, *)) {
+        if (collectionEnabled && [NSProcessInfo instancesRespondToSelector:@selector(isLowPowerModeEnabled)]) {
+                collectionEnabled = !NSProcessInfo.processInfo.isLowPowerModeEnabled;
+        }
+    }
+
+    return collectionEnabled;
 }
 
 - (void)mme_setIsCollectionEnabled:(BOOL) collectionEnabled {
-    [self mme_setObject:@(!collectionEnabled) forPersistantKey:MMECollectionDisabled];
+    [self mme_setObject:@(!collectionEnabled) forPersistentKey:MMECollectionDisabled];
 }
 
 - (BOOL)mme_isCollectionEnabledInSimulator {
@@ -511,65 +534,36 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)mme_updateFromAccountType:(NSInteger)typeCode {
     if (typeCode == MMEAccountType1) {
-        [self mme_setObject:@(YES) forPersistantKey:MMECollectionDisabled];
+        [self mme_setObject:@(YES) forPersistentKey:MMECollectionDisabled];
     }
     else if (typeCode == MMEAccountType2) {
-        [self mme_setObject:@(YES) forPersistantKey:MMECollectionDisabledInBackground];
+        [self mme_setObject:@(YES) forPersistentKey:MMECollectionDisabledInBackground];
     }
-}
-
-- (NSSet<NSData*> *)mme_serverSSLPinSet {
-    NSSet *serverSSLSet = (NSSet<NSData*> *)[self mme_objectForVolatileKey:MMEServerSSLPinSet];
-    if (!serverSSLSet) {
-        [self mme_setServerSSLPinSet:serverSSLSet];
-        serverSSLSet = [NSSet set];
-        NSArray *SSLArray = (NSArray<NSData*> *)[self mme_objectForVolatileKey:MMEServerSSLPinSet];
-        serverSSLSet = [serverSSLSet setByAddingObjectsFromArray:SSLArray];
-    }
-    
-    return serverSSLSet;
-}
-
-- (void)mme_setServerSSLPinSet:(NSMutableSet<NSData*> *)serverSSLPinSet {
-    if (!serverSSLPinSet) {
-        serverSSLPinSet = [NSMutableSet set];
-    }
-    
-    for (NSString *pinnedKeyHashBase64 in NSUserDefaults.mme_configuration.mme_certificatePinningConfig[MMEEventsMapboxCom]) {
-        NSData *pinnedKeyHash = [[NSData alloc] initWithBase64EncodedString:pinnedKeyHashBase64 options:(NSDataBase64DecodingOptions)0];
-        [serverSSLPinSet addObject:pinnedKeyHash];
-    }
-    for (NSString *pinnedKeyHashBase64 in NSUserDefaults.mme_configuration.mme_certificatePinningConfig[MMEEventsMapboxCN]) {
-        NSData *pinnedKeyHash = [[NSData alloc] initWithBase64EncodedString:pinnedKeyHashBase64 options:(NSDataBase64DecodingOptions)0];
-        [serverSSLPinSet addObject:pinnedKeyHash];
-    }
-    
-    [self mme_setObject:[serverSSLPinSet allObjects] forVolatileKey:MMEServerSSLPinSet];
 }
 
 - (BOOL)mme_updateFromConfigServiceObject:(NSDictionary *)configDictionary updateError:(NSError **)updateError{
     BOOL success = NO;
     if (configDictionary) {
         if ([configDictionary.allKeys containsObject:MMERevokedCertKeys]) {
-            NSLog(@"Config object contains invalid key: %@", MMERevokedCertKeys);
+            *updateError = [NSError errorWithDomain:MMEErrorDomain code:MMEErrorConfigUpdateError userInfo:@{
+                NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Config object contains invalid key: %@", MMERevokedCertKeys]
+            }];
             return success;
         }
 
         id configCRL = [configDictionary objectForKey:MMEConfigCRLKey];
         if ([configCRL isKindOfClass:NSArray.class]) {
-            if ([configCRL count] > 0) {
-                for (NSString *publicKeyHash in configCRL) {
-                    NSData *pinnedKeyHash = [[NSData alloc] initWithBase64EncodedString:publicKeyHash options:(NSDataBase64DecodingOptions)0];
-                    if ([pinnedKeyHash length] != CC_SHA256_DIGEST_LENGTH){
-                        // The subject public key info hash doesn't have a valid size
-                        NSLog(@"Hash value invalid: %@", pinnedKeyHash);
-                        return success;
-                    }
+            for (NSString *publicKeyHash in configCRL) {
+                NSData *pinnedKeyHash = [[NSData alloc] initWithBase64EncodedString:publicKeyHash options:(NSDataBase64DecodingOptions)0];
+                if ([pinnedKeyHash length] != CC_SHA256_DIGEST_LENGTH){
+                    *updateError = [NSError errorWithDomain:MMEErrorDomain code:MMEErrorConfigUpdateError userInfo:@{
+                        NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Hash value invalid: %@", pinnedKeyHash]
+                    }];
+                    return success;
                 }
-                
-                [self mme_setObject:configCRL forPersistantKey:MMECertificateRevocationList];
-                [self mme_setServerSSLPinSet:[NSMutableSet set]]; // Reset SSL pin set with fresh hashes
             }
+            
+            [self mme_setObject:configCRL forPersistentKey:MMECertificateRevocationList];
         }
         
         id configTTO = [configDictionary objectForKey:MMEConfigTTOKey];
@@ -582,7 +576,7 @@ NS_ASSUME_NONNULL_BEGIN
             CLLocationDistance gfoDistance = [configGFO doubleValue];
             if (gfoDistance >= MMECustomGeofenceRadiusMinimum
              && gfoDistance <= MMECustomGeofenceRadiusMaximum) {
-                [self mme_setObject:@(gfoDistance) forPersistantKey:MMEBackgroundGeofence];
+                [self mme_setObject:@(gfoDistance) forPersistentKey:MMEBackgroundGeofence];
             }
             else { // fallback to the default
                 [self removeObjectForKey:MMEBackgroundGeofence];
@@ -593,13 +587,13 @@ NS_ASSUME_NONNULL_BEGIN
         if ([configBSO isKindOfClass:NSNumber.class]) {
             NSTimeInterval bsoInterval = [configBSO doubleValue];
             if (bsoInterval > 0 && bsoInterval <= MMEStartupDelayMaximum) {
-                [self mme_setObject:@(bsoInterval) forPersistantKey:MMEBackgroundStartupDelay];
+                [self mme_setObject:@(bsoInterval) forPersistentKey:MMEBackgroundStartupDelay];
             }
         }
         
         id configTag = [configDictionary objectForKey:MMEConfigTagKey];
         if ([configTag isKindOfClass:NSString.class]) {
-            [self mme_setObject:configTag forPersistantKey:MMEConfigEventTag];
+            [self mme_setObject:configTag forPersistentKey:MMEConfigEventTag];
         }
         
         success = YES;

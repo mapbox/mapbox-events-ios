@@ -15,8 +15,10 @@
 
 #import "MMERunningLock.h"
 #import "MMEServiceFixture.h"
+#import "MMEBundleInfoFake.h"
 
 #import "NSUserDefaults+MMEConfiguration.h"
+#import "NSUserDefaults+MMEConfiguration_Private.h"
 
 @interface MMENSURLSessionWrapper (MMECertPinTests)
 
@@ -56,7 +58,18 @@
 @implementation MMECertPinTests
 
 - (void)setUp {
-    [MMEEventsManager.sharedManager initializeWithAccessToken:@"test-access-token" userAgentBase:@"user-agent-base-sucks" hostSDKVersion:@"-NaN"];
+    [MMEEventsManager.sharedManager initializeWithAccessToken:@"test-access-token" userAgentBase:@"user-agent-base-sucks" hostSDKVersion:@"1.2.3"];
+    
+    // reset configuration, set a test access token
+    [NSUserDefaults mme_resetConfiguration];
+    NSUserDefaults.mme_configuration.mme_accessToken = @"test-access-token";
+
+    // inject our config service URL from the MMEService Fixtures
+    NSMutableDictionary *infoDictionary = NSBundle.mainBundle.infoDictionary.mutableCopy;
+    infoDictionary[MMEConfigServiceURL] = MMEServiceFixture.serviceURL;
+    MMEBundleInfoFake *fakeBundle = [MMEBundleInfoFake new];
+    fakeBundle.infoDictionaryFake = infoDictionary;
+    NSBundle.mme_mainBundle = fakeBundle;
 
     self.apiClient = MMEEventsManager.sharedManager.apiClient;
 }

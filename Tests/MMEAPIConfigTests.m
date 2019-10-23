@@ -10,8 +10,8 @@
 #import "MMEDate.h"
 
 @interface MMEAPIClientConfigTests : XCTestCase <MMEEventsManagerDelegate>
-@property(nonatomic,retain) MMEAPIClient<MMEAPIClient> *apiClient;
-@property(nonatomic,retain) NSError *eventsError;
+@property(nonatomic) MMEAPIClient<MMEAPIClient> *apiClient;
+@property(nonatomic) NSError *eventsError;
 
 @end
 
@@ -22,22 +22,19 @@
 - (void)setUp {
     self.eventsError = nil;
 
+    // reset configuration, set a test access token
+    [NSUserDefaults mme_resetConfiguration];
+
+    // inject our config service URL from the MMEService Fixtures
+    NSMutableDictionary *fakeInfo = NSBundle.mainBundle.infoDictionary.mutableCopy;
+    fakeInfo[MMEConfigServiceURL] = MMEServiceFixture.serviceURL;
+    NSBundle.mme_mainBundle = [MMEBundleInfoFake bundleWithFakeInfo:fakeInfo];
+    [NSUserDefaults.mme_configuration mme_registerDefaults];
+
     // be the events manager delegate for the duration
     [MMEEventsManager.sharedManager initializeWithAccessToken:@"test-access-token" userAgentBase:@"user-agent-base-sucks" hostSDKVersion:@"-NaN"];
     MMEEventsManager.sharedManager.delegate = self;
-
-    self.apiClient = MMEEventsManager.sharedManager.apiClient;
-
-    // reset configuration, set a test access token
-    [NSUserDefaults mme_resetConfiguration];
-    NSUserDefaults.mme_configuration.mme_accessToken = @"test-access-token";
-
-    // inject our config service URL from the MMEService Fixtures
-    NSMutableDictionary *infoDictionary = NSBundle.mainBundle.infoDictionary.mutableCopy;
-    infoDictionary[MMEConfigServiceURL] = MMEServiceFixture.serviceURL;
-    MMEBundleInfoFake *fakeBundle = MMEBundleInfoFake.new;
-    fakeBundle.infoDictionaryFake = infoDictionary;
-    NSBundle.mme_mainBundle = fakeBundle;
+    self.apiClient = (MMEAPIClient<MMEAPIClient> *)MMEEventsManager.sharedManager.apiClient;
 }
 
 - (void)tearDown {
@@ -68,14 +65,10 @@
 - (void) test004_ShortUpdateInterval {
     NSError *configError = nil;
     MMEServiceFixture *configFixture = [MMEServiceFixture serviceFixtureWithResource:@"config-null"];
-    NSDictionary *powerOnDefaults = [NSUserDefaults.mme_configuration volatileDomainForName:NSRegistrationDomain];
-    NSMutableDictionary *shortConfigUpdateInterval = powerOnDefaults.mutableCopy;
-    shortConfigUpdateInterval[MMEConfigurationUpdateInterval] = @(MME1sTimeout);
-    [NSUserDefaults.mme_configuration registerDefaults:shortConfigUpdateInterval];
+    [NSUserDefaults.mme_configuration registerDefaults:@{MMEConfigurationUpdateInterval: @(MME1sTimeout)}];
 
     XCTAssert(NSUserDefaults.mme_configuration.mme_configUpdateInterval == MME1sTimeout);
     [self.apiClient startGettingConfigUpdates];
-
     XCTAssert(self.apiClient.isGettingConfigUpdates);
     XCTAssert([configFixture waitForConnectionWithTimeout:MME10sTimeout error:&configError]);
     XCTAssertNil(configError);
