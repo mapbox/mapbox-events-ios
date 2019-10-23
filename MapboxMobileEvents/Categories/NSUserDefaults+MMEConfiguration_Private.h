@@ -33,6 +33,7 @@ static MMEVolatileKey * const MMELegacyUserAgent = @"MMELegacyUserAgent";
 static MMEVolatileKey * const MMELegacyUserAgentBase = @"MMELegacyUserAgentBase";
 static MMEVolatileKey * const MMELegacyHostSDKVersion = @"MMELegacyHostSDKVersion";
 static MMEVolatileKey * const MMEConfigUpdateDate = @"MMEConfigUpdateDate";
+static MMEVolatileKey * const MMEServerSSLPinSet = @"MMEServerSSLPinSet";
 
 // MARK: - Info.plist Keys
 

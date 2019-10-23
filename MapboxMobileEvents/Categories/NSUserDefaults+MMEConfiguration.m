@@ -518,8 +518,23 @@ NS_ASSUME_NONNULL_BEGIN
     }
 }
 
-- (NSMutableSet<NSData*> *)mme_serverSSLPinSet {
-    NSMutableSet<NSData*> *serverSSLPinSet = [NSMutableSet set];
+- (NSSet<NSData*> *)mme_serverSSLPinSet {
+    NSSet *serverSSLSet = (NSSet<NSData*> *)[self mme_objectForVolatileKey:MMEServerSSLPinSet];
+    if (!serverSSLSet) {
+        [self mme_setServerSSLPinSet:serverSSLSet];
+        serverSSLSet = [NSSet set];
+        NSArray *SSLArray = (NSArray<NSData*> *)[self mme_objectForVolatileKey:MMEServerSSLPinSet];
+        serverSSLSet = [serverSSLSet setByAddingObjectsFromArray:SSLArray];
+    }
+    
+    return serverSSLSet;
+}
+
+- (void)mme_setServerSSLPinSet:(NSMutableSet<NSData*> *)serverSSLPinSet {
+    if (!serverSSLPinSet) {
+        serverSSLPinSet = [NSMutableSet set];
+    }
+    
     for (NSString *pinnedKeyHashBase64 in NSUserDefaults.mme_configuration.mme_certificatePinningConfig[MMEEventsMapboxCom]) {
         NSData *pinnedKeyHash = [[NSData alloc] initWithBase64EncodedString:pinnedKeyHashBase64 options:(NSDataBase64DecodingOptions)0];
         [serverSSLPinSet addObject:pinnedKeyHash];
@@ -529,7 +544,7 @@ NS_ASSUME_NONNULL_BEGIN
         [serverSSLPinSet addObject:pinnedKeyHash];
     }
     
-    return serverSSLPinSet;
+    [self mme_setObject:[serverSSLPinSet allObjects] forVolatileKey:MMEServerSSLPinSet];
 }
 
 - (BOOL)mme_updateFromConfigServiceObject:(NSDictionary *)configDictionary updateError:(NSError **)updateError{

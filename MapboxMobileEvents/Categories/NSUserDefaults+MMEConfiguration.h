@@ -84,7 +84,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) NSDictionary *mme_certificatePinningConfig;
 
 /// Base 64 encoded pinned hashes
-@property (nonatomic, readonly) NSSet<NSData *> *mme_serverSSLPinSet;
+@property (nonatomic, setter=mme_setServerSSLPinSet:) NSSet<NSData *> *mme_serverSSLPinSet;
 
 @end
 
