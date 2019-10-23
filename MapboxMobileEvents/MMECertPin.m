@@ -8,9 +8,7 @@
 
 @interface MMECertPin()
 
-@property (nonatomic) NSMutableSet<NSData *> *serverSSLPinsSet;
 @property (nonatomic) NSMutableDictionary<NSData *, NSData *> *publicKeyInfoHashesCache;
-@property (nonatomic) NSMutableSet<NSString *> *excludeSubdomainsSet;
 @property (nonatomic) NSURLSessionAuthChallengeDisposition lastAuthChallengeDisposition;
 
 @property (nonatomic) dispatch_queue_t lockQueue;
@@ -61,7 +59,7 @@
                 SecCertificateRef remoteCertificate = SecTrustGetCertificateAtIndex(serverTrust, lc);
                 NSData *remoteCertificatePublicKeyHash = [self hashSubjectPublicKeyInfoFromCertificate:remoteCertificate];
                 
-                if ([_serverSSLPinsSet containsObject:remoteCertificatePublicKeyHash]) {
+                if ([NSUserDefaults.mme_configuration.mme_serverSSLPinSet containsObject:remoteCertificatePublicKeyHash]) {
                     dispatch_async(dispatch_get_main_queue(), ^{
                         self.lastAuthChallengeDisposition = NSURLSessionAuthChallengeUseCredential;
                         completionHandler(NSURLSessionAuthChallengeUseCredential, [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust]);
@@ -82,7 +80,7 @@
                 });
                 
                 [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeCertPinning,
-                                                                            MMEEventKeyLocalDebugDescription: @"No certificate found; connection canceled"}];
+                                                                            MMEEventKeyLocalDebugDescription: @"No certificate found; connection cancelled"}];
             }
         }
         else if (trustResult == kSecTrustResultProceed) {

@@ -83,6 +83,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// The Certificate Pinning config
 @property (nonatomic, readonly) NSDictionary *mme_certificatePinningConfig;
 
+
+@property (nonatomic, readonly) NSSet<NSData *> *mme_serverSSLPinSet;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -160,6 +160,11 @@
     XCTAssert([NSUserDefaults.mme_configuration.mme_eventsServiceURL.absoluteString isEqualToString:MMEAPIClientBaseURL]);
 }
 
+-(void)testServerSSLPinSet {
+    XCTAssert(NSUserDefaults.mme_configuration.mme_serverSSLPinSet.count > 0);
+    XCTAssert([NSUserDefaults.mme_configuration.mme_serverSSLPinSet.anyObject isKindOfClass:NSData.class]);
+}
+
 - (void)testEventsServiceURLOverride {
     NSMutableDictionary *testInfoPlist = NSBundle.mainBundle.infoDictionary.mutableCopy;
     testInfoPlist[@"MMEEventsServiceURL"]  = @"https://test.com";

@@ -518,6 +518,20 @@ NS_ASSUME_NONNULL_BEGIN
     }
 }
 
+- (NSMutableSet<NSData*> *)mme_serverSSLPinSet {
+    NSMutableSet<NSData*> *serverSSLPinSet = [NSMutableSet set];
+    for (NSString *pinnedKeyHashBase64 in NSUserDefaults.mme_configuration.mme_certificatePinningConfig[MMEEventsMapboxCom]) {
+        NSData *pinnedKeyHash = [[NSData alloc] initWithBase64EncodedString:pinnedKeyHashBase64 options:(NSDataBase64DecodingOptions)0];
+        [serverSSLPinSet addObject:pinnedKeyHash];
+    }
+    for (NSString *pinnedKeyHashBase64 in NSUserDefaults.mme_configuration.mme_certificatePinningConfig[MMEEventsMapboxCN]) {
+        NSData *pinnedKeyHash = [[NSData alloc] initWithBase64EncodedString:pinnedKeyHashBase64 options:(NSDataBase64DecodingOptions)0];
+        [serverSSLPinSet addObject:pinnedKeyHash];
+    }
+    
+    return serverSSLPinSet;
+}
+
 - (BOOL)mme_updateFromConfigServiceObject:(NSDictionary *)configDictionary updateError:(NSError **)updateError{
     BOOL success = NO;
     if (configDictionary) {
