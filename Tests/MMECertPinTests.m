@@ -60,12 +60,12 @@
 }
 
 - (void)test001_checkCNHashCount {
-    NSArray *cnHashes = NSUserDefaults.mme_configuration.mme_certificatePinningConfig[MMEPinnedDomains][@"events.mapbox.cn"][MMEPublicKeyHashes];
+    NSArray *cnHashes = NSUserDefaults.mme_configuration.mme_certificatePinningConfig[@"events.mapbox.cn"];
     XCTAssert(cnHashes.count ==54);
 }
 
 -(void)test002_checkCOMHashCount {
-    NSArray *comHashes = NSUserDefaults.mme_configuration.mme_certificatePinningConfig[MMEPinnedDomains][@"events.mapbox.com"][MMEPublicKeyHashes];
+    NSArray *comHashes = NSUserDefaults.mme_configuration.mme_certificatePinningConfig[@"events.mapbox.com"];
     XCTAssert(comHashes.count ==54);
 }
     
@@ -76,7 +76,7 @@
     XCTAssert([configFixture waitForConnectionWithTimeout:MME10sTimeout error:&configError]); // fetch the config fixture
     XCTAssertNil(configError);
 
-    NSArray *cnHashes = NSUserDefaults.mme_configuration.mme_certificatePinningConfig[MMEPinnedDomains][@"events.mapbox.cn"][MMEPublicKeyHashes];
+    NSArray *cnHashes = NSUserDefaults.mme_configuration.mme_certificatePinningConfig[@"events.mapbox.cn"];
     XCTAssert(cnHashes.count == 53);
 }
             
@@ -87,7 +87,7 @@
     XCTAssert([configFixture waitForConnectionWithTimeout:MME10sTimeout error:&configError]); // fetch the config fixture
     XCTAssertNil(configError);
 
-    NSArray *comHashes = NSUserDefaults.mme_configuration.mme_certificatePinningConfig[MMEPinnedDomains][@"events.mapbox.com"][MMEPublicKeyHashes];
+    NSArray *comHashes = NSUserDefaults.mme_configuration.mme_certificatePinningConfig[@"events.mapbox.com"];
     XCTAssert(comHashes.count == 53);
 }
 

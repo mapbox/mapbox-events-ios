@@ -4,12 +4,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-// MARK: mme_certificatePinningConfig Keys
-
-extern NSString * const MMEPinnedDomains;
-extern NSString * const MMEPublicKeyHashes;
-extern NSString * const MMEExcludeSubdomainFromParentPolicy;
-
 // MARK: -
 
 @class MMEDate;
@@ -82,9 +76,6 @@ extern NSString * const MMEExcludeSubdomainFromParentPolicy;
 @property (nonatomic, readonly) CLLocationDistance mme_backgroundGeofence;
 
 // MARK: - Certificate Pinning and Revocation
-
-// This property is volatile
-@property (nonatomic, setter=mme_setShouldUpdateSSL:) BOOL mme_shouldUpdateSSL;
 
 /// An array of revoked public key hashes
 @property (nonatomic, readonly) NSArray<NSString *>*mme_certificateRevocationList;

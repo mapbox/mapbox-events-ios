@@ -1,15 +1,11 @@
+#import <CommonCrypto/CommonDigest.h>
+
 #import "NSUserDefaults+MMEConfiguration.h"
 #import "NSUserDefaults+MMEConfiguration_Private.h"
 #import "MMEConstants.h"
 #import "MMEDate.h"
 
 NS_ASSUME_NONNULL_BEGIN
-
-// MARK: Constants
-
-NSString * const MMEPinnedDomains = @"MMEPinnedDomains";
-NSString * const MMEPublicKeyHashes = @"MMEPublicKeyHashes";
-NSString * const MMEExcludeSubdomainFromParentPolicy = @"MMEExcludeSubdomainFromParentPolicy";
 
 // MARK: -
 
@@ -350,14 +346,6 @@ NSString * const MMEExcludeSubdomainFromParentPolicy = @"MMEExcludeSubdomainFrom
 
 // MARK: - Certificate Pinning and Revocation
 
-- (BOOL)mme_shouldUpdateSSL {
-    return [self boolForKey:MMEShouldUpdateSSL];
-}
-
-- (void)mme_setShouldUpdateSSL:(BOOL)shouldUpdateSSL {
-    [self mme_setObject:@(shouldUpdateSSL) forVolatileKey:MMEShouldUpdateSSL];
-}
-
 - (NSArray<NSString *>*)mme_certificateRevocationList {
     NSArray<NSString *>* crl = @[];
     id crlObject = [self objectForKey:MMECertificateRevocationList];
@@ -499,17 +487,11 @@ NSString * const MMEExcludeSubdomainFromParentPolicy = @"MMEExcludeSubdomainFrom
     }
     
     return @{
-        MMEPinnedDomains: @{
-            MMEAPIMapboxCom:        @{ MMEExcludeSubdomainFromParentPolicy: @(YES) },
-            MMEAPIMapboxCN:         @{ MMEExcludeSubdomainFromParentPolicy: @(YES) },
-            MMEEventsMapboxCom:     @{ MMEPublicKeyHashes: comPublicKeys },
-            MMEEventsMapboxCN:      @{ MMEPublicKeyHashes: cnPublicKeys },
-            MMEConfigMapboxCom:     @{ MMEExcludeSubdomainFromParentPolicy: @(YES) },
-            MMEConfigMapboxCN:      @{ MMEExcludeSubdomainFromParentPolicy: @(YES) },
+        MMEEventsMapboxCom:     comPublicKeys,
+        MMEEventsMapboxCN:      cnPublicKeys,
 #if DEBUG
-            MMEEventsTilestreamNet: @{ MMEPublicKeyHashes: @[@"3euxrJOrEZI15R4104UsiAkDqe007EPyZ6eTL/XxdAY="] }
+        MMEEventsTilestreamNet: @[@"3euxrJOrEZI15R4104UsiAkDqe007EPyZ6eTL/XxdAY="]
 #endif
-       }
     };
 }
 
@@ -539,18 +521,25 @@ NSString * const MMEExcludeSubdomainFromParentPolicy = @"MMEExcludeSubdomainFrom
 - (BOOL)mme_updateFromConfigServiceObject:(NSDictionary *)configDictionary updateError:(NSError **)updateError{
     BOOL success = NO;
     if (configDictionary) {
-        id revokedCertKeys = [configDictionary objectForKey:MMERevokedCertKeys];
-        if ([revokedCertKeys isKindOfClass:NSArray.class]) {
-            if ([revokedCertKeys count] > 0) {
-                [self mme_setObject:revokedCertKeys forPersistantKey:MMECertificateRevocationList];
-            }
+        if ([configDictionary.allKeys containsObject:MMERevokedCertKeys]) {
+            NSLog(@"Config object contains invalid key: %@", MMERevokedCertKeys);
+            goto exit;
         }
 
         id configCRL = [configDictionary objectForKey:MMEConfigCRLKey];
         if ([configCRL isKindOfClass:NSArray.class]) {
             if ([configCRL count] > 0) {
+                for (NSString *publicKeyHash in configCRL) {
+                    //TODO: add to unit test on all hashes
+                    NSData *pinnedKeyHash = [[NSData alloc] initWithBase64EncodedString:publicKeyHash options:(NSDataBase64DecodingOptions)0];
+                    if ([pinnedKeyHash length] != CC_SHA256_DIGEST_LENGTH){
+                        // The subject public key info hash doesn't have a valid size
+                        NSLog(@"Hash value invalid: %@", pinnedKeyHash);
+                        goto exit;
+                    }
+                }
+                
                 [self mme_setObject:configCRL forPersistantKey:MMECertificateRevocationList];
-                [self mme_setObject:[NSNumber numberWithBool:YES] forVolatileKey:MMEShouldUpdateSSL];
             }
         }
         
@@ -586,6 +575,7 @@ NSString * const MMEExcludeSubdomainFromParentPolicy = @"MMEExcludeSubdomainFrom
         
         success = YES;
     }
+exit:
     return success;
 }
 
