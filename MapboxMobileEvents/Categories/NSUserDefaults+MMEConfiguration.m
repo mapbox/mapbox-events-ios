@@ -32,7 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// check for Info.plist keys which change various default configuration values
 - (void)mme_registerDefaults {
     CLLocationDistance backgroundGeofence = kMMEBackgroundGeofence;
-    NSTimeInterval startupDelay = kMMEBackgroundStartupDelay;
+    NSTimeInterval startupDelay = kMMEStartupDelay;
     
     NSString *profileName = (NSString*)[NSBundle.mme_mainBundle objectForInfoDictionaryKey:MMEEventsProfile];
     if ([profileName isEqualToString:MMECustomProfile]) {
@@ -568,6 +568,7 @@ NS_ASSUME_NONNULL_BEGIN
                 }
                 
                 [self mme_setObject:configCRL forPersistantKey:MMECertificateRevocationList];
+                [self mme_setServerSSLPinSet:[NSMutableSet set]]; // Reset SSL pin set with fresh hashes
             }
         }
         
