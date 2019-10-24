@@ -552,7 +552,7 @@ NS_ASSUME_NONNULL_BEGIN
     if (configDictionary) {
         if ([configDictionary.allKeys containsObject:MMERevokedCertKeys]) {
             NSLog(@"Config object contains invalid key: %@", MMERevokedCertKeys);
-            goto exit;
+            return success;
         }
 
         id configCRL = [configDictionary objectForKey:MMEConfigCRLKey];
@@ -563,7 +563,7 @@ NS_ASSUME_NONNULL_BEGIN
                     if ([pinnedKeyHash length] != CC_SHA256_DIGEST_LENGTH){
                         // The subject public key info hash doesn't have a valid size
                         NSLog(@"Hash value invalid: %@", pinnedKeyHash);
-                        goto exit;
+                        return success;
                     }
                 }
                 
@@ -604,7 +604,6 @@ NS_ASSUME_NONNULL_BEGIN
         
         success = YES;
     }
-exit:
     return success;
 }
 
