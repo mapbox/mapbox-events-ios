@@ -8,9 +8,7 @@
 
 @interface MMECertPin()
 
-@property (nonatomic) NSMutableSet<NSData *> *serverSSLPinsSet;
 @property (nonatomic) NSMutableDictionary<NSData *, NSData *> *publicKeyInfoHashesCache;
-@property (nonatomic) NSMutableSet<NSString *> *excludeSubdomainsSet;
 @property (nonatomic) NSURLSessionAuthChallengeDisposition lastAuthChallengeDisposition;
 
 @property (nonatomic) dispatch_queue_t lockQueue;
@@ -21,8 +19,6 @@
 
 - (instancetype)init {
     if (self = [super init]) {
-        _serverSSLPinsSet = [NSMutableSet set];
-        _excludeSubdomainsSet = [NSMutableSet set];
         _publicKeyInfoHashesCache = [NSMutableDictionary dictionary];
         _lockQueue = dispatch_queue_create("MMECertHashLock", DISPATCH_QUEUE_CONCURRENT);
     }
@@ -34,20 +30,18 @@
     
     if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
         
-        //Domain should be excluded
-        for (NSString *excludeSubdomains in _excludeSubdomainsSet) {
-            if ([challenge.protectionSpace.host isEqualToString:excludeSubdomains]) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    self.lastAuthChallengeDisposition = NSURLSessionAuthChallengePerformDefaultHandling;
-                    completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
-                });
-                
-                NSString *debugDescription = [NSString stringWithFormat:@"Excluded subdomain(s): %@", excludeSubdomains];
-                [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeCertPinning,
-                                                                            MMEEventKeyLocalDebugDescription: debugDescription}];
-                
-                return;
-            }
+        //Domain should be included
+        if (![NSUserDefaults.mme_configuration.mme_certificatePinningConfig.allKeys containsObject:challenge.protectionSpace.host]) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.lastAuthChallengeDisposition = NSURLSessionAuthChallengePerformDefaultHandling;
+                completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
+            });
+            
+            NSString *debugDescription = [NSString stringWithFormat:@"%@ excludes domain: %@", self.class, challenge.protectionSpace.host];
+            [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeCertPinning,
+                                                                        MMEEventKeyLocalDebugDescription: debugDescription}];
+            
+            return;
         }
         
         SecTrustRef serverTrust = [[challenge protectionSpace] serverTrust];
@@ -65,7 +59,7 @@
                 SecCertificateRef remoteCertificate = SecTrustGetCertificateAtIndex(serverTrust, lc);
                 NSData *remoteCertificatePublicKeyHash = [self hashSubjectPublicKeyInfoFromCertificate:remoteCertificate];
                 
-                if ([_serverSSLPinsSet containsObject:remoteCertificatePublicKeyHash]) {
+                if ([NSUserDefaults.mme_configuration.mme_serverSSLPinSet containsObject:remoteCertificatePublicKeyHash]) {
                     dispatch_async(dispatch_get_main_queue(), ^{
                         self.lastAuthChallengeDisposition = NSURLSessionAuthChallengeUseCredential;
                         completionHandler(NSURLSessionAuthChallengeUseCredential, [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust]);
@@ -86,7 +80,7 @@
                 });
                 
                 [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeCertPinning,
-                                                                            MMEEventKeyLocalDebugDescription: @"No certificate found; connection canceled"}];
+                                                                            MMEEventKeyLocalDebugDescription: @"No certificate found; connection cancelled"}];
             }
         }
         else if (trustResult == kSecTrustResultProceed) {

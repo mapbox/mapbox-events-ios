@@ -1,15 +1,11 @@
+#import <CommonCrypto/CommonDigest.h>
+
 #import "NSUserDefaults+MMEConfiguration.h"
 #import "NSUserDefaults+MMEConfiguration_Private.h"
 #import "MMEConstants.h"
 #import "MMEDate.h"
 
 NS_ASSUME_NONNULL_BEGIN
-
-// MARK: Constants
-
-NSString * const MMEPinnedDomains = @"MMEPinnedDomains";
-NSString * const MMEPublicKeyHashes = @"MMEPublicKeyHashes";
-NSString * const MMEExcludeSubdomainFromParentPolicy = @"MMEExcludeSubdomainFromParentPolicy";
 
 // MARK: -
 
@@ -35,8 +31,8 @@ NSString * const MMEExcludeSubdomainFromParentPolicy = @"MMEExcludeSubdomainFrom
 
 /// check for Info.plist keys which change various default configuration values
 - (void)mme_registerDefaults {
-    CLLocationDistance backgroundGeofence = 300.0; // Meters
-    NSTimeInterval startupDelay = 1;
+    CLLocationDistance backgroundGeofence = MMEBackgroundGeofenceDefault;
+    NSTimeInterval startupDelay = MMEStartupDelayDefault;
     
     NSString *profileName = (NSString*)[NSBundle.mme_mainBundle objectForInfoDictionaryKey:MMEEventsProfile];
     if ([profileName isEqualToString:MMECustomProfile]) {
@@ -83,11 +79,11 @@ NSString * const MMEExcludeSubdomainFromParentPolicy = @"MMEExcludeSubdomainFrom
     [self registerDefaults:@{
         MMEStartupDelay: @(startupDelay), // seconds
         MMEBackgroundGeofence: @(backgroundGeofence), // meters
-        MMEEventFlushCount: @(10), // events
-        MMEEventFlushInterval: @(10), // seconds
-        MMEIdentifierRotationInterval: @(24 * 60 * 60), // 24 hours
-        MMEConfigurationUpdateInterval: @(24 * 60 * 60), // 24 hours
-        MMEBackgroundStartupDelay: @(15.0), // seconds
+        MMEEventFlushCount: @(MMEEventFlushCountDefault), // events
+        MMEEventFlushInterval: @(MMEEventFlushIntervalDefault), // seconds
+        MMEIdentifierRotationInterval: @(MMEIdentifierRotationIntervalDefault), // 24 hours
+        MMEConfigurationUpdateInterval: @(MMEConfigurationUpdateIntervalDefault), // 24 hours
+        MMEBackgroundStartupDelay: @(MMEBackgroundStartupDelayDefault), // seconds
     }];
 }
 
@@ -491,17 +487,11 @@ NSString * const MMEExcludeSubdomainFromParentPolicy = @"MMEExcludeSubdomainFrom
     }
     
     return @{
-        MMEPinnedDomains: @{
-            MMEAPIMapboxCom:        @{ MMEExcludeSubdomainFromParentPolicy: @(YES) },
-            MMEAPIMapboxCN:         @{ MMEExcludeSubdomainFromParentPolicy: @(YES) },
-            MMEEventsMapboxCom:     @{ MMEPublicKeyHashes: comPublicKeys },
-            MMEEventsMapboxCN:      @{ MMEPublicKeyHashes: cnPublicKeys },
-            MMEConfigMapboxCom:     @{ MMEExcludeSubdomainFromParentPolicy: @(YES) },
-            MMEConfigMapboxCN:      @{ MMEExcludeSubdomainFromParentPolicy: @(YES) },
+        MMEEventsMapboxCom:     comPublicKeys,
+        MMEEventsMapboxCN:      cnPublicKeys,
 #if DEBUG
-            MMEEventsTilestreamNet: @{ MMEPublicKeyHashes: @[@"3euxrJOrEZI15R4104UsiAkDqe007EPyZ6eTL/XxdAY="] }
+        MMEEventsTilestreamNet: @[@"3euxrJOrEZI15R4104UsiAkDqe007EPyZ6eTL/XxdAY="]
 #endif
-       }
     };
 }
 
@@ -528,20 +518,57 @@ NSString * const MMEExcludeSubdomainFromParentPolicy = @"MMEExcludeSubdomainFrom
     }
 }
 
+- (NSSet<NSData*> *)mme_serverSSLPinSet {
+    NSSet *serverSSLSet = (NSSet<NSData*> *)[self mme_objectForVolatileKey:MMEServerSSLPinSet];
+    if (!serverSSLSet) {
+        [self mme_setServerSSLPinSet:serverSSLSet];
+        serverSSLSet = [NSSet set];
+        NSArray *SSLArray = (NSArray<NSData*> *)[self mme_objectForVolatileKey:MMEServerSSLPinSet];
+        serverSSLSet = [serverSSLSet setByAddingObjectsFromArray:SSLArray];
+    }
+    
+    return serverSSLSet;
+}
+
+- (void)mme_setServerSSLPinSet:(NSMutableSet<NSData*> *)serverSSLPinSet {
+    if (!serverSSLPinSet) {
+        serverSSLPinSet = [NSMutableSet set];
+    }
+    
+    for (NSString *pinnedKeyHashBase64 in NSUserDefaults.mme_configuration.mme_certificatePinningConfig[MMEEventsMapboxCom]) {
+        NSData *pinnedKeyHash = [[NSData alloc] initWithBase64EncodedString:pinnedKeyHashBase64 options:(NSDataBase64DecodingOptions)0];
+        [serverSSLPinSet addObject:pinnedKeyHash];
+    }
+    for (NSString *pinnedKeyHashBase64 in NSUserDefaults.mme_configuration.mme_certificatePinningConfig[MMEEventsMapboxCN]) {
+        NSData *pinnedKeyHash = [[NSData alloc] initWithBase64EncodedString:pinnedKeyHashBase64 options:(NSDataBase64DecodingOptions)0];
+        [serverSSLPinSet addObject:pinnedKeyHash];
+    }
+    
+    [self mme_setObject:[serverSSLPinSet allObjects] forVolatileKey:MMEServerSSLPinSet];
+}
+
 - (BOOL)mme_updateFromConfigServiceObject:(NSDictionary *)configDictionary updateError:(NSError **)updateError{
     BOOL success = NO;
     if (configDictionary) {
-        id revokedCertKeys = [configDictionary objectForKey:MMERevokedCertKeys];
-        if ([revokedCertKeys isKindOfClass:NSArray.class]) {
-            if ([revokedCertKeys count] > 0) {
-                [self mme_setObject:revokedCertKeys forPersistantKey:MMECertificateRevocationList];
-            }
+        if ([configDictionary.allKeys containsObject:MMERevokedCertKeys]) {
+            NSLog(@"Config object contains invalid key: %@", MMERevokedCertKeys);
+            return success;
         }
 
         id configCRL = [configDictionary objectForKey:MMEConfigCRLKey];
         if ([configCRL isKindOfClass:NSArray.class]) {
             if ([configCRL count] > 0) {
+                for (NSString *publicKeyHash in configCRL) {
+                    NSData *pinnedKeyHash = [[NSData alloc] initWithBase64EncodedString:publicKeyHash options:(NSDataBase64DecodingOptions)0];
+                    if ([pinnedKeyHash length] != CC_SHA256_DIGEST_LENGTH){
+                        // The subject public key info hash doesn't have a valid size
+                        NSLog(@"Hash value invalid: %@", pinnedKeyHash);
+                        return success;
+                    }
+                }
+                
                 [self mme_setObject:configCRL forPersistantKey:MMECertificateRevocationList];
+                [self mme_setServerSSLPinSet:[NSMutableSet set]]; // Reset SSL pin set with fresh hashes
             }
         }
         
