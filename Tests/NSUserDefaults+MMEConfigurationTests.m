@@ -19,13 +19,13 @@
     [super setUp];
     self.continueAfterFailure = NO;
     NSDictionary *testDefaults = @{ // alternate defaults
-        MMEStartupDelay: @(kMMEStartupDelay), // seconds
-        MMEBackgroundGeofence: @(kMMEBackgroundGeofence), // meters
-        MMEEventFlushCount: @(kMMEEventFlushCount), // events
-        MMEEventFlushInterval: @(kMMEEventFlushInterval), // seconds
-        MMEIdentifierRotationInterval: @(kMMEIdentifierRotationInterval), // 24 hours
-        MMEConfigurationUpdateInterval: @(kMMEConfigurationUpdateInterval), // 24 hours
-        MMEBackgroundStartupDelay: @(kMMEBackgroundStartupDelay), // seconds
+        MMEStartupDelay: @(MMEStartupDelayDefault), // seconds
+        MMEBackgroundGeofence: @(MMEBackgroundGeofenceDefault), // meters
+        MMEEventFlushCount: @(MMEEventFlushCountDefault), // events
+        MMEEventFlushInterval: @(MMEEventFlushIntervalDefault), // seconds
+        MMEIdentifierRotationInterval: @(MMEIdentifierRotationIntervalDefault), // 24 hours
+        MMEConfigurationUpdateInterval: @(MMEConfigurationUpdateIntervalDefault), // 24 hours
+        MMEBackgroundStartupDelay: @(MMEBackgroundStartupDelayDefault), // seconds
         MMECertificateRevocationList: @[@"badcert",@"badcert"],
         MMECollectionDisabled: @NO,
         MMECollectionEnabledInSimulator: @YES,

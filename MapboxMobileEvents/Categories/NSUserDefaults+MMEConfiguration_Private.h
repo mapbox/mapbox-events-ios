@@ -81,13 +81,13 @@ static NSString * const MMEConfigTagKey = @"tag"; // event tag
 
 // MARK: - Constants
 
-static int const kMMEEventFlushCount = 180; // events
-static NSTimeInterval const kMMEEventFlushInterval = 180; // seconds
-static NSTimeInterval const kMMEIdentifierRotationInterval = 24 * 60 * 60; // 24 hours
-static NSTimeInterval const kMMEConfigurationUpdateInterval = 24 * 60 * 60; // 24 hours
-static NSTimeInterval const kMMEBackgroundStartupDelay = 15.0; // seconds
-static NSTimeInterval const kMMEStartupDelay = 1;
-static CLLocationDistance const kMMEBackgroundGeofence = 300.0; // Meters
+static int const MMEEventFlushCountDefault = 180; // events
+static NSTimeInterval const MMEEventFlushIntervalDefault = 180; // seconds
+static NSTimeInterval const MMEIdentifierRotationIntervalDefault = 24 * 60 * 60; // 24 hours
+static NSTimeInterval const MMEConfigurationUpdateIntervalDefault = 24 * 60 * 60; // 24 hours
+static NSTimeInterval const MMEBackgroundStartupDelayDefault = 15.0; // seconds
+static NSTimeInterval const MMEStartupDelayDefault = 1;
+static CLLocationDistance const MMEBackgroundGeofenceDefault = 300.0; // Meters
 
 // MARK: - Limits
 

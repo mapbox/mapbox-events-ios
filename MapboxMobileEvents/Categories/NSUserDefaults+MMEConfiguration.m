@@ -31,8 +31,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// check for Info.plist keys which change various default configuration values
 - (void)mme_registerDefaults {
-    CLLocationDistance backgroundGeofence = kMMEBackgroundGeofence;
-    NSTimeInterval startupDelay = kMMEStartupDelay;
+    CLLocationDistance backgroundGeofence = MMEBackgroundGeofenceDefault;
+    NSTimeInterval startupDelay = MMEStartupDelayDefault;
     
     NSString *profileName = (NSString*)[NSBundle.mme_mainBundle objectForInfoDictionaryKey:MMEEventsProfile];
     if ([profileName isEqualToString:MMECustomProfile]) {
@@ -79,11 +79,11 @@ NS_ASSUME_NONNULL_BEGIN
     [self registerDefaults:@{
         MMEStartupDelay: @(startupDelay), // seconds
         MMEBackgroundGeofence: @(backgroundGeofence), // meters
-        MMEEventFlushCount: @(kMMEEventFlushCount), // events
-        MMEEventFlushInterval: @(kMMEEventFlushInterval), // seconds
-        MMEIdentifierRotationInterval: @(kMMEIdentifierRotationInterval), // 24 hours
-        MMEConfigurationUpdateInterval: @(kMMEConfigurationUpdateInterval), // 24 hours
-        MMEBackgroundStartupDelay: @(kMMEBackgroundStartupDelay), // seconds
+        MMEEventFlushCount: @(MMEEventFlushCountDefault), // events
+        MMEEventFlushInterval: @(MMEEventFlushIntervalDefault), // seconds
+        MMEIdentifierRotationInterval: @(MMEIdentifierRotationIntervalDefault), // 24 hours
+        MMEConfigurationUpdateInterval: @(MMEConfigurationUpdateIntervalDefault), // 24 hours
+        MMEBackgroundStartupDelay: @(MMEBackgroundStartupDelayDefault), // seconds
     }];
 }
 
