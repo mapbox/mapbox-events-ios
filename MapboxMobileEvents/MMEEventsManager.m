@@ -27,6 +27,11 @@
 #import "CLLocationManager+MMEMobileEvents.h"
 #import "NSUserDefaults+MMEConfiguration.h"
 
+@interface MMEAPIClient () <MMEAPIClient>
+@end
+
+// MARK: -
+
 @interface MMEEventsManager () <MMELocationManagerDelegate>
 
 @property (nonatomic) id<MMELocationManager> locationManager;

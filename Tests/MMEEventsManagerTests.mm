@@ -103,8 +103,8 @@ describe(@"MMEEventsManager", ^{
 
         [eventsManager.eventQueue removeAllObjects];
 
-        spy_on(NSUserDefaults.mme_configuration);
-        NSUserDefaults.mme_configuration stub_method(@selector(mme_eventFlushCount)).and_return((unsigned long)1000);
+        // set a high MMEEventFlushCount to prevent crossing the threshold in the tests
+        [NSUserDefaults.mme_configuration setObject:@1000 forKey:MMEEventFlushCount];
     });
 
     it(@"sets common event data", ^{
@@ -392,8 +392,9 @@ describe(@"MMEEventsManager", ^{
                     context(@"when the event count threshold has not yet been reached and a location event is received", ^{
                         beforeEach(^{
                             spy_on(eventsManager.timerManager);
-                            spy_on(NSUserDefaults.mme_configuration);
-                            NSUserDefaults.mme_configuration stub_method(@selector(mme_eventFlushCount)).again().and_return((unsigned long)2); // set a low value to make it easy to cross threshold in the test
+                            // set a low MMEEventFlushCount to make it easy to cross threshold in the test
+                            [NSUserDefaults.mme_configuration setObject:@2 forKey:MMEEventFlushCount];
+                            
                             eventsManager.delegate = nice_fake_for(@protocol(MMEEventsManagerDelegate));
                             
                             [eventsManager locationManager:nil didUpdateLocations:locations];

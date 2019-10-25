@@ -4,12 +4,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-// MARK: mme_certificatePinningConfig Keys
-
-extern NSString * const MMEPinnedDomains;
-extern NSString * const MMEPublicKeyHashes;
-extern NSString * const MMEExcludeSubdomainFromParentPolicy;
-
 // MARK: -
 
 @class MMEDate;
@@ -88,6 +82,9 @@ extern NSString * const MMEExcludeSubdomainFromParentPolicy;
 
 /// The Certificate Pinning config
 @property (nonatomic, readonly) NSDictionary *mme_certificatePinningConfig;
+
+/// Base 64 encoded pinned hashes
+@property (nonatomic, setter=mme_setServerSSLPinSet:) NSSet<NSData *> *mme_serverSSLPinSet;
 
 @end
 

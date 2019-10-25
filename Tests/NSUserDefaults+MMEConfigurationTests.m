@@ -19,13 +19,13 @@
     [super setUp];
     self.continueAfterFailure = NO;
     NSDictionary *testDefaults = @{ // alternate defaults
-        MMEStartupDelay: @(1), // seconds
-        MMEBackgroundGeofence: @(300), // meters
-        MMEEventFlushCount: @(180), // events
-        MMEEventFlushInterval: @(180), // seconds
-        MMEIdentifierRotationInterval: @(24 * 60 * 60), // 24 hours
-        MMEConfigurationUpdateInterval: @(24 * 60 * 60), // 24 hours
-        MMEBackgroundStartupDelay: @(1), // seconds
+        MMEStartupDelay: @(MMEStartupDelayDefault), // seconds
+        MMEBackgroundGeofence: @(MMEBackgroundGeofenceDefault), // meters
+        MMEEventFlushCount: @(MMEEventFlushCountDefault), // events
+        MMEEventFlushInterval: @(MMEEventFlushIntervalDefault), // seconds
+        MMEIdentifierRotationInterval: @(MMEIdentifierRotationIntervalDefault), // 24 hours
+        MMEConfigurationUpdateInterval: @(MMEConfigurationUpdateIntervalDefault), // 24 hours
+        MMEBackgroundStartupDelay: @(MMEBackgroundStartupDelayDefault), // seconds
         MMECertificateRevocationList: @[@"badcert",@"badcert"],
         MMECollectionDisabled: @NO,
         MMECollectionEnabledInSimulator: @YES,
@@ -73,7 +73,7 @@
 }
 
 - (void)testEventBackgroundStartupDelayDefault {
-    XCTAssert(NSUserDefaults.mme_configuration.mme_backgroundStartupDelay == 1);
+    XCTAssert(NSUserDefaults.mme_configuration.mme_backgroundStartupDelay == 15);
 }
 
 - (void)testUserAgentGenerationDefault {
@@ -158,6 +158,17 @@
     
 - (void)testEventsServiceURLDefault {
     XCTAssert([NSUserDefaults.mme_configuration.mme_eventsServiceURL.absoluteString isEqualToString:MMEAPIClientBaseURL]);
+}
+
+- (void)testServerSSLPinSet {
+    XCTAssert(NSUserDefaults.mme_configuration.mme_serverSSLPinSet.count > 0);
+}
+
+- (void)testServerSSLPinSetIsReset {
+    // Count of CN and COM hashes
+    XCTAssert(NSUserDefaults.mme_configuration.mme_serverSSLPinSet.count == 108);
+    [NSUserDefaults.mme_configuration mme_setServerSSLPinSet:[NSMutableSet set]];
+    XCTAssert(NSUserDefaults.mme_configuration.mme_serverSSLPinSet.count == 108);
 }
 
 - (void)testEventsServiceURLOverride {
