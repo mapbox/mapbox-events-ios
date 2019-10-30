@@ -170,41 +170,54 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)pauseOrResumeMetricsCollectionIfRequired {
     @try {
-        // Prevent blue status bar when host app has `when in use` permission only and it is not in foreground
-        if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedWhenInUse
-         && self.application.applicationState == UIApplicationStateBackground
-         && NSUserDefaults.mme_configuration.mme_isCollectionEnabledInBackground) {
-            if (_backgroundTaskIdentifier == UIBackgroundTaskInvalid) {
-                __weak __typeof__(self) weakSelf = self;
-                _backgroundTaskIdentifier = [self.application beginBackgroundTaskWithExpirationHandler:^{
-                    __strong __typeof__(weakSelf) strongSelf = weakSelf;
-                    [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeBackgroundTask,
-                                                         MMEEventKeyLocalDebugDescription: @"Ending background task",
-                                                         @"Identifier": @(strongSelf.backgroundTaskIdentifier)}];
-                    [self.application endBackgroundTask:strongSelf.backgroundTaskIdentifier];
-                    strongSelf.backgroundTaskIdentifier = UIBackgroundTaskInvalid;
-                }];
-                [self pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeBackgroundTask,
-                                                     MMEEventKeyLocalDebugDescription: @"Initiated background task",
-                                                     @"Identifier": @(_backgroundTaskIdentifier)}];
-                [self flush];
-                [self resetEventQueuing];
-            }
-            [self pauseMetricsCollection];
-            return;
-        }
+        BOOL appIsInBackground = (self.application.applicationState == UIApplicationStateBackground);
 
-        // Toggle pause based on current pause state, user opt-out state, and low-power state.
-        if (self.paused && NSUserDefaults.mme_configuration.mme_isCollectionEnabled) {
-            [self resumeMetricsCollection];
-        } else if (!self.paused && !NSUserDefaults.mme_configuration.mme_isCollectionEnabled) {
+        // check for existing background task status, flush the event queue if needed
+        if (appIsInBackground && _backgroundTaskIdentifier == UIBackgroundTaskInvalid) {
+            [self pushDebugEventWithAttributes:@{
+                MMEDebugEventType: MMEDebugEventTypeBackgroundTask,
+                MMEEventKeyLocalDebugDescription: @"Initiated background task",
+                @"Identifier": @(_backgroundTaskIdentifier)}];
+            
+            _backgroundTaskIdentifier = [self.application beginBackgroundTaskWithExpirationHandler:^{
+                [self pushDebugEventWithAttributes:@{
+                    MMEDebugEventType: MMEDebugEventTypeBackgroundTask,
+                    MMEEventKeyLocalDebugDescription: @"Ending background task",
+                    @"Identifier": @(self.backgroundTaskIdentifier)}];
+                [self.application endBackgroundTask:self.backgroundTaskIdentifier];
+                self.backgroundTaskIdentifier = UIBackgroundTaskInvalid;
+            }];
+            
             [self flush];
-            [self resetEventQueuing];
-            [self pauseMetricsCollection];
         }
+                
+        [self processAuthorizationStatus:[CLLocationManager authorizationStatus] andApplicationState:self.application.applicationState];
     }
     @catch(NSException *except) {
         [self reportException:except];
+    }
+}
+
+- (void)processAuthorizationStatus:(CLAuthorizationStatus)authStatus andApplicationState:(UIApplicationState)applicationState {
+    // check the system authorization status, then decide what we should be doing
+    if (authStatus == kCLAuthorizationStatusAuthorizedAlways) {
+        if (((applicationState != UIApplicationStateBackground && NSUserDefaults.mme_configuration.mme_isCollectionEnabled)
+         || (applicationState == UIApplicationStateBackground && NSUserDefaults.mme_configuration.mme_isCollectionEnabledInBackground))
+         && self.isPaused) {
+            [self resumeMetricsCollection];
+        } else {
+            [self pauseMetricsCollection];
+        }
+    } else if (authStatus == kCLAuthorizationStatusAuthorizedWhenInUse) {
+        if (NSUserDefaults.mme_configuration.mme_isCollectionEnabled && self.paused) {  // Prevent blue status bar
+            [self resumeMetricsCollection];
+        } else if (applicationState == UIApplicationStateBackground) { // check for user preferences
+            [self pauseMetricsCollection];
+        } else if (!NSUserDefaults.mme_configuration.mme_isCollectionEnabled) {
+            [self pauseMetricsCollection];
+        }
+    } else {
+        [self pauseMetricsCollection];
     }
 }
 
@@ -550,8 +563,7 @@ NS_ASSUME_NONNULL_BEGIN
     }
     
     self.paused = YES;
-    [self.timerManager cancel];
-    [self.eventQueue removeAllObjects];
+    [self resetEventQueuing];
     
     [self.locationManager stopUpdatingLocation];
     [self pushDebugEventWithAttributes:@{
@@ -604,7 +616,6 @@ NS_ASSUME_NONNULL_BEGIN
     
     if (self.eventQueue.count >= NSUserDefaults.mme_configuration.mme_eventFlushCount) {
         [self flush];
-        [self resetEventQueuing];
     }
     
     if (self.eventQueue.count == 1) {
