@@ -423,8 +423,6 @@ describe(@"MMELocationManager", ^{
                 });
                 
                 it(@"tells the location manager to start monitoring for region", ^{
-                    expectedRegion.notifyOnEntry = NO;
-                    expectedRegion.notifyOnExit = YES;
                     locationManager.locationManager should have_received(@selector(startMonitoringForRegion:)).with(expectedRegion);
                 });
             });
