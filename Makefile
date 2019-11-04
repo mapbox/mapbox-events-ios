@@ -1,5 +1,6 @@
 OUTPUT_PATH = build
 PROJ_PATH = $(IOS_OUTPUT_PATH)/mbgl.xcodeproj
+CARTHAGE_PATH = Carthage
 
 .PHONY: name-header
 name-header:
@@ -16,6 +17,14 @@ tag-version:
 .PHONY: create-static
 create-static:
 	./scripts/package.sh -s
+
+.PHONY: clean-carthage
+clean-carthage:
+	rm -fr $(CARTHAGE_PATH)/*
+
+.PHONY: clean
+clean: clean-carthage
+	rm -fr $(OUTPUT_PATH)
 
 .PHONY: pod-lint
 pod-lint:
