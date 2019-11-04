@@ -2,11 +2,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-extern NSUInteger const MMEServiceFixtureDefaultPort;
 extern NSErrorDomain const MMEServiceFixtureErrorDomain;
 extern NSTimeInterval const MME1sTimeout;
 extern NSTimeInterval const MME10sTimeout;
 extern NSTimeInterval const MME100sTimeout;
+extern NSUInteger const MMEFixtureDefaultPort;
 
 typedef NS_ENUM(NSInteger, MMEServiceFixtureErrorNumber) { // 11000 - 11999
     MMEServiceFixtureNoError = 0,

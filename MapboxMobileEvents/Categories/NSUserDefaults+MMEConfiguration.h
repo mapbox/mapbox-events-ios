@@ -50,11 +50,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, readonly) NSURL *mme_configServiceURL;
 
-@property (nonatomic, setter=mme_setConfigUpdateDate:) MMEDate *mme_configUpdateDate;
-
 @property (nonatomic, readonly) NSString *mme_userAgentString;
 
 @property (nonatomic, readonly) NSString *mme_legacyUserAgentString;
+
+// MARK: - Update Configuration
+
+@property (nonatomic, setter=mme_setConfigUpdateDate:, nullable) MMEDate *mme_configUpdateDate;
 
 // MARK: - Location Collection
 

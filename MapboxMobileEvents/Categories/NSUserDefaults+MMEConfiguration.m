@@ -245,35 +245,6 @@ NS_ASSUME_NONNULL_BEGIN
     return configServiceURL;
 }
 
-- (MMEDate *)mme_configUpdateDate {
-    MMEDate *updateTime = (MMEDate *)[self mme_objectForVolatileKey:MMEConfigUpdateDate];
-    if (!updateTime) { // try loading from the Persistent domain
-        NSData *updateData = [self objectForKey:MMEConfigUpdateData];
-        if (updateData) { // unarchive the data, saving the MMEDate in the volatile domain
-            NSKeyedUnarchiver* unarchiver = [NSKeyedUnarchiver.alloc initForReadingWithData:updateData];
-            unarchiver.requiresSecureCoding = YES;
-            updateTime = [unarchiver decodeObjectOfClass:MMEDate.class forKey:NSKeyedArchiveRootObjectKey];
-        } // else nil
-    }
-    return updateTime;
-}
-
-- (void)mme_setConfigUpdateDate:(MMEDate *)updateTime {
-    if (@available(iOS 10.0, macos 10.12, tvOS 10.0, watchOS 3.0, *)) {
-        if (updateTime) {
-            if (updateTime.timeIntervalSinceNow <= 0) { // updates always happen in the past
-                NSKeyedArchiver *archiver = [NSKeyedArchiver new];
-                archiver.requiresSecureCoding = YES;
-                [archiver encodeObject:updateTime forKey:NSKeyedArchiveRootObjectKey];
-                NSData *updateData = archiver.encodedData;
-                [self mme_setObject:updateData forPersistentKey:MMEConfigUpdateData];
-                [self mme_setObject:updateTime forVolatileKey:MMEConfigUpdateDate];
-            }
-            else NSLog(@"WARNING Mapbox Mobile Events Config Update Date cannot be set to a future date: %@", updateTime);
-        }
-    }
-}
-
 - (NSString *)mme_userAgentString {
     static NSString *userAgent = nil;
     static dispatch_once_t onceToken;
@@ -314,6 +285,37 @@ NS_ASSUME_NONNULL_BEGIN
         [self mme_setObject:legacyUAString forVolatileKey:MMELegacyUserAgent];
     }
     return legacyUAString;
+}
+
+// MARK: - Update Configuration
+
+- (nullable MMEDate *)mme_configUpdateDate {
+    MMEDate *updateTime = (MMEDate *)[self mme_objectForVolatileKey:MMEConfigUpdateDate];
+    if (!updateTime) { // try loading from the Persistent domain
+        NSData *updateData = [self objectForKey:MMEConfigUpdateData];
+        if (updateData) { // unarchive the data, saving the MMEDate in the volatile domain
+            NSKeyedUnarchiver* unarchiver = [NSKeyedUnarchiver.alloc initForReadingWithData:updateData];
+            unarchiver.requiresSecureCoding = YES;
+            updateTime = [unarchiver decodeObjectOfClass:MMEDate.class forKey:NSKeyedArchiveRootObjectKey];
+        } // else nil
+    }
+    return updateTime;
+}
+
+- (void)mme_setConfigUpdateDate:(nullable MMEDate *)updateTime {
+    if (@available(iOS 10.0, macos 10.12, tvOS 10.0, watchOS 3.0, *)) {
+        if (updateTime) {
+            if (updateTime.timeIntervalSinceNow <= 0) { // updates always happen in the past
+                NSKeyedArchiver *archiver = [NSKeyedArchiver new];
+                archiver.requiresSecureCoding = YES;
+                [archiver encodeObject:updateTime forKey:NSKeyedArchiveRootObjectKey];
+                NSData *updateData = archiver.encodedData;
+                [self mme_setObject:updateData forPersistentKey:MMEConfigUpdateData];
+                [self mme_setObject:updateTime forVolatileKey:MMEConfigUpdateDate];
+            }
+            else NSLog(@"WARNING Mapbox Mobile Events Config Update Date cannot be set to a future date: %@", updateTime);
+        }
+    }
 }
 
 // MARK: - Location Collection
@@ -545,9 +547,12 @@ NS_ASSUME_NONNULL_BEGIN
     BOOL success = NO;
     if (configDictionary) {
         if ([configDictionary.allKeys containsObject:MMERevokedCertKeys]) {
-            *updateError = [NSError errorWithDomain:MMEErrorDomain code:MMEErrorConfigUpdateError userInfo:@{
+            NSError *error = [NSError errorWithDomain:MMEErrorDomain code:MMEErrorConfigUpdateError userInfo:@{
                 NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Config object contains invalid key: %@", MMERevokedCertKeys]
             }];
+            if (error && updateError) {
+                *updateError = error;
+            }
             return success;
         }
 
@@ -556,9 +561,12 @@ NS_ASSUME_NONNULL_BEGIN
             for (NSString *publicKeyHash in configCRL) {
                 NSData *pinnedKeyHash = [[NSData alloc] initWithBase64EncodedString:publicKeyHash options:(NSDataBase64DecodingOptions)0];
                 if ([pinnedKeyHash length] != CC_SHA256_DIGEST_LENGTH){
-                    *updateError = [NSError errorWithDomain:MMEErrorDomain code:MMEErrorConfigUpdateError userInfo:@{
+                    NSError *error = [NSError errorWithDomain:MMEErrorDomain code:MMEErrorConfigUpdateError userInfo:@{
                         NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Hash value invalid: %@", pinnedKeyHash]
                     }];
+                    if (error && updateError) {
+                        *updateError = error;
+                    }
                     return success;
                 }
             }

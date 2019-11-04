@@ -5,20 +5,25 @@
 #import <netinet/in.h>
 #import <arpa/inet.h>
 
+NSUInteger const MMEFixtureDefaultPort = 8080;
+
+static NSUInteger MMEServiceFixturePort = MMEFixtureDefaultPort;
+static NSURL *MMEServiceFixtureURL;
+
 NS_ASSUME_NONNULL_BEGIN
 
-NSUInteger const MMEServiceFixtureDefaultPort = 8080;
 NSErrorDomain const MMEServiceFixtureErrorDomain = @"MMEServiceFixtureErrorDomain";
 NSTimeInterval const MME1sTimeout = 1.0;
 NSTimeInterval const MME10sTimeout = 10.0;
 NSTimeInterval const MME100sTimeout = 100.0;
+NSUInteger const MMEPrivledgedPort = 1024;
 
 @interface MMEServiceFixture ()
 @property(nonatomic) NSLock *serviceLock;
 @property(nonatomic) NSString *fixtureFile;
 @property(nonatomic) NSFileHandle *listeningHandle;
 @property(nonatomic) NSError *serviceError;
-@property(nonatomic, assign, nullable) CFSocketRef serverSocket;
+@property(nonatomic, nullable) id serverSocket;
 
 @end
 
@@ -26,15 +31,12 @@ NSTimeInterval const MME100sTimeout = 100.0;
 
 @implementation MMEServiceFixture
 
-static NSUInteger MMEServiceFixturePort = MMEServiceFixtureDefaultPort;
-static NSURL *MMEServiceFixtureURL;
-
 + (NSUInteger)servicePort {
     return MMEServiceFixturePort;
 }
 
 + (void)setServicePort:(NSUInteger)newPort {
-    if (newPort > 1024) {
+    if (newPort > MMEPrivledgedPort) {
         MMEServiceFixturePort = newPort;
         MMEServiceFixtureURL = nil;
     }
@@ -73,8 +75,7 @@ static NSURL *MMEServiceFixtureURL;
 
 - (void)cleanupSocket {
     if (self.serverSocket) {
-        CFSocketInvalidate(self.serverSocket);
-        CFRelease(self.serverSocket);
+        CFSocketInvalidate((CFSocketRef)self.serverSocket);
         self.serverSocket = nil;
     }
 }
@@ -84,7 +85,7 @@ static NSURL *MMEServiceFixtureURL;
     NSTimeInterval quantum = 0.1; // how long we wait for each lock check
     NSDate *timeoutDate = [NSDate dateWithTimeIntervalSinceNow:timeout];
 
-    if (self.serviceError) { // if there was an error setting up, report it and exit
+    if (self.serviceError && error) { // if there was an error setting up, report it and exit
         *error = self.serviceError;
         goto exit;
     }
@@ -100,7 +101,7 @@ static NSURL *MMEServiceFixtureURL;
         }
     }
 
-    if (self.serviceError) {
+    if (self.serviceError && error) {
         *error = self.serviceError;
         success = NO; // we got the lock, but we have an error to report
     }
@@ -114,7 +115,8 @@ exit:
 - (void)startServer {
     CFDataRef addressData = nil;
     [self.serviceLock lock];
-    self.serverSocket = CFSocketCreate(kCFAllocatorDefault, PF_INET, SOCK_STREAM, IPPROTO_TCP, 0, NULL, NULL);
+    CFSocketRef serverSocketRef = CFSocketCreate(kCFAllocatorDefault, PF_INET, SOCK_STREAM, IPPROTO_TCP, 0, NULL, NULL);
+    self.serverSocket = CFBridgingRelease(serverSocketRef);
     if (!self.serverSocket) {
         self.serviceError = [NSError errorWithDomain:MMEServiceFixtureErrorDomain code:MMEServiceFixtureSocketCreateError userInfo:@{
             NSLocalizedDescriptionKey:@"Unable to create socket."
@@ -123,7 +125,7 @@ exit:
     }
 
     int reuse = true;
-    int fileDescriptor = CFSocketGetNative(self.serverSocket);
+    int fileDescriptor = CFSocketGetNative((CFSocketRef)self.serverSocket);
     if (setsockopt(fileDescriptor, SOL_SOCKET, SO_REUSEADDR, (void *)&reuse, sizeof(int)) != noErr) {
         self.serviceError = [NSError errorWithDomain:MMEServiceFixtureErrorDomain code:MMEServiceFixtureSocketOptionsError userInfo:@{
             NSLocalizedDescriptionKey:@"Unable to set SO_REUSEADDR option"
@@ -146,7 +148,7 @@ exit:
     address.sin_port = htons(MMEServiceFixture.servicePort);
     addressData = CFDataCreate(kCFAllocatorDefault, (const UInt8 *)&address, sizeof(address));
         
-    if (CFSocketSetAddress(self.serverSocket, addressData) != kCFSocketSuccess) {
+    if (CFSocketSetAddress((CFSocketRef)self.serverSocket, addressData) != kCFSocketSuccess) {
         self.serviceError = [NSError errorWithDomain:MMEServiceFixtureErrorDomain code:MMEServiceFixtureSocketBindError userInfo:@{
             NSLocalizedDescriptionKey:@"Unable to bind socket to address"
         }];
