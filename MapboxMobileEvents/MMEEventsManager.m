@@ -27,6 +27,8 @@
 #import "CLLocationManager+MMEMobileEvents.h"
 #import "NSUserDefaults+MMEConfiguration.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface MMEAPIClient () <MMEAPIClient>
 @end
 
@@ -432,7 +434,7 @@
 }
 
 - (void)enqueueEventWithName:(NSString *)name {
-    [self createAndPushEventBasedOnName:name attributes:nil];
+    [self createAndPushEventBasedOnName:name attributes:@{}];
 }
 
 - (void)enqueueEventWithName:(NSString *)name attributes:(MMEMapboxEventAttributes *)attributes {
@@ -695,3 +697,5 @@
 }
 
 @end
+
+NS_ASSUME_NONNULL_END
