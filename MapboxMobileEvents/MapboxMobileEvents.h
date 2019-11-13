@@ -12,10 +12,4 @@ FOUNDATION_EXPORT const unsigned char MapboxMobileEventsVersionString[];
 #import "MMEEvent.h"
 #import "MMETypes.h"
 #import "MMEEventsManager.h"
-
-
-
-//#import <MapboxMobileEvents/MMEConstants.h>
-//#import <MapboxMobileEvents/MMEEvent.h>
-//#import <MapboxMobileEvents/MMETypes.h>
-//#import <MapboxMobileEvents/MMEEventsManager.h>
+#import "NSUserDefaults+MMEConfiguration.h"

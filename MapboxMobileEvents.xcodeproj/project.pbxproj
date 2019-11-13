@@ -119,7 +119,7 @@
 		9C65A28C225D41F2006E3FED /* UIKit+MMEMobileEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C65A28A225D41F2006E3FED /* UIKit+MMEMobileEvents.m */; };
 		9C65A28D225D41F2006E3FED /* UIKit+MMEMobileEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C65A28A225D41F2006E3FED /* UIKit+MMEMobileEvents.m */; platformFilter = ios; };
 		9C794C86235505340027B9D4 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C794C85235505340027B9D4 /* XCTest.framework */; platformFilter = ios; };
-		9CDC34B8234FD35800852FF0 /* NSUserDefaults+MMEConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = 9CDC34B6234FD35800852FF0 /* NSUserDefaults+MMEConfiguration.h */; };
+		9CDC34B8234FD35800852FF0 /* NSUserDefaults+MMEConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = 9CDC34B6234FD35800852FF0 /* NSUserDefaults+MMEConfiguration.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9CDC34B9234FD35800852FF0 /* NSUserDefaults+MMEConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CDC34B7234FD35800852FF0 /* NSUserDefaults+MMEConfiguration.m */; };
 		9CDC34BB234FD36E00852FF0 /* NSUserDefaults+MMEConfigurationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CDC34BA234FD36E00852FF0 /* NSUserDefaults+MMEConfigurationTests.m */; platformFilter = ios; };
 		9CDC34BE234FD62A00852FF0 /* MMEBundleInfoFake.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CDC34BC234FD62A00852FF0 /* MMEBundleInfoFake.m */; platformFilter = ios; };
@@ -195,6 +195,7 @@
 		ACBD2E5923709F920082F037 /* MMEEventsManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = ACBD2E5823709F920082F037 /* MMEEventsManagerTests.m */; };
 		ACE4F01A1FD6102100035880 /* MMEUINavigation.h in Headers */ = {isa = PBXBuildFile; fileRef = ACE4F0181FD6102100035880 /* MMEUINavigation.h */; };
 		ACE4F01B1FD6102100035880 /* MMEUINavigation.m in Sources */ = {isa = PBXBuildFile; fileRef = ACE4F0191FD6102100035880 /* MMEUINavigation.m */; };
+		CA0FAA2C237C80C000C9F3C9 /* NSUserDefaults+MMEConfiguration.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9CDC34B6234FD35800852FF0 /* NSUserDefaults+MMEConfiguration.h */; };
 		CF93A6582241EDD500BBA199 /* MMECertPin.m in Sources */ = {isa = PBXBuildFile; fileRef = CF93A6562241EDD500BBA199 /* MMECertPin.m */; };
 		CF93A6592241EDD500BBA199 /* MMECertPin.m in Sources */ = {isa = PBXBuildFile; fileRef = CF93A6562241EDD500BBA199 /* MMECertPin.m */; platformFilter = ios; };
 		CF93A65B2241EDD500BBA199 /* MMECertPin.h in Headers */ = {isa = PBXBuildFile; fileRef = CF93A6572241EDD500BBA199 /* MMECertPin.h */; };
@@ -252,6 +253,7 @@
 			dstPath = include/MapboxMobileEvents;
 			dstSubfolderSpec = 16;
 			files = (
+				CA0FAA2C237C80C000C9F3C9 /* NSUserDefaults+MMEConfiguration.h in CopyFiles */,
 				4085966A1ED08FA9003BD29D /* MapboxMobileEvents.h in CopyFiles */,
 				408596DA1ED0BF35003BD29D /* MMEConstants.h in CopyFiles */,
 				408596D81ED0B1F6003BD29D /* MMEEvent.h in CopyFiles */,
@@ -774,6 +776,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9CDC34B8234FD35800852FF0 /* NSUserDefaults+MMEConfiguration.h in Headers */,
 				404807CA1EA186D8008A6D50 /* MapboxMobileEvents.h in Headers */,
 				40AE58561EA932DB0046B437 /* MMEConstants.h in Headers */,
 				40AE586D1EA95EDD0046B437 /* MMEEvent.h in Headers */,
@@ -793,7 +796,6 @@
 				CF93A65B2241EDD500BBA199 /* MMECertPin.h in Headers */,
 				AC611F271FCDED2F00ABBF6D /* MMEEventLogReportViewController.h in Headers */,
 				4036EFBE1ED37D56009C40BA /* MMEEventLogger.h in Headers */,
-				9CDC34B8234FD35800852FF0 /* NSUserDefaults+MMEConfiguration.h in Headers */,
 				40AE58711EAA87960046B437 /* MMEAPIClient.h in Headers */,
 				405172DD1EAFFA9400F8CDA1 /* MMENSURLSessionWrapper.h in Headers */,
 				40AE58691EA953970046B437 /* CLLocation+MMEMobileEvents.h in Headers */,

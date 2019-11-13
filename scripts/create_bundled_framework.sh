@@ -31,6 +31,7 @@ cp ${MAPBOX_EVENTS_IOS_PATH}/MapboxMobileEvents/MMEEventsManager.h ${HEADERS_DIR
 cp ${MAPBOX_EVENTS_IOS_PATH}/MapboxMobileEvents/MMEConstants.h ${HEADERS_DIR}
 cp ${MAPBOX_EVENTS_IOS_PATH}/MapboxMobileEvents/MMEEvent.h ${HEADERS_DIR}
 cp ${MAPBOX_EVENTS_IOS_PATH}/MapboxMobileEvents/MMETypes.h ${HEADERS_DIR}
+cp ${MAPBOX_EVENTS_IOS_PATH}/MapboxMobileEvents/Categories/NSUserDefaults+MMEConfiguration.h ${HEADERS_DIR}
 
 # Module map
 MODULES_DIR=${FRAMEWORKS_PATH}/${FRAMEWORK_NAME}.framework/Modules
