@@ -90,7 +90,8 @@ NS_ASSUME_NONNULL_BEGIN
         MMEIdentifierRotationInterval: @(MMEIdentifierRotationIntervalDefault), // 24 hours
         MMEConfigurationUpdateInterval: @(MMEConfigurationUpdateIntervalDefault), // 24 hours
         MMEBackgroundStartupDelay: @(MMEBackgroundStartupDelayDefault), // seconds
-        MMECollectionEnabledInSimulator: @(collectionEnabledInSimulator) // boolean
+        MMECollectionEnabledInSimulator: @(collectionEnabledInSimulator), // boolean
+        MMEAccountType: @(0) // 
     }];
 }
 
