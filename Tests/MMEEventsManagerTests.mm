@@ -379,7 +379,7 @@ describe(@"MMEEventsManager", ^{
                 
                 context(@"when the events manager's api client does not have a host sdk version set", ^{
                     beforeEach(^{
-                        NSUserDefaults.mme_configuration stub_method(@selector(mme_legacyHostSDKVersion)).and_return(nil);
+                        [NSUserDefaults.mme_configuration mme_deleteObjectForVolatileKey:MMELegacyHostSDKVersion];
                         [eventsManager sendTurnstileEvent];
                     });
                     
