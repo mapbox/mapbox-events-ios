@@ -414,8 +414,8 @@ describe(@"MMELocationManager", ^{
                     locationManager.delegate should have_received(@selector(locationManager:didVisit:)).with(locationManager, visit);
                 });
             });
-            
-//            context(@"when location data are received", ^{
+            //TODO: This passes locally but CI refuses. Consider moving to XCTest?
+            context(@"when location data are received", ^{
 //                beforeEach(^{
 //                    [locationManager startUpdatingLocation];
 //                    [locationManager locationManager:locationManagerInstance didUpdateLocations:@[movingLocation]];
@@ -425,7 +425,7 @@ describe(@"MMELocationManager", ^{
 //                it(@"tells the location manager to start monitoring for region", ^{
 //                    locationManager.locationManager should have_received(@selector(startMonitoringForRegion:)).and_with(Arguments::anything);
 //                });
-//            });
+            });
             
             context(@"when a sationary location is received", ^{
                 beforeEach(^{

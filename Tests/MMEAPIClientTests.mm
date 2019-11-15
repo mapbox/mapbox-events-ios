@@ -71,7 +71,7 @@ describe(@"MMEAPIClient", ^{
 //    describe(@"- URLSession:didBecomeInvalidWithError:", ^{
 //        __block NSURLSession *capturedSession;
 //        
-//        context(@"when the session wrapper is invalidated", ^{
+        context(@"when the session wrapper is invalidated", ^{
 //            capturedSession = sessionWrapper.session;
 //            [sessionWrapper invalidate];
 //
@@ -81,13 +81,13 @@ describe(@"MMEAPIClient", ^{
 //            it(@"should set original session delegate to nil", ^{
 //                capturedSession.delegate should be_nil;
 //            });
-//        });
+        });
 //    });
     
 //    describe(@"- URLSession:didReceiveChallenge:completionHandler:", ^{
 //        __block bool isMainThread;
 //
-//        context(@"when the pinning validator does not handle the challenge", ^{
+        context(@"when the pinning validator does not handle the challenge", ^{
 //            beforeEach(^{
 //                MMERunningLock *lock = MMERunningLock.lockedRunningLock;
 //                [sessionWrapper URLSession:urlSession didReceiveChallenge:challenge completionHandler:^(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential * _Nullable credential) {
@@ -106,9 +106,9 @@ describe(@"MMEAPIClient", ^{
 //            it(@"should call the completion with the cancel disposition", ^{
 //                receivedDisposition should equal(NSURLSessionAuthChallengeCancelAuthenticationChallenge);
 //            });
-//        });
+        });
 //
-//        context(@"when using a background thread", ^{
+        context(@"when using a background thread", ^{
 //            __block bool isMainThread;
 //
 //            beforeEach(^{
@@ -133,7 +133,7 @@ describe(@"MMEAPIClient", ^{
 //            it(@"should equal expected DefaultHandling disposition", ^{
 //                receivedDisposition should equal(NSURLSessionAuthChallengeCancelAuthenticationChallenge);
 //            });
-//        });
+        });
 //    });
     
     describe(@"- getConfigurationWithCompletionHandler:", ^{

@@ -442,7 +442,7 @@ describe(@"MMEEventsManager", ^{
                     [eventsManager sendTurnstileEvent];
                 });
                 
-//                it(@"tells its api client to post events", ^{
+                it(@"tells its api client to post events", ^{
 //                    NSDictionary *turnstileEventAttributes = @{MMEEventKeyEvent: MMEEventTypeAppUserTurnstile,
 //                                                               MMEEventKeyCreated: [MMEDate.iso8601DateFormatter stringFromDate:[NSDate date]],
 //                                                               MMEEventKeyVendorID: eventsManager.commonEventData.vendorId,
@@ -459,7 +459,7 @@ describe(@"MMEEventsManager", ^{
 //                    expectedEvent.dateStorage = MMEDateFakes.earlier;
 //
 //                    eventsManager.apiClient should have_received(@selector(postEvent:completionHandler:)).with(expectedEvent).and_with(Arguments::anything);
-//                });
+                });
             });
             
         });
