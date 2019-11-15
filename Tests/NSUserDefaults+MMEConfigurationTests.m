@@ -96,6 +96,11 @@
     XCTAssertTrue(NSUserDefaults.mme_configuration.mme_isCollectionEnabledInSimulator);
 }
 
+- (void)testEventAccountTypeDefaultsToZero {
+    // this is important for Maps functionality related to Events
+    XCTAssertTrue([NSUserDefaults.mme_configuration integerForKey:MMEAccountType] == 0);
+}
+
 // MARK: - Background Collection
 
 - (void)testEventIsCollectionEnabledInBackgroundDefault {

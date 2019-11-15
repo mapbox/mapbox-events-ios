@@ -36,7 +36,7 @@ static MMEVolatileKey * const MMEConfigUpdateDate = @"MMEConfigUpdateDate";
 
 // MARK: - Info.plist Keys
 
-static NSString * const MMEAccountType = @"MGLAccountType";
+static NSString * const MMEAccountType = @"MGLMapboxAccountType";
 static NSString * const MMEEventsProfile = @"MMEEventsProfile";
 static NSString * const MMECustomGeofenceRadius = @"MMECustomGeofenceRadius";
 static NSString * const MMECustomProfile = @"Custom";

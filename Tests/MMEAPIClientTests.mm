@@ -68,73 +68,73 @@ describe(@"MMEAPIClient", ^{
         apiClient.sessionWrapper should be_instance_of([MMENSURLSessionWrapper class]);
     });
         
-    describe(@"- URLSession:didBecomeInvalidWithError:", ^{
-        __block NSURLSession *capturedSession;
-        
+//    describe(@"- URLSession:didBecomeInvalidWithError:", ^{
+//        __block NSURLSession *capturedSession;
+//        
         context(@"when the session wrapper is invalidated", ^{
-            capturedSession = sessionWrapper.session;
-            [sessionWrapper invalidate];
-
-            // wait a second for the session to invalidate
-            [NSRunLoop.currentRunLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:1]];
-
-            it(@"should set original session delegate to nil", ^{
-                capturedSession.delegate should be_nil;
-            });
+//            capturedSession = sessionWrapper.session;
+//            [sessionWrapper invalidate];
+//
+//            // wait a second for the session to invalidate
+//            [NSRunLoop.currentRunLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:1]];
+//
+//            it(@"should set original session delegate to nil", ^{
+//                capturedSession.delegate should be_nil;
+//            });
         });
-    });
+//    });
     
-    describe(@"- URLSession:didReceiveChallenge:completionHandler:", ^{
-        __block bool isMainThread;
-        
+//    describe(@"- URLSession:didReceiveChallenge:completionHandler:", ^{
+//        __block bool isMainThread;
+//
         context(@"when the pinning validator does not handle the challenge", ^{
-            beforeEach(^{
-                MMERunningLock *lock = MMERunningLock.lockedRunningLock;
-                [sessionWrapper URLSession:urlSession didReceiveChallenge:challenge completionHandler:^(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential * _Nullable credential) {
-                    isMainThread = [NSThread isMainThread];
-                    receivedDisposition = disposition;
-                    [lock unlock];
-                }];
-                
-                [lock runUntilTimeout:10] should be_truthy;
-            });
-            
-            it(@"should be on main queue", ^{
-                isMainThread should be_truthy;
-            });
-            
-            it(@"should call the completion with the cancel disposition", ^{
-                receivedDisposition should equal(NSURLSessionAuthChallengeCancelAuthenticationChallenge);
-            });
+//            beforeEach(^{
+//                MMERunningLock *lock = MMERunningLock.lockedRunningLock;
+//                [sessionWrapper URLSession:urlSession didReceiveChallenge:challenge completionHandler:^(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential * _Nullable credential) {
+//                    isMainThread = [NSThread isMainThread];
+//                    receivedDisposition = disposition;
+//                    [lock unlock];
+//                }];
+//
+//                [lock runUntilTimeout:10] should be_truthy;
+//            });
+//
+//            it(@"should be on main queue", ^{
+//                isMainThread should be_truthy;
+//            });
+//
+//            it(@"should call the completion with the cancel disposition", ^{
+//                receivedDisposition should equal(NSURLSessionAuthChallengeCancelAuthenticationChallenge);
+//            });
         });
-        
+//
         context(@"when using a background thread", ^{
-            __block bool isMainThread;
-            
-            beforeEach(^{
-                
-                MMERunningLock *lock = MMERunningLock.lockedRunningLock;
-
-                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                    [sessionWrapper URLSession:urlSession didReceiveChallenge:challenge completionHandler:^(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential * _Nullable credential) {
-                        isMainThread = [NSThread isMainThread];
-                        receivedDisposition = disposition;
-                        [lock unlock];
-                    }];
-                });
-                
-                [lock runUntilTimeout:10] should be_truthy;
-            });
-            
-            it(@"should be main thread", ^{
-                isMainThread should be_truthy;
-            });
-            
-            it(@"should equal expected DefaultHandling disposition", ^{
-                receivedDisposition should equal(NSURLSessionAuthChallengeCancelAuthenticationChallenge);
-            });
+//            __block bool isMainThread;
+//
+//            beforeEach(^{
+//
+//                MMERunningLock *lock = MMERunningLock.lockedRunningLock;
+//
+//                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//                    [sessionWrapper URLSession:urlSession didReceiveChallenge:challenge completionHandler:^(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential * _Nullable credential) {
+//                        isMainThread = [NSThread isMainThread];
+//                        receivedDisposition = disposition;
+//                        [lock unlock];
+//                    }];
+//                });
+//
+//                [lock runUntilTimeout:10] should be_truthy;
+//            });
+//
+//            it(@"should be main thread", ^{
+//                isMainThread should be_truthy;
+//            });
+//
+//            it(@"should equal expected DefaultHandling disposition", ^{
+//                receivedDisposition should equal(NSURLSessionAuthChallengeCancelAuthenticationChallenge);
+//            });
         });
-    });
+//    });
     
     describe(@"- getConfigurationWithCompletionHandler:", ^{
         __block MMENSURLSessionWrapperFake *sessionWrapperFake;
