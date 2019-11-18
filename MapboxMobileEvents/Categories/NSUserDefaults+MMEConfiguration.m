@@ -515,7 +515,7 @@ NS_ASSUME_NONNULL_BEGIN
         MMEEventsMapboxCom:     comPublicKeys,
         MMEEventsMapboxCN:      cnPublicKeys,
 #if DEBUG
-        MMEEventsTilestreamNet: @[@"3euxrJOrEZI15R4104UsiAkDqe007EPyZ6eTL/XxdAY="]
+        MMEEventsTilestreamNet: @[@"f0eq9TvzcjRVgNZjisBA1sVrQ9b0pJA5ESWg6hVpK2c="]
 #endif
     };
 }
