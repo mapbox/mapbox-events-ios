@@ -210,10 +210,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSURL *)mme_eventsServiceURL {
     NSURL *serviceURL = nil;
-    NSString *infoEventsServiceURL = [NSBundle.mme_mainBundle objectForInfoDictionaryKey:MMEEventsServiceURL];
+    id infoPlistObject = [NSBundle.mme_mainBundle objectForInfoDictionaryKey:MMEEventsServiceURL];
 
-    if (infoEventsServiceURL) {
-        serviceURL = [NSURL URLWithString:infoEventsServiceURL];
+    if ([infoPlistObject isKindOfClass:NSURL.class]) {
+        serviceURL = infoPlistObject;
+    }
+    else if ([infoPlistObject isKindOfClass:NSString.class]) {
+        serviceURL = [NSURL URLWithString:infoPlistObject];
     }
     else if ([self mme_isCNRegion]) {
         serviceURL = [NSURL URLWithString:MMEAPIClientBaseChinaEventsURL];
