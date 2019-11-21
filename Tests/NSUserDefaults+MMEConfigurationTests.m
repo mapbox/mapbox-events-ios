@@ -266,4 +266,39 @@
     XCTAssertFalse(NSUserDefaults.mme_configuration.mme_isCollectionEnabledInBackground);
 }
 
+- (void)testCNRegionSetFromPlist {
+    // set the region to CN in the plist
+    NSBundle.mme_mainBundle = [MMEBundleInfoFake bundleWithFakeInfo:@{MMEGLMapboxAPIBaseURL: MMEAPIClientBaseChinaAPIURL}];
+    [NSUserDefaults.mme_configuration mme_registerDefaults];
+    
+    XCTAssertTrue(NSUserDefaults.mme_configuration.mme_isCNRegion);
+}
+
+- (void)testCNRegionSetFromAPI {
+    // set the region to CN using the API
+    NSUserDefaults.mme_configuration.mme_isCNRegion = YES;
+    XCTAssertTrue(NSUserDefaults.mme_configuration.mme_isCNRegion);
+}
+
+- (void)testCNRegionToggle {
+    XCTAssertFalse(NSUserDefaults.mme_configuration.mme_isCNRegion);
+    NSUserDefaults.mme_configuration.mme_isCNRegion = YES;
+    XCTAssertTrue(NSUserDefaults.mme_configuration.mme_isCNRegion);
+    NSUserDefaults.mme_configuration.mme_isCNRegion = NO;
+    XCTAssertFalse(NSUserDefaults.mme_configuration.mme_isCNRegion);
+}
+
+- (void)testRoWRegionURLS {
+    XCTAssertTrue([NSUserDefaults.mme_configuration.mme_APIServiceURL.absoluteString isEqual:MMEAPIClientBaseAPIURL]);
+    XCTAssertTrue([NSUserDefaults.mme_configuration.mme_eventsServiceURL.absoluteString isEqual:MMEAPIClientBaseEventsURL]);
+    XCTAssertTrue([NSUserDefaults.mme_configuration.mme_configServiceURL.absoluteString isEqual:MMEAPIClientBaseConfigURL]);
+}
+
+- (void)testCNRegionURLS {
+    NSUserDefaults.mme_configuration.mme_isCNRegion = YES;
+    XCTAssertTrue([NSUserDefaults.mme_configuration.mme_APIServiceURL.absoluteString isEqual:MMEAPIClientBaseChinaAPIURL]);
+    XCTAssertTrue([NSUserDefaults.mme_configuration.mme_eventsServiceURL.absoluteString isEqual:MMEAPIClientBaseChinaEventsURL]);
+    XCTAssertTrue([NSUserDefaults.mme_configuration.mme_configServiceURL.absoluteString isEqual:MMEAPIClientBaseChinaConfigURL]);
+}
+
 @end

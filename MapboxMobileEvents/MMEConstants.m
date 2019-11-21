@@ -1,9 +1,9 @@
 #import "MMEConstants.h"
 
-NSString * const MMEAPIClientBaseURL = @"https://events.mapbox.com";
 NSString * const MMEAPIClientBaseAPIURL = @"https://api.mapbox.com";
+NSString * const MMEAPIClientBaseChinaAPIURL = @"https://api.mapbox.cn";
+NSString * const MMEAPIClientBaseEventsURL = @"https://events.mapbox.com";
 NSString * const MMEAPIClientBaseChinaEventsURL = @"https://events.mapbox.cn";
-NSString * const MMEAPIClientBaseChinaAPIURL = @"https://api.mapbox.cn"; 
 NSString * const MMEAPIClientEventsPath = @"events/v2";
 NSString * const MMEAPIClientEventsConfigPath = @"events-config";
 NSString * const MMEAPIClientAttachmentsPath = @"attachments/v1";
@@ -171,3 +171,4 @@ NSString * const MMEEventGestureRotateStart = @"Rotation";
 NSString * const MMEEventGesturePitchStart = @"Pitch";
 NSString * const MMEEventTypeMapTap = @"map.click";
 NSString * const MMEEventTypeMapDragEnd = @"map.dragend";
+NSString * const MMEAPIClientBaseURL = MMEAPIClientBaseEventsURL;
