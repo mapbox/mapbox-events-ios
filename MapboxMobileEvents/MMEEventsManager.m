@@ -205,7 +205,9 @@ NS_ASSUME_NONNULL_BEGIN
          || (applicationState == UIApplicationStateBackground && NSUserDefaults.mme_configuration.mme_isCollectionEnabledInBackground))
          && self.isPaused) {
             [self resumeMetricsCollection];
-        } else {
+        } else if ((applicationState == UIApplicationStateBackground
+                   && NSUserDefaults.mme_configuration.mme_isCollectionEnabledInBackground == NO)
+                   || NSUserDefaults.mme_configuration.mme_isCollectionEnabled == NO)) {
             [self pauseMetricsCollection];
         }
     } else if (authStatus == kCLAuthorizationStatusAuthorizedWhenInUse) {
