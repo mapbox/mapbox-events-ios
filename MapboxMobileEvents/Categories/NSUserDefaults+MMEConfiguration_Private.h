@@ -1,6 +1,8 @@
 #ifndef NSUserDefaults_MMEConfiguration_Private_h
 #define NSUserDefaults_MMEConfiguration_Private_h
 
+#import <CoreLocation/CoreLocation.h>
+
 NS_ASSUME_NONNULL_BEGIN
 
 static NSString * const MMEConfigurationDomain = @"com.mapbox.events";
@@ -114,6 +116,7 @@ static NSTimeInterval const MMEStartupDelayMaximum = 100;
 
 @interface NSBundle (MMEConfiguration_Private)
 @property(class, nonatomic, null_resettable, setter=mme_setMainBundle:) NSBundle *mme_mainBundle;
+@property(nonatomic, readonly) NSString *mme_bundleVersionString;
 
 @end
 

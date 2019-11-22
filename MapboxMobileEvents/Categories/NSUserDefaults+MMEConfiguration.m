@@ -1,9 +1,11 @@
 #import <CommonCrypto/CommonDigest.h>
 
-#import "NSUserDefaults+MMEConfiguration.h"
-#import "NSUserDefaults+MMEConfiguration_Private.h"
 #import "MMEConstants.h"
 #import "MMEDate.h"
+
+#import "NSString+MMEVersions.h"
+#import "NSUserDefaults+MMEConfiguration.h"
+#import "NSUserDefaults+MMEConfiguration_Private.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -134,7 +136,7 @@ NS_ASSUME_NONNULL_BEGIN
     [self setPersistentDomain:PersistentDomain forName:MMEConfigurationDomain];
 }
 
-- (void)mme_deleteObjectPersistentKey:(MMEPersistentKey *)key {
+- (void)mme_deleteObjectForPersistentKey:(MMEPersistentKey *)key {
     NSMutableDictionary *PersistentDomain = self.mme_PersistentDomain.mutableCopy;
     [PersistentDomain removeObjectForKey:key];
     [self setPersistentDomain:PersistentDomain forName:MMEConfigurationDomain];
@@ -188,6 +190,10 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void)mme_setLegacyHostSDKVersion:(NSString *)legacyHostSDKVersion {
+    if (![legacyHostSDKVersion mme_isSemverString]) {
+        NSLog(@"WARNING mme_setLegacyHostSDKVersion: version string (%@) is not a valid semantic version string: http://semver.org", legacyHostSDKVersion);
+    }
+
     [self mme_setObject:legacyHostSDKVersion forVolatileKey:MMELegacyHostSDKVersion];
     [self mme_deleteObjectForVolatileKey:MMELegacyUserAgent];
 }
@@ -272,9 +278,10 @@ NS_ASSUME_NONNULL_BEGIN
     static NSString *userAgent = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
+
         userAgent = [NSString stringWithFormat:@"%@/%@ (%@; v%@)",
             NSBundle.mme_mainBundle.infoDictionary[(id)kCFBundleNameKey],
-            NSBundle.mme_mainBundle.infoDictionary[@"CFBundleShortVersionString"],
+            NSBundle.mme_mainBundle.mme_bundleVersionString,
             NSBundle.mme_mainBundle.bundleIdentifier,
             NSBundle.mme_mainBundle.infoDictionary[(id)kCFBundleVersionKey]];
         
@@ -285,7 +292,7 @@ NS_ASSUME_NONNULL_BEGIN
             && [loaded.bundleIdentifier rangeOfString:@"mapbox" options:NSCaseInsensitiveSearch].location != NSNotFound) {
                 NSString *uaFragment = [NSString stringWithFormat:@" %@/%@ (%@; v%@)",
                     loaded.infoDictionary[(id)kCFBundleNameKey],
-                    loaded.infoDictionary[@"CFBundleShortVersionString"],
+                    loaded.mme_bundleVersionString,
                     loaded.bundleIdentifier,
                     loaded.infoDictionary[(id)kCFBundleVersionKey]];
                 userAgent = [userAgent stringByAppendingString:uaFragment];
@@ -301,7 +308,7 @@ NS_ASSUME_NONNULL_BEGIN
     if (!legacyUAString) {
         legacyUAString= [NSString stringWithFormat:@"%@/%@/%@ %@/%@",
             NSBundle.mme_mainBundle.bundleIdentifier,
-            [NSBundle.mme_mainBundle objectForInfoDictionaryKey:@"CFBundleShortVersionString"],
+            NSBundle.mme_mainBundle.mme_bundleVersionString,
             [NSBundle.mme_mainBundle objectForInfoDictionaryKey:(id)kCFBundleVersionKey],
             self.mme_legacyUserAgentBase,
             self.mme_legacyHostSDKVersion];
@@ -648,13 +655,34 @@ static NSBundle *MMEMainBundle = nil;
     return MMEMainBundle;
 }
 
-+ (void) mme_setMainBundle:(nullable NSBundle *)mainBundle {
++ (void)mme_setMainBundle:(nullable NSBundle *)mainBundle {
     if (mainBundle) {
         MMEMainBundle = mainBundle;
     }
     else {
         MMEMainBundle = NSBundle.mainBundle;
     }
+}
+
+// MARK: -
+
+
+- (NSString *)mme_bundleVersionString {
+    NSString *bundleVersion = @"0.0.0";
+
+    // check for MGLSemanticVersionString in Mapbox.framework
+    if ([self.infoDictionary.allKeys containsObject:@"MGLSemanticVersionString"]) {
+        bundleVersion = self.infoDictionary[@"MGLSemanticVersionString"];
+    }
+    else if ([self.infoDictionary.allKeys containsObject:@"CFBundleShortVersionString"]) {
+        bundleVersion = self.infoDictionary[@"CFBundleShortVersionString"];
+    }
+
+    if (![bundleVersion mme_isSemverString]) {
+        NSLog(@"WARNING bundle %@ version string (%@) is not a valid semantic version string: http://semver.org", self, bundleVersion);
+    }
+    
+    return bundleVersion;
 }
 
 @end
