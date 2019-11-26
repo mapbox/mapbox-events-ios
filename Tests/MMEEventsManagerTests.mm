@@ -421,47 +421,6 @@ describe(@"MMEEventsManager", ^{
                     });
                 });
             });
-            
-            context(@"when the events manager's api client is correctly configured", ^{
-                beforeEach(^{
-                    spy_on([NSDate class]);
-                    NSDate *date = [NSDate dateWithTimeIntervalSince1970:1000];
-                    [NSDate class] stub_method(@selector(date)).and_return(date);
-                    
-                    NSUserDefaults.mme_configuration.mme_isCollectionEnabled = NO; // on device or in simulator
-                    
-                    MMEAPIClientFake *fakeAPIClient = [[MMEAPIClientFake alloc] init];
-                    spy_on(fakeAPIClient);
-                    
-                    NSUserDefaults.mme_configuration.mme_accessToken = @"access-token";
-                    NSUserDefaults.mme_configuration.mme_legacyUserAgentBase = @"user-agent-base";
-                    NSUserDefaults.mme_configuration.mme_legacyHostSDKVersion = @"host-sdk-version";
-                    
-                    eventsManager.apiClient = fakeAPIClient;
-                    
-                    [eventsManager sendTurnstileEvent];
-                });
-                
-                it(@"tells its api client to post events", ^{
-//                    NSDictionary *turnstileEventAttributes = @{MMEEventKeyEvent: MMEEventTypeAppUserTurnstile,
-//                                                               MMEEventKeyCreated: [MMEDate.iso8601DateFormatter stringFromDate:[NSDate date]],
-//                                                               MMEEventKeyVendorID: eventsManager.commonEventData.vendorId,
-//                                                               MMEEventKeyDevice: eventsManager.commonEventData.model,
-//                                                               MMEEventKeyOperatingSystem: eventsManager.commonEventData.osVersion,
-//                                                               MMEEventSDKIdentifier: NSUserDefaults.mme_configuration.mme_legacyUserAgentBase,
-//                                                               MMEEventSDKVersion: NSUserDefaults.mme_configuration.mme_legacyHostSDKVersion,
-//                                                               MMEEventKeyEnabledTelemetry: @NO,
-//                                                               MMEEventKeyLocationEnabled: @([CLLocationManager locationServicesEnabled]),
-//                                                               MMEEventKeyLocationAuthorization: [CLLocationManager mme_authorizationStatusString],
-//                                                               MMEEventKeySkuId: eventsManager.skuId ?: [NSNull null]
-//                                                               };
-//                    MMEEvent *expectedEvent = [MMEEvent turnstileEventWithAttributes:turnstileEventAttributes];
-//                    expectedEvent.dateStorage = MMEDateFakes.earlier;
-//
-//                    eventsManager.apiClient should have_received(@selector(postEvent:completionHandler:)).with(expectedEvent).and_with(Arguments::anything);
-                });
-            });
-            
         });
         
         context(@"when next turnstile send date is not nil and event manager is correctly configured", ^{
