@@ -1,7 +1,7 @@
 #import <Foundation/Foundation.h>
 #import "MMETypes.h"
 
-extern NSString * const MMEAPIClientBaseURL;
+extern NSString * const MMEAPIClientBaseEventsURL;
 extern NSString * const MMEAPIClientBaseAPIURL;
 extern NSString * const MMEAPIClientBaseChinaEventsURL;
 extern NSString * const MMEAPIClientBaseChinaAPIURL;
@@ -175,7 +175,9 @@ extern NSString * const MMEErrorUnderlyingExceptionKey;
 
 #pragma mark - Deprecated
 
-extern NSString * const MMEErrorDescriptionKey; MME_DEPRECATED_MSG("Use NSLocalizedDescriptionKey")
+extern NSString * const MMEAPIClientBaseURL MME_DEPRECATED_MSG("Use MMEAPIClientBaseEventsURL");
+
+extern NSString * const MMEErrorDescriptionKey MME_DEPRECATED_MSG("Use NSLocalizedDescriptionKey");
 
 extern NSString * const MMEEventKeyVendorID MME_DEPRECATED_MSG("Use MMEEventKeyVendorId");
 extern NSString * const MMEEventKeyInstallationID MME_DEPRECATED_MSG("Use MMEEventKeyInstallationId");
