@@ -44,19 +44,29 @@ NS_ASSUME_NONNULL_BEGIN
 /// Host SDK Version
 @property (nonatomic, copy, setter=mme_setLegacyHostSDKVersion:) NSString *mme_legacyHostSDKVersion;
 
+/// CN Region Setting
+@property (nonatomic, assign, setter=mme_setIsCNRegion:) BOOL mme_isCNRegion;
+
 // MARK: - Service Configuration
 
+/// API Service URL for the current region
+@property (nonatomic, readonly) NSURL *mme_APIServiceURL;
+
+/// Events Service URL for the current region
 @property (nonatomic, readonly) NSURL *mme_eventsServiceURL;
 
+/// Config Service URL for the current region
 @property (nonatomic, readonly) NSURL *mme_configServiceURL;
 
+/// Reformed User-Agent String
 @property (nonatomic, readonly) NSString *mme_userAgentString;
 
+/// Legacy User-Agent String
 @property (nonatomic, readonly) NSString *mme_legacyUserAgentString;
 
 // MARK: - Update Configuration
 
-@property (nonatomic, setter=mme_setConfigUpdateDate:, nullable) MMEDate *mme_configUpdateDate;
+@property (nonatomic, nullable, setter=mme_setConfigUpdateDate:) MMEDate *mme_configUpdateDate;
 
 // MARK: - Location Collection
 

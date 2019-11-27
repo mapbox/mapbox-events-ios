@@ -69,15 +69,16 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <MacroExpansion>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "9CDC34C223502F8700852FF0"
-            BuildableName = "MMECedarTests.xctest"
-            BlueprintName = "MMECedarTests"
+            BlueprintIdentifier = "9C65A2652256C110006E3FED"
+            BuildableName = "MMETestHost.app"
+            BlueprintName = "MMETestHost"
             ReferencedContainer = "container:MapboxMobileEvents.xcodeproj">
          </BuildableReference>
-      </MacroExpansion>
+      </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">
