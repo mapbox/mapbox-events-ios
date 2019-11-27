@@ -35,6 +35,7 @@
 }
 
 - (void)testLocationManagerStartsMonitoringRegions {
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Region should be created after a valid location is updated"];
     CLLocation *movingLocation = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(0, 0) altitude:0 horizontalAccuracy:0 verticalAccuracy:0 course:0 speed:100.0 timestamp:[NSDate date]];
     
     [self.mme_locationManager locationManager:self.locationManager didUpdateLocations:@[movingLocation]];
@@ -43,8 +44,10 @@
     for(CLRegion *region in self.locationManager.monitoredRegions) {
         if([region.identifier isEqualToString:MMELocationManagerRegionIdentifier]) {
             capturedRegion = region;
+            [expectation fulfill];
         }
     }
+    [self waitForExpectations:@[expectation] timeout:5];
     
     XCTAssert(capturedRegion != nil);
 }
