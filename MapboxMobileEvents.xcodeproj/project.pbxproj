@@ -185,6 +185,7 @@
 		AC611F281FCDED2F00ABBF6D /* MMEEventLogReportViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AC611F261FCDED2F00ABBF6D /* MMEEventLogReportViewController.m */; };
 		AC61FA5C217A04CC008519F5 /* MMEMetrics.h in Headers */ = {isa = PBXBuildFile; fileRef = AC61FA5A217A04CC008519F5 /* MMEMetrics.h */; };
 		AC61FA5E217A04CC008519F5 /* MMEMetrics.m in Sources */ = {isa = PBXBuildFile; fileRef = AC61FA5B217A04CC008519F5 /* MMEMetrics.m */; platformFilter = ios; };
+		AC69502D238E000C00D095EB /* MMELocationManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AC69502C238E000C00D095EB /* MMELocationManagerTests.m */; };
 		AC86FE1D2169250000D1B89C /* MMEMetricsManager.h in Headers */ = {isa = PBXBuildFile; fileRef = AC86FE1B2169250000D1B89C /* MMEMetricsManager.h */; };
 		AC86FE1F2169250000D1B89C /* MMEMetricsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = AC86FE1C2169250000D1B89C /* MMEMetricsManager.m */; platformFilter = ios; };
 		ACAF8D27238DDED20033745A /* MMEAPIClientTests.m in Sources */ = {isa = PBXBuildFile; fileRef = ACAF8D26238DDED20033745A /* MMEAPIClientTests.m */; };
@@ -432,6 +433,7 @@
 		AC61FA08216BE7A0008519F5 /* MMEMetricsManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MMEMetricsManager.mm; sourceTree = "<group>"; };
 		AC61FA5A217A04CC008519F5 /* MMEMetrics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEMetrics.h; sourceTree = "<group>"; };
 		AC61FA5B217A04CC008519F5 /* MMEMetrics.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEMetrics.m; sourceTree = "<group>"; };
+		AC69502C238E000C00D095EB /* MMELocationManagerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMELocationManagerTests.m; sourceTree = "<group>"; };
 		AC86FE1B2169250000D1B89C /* MMEMetricsManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEMetricsManager.h; sourceTree = "<group>"; };
 		AC86FE1C2169250000D1B89C /* MMEMetricsManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEMetricsManager.m; sourceTree = "<group>"; };
 		AC956E0C23072F6700AC3D5B /* MMEEventFake.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEEventFake.h; sourceTree = "<group>"; };
@@ -779,6 +781,7 @@
 				9CF000422370D7B2009A2700 /* NSString+MMEVersions_Tests.m */,
 				9CDC34BA234FD36E00852FF0 /* NSUserDefaults+MMEConfigurationTests.m */,
 				ACAF8D26238DDED20033745A /* MMEAPIClientTests.m */,
+				AC69502C238E000C00D095EB /* MMELocationManagerTests.m */,
 			);
 			name = XCTest;
 			sourceTree = "<group>";
@@ -1153,6 +1156,7 @@
 				9CDC34BB234FD36E00852FF0 /* NSUserDefaults+MMEConfigurationTests.m in Sources */,
 				ACD1B2B423889BC000C0F0B6 /* MMEAPIClientFake.m in Sources */,
 				9CF000432370D7B2009A2700 /* NSString+MMEVersions_Tests.m in Sources */,
+				AC69502D238E000C00D095EB /* MMELocationManagerTests.m in Sources */,
 				ACAF8D27238DDED20033745A /* MMEAPIClientTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

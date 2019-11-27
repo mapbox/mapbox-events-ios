@@ -423,25 +423,14 @@ describe(@"MMELocationManager", ^{
                     locationManager.delegate should have_received(@selector(locationManager:didVisit:)).with(locationManager, visit);
                 });
             });
-            context(@"when location data are received", ^{
-                beforeEach(^{
-                    [locationManager startUpdatingLocation];
-                    [locationManager locationManager:locationManagerInstance didUpdateLocations:@[movingLocation]];
-                    locationManager.backgroundLocationServiceTimeoutTimer should_not be_nil;
-                });
-                
-                afterEach(^{
-                    [NSUserDefaults mme_resetConfiguration];
-                });
-
-                it(@"tells the location manager to start monitoring for region", ^{
-                    locationManager.locationManager should have_received(@selector(startMonitoringForRegion:));
-                });
-            });
             
             context(@"when a sationary location is received", ^{
                 beforeEach(^{
                     [locationManager locationManager:locationManagerInstance didUpdateLocations:@[stationaryLocation]];
+                });
+                
+                afterEach(^{
+                    [NSUserDefaults mme_resetConfiguration];
                 });
                 
                 it(@"should not start the timer", ^{
@@ -452,6 +441,10 @@ describe(@"MMELocationManager", ^{
             context(@"when a moving location is received", ^{
                 beforeEach(^{
                     [locationManager locationManager:locationManagerInstance didUpdateLocations:@[movingLocation]];
+                });
+                
+                afterEach(^{
+                    [NSUserDefaults mme_resetConfiguration];
                 });
                 
                 it(@"should start the timer", ^{
@@ -517,6 +510,10 @@ describe(@"MMELocationManager", ^{
                         
                         locationManager.updatingLocation = YES;
                         [locationManager stopMonitoringRegions];
+                    });
+                    
+                    afterEach(^{
+                        [NSUserDefaults mme_resetConfiguration];
                     });
                     
                     it(@"tells the location manager to stop monitoring for region", ^{
