@@ -422,55 +422,6 @@ describe(@"MMEEventsManager", ^{
                 });
             });
         });
-        
-        context(@"when next turnstile send date is not nil and event manager is correctly configured", ^{
-            beforeEach(^{
-                eventsManager.nextTurnstileSendDate = [NSDate dateWithTimeIntervalSince1970:1000];
-                
-                MMEAPIClientFake *fakeAPIClient = [[MMEAPIClientFake alloc] init];
-                spy_on(fakeAPIClient);
-                eventsManager.apiClient = fakeAPIClient;
-                
-                NSUserDefaults.mme_configuration.mme_accessToken = @"access-token";
-                NSUserDefaults.mme_configuration.mme_legacyUserAgentBase = @"user-agent-base";
-                NSUserDefaults.mme_configuration.mme_legacyHostSDKVersion = @"host-sdk-version";
-                
-                spy_on([NSDate class]);
-            });
-            
-            afterEach(^{
-                eventsManager.nextTurnstileSendDate = nil;
-                stop_spying_on([NSDate class]);
-            });
-
-            context(@"when the current time is before the next turnstile send date", ^{
-                beforeEach(^{
-                    NSDate *date = [NSDate dateWithTimeIntervalSince1970:500];
-                    [NSDate class] stub_method(@selector(date)).and_return(date);
-                    
-                    [eventsManager sendTurnstileEvent];
-                });
-                
-                it(@"tells its api client to not post events", ^{
-                    eventsManager.apiClient should_not have_received(@selector(postEvent:completionHandler:));
-                });
-            });
-            
-            context(@"when the current time is after the next turnstile send date", ^{
-                beforeEach(^{
-                    NSDate *date = [NSDate dateWithTimeIntervalSince1970:1001];
-                    [NSDate class] stub_method(@selector(date)).and_return(date);
-
-                    [eventsManager sendTurnstileEvent];
-                    [NSThread sleepForTimeInterval:1.0];
-                });
-
-                it(@"tells its api client to post events", ^{
-                    eventsManager.apiClient should have_received(@selector(postEvent:completionHandler:));
-                });
-            });
-        });
-        
     });
     
     describe(@"- sendTelemetryMetricsEvent", ^{

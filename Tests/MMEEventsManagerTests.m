@@ -289,6 +289,48 @@
     XCTAssert(self.eventsManager.eventQueue.count == 0);
 }
 
+- (void)testSendsTurnstileWhenCollectionEnabled {
+    XCTAssert(self.eventsManager.nextTurnstileSendDate == nil);
+
+    NSUserDefaults.mme_configuration.mme_isCollectionEnabled = YES; // on device or in simulator
+    
+    MMEAPIClientFake *fakeAPIClient = [[MMEAPIClientFake alloc] init];
+    
+    NSUserDefaults.mme_configuration.mme_accessToken = @"access-token";
+    NSUserDefaults.mme_configuration.mme_legacyUserAgentBase = @"user-agent-base";
+    NSUserDefaults.mme_configuration.mme_legacyHostSDKVersion = @"host-sdk-version";
+    
+    self.eventsManager.apiClient = fakeAPIClient;
+    
+    self.eventsManager.nextTurnstileSendDate = MMEDate.distantPast;
+    
+    [self.eventsManager sendTurnstileEvent];
+    
+    XCTAssert([(MMETestStub*)self.eventsManager.apiClient received:@selector(postEvent:completionHandler:)]);
+    XCTAssert(self.eventsManager.eventQueue.count == 0);
+}
+
+- (void)testDoesNotSendTurnstileWithFutureSendDateAndCollectionEnabled {
+    XCTAssert(self.eventsManager.nextTurnstileSendDate == nil);
+
+    NSUserDefaults.mme_configuration.mme_isCollectionEnabled = YES; // on device or in simulator
+    
+    MMEAPIClientFake *fakeAPIClient = [[MMEAPIClientFake alloc] init];
+    
+    NSUserDefaults.mme_configuration.mme_accessToken = @"access-token";
+    NSUserDefaults.mme_configuration.mme_legacyUserAgentBase = @"user-agent-base";
+    NSUserDefaults.mme_configuration.mme_legacyHostSDKVersion = @"host-sdk-version";
+    
+    self.eventsManager.apiClient = fakeAPIClient;
+    
+    self.eventsManager.nextTurnstileSendDate = MMEDate.distantFuture;
+    
+    [self.eventsManager sendTurnstileEvent];
+    
+    XCTAssertFalse([(MMETestStub*)self.eventsManager.apiClient received:@selector(postEvent:completionHandler:)]);
+    XCTAssert(self.eventsManager.eventQueue.count == 0);
+}
+
 //- (void)testLowPowerMode {
 //    //TODO: ^^
 //    self.lowPowerCompletionExpectation = [self expectationWithDescription:@"It should flush and pause"];
