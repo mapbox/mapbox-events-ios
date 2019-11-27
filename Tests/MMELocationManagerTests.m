@@ -46,7 +46,7 @@
         }
     }
     
-    XCTAssert(capturedRegion);
+    XCTAssert(capturedRegion != nil);
 }
 
 @end
