@@ -73,11 +73,11 @@
     XCTAssert(self.eventsManager.paused == NO);
 }
 
-- (void)testPausesWithAlwaysAuthAndBackgrounded {
-    self.eventsManager.paused = NO;
+- (void)testUnpausesWithAlwaysAuthAndBackgrounded {
+    self.eventsManager.paused = YES;
     
     [self.eventsManager processAuthorizationStatus:kCLAuthorizationStatusAuthorizedAlways andApplicationState:UIApplicationStateBackground];
-    XCTAssert(self.eventsManager.paused == YES);
+    XCTAssert(self.eventsManager.paused == NO);
 }
 
 - (void)testUnpausesWithAlwaysAuthAndAppActive {

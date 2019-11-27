@@ -79,6 +79,12 @@ NS_ASSUME_NONNULL_BEGIN
         self.mme_legacyHostSDKVersion = hostSDKVersion;
     }
     
+    id bundleAPIURL = [NSBundle.mme_mainBundle objectForInfoDictionaryKey:MMEGLMapboxAPIBaseURL];
+    if (bundleAPIURL) {
+        BOOL isCNRegionURL = [bundleAPIURL isEqual:MMEAPIClientBaseChinaAPIURL];
+        [self mme_setObject:@(isCNRegionURL) forVolatileKey:MMEIsCNRegion];
+    }
+
     id infoCollectionEnabledInSimulator = [NSBundle.mme_mainBundle objectForInfoDictionaryKey:MMECollectionEnabledInSimulator];
     if ([infoCollectionEnabledInSimulator isKindOfClass:NSNumber.class]) {
         collectionEnabledInSimulator = [infoCollectionEnabledInSimulator boolValue];
@@ -195,12 +201,6 @@ NS_ASSUME_NONNULL_BEGIN
 // MARK: - Service Configuration
 
 - (BOOL)mme_isCNRegion {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        NSString *bundleAPIURL = [NSBundle.mme_mainBundle objectForInfoDictionaryKey:MMEGLMapboxAPIBaseURL];
-        [self mme_setObject:@([bundleAPIURL isEqualToString:MMEAPIClientBaseChinaAPIURL]) forVolatileKey:MMEIsCNRegion];
-    });
-
     BOOL isCNRegion = NO;
     id isCNRegionNumber = [self mme_objectForVolatileKey:MMEIsCNRegion];
     if ([isCNRegionNumber isKindOfClass:NSNumber.class]) {
@@ -212,6 +212,26 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)mme_setIsCNRegion:(BOOL) isCNRegion {
     [self mme_setObject:@(isCNRegion) forVolatileKey:MMEIsCNRegion];
+}
+
+- (NSURL *)mme_APIServiceURL {
+    NSURL *serviceURL = nil;
+    id infoPlistObject = [NSBundle.mme_mainBundle objectForInfoDictionaryKey:MMEEventsServiceURL];
+
+    if ([infoPlistObject isKindOfClass:NSURL.class]) {
+        serviceURL = infoPlistObject;
+    }
+    else if ([infoPlistObject isKindOfClass:NSString.class]) {
+        serviceURL = [NSURL URLWithString:infoPlistObject];
+    }
+    else if ([self mme_isCNRegion]) {
+        serviceURL = [NSURL URLWithString:MMEAPIClientBaseChinaAPIURL];
+    }
+    else {
+        serviceURL = [NSURL URLWithString:MMEAPIClientBaseAPIURL];
+    }
+    
+    return serviceURL;
 }
 
 - (NSURL *)mme_eventsServiceURL {
@@ -228,30 +248,30 @@ NS_ASSUME_NONNULL_BEGIN
         serviceURL = [NSURL URLWithString:MMEAPIClientBaseChinaEventsURL];
     }
     else {
-        serviceURL = [NSURL URLWithString:MMEAPIClientBaseURL];
+        serviceURL = [NSURL URLWithString:MMEAPIClientBaseEventsURL];
     }
     
     return serviceURL;
 }
 
 - (NSURL *)mme_configServiceURL {
-    NSURL *configServiceURL = nil;
+    NSURL *serviceURL = nil;
     id infoPlistObject = [NSBundle.mme_mainBundle objectForInfoDictionaryKey:MMEConfigServiceURL];
     
     if ([infoPlistObject isKindOfClass:NSURL.class]) {
-        configServiceURL = infoPlistObject;
+        serviceURL = infoPlistObject;
     }
     else if ([infoPlistObject isKindOfClass:NSString.class]) {
-        configServiceURL = [NSURL URLWithString:infoPlistObject];
+        serviceURL = [NSURL URLWithString:infoPlistObject];
     }
     else if ([self mme_isCNRegion]) {
-        configServiceURL = [NSURL URLWithString:MMEAPIClientBaseChinaConfigURL];
+        serviceURL = [NSURL URLWithString:MMEAPIClientBaseChinaConfigURL];
     }
     else {
-        configServiceURL = [NSURL URLWithString:MMEAPIClientBaseConfigURL];
+        serviceURL = [NSURL URLWithString:MMEAPIClientBaseConfigURL];
     }
     
-    return configServiceURL;
+    return serviceURL;
 }
 
 - (NSString *)mme_userAgentString {
