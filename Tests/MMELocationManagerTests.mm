@@ -415,6 +415,10 @@ describe(@"MMELocationManager", ^{
                     [locationManager locationManager:locationManagerInstance didVisit:visit];
                 });
                 
+                afterEach(^{
+                    [NSUserDefaults mme_resetConfiguration];
+                });
+                
                 it(@"tells its delegate", ^{
                     locationManager.delegate should have_received(@selector(locationManager:didVisit:)).with(locationManager, visit);
                 });
@@ -424,6 +428,10 @@ describe(@"MMELocationManager", ^{
                     [locationManager startUpdatingLocation];
                     [locationManager locationManager:locationManagerInstance didUpdateLocations:@[movingLocation]];
                     locationManager.backgroundLocationServiceTimeoutTimer should_not be_nil;
+                });
+                
+                afterEach(^{
+                    [NSUserDefaults mme_resetConfiguration];
                 });
 
                 it(@"tells the location manager to start monitoring for region", ^{

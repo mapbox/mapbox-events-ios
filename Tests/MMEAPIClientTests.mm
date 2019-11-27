@@ -67,17 +67,6 @@ describe(@"MMEAPIClient", ^{
         apiClient.sessionWrapper should_not be_nil;
         apiClient.sessionWrapper should be_instance_of([MMENSURLSessionWrapper class]);
     });
-    
-    describe(@"- getConfigurationWithCompletionHandler:", ^{
-        __block MMENSURLSessionWrapperFake *sessionWrapperFake;
-        
-        beforeEach(^{
-            sessionWrapperFake = [[MMENSURLSessionWrapperFake alloc] init];
-            spy_on(sessionWrapperFake);
-            
-            apiClient.sessionWrapper = sessionWrapperFake;
-        });
-    });
         
     describe(@"- postEvent:completionHandler:", ^{
         __block MMEEvent *event;
