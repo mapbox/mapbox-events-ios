@@ -43,7 +43,6 @@ SPEC_BEGIN(MMEAPIClientSpec)
 describe(@"MMEAPIClient", ^{
     
     __block MMEAPIClient *apiClient;
-    __block NSURLSessionAuthChallengeDisposition receivedDisposition;
     __block MMENSURLSessionWrapper *sessionWrapper;
     __block NSURLSession *urlSession;
     __block NSURLAuthenticationChallenge *challenge;

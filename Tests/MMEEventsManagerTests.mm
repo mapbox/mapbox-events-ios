@@ -57,25 +57,6 @@ using namespace Cedar::Doubles::Arguments;
 
 #pragma mark -
 
-static CLLocation * location() {
-    CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(10, 10);
-    CLLocationDistance altitude = 100;
-    CLLocationAccuracy horizontalAccuracy = 42;
-    CLLocationAccuracy verticalAccuracy = 24;
-    CLLocationDirection course = 99;
-    CLLocationSpeed speed = 102;
-    NSDate *timestamp = [NSDate dateWithTimeIntervalSince1970:0];
-    return [[CLLocation alloc] initWithCoordinate:coordinate
-                                         altitude:altitude
-                               horizontalAccuracy:horizontalAccuracy
-                                 verticalAccuracy:verticalAccuracy
-                                           course:course
-                                            speed:speed
-                                        timestamp:timestamp];
-}
-
-#pragma mark -
-
 SPEC_BEGIN(MMEEventsManagerSpec)
 
 /* many of the tests use a manager which is not the shared manager,
