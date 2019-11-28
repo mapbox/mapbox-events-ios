@@ -6,6 +6,7 @@
 #import "MMEUIApplicationWrapper.h"
 
 #import "NSUserDefaults+MMEConfiguration.h"
+#import "NSUserDefaults+MMEConfiguration_Private.h"
 
 using namespace Cedar::Matchers;
 using namespace Cedar::Doubles;
@@ -402,6 +403,10 @@ describe(@"MMELocationManager", ^{
                 locationManager.backgroundLocationServiceTimeoutTimer should be_nil;
             });
             
+            afterEach(^{
+                [NSUserDefaults mme_resetConfiguration];
+            });
+            
             context(@"when a visit is received", ^{
                 __block CLVisit *visit;
                 
@@ -410,26 +415,22 @@ describe(@"MMELocationManager", ^{
                     [locationManager locationManager:locationManagerInstance didVisit:visit];
                 });
                 
+                afterEach(^{
+                    [NSUserDefaults mme_resetConfiguration];
+                });
+                
                 it(@"tells its delegate", ^{
                     locationManager.delegate should have_received(@selector(locationManager:didVisit:)).with(locationManager, visit);
                 });
-            });
-            //TODO: This passes locally but CI refuses. Consider moving to XCTest?
-            context(@"when location data are received", ^{
-//                beforeEach(^{
-//                    [locationManager startUpdatingLocation];
-//                    [locationManager locationManager:locationManagerInstance didUpdateLocations:@[movingLocation]];
-//                    locationManager.backgroundLocationServiceTimeoutTimer should_not be_nil;
-//                });
-//
-//                it(@"tells the location manager to start monitoring for region", ^{
-//                    locationManager.locationManager should have_received(@selector(startMonitoringForRegion:)).and_with(Arguments::anything);
-//                });
             });
             
             context(@"when a sationary location is received", ^{
                 beforeEach(^{
                     [locationManager locationManager:locationManagerInstance didUpdateLocations:@[stationaryLocation]];
+                });
+                
+                afterEach(^{
+                    [NSUserDefaults mme_resetConfiguration];
                 });
                 
                 it(@"should not start the timer", ^{
@@ -440,6 +441,10 @@ describe(@"MMELocationManager", ^{
             context(@"when a moving location is received", ^{
                 beforeEach(^{
                     [locationManager locationManager:locationManagerInstance didUpdateLocations:@[movingLocation]];
+                });
+                
+                afterEach(^{
+                    [NSUserDefaults mme_resetConfiguration];
                 });
                 
                 it(@"should start the timer", ^{
@@ -505,6 +510,10 @@ describe(@"MMELocationManager", ^{
                         
                         locationManager.updatingLocation = YES;
                         [locationManager stopMonitoringRegions];
+                    });
+                    
+                    afterEach(^{
+                        [NSUserDefaults mme_resetConfiguration];
                     });
                     
                     it(@"tells the location manager to stop monitoring for region", ^{

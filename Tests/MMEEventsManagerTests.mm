@@ -57,25 +57,6 @@ using namespace Cedar::Doubles::Arguments;
 
 #pragma mark -
 
-static CLLocation * location() {
-    CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(10, 10);
-    CLLocationDistance altitude = 100;
-    CLLocationAccuracy horizontalAccuracy = 42;
-    CLLocationAccuracy verticalAccuracy = 24;
-    CLLocationDirection course = 99;
-    CLLocationSpeed speed = 102;
-    NSDate *timestamp = [NSDate dateWithTimeIntervalSince1970:0];
-    return [[CLLocation alloc] initWithCoordinate:coordinate
-                                         altitude:altitude
-                               horizontalAccuracy:horizontalAccuracy
-                                 verticalAccuracy:verticalAccuracy
-                                           course:course
-                                            speed:speed
-                                        timestamp:timestamp];
-}
-
-#pragma mark -
-
 SPEC_BEGIN(MMEEventsManagerSpec)
 
 /* many of the tests use a manager which is not the shared manager,
@@ -421,97 +402,7 @@ describe(@"MMEEventsManager", ^{
                     });
                 });
             });
-            
-            context(@"when the events manager's api client is correctly configured", ^{
-                beforeEach(^{
-                    spy_on([NSDate class]);
-                    NSDate *date = [NSDate dateWithTimeIntervalSince1970:1000];
-                    [NSDate class] stub_method(@selector(date)).and_return(date);
-                    
-                    NSUserDefaults.mme_configuration.mme_isCollectionEnabled = NO; // on device or in simulator
-                    
-                    MMEAPIClientFake *fakeAPIClient = [[MMEAPIClientFake alloc] init];
-                    spy_on(fakeAPIClient);
-                    
-                    NSUserDefaults.mme_configuration.mme_accessToken = @"access-token";
-                    NSUserDefaults.mme_configuration.mme_legacyUserAgentBase = @"user-agent-base";
-                    NSUserDefaults.mme_configuration.mme_legacyHostSDKVersion = @"host-sdk-version";
-                    
-                    eventsManager.apiClient = fakeAPIClient;
-                    
-                    [eventsManager sendTurnstileEvent];
-                });
-                
-                it(@"tells its api client to post events", ^{
-//                    NSDictionary *turnstileEventAttributes = @{MMEEventKeyEvent: MMEEventTypeAppUserTurnstile,
-//                                                               MMEEventKeyCreated: [MMEDate.iso8601DateFormatter stringFromDate:[NSDate date]],
-//                                                               MMEEventKeyVendorID: eventsManager.commonEventData.vendorId,
-//                                                               MMEEventKeyDevice: eventsManager.commonEventData.model,
-//                                                               MMEEventKeyOperatingSystem: eventsManager.commonEventData.osVersion,
-//                                                               MMEEventSDKIdentifier: NSUserDefaults.mme_configuration.mme_legacyUserAgentBase,
-//                                                               MMEEventSDKVersion: NSUserDefaults.mme_configuration.mme_legacyHostSDKVersion,
-//                                                               MMEEventKeyEnabledTelemetry: @NO,
-//                                                               MMEEventKeyLocationEnabled: @([CLLocationManager locationServicesEnabled]),
-//                                                               MMEEventKeyLocationAuthorization: [CLLocationManager mme_authorizationStatusString],
-//                                                               MMEEventKeySkuId: eventsManager.skuId ?: [NSNull null]
-//                                                               };
-//                    MMEEvent *expectedEvent = [MMEEvent turnstileEventWithAttributes:turnstileEventAttributes];
-//                    expectedEvent.dateStorage = MMEDateFakes.earlier;
-//
-//                    eventsManager.apiClient should have_received(@selector(postEvent:completionHandler:)).with(expectedEvent).and_with(Arguments::anything);
-                });
-            });
-            
         });
-        
-        context(@"when next turnstile send date is not nil and event manager is correctly configured", ^{
-            beforeEach(^{
-                eventsManager.nextTurnstileSendDate = [NSDate dateWithTimeIntervalSince1970:1000];
-                
-                MMEAPIClientFake *fakeAPIClient = [[MMEAPIClientFake alloc] init];
-                spy_on(fakeAPIClient);
-                eventsManager.apiClient = fakeAPIClient;
-                
-                NSUserDefaults.mme_configuration.mme_accessToken = @"access-token";
-                NSUserDefaults.mme_configuration.mme_legacyUserAgentBase = @"user-agent-base";
-                NSUserDefaults.mme_configuration.mme_legacyHostSDKVersion = @"host-sdk-version";
-                
-                spy_on([NSDate class]);
-            });
-            
-            afterEach(^{
-                eventsManager.nextTurnstileSendDate = nil;
-                stop_spying_on([NSDate class]);
-            });
-
-            context(@"when the current time is before the next turnstile send date", ^{
-                beforeEach(^{
-                    NSDate *date = [NSDate dateWithTimeIntervalSince1970:500];
-                    [NSDate class] stub_method(@selector(date)).and_return(date);
-                    
-                    [eventsManager sendTurnstileEvent];
-                });
-                
-                it(@"tells its api client to not post events", ^{
-                    eventsManager.apiClient should_not have_received(@selector(postEvent:completionHandler:));
-                });
-            });
-            
-            context(@"when the current time is after the next turnstile send date", ^{
-                beforeEach(^{
-                    NSDate *date = [NSDate dateWithTimeIntervalSince1970:1001];
-                    [NSDate class] stub_method(@selector(date)).and_return(date);
-
-                    [eventsManager sendTurnstileEvent];
-                    [NSThread sleepForTimeInterval:1.0];
-                });
-
-                it(@"tells its api client to post events", ^{
-                    eventsManager.apiClient should have_received(@selector(postEvent:completionHandler:));
-                });
-            });
-        });
-        
     });
     
     describe(@"- sendTelemetryMetricsEvent", ^{
