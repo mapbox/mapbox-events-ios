@@ -167,6 +167,10 @@
 #define MMEApplicationStateUnknown __NS_SYMBOL(MMEApplicationStateUnknown)
 #endif
 
+#ifndef MMESemverInvalidVersion
+#define MMESemverInvalidVersion __NS_SYMBOL(MMESemverInvalidVersion)
+#endif
+
 #ifndef MMELocationManagerDistanceFilter
 #define MMELocationManagerDistanceFilter __NS_SYMBOL(MMELocationManagerDistanceFilter)
 #endif
@@ -179,20 +183,20 @@
 #define MMERadiusAccuracyMax __NS_SYMBOL(MMERadiusAccuracyMax)
 #endif
 
-#ifndef MMEAPIClientBaseURL
-#define MMEAPIClientBaseURL __NS_SYMBOL(MMEAPIClientBaseURL)
-#endif
-
 #ifndef MMEAPIClientBaseAPIURL
 #define MMEAPIClientBaseAPIURL __NS_SYMBOL(MMEAPIClientBaseAPIURL)
 #endif
 
-#ifndef MMEAPIClientBaseChinaEventsURL
-#define MMEAPIClientBaseChinaEventsURL __NS_SYMBOL(MMEAPIClientBaseChinaEventsURL)
-#endif
-
 #ifndef MMEAPIClientBaseChinaAPIURL
 #define MMEAPIClientBaseChinaAPIURL __NS_SYMBOL(MMEAPIClientBaseChinaAPIURL)
+#endif
+
+#ifndef MMEAPIClientBaseEventsURL
+#define MMEAPIClientBaseEventsURL __NS_SYMBOL(MMEAPIClientBaseEventsURL)
+#endif
+
+#ifndef MMEAPIClientBaseChinaEventsURL
+#define MMEAPIClientBaseChinaEventsURL __NS_SYMBOL(MMEAPIClientBaseChinaEventsURL)
 #endif
 
 #ifndef MMEAPIClientEventsPath
@@ -785,5 +789,9 @@
 
 #ifndef MMEEventTypeMapDragEnd
 #define MMEEventTypeMapDragEnd __NS_SYMBOL(MMEEventTypeMapDragEnd)
+#endif
+
+#ifndef MMEAPIClientBaseURL
+#define MMEAPIClientBaseURL __NS_SYMBOL(MMEAPIClientBaseURL)
 #endif
 
