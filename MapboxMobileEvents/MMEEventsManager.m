@@ -45,7 +45,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) MMEDispatchManager *dispatchManager;
 @property (nonatomic, getter=isPaused) BOOL paused;
 @property (nonatomic) id<MMEUIApplicationWrapper> application;
-@property (nonatomic, getter=isLocationMetricsEnabled) BOOL locationMetricsEnabled;
 @property (nonatomic) UIBackgroundTaskIdentifier backgroundTaskIdentifier;
 
 @end
@@ -72,7 +71,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initShared {
     if (self = [super init]) {
-        _locationMetricsEnabled = YES;
         _paused = YES;
         _eventQueue = [NSMutableArray array];
         _commonEventData = [[MMECommonEventData alloc] init];
@@ -587,7 +585,7 @@ NS_ASSUME_NONNULL_BEGIN
     
     self.paused = NO;
 
-    if (self.locationMetricsEnabled) {
+    if (NSUserDefaults.mme_configuration.mme_isCollectionEnabled) {
         [self.locationManager startUpdatingLocation];
     }
     [self pushDebugEventWithAttributes:@{
