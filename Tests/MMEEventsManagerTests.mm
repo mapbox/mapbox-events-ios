@@ -65,7 +65,7 @@ describe(@"MMEventsManager.sharedManager", ^{
     MMEEventsManager *shared = MMEEventsManager.sharedManager;
     MMEEventsManager *allocated = [MMEEventsManager.alloc init];
 
-    it(@"", ^{
+    it(@"should equal the allocated manager", ^{
         shared should equal(allocated);
     });
 });

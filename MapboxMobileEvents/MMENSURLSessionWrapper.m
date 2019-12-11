@@ -2,6 +2,7 @@
 #import "MMEEventsManager.h"
 #import "MMECertPin.h"
 #import "MMEEvent.h"
+#import "MMEEventLogger.h"
 
 #pragma mark -
 
@@ -64,7 +65,7 @@
 -(void)URLSession:(NSURLSession *)session didBecomeInvalidWithError:(NSError *)error {
     if (error) { // only recreate the session if the error was non-nil
         self.session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:nil];
-        [[MMEEventsManager sharedManager] pushEvent:[MMEEvent debugEventWithError:error]];
+        [MMEEventLogger.sharedLogger logEvent:[MMEEvent debugEventWithError:error]];
     }
     else { // release the session object
         self.session = nil;
