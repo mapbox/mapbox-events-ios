@@ -270,7 +270,7 @@ NS_ASSUME_NONNULL_BEGIN
                 __strong __typeof__(weakSelf) strongSelf = weakSelf;
 
                 if (error) {
-                    [MMEEventsManager.sharedManager pushEvent:[MMEEvent debugEventWithError:error]];
+                    [MMEEventLogger.sharedLogger logEvent:[MMEEvent debugEventWithError:error]];
                 } else {
                     [strongSelf pushDebugEventWithAttributes:@{
                         MMEDebugEventType: MMEDebugEventTypePost,
@@ -405,7 +405,7 @@ NS_ASSUME_NONNULL_BEGIN
             __strong __typeof__(weakSelf) strongSelf = weakSelf;
 
             if (error) {
-                [strongSelf pushEvent:[MMEEvent debugEventWithError:error]];
+                [MMEEventLogger.sharedLogger logEvent:[MMEEvent debugEventWithError:error]];
                 return;
             }
 
@@ -529,7 +529,7 @@ NS_ASSUME_NONNULL_BEGIN
             [self pushEvent:errorEvent];
         }
         else {
-            [self pushEvent:[MMEEvent debugEventWithError:createError]];
+            [MMEEventLogger.sharedLogger logEvent:[MMEEvent debugEventWithError:createError]];
         }
     }
     @catch(NSException *except) {
