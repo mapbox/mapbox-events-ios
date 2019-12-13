@@ -1,6 +1,6 @@
 {
   "name": "@mapbox/mapbox-events-ios",
-  "version": "0.7.0",
+  "version": "0.10.2",
   "description": "Telemetry and Location Services",
   "keywords": [
     "mapbox",
@@ -20,7 +20,7 @@
     "pretty-bytes": "^5.1.0"
   },
   "engines": {
-    "node": ">=6"
+    "node": ">=10"
   },
   "dependencies": {
     "@mapbox/cloudfriend": "^2.5.0"
