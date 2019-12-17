@@ -176,6 +176,8 @@
 		9CF000602371037E009A2700 /* config-type1-tto.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933923512FD300F99907 /* config-type1-tto.json */; };
 		9CF000612371037E009A2700 /* config-100m-gfo.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F934023512FD300F99907 /* config-100m-gfo.json */; };
 		9CF000642371037E009A2700 /* Cedar.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 40A7F9911F79A743002B931F /* Cedar.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		AC03B2C423A851160043271D /* MMEUniqueIdentifierFake.m in Sources */ = {isa = PBXBuildFile; fileRef = 40031E5D1EFC5CA1009EAB33 /* MMEUniqueIdentifierFake.m */; };
+		AC03B2C523A851410043271D /* MMEUIApplicationWrapperFake.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AE58461EA6C9F10046B437 /* MMEUIApplicationWrapperFake.m */; };
 		AC1B091122137BB000DB56C8 /* CLLocationManager+MMEMobileEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = AC1B090F22137BB000DB56C8 /* CLLocationManager+MMEMobileEvents.h */; };
 		AC1B091222137BB000DB56C8 /* CLLocationManager+MMEMobileEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = AC1B091022137BB000DB56C8 /* CLLocationManager+MMEMobileEvents.m */; };
 		AC1B091322137BB000DB56C8 /* CLLocationManager+MMEMobileEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = AC1B091022137BB000DB56C8 /* CLLocationManager+MMEMobileEvents.m */; platformFilter = ios; };
@@ -1144,9 +1146,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				9CDC34BE234FD62A00852FF0 /* MMEBundleInfoFake.m in Sources */,
+				AC03B2C523A851410043271D /* MMEUIApplicationWrapperFake.m in Sources */,
 				4052C4F31EFB4A740044E2FF /* MMETimerManagerFake.m in Sources */,
 				9C3F931223512F1A00F99907 /* MMETestStub.m in Sources */,
 				9C3F931423512F1A00F99907 /* MMEServiceFixture.m in Sources */,
+				AC03B2C423A851160043271D /* MMEUniqueIdentifierFake.m in Sources */,
 				9C3F93552351300F00F99907 /* MMEExceptionalDictionary.m in Sources */,
 				9CE132C5235926B3005E23F1 /* MMECertPinTests.m in Sources */,
 				ACBD2E5923709F920082F037 /* MMEEventsManagerTests.m in Sources */,
