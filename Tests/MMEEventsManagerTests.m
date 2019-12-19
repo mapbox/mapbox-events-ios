@@ -44,7 +44,6 @@
 
 @interface MMEEventsManagerTests : XCTestCase
 @property (nonatomic) MMEEventsManager *eventsManager;
-@property (nonatomic) XCTestExpectation *lowPowerCompletionExpectation;
 
 @end
 
@@ -374,7 +373,7 @@
 }
 
 - (void)testLowPowerMode {
-    self.lowPowerCompletionExpectation = [self expectationWithDescription:@"It should flush and pause"];
+    XCTestExpectation *lowPowerCompletionExpectation = [self expectationWithDescription:@"It should flush and pause"];
     [NSUserDefaults.mme_configuration mme_setIsCollectionEnabled:YES];
     self.eventsManager.paused = NO;
     
@@ -389,10 +388,10 @@
     
     //waiting a bit
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self.lowPowerCompletionExpectation fulfill];
+        [lowPowerCompletionExpectation fulfill];
     });
 
-    [self waitForExpectations:@[self.lowPowerCompletionExpectation] timeout:1];
+    [self waitForExpectations:@[lowPowerCompletionExpectation] timeout:1];
 
     XCTAssert(self.eventsManager.eventQueue.count == 0);
     XCTAssert(self.eventsManager.paused == YES);
