@@ -95,17 +95,14 @@
 
 - (void)testPostMetadata {
     self.apiClient.sessionWrapper = self.sessionWrapperFake;
-    NSArray *parameters = @[ @{ @"name": @"file", @"fileName": @"images.jpeg" },
-                             @{ @"name": @"attachments", @"value": @"[{\"name\":\"images.jpeg\",\"format\":\"jpg\",\"eventId\":\"123\",\"created\":\"2018-08-28T16:36:39+00:00\",\"size\":66962,\"type\":\"image\",\"startTime\":\"2018-08-28T16:36:39+00:00\",\"endTime\":\"2018-08-28T16:36:40+00:00\"}]" } ];
-    
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Completion block should get called after pinning validation receives a challenge"];
+    NSArray *parameters = @[@{@"name": @"file", @"fileName": @"images.jpeg"},
+                            @{@"name": @"attachments", @"value": @"[{\"name\":\"images.jpeg\",\"format\":\"jpg\",\"eventId\":\"123\",\"created\":\"2018-08-28T16:36:39+00:00\",\"size\":66962,\"type\":\"image\",\"startTime\":\"2018-08-28T16:36:39+00:00\",\"endTime\":\"2018-08-28T16:36:40+00:00\"}]"}];
     
     [self.apiClient postMetadata:parameters filePaths:@[@"../filepath"] completionHandler:^(NSError * _Nullable error) {
-        [expectation fulfill];
+        // empty
     }];
     
     XCTAssert([(MMETestStub*)self.apiClient.sessionWrapper received:@selector(processRequest:completionHandler:)]);
-    [self waitForExpectations:@[expectation] timeout:5];
 }
 
 @end
