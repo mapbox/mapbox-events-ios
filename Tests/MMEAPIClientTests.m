@@ -2,6 +2,7 @@
 
 #import "MMEAPIClient.h"
 #import "MMENSURLSessionWrapper.h"
+#import "MMENSURLSessionWrapperFake.h"
 
 #import "NSUserDefaults+MMEConfiguration.h"
 #import "NSUserDefaults+MMEConfiguration_Private.h"
@@ -15,6 +16,7 @@
 @property (nonatomic) MMEAPIClient *apiClient;
 @property (nonatomic) NSURLSessionAuthChallengeDisposition receivedDisposition;
 @property (nonatomic) MMENSURLSessionWrapper *sessionWrapper;
+@property (nonatomic) MMENSURLSessionWrapperFake *sessionWrapperFake;
 @property (nonatomic) NSURLSession *urlSession;
 @property (nonatomic) NSURLSession *capturedSession;
 @property (nonatomic) NSURLAuthenticationChallenge *challenge;
@@ -33,6 +35,7 @@
                                            hostSDKVersion:@"host-sdk-1"];
     
     self.sessionWrapper = (MMENSURLSessionWrapper *)self.apiClient.sessionWrapper;
+    self.sessionWrapperFake = [[MMENSURLSessionWrapperFake alloc] init];
     
     NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
     self.urlSession = [NSURLSession sessionWithConfiguration:sessionConfig delegate:self.sessionWrapper delegateQueue:nil];
@@ -88,6 +91,21 @@
     
     XCTAssert(isMainThread = YES);
     XCTAssert(self.receivedDisposition = NSURLSessionAuthChallengeCancelAuthenticationChallenge);
+}
+
+- (void)testPostMetadata {
+    self.apiClient.sessionWrapper = self.sessionWrapperFake;
+    NSArray *parameters = @[ @{ @"name": @"file", @"fileName": @"images.jpeg" },
+                             @{ @"name": @"attachments", @"value": @"[{\"name\":\"images.jpeg\",\"format\":\"jpg\",\"eventId\":\"123\",\"created\":\"2018-08-28T16:36:39+00:00\",\"size\":66962,\"type\":\"image\",\"startTime\":\"2018-08-28T16:36:39+00:00\",\"endTime\":\"2018-08-28T16:36:40+00:00\"}]" } ];
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Completion block should get called after pinning validation receives a challenge"];
+    
+    [self.apiClient postMetadata:parameters filePaths:@[@"../filepath"] completionHandler:^(NSError * _Nullable error) {
+        [expectation fulfill];
+    }];
+    
+    XCTAssert([(MMETestStub*)self.apiClient.sessionWrapper received:@selector(processRequest:completionHandler:)]);
+    [self waitForExpectations:@[expectation] timeout:5];
 }
 
 @end
