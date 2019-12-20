@@ -3,9 +3,13 @@
 #import "MMEAPIClient.h"
 #import "MMENSURLSessionWrapper.h"
 #import "MMENSURLSessionWrapperFake.h"
+#import "MMEEvent.h"
+#import "MMECommonEventData.h"
+#import "MMEConstants.h"
 
 #import "NSUserDefaults+MMEConfiguration.h"
 #import "NSUserDefaults+MMEConfiguration_Private.h"
+#import "NSData+MMEGZIP.h"
 
 @interface MMENSURLSessionWrapper (Private)
 @property (nonatomic) NSURLSession *session;
@@ -103,6 +107,39 @@
     }];
     
     XCTAssert([(MMETestStub*)self.apiClient.sessionWrapper received:@selector(processRequest:completionHandler:)]);
+}
+
+- (void)testPostEventsCompression {
+    self.apiClient.sessionWrapper = self.sessionWrapperFake;
+    
+    MMECommonEventData *commonEventData = [[MMECommonEventData alloc] init];
+    commonEventData.vendorId = @"vendor-id";
+    commonEventData.model = @"model";
+    commonEventData.osVersion = @"1";
+    commonEventData.scale = 42;
+    
+    MMEEvent *event = [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-1" commonEventData:commonEventData];
+    MMEEvent *eventTwo = [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-1" commonEventData:commonEventData];
+    
+    NSArray *events = @[event, eventTwo];
+    
+    NSMutableArray *eventAttributes = [NSMutableArray arrayWithCapacity:events.count];
+    [events enumerateObjectsUsingBlock:^(MMEEvent * _Nonnull event, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (event.attributes) {
+            [eventAttributes addObject:event.attributes];
+        }
+    }];
+    
+    NSData *uncompressedData = [NSJSONSerialization dataWithJSONObject:eventAttributes options:0 error:nil];
+    
+    [self.apiClient postEvents:@[event, eventTwo] completionHandler:nil];
+    
+    XCTAssert([self.sessionWrapperFake.request.allHTTPHeaderFields[MMEAPIClientHeaderFieldContentEncodingKey] isEqualToString:@"gzip"]);
+    
+    NSData *data = (NSData *)self.sessionWrapperFake.request.HTTPBody; //compressed data
+    XCTAssert(data.length < uncompressedData.length);
+    
+    XCTAssert(data.mme_gunzippedData.length == uncompressedData.length);
 }
 
 @end
