@@ -183,9 +183,6 @@ extern NSString * const MMEEventKeyVendorID MME_DEPRECATED_MSG("Use MMEEventKeyV
 extern NSString * const MMEEventKeyInstallationID MME_DEPRECATED_MSG("Use MMEEventKeyInstallationId");
 extern NSString * const MMEEventKeyAppID MME_DEPRECATED_MSG("Use MMEEventKeyInstallationId");
 
-extern NSString * const MMELoggerHTML MME_DEPRECATED;
-extern NSString * const MMELoggerShareableHTML MME_DEPRECATED;
-
 extern NSString * const MMEEventKeyGestureId MME_DEPRECATED;
 extern NSString * const MMEEventKeyGestureID MME_DEPRECATED;
 extern NSString * const MMEEventGestureSingleTap MME_DEPRECATED;

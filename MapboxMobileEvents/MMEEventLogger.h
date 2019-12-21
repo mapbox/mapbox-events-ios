@@ -13,7 +13,6 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)sharedLogger;
 
 - (void)logEvent:(MMEEvent *)event;
-- (void)readAndDisplayLogFileFromDate:(NSDate *)logDate;
 - (void)pushDebugEventWithAttributes:(MMEMapboxEventAttributes *)attributes;
 
 @end
