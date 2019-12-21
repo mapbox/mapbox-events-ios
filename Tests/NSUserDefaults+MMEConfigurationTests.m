@@ -87,6 +87,77 @@
     XCTAssert([NSUserDefaults.mme_configuration.mme_eventTag isEqual:@"tag"]);
 }
 
+- (void)testCustomProfileOverMaxValues {
+    NSBundle.mme_mainBundle = [MMEBundleInfoFake bundleWithFakeInfo:@{
+        MMEEventsProfile: MMECustomProfile,
+        MMEStartupDelay : @9001,
+        MMECustomGeofenceRadius: @9001
+    }];
+    [NSUserDefaults.mme_configuration mme_registerDefaults];
+
+    XCTAssert(NSUserDefaults.mme_configuration.mme_backgroundGeofence == 300);
+    XCTAssert(NSUserDefaults.mme_configuration.mme_startupDelay == 1);
+}
+
+- (void)testCustomProfileUnderMinValues {
+    NSBundle.mme_mainBundle = [MMEBundleInfoFake bundleWithFakeInfo:@{
+        MMEEventsProfile: MMECustomProfile,
+        MMEStartupDelay : @-42,
+        MMECustomGeofenceRadius: @10
+    }];
+    [NSUserDefaults.mme_configuration mme_registerDefaults];
+
+    XCTAssert(NSUserDefaults.mme_configuration.mme_backgroundGeofence == 300);
+    XCTAssert(NSUserDefaults.mme_configuration.mme_startupDelay == 1);
+}
+
+- (void)testCustomProfile {
+    NSBundle.mme_mainBundle = [MMEBundleInfoFake bundleWithFakeInfo:@{
+        MMEEventsProfile: MMECustomProfile,
+        MMEStartupDelay : @2,
+        MMECustomGeofenceRadius: @420
+    }];
+    [NSUserDefaults.mme_configuration mme_registerDefaults];
+
+    XCTAssert(NSUserDefaults.mme_configuration.mme_backgroundGeofence == 420);
+    XCTAssert(NSUserDefaults.mme_configuration.mme_startupDelay == 2);
+}
+
+- (void)testCustomProfileInvalidValues {
+    NSBundle.mme_mainBundle = [MMEBundleInfoFake bundleWithFakeInfo:@{
+        MMEEventsProfile: MMECustomProfile,
+        MMEStartupDelay : @"unicorn",
+        MMECustomGeofenceRadius: @"fence"
+    }];
+    [NSUserDefaults.mme_configuration mme_registerDefaults];
+
+    XCTAssert(NSUserDefaults.mme_configuration.mme_backgroundGeofence == 300);
+    XCTAssert(NSUserDefaults.mme_configuration.mme_startupDelay == 1);
+}
+
+- (void)testDefaults {
+    NSBundle.mme_mainBundle = [MMEBundleInfoFake bundleWithFakeInfo:@{
+        MMEAccountType: @1,
+        @"MMEMapboxUserAgentBase" : @"com.mapbox.test",
+        @"MMEMapboxHostSDKVersion": @"1.0.0"
+    }];
+    [NSUserDefaults.mme_configuration mme_registerDefaults];
+
+    XCTAssertFalse(NSUserDefaults.mme_configuration.mme_isCollectionEnabled);
+    XCTAssert([NSUserDefaults.mme_configuration.mme_legacyUserAgentBase isEqualToString:@"com.mapbox.test"]);
+    XCTAssert([NSUserDefaults.mme_configuration.mme_legacyHostSDKVersion isEqualToString:@"1.0.0"]);
+}
+
+//TODO: Persistent object deletion isn't working as expected
+//- (void)testDeletePersistentObject {
+//    [NSUserDefaults.mme_configuration mme_setIsCollectionEnabled:YES];
+//    XCTAssert(NSUserDefaults.mme_configuration.mme_isCollectionEnabled);
+//    XCTAssert([NSUserDefaults.mme_configuration objectForKey:MMECollectionDisabled]);
+//
+//    [NSUserDefaults.mme_configuration mme_deleteObjectForPersistentKey:MMECollectionDisabled];
+//    XCTAssert([NSUserDefaults.mme_configuration objectForKey:MMECollectionDisabled] == nil);
+//}
+
 // MARK: - Location Collection
 - (void)testEventIsCollectionEnabledDefault {
     XCTAssertTrue(NSUserDefaults.mme_configuration.mme_isCollectionEnabled);
@@ -125,6 +196,15 @@
 
 - (void)testInvalidCRL {
     NSDictionary *jsonDict = @{MMEConfigCRLKey: @[@"not-a-key-hash"]};
+    NSError *jsonError = nil;
+    NSData *data = [NSJSONSerialization dataWithJSONObject:jsonDict options:NSJSONWritingPrettyPrinted error:&jsonError];
+    NSError *updateError = [NSUserDefaults.mme_configuration mme_updateFromConfigServiceData:data];
+    XCTAssertNil(jsonError);
+    XCTAssertNotNil(updateError);
+}
+
+- (void)testRevokedCertKeys {
+    NSDictionary *jsonDict = @{MMERevokedCertKeys: @[@"not-a-key-hash"]};
     NSError *jsonError = nil;
     NSData *data = [NSJSONSerialization dataWithJSONObject:jsonDict options:NSJSONWritingPrettyPrinted error:&jsonError];
     NSError *updateError = [NSUserDefaults.mme_configuration mme_updateFromConfigServiceData:data];
@@ -181,12 +261,57 @@
 
 - (void)testEventsServiceURLOverride {
     NSMutableDictionary *testInfoPlist = NSBundle.mainBundle.infoDictionary.mutableCopy;
-    testInfoPlist[@"MMEEventsServiceURL"]  = @"https://test.com";
     MMEBundleInfoFake *fakeBundle = MMEBundleInfoFake.new;
+    
+    testInfoPlist[MMEEventsServiceURL]  = @"https://test.com";
     fakeBundle.infoDictionaryFake = testInfoPlist;
     [NSBundle mme_setMainBundle:fakeBundle];
     
     XCTAssert([NSUserDefaults.mme_configuration.mme_eventsServiceURL.absoluteString isEqualToString:@"https://test.com"]);
+}
+
+- (void)testEventsServiceURLWithNSURL {
+    MMEBundleInfoFake *fakeBundle = MMEBundleInfoFake.new;
+    NSMutableDictionary *testInfoPlist = NSBundle.mainBundle.infoDictionary.mutableCopy;
+    
+    testInfoPlist[MMEEventsServiceURL]  = [NSURL URLWithString:@"https://test.com"];
+    fakeBundle.infoDictionaryFake = testInfoPlist;
+    [NSBundle mme_setMainBundle:fakeBundle];
+    
+    XCTAssert([NSUserDefaults.mme_configuration.mme_eventsServiceURL.absoluteString isEqualToString:@"https://test.com"]);
+}
+
+- (void)testAPIServiceURLWithNSString {
+    MMEBundleInfoFake *fakeBundle = MMEBundleInfoFake.new;
+    NSMutableDictionary *testInfoPlist = NSBundle.mainBundle.infoDictionary.mutableCopy;
+    
+    testInfoPlist[MMEEventsServiceURL]  = @"https://test.com";
+    fakeBundle.infoDictionaryFake = testInfoPlist;
+    [NSBundle mme_setMainBundle:fakeBundle];
+    
+    XCTAssert([NSUserDefaults.mme_configuration.mme_APIServiceURL.absoluteString isEqualToString:@"https://test.com"]);
+}
+
+- (void)testAPIServiceURLWithNSURL {
+    MMEBundleInfoFake *fakeBundle = MMEBundleInfoFake.new;
+    NSMutableDictionary *testInfoPlist = NSBundle.mainBundle.infoDictionary.mutableCopy;
+    
+    testInfoPlist[MMEEventsServiceURL]  = [NSURL URLWithString:@"https://test.com"];
+    fakeBundle.infoDictionaryFake = testInfoPlist;
+    [NSBundle mme_setMainBundle:fakeBundle];
+    
+    XCTAssert([NSUserDefaults.mme_configuration.mme_APIServiceURL.absoluteString isEqualToString:@"https://test.com"]);
+}
+
+- (void)testConfigServiceURLWithNSString {
+    MMEBundleInfoFake *fakeBundle = MMEBundleInfoFake.new;
+    NSMutableDictionary *testInfoPlist = NSBundle.mainBundle.infoDictionary.mutableCopy;
+    
+    testInfoPlist[MMEConfigServiceURL]  = @"https://test.com";
+    fakeBundle.infoDictionaryFake = testInfoPlist;
+    [NSBundle mme_setMainBundle:fakeBundle];
+    
+    XCTAssert([NSUserDefaults.mme_configuration.mme_configServiceURL.absoluteString isEqualToString:@"https://test.com"]);
 }
 
 - (void)testStartupDelayChange {
@@ -299,6 +424,15 @@
     XCTAssertTrue([NSUserDefaults.mme_configuration.mme_APIServiceURL.absoluteString isEqual:MMEAPIClientBaseChinaAPIURL]);
     XCTAssertTrue([NSUserDefaults.mme_configuration.mme_eventsServiceURL.absoluteString isEqual:MMEAPIClientBaseChinaEventsURL]);
     XCTAssertTrue([NSUserDefaults.mme_configuration.mme_configServiceURL.absoluteString isEqual:MMEAPIClientBaseChinaConfigURL]);
+}
+
+- (void)testConfigUpdateDate {
+    [NSUserDefaults.mme_configuration mme_setConfigUpdateDate:MMEDate.date];
+    [NSUserDefaults.mme_configuration mme_deleteObjectForVolatileKey:MMEConfigUpdateDate];
+    
+    MMEDate *date = [NSUserDefaults.mme_configuration mme_configUpdateDate];
+    
+    XCTAssert(date);
 }
 
 @end
