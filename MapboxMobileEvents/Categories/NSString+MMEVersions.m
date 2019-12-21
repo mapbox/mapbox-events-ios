@@ -106,44 +106,45 @@ typedef enum {
     return patchVersion;
 }
 
-// MARK: - Build Identifiers
-
-- (BOOL) mme_containsBuildStringComponent {
-    NSTextCheckingResult *regexMatch = [NSString.mme_semverExpression firstMatchInString:self options:0 range:NSMakeRange(0,self.length)];
-    return (regexMatch && regexMatch.numberOfRanges >= MMESemverBuildIndex);
-}
-
-- (NSString *)mme_semverBuildStringComponent {
-    NSString *buildString = nil;
-    NSTextCheckingResult *regexMatch = [NSString.mme_semverExpression firstMatchInString:self options:0 range:NSMakeRange(0,self.length)];
-    if (regexMatch && regexMatch.numberOfRanges >= MMESemverBuildIndex) {
-        buildString = [self substringWithRange:[regexMatch rangeAtIndex:MMESemverBuildIndex]];
-    }
-    return buildString;
-}
-
-- (NSArray<NSString *>*)mme_semverBuildIdentifiers {
-    return [[self mme_semverBuildStringComponent] componentsSeparatedByString:@"."];
-}
-
-// MARK: - Pre-Release Identifiers
-
-- (BOOL) mme_containsPreReleaseComponent {
-    NSTextCheckingResult *regexMatch = [NSString.mme_semverExpression firstMatchInString:self options:0 range:NSMakeRange(0,self.length)];
-    return (regexMatch && regexMatch.numberOfRanges >= MMESemverReleaseIndex);
-}
-
-- (NSString *)mme_semverPreReleaseComponent {
-    NSString *buildString = nil;
-    NSTextCheckingResult *regexMatch = [NSString.mme_semverExpression firstMatchInString:self options:0 range:NSMakeRange(0,self.length)];
-    if (regexMatch && regexMatch.numberOfRanges >= MMESemverReleaseIndex) {
-        buildString = [self substringWithRange:[regexMatch rangeAtIndex:MMESemverReleaseIndex]];
-    }
-    return buildString;
-}
-
-- (NSArray<NSString *>*)mme_semverPreReleaseIdentifiers {
-    return [[self mme_semverPreReleaseComponent] componentsSeparatedByString:@"."];
-}
+//TODO: These methods are not working as expected in tests and are not used currently
+//// MARK: - Build Identifiers
+//
+//- (BOOL) mme_containsBuildStringComponent {
+//    NSTextCheckingResult *regexMatch = [NSString.mme_semverExpression firstMatchInString:self options:0 range:NSMakeRange(0,self.length)];
+//    return (regexMatch && regexMatch.numberOfRanges >= MMESemverBuildIndex);
+//}
+//
+//- (NSString *)mme_semverBuildStringComponent {
+//    NSString *buildString = nil;
+//    NSTextCheckingResult *regexMatch = [NSString.mme_semverExpression firstMatchInString:self options:0 range:NSMakeRange(0,self.length)];
+//    if (regexMatch && regexMatch.numberOfRanges >= MMESemverBuildIndex) {
+//        buildString = [self substringWithRange:[regexMatch rangeAtIndex:MMESemverBuildIndex]];
+//    }
+//    return buildString;
+//}
+//
+//- (NSArray<NSString *>*)mme_semverBuildIdentifiers {
+//    return [[self mme_semverBuildStringComponent] componentsSeparatedByString:@"."];
+//}
+//
+//// MARK: - Pre-Release Identifiers
+//
+//- (BOOL) mme_containsPreReleaseComponent {
+//    NSTextCheckingResult *regexMatch = [NSString.mme_semverExpression firstMatchInString:self options:0 range:NSMakeRange(0,self.length)];
+//    return (regexMatch && regexMatch.numberOfRanges >= MMESemverReleaseIndex);
+//}
+//
+//- (NSString *)mme_semverPreReleaseComponent {
+//    NSString *buildString = nil;
+//    NSTextCheckingResult *regexMatch = [NSString.mme_semverExpression firstMatchInString:self options:0 range:NSMakeRange(0,self.length)];
+//    if (regexMatch && regexMatch.numberOfRanges >= MMESemverReleaseIndex) {
+//        buildString = [self substringWithRange:[regexMatch rangeAtIndex:MMESemverReleaseIndex]];
+//    }
+//    return buildString;
+//}
+//
+//- (NSArray<NSString *>*)mme_semverPreReleaseIdentifiers {
+//    return [[self mme_semverPreReleaseComponent] componentsSeparatedByString:@"."];
+//}
 
 @end
