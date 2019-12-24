@@ -18,9 +18,6 @@
 /*! @brief UTC yyyy-MM-dd formatter */
 + (NSDateFormatter *)iso8601DateOnlyFormatter;
 
-/*! @brief local time yyyy-MM-dd formatter */
-+ (NSDateFormatter *)logDateFormatter;
-
 /*! @biref HTTP-date formatter
     @link https://tools.ietf.org/html/rfc7231#section-7.1.1.1
 */
