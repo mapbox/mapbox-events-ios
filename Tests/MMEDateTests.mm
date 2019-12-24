@@ -101,27 +101,6 @@ describe(@"MMEDate", ^{
         });
     });
 
-    context(@"NSSecureCoding", ^{
-        MMEDate *now = [MMEDate new];
-        NSKeyedArchiver *archiver = [NSKeyedArchiver new];
-        archiver.requiresSecureCoding = YES;
-        [archiver encodeObject:now forKey:NSKeyedArchiveRootObjectKey];
-        NSData* nowData = archiver.encodedData;
-
-        it(@"should encode to nowData", ^{
-            nowData should_not be_nil;
-            nowData.length should be_greater_than(0);
-        });
-
-        it(@"should decode from data", ^{
-            NSKeyedUnarchiver *unarchiver = [NSKeyedUnarchiver.alloc initForReadingWithData:nowData];
-            unarchiver.requiresSecureCoding = YES;
-            MMEDate *then = [unarchiver decodeObjectOfClass:MMEDate.class forKey:NSKeyedArchiveRootObjectKey];
-            then should_not be_nil;
-            then.timeIntervalSinceReferenceDate should equal(now.timeIntervalSinceReferenceDate);
-        });
-    });
-
     context(@"NSKeyedArchiver", ^{
         MMEDate *now = [MMEDate new];
         NSString *tempFile = [NSTemporaryDirectory() stringByAppendingPathComponent:@"MMEDate-now.data"];
