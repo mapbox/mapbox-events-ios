@@ -16,11 +16,19 @@
     return _sharedLogger;
 }
 
+- (void)setHandler:(void (^)(MMEEvent *))handler {
+    if (!handler) {
+        _handler = [self defaultBlockHandler];
+    } else {
+        _handler = handler;
+    }
+}
+
 #pragma mark -
 
 - (void)logEvent:(MMEEvent *)event {
     if (self.isEnabled) {
-        NSLog(@"%@", [NSString stringWithFormat:@"Mapbox Telemetry event %@", event]);
+        self.handler(event);
     }
 }
 
@@ -29,6 +37,14 @@
     [combinedAttributes setObject:[MMEDate.iso8601DateFormatter stringFromDate:[NSDate date]] forKey:@"created"];
     MMEEvent *debugEvent = [MMEEvent debugEventWithAttributes:combinedAttributes];
     [MMEEventLogger.sharedLogger logEvent:debugEvent];
+}
+
+- (MMELoggingBlockHandler)defaultBlockHandler {
+    MMELoggingBlockHandler mapboxHandler = ^(MMEEvent *debugEvent) {
+        NSLog(@"%@", [NSString stringWithFormat:@"Mapbox Telemetry event %@", debugEvent]);
+    };
+ 
+    return mapboxHandler;
 }
 
 @end

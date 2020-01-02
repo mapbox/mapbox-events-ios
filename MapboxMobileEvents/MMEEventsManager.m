@@ -512,6 +512,10 @@ NS_ASSUME_NONNULL_BEGIN
     return [MMEEventLogger.sharedLogger isEnabled];
 }
 
+- (void)setDebugHandler:(void (^)(MMEEvent *))handler {
+    [MMEEventLogger.sharedLogger setHandler:handler];
+}
+
 #pragma mark - Error & Exception Reporting
 
 - (MMEEvent *)reportError:(NSError *)eventsError {
