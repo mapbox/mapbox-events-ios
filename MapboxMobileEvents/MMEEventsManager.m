@@ -595,7 +595,9 @@ NS_ASSUME_NONNULL_BEGIN
             [self pushEvent:errorEvent];
         }
         else {
+            #ifdef DEBUG
             [MMEEventLogger.sharedLogger logEvent:[MMEEvent debugEventWithError:createError]];
+            #endif
         }
     }
     @catch(NSException *except) {
