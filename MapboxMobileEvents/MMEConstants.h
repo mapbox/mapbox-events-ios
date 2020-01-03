@@ -1,6 +1,8 @@
 #import <Foundation/Foundation.h>
 #import "MMETypes.h"
 
+// MARK: URLs & HTTP Headers
+
 extern NSString * const MMEAPIClientBaseEventsURL;
 extern NSString * const MMEAPIClientBaseAPIURL;
 extern NSString * const MMEAPIClientBaseChinaEventsURL;
@@ -16,7 +18,7 @@ extern NSString * const MMEAPIClientHeaderFieldContentEncodingKey;
 extern NSString * const MMEAPIClientHTTPMethodPost;
 extern NSString * const MMEAPIClientHTTPMethodGet;
 
-// Debug types
+// MARK: - Debug types
 extern NSString * const MMEDebugEventType;
 extern NSString * const MMEDebugEventTypeError;
 extern NSString * const MMEDebugEventTypeFlush;
@@ -31,7 +33,7 @@ extern NSString * const MMEDebugEventTypeLocationManager;
 extern NSString * const MMEDebugEventTypeTelemetryMetrics;
 extern NSString * const MMEDebugEventTypeCertPinning;
 
-// Event types
+// MARK: - Event types
 extern NSString * const MMEEventTypeAppUserTurnstile;
 extern NSString * const MMEEventTypeTelemetryMetrics;
 extern NSString * const MMEEventTypeMapLoad;
@@ -41,7 +43,7 @@ extern NSString * const MMEEventTypeLocalDebug;
 extern NSString * const MMEventTypeOfflineDownloadStart;
 extern NSString * const MMEventTypeOfflineDownloadEnd;
 
-// Event keys
+// MARK: - Event keys
 extern NSString * const MMEEventKeyArrivalDate;
 extern NSString * const MMEEventKeyDepartureDate;
 extern NSString * const MMEEventKeyLatitude;
@@ -127,13 +129,10 @@ extern NSString * const MMEEventStatusNotDetermined;
 extern NSString * const MMEEventStatusAuthorizedAlways;
 extern NSString * const MMEEventStatusAuthorizedWhenInUse;
 extern NSString * const MMEEventUnknown;
-
 extern NSString * const MMEResponseKey;
-
-/*! @brief SDK event source */
 extern NSString * const MMEEventSource;
 
-#pragma mark - mobile.crash Keys
+// MARK: - mobile.crash Keys
 
 extern NSString * const MMEEventMobileCrash;
 extern NSString * const MMEEventKeyOSVersion;
@@ -148,12 +147,12 @@ extern NSString * const MMEEventKeyAppVersion;
 extern NSString * const MMEEventKeyAppStartDate;
 extern NSString * const MMEEventKeyCustomData;
 
-#pragma mark - MMEErrorDomain
+// MARK: - MMEErrorDomain
 
-/*! @brief NSErrorDomain for MapboxMobileEvents */
+/// NSErrorDomain for MapboxMobileEvents
 extern NSErrorDomain const MMEErrorDomain;
 
-/*! @brief MMEErrorDomain Error Numbers
+/** MMEErrorDomain Error Numbers
     - MMENoError: No Error
     - MMEErrorException for exceptions
     - MMEErrorEventInit for errors when initlizing events
@@ -173,13 +172,13 @@ typedef NS_ENUM(NSInteger, MMEErrorNumber) {
     MMEErrorConfigUpdateError   = 10008
 };
 
-/*! @brief key for MMEErrorEventInit userInfo dictionary containing the attributes which failed to create the event */
+/// key for MMEErrorEventInit userInfo dictionary containing the attributes which failed to create the event
 extern NSString * const MMEErrorEventAttributesKey;
 
-/*! @brief key for MMEErrorDomain userInfo dictionary containing the underlying exception which triggered the error */
+/// key for MMEErrorDomain userInfo dictionary containing the underlying exception which triggered the error
 extern NSString * const MMEErrorUnderlyingExceptionKey;
 
-#pragma mark - Deprecated
+// MARK: - Deprecated
 
 extern NSString * const MMEAPIClientBaseURL MME_DEPRECATED_MSG("Use MMEAPIClientBaseEventsURL");
 

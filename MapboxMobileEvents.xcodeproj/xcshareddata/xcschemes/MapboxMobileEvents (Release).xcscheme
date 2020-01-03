@@ -43,8 +43,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "9CDC34C223502F8700852FF0"
-               BuildableName = "MMECedarTests.xctest"
-               BlueprintName = "MMECedarTests"
+               BuildableName = "MMEZCedarTests.xctest"
+               BlueprintName = "MMEZCedarTests"
                ReferencedContainer = "container:MapboxMobileEvents.xcodeproj">
             </BuildableReference>
          </TestableReference>

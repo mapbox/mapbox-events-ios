@@ -4,13 +4,13 @@
 #import "MMEEvent.h"
 #import "MMEEventLogger.h"
 
-#pragma mark -
+// MARK: -
 
 @interface MMEEventsManager (Private)
 - (void)pushEvent:(MMEEvent *)event;
 @end
 
-#pragma mark -
+// MARK: -
 
 @interface MMENSURLSessionWrapper ()
 
@@ -36,7 +36,7 @@
     [self.session invalidateAndCancel];
 }
 
-#pragma mark MMENSURLSessionWrapper
+// MARK: MMENSURLSessionWrapper
 
 - (void)processRequest:(NSURLRequest *)request completionHandler:(void (^)(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error))completionHandler {
     dispatch_async(self.serialQueue, ^{
@@ -52,7 +52,7 @@
     });
 }
 
-#pragma mark NSURLSessionDelegate
+// MARK: NSURLSessionDelegate
 
 - (void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable))completionHandler {    
     __weak __typeof__(self) weakSelf = self;

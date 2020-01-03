@@ -22,7 +22,7 @@ typedef NS_ENUM(NSInteger, MMEErrorCode) {
 
 @import MobileCoreServices;
 
-#pragma mark -
+// MARK: -
 
 @interface MMEAPIClient ()
 @property (nonatomic) NSTimer *configurationUpdateTimer;
@@ -33,7 +33,7 @@ typedef NS_ENUM(NSInteger, MMEErrorCode) {
 
 int const kMMEMaxRequestCount = 1000;
 
-#pragma mark -
+// MARK: -
 
 @implementation MMEAPIClient
 
@@ -206,7 +206,7 @@ int const kMMEMaxRequestCount = 1000;
     return self.configurationUpdateTimer.isValid;
 }
 
-#pragma mark - Utilities
+// MARK: - Utilities
 
 - (NSError *)statusErrorFromRequest:(NSURLRequest *)request andHTTPResponse:(NSHTTPURLResponse *)httpResponse {
     NSError *statusError = nil;

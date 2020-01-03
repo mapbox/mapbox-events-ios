@@ -95,7 +95,7 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
     }
 }
 
-#pragma mark - Utilities
+// MARK: - Utilities
 
 - (void)configurePassiveLocationManager {
     self.locationManager.delegate = self;
@@ -182,7 +182,7 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
     [self.locationManager startMonitoringForRegion:region];
 }
 
-#pragma mark - CLLocationManagerDelegate
+// MARK: - CLLocationManagerDelegate
 
 - (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
     if (status == kCLAuthorizationStatusAuthorizedAlways ||

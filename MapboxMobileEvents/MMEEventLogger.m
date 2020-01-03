@@ -24,7 +24,7 @@
     }
 }
 
-#pragma mark -
+// MARK: -
 
 - (void)logEvent:(MMEEvent *)event {
     if (self.isEnabled) {

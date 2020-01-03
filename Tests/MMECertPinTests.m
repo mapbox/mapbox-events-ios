@@ -8,12 +8,10 @@
 #import "MMEAPIClient_Private.h"
 #import "MMEAPIClientFake.h"
 #import "MMECertPin.h"
-#import "MMECommonEventData.h"
 #import "MMEEvent.h"
 #import "MMEEventsManager.h"
 #import "MMENSURLSessionWrapper.h"
 
-#import "MMERunningLock.h"
 #import "MMEServiceFixture.h"
 #import "MMEBundleInfoFake.h"
 

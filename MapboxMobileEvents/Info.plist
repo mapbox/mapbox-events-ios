@@ -15,8 +15,8 @@
 	<key>CFBundlePackageType</key>
 	<string>FMWK</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.10.2</string>
+	<string>MME_SHORT_VERSION_STRING</string>
 	<key>CFBundleVersion</key>
-	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<string>MME_BUNDLE_VERSION</string>
 </dict>
 </plist>

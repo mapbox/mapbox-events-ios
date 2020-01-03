@@ -130,7 +130,7 @@ NSString * const MMEEventTypeSearchFeedback = @"search.feedback";
 
 NSString * const MMEEventSource = @"mapbox";
 
-#pragma mark - mobile.crash events
+// MARK: - mobile.crash events
 
 NSString * const MMEEventMobileCrash = @"mobile.crash";
 NSString * const MMEEventKeyOSVersion = @"osVersion";
@@ -145,14 +145,14 @@ NSString * const MMEEventKeyAppVersion = @"appVersion";
 NSString * const MMEEventKeyAppStartDate = @"appStartDate";
 NSString * const MMEEventKeyCustomData = @"threadDetails";
 
-#pragma mark - MMEErrorDomain
+// MARK: - MMEErrorDomain
 
 NSErrorDomain const MMEErrorDomain = @"MMEErrorDomain";
 
 NSString * const MMEErrorEventAttributesKey = @"eventAttributes";
 NSString * const MMEErrorUnderlyingExceptionKey = @"underlyingException";
 
-#pragma mark - Deprecated
+// MARK: - Deprecated
 
 NSString * const MMEErrorDescriptionKey = @"errorDescription";
 NSString * const MMEEventKeyVendorID = MMEEventKeyVendorId;

@@ -7,36 +7,27 @@ The Mapbox Mobile Events SDK collects [anonymous data](https://www.mapbox.com/te
 
 ### 📦 Client Frameworks
 
-- [Mapbox Maps SDK](https://github.com/mapbox/mapbox-gl-native/)
+The `MapboxMobileEvents.framework` is included in many Mapbox SDKs including: 
+
+- [Mapbox Maps SDK](https://github.com/mapbox/mapbox-gl-native/) [iOS](https://github.com/mapbox/mapbox-gl-native-ios)
 - [Mapbox Navigation SDK](https://github.com/mapbox/mapbox-navigation-ios/)
-- [Mapbox Vision SDK](https://github.com/mapbox/mapbox-vision-ios)
-- [Mapbox ReactNative SDK](https://github.com/mapbox/react-native-mapbox-gl)
+- [Mapbox Vision SDK](https://vision.mapbox.com)
 
 ### 📖 Quick Start
 
 Include `MapboxMobileEvents.framework` in your application, in the application delegate's  `…didFinishLaunching…` method, add:
 
 ```objc
-MMEEventsManager *manager = [MMEventsManager.sharedManager 
-    initializeWithAccessToken:@"your-mapbox-token" 
-    userAgentBase:@"user-agent-string"
-    hostSDKVersion:@"1.0.0"];
+MMEEventsManager *manager = [MMEventsManager.sharedManager startEventsManagerWithToken:@"your-mapbox-token"];
 manager.delegate = self;
-manager.isMetricsEnabledInSimulator = YES;
-manager.isDebugLoggingEnabled = (DEBUG ? YES : NO);
 [manager sendTurnstileEvent];
 ```
 
 Or, in Swift:
 
 ```swift
-let eventsManager = MMEEventsManager.sharedManager().initialize(
-    withAccessToken: "your-mapbox-token", 
-    userAgentBase: "user-agent-string", 
-    hostSDKVersion: "1.0.0")
-eventsManager.delgate = self;
-eventsManager.isMetricsEnabledInSimulator = true
-eventsManager.isDebugLoggingEnabled = (DEBUG ? true : false)
+let eventsManager = MMEEventsManager.sharedManager().startEventsManager(withToken: "your-mapbox-token");
+eventsManager.delegate = self;
 eventsManager.sendTurnstileEvent()
 ```
 
@@ -72,7 +63,7 @@ If a framework wishes to report errors via the mobile events API two convenience
 
 ```objc
 NSError *reportableError = nil;
-// make a call with an **error paramater
+// make a call with an **error parameter
 [MMEEventsManager.sharedManager reportError:reportableError];
 
 @try {
@@ -85,7 +76,7 @@ NSError *reportableError = nil;
 
 ### 🧪 Testing
 
-Test cases are written using [Cedar](https://github.com/cedarbdd/cedar), to run the test in `Xcode` using `Command-U` you'll need to install the framework:
+Some tests are currently written using [Cedar](https://github.com/cedarbdd/cedar), to run these tests in `Xcode` you'll need to install the framework:
 
 ```bash
 # install carthage
@@ -96,6 +87,7 @@ cd $PROJECT_DIR
 carthage bootstrap
 ```
 
+<<<<<<< HEAD:readme.md
 ### 🔎Enable debug logging within your app.
 
 **Pre-v1.0**
@@ -113,3 +105,8 @@ Nav SDK: To enable debug logs in your console set `MBNavigationMetricsDebugLoggi
 3. Watch console for logs
 <img width="777" alt="Screen Shot 2020-02-07 at 5 10 26 PM" src="https://user-images.githubusercontent.com/10932745/74076691-afd0aa80-49ce-11ea-9d9f-1a8219852b7a.png">
 
+=======
+### 📑 License
+
+Mapbox Mobile Events is an open source project, released under a [two clause BSD Style License](LICENSE.md).
+>>>>>>> Mapbox Mobile Events 1.0-beta1:README.md

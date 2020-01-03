@@ -2,7 +2,6 @@
 #import <CoreLocation/CoreLocation.h>
 
 #import "MMEEvent.h"
-#import "MMECommonEventData.h"
 #import "MMEMetricsManager.h"
 #import "MMEConstants.h"
 #import "MMEReachability.h"
@@ -146,14 +145,8 @@ describe(@"MMEMetricsManager", ^{
             __block NSData *uncompressedData;
             
             beforeEach(^{
-                MMECommonEventData *commonEventData = [[MMECommonEventData alloc] init];
-                commonEventData.vendorId = @"vendor-id";
-                commonEventData.model = @"model";
-                commonEventData.osVersion = @"1";
-                commonEventData.scale = 42;
-                
-                MMEEvent *event = [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-1" commonEventData:commonEventData];
-                MMEEvent *eventTwo = [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-1" commonEventData:commonEventData];
+                MMEEvent *event = [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-1" commonEventData:nil];
+                MMEEvent *eventTwo = [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-1" commonEventData:nil];
                 
                 NSArray *events = @[event, eventTwo];
                 

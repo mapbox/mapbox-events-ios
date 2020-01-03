@@ -3,25 +3,15 @@
 #import "MMEConstants.h"
 #import "MMEDate.h"
 #import "MMEEvent.h"
+#import "MMEEvent+SystemInfo.h"
 #import "MMEEventsManager.h"
-#import "MMECommonEventData.h"
+#import "MMEEventsManager_Private.h"
 #import "MMEAPIClient.h"
 #import "MMEAPIClient_Private.h"
 #import "NSUserDefaults+MMEConfiguration.h"
 #import "MMEEventLogger.h"
 
-#pragma mark -
-
-@interface MMEEventsManager (Private)
-
-- (void)pushEvent:(MMEEvent *)event;
-
-@property (nonatomic) MMECommonEventData *commonEventData;
-@property (nonatomic) MMEAPIClient *apiClient;
-
-@end
-
-#pragma mark -
+// MARK: -
 
 @interface MMEMetricsManager ()
 
@@ -29,7 +19,7 @@
 
 @end
 
-#pragma mark -
+// MARK: -
 
 @implementation MMEMetricsManager
 
@@ -58,7 +48,6 @@
     return pendingMetricFile;
 }
 
-/*! @brief Remove any existing pending metrics event, logging any errors that occur */
 + (BOOL)deletePendingMetricsEventFile {
     BOOL success = NO;
     if ([NSFileManager.defaultManager fileExistsAtPath:MMEMetricsManager.pendingMetricsEventPath]) {
@@ -110,7 +99,7 @@
     return sdkPathIsDir;
 }
 
-#pragma mark -
+// MARK: -
 
 - (instancetype)init {
     if (self = [super init]) {
@@ -232,10 +221,10 @@
         attributes[MMEEventDeviceLat] = @(self.metrics.deviceLat);
         attributes[MMEEventDeviceLon] = @(self.metrics.deviceLon);
     }
-    attributes[MMEEventKeyModel] = [MMEEventsManager sharedManager].commonEventData.model;
-    attributes[MMEEventKeyOperatingSystem] = [MMEEventsManager sharedManager].commonEventData.osVersion;
-    attributes[MMEEventKeyPlatform] = [MMEEventsManager sharedManager].commonEventData.platform;
-    attributes[MMEEventKeyDevice] = [MMEEventsManager sharedManager].commonEventData.device;
+    attributes[MMEEventKeyModel] = MMEEvent.deviceModel;
+    attributes[MMEEventKeyPlatform] = MMEEvent.platformName;
+    attributes[MMEEventKeyOperatingSystem] = MMEEvent.osVersion;
+    attributes[MMEEventKeyDevice] = MMEEvent.deviceModel;
     
     attributes[MMEEventSDKIdentifier] = NSUserDefaults.mme_configuration.mme_legacyUserAgentBase;
     attributes[MMEEventSDKVersion] = NSUserDefaults.mme_configuration.mme_legacyHostSDKVersion;
@@ -281,7 +270,7 @@
                     [archiver encodeObject:telemetryMetrics forKey:NSKeyedArchiveRootObjectKey];
 
                     if (![archiver.encodedData writeToFile:MMEMetricsManager.pendingMetricsEventPath atomically:YES]) {
-                        MMELOG(MMELogInfo, MMEDebugEventTypeTelemetryMetrics, ([NSString stringWithFormat:@"Failed to archiveRootObject: %@ toFile: %@",
+                        MMELog(MMELogInfo, MMEDebugEventTypeTelemetryMetrics, ([NSString stringWithFormat:@"Failed to archiveRootObject: %@ toFile: %@",
                         telemetryMetrics, MMEMetricsManager.pendingMetricsEventPath]));
                     }
                 }
@@ -298,7 +287,7 @@
     return telemetryMetrics;
 }
 
-#pragma mark -
+// MARK: -
 
 - (NSString *)jsonStringfromDict:(NSDictionary *)dictionary {
     //prevents empty dictionaries from being stringified

@@ -81,7 +81,7 @@ static void TMReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
 
 @implementation MMEReachability
 
-#pragma mark - Class Constructor Methods
+// MARK: - Class Constructor Methods
 
 +(instancetype)reachabilityWithHostName:(NSString*)hostname {
     return [MMEReachability reachabilityWithHostname:hostname];
@@ -161,7 +161,7 @@ static void TMReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
     _reachabilitySerialQueue = nil;
 }
 
-#pragma mark - Notifier Methods
+// MARK: - Notifier Methods
 
 // Notifier
 // NOTE: This uses GCD to trigger the blocks - they *WILL NOT* be called on THE MAIN THREAD
@@ -216,7 +216,7 @@ static void TMReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
     self.reachabilityObject = nil;
 }
 
-#pragma mark - reachability tests
+// MARK: - reachability tests
 
 // This is for the case where you flick the airplane mode;
 // you end up getting something like this:
@@ -339,7 +339,7 @@ static void TMReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
 }
 
 
-#pragma mark - reachability status stuff
+// MARK: - reachability status stuff
 
 -(NetworkStatus)currentReachabilityStatus {
     if ([self isReachable]) {
@@ -382,7 +382,7 @@ static void TMReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
     return reachabilityFlags(self.reachabilityFlags);
 }
 
-#pragma mark - Callback function calls this method
+// MARK: - Callback function calls this method
 
 -(void)reachabilityChanged:(SCNetworkReachabilityFlags)flags {
     if ([self isReachableWithFlags:flags]) {
@@ -403,7 +403,7 @@ static void TMReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
     });
 }
 
-#pragma mark - Debug Description
+// MARK: - Debug Description
 
 - (NSString *) description {
     NSString *description = [NSString stringWithFormat:@"<%@: %#x (%@)>",

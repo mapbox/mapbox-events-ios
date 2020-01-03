@@ -1,11 +1,12 @@
 #import <CommonCrypto/CommonDigest.h>
 
 #import "MMEEvent.h"
-#import "MMEDate.h"
+
 #import "MMEConstants.h"
-#import "MMECommonEventData.h"
-#import "MMEReachability.h"
+#import "MMEDate.h"
+#import "MMEEvent+SystemInfo.h"
 #import "MMEEventsManager.h"
+#import "MMEReachability.h"
 
 #import "NSUserDefaults+MMEConfiguration.h"
 #if TARGET_OS_IOS || TARGET_OS_TVOS
@@ -20,7 +21,7 @@
 
 @end
 
-#pragma mark -
+// MARK: -
 
 @implementation MMEEvent
 
@@ -57,10 +58,10 @@
         }
     }
 
-    return (shouldRedact ? @"-\tredacted" : stackFrame);
+    return (shouldRedact ? @"-\redacted" : stackFrame);
 }
 
-#pragma mark - Generic Events
+// MARK: - Generic Events
 
 + (instancetype)eventWithAttributes:(NSDictionary *)attributes {
     NSError *eventError = nil;
@@ -76,7 +77,7 @@
     return [self.alloc initWithAttributes:attributes error:error];
 }
 
-#pragma mark - Custom Events
+// MARK: - Custom Events
 
 + (instancetype)turnstileEventWithAttributes:(NSDictionary *)attributes {
     NSMutableDictionary *eventAttributes = attributes.mutableCopy;
@@ -92,31 +93,35 @@
     return [self eventWithAttributes:eventAttributes];
 }
 
-#pragma mark - Crash Events
+// MARK: - Error Events
 
-+ (instancetype)crashEventReporting:(NSError *)eventsError error:(NSError **)createError {
++ (instancetype)errorEventReporting:(NSError *)eventsError error:(NSError **)createError {
     // start with common event data
-    NSMutableDictionary *crashAttributes = MMECommonEventData.commonCrashEventData;
-    crashAttributes[MMEEventKeyEvent] = MMEEventMobileCrash;
+    NSMutableDictionary *errorAttributes = NSMutableDictionary.new;
+    errorAttributes[MMEEventKeyEvent] = MMEEventMobileCrash;
 #if DEBUG
-    crashAttributes[MMEEventKeyBuildType] = @"debug";
+    errorAttributes[MMEEventKeyBuildType] = @"debug";
 #else
-    crashAttributes[MMEEventKeyBuildType] = @"release";
+    errorAttributes[MMEEventKeyBuildType] = @"release";
 #endif
-    crashAttributes[MMEEventKeyIsSilentCrash] = @"yes";
-    crashAttributes[MMEEventSDKIdentifier] = NSUserDefaults.mme_configuration.mme_userAgentString;
-    crashAttributes[MMEEventKeyAppID] = (NSBundle.mainBundle.bundleIdentifier ?: @"unknown");
-    crashAttributes[MMEEventKeyAppVersion] = [NSString stringWithFormat:@"%@ %@",
+    errorAttributes[MMEEventKeyIsSilentCrash] = @"yes";
+    errorAttributes[MMEEventSDKIdentifier] = NSUserDefaults.mme_configuration.mme_userAgentString;
+    errorAttributes[MMEEventKeyAppID] = (NSBundle.mainBundle.bundleIdentifier ?: @"unknown");
+    errorAttributes[MMEEventKeyAppVersion] = [NSString stringWithFormat:@"%@ %@",
         NSBundle.mainBundle.infoDictionary[@"CFBundleShortVersionString"],
         NSBundle.mainBundle.infoDictionary[(id)kCFBundleVersionKey]];
 
     if (NSProcessInfo.processInfo.operatingSystemVersionString) {
-        crashAttributes[MMEEventKeyOSVersion] = NSProcessInfo.processInfo.operatingSystemVersionString;
+        errorAttributes[MMEEventKeyOSVersion] = NSProcessInfo.processInfo.operatingSystemVersionString;
     }
 
+    errorAttributes[MMEEventKeyModel] = MMEEvent.deviceModel;
+    errorAttributes[MMEEventKeyOSVersion] = MMEEvent.osVersion;
+    errorAttributes[MMEEventKeyDevice] = MMEEvent.deviceModel;
+
 #if TARGET_OS_MACOS
-    if (NSRunningApplication.currentApplicaiton.launchDate) {
-        crashAttributes[MMEEventKeyAppStartDate] = [MMEDate.iso8601DateFormatter stringFromDate:NSRunningApplication.currentApplicaiton.launchDate];
+    if (NSRunningApplication.currentApplication.launchDate) {
+        errorAttributes[MMEEventKeyAppStartDate] = [MMEDate.iso8601DateFormatter stringFromDate:NSRunningApplication.currentApplication.launchDate];
     }
 #endif
 
@@ -134,7 +139,7 @@
             }
             index++;
         }
-        crashAttributes[MMEEventKeyStackTrace] = callStack;
+        errorAttributes[MMEEventKeyStackTrace] = callStack;
 
         /* compute a hash of the full trace */
         NSData *callstackDigest = [[errorException.callStackSymbols componentsJoinedByString:@"+"] dataUsingEncoding:NSUTF8StringEncoding];
@@ -147,21 +152,21 @@
             }
 
             if (output) {
-                crashAttributes[MMEEventKeyStackTraceHash] = output;
+                errorAttributes[MMEEventKeyStackTraceHash] = output;
             }
         }
     }
     else {
-        crashAttributes[MMEEventKeyStackTrace] = [NSString stringWithFormat:@"%@/%ld %@ %@",
+        errorAttributes[MMEEventKeyStackTrace] = [NSString stringWithFormat:@"%@/%ld %@ %@",
             eventsError.domain, (long)eventsError.code,
             (eventsError.localizedDescription ?: @"") ,
             (eventsError.localizedFailureReason ?: MMEEventKeyErrorNoReason)];
     }
 
-    return [MMEEvent eventWithAttributes:crashAttributes error:createError];
+    return [MMEEvent eventWithAttributes:errorAttributes error:createError];
 }
 
-#pragma mark - Debug Events
+// MARK: - Debug Events
 
 + (instancetype)debugEventWithAttributes:(NSDictionary *)attributes {
     NSMutableDictionary *eventAttributes = attributes.mutableCopy;
@@ -188,7 +193,7 @@
     return [self debugEventWithAttributes:eventAttributes];
 }
 
-#pragma mark - Deprecated
+// MARK: - Deprecated
 
 + (instancetype)eventWithDate:(NSDate *)eventDate name:(NSString *)eventName attributes:(NSDictionary *)attributes {
     NSMutableDictionary *eventAttributes = attributes.mutableCopy;
@@ -215,9 +220,9 @@
     eventAttributes[MMEEventKeyEvent] = MMEEventTypeLocation;
     eventAttributes[MMEEventKeySource] = MMEEventSource;
     eventAttributes[MMEEventKeySessionId] = instanceIdentifer;
-    eventAttributes[MMEEventKeyOperatingSystem] = commonEventData.osVersion;
-    if (![MMECommonEventData.applicationState isEqualToString:MMEApplicationStateUnknown]) {
-        eventAttributes[MMEEventKeyApplicationState] = MMECommonEventData.applicationState;
+    eventAttributes[MMEEventKeyOperatingSystem] = MMEEvent.osVersion;
+    if (![MMEEvent.applicationState isEqualToString:MMEApplicationStateUnknown]) {
+        eventAttributes[MMEEventKeyApplicationState] = MMEEvent.applicationState;
     }
 
     return [self eventWithAttributes:eventAttributes];
@@ -227,10 +232,10 @@
     NSMutableDictionary *eventAttributes = NSMutableDictionary.dictionary;
     eventAttributes[MMEEventKeyEvent] = MMEEventTypeMapLoad;
     eventAttributes[MMEEventKeyCreated] = dateString;
-    eventAttributes[MMEEventKeyVendorID] = commonEventData.vendorId;
-    eventAttributes[MMEEventKeyModel] = commonEventData.model;
-    eventAttributes[MMEEventKeyOperatingSystem] = commonEventData.osVersion;
-    eventAttributes[MMEEventKeyResolution] = @(commonEventData.scale);
+    eventAttributes[MMEEventKeyVendorID] = MMEEvent.vendorId;
+    eventAttributes[MMEEventKeyModel] = MMEEvent.deviceModel;
+    eventAttributes[MMEEventKeyOperatingSystem] = MMEEvent.osVersion;
+    eventAttributes[MMEEventKeyResolution] = @(MMEEvent.screenScale);
 #if TARGET_OS_IOS || TARGET_OS_TVOS
 
     if (NSBundle.mme_isExtension) {
@@ -309,13 +314,17 @@
     return [self eventWithAttributes:eventAttributes];
 }
 
-#pragma mark - NSSecureCoding
++ (instancetype)crashEventReporting:(NSError *)eventsError error:(NSError **)createError {
+    return [self errorEventReporting:eventsError error:createError];
+}
+
+// MARK: - NSSecureCoding
 
 + (BOOL) supportsSecureCoding {
     return YES;
 }
 
-#pragma mark - Designated Initilizer
+// MARK: - Designated Initializer
 
 
 - (instancetype)init {
@@ -366,7 +375,7 @@
     return self;
 }
 
-#pragma mark - Properties
+// MARK: - Properties
 
 - (NSDate *)date {
     return [_dateStorage copy];
@@ -380,7 +389,7 @@
     return (_attributesStorage ? [NSDictionary dictionaryWithDictionary:_attributesStorage] : nil);
 }
 
-#pragma mark - MMEEvent
+// MARK: - MMEEvent
 
 - (BOOL)isEqualToEvent:(MMEEvent *)event {
     if (!event) {
@@ -393,7 +402,7 @@
     return (hasEqualDate && hasEqualAttributes);
 }
 
-#pragma mark - NSObject overrides
+// MARK: - NSObject overrides
 
 - (BOOL)isEqual:(id)other {
     if (other == self) {
@@ -416,7 +425,7 @@
         NSStringFromClass(self.class), self.name, self.date, self.attributes];
 }
 
-#pragma mark - NSCopying
+// MARK: - NSCopying
 
 - (id)copyWithZone:(NSZone *)zone {
     MMEEvent *copy = [MMEEvent new];
@@ -425,7 +434,7 @@
     return copy;
 }
 
-#pragma mark - NSCoding
+// MARK: - NSCoding
 
 static NSInteger const MMEEventVersion1 = 1; // Name, Date & Attributes Dictionary
 static NSInteger const MMEEventVersion2 = 2; // Date & Attributes Dictionary
@@ -459,4 +468,9 @@ static NSString * const MMEEventAttributesKey = @"MMEEventAttributes";
     [aCoder encodeInteger:MMEEventVersion2 forKey:MMEEventVersionKey];
 }
 
+@end
+
+// MARK: - Deprecated Class
+
+@implementation MMECommonEventData
 @end
