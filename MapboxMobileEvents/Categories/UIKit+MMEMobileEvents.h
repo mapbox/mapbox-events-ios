@@ -11,7 +11,7 @@ void mme_linkUIKitCategories();
 
 @end
 
-#pragma mark -
+// MARK: -
 
 @interface UIDevice (MMEMobileEvents)
 
@@ -19,7 +19,7 @@ void mme_linkUIKitCategories();
 
 @end
 
-#pragma mark -
+// MARK: -
 
 @interface UIApplication (MMEMobileEvents)
 

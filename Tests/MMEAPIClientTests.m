@@ -4,7 +4,6 @@
 #import "MMENSURLSessionWrapper.h"
 #import "MMENSURLSessionWrapperFake.h"
 #import "MMEEvent.h"
-#import "MMECommonEventData.h"
 #import "MMEConstants.h"
 
 #import "NSUserDefaults+MMEConfiguration.h"
@@ -111,15 +110,9 @@
 
 - (void)testPostEventsCompression {
     self.apiClient.sessionWrapper = self.sessionWrapperFake;
-    
-    MMECommonEventData *commonEventData = [[MMECommonEventData alloc] init];
-    commonEventData.vendorId = @"vendor-id";
-    commonEventData.model = @"model";
-    commonEventData.osVersion = @"1";
-    commonEventData.scale = 42;
-    
-    MMEEvent *event = [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-1" commonEventData:commonEventData];
-    MMEEvent *eventTwo = [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-1" commonEventData:commonEventData];
+        
+    MMEEvent *event = [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-1" commonEventData:nil];
+    MMEEvent *eventTwo = [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-1" commonEventData:nil];
     
     NSArray *events = @[event, eventTwo];
     

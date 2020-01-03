@@ -4,11 +4,9 @@
 #import "MMEAPIClient.h"
 #import "MMEConstants.h"
 #import "MMEEvent.h"
-#import "MMECommonEventData.h"
 #import "MMENSURLSessionWrapperFake.h"
 #import "MMEAPIClientFake.h"
 #import "MMECertPin.h"
-#import "MMERunningLock.h"
 
 #import "NSUserDefaults+MMEConfiguration.h"
 
@@ -78,14 +76,8 @@ describe(@"MMEAPIClient", ^{
             spy_on(sessionWrapperFake);
             
             apiClient.sessionWrapper = sessionWrapperFake;
-            
-            MMECommonEventData *commonEventData = [[MMECommonEventData alloc] init];
-            commonEventData.vendorId = @"vendor-id";
-            commonEventData.model = @"model";
-            commonEventData.osVersion = @"1";
-            commonEventData.scale = 42;
-            
-            event = [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-1" commonEventData:commonEventData];
+                        
+            event = [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-1" commonEventData:nil];
         });
         
         context(@"when posting a single event", ^{

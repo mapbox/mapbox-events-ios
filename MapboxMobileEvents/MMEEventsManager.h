@@ -11,116 +11,138 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol MMEEventsManagerDelegate;
 
-/*! @brief Mapbox Mobile Events Manager */
+/** Mapbox Mobile Events Manager
+ 
+ `MMEEventsManager` manages sending telemetry events for Mapbox frameworks.
+ 
+ ## Theory of Operation
+ 
+ The events manager maintains a queue of pending events, groups them according to configurable rules,
+ serializes and compresses the data then posts it to the Mapbox events service.
+ 
+ ## Delegate Interface
+ 
+ The events manager provides a delegate interface for monitoring it's activity `MMEEventsManagerDelegate`
+ 
+*/
 @interface MMEEventsManager : NSObject
 
-/*! @brief events manager delegate */
+/// events manager delegate
 @property (nonatomic, weak) id<MMEEventsManagerDelegate> delegate;
+/// Active SKU Identifier to add to events
 @property (nonatomic, copy) NSString *skuId;
-@property (nonatomic) id<MMEAPIClient> apiClient MME_DEPRECATED;
+@property (nonatomic, nullable) id<MMEAPIClient> apiClient MME_DEPRECATED;
 
-#pragma mark -
+// MARK: -
 
-/*! @brief Shared Mapbox Mobile Events Manager */
+/// Shared Mapbox Mobile Events Manager
 + (instancetype)sharedManager;
 
-#pragma mark - Exception Free API
+// MARK: - Events Manager Lifecycle
 
-/*!
- @brief designated initilizer
- @param accessToken Mapbox Access Token
- @param userAgentBase UserAgent base string, in RFC 2616 format
- @param hostSDKVersion SDK version, in Semantic Versioning 2.0.0 format
- @throws no exceptions
-*/
-- (void)initializeWithAccessToken:(NSString *)accessToken userAgentBase:(NSString *)userAgentBase hostSDKVersion:(NSString *)hostSDKVersion;
+/// Start the events manager
+/// - Parameter accessToken: Mapbox Access Token
+/// - Throws: no exceptions
+- (void)startEventsManagerWithToken:(NSString *)accessToken;
 
-/*! @brief pauseOrResumeMetricsCollectionIfRequired
-    @throws no exceptions */
-- (void)pauseOrResumeMetricsCollectionIfRequired;
+/// To be deprecated when User Agent Reform is Achieved
+- (void)startEventsManagerWithToken:(NSString *)accessToken userAgentBase:(NSString *)userAgentBase hostSDKVersion:(NSString *)hostSDKVersion;
 
-/*! @brief flush the events pipeline, sending any pending events
-    @throws no exceptions */
-- (void)flush;
+/// Attempts to send all pending events immediately
+/// - Throws: no exceptions
+- (void)flushEventsManager;
 
-/*! @brief resetEventQueuing
-    @throws no exceptions */
-- (void)resetEventQueuing;
+/// Flush the event queue and stop accepting new events
+/// - Throws: no exceptions
+- (void)stopEventsManager;
 
-/*! @brief sendTurnstileEvent
-    @throws no exceptions */
+// MARK: - Post Events or Files
+
+/// Send a turnstile event for the accessToken, if necessary
+/// - Throws: no exceptions
 - (void)sendTurnstileEvent;
 
-/*! @brief sendTelemetryMetricsEvent
-    @throws no exceptions */
-- (void)sendTelemetryMetricsEvent;
+/// Enqueue an event
+///   - Parameter event: added too the event queue
+- (void)enqueueEvent:(MMEEvent *)event;
 
-/*! @brief disableLocationMetrics */
-- (void)disableLocationMetrics;
-
-#pragma mark -
-
-/*! @brief enqueueEventWithName:
-    @param name event name */
-- (void)enqueueEventWithName:(NSString *)name;
-
-/*! @brief enqueueEventWithName:attributes:
-    @param name event name
-    @param attributes event attributes */
-- (void)enqueueEventWithName:(NSString *)name attributes:(MMEMapboxEventAttributes *)attributes;
-
-/*! @brief postMetadata:filePaths:completionHander:
-    @param metadata array of metadata
-    @param filePaths array of file paths
-    @param completionHandler completion handler block
-*/
+/// Post files with metadata
+/// - Parameter metadata: array of metadata tags
+/// - Parameter filePaths: array of local files to upload
+/// - Parameter completionHandler: if provided, block will be run when the post completes
 - (void)postMetadata:(NSArray *)metadata filePaths:(NSArray *)filePaths completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler;
 
-#pragma mark - Error & Exception Reporting
+// MARK: - Error & Exception Reporting
 
-/*! @brief report an error to the telemetry service
-    @return the report event, for inspection or logging
-    @throws no exceptions */
+/// report an error to the telemetry service
+/// - Returns: the report event, for inspection or logging
+/// - Throws: no exceptions
 - (MMEEvent *)reportError:(NSError *)eventsError;
 
-/*! @brief report an exception to the telemetry service
-    @return the report event, for inspection or logging
-    @throws no exceptions */
+/// report an exception to the telemetry service
+/// - Returns: the report event, for inspection or logging
+/// - Throws: no exceptions
 - (MMEEvent *)reportException:(NSException *)eventException;
 
-/*! @brief Sets the handler for debug logging in MMEEventLogger. If this property is set to nil or if no custom handler is provided this property is set to the default handler.
-    @param handler The handler this SDK uses to log messages.
+// MARK: - Debug Handler
+
+/** Sets the handler for debug logging in MMEEventLogger. If this property is set to nil or if no custom handler is provided this property is set to the default handler.
+    -Parameter: handler The handler this SDK uses to log messages.
 */
 - (void)setDebugHandler:(void (^)(NSUInteger, NSString *, NSString *))handler;
 
+#pragma mark - Deprecated API
+
+- (void)initializeWithAccessToken:(NSString *)accessToken userAgentBase:(NSString *)userAgentBase hostSDKVersion:(NSString *)hostSDKVersion
+    MME_DEPRECATED_GOTO("use startEventsManagerWithToken:", "-startEventsManagerWithToken:");
+- (void)flush MME_DEPRECATED_GOTO("use flushEventsManager", "-flushEventsManager");
+- (void)enqueueEventWithName:(NSString *)name MME_DEPRECATED_GOTO("use enqueueEvent:", "-enqueueEvent:");
+- (void)enqueueEventWithName:(NSString *)name attributes:(MMEMapboxEventAttributes *)attributes
+    MME_DEPRECATED_GOTO("use enqueueEvent:", "-enqueueEvent:");
+- (void)disableLocationMetrics MME_DEPRECATED;
+
 @end
 
-#pragma mark -
+// MARK: -
 
-/*! @brief delegate methods for MMEEventsManager */
+/// Events Manager Delegate
 @protocol MMEEventsManagerDelegate <NSObject>
 
 @optional
 
-/*! @brief eventsManager:didUpdateLocations: reports location updates to the delegate
+/** eventsManager:didUpdateLocations: reports location updates to the delegate
     @param eventsManager shared manager
     @param locations array of CLLocations
 */
 - (void)eventsManager:(MMEEventsManager *)eventsManager didUpdateLocations:(NSArray<CLLocation *> *)locations;
 
+
+/** reports errors encountered by the Events Manager to the delegate
+    @param eventsManager the shared events manager
+    @param error the encountered NSError object
+*/
+- (void)eventsManager:(MMEEventsManager *)eventsManager didEncounterError:(NSError *)error;
+
+/** reports to the delegate when an event is added to the queue
+    @param eventsManager the shared events manager
+    @param enqueued the event that will be sent when the queue is flushed
+*/
+- (void)eventsManager:(MMEEventsManager *)eventsManager didEnqueueEvent:(MMEEvent *)enqueued;
+
+/** reports to the delegate when events are successfully sent
+    @param eventsManager the shared events manager
+    @param events an array of events which were sent to the events service
+*/
+- (void)eventsManager:(MMEEventsManager *)eventsManager didSendEvents:(NSArray<MMEEvent *>*)events;
+
+
 #if TARGET_OS_IOS
-/*! @brief eventsManager:didVisit: reports visits to the delegate
+/** eventsManager:didVisit: reports visits to the delegate
     @param eventsManager shared manager
     @param visit CLVisit
 */
 - (void)eventsManager:(MMEEventsManager *)eventsManager didVisit:(CLVisit *)visit;
 #endif
-
-/*! @brief reports errors encountered by the Events Manager to the delegate
-    @param eventsManager the shared events manager
-    @param error the encountered NSError object
-*/
-- (void)eventsManager:(MMEEventsManager *)eventsManager didEncounterError:(NSError *)error;
 
 @end
 

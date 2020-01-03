@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1020"
+   LastUpgradeVersion = "1130"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -33,8 +33,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "9CDC34C223502F8700852FF0"
-               BuildableName = "MMECedarTests.xctest"
-               BlueprintName = "MMECedarTests"
+               BuildableName = "MMEZCedarTests.xctest"
+               BlueprintName = "MMEZCedarTests"
                ReferencedContainer = "container:MapboxMobileEvents.xcodeproj">
             </BuildableReference>
          </TestableReference>

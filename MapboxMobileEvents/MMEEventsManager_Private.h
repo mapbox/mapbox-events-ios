@@ -4,10 +4,17 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class MMEAPIClient;
+@class MMECommonEventData;
 
 @interface MMEEventsManager (Private)
 
 - (void)pushEvent:(MMEEvent *)event;
+
+- (void)sendTelemetryMetricsEvent;
+
+- (void)resetEventQueuing;
+
+- (void)pauseOrResumeMetricsCollectionIfRequired;
 
 @end
 

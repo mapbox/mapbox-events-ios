@@ -1,11 +1,11 @@
 #import <XCTest/XCTest.h>
 
 #import "MMEEventsManager.h"
+#import "MMEEventsManager_Private.h"
 #import "MMEConstants.h"
 #import "MMEDate.h"
 #import "MMEEvent.h"
 #import "MMEUniqueIdentifier.h"
-#import "MMECommonEventData.h"
 #import "MMEUIApplicationWrapper.h"
 
 #import "NSUserDefaults+MMEConfiguration.h"
@@ -14,7 +14,6 @@
 #import "CLLocationManager+MMEMobileEvents.h"
 
 #import "MMEAPIClientFake.h"
-#import "MMETimerManagerFake.h"
 #import "MMELocationManagerFake.h"
 #import "MMEUIApplicationWrapperFake.h"
 
@@ -26,7 +25,7 @@
 @property (nonatomic) MMECommonEventData *commonEventData;
 @property (nonatomic) id<MMELocationManager> locationManager;
 @property (nonatomic) id<MMEUniqueIdentifer> uniqueIdentifer;
-@property (nonatomic) MMETimerManager *timerManager;
+//@property (nonatomic) MMETimerManager *timerManager;
 @property (nonatomic) NSDate *nextTurnstileSendDate;
 @property (nonatomic) id<MMEUIApplicationWrapper> application;
 @property (nonatomic) UIBackgroundTaskIdentifier backgroundTaskIdentifier;
@@ -52,13 +51,7 @@
 - (void)setUp {
     self.eventsManager = [MMEEventsManager.alloc initShared];
     self.eventsManager.application = [[MMEUIApplicationWrapperFake alloc] init];
-    
-    MMECommonEventData *commonEventData = [[MMECommonEventData alloc] init];
-    commonEventData.vendorId = @"vendor-id";
-    commonEventData.model = @"model";
-    commonEventData.osVersion = @"ios-version";
-    self.eventsManager.commonEventData = commonEventData;
-    
+        
     [NSUserDefaults.mme_configuration mme_registerDefaults];
     [NSUserDefaults.mme_configuration mme_setAccessToken:@"access-token"];
     [NSUserDefaults.mme_configuration mme_setIsCollectionEnabled:YES];
@@ -147,7 +140,7 @@
                             MMEEventKeyAltitude: @([location mme_roundedAltitude]),
                             MMEEventHorizontalAccuracy: @([location mme_roundedHorizontalAccuracy])
     };
-    MMEEvent *locationEvent = [MMEEvent locationEventWithAttributes:eventAttributes instanceIdentifer:self.eventsManager.uniqueIdentifer.rollingInstanceIdentifer commonEventData:self.eventsManager.commonEventData];
+    MMEEvent *locationEvent = [MMEEvent locationEventWithAttributes:eventAttributes instanceIdentifer:self.eventsManager.uniqueIdentifer.rollingInstanceIdentifer commonEventData:nil];
                             
     [self.eventsManager pushEvent:locationEvent];
     XCTAssert(self.eventsManager.eventQueue.count > 0);
@@ -158,13 +151,7 @@
 - (void)testTimerReachedWithEventQueued {
     self.eventsManager.paused = NO;
     
-    MMETimerManagerFake *timerManager = [[MMETimerManagerFake alloc] init];
-    timerManager.target = self.eventsManager;
-    timerManager.selector = @selector(flush);
-    self.eventsManager.timerManager = timerManager;
-    
     CLLocation *location = [[CLLocation alloc] initWithLatitude:0.0 longitude:0.0];
-    
     MMEMapboxEventAttributes *eventAttributes = @{
                             MMEEventKeyCreated: [MMEDate.iso8601DateFormatter stringFromDate:[location timestamp]],
                             MMEEventKeyLatitude: @([location mme_latitudeRoundedWithPrecision:7]),
@@ -172,12 +159,12 @@
                             MMEEventKeyAltitude: @([location mme_roundedAltitude]),
                             MMEEventHorizontalAccuracy: @([location mme_roundedHorizontalAccuracy])
     };
-    MMEEvent *locationEvent = [MMEEvent locationEventWithAttributes:eventAttributes instanceIdentifer:self.eventsManager.uniqueIdentifer.rollingInstanceIdentifer commonEventData:self.eventsManager.commonEventData];
+    
+    MMEEvent *locationEvent = [MMEEvent locationEventWithAttributes:eventAttributes instanceIdentifer:self.eventsManager.uniqueIdentifer.rollingInstanceIdentifer commonEventData:nil];
     
     [self.eventsManager pushEvent:locationEvent];
     XCTAssert(self.eventsManager.eventQueue.count > 0);
     
-    [timerManager triggerTimer];
     XCTAssert(self.eventsManager.eventQueue.count == 0);
 }
 
@@ -263,7 +250,7 @@
                             MMEEventKeyAltitude: @([location mme_roundedAltitude]),
                             MMEEventHorizontalAccuracy: @([location mme_roundedHorizontalAccuracy])
     };
-    MMEEvent *locationEvent = [MMEEvent locationEventWithAttributes:eventAttributes instanceIdentifer:self.eventsManager.uniqueIdentifer.rollingInstanceIdentifer commonEventData:self.eventsManager.commonEventData];
+    MMEEvent *locationEvent = [MMEEvent locationEventWithAttributes:eventAttributes instanceIdentifer:self.eventsManager.uniqueIdentifer.rollingInstanceIdentifer commonEventData:nil];
     
     [self.eventsManager pushEvent:locationEvent];
     XCTAssert(self.eventsManager.eventQueue.count > 0);
@@ -289,7 +276,7 @@
                             MMEEventKeyAltitude: @([location mme_roundedAltitude]),
                             MMEEventHorizontalAccuracy: @([location mme_roundedHorizontalAccuracy])
     };
-    MMEEvent *locationEvent = [MMEEvent locationEventWithAttributes:eventAttributes instanceIdentifer:self.eventsManager.uniqueIdentifer.rollingInstanceIdentifer commonEventData:self.eventsManager.commonEventData];
+    MMEEvent *locationEvent = [MMEEvent locationEventWithAttributes:eventAttributes instanceIdentifer:self.eventsManager.uniqueIdentifer.rollingInstanceIdentifer commonEventData:nil];
     
     [self.eventsManager pushEvent:locationEvent];
     XCTAssert(self.eventsManager.eventQueue.count > 0);
@@ -407,7 +394,7 @@
 
 
 
-#pragma mark - Internal API
+// MARK: - Internal API
 
 - (void)testPushEventNil {
     [self.eventsManager pushEvent:nil];

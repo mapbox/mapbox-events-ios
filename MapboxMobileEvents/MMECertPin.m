@@ -37,7 +37,7 @@
                 self.lastAuthChallengeDisposition = NSURLSessionAuthChallengePerformDefaultHandling;
                 completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
             });
-            MMELOG(MMELogInfo, MMEDebugEventTypeCertPinning, ([NSString stringWithFormat:@"%@ excludes domain: %@", self.class, challenge.protectionSpace.host]));
+            MMELog(MMELogInfo, MMEDebugEventTypeCertPinning, ([NSString stringWithFormat:@"%@ excludes domain: %@", self.class, challenge.protectionSpace.host]));
             
             return;
         }
@@ -64,7 +64,7 @@
                         self.lastAuthChallengeDisposition = NSURLSessionAuthChallengeUseCredential;
                         completionHandler(NSURLSessionAuthChallengeUseCredential, [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust]);
                     });
-                    MMELOG(MMELogInfo, MMEDebugEventTypeCertPinning, @"Certificate found and accepted trust!");
+                    MMELog(MMELogInfo, MMEDebugEventTypeCertPinning, @"Certificate found and accepted trust!");
                     
                     found = YES;
                     break;
@@ -76,7 +76,7 @@
                     self.lastAuthChallengeDisposition = NSURLSessionAuthChallengeCancelAuthenticationChallenge;
                     completionHandler(NSURLSessionAuthChallengeCancelAuthenticationChallenge, [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust]);
                 });
-                MMELOG(MMELogInfo, MMEDebugEventTypeCertPinning, @"No certificate found; connection canceled");
+                MMELog(MMELogInfo, MMEDebugEventTypeCertPinning, @"No certificate found; connection canceled");
             }
         }
         else if (trustResult == kSecTrustResultProceed) {
@@ -84,14 +84,14 @@
                 self.lastAuthChallengeDisposition = NSURLSessionAuthChallengePerformDefaultHandling;
                 completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust]);
             });
-            MMELOG(MMELogInfo, MMEDebugEventTypeCertPinning, @"User granted - Always Trust; proceeding");
+            MMELog(MMELogInfo, MMEDebugEventTypeCertPinning, @"User granted - Always Trust; proceeding");
         }
         else {
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.lastAuthChallengeDisposition = NSURLSessionAuthChallengeCancelAuthenticationChallenge;
                 completionHandler(NSURLSessionAuthChallengeCancelAuthenticationChallenge, [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust]);
             });
-            MMELOG(MMELogInfo, MMEDebugEventTypeCertPinning, @"Certificate chain validation failed; connection canceled");
+            MMELog(MMELogInfo, MMEDebugEventTypeCertPinning, @"Certificate chain validation failed; connection canceled");
         }
     }
     else {
@@ -99,7 +99,7 @@
             self.lastAuthChallengeDisposition = NSURLSessionAuthChallengePerformDefaultHandling;
             completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
         });
-        MMELOG(MMELogInfo, MMEDebugEventTypeCertPinning, @"Ignoring credentials; default handling for challenge");
+        MMELog(MMELogInfo, MMEDebugEventTypeCertPinning, @"Ignoring credentials; default handling for challenge");
     }
     
 }
@@ -149,7 +149,7 @@
     return subjectPublicKeyInfoHash;
 }
 
-#pragma mark - Generate Public Key Hash
+// MARK: - Generate Public Key Hash
 
 static const NSString *kMMEKeychainPublicKeyTag = @"MMEKeychainPublicKeyTag"; // Used to add and find the public key in the Keychain
 

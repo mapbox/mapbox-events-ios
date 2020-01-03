@@ -20,59 +20,13 @@
                ReferencedContainer = "container:MapboxMobileEvents.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "NO"
-            buildForProfiling = "NO"
-            buildForArchiving = "NO"
-            buildForAnalyzing = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "404807C11EA186D8008A6D50"
-               BuildableName = "MMEXCTests.xctest"
-               BlueprintName = "MMEXCTests"
-               ReferencedContainer = "container:MapboxMobileEvents.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "NO"
-            buildForProfiling = "NO"
-            buildForArchiving = "NO"
-            buildForAnalyzing = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "9CDC34C223502F8700852FF0"
-               BuildableName = "MMEZCedarTests.xctest"
-               BlueprintName = "MMEZCedarTests"
-               ReferencedContainer = "container:MapboxMobileEvents.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "NO"
-            buildForProfiling = "NO"
-            buildForArchiving = "NO"
-            buildForAnalyzing = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "9C65A2652256C110006E3FED"
-               BuildableName = "MMETestHost.app"
-               BlueprintName = "MMETestHost"
-               ReferencedContainer = "container:MapboxMobileEvents.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      shouldUseLaunchSchemeArgsEnv = "YES"
-      enableAddressSanitizer = "YES"
-      enableASanStackUseAfterReturn = "YES"
-      enableUBSanitizer = "YES"
-      codeCoverageEnabled = "YES">
+      shouldUseLaunchSchemeArgsEnv = "YES">
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
@@ -92,16 +46,38 @@
                BlueprintName = "MMEXCTests"
                ReferencedContainer = "container:MapboxMobileEvents.xcodeproj">
             </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "9CDC34C223502F8700852FF0"
-               BuildableName = "MMEZCedarTests.xctest"
-               BlueprintName = "MMEZCedarTests"
-               ReferencedContainer = "container:MapboxMobileEvents.xcodeproj">
-            </BuildableReference>
+            <SkippedTests>
+               <Test
+                  Identifier = "MMEAPIClientTests">
+               </Test>
+               <Test
+                  Identifier = "MMEEventsManagerTests">
+               </Test>
+               <Test
+                  Identifier = "MMELocationManagerTests">
+               </Test>
+               <Test
+                  Identifier = "MMELocationManagerTests/testAsDelegateForLocationManagerWrapperAuthorizationStatusChangeToAlways">
+               </Test>
+               <Test
+                  Identifier = "MMELocationManagerTests/testAsDelegateForLocationManagerWrapperAuthorizationStatusChangeToWhenInUse">
+               </Test>
+               <Test
+                  Identifier = "MMELocationManagerTests/testStartUpdatingLocationWhenHostAppHasNoBackgroundCapabilityAndAlwaysPermissions">
+               </Test>
+               <Test
+                  Identifier = "MMELocationManagerTests/testStartUpdatingLocationWhenHostAppHasWhenInUsePermissions">
+               </Test>
+               <Test
+                  Identifier = "MMENSDateWrapperTests">
+               </Test>
+               <Test
+                  Identifier = "MMETimerManagerTests">
+               </Test>
+               <Test
+                  Identifier = "MMEUniqueIdentifierTests">
+               </Test>
+            </SkippedTests>
          </TestableReference>
       </Testables>
    </TestAction>

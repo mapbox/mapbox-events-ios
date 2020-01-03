@@ -1,21 +1,21 @@
 #import <Foundation/Foundation.h>
 
-/*! @brief MMEDate is a subclass of NSDate which stores information needed to compute clock offsets from servers */
+/** MMEDate is a subclass of NSDate which stores information needed to compute clock offsets from servers */
 @interface MMEDate : NSDate
 
-/*! @brief store the recorded time offset for the date when created using the +[MMEDate date] or +[MMEDate dateWithOffsetFromServer:(NSTimeInterval)offset]` methods */
+/** store the recorded time offset for the date when created using the +[MMEDate date] or +[MMEDate dateWithOffsetFromServer:(NSTimeInterval)offset]` methods */
 @property(nonatomic,assign,readonly) NSTimeInterval offsetFromServer;
 
-/*! @brief computes, records and returns the time offset from the server's time frame */
+/** computes, records and returns the time offset from the server's time frame */
 + (NSTimeInterval)recordTimeOffsetFromServer:(NSDate *)responseDate;
 
-/*! @brief returns the recorded time offset from the server's time frame */
+/** returns the recorded time offset from the server's time frame */
 + (NSTimeInterval)recordedTimeOffsetFromServer;
 
-/*! @brief UTC yyyy-MM-dd'T'HH:mm:ss.SSSZ formatter */
+/** UTC yyyy-MM-dd'T'HH:mm:ss.SSSZ formatter */
 + (NSDateFormatter *)iso8601DateFormatter;
 
-/*! @brief UTC yyyy-MM-dd formatter */
+/** UTC yyyy-MM-dd formatter */
 + (NSDateFormatter *)iso8601DateOnlyFormatter;
 
 /*! @biref HTTP-date formatter
@@ -23,31 +23,31 @@
 */
 + (NSDateFormatter *)HTTPDateFormatter;
 
-/*! @brief returns a date with the recordedTimeOffsetFromServer */
+/** returns a date with the recordedTimeOffsetFromServer */
 + (MMEDate *)dateWithRecordedOffset;
 
-/*! @brief returns a date with the specified timeOffsetFromServer */
+/** returns a date with the specified timeOffsetFromServer */
 + (MMEDate *)dateWithOffset:(NSTimeInterval)serverTimeFrame;
 
-/*! @brief return an MMEDate with the time specified in the provided date */
+/** return an MMEDate with the time specified in the provided date */
 + (MMEDate *)dateWithDate:(NSDate *)date;
 
-#pragma mark -
+// MARK: -
 
 - (MMEDate *)initWithOffset:(NSTimeInterval)serverTimeFrame;
 
-#pragma mark -
+// MARK: -
 
-/*! @brief returns the date, with the offsetFromServer adjustment applied, putting the date in the server's time frame  */
+/** returns the date, with the offsetFromServer adjustment applied, putting the date in the server's time frame  */
 - (NSDate *)offsetToServer;
 
 @end
 
-#pragma mark -
+// MARK: -
 
 @interface NSDate (MMEDate)
 
-/*! @brief returns a date at 00:00:00 on the next calendar day */
+/** returns a date at 00:00:00 on the next calendar day */
 - (NSDate *)mme_startOfTomorrow;
 
 @end

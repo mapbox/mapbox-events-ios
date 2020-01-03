@@ -7,7 +7,7 @@ static NSTimeInterval _timeOffsetFromServer = 0.0; // TODO maintain a list of MM
 
 @end
 
-#pragma mark -
+// MARK: -
 
 @implementation MMEDate
 
@@ -74,19 +74,19 @@ static NSTimeInterval _timeOffsetFromServer = 0.0; // TODO maintain a list of MM
 }
 
 
-#pragma mark - NSDate Overrides
+// MARK: - NSDate Overrides
 
 + (instancetype) date {
     return [self.class new];
 }
 
-#pragma mark - NSSecureCoding
+// MARK: - NSSecureCoding
 
 + (BOOL) supportsSecureCoding {
     return YES;
 }
 
-#pragma mark -
+// MARK: -
 
 - (MMEDate *)initWithTimeIntervalSinceReferenceDate:(NSTimeInterval)ti offset:(NSTimeInterval)serverTimeFrame {
     if (self = [super init]) {
@@ -101,13 +101,13 @@ static NSTimeInterval _timeOffsetFromServer = 0.0; // TODO maintain a list of MM
     return [self initWithTimeIntervalSinceReferenceDate:NSDate.timeIntervalSinceReferenceDate offset:serverTimeFrame];
 }
 
-#pragma mark - NSObject Overrides
+// MARK: - NSObject Overrides
 
 - (instancetype) init {
     return [self initWithTimeIntervalSinceReferenceDate:NSDate.timeIntervalSinceReferenceDate offset:MMEDate.recordedTimeOffsetFromServer];
 }
 
-#pragma mark - NSDate Overrides
+// MARK: - NSDate Overrides
 
 - (instancetype)initWithTimeIntervalSinceReferenceDate:(NSTimeInterval)ti {
     return [self initWithTimeIntervalSinceReferenceDate:ti offset:MMEDate.recordedTimeOffsetFromServer];
@@ -117,7 +117,7 @@ static NSTimeInterval _timeOffsetFromServer = 0.0; // TODO maintain a list of MM
     return _sinceReferenceDate;
 }
 
-#pragma mark - NSObject Overrides
+// MARK: - NSObject Overrides
 
 - (NSString *)description {
     return [NSString stringWithFormat:@"<%@ sinceReference=%f, offsetFromServer=%f>", NSStringFromClass(self.class), _sinceReferenceDate, _offsetFromServer];
@@ -141,13 +141,13 @@ static NSTimeInterval _timeOffsetFromServer = 0.0; // TODO maintain a list of MM
     return isEqual;
 }
 
-#pragma mark - NSCopying
+// MARK: - NSCopying
 
 - (id)copyWithZone:(NSZone *)zone {
     return [MMEDate.alloc initWithTimeIntervalSinceReferenceDate:_sinceReferenceDate offset:_offsetFromServer];
 }
 
-#pragma mark - NSCoding
+// MARK: - NSCoding
 
 static NSInteger const MMEDateVersion1 = 1;
 static NSString * const MMEDateVersionKey = @"MMEDateVersion";
@@ -178,7 +178,7 @@ static NSString * const MMEDateOffsetFromServerKey = @"MMEDateOffsetFromServer";
     [aCoder encodeDouble:_offsetFromServer forKey:MMEDateOffsetFromServerKey];
 }
 
-#pragma mark - MMEDate Methods
+// MARK: - MMEDate Methods
 
 - (MMEDate*) offsetToServer {
     return [self dateByAddingTimeInterval:_offsetFromServer];
@@ -186,7 +186,7 @@ static NSString * const MMEDateOffsetFromServerKey = @"MMEDateOffsetFromServer";
 
 @end
 
-#pragma mark -
+// MARK: -
 
 @implementation NSDate (MMEDate)
 

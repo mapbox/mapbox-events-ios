@@ -5,7 +5,6 @@
 @protocol MMELocationManagerDelegate;
 
 @protocol MMELocationManager <NSObject>
-
 @property (nonatomic, weak) id<MMELocationManagerDelegate> delegate;
 @property (nonatomic, getter=isUpdatingLocation, readonly) BOOL updatingLocation;
 @property (nonatomic, getter=isMetricsEnabledForInUsePermissions) BOOL metricsEnabledForInUsePermissions;
@@ -22,7 +21,6 @@ extern const CLLocationDistance MMELocationManagerHibernationRadius;
 extern NSString * const MMELocationManagerRegionIdentifier;
 
 @interface MMELocationManager : NSObject <MMELocationManager>
-
 @property (nonatomic, weak) id<MMELocationManagerDelegate> delegate;
 @property (nonatomic, getter=isUpdatingLocation, readonly) BOOL updatingLocation;
 @property (nonatomic, getter=isMetricsEnabledForInUsePermissions) BOOL metricsEnabledForInUsePermissions;

@@ -5,7 +5,7 @@
 
 @end
 
-#pragma mark -
+// MARK: -
 
 @implementation MMEExceptionalDictionary
 

@@ -6,7 +6,7 @@ void mme_linkUIKitCategories(){}
 
 @end
 
-#pragma mark -
+// MARK: -
 
 @implementation UIDevice (MMEMobileEvents)
 
@@ -43,7 +43,7 @@ void mme_linkUIKitCategories(){}
 
 @end
 
-#pragma mark -
+// MARK: -
 
 @implementation UIApplication (MMEMobileEvents)
 

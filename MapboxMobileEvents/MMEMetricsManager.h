@@ -20,10 +20,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)incrementAppWakeUpCount;
 - (void)resetMetrics;
 
-/*! @brief loads any pending telemetry metrics events from ~/Library/Caches */
+/** loads any pending telemetry metrics events from ~/Library/Caches */
 - (MMEEvent *)loadPendingTelemetryMetricsEvent;
 
-/*! @brief generates an event with the current telemetry metrics
+/** generates an event with the current telemetry metrics
     @return nil for pending events, or a telemetry event which is ready to send
     @discussion if this method returns nil the framework will write the pending telemetry metrics
     to a file in ~/Library/Caches, this event may be loaded with -loadPendingTelemetryMetricsEvent */

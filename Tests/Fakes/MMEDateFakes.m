@@ -12,7 +12,7 @@ typedef enum {
 
 @end
 
-#pragma mark -
+// MARK: -
 
 @implementation MMEDateFakes
 
@@ -40,7 +40,7 @@ typedef enum {
     return faked;
 }
 
-#pragma mark - NSDate Overrides
+// MARK: - NSDate Overrides
 
 - (BOOL) isEqualToDate:(NSDate *)date {
     BOOL isEqual = NO;

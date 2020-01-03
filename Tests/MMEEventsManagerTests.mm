@@ -1,18 +1,17 @@
 @import Cedar;
 
 #import "MMEEvent.h"
+#import "MMEEvent+SystemInfo.h"
 #import "MMEEventsManager.h"
+#import "MMEEventsManager_Private.h"
 #import "MMEConstants.h"
 #import "MMEUniqueIdentifier.h"
 #import "MMEDate.h"
 #import "MMELocationManager.h"
 #import "MMEAPIClient.h"
 #import "MMEAPIClient_Private.h"
-#import "MMETimerManager.h"
 #import "MMEDispatchManagerFake.h"
-#import "MMETimerManagerFake.h"
 #import "MMEAPIClientFake.h"
-#import "MMECommonEventData.h"
 #import "MMEUIApplicationWrapperFake.h"
 #import "MMEUIApplicationWrapper.h"
 #import "MMEMetricsManager.h"
@@ -32,11 +31,10 @@ using namespace Cedar::Doubles::Arguments;
 
 @property (nonatomic) NS_MUTABLE_ARRAY_OF(MMEEvent *) *eventQueue;
 @property (nonatomic, getter=isPaused) BOOL paused;
-@property (nonatomic) MMECommonEventData *commonEventData;
 @property (nonatomic) id<MMELocationManager> locationManager;
 @property (nonatomic) id<MMEAPIClient> apiClient;
 @property (nonatomic) id<MMEUniqueIdentifer> uniqueIdentifer;
-@property (nonatomic) MMETimerManager *timerManager;
+//@property (nonatomic) MMETimerManager *timerManager;
 @property (nonatomic) MMEDispatchManager *dispatchManager;
 @property (nonatomic) NSDate *nextTurnstileSendDate;
 @property (nonatomic) id<MMEUIApplicationWrapper> application;
@@ -47,7 +45,7 @@ using namespace Cedar::Doubles::Arguments;
 
 @end
 
-#pragma mark -
+// MARK: -
 
 @interface MMEEvent (Tests)
 @property(nonatomic) MMEDate *dateStorage;
@@ -55,7 +53,7 @@ using namespace Cedar::Doubles::Arguments;
 
 @end
 
-#pragma mark -
+// MARK: -
 
 SPEC_BEGIN(MMEEventsManagerSpec)
 
@@ -86,10 +84,6 @@ describe(@"MMEEventsManager", ^{
 
         // set a high MMEEventFlushCount to prevent crossing the threshold in the tests
         [NSUserDefaults.mme_configuration setObject:@1000 forKey:MMEEventFlushCount];
-    });
-
-    it(@"sets common event data", ^{
-        eventsManager.commonEventData should_not be_nil;
     });
 
     describe(@"-initializeWithAccessToken:userAgentBase:hostSDKVersion:", ^{
@@ -281,28 +275,29 @@ describe(@"MMEEventsManager", ^{
                     });
                 });
                 
-                context(@"when there are events in the queue", ^{
-                    beforeEach(^{
-                        eventsManager.timerManager = [[MMETimerManager alloc] initWithTimeInterval:1000 target:eventsManager selector:@selector(flush)];
-                        spy_on(eventsManager.timerManager);
-                        [eventsManager enqueueEventWithName:MMEEventTypeMapLoad];
-                        [eventsManager flush];
-                    });
-                    
-                    it(@"tells the api client to post events", ^{
-                        eventsManager.apiClient should have_received(@selector(postEvents:completionHandler:));
-                    });
-                    
-                    it(@"tells its timer manager to cancel", ^{
-                        eventsManager.timerManager should have_received(@selector(cancel));
-                    });
-                    
-                    it(@"does nothing if flush is called again", ^{
-                        [(id<CedarDouble>)eventsManager.apiClient reset_sent_messages];
-                        [eventsManager flush];
-                        eventsManager.apiClient should_not have_received(@selector(postEvents:completionHandler:));
-                    });
-                });
+                // TODO: move these to an XCTest case
+//                context(@"when there are events in the queue", ^{
+//                    beforeEach(^{
+//                        eventsManager.timerManager = [[MMETimerManager alloc] initWithTimeInterval:1000 target:eventsManager selector:@selector(flush)];
+//                        spy_on(eventsManager.timerManager);
+//                        [eventsManager enqueueEventWithName:MMEEventTypeMapLoad];
+//                        [eventsManager flush];
+//                    });
+//
+//                    it(@"tells the api client to post events", ^{
+//                        eventsManager.apiClient should have_received(@selector(postEvents:completionHandler:));
+//                    });
+//
+//                    it(@"tells its timer manager to cancel", ^{
+//                        eventsManager.timerManager should have_received(@selector(cancel));
+//                    });
+//
+//                    it(@"does nothing if flush is called again", ^{
+//                        [(id<CedarDouble>)eventsManager.apiClient reset_sent_messages];
+//                        [eventsManager flush];
+//                        eventsManager.apiClient should_not have_received(@selector(postEvents:completionHandler:));
+//                    });
+//                });
             });
         });
         
@@ -325,15 +320,7 @@ describe(@"MMEEventsManager", ^{
                     NSUserDefaults.mme_configuration.mme_legacyHostSDKVersion = @"host-sdk-version";
                     
                     eventsManager.apiClient = fakeAPIClient;
-                    
-                    MMECommonEventData *commonEventData = [[MMECommonEventData alloc] init];
-                    spy_on(commonEventData);
-                    commonEventData.vendorId = @"vendor-id";
-                    commonEventData.model = @"model";
-                    commonEventData.osVersion = @"ios-version";
-                    
-                    eventsManager.commonEventData = commonEventData;
-                });
+                    });
                 
                 context(@"when the events manager's api client does not have an access token set", ^{
                     beforeEach(^{
@@ -371,7 +358,7 @@ describe(@"MMEEventsManager", ^{
                 
                 context(@"when the events manager's common even data does not have a vendor id", ^{
                     beforeEach(^{
-                        eventsManager.commonEventData stub_method(@selector(vendorId)).and_return(nil);
+                        MMEEvent.class stub_method(@selector(vendorId)).and_return(nil);
                         [eventsManager sendTurnstileEvent];
                     });
                     
@@ -382,7 +369,7 @@ describe(@"MMEEventsManager", ^{
                 
                 context(@"when the events manager's common even data does not have a model", ^{
                     beforeEach(^{
-                        eventsManager.commonEventData stub_method(@selector(model)).and_return(nil);
+                        MMEEvent.class stub_method(@selector(model)).and_return(nil);
                         [eventsManager sendTurnstileEvent];
                     });
                     
@@ -393,7 +380,7 @@ describe(@"MMEEventsManager", ^{
                 
                 context(@"when the events manager's common even data does not have a ios version", ^{
                     beforeEach(^{
-                        eventsManager.commonEventData stub_method(@selector(osVersion)).and_return(nil);
+                        MMEEvent.class stub_method(@selector(osVersion)).and_return(nil);
                         [eventsManager sendTurnstileEvent];
                     });
                     
@@ -455,7 +442,6 @@ describe(@"MMEEventsManager", ^{
     
     describe(@"- enqueueEventWithName:attributes", ^{
         __block NSString *dateString;
-        __block MMECommonEventData *commonEventData;
         __block NSDictionary *attributes;
         
         beforeEach(^{
@@ -463,12 +449,6 @@ describe(@"MMEEventsManager", ^{
             NSDateFormatter *dateFormatter = MMEDate.iso8601DateFormatter;
             spy_on(dateFormatter);
             dateFormatter stub_method(@selector(stringFromDate:)).and_return(dateString);
-            commonEventData = [[MMECommonEventData alloc] init];
-            commonEventData.vendorId = @"a nice vendor id";
-            commonEventData.model = @"a nice model";
-            commonEventData.osVersion = @"a nice ios version";
-            commonEventData.scale = 42.0;
-            eventsManager.commonEventData = commonEventData;
             
             attributes = @{@"attribute1": @"a nice attribute"};
         });
@@ -596,19 +576,12 @@ describe(@"MMEEventsManager", ^{
     
     describe(@"- enqueueEventWithName:", ^{
         __block NSString *dateString;
-        __block MMECommonEventData *commonEventData;
         
         beforeEach(^{
             dateString = @"A nice date";
             NSDateFormatter *dateFormatter = MMEDate.iso8601DateFormatter;
             spy_on(dateFormatter);
             dateFormatter stub_method(@selector(stringFromDate:)).and_return(dateString);
-            commonEventData = [[MMECommonEventData alloc] init];
-            commonEventData.vendorId = @"a nice vendor id";
-            commonEventData.model = @"a nice model";
-            commonEventData.osVersion = @"a nice ios version";
-            commonEventData.scale = 42.0;
-            eventsManager.commonEventData = commonEventData;
         });
         
         context(@"when the events manager is not paused", ^{
@@ -622,7 +595,7 @@ describe(@"MMEEventsManager", ^{
                 });
                 
                 it(@"has the correct event", ^{
-                    MMEEvent *expectedEvent = [MMEEvent mapLoadEventWithDateString:dateString commonEventData:commonEventData];
+                    MMEEvent *expectedEvent = [MMEEvent mapLoadEventWithDateString:dateString commonEventData:nil];
                     MMEEvent *event = eventsManager.eventQueue.firstObject;
                     expectedEvent.dateStorage = event.dateStorage;
 
