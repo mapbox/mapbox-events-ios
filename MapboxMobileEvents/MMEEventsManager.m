@@ -176,7 +176,7 @@ NS_ASSUME_NONNULL_BEGIN
         if (appIsInBackground && _backgroundTaskIdentifier == UIBackgroundTaskInvalid) {
             #ifdef DEBUG
             [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-                @"instance": self.uniqueIdentifer.rollingInstanceIdentifer,
+                @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
                 MMEDebugEventType: MMEDebugEventTypeBackgroundTask,
                 MMEEventKeyLocalDebugDescription: @"Initiated background task",
                 @"Identifier": @(_backgroundTaskIdentifier)}];
@@ -185,7 +185,7 @@ NS_ASSUME_NONNULL_BEGIN
             _backgroundTaskIdentifier = [self.application beginBackgroundTaskWithExpirationHandler:^{
                 #ifdef DEBUG
                 [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-                    @"instance": self.uniqueIdentifer.rollingInstanceIdentifer,
+                    @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
                     MMEDebugEventType: MMEDebugEventTypeBackgroundTask,
                     MMEEventKeyLocalDebugDescription: @"Ending background task",
                     @"Identifier": @(self.backgroundTaskIdentifier)}];
@@ -250,7 +250,7 @@ NS_ASSUME_NONNULL_BEGIN
 
         #ifdef DEBUG
         [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-            @"instance": self.uniqueIdentifer.rollingInstanceIdentifer,
+            @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
             MMEDebugEventType: MMEDebugEventTypeFlush,
             MMEEventKeyLocalDebugDescription:@"flush"}];
         #endif
@@ -289,7 +289,7 @@ NS_ASSUME_NONNULL_BEGIN
                 } else {
                     #ifdef DEBUG
                     [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-                        @"instance": self.uniqueIdentifer.rollingInstanceIdentifer,
+                        @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
                         MMEDebugEventType: MMEDebugEventTypePost,
                         MMEEventKeyLocalDebugDescription: @"post",
                         @"debug.eventsCount": @(eventsCount)}];
@@ -299,7 +299,7 @@ NS_ASSUME_NONNULL_BEGIN
                 if (strongSelf.backgroundTaskIdentifier != UIBackgroundTaskInvalid) {
                     #ifdef DEBUG
                     [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-                        @"instance": self.uniqueIdentifer.rollingInstanceIdentifer,
+                        @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
                         MMEDebugEventType: MMEDebugEventTypeBackgroundTask,
                         MMEEventKeyLocalDebugDescription: @"Ending background task",
                         @"Identifier": @(strongSelf.backgroundTaskIdentifier)}];
@@ -324,7 +324,7 @@ NS_ASSUME_NONNULL_BEGIN
             #ifdef DEBUG
             NSString *debugDescription = [NSString stringWithFormat:@"Turnstile event already sent; waiting until %@ to send another one", self.nextTurnstileSendDate];
             [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-                @"instance": self.uniqueIdentifer.rollingInstanceIdentifer,
+                @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
                 MMEDebugEventType: MMEDebugEventTypeTurnstile,
                 MMEEventKeyLocalDebugDescription: debugDescription}];
             #endif
@@ -334,7 +334,7 @@ NS_ASSUME_NONNULL_BEGIN
         if (!NSUserDefaults.mme_configuration.mme_accessToken) {
             #ifdef DEBUG
             [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-                @"instance": self.uniqueIdentifer.rollingInstanceIdentifer,
+                @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
                 MMEDebugEventType: MMEDebugEventTypeTurnstileFailed,
                 MMEEventKeyLocalDebugDescription: @"No access token sent, can not send turntile event"}];
             #endif
@@ -344,7 +344,7 @@ NS_ASSUME_NONNULL_BEGIN
         if (!NSUserDefaults.mme_configuration.mme_legacyUserAgentBase) {
             #ifdef DEBUG
             [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-                @"instance": self.uniqueIdentifer.rollingInstanceIdentifer,
+                @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
                 MMEDebugEventType: MMEDebugEventTypeTurnstileFailed,
                 MMEEventKeyLocalDebugDescription: @"No user agent base set, can not send turntile event"}];
             #endif
@@ -354,7 +354,7 @@ NS_ASSUME_NONNULL_BEGIN
         if (!NSUserDefaults.mme_configuration.mme_legacyHostSDKVersion) {
             #ifdef DEBUG
             [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-                @"instance": self.uniqueIdentifer.rollingInstanceIdentifer,
+                @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
                 MMEDebugEventType: MMEDebugEventTypeTurnstileFailed,
                 MMEEventKeyLocalDebugDescription: @"No host SDK version set, can not send turntile event"}];
             #endif
@@ -364,7 +364,7 @@ NS_ASSUME_NONNULL_BEGIN
         if (!self.commonEventData.vendorId) {
             #ifdef DEBUG
             [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-                @"instance": self.uniqueIdentifer.rollingInstanceIdentifer,
+                @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
                 MMEDebugEventType: MMEDebugEventTypeTurnstileFailed,
                 MMEEventKeyLocalDebugDescription: @"No vendor id available, can not send turntile event"}];
             #endif
@@ -374,7 +374,7 @@ NS_ASSUME_NONNULL_BEGIN
         if (!self.commonEventData.model) {
             #ifdef DEBUG
             [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-                @"instance": self.uniqueIdentifer.rollingInstanceIdentifer,
+                @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
                 MMEDebugEventType: MMEDebugEventTypeTurnstileFailed,
                 MMEEventKeyLocalDebugDescription: @"No model available, can not send turntile event"}];
             #endif
@@ -384,7 +384,8 @@ NS_ASSUME_NONNULL_BEGIN
         if (!self.commonEventData.osVersion) {
             #ifdef DEBUG
             [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-                @"instance": self.uniqueIdentifer.rollingInstanceIdentifer,MMEDebugEventType: MMEDebugEventTypeTurnstileFailed,
+                @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
+                MMEDebugEventType: MMEDebugEventTypeTurnstileFailed,
                 MMEEventKeyLocalDebugDescription: @"No iOS version available, can not send turntile event"}];
             #endif
             return;
@@ -408,7 +409,7 @@ NS_ASSUME_NONNULL_BEGIN
         MMEEvent *turnstileEvent = [MMEEvent turnstileEventWithAttributes:turnstileEventAttributes];
         #ifdef DEBUG
         [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-            @"instance": self.uniqueIdentifer.rollingInstanceIdentifer,
+            @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
             MMEDebugEventType: MMEDebugEventTypeTurnstile,
             MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Sending turnstile event: %@", turnstileEvent]}];
         #endif
@@ -421,7 +422,7 @@ NS_ASSUME_NONNULL_BEGIN
                 if (error) {
                     #ifdef DEBUG
                     [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-                        @"instance": self.uniqueIdentifer.rollingInstanceIdentifer,
+                        @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
                         MMEDebugEventType: MMEDebugEventTypeTurnstile,
                         MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Could not send turnstile event: %@", error]}];
                     #endif
@@ -431,7 +432,7 @@ NS_ASSUME_NONNULL_BEGIN
                 [strongSelf updateNextTurnstileSendDate];
                 #ifdef DEBUG
                 [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-                    @"instance": self.uniqueIdentifer.rollingInstanceIdentifer,
+                    @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
                     MMEDebugEventType: MMEDebugEventTypeTurnstile,
                     MMEEventKeyLocalDebugDescription: @"Sent turnstile event"}];
                 #endif
@@ -459,7 +460,7 @@ NS_ASSUME_NONNULL_BEGIN
             }
             #ifdef DEBUG
             [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-                @"instance": self.uniqueIdentifer.rollingInstanceIdentifer,
+                @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
                 MMEDebugEventType: MMEDebugEventTypeTurnstile,
                 MMEEventKeyLocalDebugDescription: @"Sent pendingTelemetryMetrics event"}];
             #endif
@@ -472,7 +473,7 @@ NS_ASSUME_NONNULL_BEGIN
         MMEEvent *telemetryMetricsEvent = [MMEMetricsManager.sharedManager generateTelemetryMetricsEvent];
         #ifdef DEBUG
         [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-            @"instance": self.uniqueIdentifer.rollingInstanceIdentifer,
+            @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
             MMEDebugEventType: MMEDebugEventTypeTurnstile,
             MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Sending telemetryMetrics event: %@", telemetryMetricsEvent]}];
         #endif
@@ -482,7 +483,7 @@ NS_ASSUME_NONNULL_BEGIN
                 if (error) {
                     #ifdef DEBUG
                     [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-                        @"instance": self.uniqueIdentifer.rollingInstanceIdentifer,
+                        @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
                         MMEDebugEventType: MMEDebugEventTypeTelemetryMetrics,
                         MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Could not send telemetryMetrics event: %@", error]}];
                     #endif
@@ -490,7 +491,7 @@ NS_ASSUME_NONNULL_BEGIN
                 }
                 #ifdef DEBUG
                 [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-                    @"instance": self.uniqueIdentifer.rollingInstanceIdentifer,
+                    @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
                     MMEDebugEventType: MMEDebugEventTypeTurnstile,
                     MMEEventKeyLocalDebugDescription: @"Sent telemetryMetrics event"}];
                 #endif
@@ -541,7 +542,7 @@ NS_ASSUME_NONNULL_BEGIN
     if (event) {
         #ifdef DEBUG
         [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-            @"instance": self.uniqueIdentifer.rollingInstanceIdentifer,
+            @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
             MMEDebugEventType: MMEDebugEventTypePush,
             MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Pushing event: %@", event]}];
         #endif
@@ -550,7 +551,7 @@ NS_ASSUME_NONNULL_BEGIN
         event = [MMEEvent eventWithDateString:[MMEDate.iso8601DateFormatter stringFromDate:now] name:name attributes:attributes];
         #ifdef DEBUG
         [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-            @"instance": self.uniqueIdentifer.rollingInstanceIdentifer,
+            @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
             MMEDebugEventType: MMEDebugEventTypePush,
             MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Pushing generic event: %@", event]}];
         #endif
@@ -623,7 +624,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)pauseMetricsCollection {
     #ifdef DEBUG
     [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-        @"instance": self.uniqueIdentifer.rollingInstanceIdentifer,
+        @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
         MMEDebugEventType: MMEDebugEventTypeMetricCollection,
         MMEEventKeyLocalDebugDescription: @"Pausing metrics collection..."}];
     #endif
@@ -631,7 +632,7 @@ NS_ASSUME_NONNULL_BEGIN
     if (self.isPaused) {
         #ifdef DEBUG
         [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-        @"instance": self.uniqueIdentifer.rollingInstanceIdentifer,
+        @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
             MMEDebugEventType: MMEDebugEventTypeMetricCollection,
             MMEEventKeyLocalDebugDescription: @"Already paused"}];
         #endif
@@ -644,7 +645,7 @@ NS_ASSUME_NONNULL_BEGIN
     [self.locationManager stopUpdatingLocation];
     #ifdef DEBUG
     [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-        @"instance": self.uniqueIdentifer.rollingInstanceIdentifer,
+        @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
         MMEDebugEventType: MMEDebugEventTypeLocationManager,
         MMEEventKeyLocalDebugDescription: @"Paused and location manager stopped"}];
     #endif
@@ -653,7 +654,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)resumeMetricsCollection {
     #ifdef DEBUG
     [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-        @"instance": self.uniqueIdentifer.rollingInstanceIdentifer,
+        @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
         MMEDebugEventType: MMEDebugEventTypeMetricCollection,
         MMEEventKeyLocalDebugDescription: @"Resuming metrics collection..."}];
     #endif
@@ -661,7 +662,7 @@ NS_ASSUME_NONNULL_BEGIN
     if (!self.isPaused || !NSUserDefaults.mme_configuration.mme_isCollectionEnabled) {
         #ifdef DEBUG
         [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-            @"instance": self.uniqueIdentifer.rollingInstanceIdentifer,
+            @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
             MMEDebugEventType: MMEDebugEventTypeMetricCollection,
             MMEEventKeyLocalDebugDescription: @"Already running"}];
         #endif
@@ -675,7 +676,7 @@ NS_ASSUME_NONNULL_BEGIN
     }
     #ifdef DEBUG
     [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-        @"instance": self.uniqueIdentifer.rollingInstanceIdentifer,
+        @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
         MMEDebugEventType: MMEDebugEventTypeLocationManager,
         MMEEventKeyLocalDebugDescription: @"Resumed and location manager started"}];
     #endif
@@ -688,7 +689,7 @@ NS_ASSUME_NONNULL_BEGIN
     self.nextTurnstileSendDate = [NSDate.date mme_startOfTomorrow];
     #ifdef DEBUG
     [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-        @"instance": self.uniqueIdentifer.rollingInstanceIdentifer,
+        @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
         MMEDebugEventType: MMEDebugEventTypeTurnstile,
         MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Set next turnstile date to: %@", self.nextTurnstileSendDate]}];
     #endif
@@ -702,7 +703,7 @@ NS_ASSUME_NONNULL_BEGIN
     [self.eventQueue addObject:event];
     #ifdef DEBUG
     [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-        @"instance": self.uniqueIdentifer.rollingInstanceIdentifer,
+        @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
         MMEDebugEventType: MMEDebugEventTypePush,
         MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Added event to event queue; event queue now has %ld events", (long)self.eventQueue.count]}];
     #endif
@@ -721,7 +722,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)locationManager:(MMELocationManager *)locationManager didUpdateLocations:(NSArray *)locations {
     #ifdef DEBUG
     [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-        @"instance": self.uniqueIdentifer.rollingInstanceIdentifer,
+        @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
         MMEDebugEventType: MMEDebugEventTypeLocationManager,
         MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Location manager sent %ld locations", (long)locations.count]}];
     #endif
@@ -747,28 +748,28 @@ NS_ASSUME_NONNULL_BEGIN
 #ifdef DEBUG
 - (void)locationManagerDidStartLocationUpdates:(MMELocationManager *)locationManager {
     [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-        @"instance": self.uniqueIdentifer.rollingInstanceIdentifer,
+        @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
         MMEDebugEventType: MMEDebugEventTypeLocationManager,
         MMEEventKeyLocalDebugDescription: @"Location manager started location updates"}];
 }
 
 - (void)locationManagerBackgroundLocationUpdatesDidTimeout:(MMELocationManager *)locationManager {
     [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-        @"instance": self.uniqueIdentifer.rollingInstanceIdentifer,
+        @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
         MMEDebugEventType: MMEDebugEventTypeLocationManager,
         MMEEventKeyLocalDebugDescription: @"Location manager timed out"}];
 }
 
 - (void)locationManagerBackgroundLocationUpdatesDidAutomaticallyPause:(MMELocationManager *)locationManager {
     [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-        @"instance": self.uniqueIdentifer.rollingInstanceIdentifer,
+        @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
         MMEDebugEventType: MMEDebugEventTypeLocationManager,
         MMEEventKeyLocalDebugDescription: @"Location manager automatically paused"}];
 }
 
 - (void)locationManagerDidStopLocationUpdates:(MMELocationManager *)locationManager {
     [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-        @"instance": self.uniqueIdentifer.rollingInstanceIdentifer,
+        @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
         MMEDebugEventType: MMEDebugEventTypeLocationManager,
         MMEEventKeyLocalDebugDescription: @"Location manager stopped location updates"}];
 }
@@ -777,7 +778,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)locationManager:(MMELocationManager *)locationManager didVisit:(CLVisit *)visit {
     #ifdef DEBUG
     [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-        @"instance": self.uniqueIdentifer.rollingInstanceIdentifer,
+        @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
         MMEDebugEventType: MMEDebugEventTypeLocationManager,
         MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Location manager visit %@", visit]}];
     #endif

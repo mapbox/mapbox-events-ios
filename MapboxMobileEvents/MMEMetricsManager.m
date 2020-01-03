@@ -313,7 +313,7 @@
                     if (![archiver.encodedData writeToFile:MMEMetricsManager.pendingMetricsEventPath atomically:YES]) {
                         #ifdef DEBUG
                         NSString *debugDescription = [NSString stringWithFormat:@"Failed to archiveRootObject: %@ toFile: %@",
-                            telemetryMetrics, MMEMetricsManager.
+                            telemetryMetrics, MMEMetricsManager.pendingMetricsEventPath];
                         [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
                             MMEDebugEventType: MMEDebugEventTypeTelemetryMetrics,
                             MMEEventKeyLocalDebugDescription: debugDescription}];
