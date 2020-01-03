@@ -1,3 +1,5 @@
+#ifdef DEBUG
+
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import "MMETypes.h"
@@ -39,3 +41,4 @@ typedef void (^MMELoggingBlockHandler)(MMEEvent *debugEvent);
 
 NS_ASSUME_NONNULL_END
 
+#endif

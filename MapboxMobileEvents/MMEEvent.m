@@ -160,6 +160,7 @@
     return [MMEEvent eventWithAttributes:crashAttributes error:createError];
 }
 
+#ifdef DEBUG
 #pragma mark - Debug Events
 
 + (instancetype)debugEventWithAttributes:(NSDictionary *)attributes {
@@ -186,6 +187,7 @@
 
     return [self debugEventWithAttributes:eventAttributes];
 }
+#endif
 
 #pragma mark - Deprecated
 

@@ -1,3 +1,5 @@
+#ifdef DEBUG
+
 #import "MMEEventLogger.h"
 #import "MMEEvent.h"
 #import "MMEDate.h"
@@ -49,3 +51,4 @@
 
 @end
 
+#endif

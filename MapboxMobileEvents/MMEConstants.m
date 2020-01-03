@@ -16,6 +16,7 @@ NSString * const MMEAPIClientHTTPMethodPost = @"POST";
 NSString * const MMEAPIClientHTTPMethodGet = @"GET";
 NSString * const MMEResponseKey = @"MMEResponseKey";
 
+#ifdef DEBUG
 NSString * const MMEDebugEventType = @"debug.type";
 NSString * const MMEDebugEventTypeError = @"error";
 NSString * const MMEDebugEventTypeFlush = @"flush";
@@ -29,6 +30,7 @@ NSString * const MMEDebugEventTypeMetricCollection = @"metricCollection";
 NSString * const MMEDebugEventTypeLocationManager = @"locationManager";
 NSString * const MMEDebugEventTypeTelemetryMetrics = @"telemMetrics";
 NSString * const MMEDebugEventTypeCertPinning = @"certPinning";
+#endif
 
 NSString * const MMEEventTypeAppUserTurnstile = @"appUserTurnstile";
 NSString * const MMEEventTypeTelemetryMetrics = @"telemetryMetrics";

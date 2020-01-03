@@ -117,10 +117,12 @@ NS_ASSUME_NONNULL_BEGIN
 */
 - (void)eventsManager:(MMEEventsManager *)eventsManager didEncounterError:(NSError *)error;
 
+#ifdef DEBUG
 /*! @brief Sets the handler for debug logging in MMEEventLogger. If this property is set to nil or if no custom handler is provided this property is set to the default handler.
     @param handler The handler this SDK uses to log messages.
 */
 - (void)setDebugHandler:(void (^)(MMEEvent *))handler;
+#endif
 
 @end
 
