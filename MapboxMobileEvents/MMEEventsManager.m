@@ -273,7 +273,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)postEvents:(NSArray *)events {
     @try {
+        #ifdef DEBUG
         NSUInteger eventsCount = events.count;
+        #endif
 
         __weak __typeof__(self) weakSelf = self;
         [self.apiClient postEvents:events completionHandler:^(NSError * _Nullable error) {
@@ -319,8 +321,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)sendTurnstileEvent {
     @try {
         if (self.nextTurnstileSendDate && ([NSDate.date timeIntervalSinceDate:self.nextTurnstileSendDate] < 0)) {
-            NSString *debugDescription = [NSString stringWithFormat:@"Turnstile event already sent; waiting until %@ to send another one", self.nextTurnstileSendDate];
             #ifdef DEBUG
+            NSString *debugDescription = [NSString stringWithFormat:@"Turnstile event already sent; waiting until %@ to send another one", self.nextTurnstileSendDate];
             [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
                 @"instance": self.uniqueIdentifer.rollingInstanceIdentifer,
                 MMEDebugEventType: MMEDebugEventTypeTurnstile,

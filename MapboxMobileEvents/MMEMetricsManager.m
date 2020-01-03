@@ -66,8 +66,8 @@
     if ([NSFileManager.defaultManager fileExistsAtPath:MMEMetricsManager.pendingMetricsEventPath]) {
         NSError *fileError = nil;
         if (![NSFileManager.defaultManager removeItemAtPath:MMEMetricsManager.pendingMetricsEventPath error:&fileError]) {
-            MMEEvent *errorEvent = [MMEEvent debugEventWithError:fileError];
             #ifdef DEBUG
+            MMEEvent *errorEvent = [MMEEvent debugEventWithError:fileError];
             [MMEEventLogger.sharedLogger logEvent:errorEvent];
             #endif
         }
@@ -311,9 +311,9 @@
                     [archiver encodeObject:telemetryMetrics forKey:NSKeyedArchiveRootObjectKey];
 
                     if (![archiver.encodedData writeToFile:MMEMetricsManager.pendingMetricsEventPath atomically:YES]) {
-                        NSString *debugDescription = [NSString stringWithFormat:@"Failed to archiveRootObject: %@ toFile: %@",
-                            telemetryMetrics, MMEMetricsManager.pendingMetricsEventPath];
                         #ifdef DEBUG
+                        NSString *debugDescription = [NSString stringWithFormat:@"Failed to archiveRootObject: %@ toFile: %@",
+                            telemetryMetrics, MMEMetricsManager.
                         [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
                             MMEDebugEventType: MMEDebugEventTypeTelemetryMetrics,
                             MMEEventKeyLocalDebugDescription: debugDescription}];
