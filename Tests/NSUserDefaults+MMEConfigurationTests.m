@@ -148,15 +148,21 @@
     XCTAssert([NSUserDefaults.mme_configuration.mme_legacyHostSDKVersion isEqualToString:@"1.0.0"]);
 }
 
-//TODO: Persistent object deletion isn't working as expected
-//- (void)testDeletePersistentObject {
-//    [NSUserDefaults.mme_configuration mme_setIsCollectionEnabled:YES];
-//    XCTAssert(NSUserDefaults.mme_configuration.mme_isCollectionEnabled);
-//    XCTAssert([NSUserDefaults.mme_configuration objectForKey:MMECollectionDisabled]);
-//
-//    [NSUserDefaults.mme_configuration mme_deleteObjectForPersistentKey:MMECollectionDisabled];
-//    XCTAssert([NSUserDefaults.mme_configuration objectForKey:MMECollectionDisabled] == nil);
-//}
+- (void)testPersistentObjectSetDelete {
+    [NSUserDefaults.mme_configuration mme_setObject:@2 forPersistentKey:MMEAccountType];
+    XCTAssert([NSUserDefaults.mme_configuration objectForKey:MMEAccountType] == [NSNumber numberWithInt:2]);
+    
+    [NSUserDefaults.mme_configuration mme_deleteObjectForPersistentKey:MMEAccountType];
+    XCTAssertNil([NSUserDefaults.mme_configuration objectForKey:MMEAccountType]);
+}
+
+- (void)testVolatileObjectSetDelete {
+    [NSUserDefaults.mme_configuration mme_setObject:@"com.mapbox.map" forVolatileKey:MMELegacyUserAgentBase];
+    XCTAssert([(NSString*)[NSUserDefaults.mme_configuration mme_objectForVolatileKey:MMELegacyUserAgentBase] isEqualToString:@"com.mapbox.map"]);
+    
+    [NSUserDefaults.mme_configuration mme_deleteObjectForVolatileKey:MMELegacyUserAgentBase];
+    XCTAssertNil([NSUserDefaults.mme_configuration objectForKey:MMELegacyUserAgentBase]);
+}
 
 // MARK: - Location Collection
 - (void)testEventIsCollectionEnabledDefault {
