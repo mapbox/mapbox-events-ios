@@ -112,7 +112,7 @@ describe(@"MMEEvent", ^{
     });
 
     context(@"debugEventWithError", ^{
-    #ifdef DEBUG
+    #if DEBUG
         NSError *errorWithNoInfo = [NSError errorWithDomain:NSCocoaErrorDomain code:0 userInfo:nil];
         NSError *errorWithAllInfo = [NSError errorWithDomain:NSCocoaErrorDomain code:1 userInfo:@{
             NSURLErrorKey: [NSURL URLWithString:@"http://mapbox.com"],
@@ -128,14 +128,14 @@ describe(@"MMEEvent", ^{
     #endif
 
         it(@"should create an MMEEvent from errorWithNoInfo", ^{
-            #ifdef DEBUG
+            #if DEBUG
             MMEEvent *errorEventWithNoInfo = [MMEEvent debugEventWithError:errorWithNoInfo];
             errorEventWithNoInfo should_not be_nil;
             #endif
         });
 
         it(@"should crteate an MMEEvent from errorWithAllInfo", ^{
-            #ifdef DEBUG
+            #if DEBUG
             MMEEvent *errorEventWithAllInfo = [MMEEvent debugEventWithError:errorWithAllInfo];
             errorEventWithAllInfo should_not be_nil;
             #endif
@@ -143,7 +143,7 @@ describe(@"MMEEvent", ^{
     });
 
     context(@"debugEventWithException", ^{
-    #ifdef DEBUG
+    #if DEBUG
         NSException *exceptionWithNoInfo = [NSException exceptionWithName:NSGenericException reason:nil userInfo:nil];
         NSException *exceptionWithAllInfo = [NSException exceptionWithName:NSGenericException reason:@"TestReason" userInfo:@{
             @"ExceptionUserInfo": @"ExceptionUserInfo"
@@ -151,14 +151,14 @@ describe(@"MMEEvent", ^{
     #endif
 
         it(@"should create an MMEEvent from exceptionWithNoInfo", ^{
-            #ifdef DEBUG
+            #if DEBUG
             MMEEvent *exceptionEventWithNoInfo = [MMEEvent debugEventWithException:exceptionWithNoInfo];
             exceptionEventWithNoInfo should_not be_nil;
             #endif
         });
 
         it(@"should create an MMEEvent from exceptionWithAllInfo", ^{
-            #ifdef DEBUG
+            #if DEBUG
             MMEEvent *exceptionEventWithAllInfo = [MMEEvent debugEventWithException:exceptionWithAllInfo];
             exceptionEventWithAllInfo should_not be_nil;
             #endif

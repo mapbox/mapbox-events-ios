@@ -654,7 +654,7 @@ describe(@"MMEEventsManager", ^{
         });
 
         context(@"when an error event is pushed", ^{
-            #ifdef DEBUG
+            #if DEBUG
             NSError* testError = [NSError.alloc initWithDomain:NSCocoaErrorDomain code:999 userInfo:@{
                 NSLocalizedDescriptionKey: @"Test Error Description",
                 NSLocalizedFailureReasonErrorKey: @"Test Error Failure Reason"
@@ -662,7 +662,7 @@ describe(@"MMEEventsManager", ^{
             #endif
 
             it(@"should not queue error events", ^{
-                #ifdef DEBUG
+                #if DEBUG
                 [MMEEventsManager.sharedManager pushEvent:[MMEEvent debugEventWithError:testError]];
                 eventsManager.eventQueue.count should equal(0);
                 #endif
@@ -670,12 +670,12 @@ describe(@"MMEEventsManager", ^{
         });
 
         context(@"when an exception event is pushed", ^{
-            #ifdef DEBUG
+            #if DEBUG
             NSException* testException = [NSException.alloc initWithName:@"TestExceptionName" reason:@"TestExceptionReason" userInfo:nil];
             #endif
 
             it(@"should not queue exception events", ^{
-                #ifdef DEBUG
+                #if DEBUG
                 [MMEEventsManager.sharedManager pushEvent:[MMEEvent debugEventWithException:testException]];
                 eventsManager.eventQueue.count should equal(0);
                 #endif

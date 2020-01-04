@@ -16,7 +16,7 @@ NSString * const MMEAPIClientHTTPMethodPost = @"POST";
 NSString * const MMEAPIClientHTTPMethodGet = @"GET";
 NSString * const MMEResponseKey = @"MMEResponseKey";
 
-#ifdef DEBUG
+#if DEBUG
 NSString * const MMEDebugEventType = @"debug.type";
 NSString * const MMEDebugEventTypeError = @"error";
 NSString * const MMEDebugEventTypeFlush = @"flush";

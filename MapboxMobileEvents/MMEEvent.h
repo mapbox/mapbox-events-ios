@@ -61,7 +61,7 @@ NS_ASSUME_NONNULL_BEGIN
 */
 + (instancetype)crashEventReporting:(NSError *)eventsError error:(NSError **)createError;
 
-#ifdef DEBUG
+#if DEBUG
 #pragma mark - Debug Devents
 
 /*! @brief debugEventWithAttributes: debug logging event with attributes provided

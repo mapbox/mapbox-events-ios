@@ -1,4 +1,4 @@
-#ifdef DEBUG
+#if DEBUG
 
 #import "MMEEventLogger.h"
 #import "MMEEvent.h"

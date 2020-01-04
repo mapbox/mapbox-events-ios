@@ -16,7 +16,7 @@ extern NSString * const MMEAPIClientHeaderFieldContentEncodingKey;
 extern NSString * const MMEAPIClientHTTPMethodPost;
 extern NSString * const MMEAPIClientHTTPMethodGet;
 
-#ifdef DEBUG
+#if DEBUG
 // Debug types
 extern NSString * const MMEDebugEventType;
 extern NSString * const MMEDebugEventTypeError;

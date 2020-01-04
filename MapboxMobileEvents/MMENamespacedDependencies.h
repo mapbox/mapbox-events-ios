@@ -43,7 +43,7 @@
 #define MMEEvent __NS_SYMBOL(MMEEvent)
 #endif
 
-#ifdef DEBUG
+#if DEBUG
 #ifndef MMEEventLogger
 #define MMEEventLogger __NS_SYMBOL(MMEEventLogger)
 #endif

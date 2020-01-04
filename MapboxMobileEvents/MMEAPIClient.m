@@ -7,7 +7,7 @@
 #import "MMEMetricsManager.h"
 #import "MMEEventsManager.h"
 #import "MMEEventsManager_Private.h"
-#ifdef DEBUG
+#if DEBUG
 #import "MMEEventLogger.h"
 #endif
 
@@ -303,7 +303,7 @@ int const kMMEMaxRequestCount = 1000;
             [request setHTTPBody:jsonData];
         }
     } else if (jsonError) {
-        #ifdef DEBUG
+        #if DEBUG
         [MMEEventLogger.sharedLogger logEvent:[MMEEvent debugEventWithError:jsonError]];
         #endif
         return nil;
@@ -339,7 +339,7 @@ int const kMMEMaxRequestCount = 1000;
         [httpBody appendData:jsonData];
         [httpBody appendData:[[NSString stringWithFormat:@"\r\n\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
     } else if (jsonError) {
-        #ifdef DEBUG
+        #if DEBUG
         [MMEEventLogger.sharedLogger logEvent:[MMEEvent debugEventWithError:jsonError]];
         #endif
     }

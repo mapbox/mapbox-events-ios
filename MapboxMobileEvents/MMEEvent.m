@@ -160,7 +160,7 @@
     return [MMEEvent eventWithAttributes:crashAttributes error:createError];
 }
 
-#ifdef DEBUG
+#if DEBUG
 #pragma mark - Debug Events
 
 + (instancetype)debugEventWithAttributes:(NSDictionary *)attributes {
