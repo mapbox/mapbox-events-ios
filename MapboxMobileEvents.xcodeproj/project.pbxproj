@@ -138,7 +138,6 @@
 		9CDC34E123502F8700852FF0 /* MMEDependencyManagerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 403835051F7AF860004205B9 /* MMEDependencyManagerTests.mm */; platformFilter = ios; };
 		9CDC34E323502F8700852FF0 /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 404807B91EA186D8008A6D50 /* MapboxMobileEvents.framework */; platformFilter = ios; };
 		9CDC34E423502F8700852FF0 /* Cedar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40A7F9911F79A743002B931F /* Cedar.framework */; platformFilter = ios; };
-		9CDC34EF2350FB0500852FF0 /* MMEEventLogReportViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AC611F261FCDED2F00ABBF6D /* MMEEventLogReportViewController.m */; platformFilter = ios; };
 		9CDC34F12350FD1E00852FF0 /* MMETimerManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CDC34F02350FD1E00852FF0 /* MMETimerManagerTests.m */; platformFilter = ios; };
 		9CE132C42358EC25005E23F1 /* config-long-ago.json in Resources */ = {isa = PBXBuildFile; fileRef = 9CE132C32358EC25005E23F1 /* config-long-ago.json */; };
 		9CE132C5235926B3005E23F1 /* MMECertPinTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CF93A66222488A4500BBA199 /* MMECertPinTests.m */; };
@@ -187,8 +186,6 @@
 		AC1B091322137BB000DB56C8 /* CLLocationManager+MMEMobileEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = AC1B091022137BB000DB56C8 /* CLLocationManager+MMEMobileEvents.m */; platformFilter = ios; };
 		AC2C715E2112408A004179E0 /* MMEDispatchManager.h in Headers */ = {isa = PBXBuildFile; fileRef = AC2C715C21124089004179E0 /* MMEDispatchManager.h */; };
 		AC2C716021124099004179E0 /* MMEDispatchManager.m in Sources */ = {isa = PBXBuildFile; fileRef = AC2C715D2112408A004179E0 /* MMEDispatchManager.m */; platformFilter = ios; };
-		AC611F271FCDED2F00ABBF6D /* MMEEventLogReportViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = AC611F251FCDED2F00ABBF6D /* MMEEventLogReportViewController.h */; };
-		AC611F281FCDED2F00ABBF6D /* MMEEventLogReportViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AC611F261FCDED2F00ABBF6D /* MMEEventLogReportViewController.m */; };
 		AC61FA5C217A04CC008519F5 /* MMEMetrics.h in Headers */ = {isa = PBXBuildFile; fileRef = AC61FA5A217A04CC008519F5 /* MMEMetrics.h */; };
 		AC61FA5E217A04CC008519F5 /* MMEMetrics.m in Sources */ = {isa = PBXBuildFile; fileRef = AC61FA5B217A04CC008519F5 /* MMEMetrics.m */; platformFilter = ios; };
 		AC69502D238E000C00D095EB /* MMELocationManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AC69502C238E000C00D095EB /* MMELocationManagerTests.m */; };
@@ -437,9 +434,7 @@
 		AC1B091022137BB000DB56C8 /* CLLocationManager+MMEMobileEvents.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "CLLocationManager+MMEMobileEvents.m"; sourceTree = "<group>"; };
 		AC2C715C21124089004179E0 /* MMEDispatchManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEDispatchManager.h; sourceTree = "<group>"; };
 		AC2C715D2112408A004179E0 /* MMEDispatchManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEDispatchManager.m; sourceTree = "<group>"; };
-		AC611F251FCDED2F00ABBF6D /* MMEEventLogReportViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEEventLogReportViewController.h; sourceTree = "<group>"; };
-		AC611F261FCDED2F00ABBF6D /* MMEEventLogReportViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEEventLogReportViewController.m; sourceTree = "<group>"; };
-		AC61FA08216BE7A0008519F5 /* MMEMetricsManagerTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MMEMetricsManagerTests.mm; sourceTree = "<group>"; };
+		AC61FA08216BE7A0008519F5 /* MMEMetricsManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MMEMetricsManager.mm; sourceTree = "<group>"; };
 		AC61FA5A217A04CC008519F5 /* MMEMetrics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEMetrics.h; sourceTree = "<group>"; };
 		AC61FA5B217A04CC008519F5 /* MMEMetrics.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEMetrics.m; sourceTree = "<group>"; };
 		AC69502C238E000C00D095EB /* MMELocationManagerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMELocationManagerTests.m; sourceTree = "<group>"; };
@@ -567,8 +562,6 @@
 				40AE586C1EA95EDD0046B437 /* MMEEvent.m */,
 				4036EFBC1ED37D56009C40BA /* MMEEventLogger.h */,
 				4036EFBD1ED37D56009C40BA /* MMEEventLogger.m */,
-				AC611F251FCDED2F00ABBF6D /* MMEEventLogReportViewController.h */,
-				AC611F261FCDED2F00ABBF6D /* MMEEventLogReportViewController.m */,
 				40C9E2791EA542BC00744FE7 /* MMEEventsManager.h */,
 				9C3F930C235128F500F99907 /* MMEEventsManager_Private.h */,
 				40C9E27A1EA542BC00744FE7 /* MMEEventsManager.m */,
@@ -824,7 +817,6 @@
 				40FB437C1EFAFAE900EC5BC0 /* MMETimerManager.h in Headers */,
 				AC2C715E2112408A004179E0 /* MMEDispatchManager.h in Headers */,
 				CF93A65B2241EDD500BBA199 /* MMECertPin.h in Headers */,
-				AC611F271FCDED2F00ABBF6D /* MMEEventLogReportViewController.h in Headers */,
 				4036EFBE1ED37D56009C40BA /* MMEEventLogger.h in Headers */,
 				40AE58711EAA87960046B437 /* MMEAPIClient.h in Headers */,
 				405172DD1EAFFA9400F8CDA1 /* MMENSURLSessionWrapper.h in Headers */,
@@ -1139,7 +1131,6 @@
 				403835031F7AF145004205B9 /* MMEDependencyManager.m in Sources */,
 				40AE586E1EA95EDD0046B437 /* MMEEvent.m in Sources */,
 				4036EFBF1ED37D56009C40BA /* MMEEventLogger.m in Sources */,
-				AC611F281FCDED2F00ABBF6D /* MMEEventLogReportViewController.m in Sources */,
 				40C9E2801EA5473F00744FE7 /* MMELocationManager.m in Sources */,
 				405172DE1EAFFA9400F8CDA1 /* MMENSURLSessionWrapper.m in Sources */,
 				40F16C971F04514100DF338D /* MMEReachability.m in Sources */,
@@ -1196,7 +1187,6 @@
 				AC2C716021124099004179E0 /* MMEDispatchManager.m in Sources */,
 				4085965E1ED086D9003BD29D /* MMEEvent.m in Sources */,
 				4036EFC01ED38489009C40BA /* MMEEventLogger.m in Sources */,
-				9CDC34EF2350FB0500852FF0 /* MMEEventLogReportViewController.m in Sources */,
 				4085965F1ED086DC003BD29D /* MMEEventsManager.m in Sources */,
 				408596601ED086DF003BD29D /* MMELocationManager.m in Sources */,
 				AC61FA5E217A04CC008519F5 /* MMEMetrics.m in Sources */,

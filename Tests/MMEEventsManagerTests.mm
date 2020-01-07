@@ -654,23 +654,31 @@ describe(@"MMEEventsManager", ^{
         });
 
         context(@"when an error event is pushed", ^{
+            #if DEBUG
             NSError* testError = [NSError.alloc initWithDomain:NSCocoaErrorDomain code:999 userInfo:@{
                 NSLocalizedDescriptionKey: @"Test Error Description",
                 NSLocalizedFailureReasonErrorKey: @"Test Error Failure Reason"
             }];
+            #endif
 
             it(@"should not queue error events", ^{
+                #if DEBUG
                 [MMEEventsManager.sharedManager pushEvent:[MMEEvent debugEventWithError:testError]];
                 eventsManager.eventQueue.count should equal(0);
+                #endif
             });
         });
 
         context(@"when an exception event is pushed", ^{
+            #if DEBUG
             NSException* testException = [NSException.alloc initWithName:@"TestExceptionName" reason:@"TestExceptionReason" userInfo:nil];
+            #endif
 
             it(@"should not queue exception events", ^{
+                #if DEBUG
                 [MMEEventsManager.sharedManager pushEvent:[MMEEvent debugEventWithException:testException]];
                 eventsManager.eventQueue.count should equal(0);
+                #endif
             });
         });
     });
