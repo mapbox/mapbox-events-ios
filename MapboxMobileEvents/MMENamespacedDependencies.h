@@ -43,12 +43,10 @@
 #define MMEEvent __NS_SYMBOL(MMEEvent)
 #endif
 
-#ifndef MMEEventLogReportViewController
-#define MMEEventLogReportViewController __NS_SYMBOL(MMEEventLogReportViewController)
-#endif
-
+#if DEBUG
 #ifndef MMEEventLogger
 #define MMEEventLogger __NS_SYMBOL(MMEEventLogger)
+#endif
 #endif
 
 #ifndef MMEEventsManager
@@ -733,14 +731,6 @@
 
 #ifndef MMEEventKeyAppID
 #define MMEEventKeyAppID __NS_SYMBOL(MMEEventKeyAppID)
-#endif
-
-#ifndef MMELoggerHTML
-#define MMELoggerHTML __NS_SYMBOL(MMELoggerHTML)
-#endif
-
-#ifndef MMELoggerShareableHTML
-#define MMELoggerShareableHTML __NS_SYMBOL(MMELoggerShareableHTML)
 #endif
 
 #ifndef MMEEventKeyGestureId

@@ -16,6 +16,7 @@ extern NSString * const MMEAPIClientHeaderFieldContentEncodingKey;
 extern NSString * const MMEAPIClientHTTPMethodPost;
 extern NSString * const MMEAPIClientHTTPMethodGet;
 
+#if DEBUG
 // Debug types
 extern NSString * const MMEDebugEventType;
 extern NSString * const MMEDebugEventTypeError;
@@ -30,6 +31,7 @@ extern NSString * const MMEDebugEventTypeMetricCollection;
 extern NSString * const MMEDebugEventTypeLocationManager;
 extern NSString * const MMEDebugEventTypeTelemetryMetrics;
 extern NSString * const MMEDebugEventTypeCertPinning;
+#endif
 
 // Event types
 extern NSString * const MMEEventTypeAppUserTurnstile;
@@ -182,9 +184,6 @@ extern NSString * const MMEErrorDescriptionKey MME_DEPRECATED_MSG("Use NSLocaliz
 extern NSString * const MMEEventKeyVendorID MME_DEPRECATED_MSG("Use MMEEventKeyVendorId");
 extern NSString * const MMEEventKeyInstallationID MME_DEPRECATED_MSG("Use MMEEventKeyInstallationId");
 extern NSString * const MMEEventKeyAppID MME_DEPRECATED_MSG("Use MMEEventKeyInstallationId");
-
-extern NSString * const MMELoggerHTML MME_DEPRECATED;
-extern NSString * const MMELoggerShareableHTML MME_DEPRECATED;
 
 extern NSString * const MMEEventKeyGestureId MME_DEPRECATED;
 extern NSString * const MMEEventKeyGestureID MME_DEPRECATED;
