@@ -13,6 +13,7 @@
     
     dispatch_once(&onceToken, ^{
         _sharedLogger = [[MMEEventLogger alloc] init];
+        [_sharedLogger setHandler:nil];
     });
     
     return _sharedLogger;

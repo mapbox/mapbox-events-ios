@@ -49,19 +49,6 @@ static NSTimeInterval _timeOffsetFromServer = 0.0; // TODO maintain a list of MM
     return _iso8601ShortDateFormatter;
 }
 
-+ (NSDateFormatter *)logDateFormatter {
-    static NSDateFormatter *_logDateFormatter;
-
-    if (!_logDateFormatter) {
-        _logDateFormatter = [NSDateFormatter new];
-        NSLocale *enUSPOSIXLocale = [NSLocale.alloc initWithLocaleIdentifier:@"en_US_POSIX"];
-        [_logDateFormatter setLocale:enUSPOSIXLocale];
-        [_logDateFormatter setDateFormat:@"yyyy-MM-dd"];
-    }
-
-    return _logDateFormatter;
-}
-
 + (NSDateFormatter *)HTTPDateFormatter {
     static NSDateFormatter *_httpDateFormatter;
     

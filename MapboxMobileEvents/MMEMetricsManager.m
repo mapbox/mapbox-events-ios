@@ -73,7 +73,6 @@
         }
         else {  // we successfully removed the file
             success = YES;
-
         }
     }
     else { // there was no file to begin with
@@ -132,23 +131,12 @@
 
 - (void)updateMetricsFromEventQueue:(NSArray *)eventQueue {
     if (eventQueue.count > 0) {
-        if (self.metrics.eventCountPerType == nil) {
-            self.metrics.eventCountPerType = [[NSMutableDictionary alloc] init];
-        }
-        
         self.metrics.eventCountTotal += (int)eventQueue.count;
         
         for (MMEEvent *event in eventQueue) {
-            if (event.name) {
-                NSNumber *eventCount = [self.metrics.eventCountPerType objectForKey:event.name];
-                eventCount = [NSNumber numberWithInteger:[eventCount integerValue] + 1];
-                [self.metrics.eventCountPerType setObject:eventCount forKey:event.name];
-            } else {
-                NSString *errorString = [[NSString alloc] initWithFormat:@"%@ nil event name when counting events",
-                                         NSStringFromClass(self.class)];
-                NSError *encodingError = [NSError errorWithDomain:MMEErrorDomain code:MMEErrorEventCounting userInfo:@{MMEErrorDescriptionKey: errorString}];
-                [MMEEventsManager.sharedManager reportError:encodingError];
-            }
+            NSNumber *eventCount = [self.metrics.eventCountPerType objectForKey:event.name];
+            eventCount = [NSNumber numberWithInteger:[eventCount integerValue] + 1];
+            [self.metrics.eventCountPerType setObject:eventCount forKey:event.name];
         }
     }
 }
@@ -170,10 +158,6 @@
         NSString *urlString = response.URL.absoluteString;
         NSNumber *statusCode = @(response.statusCode);
         NSString *statusCodeKey = [statusCode stringValue];
-        
-        if (self.metrics.failedRequestsDict == nil) {
-            self.metrics.failedRequestsDict = [[NSMutableDictionary alloc] init];
-        }
         
         if (urlString && [self.metrics.failedRequestsDict objectForKey:MMEEventKeyHeader] == nil) {
             [self.metrics.failedRequestsDict setObject:urlString forKey:MMEEventKeyHeader];
@@ -224,7 +208,7 @@
 }
 
 - (void)updateCoordinate:(CLLocationCoordinate2D)coordinate {
-    if (!self.metrics.deviceLat || !self.metrics.deviceLon) {
+    if (!self.metrics.deviceLat && !self.metrics.deviceLon) {
         self.metrics.deviceLat = round(coordinate.latitude*1000)/1000;
         self.metrics.deviceLon = round(coordinate.longitude*1000)/1000;
     }
@@ -286,12 +270,10 @@
             #endif
         }
     }
-    
     //decoding failed; deleting metrics event
     if (pending == nil) {
         [MMEMetricsManager deletePendingMetricsEventFile];
     }
-
     return pending;
 }
 
@@ -327,10 +309,8 @@
                 }
             }
         }
-
         return nil;
     }
-
     #if DEBUG
     [MMEEventLogger.sharedLogger logEvent:telemetryMetrics];
     #endif
