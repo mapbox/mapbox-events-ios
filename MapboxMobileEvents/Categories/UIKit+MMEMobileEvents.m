@@ -2,7 +2,7 @@
 
 @implementation NSObject (MMEMobileEvents)
 
-void mme_linkUIKitCategories(){};
+void mme_linkUIKitCategories(){}
 
 @end
 
