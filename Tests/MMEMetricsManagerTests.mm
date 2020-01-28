@@ -17,7 +17,7 @@
 using namespace Cedar::Matchers;
 using namespace Cedar::Doubles;
 
-SPEC_BEGIN(MMEMetricsManagerSpec)
+SPEC_BEGIN(MMEMetricsManagerTestsSpec)
 
 describe(@"MMEMetricsManager", ^{
     

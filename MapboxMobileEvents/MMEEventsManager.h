@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark -
 
-/*! @brief Shared Mabpox Mobile Events Manager */
+/*! @brief Shared Mapbox Mobile Events Manager */
 + (instancetype)sharedManager;
 
 #pragma mark - Exception Free API
@@ -70,13 +70,11 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)enqueueEventWithName:(NSString *)name attributes:(MMEMapboxEventAttributes *)attributes;
 
 /*! @brief postMetadata:filePaths:completionHander:
-    @param metadata array of metadat
+    @param metadata array of metadata
     @param filePaths array of file paths
     @param completionHandler completion handler block
 */
 - (void)postMetadata:(NSArray *)metadata filePaths:(NSArray *)filePaths completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler;
-
-- (void)displayLogFileFromDate:(NSDate *)logDate MME_DEPRECATED;
 
 #pragma mark - Error & Exception Reporting
 
@@ -113,11 +111,18 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)eventsManager:(MMEEventsManager *)eventsManager didVisit:(CLVisit *)visit;
 #endif
 
-/** @brief reports errors encoutered by the Events Manager to the delegate
+/*! @brief reports errors encountered by the Events Manager to the delegate
     @param eventsManager the shared events manager
     @param error the encountered NSError object
 */
 - (void)eventsManager:(MMEEventsManager *)eventsManager didEncounterError:(NSError *)error;
+
+#if DEBUG
+/*! @brief Sets the handler for debug logging in MMEEventLogger. If this property is set to nil or if no custom handler is provided this property is set to the default handler.
+    @param handler The handler this SDK uses to log messages.
+*/
+- (void)setDebugHandler:(void (^)(MMEEvent *))handler;
+#endif
 
 @end
 

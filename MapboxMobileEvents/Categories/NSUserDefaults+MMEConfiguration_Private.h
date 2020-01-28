@@ -107,8 +107,13 @@ static NSTimeInterval const MMEStartupDelayMaximum = 100;
 - (void)mme_registerDefaults;
 - (NSError *)mme_updateFromConfigServiceData:(NSData *)configData;
 
+- (void)mme_setObject:(NSObject *)value forVolatileKey:(MMEVolatileKey *)key;
+- (void)mme_setObject:(id)value forPersistentKey:(MMEPersistentKey *)key;
+
 - (void)mme_deleteObjectForVolatileKey:(MMEVolatileKey *)key;
-- (void)mme_deleteObjectPersistentKey:(MMEPersistentKey *)key;
+- (void)mme_deleteObjectForPersistentKey:(MMEPersistentKey *)key;
+
+- (NSObject *)mme_objectForVolatileKey:(MMEVolatileKey *)key;
 
 @end
 

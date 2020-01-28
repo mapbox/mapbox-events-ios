@@ -149,43 +149,6 @@ describe(@"MMEAPIClient", ^{
             });
 
         });
-        
-        context(@"when posting two events", ^{
-            __block MMEEvent *eventTwo;
-            __block NSData *uncompressedData;
-            
-            beforeEach(^{
-                MMECommonEventData *commonEventData = [[MMECommonEventData alloc] init];
-                commonEventData.vendorId = @"vendor-id";
-                commonEventData.model = @"model";
-                commonEventData.osVersion = @"1";
-                commonEventData.scale = 42;
-                
-                eventTwo = [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-1" commonEventData:commonEventData];
-                
-                NSArray *events = @[event, eventTwo];
-                
-                NSMutableArray *eventAttributes = [NSMutableArray arrayWithCapacity:events.count];
-                [events enumerateObjectsUsingBlock:^(MMEEvent * _Nonnull event, NSUInteger idx, BOOL * _Nonnull stop) {
-                    if (event.attributes) {
-                        [eventAttributes addObject:event.attributes];
-                    }
-                }];
-                
-                uncompressedData = [NSJSONSerialization dataWithJSONObject:eventAttributes options:0 error:nil];
-                
-                [apiClient postEvents:@[event, eventTwo] completionHandler:nil];
-            });
-            
-            it(@"should use gzip for content encoding", ^{
-                sessionWrapperFake.request.allHTTPHeaderFields[MMEAPIClientHeaderFieldContentEncodingKey] should equal(@"gzip");
-            });
-            
-            it(@"should compress the data", ^{
-                NSData *data = (NSData *)sessionWrapperFake.request.HTTPBody;
-                data.length should be_less_than(uncompressedData.length);
-            });
-        });
     });
 });
 
