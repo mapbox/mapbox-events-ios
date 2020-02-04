@@ -397,12 +397,6 @@
     XCTAssert(self.eventsManager.paused == YES);
 }
 
-- (void)testDebugLoggingEnablement {
-    XCTAssertFalse(self.eventsManager.isDebugLoggingEnabled);
-    [self.eventsManager setDebugLoggingEnabled:YES];
-    XCTAssertTrue(self.eventsManager.isDebugLoggingEnabled);
-}
-
 - (void)testQueueLocationEvents {
     CLLocation *location = [[CLLocation alloc] initWithLatitude:0.0 longitude:0.0];
     CLLocation *location2 = [[CLLocation alloc] initWithLatitude:0.001 longitude:0.001];

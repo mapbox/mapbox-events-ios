@@ -2,6 +2,7 @@
 
 #import "MMEConstants.h"
 #import "MMEDate.h"
+#import "MMEEventLogger.h"
 
 #import "NSString+MMEVersions.h"
 #import "NSUserDefaults+MMEConfiguration.h"
@@ -88,6 +89,11 @@ NS_ASSUME_NONNULL_BEGIN
     id infoCollectionEnabledInSimulator = [NSBundle.mme_mainBundle objectForInfoDictionaryKey:MMECollectionEnabledInSimulator];
     if ([infoCollectionEnabledInSimulator isKindOfClass:NSNumber.class]) {
         collectionEnabledInSimulator = [infoCollectionEnabledInSimulator boolValue];
+    }
+    
+    id debugLoggingEnabled = [NSBundle.mme_mainBundle objectForInfoDictionaryKey:MMEDebugLogging];
+    if ([debugLoggingEnabled isKindOfClass:NSNumber.class]) {
+        [MMEEventLogger.sharedLogger setEnabled:debugLoggingEnabled];
     }
 
     [self registerDefaults:@{
