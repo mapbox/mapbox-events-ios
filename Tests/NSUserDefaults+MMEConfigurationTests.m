@@ -5,6 +5,7 @@
 #import "NSUserDefaults+MMEConfiguration.h"
 #import "NSUserDefaults+MMEConfiguration_Private.h"
 #import "MMEDate.h"
+#import "MMEEventLogger.h"
 
 @interface MMENSUserDefaultsTests : XCTestCase
 @property (nonatomic) NSMutableDictionary *mutableDomain;
@@ -133,6 +134,15 @@
 
     XCTAssert(NSUserDefaults.mme_configuration.mme_backgroundGeofence == 300);
     XCTAssert(NSUserDefaults.mme_configuration.mme_startupDelay == 1);
+}
+
+- (void)testDebugLoggingEnabledFromBundle {
+    XCTAssertFalse([MMEEventLogger.sharedLogger isEnabled]);
+    NSBundle.mme_mainBundle = [MMEBundleInfoFake bundleWithFakeInfo:@{
+        MMEDebugLogging: @YES
+    }];
+    [NSUserDefaults.mme_configuration mme_registerDefaults];
+    XCTAssertTrue([MMEEventLogger.sharedLogger isEnabled]);
 }
 
 - (void)testDefaults {

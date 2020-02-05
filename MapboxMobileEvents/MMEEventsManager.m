@@ -568,10 +568,6 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 #if DEBUG
-- (void)setDebugLoggingEnabled:(BOOL)debugLoggingEnabled {
-    MMEEventLogger.sharedLogger.enabled = debugLoggingEnabled;
-}
-
 - (BOOL)isDebugLoggingEnabled {
     return [MMEEventLogger.sharedLogger isEnabled];
 }
