@@ -180,6 +180,7 @@ NS_ASSUME_NONNULL_BEGIN
                 MMEDebugEventType: MMEDebugEventTypeBackgroundTask,
                 MMEEventKeyLocalDebugDescription: @"Initiated background task",
                 @"Identifier": @(_backgroundTaskIdentifier)}];
+            MMELog(MMELogInfo, MMEDebugEventTypeBackgroundTask, @"Initiated background task");
             #endif
             
             _backgroundTaskIdentifier = [self.application beginBackgroundTaskWithExpirationHandler:^{
@@ -572,7 +573,7 @@ NS_ASSUME_NONNULL_BEGIN
     return [MMEEventLogger.sharedLogger isEnabled];
 }
 
-- (void)setDebugHandler:(void (^)(MMEEvent *))handler {
+- (void)setDebugHandler:(void (^)(NSUInteger, NSString *, NSString *))handler {
     [MMEEventLogger.sharedLogger setHandler:handler];
 }
 #endif
