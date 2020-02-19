@@ -1,7 +1,3 @@
-#if DEBUG
-
-#define MMELog(priority, type, message) [MMEEventLogger.sharedLogger logPriority:priority withType:type andMessage:message];
-
 #import "MMEEventLogger.h"
 #import "MMEEvent.h"
 #import "MMEDate.h"
@@ -58,6 +54,3 @@
 }
 
 @end
-#else
-#define MMELog(priority, type, message)
-#endif

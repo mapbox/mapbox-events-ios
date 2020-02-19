@@ -21,9 +21,7 @@
 #import "MMETimerManager.h"
 #import "MMEUIApplicationWrapper.h"
 #import "MMEUniqueIdentifier.h"
-#if DEBUG
 #import "MMEEventLogger.h"
-#endif
 
 #import "CLLocation+MMEMobileEvents.h"
 #import "CLLocationManager+MMEMobileEvents.h"
@@ -174,23 +172,11 @@ NS_ASSUME_NONNULL_BEGIN
 
         // check for existing background task status, flush the event queue if needed
         if (appIsInBackground && _backgroundTaskIdentifier == UIBackgroundTaskInvalid) {
-            #if DEBUG
-            [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-                @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
-                MMEDebugEventType: MMEDebugEventTypeBackgroundTask,
-                MMEEventKeyLocalDebugDescription: @"Initiated background task",
-                @"Identifier": @(_backgroundTaskIdentifier)}];
-            MMELog(MMELogInfo, MMEDebugEventTypeBackgroundTask, @"Initiated background task");
-            #endif
+            MMELOG(MMELogInfo, MMEDebugEventTypeBackgroundTask, ([NSString stringWithFormat:@"Initiated background task: %@, instance: %@",@(self.backgroundTaskIdentifier),self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
             
             _backgroundTaskIdentifier = [self.application beginBackgroundTaskWithExpirationHandler:^{
-                #if DEBUG
-                [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-                    @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
-                    MMEDebugEventType: MMEDebugEventTypeBackgroundTask,
-                    MMEEventKeyLocalDebugDescription: @"Ending background task",
-                    @"Identifier": @(self.backgroundTaskIdentifier)}];
-                #endif
+                MMELOG(MMELogInfo, MMEDebugEventTypeBackgroundTask, ([NSString stringWithFormat:@"Ending background task: %@, instance: %@",@(self.backgroundTaskIdentifier),self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
+                
                 [self.application endBackgroundTask:self.backgroundTaskIdentifier];
                 self.backgroundTaskIdentifier = UIBackgroundTaskInvalid;
             }];
@@ -249,12 +235,7 @@ NS_ASSUME_NONNULL_BEGIN
         [self postEvents:events];
         [self resetEventQueuing];
 
-        #if DEBUG
-        [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-            @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
-            MMEDebugEventType: MMEDebugEventTypeFlush,
-            MMEEventKeyLocalDebugDescription:@"flush"}];
-        #endif
+        MMELOG(MMELogInfo, MMEDebugEventTypeFlush, ([NSString stringWithFormat:@"flush, instance: %@",self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
     }
     @catch(NSException *except) {
         [self reportException:except];
@@ -274,9 +255,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)postEvents:(NSArray *)events {
     @try {
-        #if DEBUG
         NSUInteger eventsCount = events.count;
-        #endif
 
         __weak __typeof__(self) weakSelf = self;
         [self.apiClient postEvents:events completionHandler:^(NSError * _Nullable error) {
@@ -284,27 +263,14 @@ NS_ASSUME_NONNULL_BEGIN
                 __strong __typeof__(weakSelf) strongSelf = weakSelf;
 
                 if (error) {
-                    #if DEBUG
                     [MMEEventLogger.sharedLogger logEvent:[MMEEvent debugEventWithError:error]];
-                    #endif
                 } else {
-                    #if DEBUG
-                    [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-                        @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
-                        MMEDebugEventType: MMEDebugEventTypePost,
-                        MMEEventKeyLocalDebugDescription: @"post",
-                        @"debug.eventsCount": @(eventsCount)}];
-                    #endif
+                    MMELOG(MMELogInfo, MMEDebugEventTypePost, ([NSString stringWithFormat:@"post: %@, instance: %@", @(eventsCount),self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
                 }
 
                 if (strongSelf.backgroundTaskIdentifier != UIBackgroundTaskInvalid) {
-                    #if DEBUG
-                    [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-                        @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
-                        MMEDebugEventType: MMEDebugEventTypeBackgroundTask,
-                        MMEEventKeyLocalDebugDescription: @"Ending background task",
-                        @"Identifier": @(strongSelf.backgroundTaskIdentifier)}];
-                    #endif
+                    MMELOG(MMELogInfo, MMEDebugEventTypeBackgroundTask, ([NSString stringWithFormat:@"Ending background task: %@, instance: %@",@(self.backgroundTaskIdentifier),self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
+                    
                     [strongSelf.application endBackgroundTask:strongSelf.backgroundTaskIdentifier];
                     strongSelf.backgroundTaskIdentifier = UIBackgroundTaskInvalid;
                 }
@@ -322,73 +288,37 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)sendTurnstileEvent {
     @try {
         if (self.nextTurnstileSendDate && ([NSDate.date timeIntervalSinceDate:self.nextTurnstileSendDate] < 0)) {
-            #if DEBUG
-            NSString *debugDescription = [NSString stringWithFormat:@"Turnstile event already sent; waiting until %@ to send another one", self.nextTurnstileSendDate];
-            [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-                @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
-                MMEDebugEventType: MMEDebugEventTypeTurnstile,
-                MMEEventKeyLocalDebugDescription: debugDescription}];
-            #endif
+            MMELOG(MMELogInfo, MMEDebugEventTypeTurnstile, ([NSString stringWithFormat:@"Turnstile event already sent; waiting until %@ to send another one, instance: %@", self.nextTurnstileSendDate, self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
             return;
         }
 
         if (!NSUserDefaults.mme_configuration.mme_accessToken) {
-            #if DEBUG
-            [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-                @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
-                MMEDebugEventType: MMEDebugEventTypeTurnstileFailed,
-                MMEEventKeyLocalDebugDescription: @"No access token sent, can not send turntile event"}];
-            #endif
+            MMELOG(MMELogInfo, MMEDebugEventTypeTurnstileFailed, ([NSString stringWithFormat:@"No access token sent - can not send turntile event, instance: %@", self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
             return;
         }
 
         if (!NSUserDefaults.mme_configuration.mme_legacyUserAgentBase) {
-            #if DEBUG
-            [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-                @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
-                MMEDebugEventType: MMEDebugEventTypeTurnstileFailed,
-                MMEEventKeyLocalDebugDescription: @"No user agent base set, can not send turntile event"}];
-            #endif
+            MMELOG(MMELogInfo, MMEDebugEventTypeTurnstileFailed, ([NSString stringWithFormat:@"No user agent base set - can not send turntile event, instance: %@", self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
             return;
         }
 
         if (!NSUserDefaults.mme_configuration.mme_legacyHostSDKVersion) {
-            #if DEBUG
-            [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-                @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
-                MMEDebugEventType: MMEDebugEventTypeTurnstileFailed,
-                MMEEventKeyLocalDebugDescription: @"No host SDK version set, can not send turntile event"}];
-            #endif
+            MMELOG(MMELogInfo, MMEDebugEventTypeTurnstileFailed, ([NSString stringWithFormat:@"No host SDK version set - can not send turntile event, instance: %@", self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
             return;
         }
 
         if (!self.commonEventData.vendorId) {
-            #if DEBUG
-            [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-                @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
-                MMEDebugEventType: MMEDebugEventTypeTurnstileFailed,
-                MMEEventKeyLocalDebugDescription: @"No vendor id available, can not send turntile event"}];
-            #endif
+            MMELOG(MMELogInfo, MMEDebugEventTypeTurnstileFailed, ([NSString stringWithFormat:@"No vendor id available - can not send turntile event, instance: %@", self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
             return;
         }
 
         if (!self.commonEventData.model) {
-            #if DEBUG
-            [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-                @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
-                MMEDebugEventType: MMEDebugEventTypeTurnstileFailed,
-                MMEEventKeyLocalDebugDescription: @"No model available, can not send turntile event"}];
-            #endif
+            MMELOG(MMELogInfo, MMEDebugEventTypeTurnstileFailed, ([NSString stringWithFormat:@"No model available - can not send turntile event, instance: %@", self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
             return;
         }
 
         if (!self.commonEventData.osVersion) {
-            #if DEBUG
-            [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-                @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
-                MMEDebugEventType: MMEDebugEventTypeTurnstileFailed,
-                MMEEventKeyLocalDebugDescription: @"No iOS version available, can not send turntile event"}];
-            #endif
+            MMELOG(MMELogInfo, MMEDebugEventTypeTurnstileFailed, ([NSString stringWithFormat:@"No iOS version available - can not send turntile event, instance: %@", self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
             return;
         }
 
@@ -408,12 +338,8 @@ NS_ASSUME_NONNULL_BEGIN
        };
 
         MMEEvent *turnstileEvent = [MMEEvent turnstileEventWithAttributes:turnstileEventAttributes];
-        #if DEBUG
-        [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-            @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
-            MMEDebugEventType: MMEDebugEventTypeTurnstile,
-            MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Sending turnstile event: %@", turnstileEvent]}];
-        #endif
+        
+        MMELOG(MMELogInfo, MMEDebugEventTypeTurnstile, ([NSString stringWithFormat:@"Sending turnstile event: %@, instance: %@", turnstileEvent , self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
 
         __weak __typeof__(self) weakSelf = self;
         [self.apiClient postEvent:turnstileEvent completionHandler:^(NSError * _Nullable error) {
@@ -421,22 +347,13 @@ NS_ASSUME_NONNULL_BEGIN
                 __strong __typeof__(weakSelf) strongSelf = weakSelf;
 
                 if (error) {
-                    #if DEBUG
-                    [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-                        @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
-                        MMEDebugEventType: MMEDebugEventTypeTurnstile,
-                        MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Could not send turnstile event: %@", error]}];
-                    #endif
+                    MMELOG(MMELogInfo, MMEDebugEventTypeTurnstileFailed, ([NSString stringWithFormat:@"Could not send turnstile event: %@, instance: %@", [error localizedDescription] , self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
                     return;
                 }
 
                 [strongSelf updateNextTurnstileSendDate];
-                #if DEBUG
-                [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-                    @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
-                    MMEDebugEventType: MMEDebugEventTypeTurnstile,
-                    MMEEventKeyLocalDebugDescription: @"Sent turnstile event"}];
-                #endif
+                
+                MMELOG(MMELogInfo, MMEDebugEventTypeTurnstile, ([NSString stringWithFormat:@"Sent turnstile event, instance: %@", self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
             }
             @catch(NSException *except) {
                 [self reportException:except];
@@ -454,17 +371,10 @@ NS_ASSUME_NONNULL_BEGIN
     if (pendingMetricsEvent) {
         [self.apiClient postEvent:pendingMetricsEvent completionHandler:^(NSError * _Nullable error) {
             if (error) {
-                #if DEBUG
                 [MMEEventLogger.sharedLogger logEvent:[MMEEvent debugEventWithError:error]];
-                #endif
                 return;
             }
-            #if DEBUG
-            [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-                @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
-                MMEDebugEventType: MMEDebugEventTypeTurnstile,
-                MMEEventKeyLocalDebugDescription: @"Sent pendingTelemetryMetrics event"}];
-            #endif
+            MMELOG(MMELogInfo, MMEDebugEventTypeTelemetryMetrics, ([NSString stringWithFormat:@"Sent pendingTelemetryMetrics event, instance: %@", self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
         }];
     }
 }
@@ -472,30 +382,17 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)sendTelemetryMetricsEvent {
     @try {
         MMEEvent *telemetryMetricsEvent = [MMEMetricsManager.sharedManager generateTelemetryMetricsEvent];
-        #if DEBUG
-        [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-            @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
-            MMEDebugEventType: MMEDebugEventTypeTurnstile,
-            MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Sending telemetryMetrics event: %@", telemetryMetricsEvent]}];
-        #endif
+        
+        MMELOG(MMELogInfo, MMEDebugEventTypeTelemetryMetrics, ([NSString stringWithFormat:@"Sending telemetryMetrics event: %@, instance: %@", telemetryMetricsEvent, self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
+        
         if (telemetryMetricsEvent) {
             [self.apiClient postEvent:telemetryMetricsEvent completionHandler:^(NSError * _Nullable error) {
                 [MMEMetricsManager.sharedManager resetMetrics];
                 if (error) {
-                    #if DEBUG
-                    [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-                        @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
-                        MMEDebugEventType: MMEDebugEventTypeTelemetryMetrics,
-                        MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Could not send telemetryMetrics event: %@", error]}];
-                    #endif
+                    MMELOG(MMELogInfo, MMEDebugEventTypeTelemetryMetrics, ([NSString stringWithFormat:@"Could not send telemetryMetrics event: %@, instance: %@", [error localizedDescription], self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
                     return;
                 }
-                #if DEBUG
-                [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-                    @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
-                    MMEDebugEventType: MMEDebugEventTypeTurnstile,
-                    MMEEventKeyLocalDebugDescription: @"Sent telemetryMetrics event"}];
-                #endif
+                MMELOG(MMELogInfo, MMEDebugEventTypeTelemetryMetrics, ([NSString stringWithFormat:@"Sent telemetryMetrics event, instance: %@", [error localizedDescription], self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
             }];
         }
     }
@@ -541,21 +438,14 @@ NS_ASSUME_NONNULL_BEGIN
     }
 
     if (event) {
-        #if DEBUG
-        [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-            @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
-            MMEDebugEventType: MMEDebugEventTypePush,
-            MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Pushing event: %@", event]}];
-        #endif
+        MMELOG(MMELogInfo, MMEDebugEventTypePush, ([NSString stringWithFormat:@"Pushing event: %@, instance: %@", event, self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
+        
         [self pushEvent:event];
     } else {
         event = [MMEEvent eventWithDateString:[MMEDate.iso8601DateFormatter stringFromDate:now] name:name attributes:attributes];
-        #if DEBUG
-        [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-            @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
-            MMEDebugEventType: MMEDebugEventTypePush,
-            MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Pushing generic event: %@", event]}];
-        #endif
+
+        MMELOG(MMELogInfo, MMEDebugEventTypePush, ([NSString stringWithFormat:@"Pushing generic event: %@, instance: %@", event, self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
+
         [self pushEvent:event];
     }
 }
@@ -568,7 +458,6 @@ NS_ASSUME_NONNULL_BEGIN
     }];
 }
 
-#if DEBUG
 - (BOOL)isDebugLoggingEnabled {
     return [MMEEventLogger.sharedLogger isEnabled];
 }
@@ -576,7 +465,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setDebugHandler:(void (^)(NSUInteger, NSString *, NSString *))handler {
     [MMEEventLogger.sharedLogger setHandler:handler];
 }
-#endif
 
 #pragma mark - Error & Exception Reporting
 
@@ -595,9 +483,7 @@ NS_ASSUME_NONNULL_BEGIN
             [self pushEvent:errorEvent];
         }
         else {
-            #if DEBUG
             [MMEEventLogger.sharedLogger logEvent:[MMEEvent debugEventWithError:createError]];
-            #endif
         }
     }
     @catch(NSException *except) {
@@ -619,20 +505,10 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Internal API
 
 - (void)pauseMetricsCollection {
-    #if DEBUG
-    [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-        @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
-        MMEDebugEventType: MMEDebugEventTypeMetricCollection,
-        MMEEventKeyLocalDebugDescription: @"Pausing metrics collection..."}];
-    #endif
+    MMELOG(MMELogInfo, MMEDebugEventTypeMetricCollection, ([NSString stringWithFormat:@"Pausing metrics collection..., instance: %@", self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
 
     if (self.isPaused) {
-        #if DEBUG
-        [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-        @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
-            MMEDebugEventType: MMEDebugEventTypeMetricCollection,
-            MMEEventKeyLocalDebugDescription: @"Already paused"}];
-        #endif
+        MMELOG(MMELogInfo, MMEDebugEventTypeMetricCollection, ([NSString stringWithFormat:@"Already paused, instance: %@", self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
         return;
     }
     
@@ -640,29 +516,15 @@ NS_ASSUME_NONNULL_BEGIN
     [self resetEventQueuing];
     
     [self.locationManager stopUpdatingLocation];
-    #if DEBUG
-    [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-        @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
-        MMEDebugEventType: MMEDebugEventTypeLocationManager,
-        MMEEventKeyLocalDebugDescription: @"Paused and location manager stopped"}];
-    #endif
+
+    MMELOG(MMELogInfo, MMEDebugEventTypeLocationManager, ([NSString stringWithFormat:@"Paused and location manager stopped, instance: %@", self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
 }
 
 - (void)resumeMetricsCollection {
-    #if DEBUG
-    [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-        @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
-        MMEDebugEventType: MMEDebugEventTypeMetricCollection,
-        MMEEventKeyLocalDebugDescription: @"Resuming metrics collection..."}];
-    #endif
+    MMELOG(MMELogInfo, MMEDebugEventTypeMetricCollection, ([NSString stringWithFormat:@"Resuming metrics collection..., instance: %@", self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
 
     if (!self.isPaused || !NSUserDefaults.mme_configuration.mme_isCollectionEnabled) {
-        #if DEBUG
-        [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-            @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
-            MMEDebugEventType: MMEDebugEventTypeMetricCollection,
-            MMEEventKeyLocalDebugDescription: @"Already running"}];
-        #endif
+        MMELOG(MMELogInfo, MMEDebugEventTypeMetricCollection, ([NSString stringWithFormat:@"Already running, instance: %@", self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
         return;
     }
     
@@ -671,12 +533,7 @@ NS_ASSUME_NONNULL_BEGIN
     if (NSUserDefaults.mme_configuration.mme_isCollectionEnabled) {
         [self.locationManager startUpdatingLocation];
     }
-    #if DEBUG
-    [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-        @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
-        MMEDebugEventType: MMEDebugEventTypeLocationManager,
-        MMEEventKeyLocalDebugDescription: @"Resumed and location manager started"}];
-    #endif
+    MMELOG(MMELogInfo, MMEDebugEventTypeLocationManager, ([NSString stringWithFormat:@"Resumed and location manager started, instance: %@", self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
 }
 
 - (void)updateNextTurnstileSendDate {
@@ -684,12 +541,8 @@ NS_ASSUME_NONNULL_BEGIN
     // turnstile events can be sent as much as once per calendar day and always at the start of a session
     // when a map load happens.
     self.nextTurnstileSendDate = [NSDate.date mme_startOfTomorrow];
-    #if DEBUG
-    [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-        @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
-        MMEDebugEventType: MMEDebugEventTypeTurnstile,
-        MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Set next turnstile date to: %@", self.nextTurnstileSendDate]}];
-    #endif
+
+    MMELOG(MMELogInfo, MMEDebugEventTypeTurnstile, ([NSString stringWithFormat:@"Set next turnstile date to: %@, instance: %@", self.nextTurnstileSendDate, self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
 }
 
 - (void)pushEvent:(MMEEvent *)event {
@@ -698,12 +551,8 @@ NS_ASSUME_NONNULL_BEGIN
     }
     
     [self.eventQueue addObject:event];
-    #if DEBUG
-    [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-        @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
-        MMEDebugEventType: MMEDebugEventTypePush,
-        MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Added event to event queue; event queue now has %ld events", (long)self.eventQueue.count]}];
-    #endif
+
+    MMELOG(MMELogInfo, MMEDebugEventTypePush, ([NSString stringWithFormat:@"Added event to event queue; event queue now has %ld events, instance: %@", (long)self.eventQueue.count, self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
     
     if (self.eventQueue.count >= NSUserDefaults.mme_configuration.mme_eventFlushCount) {
         [self flush];
@@ -717,12 +566,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - MMELocationManagerDelegate
 
 - (void)locationManager:(MMELocationManager *)locationManager didUpdateLocations:(NSArray *)locations {
-    #if DEBUG
-    [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-        @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
-        MMEDebugEventType: MMEDebugEventTypeLocationManager,
-        MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Location manager sent %ld locations", (long)locations.count]}];
-    #endif
+    MMELOG(MMELogInfo, MMEDebugEventTypeLocationManager, ([NSString stringWithFormat:@"Location manager sent %ld locations, instance: %@", (long)locations.count, self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
     
     for (CLLocation *location in locations) {        
         MMEMapboxEventAttributes *eventAttributes = @{
@@ -742,43 +586,24 @@ NS_ASSUME_NONNULL_BEGIN
     }
 }
 
-#if DEBUG
 - (void)locationManagerDidStartLocationUpdates:(MMELocationManager *)locationManager {
-    [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-        @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
-        MMEDebugEventType: MMEDebugEventTypeLocationManager,
-        MMEEventKeyLocalDebugDescription: @"Location manager started location updates"}];
+    MMELOG(MMELogInfo, MMEDebugEventTypeLocationManager, ([NSString stringWithFormat:@"Location manager started location updates, instance: %@", self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
 }
 
 - (void)locationManagerBackgroundLocationUpdatesDidTimeout:(MMELocationManager *)locationManager {
-    [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-        @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
-        MMEDebugEventType: MMEDebugEventTypeLocationManager,
-        MMEEventKeyLocalDebugDescription: @"Location manager timed out"}];
+    MMELOG(MMELogInfo, MMEDebugEventTypeLocationManager, ([NSString stringWithFormat:@"Location manager timed out, instance: %@", self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
 }
 
 - (void)locationManagerBackgroundLocationUpdatesDidAutomaticallyPause:(MMELocationManager *)locationManager {
-    [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-        @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
-        MMEDebugEventType: MMEDebugEventTypeLocationManager,
-        MMEEventKeyLocalDebugDescription: @"Location manager automatically paused"}];
+    MMELOG(MMELogInfo, MMEDebugEventTypeLocationManager, ([NSString stringWithFormat:@"Location manager automatically paused, instance: %@", self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
 }
 
 - (void)locationManagerDidStopLocationUpdates:(MMELocationManager *)locationManager {
-    [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-        @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
-        MMEDebugEventType: MMEDebugEventTypeLocationManager,
-        MMEEventKeyLocalDebugDescription: @"Location manager stopped location updates"}];
+    MMELOG(MMELogInfo, MMEDebugEventTypeLocationManager, ([NSString stringWithFormat:@"Location manager stopped location updates, instance: %@", self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
 }
-#endif
 
 - (void)locationManager:(MMELocationManager *)locationManager didVisit:(CLVisit *)visit {
-    #if DEBUG
-    [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-        @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
-        MMEDebugEventType: MMEDebugEventTypeLocationManager,
-        MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Location manager visit %@", visit]}];
-    #endif
+    MMELOG(MMELogInfo, MMEDebugEventTypeLocationManager, ([NSString stringWithFormat:@"Location manager visit %@, instance: %@", visit, self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
     
     CLLocation *location = [[CLLocation alloc] initWithLatitude:visit.coordinate.latitude longitude:visit.coordinate.longitude];
     MMEMapboxEventAttributes *eventAttributes = @{

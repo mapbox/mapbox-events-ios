@@ -1,4 +1,7 @@
+#import "MMETypes.h"
+
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 typedef NS_ENUM(NSUInteger, MMELoglevel) {
     MMELogFatal,
@@ -10,9 +13,12 @@ typedef NS_ENUM(NSUInteger, MMELoglevel) {
 };
 
 #if DEBUG
+#define MMELOG(priority, type, message) [MMEEventLogger.sharedLogger logPriority:priority withType:type andMessage:message];
+#else
+#define MMELOG(priority, type, message) ((void)0)
+#endif
 
-#import <UIKit/UIKit.h>
-#import "MMETypes.h"
+#pragma mark -
 
 @class MMEEvent;
 
@@ -59,5 +65,3 @@ typedef void (^MMELoggingBlockHandler)(NSUInteger priority, NSString *type, NSSt
 @end
 
 NS_ASSUME_NONNULL_END
-
-#endif
