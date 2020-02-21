@@ -392,7 +392,7 @@ NS_ASSUME_NONNULL_BEGIN
                     MMELOG(MMELogInfo, MMEDebugEventTypeTelemetryMetrics, ([NSString stringWithFormat:@"Could not send telemetryMetrics event: %@, instance: %@", [error localizedDescription], self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
                     return;
                 }
-                MMELOG(MMELogInfo, MMEDebugEventTypeTelemetryMetrics, ([NSString stringWithFormat:@"Sent telemetryMetrics event, instance: %@", [error localizedDescription], self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
+                MMELOG(MMELogInfo, MMEDebugEventTypeTelemetryMetrics, ([NSString stringWithFormat:@"Sent telemetryMetrics event, instance: %@", self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
             }];
         }
     }
