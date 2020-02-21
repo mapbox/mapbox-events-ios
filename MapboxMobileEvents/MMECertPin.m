@@ -37,9 +37,7 @@
                 self.lastAuthChallengeDisposition = NSURLSessionAuthChallengePerformDefaultHandling;
                 completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
             });
-            NSString *debugDescription = [NSString stringWithFormat:@"%@ excludes domain: %@", self.class, challenge.protectionSpace.host];
-            [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeCertPinning,
-                                                                        MMEEventKeyLocalDebugDescription: debugDescription}];
+            MMELOG(MMELogInfo, MMEDebugEventTypeCertPinning, ([NSString stringWithFormat:@"%@ excludes domain: %@", self.class, challenge.protectionSpace.host]));
             
             return;
         }
@@ -66,9 +64,7 @@
                         self.lastAuthChallengeDisposition = NSURLSessionAuthChallengeUseCredential;
                         completionHandler(NSURLSessionAuthChallengeUseCredential, [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust]);
                     });
-                    [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-                        MMEDebugEventType: MMEDebugEventTypeCertPinning,
-                        MMEEventKeyLocalDebugDescription: @"Certificate found and accepted trust!"}];
+                    MMELOG(MMELogInfo, MMEDebugEventTypeCertPinning, @"Certificate found and accepted trust!");
                     
                     found = YES;
                     break;
@@ -80,8 +76,7 @@
                     self.lastAuthChallengeDisposition = NSURLSessionAuthChallengeCancelAuthenticationChallenge;
                     completionHandler(NSURLSessionAuthChallengeCancelAuthenticationChallenge, [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust]);
                 });
-                [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeCertPinning,
-                                                         MMEEventKeyLocalDebugDescription: @"No certificate found; connection cancelled"}];
+                MMELOG(MMELogInfo, MMEDebugEventTypeCertPinning, @"No certificate found; connection canceled");
             }
         }
         else if (trustResult == kSecTrustResultProceed) {
@@ -89,16 +84,14 @@
                 self.lastAuthChallengeDisposition = NSURLSessionAuthChallengePerformDefaultHandling;
                 completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust]);
             });
-            [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeCertPinning,
-                                                                        MMEEventKeyLocalDebugDescription: @"User granted - Always Trust; proceeding"}];
+            MMELOG(MMELogInfo, MMEDebugEventTypeCertPinning, @"User granted - Always Trust; proceeding");
         }
         else {
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.lastAuthChallengeDisposition = NSURLSessionAuthChallengeCancelAuthenticationChallenge;
                 completionHandler(NSURLSessionAuthChallengeCancelAuthenticationChallenge, [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust]);
             });
-            [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeCertPinning,
-                                                                        MMEEventKeyLocalDebugDescription: @"Certificate chain validation failed; connection canceled"}];
+            MMELOG(MMELogInfo, MMEDebugEventTypeCertPinning, @"Certificate chain validation failed; connection canceled");
         }
     }
     else {
@@ -106,8 +99,7 @@
             self.lastAuthChallengeDisposition = NSURLSessionAuthChallengePerformDefaultHandling;
             completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
         });
-        [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeCertPinning,
-                                                                    MMEEventKeyLocalDebugDescription: @"Ignoring credentials; default handling for challenge"}];
+        MMELOG(MMELogInfo, MMEDebugEventTypeCertPinning, @"Ignoring credentials; default handling for challenge");
     }
     
 }

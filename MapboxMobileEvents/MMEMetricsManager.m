@@ -281,11 +281,8 @@
                     [archiver encodeObject:telemetryMetrics forKey:NSKeyedArchiveRootObjectKey];
 
                     if (![archiver.encodedData writeToFile:MMEMetricsManager.pendingMetricsEventPath atomically:YES]) {
-                        NSString *debugDescription = [NSString stringWithFormat:@"Failed to archiveRootObject: %@ toFile: %@",
-                            telemetryMetrics, MMEMetricsManager.pendingMetricsEventPath];
-                        [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-                            MMEDebugEventType: MMEDebugEventTypeTelemetryMetrics,
-                            MMEEventKeyLocalDebugDescription: debugDescription}];
+                        MMELOG(MMELogInfo, MMEDebugEventTypeTelemetryMetrics, ([NSString stringWithFormat:@"Failed to archiveRootObject: %@ toFile: %@",
+                        telemetryMetrics, MMEMetricsManager.pendingMetricsEventPath]));
                     }
                 }
                 @catch (NSException* exception) {
