@@ -5,7 +5,7 @@
 #import <netinet/in.h>
 #import <arpa/inet.h>
 
-NSUInteger const MMEFixtureDefaultPort = 8080;
+NSUInteger const MMEFixtureDefaultPort = 8888; // not 8080 which the test server uses
 
 static NSUInteger MMEServiceFixturePort = MMEFixtureDefaultPort;
 static NSURL *MMEServiceFixtureURL;
