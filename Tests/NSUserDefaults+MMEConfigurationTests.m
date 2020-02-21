@@ -160,7 +160,7 @@
 
 - (void)testPersistentObjectSetDelete {
     [NSUserDefaults.mme_configuration mme_setObject:@2 forPersistentKey:MMEAccountType];
-    XCTAssert([NSUserDefaults.mme_configuration objectForKey:MMEAccountType] == [NSNumber numberWithInt:2]);
+    XCTAssert([[NSUserDefaults.mme_configuration objectForKey:MMEAccountType] intValue] == 2);
     
     [NSUserDefaults.mme_configuration mme_deleteObjectForPersistentKey:MMEAccountType];
     XCTAssertNil([NSUserDefaults.mme_configuration objectForKey:MMEAccountType]);
