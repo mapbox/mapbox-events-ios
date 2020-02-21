@@ -61,7 +61,6 @@ NS_ASSUME_NONNULL_BEGIN
 */
 + (instancetype)crashEventReporting:(NSError *)eventsError error:(NSError **)createError;
 
-#if DEBUG
 #pragma mark - Debug Devents
 
 /*! @brief debugEventWithAttributes: debug logging event with attributes provided
@@ -81,7 +80,6 @@ NS_ASSUME_NONNULL_BEGIN
     @return event
 */
 + (instancetype)debugEventWithException:(NSException *)except MME_DEPRECATED;
-#endif
 
 #pragma mark - Deprecated
 

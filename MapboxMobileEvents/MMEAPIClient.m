@@ -7,9 +7,7 @@
 #import "MMEMetricsManager.h"
 #import "MMEEventsManager.h"
 #import "MMEEventsManager_Private.h"
-#if DEBUG
 #import "MMEEventLogger.h"
-#endif
 
 #import "NSData+MMEGZIP.h"
 #import "NSUserDefaults+MMEConfiguration.h"
@@ -303,9 +301,7 @@ int const kMMEMaxRequestCount = 1000;
             [request setHTTPBody:jsonData];
         }
     } else if (jsonError) {
-        #if DEBUG
         [MMEEventLogger.sharedLogger logEvent:[MMEEvent debugEventWithError:jsonError]];
-        #endif
         return nil;
     }
     
@@ -339,9 +335,7 @@ int const kMMEMaxRequestCount = 1000;
         [httpBody appendData:jsonData];
         [httpBody appendData:[[NSString stringWithFormat:@"\r\n\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
     } else if (jsonError) {
-        #if DEBUG
         [MMEEventLogger.sharedLogger logEvent:[MMEEvent debugEventWithError:jsonError]];
-        #endif
     }
 
     for (NSString *path in filePaths) { // add a file part for each

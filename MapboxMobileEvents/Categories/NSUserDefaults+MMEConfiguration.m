@@ -91,12 +91,10 @@ NS_ASSUME_NONNULL_BEGIN
         collectionEnabledInSimulator = [infoCollectionEnabledInSimulator boolValue];
     }
     
-#if DEBUG
     id debugLoggingEnabled = [NSBundle.mme_mainBundle objectForInfoDictionaryKey:MMEDebugLogging];
     if ([debugLoggingEnabled isKindOfClass:NSNumber.class]) {
-        [MMEEventLogger.sharedLogger setEnabled:debugLoggingEnabled];
+        [MMEEventLogger.sharedLogger setEnabled:[debugLoggingEnabled boolValue]];
     }
-#endif
 
     [self registerDefaults:@{
         MMEStartupDelay: @(startupDelay), // seconds

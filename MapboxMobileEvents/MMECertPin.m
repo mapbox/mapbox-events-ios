@@ -2,9 +2,7 @@
 
 #import "MMECertPin.h"
 #import "MMEConstants.h"
-#if DEBUG
 #import "MMEEventLogger.h"
-#endif
 
 
 #import "NSUserDefaults+MMEConfiguration.h"
@@ -39,11 +37,7 @@
                 self.lastAuthChallengeDisposition = NSURLSessionAuthChallengePerformDefaultHandling;
                 completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
             });
-            #if DEBUG
-            NSString *debugDescription = [NSString stringWithFormat:@"%@ excludes domain: %@", self.class, challenge.protectionSpace.host];
-            [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeCertPinning,
-                                                                        MMEEventKeyLocalDebugDescription: debugDescription}];
-            #endif
+            MMELOG(MMELogInfo, MMEDebugEventTypeCertPinning, ([NSString stringWithFormat:@"%@ excludes domain: %@", self.class, challenge.protectionSpace.host]));
             
             return;
         }
@@ -70,11 +64,7 @@
                         self.lastAuthChallengeDisposition = NSURLSessionAuthChallengeUseCredential;
                         completionHandler(NSURLSessionAuthChallengeUseCredential, [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust]);
                     });
-                    #if DEBUG
-                    [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
-                        MMEDebugEventType: MMEDebugEventTypeCertPinning,
-                        MMEEventKeyLocalDebugDescription: @"Certificate found and accepted trust!"}];
-                    #endif
+                    MMELOG(MMELogInfo, MMEDebugEventTypeCertPinning, @"Certificate found and accepted trust!");
                     
                     found = YES;
                     break;
@@ -86,10 +76,7 @@
                     self.lastAuthChallengeDisposition = NSURLSessionAuthChallengeCancelAuthenticationChallenge;
                     completionHandler(NSURLSessionAuthChallengeCancelAuthenticationChallenge, [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust]);
                 });
-                #if DEBUG
-                [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeCertPinning,
-                                                         MMEEventKeyLocalDebugDescription: @"No certificate found; connection cancelled"}];
-                #endif
+                MMELOG(MMELogInfo, MMEDebugEventTypeCertPinning, @"No certificate found; connection canceled");
             }
         }
         else if (trustResult == kSecTrustResultProceed) {
@@ -97,20 +84,14 @@
                 self.lastAuthChallengeDisposition = NSURLSessionAuthChallengePerformDefaultHandling;
                 completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust]);
             });
-            #if DEBUG
-            [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeCertPinning,
-                                                                        MMEEventKeyLocalDebugDescription: @"User granted - Always Trust; proceeding"}];
-            #endif
+            MMELOG(MMELogInfo, MMEDebugEventTypeCertPinning, @"User granted - Always Trust; proceeding");
         }
         else {
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.lastAuthChallengeDisposition = NSURLSessionAuthChallengeCancelAuthenticationChallenge;
                 completionHandler(NSURLSessionAuthChallengeCancelAuthenticationChallenge, [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust]);
             });
-            #if DEBUG
-            [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeCertPinning,
-                                                                        MMEEventKeyLocalDebugDescription: @"Certificate chain validation failed; connection canceled"}];
-            #endif
+            MMELOG(MMELogInfo, MMEDebugEventTypeCertPinning, @"Certificate chain validation failed; connection canceled");
         }
     }
     else {
@@ -118,10 +99,7 @@
             self.lastAuthChallengeDisposition = NSURLSessionAuthChallengePerformDefaultHandling;
             completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
         });
-        #if DEBUG
-        [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{MMEDebugEventType: MMEDebugEventTypeCertPinning,
-                                                                    MMEEventKeyLocalDebugDescription: @"Ignoring credentials; default handling for challenge"}];
-        #endif
+        MMELOG(MMELogInfo, MMEDebugEventTypeCertPinning, @"Ignoring credentials; default handling for challenge");
     }
     
 }

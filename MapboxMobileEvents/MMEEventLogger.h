@@ -49,7 +49,7 @@ NS_ASSUME_NONNULL_BEGIN
 /*! @brief A method used to construct a debug event and log all at once.
     @param attributes attributes belonging to an MMEEvent
 */
-- (void)pushDebugEventWithAttributes:(MMEMapboxEventAttributes *)attributes;
+- (void)pushDebugEventWithAttributes:(MMEMapboxEventAttributes *)attributes; MME_DEPRECATED
 
 /*! @brief A block to be called when debug logging is enabled.
     @param priority priority of the error being logged (MMELogLevel enum)

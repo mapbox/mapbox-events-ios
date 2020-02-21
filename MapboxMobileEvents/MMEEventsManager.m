@@ -255,8 +255,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)postEvents:(NSArray *)events {
     @try {
-        NSUInteger eventsCount = events.count;
-
         __weak __typeof__(self) weakSelf = self;
         [self.apiClient postEvents:events completionHandler:^(NSError * _Nullable error) {
             @try {
@@ -265,7 +263,7 @@ NS_ASSUME_NONNULL_BEGIN
                 if (error) {
                     [MMEEventLogger.sharedLogger logEvent:[MMEEvent debugEventWithError:error]];
                 } else {
-                    MMELOG(MMELogInfo, MMEDebugEventTypePost, ([NSString stringWithFormat:@"post: %@, instance: %@", @(eventsCount),self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
+                    MMELOG(MMELogInfo, MMEDebugEventTypePost, ([NSString stringWithFormat:@"post: %@, instance: %@", @(events.count),self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
                 }
 
                 if (strongSelf.backgroundTaskIdentifier != UIBackgroundTaskInvalid) {
