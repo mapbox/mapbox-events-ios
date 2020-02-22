@@ -572,7 +572,12 @@ NS_ASSUME_NONNULL_BEGIN
             MMEEventKeyLatitude: @([location mme_latitudeRoundedWithPrecision:7]),
             MMEEventKeyLongitude: @([location mme_longitudeRoundedWithPrecision:7]),
             MMEEventKeyAltitude: @([location mme_roundedAltitude]),
-            MMEEventHorizontalAccuracy: @([location mme_roundedHorizontalAccuracy])};
+            MMEEventHorizontalAccuracy: @([location mme_roundedHorizontalAccuracy]),
+            MMEEventKeyVerticalAccuracy: @([location mme_roundedVerticalAccuracy]),
+            MMEEventKeySpeed: @([location mme_roundedSpeed]),
+            MMEEventKeyCourse: @([location mme_roundedCourse]),
+            MMEEventKeyFloor: @([location floor].level)  ?: NSNull.null //CLFloor may return nil
+        };
 
         [self pushEvent:[MMEEvent locationEventWithAttributes:eventAttributes
                                             instanceIdentifer:self.uniqueIdentifer.rollingInstanceIdentifer
@@ -609,8 +614,13 @@ NS_ASSUME_NONNULL_BEGIN
         MMEEventKeyLatitude: @([location mme_latitudeRoundedWithPrecision:7]),
         MMEEventKeyLongitude: @([location mme_longitudeRoundedWithPrecision:7]),
         MMEEventHorizontalAccuracy: @(visit.horizontalAccuracy),
+        MMEEventKeyVerticalAccuracy: @([location mme_roundedVerticalAccuracy]),
         MMEEventKeyArrivalDate: [MMEDate.iso8601DateFormatter stringFromDate:visit.arrivalDate],
-        MMEEventKeyDepartureDate: [MMEDate.iso8601DateFormatter stringFromDate:visit.departureDate]};
+        MMEEventKeyDepartureDate: [MMEDate.iso8601DateFormatter stringFromDate:visit.departureDate],
+        MMEEventKeySpeed: @([location mme_roundedSpeed]),
+        MMEEventKeyCourse: @([location mme_roundedCourse]),
+        MMEEventKeyFloor: @([location floor].level)  ?: NSNull.null //CLFloor may return nil
+    };
 
     [self pushEvent:[MMEEvent visitEventWithAttributes:eventAttributes]];
 
