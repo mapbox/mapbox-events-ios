@@ -705,6 +705,7 @@ describe(@"MMEEventsManager", ^{
                     MMEEventKeyLatitude: @([location mme_latitudeRoundedWithPrecision:7]),
                     MMEEventKeyLongitude: @([location mme_longitudeRoundedWithPrecision:7]),
                     MMEEventHorizontalAccuracy: @(visit.horizontalAccuracy),
+                    MMEEventKeyVerticalAccuracy: @([location mme_roundedVerticalAccuracy]),
                     MMEEventKeyArrivalDate: [MMEDate.iso8601DateFormatter stringFromDate:visit.arrivalDate],
                     MMEEventKeyDepartureDate: [MMEDate.iso8601DateFormatter stringFromDate:visit.departureDate],
                     MMEEventKeySpeed: @([location mme_roundedSpeed]),
