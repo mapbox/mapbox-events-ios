@@ -566,8 +566,14 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)locationManager:(MMELocationManager *)locationManager didUpdateLocations:(NSArray *)locations {
     MMELOG(MMELogInfo, MMEDebugEventTypeLocationManager, ([NSString stringWithFormat:@"Location manager sent %ld locations, instance: %@", (long)locations.count, self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
     
-    for (CLLocation *location in locations) {        
-        MMEMapboxEventAttributes *eventAttributes = @{
+    for (CLLocation *location in locations) {
+        MMEMutableMapboxEventAttributes *eventAttributes = [[MMEMutableMapboxEventAttributes alloc] init];
+        
+        if ([location floor]) {
+            [eventAttributes setValue:@([location floor].level) forKey:MMEEventKeyFloor];
+        }
+        
+        [eventAttributes addEntriesFromDictionary:@{
             MMEEventKeyCreated: [MMEDate.iso8601DateFormatter stringFromDate:[location timestamp]],
             MMEEventKeyLatitude: @([location mme_latitudeRoundedWithPrecision:7]),
             MMEEventKeyLongitude: @([location mme_longitudeRoundedWithPrecision:7]),
@@ -575,9 +581,8 @@ NS_ASSUME_NONNULL_BEGIN
             MMEEventHorizontalAccuracy: @([location mme_roundedHorizontalAccuracy]),
             MMEEventKeyVerticalAccuracy: @([location mme_roundedVerticalAccuracy]),
             MMEEventKeySpeed: @([location mme_roundedSpeed]),
-            MMEEventKeyCourse: @([location mme_roundedCourse]),
-            MMEEventKeyFloor: @([location floor].level)  ?: NSNull.null //CLFloor may return nil
-        };
+            MMEEventKeyCourse: @([location mme_roundedCourse])
+        }];
 
         [self pushEvent:[MMEEvent locationEventWithAttributes:eventAttributes
                                             instanceIdentifer:self.uniqueIdentifer.rollingInstanceIdentifer
@@ -609,18 +614,22 @@ NS_ASSUME_NONNULL_BEGIN
     MMELOG(MMELogInfo, MMEDebugEventTypeLocationManager, ([NSString stringWithFormat:@"Location manager visit %@, instance: %@", visit, self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
     
     CLLocation *location = [[CLLocation alloc] initWithLatitude:visit.coordinate.latitude longitude:visit.coordinate.longitude];
-    MMEMapboxEventAttributes *eventAttributes = @{
+    
+    MMEMutableMapboxEventAttributes *eventAttributes = [[MMEMutableMapboxEventAttributes alloc] init];
+    
+    if ([location floor]) {
+        [eventAttributes setValue:@([location floor].level) forKey:MMEEventKeyFloor];
+    }
+    
+    [eventAttributes addEntriesFromDictionary:@{
         MMEEventKeyCreated: [MMEDate.iso8601DateFormatter stringFromDate:[location timestamp]],
         MMEEventKeyLatitude: @([location mme_latitudeRoundedWithPrecision:7]),
         MMEEventKeyLongitude: @([location mme_longitudeRoundedWithPrecision:7]),
         MMEEventHorizontalAccuracy: @(visit.horizontalAccuracy),
         MMEEventKeyVerticalAccuracy: @([location mme_roundedVerticalAccuracy]),
         MMEEventKeyArrivalDate: [MMEDate.iso8601DateFormatter stringFromDate:visit.arrivalDate],
-        MMEEventKeyDepartureDate: [MMEDate.iso8601DateFormatter stringFromDate:visit.departureDate],
-        MMEEventKeySpeed: @([location mme_roundedSpeed]),
-        MMEEventKeyCourse: @([location mme_roundedCourse]),
-        MMEEventKeyFloor: @([location floor].level)  ?: NSNull.null //CLFloor may return nil
-    };
+        MMEEventKeyDepartureDate: [MMEDate.iso8601DateFormatter stringFromDate:visit.departureDate]
+    }];
 
     [self pushEvent:[MMEEvent visitEventWithAttributes:eventAttributes]];
 

@@ -707,10 +707,7 @@ describe(@"MMEEventsManager", ^{
                     MMEEventHorizontalAccuracy: @(visit.horizontalAccuracy),
                     MMEEventKeyVerticalAccuracy: @([location mme_roundedVerticalAccuracy]),
                     MMEEventKeyArrivalDate: [MMEDate.iso8601DateFormatter stringFromDate:visit.arrivalDate],
-                    MMEEventKeyDepartureDate: [MMEDate.iso8601DateFormatter stringFromDate:visit.departureDate],
-                    MMEEventKeySpeed: @([location mme_roundedSpeed]),
-                    MMEEventKeyCourse: @([location mme_roundedCourse]),
-                    MMEEventKeyFloor: @([location floor].level)  ?: NSNull.null //CLFloor may return nil
+                    MMEEventKeyDepartureDate: [MMEDate.iso8601DateFormatter stringFromDate:visit.departureDate]
                 };
                 MMEEvent *expectedVisitEvent = [MMEEvent visitEventWithAttributes:attributes];
                 MMEEvent *enqueueEvent = eventsManager.eventQueue.firstObject;
