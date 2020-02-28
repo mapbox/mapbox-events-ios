@@ -24,6 +24,20 @@ void mme_linkCLLocationCategory(){}
     return round(self.verticalAccuracy);
 }
 
+- (CLLocationAccuracy)mme_roundedSpeedAccuracy {
+    if (@available(iOS 13.4, *)) {
+        return round(self.speedAccuracy);
+    }
+    return 0;
+}
+
+- (CLLocationAccuracy)mme_roundedCourseAccuracy {
+    if (@available(iOS 13.4, *)) {
+        return round(self.courseAccuracy);
+    }
+    return 0;
+}
+
 - (CLLocationDegrees)mme_latitudeRoundedWithPrecision:(NSUInteger)precision {
     return [self value:self.coordinate.latitude withPrecision:precision];
 }

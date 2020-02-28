@@ -569,6 +569,13 @@ NS_ASSUME_NONNULL_BEGIN
     for (CLLocation *location in locations) {
         MMEMutableMapboxEventAttributes *eventAttributes = [[MMEMutableMapboxEventAttributes alloc] init];
         
+        if (@available(iOS 13.4, *)) {
+            [eventAttributes addEntriesFromDictionary:@{
+                MMEEventKeySpeedAccuracy: @([location speedAccuracy]),
+                MMEEventKeyCourseAccuracy: @([location courseAccuracy])
+            }];
+        }
+        
         if ([location floor]) {
             [eventAttributes setValue:@([location floor].level) forKey:MMEEventKeyFloor];
         }

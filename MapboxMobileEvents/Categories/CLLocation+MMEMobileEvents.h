@@ -12,6 +12,8 @@ void mme_linkCLLocationCategory();
 - (CLLocationDistance)mme_roundedAltitude;
 - (CLLocationAccuracy)mme_roundedHorizontalAccuracy;
 - (CLLocationAccuracy)mme_roundedVerticalAccuracy;
+- (CLLocationAccuracy)mme_roundedSpeedAccuracy;
+- (CLLocationAccuracy)mme_roundedCourseAccuracy;
 - (CLLocationDegrees)mme_latitudeRoundedWithPrecision:(NSUInteger)precision;
 - (CLLocationDegrees)mme_longitudeRoundedWithPrecision:(NSUInteger)precision;
 
