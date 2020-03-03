@@ -20,13 +20,68 @@
                ReferencedContainer = "container:MapboxMobileEvents.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "NO"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "404807C11EA186D8008A6D50"
+               BuildableName = "MMEXCTests.xctest"
+               BlueprintName = "MMEXCTests"
+               ReferencedContainer = "container:MapboxMobileEvents.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "NO"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "9CDC34C223502F8700852FF0"
+               BuildableName = "MMEZCedarTests.xctest"
+               BlueprintName = "MMEZCedarTests"
+               ReferencedContainer = "container:MapboxMobileEvents.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "NO"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "9C65A2652256C110006E3FED"
+               BuildableName = "MMETestHost.app"
+               BlueprintName = "MMETestHost"
+               ReferencedContainer = "container:MapboxMobileEvents.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
       buildConfiguration = "Release"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      shouldUseLaunchSchemeArgsEnv = "YES">
+      shouldUseLaunchSchemeArgsEnv = "YES"
+      enableAddressSanitizer = "YES"
+      enableASanStackUseAfterReturn = "YES"
+      enableUBSanitizer = "YES"
+      codeCoverageEnabled = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "404807B81EA186D8008A6D50"
+            BuildableName = "MapboxMobileEvents.framework"
+            BlueprintName = "MapboxMobileEvents"
+            ReferencedContainer = "container:MapboxMobileEvents.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <Testables>
          <TestableReference
             skipped = "NO">
@@ -60,16 +115,15 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "9C65A2652256C110006E3FED"
-            BuildableName = "MMETestHost.app"
-            BlueprintName = "MMETestHost"
+            BlueprintIdentifier = "404807B81EA186D8008A6D50"
+            BuildableName = "MapboxMobileEvents.framework"
+            BlueprintName = "MapboxMobileEvents"
             ReferencedContainer = "container:MapboxMobileEvents.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </MacroExpansion>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -88,7 +142,7 @@
       </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
-      buildConfiguration = "Debug">
+      buildConfiguration = "RelWithDebInfo">
    </AnalyzeAction>
    <ArchiveAction
       buildConfiguration = "Release"

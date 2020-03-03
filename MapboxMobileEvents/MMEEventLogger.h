@@ -64,7 +64,7 @@ typedef void (^MMELoggingBlockHandler)(NSUInteger priority, NSString *type, NSSt
 /** A method used to construct a debug event and log all at once.
     - Parameter: attributes attributes belonging to an MMEEvent
 */
-- (void)pushDebugEventWithAttributes:(MMEMapboxEventAttributes *)attributes; MME_DEPRECATED
+- (void)pushDebugEventWithAttributes:(MMEMapboxEventAttributes *)attributes MME_DEPRECATED;
 
 @end
 
