@@ -455,7 +455,7 @@
 		9C794C85235505340027B9D4 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		9CA284FC23D248D40097BE53 /* MMEEvent+SystemInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MMEEvent+SystemInfo.h"; sourceTree = "<group>"; };
 		9CA284FD23D248D40097BE53 /* MMEEvent+SystemInfo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "MMEEvent+SystemInfo.m"; sourceTree = "<group>"; };
-		9CA753A8240EF2DD005C26C9 /* MapboxMobileEvents (Deprecation).framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = "MapboxMobileEvents (Deprecation).framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9CA753A8240EF2DD005C26C9 /* MapboxMobileEvents.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MapboxMobileEvents.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9CCB47E922976B5E00DF551B /* LICENSE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = LICENSE.md; sourceTree = "<group>"; };
 		9CD426D123CFE5FD00F00B51 /* MMEVersions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEVersions.h; sourceTree = "<group>"; };
 		9CDC34B6234FD35800852FF0 /* NSUserDefaults+MMEConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSUserDefaults+MMEConfiguration.h"; sourceTree = "<group>"; };
@@ -599,7 +599,7 @@
 				9C65A2662256C110006E3FED /* MMETestHost.app */,
 				9CDC34ED23502F8700852FF0 /* MMEZCedarTests.xctest */,
 				9CF000682371037E009A2700 /* MMETestHost (Static).app */,
-				9CA753A8240EF2DD005C26C9 /* MapboxMobileEvents (Deprecation).framework */,
+				9CA753A8240EF2DD005C26C9 /* MapboxMobileEvents.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1013,7 +1013,7 @@
 			);
 			name = "MapboxMobileEvents (Deprecation)";
 			productName = MapboxMobileEvents;
-			productReference = 9CA753A8240EF2DD005C26C9 /* MapboxMobileEvents (Deprecation).framework */;
+			productReference = 9CA753A8240EF2DD005C26C9 /* MapboxMobileEvents.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		9CDC34C223502F8700852FF0 /* MMEZCedarTests */ = {
@@ -1815,7 +1815,7 @@
 				);
 				OTHER_LDFLAGS = "-lz";
 				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MapboxMobileEvents;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = MapboxMobileEvents;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				SUPPORTS_MACCATALYST = NO;
@@ -1852,7 +1852,7 @@
 				);
 				OTHER_LDFLAGS = "-lz";
 				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MapboxMobileEvents;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = MapboxMobileEvents;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				SUPPORTS_MACCATALYST = NO;
@@ -1889,7 +1889,7 @@
 				);
 				OTHER_LDFLAGS = "-lz";
 				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MapboxMobileEvents;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = MapboxMobileEvents;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				SUPPORTS_MACCATALYST = NO;
