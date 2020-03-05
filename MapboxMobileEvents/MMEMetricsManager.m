@@ -9,7 +9,7 @@
 #import "MMEAPIClient.h"
 #import "MMEAPIClient_Private.h"
 #import "NSUserDefaults+MMEConfiguration.h"
-#import "MMEEventLogger.h"
+#import "MMELogger.h"
 
 // MARK: -
 
@@ -54,7 +54,7 @@
         NSError *fileError = nil;
         if (![NSFileManager.defaultManager removeItemAtPath:MMEMetricsManager.pendingMetricsEventPath error:&fileError]) {
             MMEEvent *errorEvent = [MMEEvent debugEventWithError:fileError];
-            [MMEEventLogger.sharedLogger logEvent:errorEvent];
+            [MMELogger.sharedLogger logEvent:errorEvent];
         }
         else {  // we successfully removed the file
             success = YES;
@@ -78,7 +78,7 @@
             sdkPathExtant = NO;
         }
         else {
-            [MMEEventLogger.sharedLogger logEvent:[MMEEvent debugEventWithError:sdkPathError]];
+            [MMELogger.sharedLogger logEvent:[MMEEvent debugEventWithError:sdkPathError]];
         }
     }
 
@@ -88,11 +88,11 @@
                 sdkPathIsDir = YES;
             }
             else {
-                [MMEEventLogger.sharedLogger logEvent:[MMEEvent debugEventWithError:sdkPathError]];
+                [MMELogger.sharedLogger logEvent:[MMEEvent debugEventWithError:sdkPathError]];
             }
         }
         else {
-            [MMEEventLogger.sharedLogger logEvent:[MMEEvent debugEventWithError:sdkPathError]];
+            [MMELogger.sharedLogger logEvent:[MMEEvent debugEventWithError:sdkPathError]];
         }
     }
 
@@ -244,7 +244,7 @@
             pending = [unarchiver decodeObjectOfClass:MMEEvent.class forKey:NSKeyedArchiveRootObjectKey];
         }
         @catch (NSException *exception) {
-            [MMEEventLogger.sharedLogger logEvent:[MMEEvent debugEventWithException:exception]];
+            [MMELogger.sharedLogger logEvent:[MMEEvent debugEventWithException:exception]];
         }
     }
     //decoding failed; deleting metrics event
@@ -275,13 +275,13 @@
                     }
                 }
                 @catch (NSException* exception) {
-                    [MMEEventLogger.sharedLogger logEvent:[MMEEvent debugEventWithException:exception]];
+                    [MMELogger.sharedLogger logEvent:[MMEEvent debugEventWithException:exception]];
                 }
             }
         }
         return nil;
     }
-    [MMEEventLogger.sharedLogger logEvent:telemetryMetrics];
+    [MMELogger.sharedLogger logEvent:telemetryMetrics];
     [MMEMetricsManager deletePendingMetricsEventFile];
     
     return telemetryMetrics;
@@ -299,7 +299,7 @@
         if (jsonData) {
             jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
         } else if (jsonError) {
-            [MMEEventLogger.sharedLogger logEvent:[MMEEvent debugEventWithError:jsonError]];
+            [MMELogger.sharedLogger logEvent:[MMEEvent debugEventWithError:jsonError]];
         }
         return jsonString;
     }

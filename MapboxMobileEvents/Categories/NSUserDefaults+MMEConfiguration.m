@@ -2,7 +2,7 @@
 
 #import "MMEConstants.h"
 #import "MMEDate.h"
-#import "MMEEventLogger.h"
+#import "MMELogger.h"
 
 #import "NSString+MMEVersions.h"
 #import "NSUserDefaults+MMEConfiguration.h"
@@ -93,7 +93,7 @@ NS_ASSUME_NONNULL_BEGIN
     
     id debugLoggingEnabled = [NSBundle.mme_mainBundle objectForInfoDictionaryKey:MMEDebugLogging];
     if ([debugLoggingEnabled isKindOfClass:NSNumber.class]) {
-        [MMEEventLogger.sharedLogger setEnabled:[debugLoggingEnabled boolValue]];
+        [MMELogger.sharedLogger setEnabled:[debugLoggingEnabled boolValue]];
     }
 
     [self registerDefaults:@{

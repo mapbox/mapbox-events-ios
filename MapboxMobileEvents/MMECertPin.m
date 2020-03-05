@@ -2,7 +2,7 @@
 
 #import "MMECertPin.h"
 #import "MMEConstants.h"
-#import "MMEEventLogger.h"
+#import "MMELogger.h"
 
 
 #import "NSUserDefaults+MMEConfiguration.h"

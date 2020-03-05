@@ -20,7 +20,7 @@
 #import "MMEMetricsManager.h"
 #import "MMEUIApplicationWrapper.h"
 #import "MMEUniqueIdentifier.h"
-#import "MMEEventLogger.h"
+#import "MMELogger.h"
 
 #import "CLLocation+MMEMobileEvents.h"
 #import "CLLocationManager+MMEMobileEvents.h"
@@ -254,7 +254,7 @@ NS_ASSUME_NONNULL_BEGIN
                 __strong __typeof__(weakSelf) strongSelf = weakSelf;
 
                 if (error) {
-                    [MMEEventLogger.sharedLogger logEvent:[MMEEvent debugEventWithError:error]];
+                    [MMELogger.sharedLogger logEvent:[MMEEvent debugEventWithError:error]];
                 } else {
                     MMELog(MMELogInfo, MMEDebugEventTypePost, ([NSString stringWithFormat:@"post: %@, instance: %@",
                         @(events.count),self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
@@ -374,7 +374,7 @@ NS_ASSUME_NONNULL_BEGIN
     if (pendingMetricsEvent) {
         [self.apiClient postEvent:pendingMetricsEvent completionHandler:^(NSError * _Nullable error) {
             if (error) {
-                [MMEEventLogger.sharedLogger logEvent:[MMEEvent debugEventWithError:error]];
+                [MMELogger.sharedLogger logEvent:[MMEEvent debugEventWithError:error]];
                 return;
             }
             MMELog(MMELogInfo, MMEDebugEventTypeTelemetryMetrics, ([NSString stringWithFormat:@"Sent pendingTelemetryMetrics event, instance: %@",
@@ -417,11 +417,11 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL)isDebugLoggingEnabled {
-    return [MMEEventLogger.sharedLogger isEnabled];
+    return [MMELogger.sharedLogger isEnabled];
 }
 
 - (void)setDebugHandler:(void (^)(NSUInteger, NSString *, NSString *))handler {
-    [MMEEventLogger.sharedLogger setHandler:handler];
+    [MMELogger.sharedLogger setHandler:handler];
 }
 
 // MARK: - Error & Exception Reporting
@@ -441,7 +441,7 @@ NS_ASSUME_NONNULL_BEGIN
             [self pushEvent:errorEvent];
         }
         else {
-            [MMEEventLogger.sharedLogger logEvent:[MMEEvent debugEventWithError:createError]];
+            [MMELogger.sharedLogger logEvent:[MMEEvent debugEventWithError:createError]];
         }
     }
     @catch(NSException *except) {
@@ -581,7 +581,7 @@ NS_ASSUME_NONNULL_BEGIN
 
     if (event) {
         #if DEBUG
-        [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
+        [MMELogger.sharedLogger pushDebugEventWithAttributes:@{
             @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
             MMEDebugEventType: MMEDebugEventTypePush,
             MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Pushing event: %@", event]}];
@@ -590,7 +590,7 @@ NS_ASSUME_NONNULL_BEGIN
     } else {
         event = [MMEEvent eventWithDateString:[MMEDate.iso8601DateFormatter stringFromDate:now] name:name attributes:attributes];
         #if DEBUG
-        [MMEEventLogger.sharedLogger pushDebugEventWithAttributes:@{
+        [MMELogger.sharedLogger pushDebugEventWithAttributes:@{
             @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
             MMEDebugEventType: MMEDebugEventTypePush,
             MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Pushing generic event: %@", event]}];
