@@ -22,7 +22,10 @@ extern NSString * const MMEApplicationStateUnknown;
 /// OS Version String
 + (NSString *)osVersion;
 
-/// Device Model String (iPhone 11)
+/// System CPU type: x86_65, arm9, etc.
++ (NSString *)hardwareModel;
+
+/// Device Model String: iPhone 11, Mac, etc.
 + (NSString *)deviceModel;
 
 /// Application Vendor Id

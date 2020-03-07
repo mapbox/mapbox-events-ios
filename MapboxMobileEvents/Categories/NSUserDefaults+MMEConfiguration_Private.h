@@ -78,6 +78,7 @@ static NSString * const MMEConfigTTOKey = @"tto"; // telemetry type option
 static NSString * const MMEConfigGFOKey = @"gfo"; // geo-fence option
 static NSString * const MMEConfigBSOKey = @"bso"; // background startup option
 static NSString * const MMEConfigTagKey = @"tag"; // event tag
+static NSString * const MMEClientId = @"cid"; // client Id
 
 // MARK: - Constants
 
@@ -98,6 +99,7 @@ static NSTimeInterval const MMEStartupDelayMaximum = 100;
 // MARK: -
 
 @interface NSUserDefaults (MMEConfiguration_Private)
+@property(nonatomic,readonly) NSString *mme_clietnId;
 
 + (void)mme_resetConfiguration;
 

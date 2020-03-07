@@ -31,7 +31,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, weak) id<MMEEventsManagerDelegate> delegate;
 /// Active SKU Identifier to add to events
 @property (nonatomic, copy) NSString *skuId;
-@property (nonatomic, nullable) id<MMEAPIClient> apiClient MME_DEPRECATED;
 
 // MARK: -
 
@@ -92,6 +91,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setDebugHandler:(void (^)(NSUInteger, NSString *, NSString *))handler;
 
 #pragma mark - Deprecated API
+
+@property (nonatomic, nullable) id<MMEAPIClient> apiClient MME_DEPRECATED;
 
 - (void)initializeWithAccessToken:(NSString *)accessToken userAgentBase:(NSString *)userAgentBase hostSDKVersion:(NSString *)hostSDKVersion
     MME_DEPRECATED_GOTO("use startEventsManagerWithToken:", "-startEventsManagerWithToken:");

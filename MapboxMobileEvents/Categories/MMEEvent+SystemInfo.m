@@ -72,20 +72,28 @@ NSString * const MMEApplicationStateUnknown = @"Unknown";
 
 // MARK: - iOS Specific System Info
 
-+ (NSString *)deviceModel {
++ (NSString *)hardwareModel {
     NSString *modelName = nil;
-#if TARGET_OS_IOS || TARGET_OS_TVOS
-    modelName = UIDevice.currentDevice.model;
-#else
-    modelName = [self sysInfoByName:"hw.machine"];
-#endif
+    modelName = [self sysInfoByName:"hw.machine"]; 
     return modelName;
+}
+
++ (NSString *)deviceModel {
+    NSString *deviceModel = nil;
+#if TARGET_OS_IOS || TARGET_OS_TVOS
+    deviceModel = UIDevice.currentDevice.model;
+#else
+    deviceModel = [self sysInfoMyName:"hw.targettype"];
+#endif
+    return deviceModel;
 }
 
 + (NSString *)vendorId {
     NSString *vendorId = nil;
 #if TARGET_OS_IOS || TARGET_OS_TVOS
     vendorId = UIDevice.currentDevice.identifierForVendor.UUIDString;
+#else
+    vendorId = NSUserDefaults.mme_config.mme_clientId;
 #endif
     return vendorId;
 }

@@ -217,11 +217,11 @@
     attributes[MMEEventAppWakeups] = @(self.metrics.appWakeups);
     attributes[MMEEventRequests] = @(self.metrics.requests);
     attributes[MMEEventDeviceTimeDrift] = @(MMEDate.recordedTimeOffsetFromServer);
-    if (self.metrics.deviceLat != 0 && self.metrics.deviceLon != 0) {
+    if (lround(self.metrics.deviceLat) != 0 && lround(self.metrics.deviceLon) != 0) {
         attributes[MMEEventDeviceLat] = @(self.metrics.deviceLat);
         attributes[MMEEventDeviceLon] = @(self.metrics.deviceLon);
     }
-    attributes[MMEEventKeyModel] = MMEEvent.deviceModel;
+    attributes[MMEEventKeyModel] = MMEEvent.hardwareModel;
     attributes[MMEEventKeyPlatform] = MMEEvent.platformName;
     attributes[MMEEventKeyOperatingSystem] = MMEEvent.osVersion;
     attributes[MMEEventKeyDevice] = MMEEvent.deviceModel;
