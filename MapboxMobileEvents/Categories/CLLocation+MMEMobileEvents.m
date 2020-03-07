@@ -4,12 +4,24 @@
 
 void mme_linkCLLocationCategory(){}
 
+- (CLLocationSpeed)mme_roundedSpeed {
+    return round(self.speed);
+}
+
+- (CLLocationDirection)mme_roundedCourse {
+    return round(self.course);
+}
+
 - (CLLocationDistance)mme_roundedAltitude {
     return round(self.altitude);
 }
 
 - (CLLocationAccuracy)mme_roundedHorizontalAccuracy {
     return round(self.horizontalAccuracy);
+}
+
+- (CLLocationAccuracy)mme_roundedVerticalAccuracy {
+    return round(self.verticalAccuracy);
 }
 
 - (CLLocationDegrees)mme_latitudeRoundedWithPrecision:(NSUInteger)precision {
