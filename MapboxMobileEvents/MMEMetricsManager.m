@@ -3,13 +3,16 @@
 #import "MMEConstants.h"
 #import "MMEDate.h"
 #import "MMEEvent.h"
-#import "MMEEvent+SystemInfo.h"
 #import "MMEEventsManager.h"
 #import "MMEEventsManager_Private.h"
 #import "MMEAPIClient.h"
 #import "MMEAPIClient_Private.h"
 #import "NSUserDefaults+MMEConfiguration.h"
+<<<<<<< HEAD
 #import "MMELogger.h"
+=======
+#import "NSProcessInfo+SystemInfo.h"
+>>>>>>> Fix tests, remove Cedar targets, remove Cartfiles
 
 // MARK: -
 
@@ -221,10 +224,10 @@
         attributes[MMEEventDeviceLat] = @(self.metrics.deviceLat);
         attributes[MMEEventDeviceLon] = @(self.metrics.deviceLon);
     }
-    attributes[MMEEventKeyModel] = MMEEvent.hardwareModel;
-    attributes[MMEEventKeyPlatform] = MMEEvent.platformName;
-    attributes[MMEEventKeyOperatingSystem] = MMEEvent.osVersion;
-    attributes[MMEEventKeyDevice] = MMEEvent.deviceModel;
+    attributes[MMEEventKeyModel] = NSProcessInfo.mme_hardwareModel;
+    attributes[MMEEventKeyPlatform] = NSProcessInfo.mme_platformName;
+    attributes[MMEEventKeyOperatingSystem] = NSProcessInfo.mme_osVersion;
+    attributes[MMEEventKeyDevice] = NSProcessInfo.mme_deviceModel;
     
     attributes[MMEEventSDKIdentifier] = NSUserDefaults.mme_configuration.mme_legacyUserAgentBase;
     attributes[MMEEventSDKVersion] = NSUserDefaults.mme_configuration.mme_legacyHostSDKVersion;

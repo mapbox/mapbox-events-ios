@@ -14,6 +14,8 @@
 @property (nonatomic) NSURLSession *session;
 @end
 
+// MARK: -
+
 @interface MMEAPIClientTests : XCTestCase
 
 @property (nonatomic) MMEAPIClient *apiClient;
@@ -26,9 +28,18 @@
 
 @end
 
+// MARK: -
+
 @interface MMEAPIClient (Tests)
 @property (nonatomic) id<MMENSURLSessionWrapper> sessionWrapper;
 @end
+
+// MARK: -
+
+@interface DelegateTestClass : NSObject<NSURLConnectionDelegate, NSURLAuthenticationChallengeSender>
+@end
+
+// MARK: -
 
 @implementation MMEAPIClientTests
 
@@ -98,8 +109,11 @@
 
 - (void)testPostMetadata {
     self.apiClient.sessionWrapper = self.sessionWrapperFake;
-    NSArray *parameters = @[@{@"name": @"file", @"fileName": @"images.jpeg"},
-                            @{@"name": @"attachments", @"value": @"[{\"name\":\"images.jpeg\",\"format\":\"jpg\",\"eventId\":\"123\",\"created\":\"2018-08-28T16:36:39+00:00\",\"size\":66962,\"type\":\"image\",\"startTime\":\"2018-08-28T16:36:39+00:00\",\"endTime\":\"2018-08-28T16:36:40+00:00\"}]"}];
+    NSArray *parameters = @[
+        @{@"name": @"file",
+          @"fileName": @"images.jpeg"},
+        @{@"name": @"attachments",
+          @"value": @"[{\"name\":\"images.jpeg\",\"format\":\"jpg\",\"eventId\":\"123\",\"created\":\"2018-08-28T16:36:39+00:00\",\"size\":66962,\"type\":\"image\",\"startTime\":\"2018-08-28T16:36:39+00:00\",\"endTime\":\"2018-08-28T16:36:40+00:00\"}]"}];
     
     [self.apiClient postMetadata:parameters filePaths:@[@"../filepath"] completionHandler:^(NSError * _Nullable error) {
         // empty
@@ -134,5 +148,98 @@
     
     XCTAssert(data.mme_gunzippedData.length == uncompressedData.length);
 }
+
+- (void) testMMEAPIClientSetup {
+    // it has the correct type of session wrapper
+    XCTAssertNotNil(self.apiClient.sessionWrapper);
+    XCTAssert([self.apiClient.sessionWrapper isKindOfClass:MMENSURLSessionWrapper.class]);
+}
+
+- (void) testPostSingleEvent {
+    MMENSURLSessionWrapperFake *wrapper = MMENSURLSessionWrapperFake.new;
+    self.apiClient.sessionWrapper = wrapper;
+    MMEEvent *event = [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-1" commonEventData:nil];
+
+    
+}
+
+// TODO: - Convert Cedar Tests
+
+/*
+describe(@"- postEvent:completionHandler:", ^{
+    __block MMEEvent *event;
+    __block MMENSURLSessionWrapperFake *sessionWrapperFake;
+    __block NSError *capturedError;
+
+beforeEach(^{
+    sessionWrapperFake = [[MMENSURLSessionWrapperFake alloc] init];
+    spy_on(sessionWrapperFake);
+
+    apiClient.sessionWrapper = sessionWrapperFake;
+             
+    event = [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-1" commonEventData:nil];
+});
+         
+ context(@"when posting a single event", ^{
+             
+     beforeEach(^{
+         [apiClient postEvent:event completionHandler:^(NSError * _Nullable error) {
+             capturedError = error;
+         }];
+     });
+     
+     it(@"should have received processRequest:completionHandler:", ^{
+         apiClient.sessionWrapper should have_received(@selector(processRequest:completionHandler:)).with(sessionWrapperFake.request).and_with(Arguments::anything);
+     });
+     
+     context(@"when there is a network error", ^{
+         __block NSError *error;
+         
+         beforeEach(^{
+             error = [NSError errorWithDomain:@"test" code:42 userInfo:nil];
+             NSHTTPURLResponse *responseFake = [[NSHTTPURLResponse alloc] initWithURL:NSUserDefaults.mme_configuration.mme_eventsServiceURL statusCode:400 HTTPVersion:nil headerFields:nil];
+             [sessionWrapperFake completeProcessingWithData:nil response:responseFake error:error];
+         });
+         
+         it(@"should equal completed process error", ^{
+             capturedError should equal(error);
+         });
+     });
+     
+     context(@"when there is a response with an invalid status code", ^{
+         beforeEach(^{
+             NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:[NSURL URLWithString:@"http:test.com"]
+                                                                      statusCode:400
+                                                                     HTTPVersion:nil
+                                                                    headerFields:nil];
+             [sessionWrapperFake completeProcessingWithData:nil response:response error:nil];
+         });
+         
+         it(@"should have an error", ^{
+             capturedError should_not be_nil;
+         });
+     });
+ });
+ 
+ context(@"when posting a single event after an access token is set", ^{
+     __block NSString *expectedURLString;
+     
+     beforeEach(^{
+         NSString *stagingAccessToken = @"staging-access-token";
+         NSUserDefaults.mme_configuration.mme_accessToken = stagingAccessToken;
+         [apiClient postEvent:event completionHandler:nil];
+         
+         expectedURLString = [NSString stringWithFormat:@"%@/%@?access_token=%@", MMEAPIClientBaseURL, MMEAPIClientEventsPath, stagingAccessToken];
+     });
+     
+     it(@"should receive processRequest:completionHandler", ^{
+         sessionWrapperFake should have_received(@selector(processRequest:completionHandler:));
+     });
+
+     it(@"should be created properly", ^{
+         sessionWrapperFake.request.URL.absoluteString should equal(expectedURLString);
+     });
+
+});*/
 
 @end

@@ -4,9 +4,10 @@
 
 #import "MMEConstants.h"
 #import "MMEDate.h"
-#import "MMEEvent+SystemInfo.h"
 #import "MMEEventsManager.h"
 #import "MMEReachability.h"
+
+#import "NSProcessInfo+SystemInfo.h"
 
 #import "NSUserDefaults+MMEConfiguration.h"
 #if TARGET_OS_IOS || TARGET_OS_TVOS
@@ -115,9 +116,9 @@
         errorAttributes[MMEEventKeyOSVersion] = NSProcessInfo.processInfo.operatingSystemVersionString;
     }
 
-    errorAttributes[MMEEventKeyModel] = MMEEvent.deviceModel;
-    errorAttributes[MMEEventKeyOSVersion] = MMEEvent.osVersion;
-    errorAttributes[MMEEventKeyDevice] = MMEEvent.deviceModel;
+    errorAttributes[MMEEventKeyModel] = NSProcessInfo.mme_deviceModel;
+    errorAttributes[MMEEventKeyOSVersion] = NSProcessInfo.mme_osVersion;
+    errorAttributes[MMEEventKeyDevice] = NSProcessInfo.mme_hardwareModel;
 
 #if TARGET_OS_MACOS
     if (NSRunningApplication.currentApplication.launchDate) {
@@ -220,9 +221,9 @@
     eventAttributes[MMEEventKeyEvent] = MMEEventTypeLocation;
     eventAttributes[MMEEventKeySource] = MMEEventSource;
     eventAttributes[MMEEventKeySessionId] = instanceIdentifer;
-    eventAttributes[MMEEventKeyOperatingSystem] = MMEEvent.osVersion;
-    if (![MMEEvent.applicationState isEqualToString:MMEApplicationStateUnknown]) {
-        eventAttributes[MMEEventKeyApplicationState] = MMEEvent.applicationState;
+    eventAttributes[MMEEventKeyOperatingSystem] = NSProcessInfo.mme_osVersion;
+    if (![NSProcessInfo.mme_applicationState isEqualToString:MMEApplicationStateUnknown]) {
+        eventAttributes[MMEEventKeyApplicationState] = NSProcessInfo.mme_applicationState;
     }
 
     return [self eventWithAttributes:eventAttributes];
@@ -232,10 +233,10 @@
     NSMutableDictionary *eventAttributes = NSMutableDictionary.dictionary;
     eventAttributes[MMEEventKeyEvent] = MMEEventTypeMapLoad;
     eventAttributes[MMEEventKeyCreated] = dateString;
-    eventAttributes[MMEEventKeyVendorID] = MMEEvent.vendorId;
-    eventAttributes[MMEEventKeyModel] = MMEEvent.deviceModel;
-    eventAttributes[MMEEventKeyOperatingSystem] = MMEEvent.osVersion;
-    eventAttributes[MMEEventKeyResolution] = @(MMEEvent.screenScale);
+    eventAttributes[MMEEventKeyVendorID] = NSProcessInfo.mme_vendorId;
+    eventAttributes[MMEEventKeyModel] = NSProcessInfo.mme_deviceModel;
+    eventAttributes[MMEEventKeyOperatingSystem] = NSProcessInfo.mme_osVersion;
+    eventAttributes[MMEEventKeyResolution] = @(NSProcessInfo.mme_screenScale);
 #if TARGET_OS_IOS || TARGET_OS_TVOS
 
     if (NSBundle.mme_isExtension) {

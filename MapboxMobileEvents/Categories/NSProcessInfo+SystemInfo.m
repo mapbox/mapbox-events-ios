@@ -1,6 +1,7 @@
-#import "MMEEvent+SystemInfo.h"
+#import "NSProcessInfo+SystemInfo.h"
+
 #import "MMEConstants.h"
-#import "NSUserDefaults+MMEConfiguration.h"
+//#import "NSUserDefaults+MMEConfiguration.h"
 
 #if TARGET_OS_IOS || TARGET_OS_TVOS
 #import <UIKit/UIKit.h>
@@ -15,7 +16,7 @@ NSString * const MMEApplicationStateBackground = @"Background";
 NSString * const MMEApplicationStateInactive = @"Inactive";
 NSString * const MMEApplicationStateUnknown = @"Unknown";
 
-@implementation MMEEvent (SystemInfo)
+@implementation NSProcessInfo (SystemInfo)
 
 + (NSString *)sysInfoByName:(char *)typeSpecifier {
     size_t size;
@@ -30,7 +31,7 @@ NSString * const MMEApplicationStateUnknown = @"Unknown";
     return results;
 }
 
-+ (NSString *)platformName {
++ (NSString *)mme_platformName {
     NSString *result;
 #if TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR
     result = MMEEventKeyiOS;
@@ -43,7 +44,7 @@ NSString * const MMEApplicationStateUnknown = @"Unknown";
     return result;
 }
 
-+ (NSString *)applicationState {
++ (NSString *)mme_applicationState {
 #if TARGET_OS_IOS || TARGET_OS_TVOS
     switch (UIApplication.sharedApplication.applicationState) {
         case UIApplicationStateActive:
@@ -60,7 +61,7 @@ NSString * const MMEApplicationStateUnknown = @"Unknown";
 #endif
 }
 
-+ (NSString *)osVersion {
++ (NSString *)mme_osVersion {
     NSString *osVersion = nil;
 #if TARGET_OS_IOS || TARGET_OS_TVOS
     osVersion = [NSString stringWithFormat:@"%@ %@", UIDevice.currentDevice.systemName, UIDevice.currentDevice.systemVersion];
@@ -72,13 +73,13 @@ NSString * const MMEApplicationStateUnknown = @"Unknown";
 
 // MARK: - iOS Specific System Info
 
-+ (NSString *)hardwareModel {
++ (NSString *)mme_hardwareModel {
     NSString *modelName = nil;
     modelName = [self sysInfoByName:"hw.machine"]; 
     return modelName;
 }
 
-+ (NSString *)deviceModel {
++ (NSString *)mme_deviceModel {
     NSString *deviceModel = nil;
 #if TARGET_OS_IOS || TARGET_OS_TVOS
     deviceModel = UIDevice.currentDevice.model;
@@ -88,7 +89,7 @@ NSString * const MMEApplicationStateUnknown = @"Unknown";
     return deviceModel;
 }
 
-+ (NSString *)vendorId {
++ (NSString *)mme_vendorId {
     NSString *vendorId = nil;
 #if TARGET_OS_IOS || TARGET_OS_TVOS
     vendorId = UIDevice.currentDevice.identifierForVendor.UUIDString;
@@ -98,7 +99,7 @@ NSString * const MMEApplicationStateUnknown = @"Unknown";
     return vendorId;
 }
 
-+ (CGFloat)screenScale {
++ (CGFloat)mme_screenScale {
     CGFloat screenScale = 0;
 #if TARGET_OS_IOS || TARGET_OS_TVOS
     if ([UIScreen instancesRespondToSelector:@selector(nativeScale)]) {

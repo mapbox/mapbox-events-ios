@@ -1,0 +1,29 @@
+{
+  "configurations" : [
+    {
+      "id" : "13A29766-3609-4511-AF09-004ECC542C8A",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false,
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:MapboxMobileEvents.xcodeproj",
+      "identifier" : "9C632266221377BF00653792",
+      "name" : "MapboxMobileEvents (All Targets)"
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:MapboxMobileEvents.xcodeproj",
+        "identifier" : "404807C11EA186D8008A6D50",
+        "name" : "MMETests"
+      }
+    }
+  ],
+  "version" : 1
+}

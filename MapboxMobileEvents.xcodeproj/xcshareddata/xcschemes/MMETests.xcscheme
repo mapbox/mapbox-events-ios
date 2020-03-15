@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "404807C11EA186D8008A6D50"
-               BuildableName = "MMEXCTests.xctest"
-               BlueprintName = "MMEXCTests"
+               BuildableName = "MMETests.xctest"
+               BlueprintName = "MMETests"
                ReferencedContainer = "container:MapboxMobileEvents.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -48,8 +48,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "404807C11EA186D8008A6D50"
-               BuildableName = "MMEXCTests.xctest"
-               BlueprintName = "MMEXCTests"
+               BuildableName = "MMETests.xctest"
+               BlueprintName = "MMETests"
                ReferencedContainer = "container:MapboxMobileEvents.xcodeproj">
             </BuildableReference>
          </TestableReference>

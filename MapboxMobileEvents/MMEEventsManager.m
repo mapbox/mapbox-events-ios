@@ -1,11 +1,21 @@
+<<<<<<< HEAD
 #import <CoreLocation/CoreLocation.h>
 #import <CoreFoundation/CoreFoundation.h>
 #if TARGET_OS_MACOS
 #import <Cocoa/Cocoa.h>
+=======
+@import CoreFoundation;
+@import CoreLocation;
+
+#if TARGET_OS_OSX
+@import AppKit;
+>>>>>>> Fix tests, remove Cedar targets, remove Cartfiles
 #elif TARGET_OS_IOS || TARGET_OS_TVOS
 #import <UIKit/UIKit.h>
 #endif
 
+#import "CLLocation+MMEMobileEvents.h"
+#import "CLLocationManager+MMEMobileEvents.h"
 #import "MMEEventsManager.h"
 #import "MMEEventsManager_Private.h"
 #import "MMEAPIClient.h"
@@ -15,16 +25,18 @@
 #import "MMEDate.h"
 #import "MMEDispatchManager.h"
 #import "MMEEvent.h"
+<<<<<<< HEAD
 #import "MMEEvent+SystemInfo.h"
+=======
+#import "MMELogger.h"
+>>>>>>> Fix tests, remove Cedar targets, remove Cartfiles
 #import "MMELocationManager.h"
 #import "MMEMetricsManager.h"
 #import "MMEUIApplicationWrapper.h"
 #import "MMEUniqueIdentifier.h"
 #import "MMELogger.h"
-
-#import "CLLocation+MMEMobileEvents.h"
-#import "CLLocationManager+MMEMobileEvents.h"
 #import "NSUserDefaults+MMEConfiguration.h"
+#import "NSProcessInfo+SystemInfo.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -291,19 +303,19 @@ NS_ASSUME_NONNULL_BEGIN
             return;
         }
 
-        if (!MMEEvent.vendorId) {
+        if (!NSProcessInfo.mme_vendorId) {
             MMELog(MMELogInfo, MMEDebugEventTypeTurnstileFailed, ([NSString stringWithFormat:@"No vendor id available - can not send turntile event, instance: %@",
                 self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
             return;
         }
 
-        if (!MMEEvent.deviceModel) {
+        if (!NSProcessInfo.mme_deviceModel) {
             MMELog(MMELogInfo, MMEDebugEventTypeTurnstileFailed, ([NSString stringWithFormat:@"No model available - can not send turntile event, instance: %@",
                 self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
             return;
         }
 
-        if (!MMEEvent.osVersion) {
+        if (!NSProcessInfo.mme_osVersion) {
             MMELog(MMELogInfo, MMEDebugEventTypeTurnstileFailed, ([NSString stringWithFormat:@"No iOS version available - can not send turntile event, instance: %@",
                 self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
             return;
@@ -326,9 +338,15 @@ NS_ASSUME_NONNULL_BEGIN
         NSDictionary *turnstileEventAttributes = @{
             MMEEventKeyEvent: MMEEventTypeAppUserTurnstile,
             MMEEventKeyCreated: [MMEDate.iso8601DateFormatter stringFromDate:[NSDate date]],
+<<<<<<< HEAD
             MMEEventKeyVendorID: MMEEvent.vendorId,
             MMEEventKeyDevice: MMEEvent.deviceModel, // MMEEventKeyDevice is synonomous with MMEEventKeyModel but the server will only accept "device" in turnstile events
             MMEEventKeyOperatingSystem: MMEEvent.osVersion,
+=======
+            MMEEventKeyVendorId: NSProcessInfo.mme_vendorId,
+            MMEEventKeyDevice: NSProcessInfo.mme_deviceModel, // MMEEventKeyDevice is synonomous with MMEEventKeyModel but the server will only accept "device" in turnstile events
+            MMEEventKeyOperatingSystem: NSProcessInfo.mme_osVersion,
+>>>>>>> Fix tests, remove Cedar targets, remove Cartfiles
             MMEEventSDKIdentifier: NSUserDefaults.mme_configuration.mme_legacyUserAgentBase,
             MMEEventSDKVersion: NSUserDefaults.mme_configuration.mme_legacyHostSDKVersion,
             MMEEventKeyEnabledTelemetry: @(NSUserDefaults.mme_configuration.mme_isCollectionEnabled),

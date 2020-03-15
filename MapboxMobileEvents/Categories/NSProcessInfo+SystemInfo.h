@@ -1,8 +1,6 @@
 #import <Foundation/Foundation.h>
 #import <CoreGraphics/CoreGraphics.h>
 
-#import "MMEEvent.h"
-
 NS_ASSUME_NONNULL_BEGIN
 
 extern NSString * const MMEApplicationStateForeground;
@@ -11,28 +9,28 @@ extern NSString * const MMEApplicationStateInactive;
 extern NSString * const MMEApplicationStateUnknown;
 
 /// Read-only system information properties for MMEEvents
-@interface MMEEvent (SystemInfo)
+@interface NSProcessInfo (SystemInfo)
 
 /// name of the platform we are running on (iOS, macOS, & c.)
-+ (NSString *)platformName;
++ (NSString *)mme_platformName;
 
 /// Foreground or Background for iOS apps, Unknown for other platforms
-+ (NSString *)applicationState;
++ (NSString *)mme_applicationState;
 
 /// OS Version String
-+ (NSString *)osVersion;
++ (NSString *)mme_osVersion;
 
-/// System CPU type: x86_65, arm9, etc.
-+ (NSString *)hardwareModel;
+/// System CPU type: x86_64, arm9, etc.
++ (NSString *)mme_hardwareModel;
 
 /// Device Model String: iPhone 11, Mac, etc.
-+ (NSString *)deviceModel;
++ (NSString *)mme_deviceModel;
 
 /// Application Vendor Id
-+ (NSString *)vendorId;
++ (NSString *)mme_vendorId;
 
 /// Point to Pixel Scale of the main screen
-+ (CGFloat)screenScale;
++ (CGFloat)mme_screenScale;
 
 @end
 
