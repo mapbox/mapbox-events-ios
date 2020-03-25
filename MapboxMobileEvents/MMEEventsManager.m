@@ -569,17 +569,6 @@ NS_ASSUME_NONNULL_BEGIN
     for (CLLocation *location in locations) {
         MMEMutableMapboxEventAttributes *eventAttributes = [[MMEMutableMapboxEventAttributes alloc] init];
         
-        if (@available(iOS 13.4, *)) {
-            [eventAttributes addEntriesFromDictionary:@{
-                MMEEventKeySpeedAccuracy: @([location speedAccuracy]),
-                MMEEventKeyCourseAccuracy: @([location courseAccuracy])
-            }];
-        }
-        
-        if ([location floor]) {
-            [eventAttributes setValue:@([location floor].level) forKey:MMEEventKeyFloor];
-        }
-        
         [eventAttributes addEntriesFromDictionary:@{
             MMEEventKeyCreated: [MMEDate.iso8601DateFormatter stringFromDate:[location timestamp]],
             MMEEventKeyLatitude: @([location mme_latitudeRoundedWithPrecision:7]),
@@ -590,6 +579,17 @@ NS_ASSUME_NONNULL_BEGIN
             MMEEventKeySpeed: @([location mme_roundedSpeed]),
             MMEEventKeyCourse: @([location mme_roundedCourse])
         }];
+        
+        if (@available(iOS 13.4, *)) {
+            [eventAttributes addEntriesFromDictionary:@{
+                MMEEventKeySpeedAccuracy: @([location speedAccuracy]),
+                MMEEventKeyCourseAccuracy: @([location courseAccuracy])
+            }];
+        }
+        
+        if ([location floor]) {
+            [eventAttributes setValue:@([location floor].level) forKey:MMEEventKeyFloor];
+        }
 
         [self pushEvent:[MMEEvent locationEventWithAttributes:eventAttributes
                                             instanceIdentifer:self.uniqueIdentifer.rollingInstanceIdentifer
@@ -624,10 +624,6 @@ NS_ASSUME_NONNULL_BEGIN
     
     MMEMutableMapboxEventAttributes *eventAttributes = [[MMEMutableMapboxEventAttributes alloc] init];
     
-    if ([location floor]) {
-        [eventAttributes setValue:@([location floor].level) forKey:MMEEventKeyFloor];
-    }
-    
     [eventAttributes addEntriesFromDictionary:@{
         MMEEventKeyCreated: [MMEDate.iso8601DateFormatter stringFromDate:[location timestamp]],
         MMEEventKeyLatitude: @([location mme_latitudeRoundedWithPrecision:7]),
@@ -637,6 +633,10 @@ NS_ASSUME_NONNULL_BEGIN
         MMEEventKeyArrivalDate: [MMEDate.iso8601DateFormatter stringFromDate:visit.arrivalDate],
         MMEEventKeyDepartureDate: [MMEDate.iso8601DateFormatter stringFromDate:visit.departureDate]
     }];
+
+    if ([location floor]) {
+        [eventAttributes setValue:@([location floor].level) forKey:MMEEventKeyFloor];
+    }
 
     [self pushEvent:[MMEEvent visitEventWithAttributes:eventAttributes]];
 
