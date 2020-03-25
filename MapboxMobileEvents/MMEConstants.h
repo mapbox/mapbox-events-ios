@@ -16,7 +16,6 @@ extern NSString * const MMEAPIClientHeaderFieldContentEncodingKey;
 extern NSString * const MMEAPIClientHTTPMethodPost;
 extern NSString * const MMEAPIClientHTTPMethodGet;
 
-#if DEBUG
 // Debug types
 extern NSString * const MMEDebugEventType;
 extern NSString * const MMEDebugEventTypeError;
@@ -31,7 +30,6 @@ extern NSString * const MMEDebugEventTypeMetricCollection;
 extern NSString * const MMEDebugEventTypeLocationManager;
 extern NSString * const MMEDebugEventTypeTelemetryMetrics;
 extern NSString * const MMEDebugEventTypeCertPinning;
-#endif
 
 // Event types
 extern NSString * const MMEEventTypeAppUserTurnstile;
@@ -54,6 +52,12 @@ extern NSString * const MMEEventKeyMinZoomLevel;
 extern NSString * const MMEEventKeyEvent;
 extern NSString * const MMEEventKeyCreated;
 extern NSString * const MMEEventKeyStyleURL;
+extern NSString * const MMEEventKeySpeed;
+extern NSString * const MMEEventKeyCourse;
+extern NSString * const MMEEventKeySpeedAccuracy;
+extern NSString * const MMEEventKeyCourseAccuracy;
+extern NSString * const MMEEventKeyVerticalAccuracy;
+extern NSString * const MMEEventKeyFloor;
 extern NSString * const MMEEventKeyVendorId;
 extern NSString * const MMEEventKeyModel;
 extern NSString * const MMEEventKeyDevice;

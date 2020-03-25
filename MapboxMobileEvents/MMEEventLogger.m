@@ -1,9 +1,6 @@
-#if DEBUG
-
 #import "MMEEventLogger.h"
 #import "MMEEvent.h"
 #import "MMEDate.h"
-#import <WebKit/WebKit.h>
 
 @implementation MMEEventLogger
 
@@ -19,7 +16,7 @@
     return _sharedLogger;
 }
 
-- (void)setHandler:(void (^)(MMEEvent *))handler {
+- (void)setHandler:(void (^)(NSUInteger, NSString *, NSString *))handler {
     if (!handler) {
         _handler = [self defaultBlockHandler];
     } else {
@@ -31,7 +28,13 @@
 
 - (void)logEvent:(MMEEvent *)event {
     if (self.isEnabled) {
-        self.handler(event);
+        self.handler(MMELogEvent, event.name, [NSString stringWithFormat:@"%@",event.attributes]);
+    }
+}
+
+- (void)logPriority:(NSUInteger)priority withType:(NSString *)type andMessage:(NSString *)message {
+    if (self.isEnabled) {
+        self.handler(priority, type, message);
     }
 }
 
@@ -43,13 +46,11 @@
 }
 
 - (MMELoggingBlockHandler)defaultBlockHandler {
-    MMELoggingBlockHandler mapboxHandler = ^(MMEEvent *debugEvent) {
-        NSLog(@"%@", [NSString stringWithFormat:@"Mapbox Telemetry event %@", debugEvent]);
+    MMELoggingBlockHandler mapboxHandler = ^(NSUInteger priority, NSString *type, NSString *message) {
+        NSLog(@"%@", [NSString stringWithFormat:@"Mapbox Telemetry Log Message: %@\nType: %@\nPriority: %lu", message, type, (unsigned long)priority]);
     };
  
     return mapboxHandler;
 }
 
 @end
-
-#endif

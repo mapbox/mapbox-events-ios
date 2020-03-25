@@ -654,31 +654,23 @@ describe(@"MMEEventsManager", ^{
         });
 
         context(@"when an error event is pushed", ^{
-            #if DEBUG
             NSError* testError = [NSError.alloc initWithDomain:NSCocoaErrorDomain code:999 userInfo:@{
                 NSLocalizedDescriptionKey: @"Test Error Description",
                 NSLocalizedFailureReasonErrorKey: @"Test Error Failure Reason"
             }];
-            #endif
 
             it(@"should not queue error events", ^{
-                #if DEBUG
                 [MMEEventsManager.sharedManager pushEvent:[MMEEvent debugEventWithError:testError]];
                 eventsManager.eventQueue.count should equal(0);
-                #endif
             });
         });
 
         context(@"when an exception event is pushed", ^{
-            #if DEBUG
             NSException* testException = [NSException.alloc initWithName:@"TestExceptionName" reason:@"TestExceptionReason" userInfo:nil];
-            #endif
 
             it(@"should not queue exception events", ^{
-                #if DEBUG
                 [MMEEventsManager.sharedManager pushEvent:[MMEEvent debugEventWithException:testException]];
                 eventsManager.eventQueue.count should equal(0);
-                #endif
             });
         });
     });
@@ -713,6 +705,7 @@ describe(@"MMEEventsManager", ^{
                     MMEEventKeyLatitude: @([location mme_latitudeRoundedWithPrecision:7]),
                     MMEEventKeyLongitude: @([location mme_longitudeRoundedWithPrecision:7]),
                     MMEEventHorizontalAccuracy: @(visit.horizontalAccuracy),
+                    MMEEventKeyVerticalAccuracy: @([location mme_roundedVerticalAccuracy]),
                     MMEEventKeyArrivalDate: [MMEDate.iso8601DateFormatter stringFromDate:visit.arrivalDate],
                     MMEEventKeyDepartureDate: [MMEDate.iso8601DateFormatter stringFromDate:visit.departureDate]
                 };

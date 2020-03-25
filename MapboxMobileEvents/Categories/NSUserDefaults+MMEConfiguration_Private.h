@@ -63,11 +63,9 @@ static NSString * const MMEAPIMapboxCN = @"api.mapbox.cn";
 static NSString * const MMEEventsMapboxCN = @"events.mapbox.cn";
 static NSString * const MMEConfigMapboxCN = @"config.mapbox.cn";
 
-#if DEBUG
 static NSString * const MMEAPITilestreamNet = @"cloudfront-staging.tilestream.net";
 static NSString * const MMEEventsTilestreamNet = @"api-events-staging.tilestream.net";
 static NSString * const MMEConfigTilestreamNet = @"api-events-config-staging.tilestream.net";
-#endif
 
 static NSString * const MMEAPIClientBaseConfigURL = @"https://config.mapbox.com";
 static NSString * const MMEAPIClientBaseChinaConfigURL = @"https://config.mapbox.cn";

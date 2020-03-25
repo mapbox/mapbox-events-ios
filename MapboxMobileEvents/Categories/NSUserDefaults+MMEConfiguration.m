@@ -93,7 +93,7 @@ NS_ASSUME_NONNULL_BEGIN
     
     id debugLoggingEnabled = [NSBundle.mme_mainBundle objectForInfoDictionaryKey:MMEDebugLogging];
     if ([debugLoggingEnabled isKindOfClass:NSNumber.class]) {
-        [MMEEventLogger.sharedLogger setEnabled:debugLoggingEnabled];
+        [MMEEventLogger.sharedLogger setEnabled:[debugLoggingEnabled boolValue]];
     }
 
     [self registerDefaults:@{
