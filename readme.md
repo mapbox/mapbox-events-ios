@@ -96,7 +96,20 @@ cd $PROJECT_DIR
 carthage bootstrap
 ```
 
-<style>
-body { margin: 2em; max-width: 512pt; margin-right:auto; margin-left:auto; font-family: Helvetica, sans-serif; }
-pre { border: 1px solid gray; padding: 1em; margin: 1em; }
-</style>
+### 🔎Enable debug logging within your app.
+
+**Pre-v1.0**
+
+Maps SDK: To enable debug logs in your console set `MGLMapboxMetricsDebugLoggingEnabled` in your plist as a boolean to `YES`.
+Nav SDK: To enable debug logs in your console set `MBNavigationMetricsDebugLoggingEnabled` in your plist as a boolean to `YES`.
+
+**Post-v1.0**
+
+1. To enable debug logs in your console set `MMEDebugLogging` in your plist as a boolean to `YES`.
+<img width="448" alt="Screen Shot 2020-02-07 at 5 10 41 PM" src="https://user-images.githubusercontent.com/10932745/74076682-992a5380-49ce-11ea-97a4-c93c518d1d42.png">
+
+2. Run app
+
+3. Watch console for logs
+<img width="777" alt="Screen Shot 2020-02-07 at 5 10 26 PM" src="https://user-images.githubusercontent.com/10932745/74076691-afd0aa80-49ce-11ea-9d9f-1a8219852b7a.png">
+
