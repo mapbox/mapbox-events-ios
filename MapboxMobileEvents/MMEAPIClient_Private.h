@@ -11,11 +11,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)postEvent:(MMEEvent *)event completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler;
 - (void)postMetadata:(NSArray *)metadata filePaths:(NSArray *)filePaths completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler;
 
-@optional
-
-- (nullable NSError *)statusErrorFromRequest:(NSURLRequest *)request andHTTPResponse:(NSHTTPURLResponse *)httpResponse;
-- (NSError *)unexpectedResponseErrorFromRequest:(NSURLRequest *)request andResponse:(NSURLResponse *)response;
-
 @end
 
 NS_ASSUME_NONNULL_END

@@ -81,16 +81,23 @@ int const kMMEMaxRequestCount = 1000;
         NSURLRequest *request = [self requestForEvents:batch];
         if (request) {
             [self.sessionWrapper processRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-                [MMEMetricsManager.sharedManager updateReceivedBytes:data.length];
-                
-                NSError *statusError = nil;
-                if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
+                // check the response object for HTTP error code
+                if (response && [response isKindOfClass:NSHTTPURLResponse.class]) {
                     NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-                    statusError = [self statusErrorFromRequest:request andHTTPResponse:httpResponse];
-                } else {
-                    statusError = [self unexpectedResponseErrorFromRequest:request andResponse:response];
+                    NSError *statusError = [self statusErrorFromRequest:request andHTTPResponse:httpResponse sessionError:error];
+
+                    if (statusError) { // report the status error
+                        [MMEEventsManager.sharedManager reportError:statusError];
+                    }
+
+                    // check the data object, log the Rx bytes and try to load the config
+                    if (data) {
+                        [MMEMetricsManager.sharedManager updateReceivedBytes:data.length];
+                    }
                 }
-                error = error ?: statusError;
+                else if (error) { // check the session error and report it if the response appears invalid
+                    [MMEEventsManager.sharedManager reportError:error];
+                }
                 
                 [MMEMetricsManager.sharedManager updateMetricsFromEventCount:events.count request:request error:error];
                 
@@ -112,24 +119,34 @@ int const kMMEMaxRequestCount = 1000;
 // MARK: - Metadata Service
 
 - (void)postMetadata:(NSArray *)metadata filePaths:(NSArray *)filePaths completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
-    
-    NSString *boundary = [[NSUUID UUID] UUIDString];
+    NSString *boundary = NSUUID.UUID.UUIDString;
     NSData *binaryData = [self createBodyWithBoundary:boundary metadata:metadata filePaths:filePaths];
     NSURLRequest *request = [self requestForBinary:binaryData boundary:boundary];
     [self.sessionWrapper processRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        [MMEMetricsManager.sharedManager updateReceivedBytes:data.length];
         
-        NSError *statusError = nil;
-        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-        statusError = [self statusErrorFromRequest:request andHTTPResponse:httpResponse];
-        if (completionHandler) {
-            error = error ?: statusError;
-            completionHandler(error);
+        // check the response object for HTTP error code
+        if (response && [response isKindOfClass:NSHTTPURLResponse.class]) {
+            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+            NSError *statusError = [self statusErrorFromRequest:request andHTTPResponse:httpResponse sessionError:error];
             
-            [MMEMetricsManager.sharedManager updateMetricsFromEventCount:filePaths.count request:request error:error];
+            if (statusError) { // always report the status error
+                [MMEEventsManager.sharedManager reportError:statusError];
+            }
+            
+            if (data) { // always log the Rx bytes
+                [MMEMetricsManager.sharedManager updateReceivedBytes:data.length];
+            }
+        }
+        else if (error) { // check the session error and report it if the response appears invalid
+            [MMEEventsManager.sharedManager reportError:error];
         }
 
+        [MMEMetricsManager.sharedManager updateMetricsFromEventCount:filePaths.count request:request error:error];
         [MMEMetricsManager.sharedManager generateTelemetryMetricsEvent];
+        
+        if (completionHandler) {
+            completionHandler(error);
+        }
     }];
 }
 
@@ -148,6 +165,7 @@ int const kMMEMaxRequestCount = 1000;
                 NSURLRequest *request = [self requestForConfiguration];
                 
                 [self.sessionWrapper processRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+<<<<<<< HEAD
 
                     // first, check the session error and report it
                     if (error) {
@@ -164,9 +182,12 @@ int const kMMEMaxRequestCount = 1000;
                             [MMEEventsManager.sharedManager reportError:configError];
 =======
                     // check the response object for HTTP error code, update the local clock offset
+=======
+                    // check the response object for HTTP error code
+>>>>>>> Make error handling and reporting more consistent for all the network calls
                     if (response && [response isKindOfClass:NSHTTPURLResponse.class]) {
                         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-                        NSError *statusError = [self statusErrorFromRequest:request andHTTPResponse:httpResponse];
+                        NSError *statusError = [self statusErrorFromRequest:request andHTTPResponse:httpResponse sessionError:error];
 
                         if (!statusError) {
                             // check for time-offset from the server
@@ -195,6 +216,9 @@ int const kMMEMaxRequestCount = 1000;
                         else {
                             [MMEEventsManager.sharedManager reportError:statusError];
                         }
+                    }
+                    else if (error) { // check the session error and report it if the response appears invalid
+                        [MMEEventsManager.sharedManager reportError:error];
                     }
 
                     [MMEMetricsManager.sharedManager updateMetricsFromEventCount:0 request:request error:error];
@@ -225,23 +249,35 @@ int const kMMEMaxRequestCount = 1000;
 
 // MARK: - Utilities
 
-- (NSError *)statusErrorFromRequest:(NSURLRequest *)request andHTTPResponse:(NSHTTPURLResponse *)httpResponse {
+- (NSError *)statusErrorFromRequest:(NSURLRequest *)request andHTTPResponse:(NSHTTPURLResponse *)httpResponse sessionError:(NSError *)error {
     NSError *statusError = nil;
+<<<<<<< HEAD
     if (httpResponse.statusCode >= 400) {
         NSString *descriptionFormat = @"The session data task failed. Original request was: %@";
         NSString *reasonFormat = @"The status code was %ld";
         NSString *description = [NSString stringWithFormat:descriptionFormat, request ?: [NSNull null]];
         NSString *reason = [NSString stringWithFormat:reasonFormat, (long)httpResponse.statusCode];
         NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
+=======
+    if (httpResponse.statusCode >= 400) { // all 4xx and 5xx errors should be reported
+        NSString *description = [NSString stringWithFormat:@"The session data task failed. Original request was: %@",
+            request ?: [NSNull null]];
+        NSString *reason = [NSString stringWithFormat:@"The status code was %ld", (long)httpResponse.statusCode];
+        NSMutableDictionary *userInfo = [NSMutableDictionary new];
+>>>>>>> Make error handling and reporting more consistent for all the network calls
         [userInfo setValue:description forKey:NSLocalizedDescriptionKey];
         [userInfo setValue:reason forKey:NSLocalizedFailureReasonErrorKey];
         [userInfo setValue:httpResponse forKey:MMEResponseKey];
+        if (error) { // record the session error as the underlying error
+            [userInfo setValue:error forKey:NSUnderlyingErrorKey];
+        }
         
         statusError = [NSError errorWithDomain:MMEErrorDomain code:MMESessionFailedError userInfo:userInfo];
     }
     return statusError;
 }
 
+<<<<<<< HEAD
 - (NSError *)unexpectedResponseErrorFromRequest:(nonnull NSURLRequest *)request andResponse:(NSURLResponse *)response {
     NSString *descriptionFormat = @"The session data task failed. Original request was: %@";
     NSString *description = [NSString stringWithFormat:descriptionFormat, request ?: [NSNull null]];
@@ -255,10 +291,12 @@ int const kMMEMaxRequestCount = 1000;
     return statusError;
 }
 
+=======
+>>>>>>> Make error handling and reporting more consistent for all the network calls
 - (NSURLRequest *)requestForConfiguration {
     NSString *path = [NSString stringWithFormat:@"%@?access_token=%@", MMEAPIClientEventsConfigPath, NSUserDefaults.mme_configuration.mme_accessToken];
     NSURL *configServiceURL = [NSURL URLWithString:path relativeToURL:NSUserDefaults.mme_configuration.mme_configServiceURL];
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:configServiceURL];
+    NSMutableURLRequest *request = [NSMutableURLRequest.alloc initWithURL:configServiceURL];
     
     [request setValue:NSUserDefaults.mme_configuration.mme_userAgentString forHTTPHeaderField:MMEAPIClientHeaderFieldUserAgentKey];
     [request setValue:MMEAPIClientHeaderFieldContentTypeValue forHTTPHeaderField:MMEAPIClientHeaderFieldContentTypeKey];
@@ -271,7 +309,7 @@ int const kMMEMaxRequestCount = 1000;
     NSString *path = [NSString stringWithFormat:@"%@?access_token=%@", MMEAPIClientAttachmentsPath, NSUserDefaults.mme_configuration.mme_accessToken];
     
     NSURL *url = [NSURL URLWithString:path relativeToURL:NSUserDefaults.mme_configuration.mme_eventsServiceURL];
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+    NSMutableURLRequest *request = [NSMutableURLRequest.alloc initWithURL:url];
     
     NSString *contentType = [NSString stringWithFormat:@"%@; boundary=\"%@\"",MMEAPIClientAttachmentsHeaderFieldContentTypeValue,boundary];
     
