@@ -148,16 +148,13 @@ int const kMMEMaxRequestCount = 1000;
                 NSURLRequest *request = [self requestForConfiguration];
                 
                 [self.sessionWrapper processRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-                    [MMEMetricsManager.sharedManager updateReceivedBytes:data.length];
-                    NSHTTPURLResponse *httpResponse = nil;
-                    NSError *statusError = nil;
-                    if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
-                        httpResponse = (NSHTTPURLResponse *)response;
-                        statusError = [self statusErrorFromRequest:request andHTTPResponse:httpResponse];
-                    } else {
-                        statusError = [self unexpectedResponseErrorFromRequest:request andResponse:response];
+
+                    // first, check the session error and report it
+                    if (error) {
+                        [MMEEventsManager.sharedManager reportError:error];
                     }
                     
+<<<<<<< HEAD
                     if (statusError) {
                         [MMEEventsManager.sharedManager reportError:statusError];
                     }
@@ -165,19 +162,39 @@ int const kMMEMaxRequestCount = 1000;
                         NSError *configError = [NSUserDefaults.mme_configuration mme_updateFromConfigServiceData:data];
                         if (configError) {
                             [MMEEventsManager.sharedManager reportError:configError];
+=======
+                    // check the response object for HTTP error code, update the local clock offset
+                    if (response && [response isKindOfClass:NSHTTPURLResponse.class]) {
+                        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+                        NSError *statusError = [self statusErrorFromRequest:request andHTTPResponse:httpResponse];
+
+                        if (!statusError) {
+                            // check for time-offset from the server
+                            NSString *dateHeader = httpResponse.allHeaderFields[@"Date"];
+                            if (dateHeader) {
+                                // parse the server date, compute the offset
+                                NSDate *date = [MMEDate.HTTPDateFormatter dateFromString:dateHeader];
+                                if (date) {
+                                    [MMEDate recordTimeOffsetFromServer:date];
+                                } // else failed to parse date
+                            }
+
+                            // check the data object, log the Rx bytes and try to load the config
+                            if (data) {
+                                [MMEMetricsManager.sharedManager updateReceivedBytes:data.length];
+
+                                NSError *configError = [NSUserDefaults.mme_configuration mme_updateFromConfigServiceData:(NSData * _Nonnull)data];
+                                if (configError) {
+                                    [MMEEventsManager.sharedManager reportError:configError];
+                                }
+                                
+                                NSUserDefaults.mme_configuration.mme_configUpdateDate = MMEDate.date;
+                            }
+>>>>>>> Check for and report errors from the session wrapper
                         }
-                        
-                        // check for time-offset from the server
-                        NSString *dateHeader = httpResponse.allHeaderFields[@"Date"];
-                        if (dateHeader) {
-                            // parse the server date, compute the offset
-                            NSDate *date = [MMEDate.HTTPDateFormatter dateFromString:dateHeader];
-                            if (date) {
-                                [MMEDate recordTimeOffsetFromServer:date];
-                            } // else failed to parse date
+                        else {
+                            [MMEEventsManager.sharedManager reportError:statusError];
                         }
-                        
-                        NSUserDefaults.mme_configuration.mme_configUpdateDate = MMEDate.date;
                     }
 
                     [MMEMetricsManager.sharedManager updateMetricsFromEventCount:0 request:request error:error];
