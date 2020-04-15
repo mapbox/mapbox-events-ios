@@ -2,10 +2,10 @@
 
 @implementation MMELocationManagerFake
 
-@synthesize allowsBackgroundLocationUpdates;
-@synthesize desiredAccuracy;
-@synthesize distanceFilter;
-@synthesize monitoredRegions;
+//@synthesize allowsBackgroundLocationUpdates;
+//@synthesize desiredAccuracy;
+//@synthesize distanceFilter;
+//@synthesize monitoredRegions;
 
 - (void)startUpdatingLocation {
     [self store:_cmd args:nil];
