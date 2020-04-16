@@ -11,6 +11,7 @@ NSString * const MMEApplicationStateForeground = @"Foreground";
 NSString * const MMEApplicationStateBackground = @"Background";
 NSString * const MMEApplicationStateInactive = @"Inactive";
 NSString * const MMEApplicationStateUnknown = @"Unknown";
+NSString * const MMEApplicationStateExtension = @"Extension";
 
 @implementation MMECommonEventData
 
@@ -74,7 +75,7 @@ NSString * const MMEApplicationStateUnknown = @"Unknown";
 #if TARGET_OS_IOS || TARGET_OS_TVOS
 
     if (NSBundle.mme_isExtension) {
-        return MMEApplicationStateUnknown;
+        return MMEApplicationStateExtension;
     } else {
         switch (UIApplication.sharedApplication.applicationState) {
             case UIApplicationStateActive:
