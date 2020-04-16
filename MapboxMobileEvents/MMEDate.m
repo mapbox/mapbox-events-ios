@@ -55,6 +55,8 @@ static NSTimeInterval _timeOffsetFromServer = 0.0; // TODO maintain a list of MM
     if (!_httpDateFormatter) {
         _httpDateFormatter = [[NSDateFormatter alloc] init];
         [_httpDateFormatter setDateFormat:@"E, d MMM yyyy HH:mm:ss Z"];
+        [_httpDateFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
+
     }
 
     return _httpDateFormatter;
