@@ -580,6 +580,13 @@ NS_ASSUME_NONNULL_BEGIN
             MMEEventKeyCourse: @([location mme_roundedCourse])
         }];
         
+        if (@available(iOS 13.4, *)) {
+            [eventAttributes addEntriesFromDictionary:@{
+                MMEEventKeySpeedAccuracy: @([location speedAccuracy]),
+                MMEEventKeyCourseAccuracy: @([location courseAccuracy])
+            }];
+        }
+        
         if ([location floor]) {
             [eventAttributes setValue:@([location floor].level) forKey:MMEEventKeyFloor];
         }
@@ -626,7 +633,7 @@ NS_ASSUME_NONNULL_BEGIN
         MMEEventKeyArrivalDate: [MMEDate.iso8601DateFormatter stringFromDate:visit.arrivalDate],
         MMEEventKeyDepartureDate: [MMEDate.iso8601DateFormatter stringFromDate:visit.departureDate]
     }];
-    
+
     if ([location floor]) {
         [eventAttributes setValue:@([location floor].level) forKey:MMEEventKeyFloor];
     }
