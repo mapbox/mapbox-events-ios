@@ -203,6 +203,9 @@
 		CF93A6582241EDD500BBA199 /* MMECertPin.m in Sources */ = {isa = PBXBuildFile; fileRef = CF93A6562241EDD500BBA199 /* MMECertPin.m */; };
 		CF93A6592241EDD500BBA199 /* MMECertPin.m in Sources */ = {isa = PBXBuildFile; fileRef = CF93A6562241EDD500BBA199 /* MMECertPin.m */; platformFilter = ios; };
 		CF93A65B2241EDD500BBA199 /* MMECertPin.h in Headers */ = {isa = PBXBuildFile; fileRef = CF93A6572241EDD500BBA199 /* MMECertPin.h */; };
+		F4684FF42432A1610079B389 /* NSBundle+MMEMobileEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = F4684FF22432A1610079B389 /* NSBundle+MMEMobileEvents.h */; };
+		F4684FF52432A1610079B389 /* NSBundle+MMEMobileEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = F4684FF32432A1610079B389 /* NSBundle+MMEMobileEvents.m */; };
+		F4684FF62432A2770079B389 /* NSBundle+MMEMobileEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = F4684FF32432A1610079B389 /* NSBundle+MMEMobileEvents.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -454,6 +457,8 @@
 		CF93A6562241EDD500BBA199 /* MMECertPin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMECertPin.m; sourceTree = "<group>"; };
 		CF93A6572241EDD500BBA199 /* MMECertPin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMECertPin.h; sourceTree = "<group>"; };
 		CF93A66222488A4500BBA199 /* MMECertPinTests.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = MMECertPinTests.m; sourceTree = "<group>"; };
+		F4684FF22432A1610079B389 /* NSBundle+MMEMobileEvents.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSBundle+MMEMobileEvents.h"; sourceTree = "<group>"; };
+		F4684FF32432A1610079B389 /* NSBundle+MMEMobileEvents.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+MMEMobileEvents.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -617,6 +622,8 @@
 				AC1B091022137BB000DB56C8 /* CLLocationManager+MMEMobileEvents.m */,
 				409115331F16BCD200F4250B /* MMECategoryLoader.h */,
 				409115341F16BCD200F4250B /* MMECategoryLoader.m */,
+				F4684FF22432A1610079B389 /* NSBundle+MMEMobileEvents.h */,
+				F4684FF32432A1610079B389 /* NSBundle+MMEMobileEvents.m */,
 				40F133521F20051E007B4096 /* NSData+MMEGZIP.h */,
 				40F133511F20051E007B4096 /* NSData+MMEGZIP.m */,
 				9CF0003E2370D674009A2700 /* NSString+MMEVersions.h */,
@@ -801,6 +808,7 @@
 			files = (
 				9CDC34B8234FD35800852FF0 /* NSUserDefaults+MMEConfiguration.h in Headers */,
 				404807CA1EA186D8008A6D50 /* MapboxMobileEvents.h in Headers */,
+				F4684FF42432A1610079B389 /* NSBundle+MMEMobileEvents.h in Headers */,
 				40AE58561EA932DB0046B437 /* MMEConstants.h in Headers */,
 				40AE586D1EA95EDD0046B437 /* MMEEvent.h in Headers */,
 				40C9E27B1EA542BC00744FE7 /* MMEEventsManager.h in Headers */,
@@ -1138,6 +1146,7 @@
 				40F16C971F04514100DF338D /* MMEReachability.m in Sources */,
 				40FB437D1EFAFAE900EC5BC0 /* MMETimerManager.m in Sources */,
 				40AE58441EA6C86C0046B437 /* MMEUIApplicationWrapper.m in Sources */,
+				F4684FF52432A1610079B389 /* NSBundle+MMEMobileEvents.m in Sources */,
 				40AE585B1EA9373F0046B437 /* MMEUniqueIdentifier.m in Sources */,
 				40F133531F20051E007B4096 /* NSData+MMEGZIP.m in Sources */,
 				9C65A28C225D41F2006E3FED /* UIKit+MMEMobileEvents.m in Sources */,
@@ -1179,6 +1188,7 @@
 			files = (
 				AC1B091322137BB000DB56C8 /* CLLocationManager+MMEMobileEvents.m in Sources */,
 				409115371F16BCD200F4250B /* MMECategoryLoader.m in Sources */,
+				F4684FF62432A2770079B389 /* NSBundle+MMEMobileEvents.m in Sources */,
 				CF93A6592241EDD500BBA199 /* MMECertPin.m in Sources */,
 				4085965C1ED086D3003BD29D /* MMEConstants.m in Sources */,
 				40F16C831F02DA9F00DF338D /* MMEDate.m in Sources */,

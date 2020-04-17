@@ -5,6 +5,7 @@ extern NSString * const MMEApplicationStateForeground;
 extern NSString * const MMEApplicationStateBackground;
 extern NSString * const MMEApplicationStateInactive;
 extern NSString * const MMEApplicationStateUnknown;
+extern NSString * const MMEApplicationStateExtension;
 
 @interface MMECommonEventData : NSObject
 

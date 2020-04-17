@@ -82,3 +82,46 @@ void mme_linkUIKitCategories(){}
 }
 
 @end
+
+@implementation NSExtensionContext (MMEMobileEvents)
+
++ (NSInteger)mme_contentSizeScale {
+
+    NSInteger result = -9999;
+
+    if (@available(iOS 10, *)) {
+        NSString *sc = UIScreen.mainScreen.traitCollection.preferredContentSizeCategory;
+
+        if ([sc isEqualToString:UIContentSizeCategoryExtraSmall]) {
+            result = -3;
+        } else if ([sc isEqualToString:UIContentSizeCategorySmall]) {
+            result = -2;
+        } else if ([sc isEqualToString:UIContentSizeCategoryMedium]) {
+            result = -1;
+        } else if ([sc isEqualToString:UIContentSizeCategoryLarge]) {
+            result = 0;
+        } else if ([sc isEqualToString:UIContentSizeCategoryExtraLarge]) {
+            result = 1;
+        } else if ([sc isEqualToString:UIContentSizeCategoryExtraExtraLarge]) {
+            result = 2;
+        } else if ([sc isEqualToString:UIContentSizeCategoryExtraExtraExtraLarge]) {
+            result = 3;
+        } else if ([sc isEqualToString:UIContentSizeCategoryAccessibilityMedium]) {
+            result = -11;
+        } else if ([sc isEqualToString:UIContentSizeCategoryAccessibilityLarge]) {
+            result = 10;
+        } else if ([sc isEqualToString:UIContentSizeCategoryAccessibilityExtraLarge]) {
+            result = 11;
+        } else if ([sc isEqualToString:UIContentSizeCategoryAccessibilityExtraExtraLarge]) {
+            result = 12;
+        } else if ([sc isEqualToString:UIContentSizeCategoryAccessibilityExtraExtraExtraLarge]) {
+            result = 13;
+        }
+    } else {
+        // No-Op
+    }
+
+    return result;
+}
+
+@end
