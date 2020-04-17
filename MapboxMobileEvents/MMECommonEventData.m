@@ -3,6 +3,7 @@
 
 #if TARGET_OS_IOS || TARGET_OS_TVOS
 #import <UIKit/UIKit.h>
+#import "NSBundle+MMEMobileEvents.h"
 #endif
 #include <sys/sysctl.h>
 
@@ -10,6 +11,7 @@ NSString * const MMEApplicationStateForeground = @"Foreground";
 NSString * const MMEApplicationStateBackground = @"Background";
 NSString * const MMEApplicationStateInactive = @"Inactive";
 NSString * const MMEApplicationStateUnknown = @"Unknown";
+NSString * const MMEApplicationStateExtension = @"Extension";
 
 @implementation MMECommonEventData
 
@@ -71,16 +73,22 @@ NSString * const MMEApplicationStateUnknown = @"Unknown";
 
 + (NSString *)applicationState {
 #if TARGET_OS_IOS || TARGET_OS_TVOS
-    switch (UIApplication.sharedApplication.applicationState) {
-        case UIApplicationStateActive:
-            return MMEApplicationStateForeground;
-        case UIApplicationStateInactive:
-            return MMEApplicationStateInactive;
-        case UIApplicationStateBackground:
-            return MMEApplicationStateBackground;
-        default:
-            return MMEApplicationStateUnknown;
+
+    if (NSBundle.mme_isExtension) {
+        return MMEApplicationStateExtension;
+    } else {
+        switch (UIApplication.sharedApplication.applicationState) {
+            case UIApplicationStateActive:
+                return MMEApplicationStateForeground;
+            case UIApplicationStateInactive:
+                return MMEApplicationStateInactive;
+            case UIApplicationStateBackground:
+                return MMEApplicationStateBackground;
+            default:
+                return MMEApplicationStateUnknown;
+        }
     }
+
 #else
     return MMEApplicationStateUnknown;
 #endif

@@ -27,4 +27,10 @@ void mme_linkUIKitCategories();
 
 @end
 
+@interface NSExtensionContext (MMEMobileEvents)
+
++ (NSInteger)mme_contentSizeScale;
+
+@end
+
 NS_ASSUME_NONNULL_END
