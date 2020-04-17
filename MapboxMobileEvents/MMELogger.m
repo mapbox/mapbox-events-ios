@@ -48,7 +48,7 @@
 #if DEBUG
         self.level = MMELogInfo;
 #else
-        self.level = MMEogFatal;
+        self.level = MMELogFatal;
 #endif
         self.handler = nil;
     }

@@ -1,10 +1,4 @@
 OUTPUT_PATH = build
-PROJ_PATH = $(IOS_OUTPUT_PATH)/mbgl.xcodeproj
-CARTHAGE_PATH = Carthage
-
-.PHONY: name-header
-name-header:
-	./scripts/package.sh -h
 
 .PHONY: get-current-version
 get-current-version:
@@ -18,20 +12,9 @@ tag-version:
 create-static:
 	./scripts/package.sh -s
 
-.PHONY: clean-carthage
-clean-carthage:
-	rm -fr $(CARTHAGE_PATH)/*
-
-.PHONY: clean
-clean: clean-carthage
-	rm -fr $(OUTPUT_PATH)
-
 .PHONY: pod-lint
 pod-lint:
 	pod lib lint
-
-.PHONE: preflight-checks
-preflight-checks: pod-lint
 
 DOCS_DIR := docs
 DOCS_INDEX = $(DOCS_DIR)/index.html
@@ -39,6 +22,14 @@ DOCS_README = readme.md
 DOCS_LICENSE = LICENSE.md
 LOWDOWN_PATH = $(shell which lowdown)
 MARKDOWN_PATH = $(shell which multimarkdown)
+
+DEBUG_SCHEME ?= "MapboxMobileEvents"
+RELEASE_SCHEME ?= "MapboxMobileEvents (Release)"
+DEPRECATION_SCHEME ?= "MapboxMobileEvents (Deprecation)"
+BUILD_SCHEME ?= $(RELEASE_SCHEME)
+
+XCODEBUILD ?= xcodebuild
+DESTINATION ?= "name=Generic iOS Device"
 
 ifneq ($(LOWDOWN_PATH),)
 	MARKDOWN_TOOL = $(LOWDOWN_PATH)
@@ -68,3 +59,25 @@ docs: $(DOCS_DIR) headerdoc docindex
 .PHONY: list
 list:
 	@$(MAKE) -pRrq -f $(lastword $(MAKEFILE_LIST)) : 2>/dev/null | awk -v RS= -F: '/^# File/,/^# Finished Make data base/ {if ($$1 !~ "^[#.]") {print $$1}}' | sort | egrep -v -e '^[^[:alnum:]]' -e '^$@$$'
+
+# driver targets
+.PHONY: pod-lint
+prep: pod-lint
+
+.PHONY: build
+build:
+	$(XCODEBUILD) -scheme "$(BUILD_SCHEME)" build
+	
+.PHONY: test
+test:
+	$(XCODEBUILD) -scheme "$(BUILD_SCHEME)" test
+
+.PHONY: docs
+docs:
+
+.PHONY: pack
+pack:
+
+.PHONY: clean
+clean:
+	rm -fr $(OUTPUT_PATH)

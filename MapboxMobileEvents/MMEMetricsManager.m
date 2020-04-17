@@ -8,11 +8,8 @@
 #import "MMEAPIClient.h"
 #import "MMEAPIClient_Private.h"
 #import "NSUserDefaults+MMEConfiguration.h"
-<<<<<<< HEAD
 #import "MMELogger.h"
-=======
 #import "NSProcessInfo+SystemInfo.h"
->>>>>>> Fix tests, remove Cedar targets, remove Cartfiles
 
 // MARK: -
 

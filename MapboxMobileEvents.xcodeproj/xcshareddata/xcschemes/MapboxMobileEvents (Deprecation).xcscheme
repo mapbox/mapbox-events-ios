@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "9CA75369240EF2DD005C26C9"
-               BuildableName = "MapboxMobileEvents (Deprecation).framework"
+               BuildableName = "MapboxMobileEvents.framework"
                BlueprintName = "MapboxMobileEvents (Deprecation)"
                ReferencedContainer = "container:MapboxMobileEvents.xcodeproj">
             </BuildableReference>
@@ -33,8 +33,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "404807C11EA186D8008A6D50"
-               BuildableName = "MMEXCTests.xctest"
-               BlueprintName = "MMEXCTests"
+               BuildableName = "MMETests.xctest"
+               BlueprintName = "MMETests"
                ReferencedContainer = "container:MapboxMobileEvents.xcodeproj">
             </BuildableReference>
          </TestableReference>
@@ -61,7 +61,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "9CA75369240EF2DD005C26C9"
-            BuildableName = "MapboxMobileEvents (Deprecation).framework"
+            BuildableName = "MapboxMobileEvents.framework"
             BlueprintName = "MapboxMobileEvents (Deprecation)"
             ReferencedContainer = "container:MapboxMobileEvents.xcodeproj">
          </BuildableReference>

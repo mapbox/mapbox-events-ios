@@ -1,11 +1,6 @@
-<<<<<<< HEAD
-#import <Foundation/Foundation.h>
-#import "MMETypes.h"
-=======
 @import Foundation;
 
 #import <MapboxMobileEvents/MMETypes.h>
->>>>>>> Fix tests, remove Cedar targets, remove Cartfiles
 
 NS_ASSUME_NONNULL_BEGIN
 

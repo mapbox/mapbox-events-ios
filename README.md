@@ -87,7 +87,6 @@ cd $PROJECT_DIR
 carthage bootstrap
 ```
 
-<<<<<<< HEAD:readme.md
 ### 🔎Enable debug logging within your app.
 
 **Pre-v1.0**
@@ -105,8 +104,6 @@ Nav SDK: To enable debug logs in your console set `MBNavigationMetricsDebugLoggi
 3. Watch console for logs
 <img width="777" alt="Screen Shot 2020-02-07 at 5 10 26 PM" src="https://user-images.githubusercontent.com/10932745/74076691-afd0aa80-49ce-11ea-9d9f-1a8219852b7a.png">
 
-=======
 ### 📑 License
 
 Mapbox Mobile Events is an open source project, released under a [two clause BSD Style License](LICENSE.md).
->>>>>>> Mapbox Mobile Events 1.0-beta1:README.md

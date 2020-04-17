@@ -165,26 +165,7 @@ int const kMMEMaxRequestCount = 1000;
                 NSURLRequest *request = [self requestForConfiguration];
                 
                 [self.sessionWrapper processRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-<<<<<<< HEAD
-
-                    // first, check the session error and report it
-                    if (error) {
-                        [MMEEventsManager.sharedManager reportError:error];
-                    }
-                    
-<<<<<<< HEAD
-                    if (statusError) {
-                        [MMEEventsManager.sharedManager reportError:statusError];
-                    }
-                    else if (data) {
-                        NSError *configError = [NSUserDefaults.mme_configuration mme_updateFromConfigServiceData:data];
-                        if (configError) {
-                            [MMEEventsManager.sharedManager reportError:configError];
-=======
                     // check the response object for HTTP error code, update the local clock offset
-=======
-                    // check the response object for HTTP error code
->>>>>>> Make error handling and reporting more consistent for all the network calls
                     if (response && [response isKindOfClass:NSHTTPURLResponse.class]) {
                         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
                         NSError *statusError = [self statusErrorFromRequest:request andHTTPResponse:httpResponse sessionError:error];
@@ -211,7 +192,6 @@ int const kMMEMaxRequestCount = 1000;
                                 
                                 NSUserDefaults.mme_configuration.mme_configUpdateDate = MMEDate.date;
                             }
->>>>>>> Check for and report errors from the session wrapper
                         }
                         else {
                             [MMEEventsManager.sharedManager reportError:statusError];
@@ -251,20 +231,11 @@ int const kMMEMaxRequestCount = 1000;
 
 - (NSError *)statusErrorFromRequest:(NSURLRequest *)request andHTTPResponse:(NSHTTPURLResponse *)httpResponse sessionError:(NSError *)error {
     NSError *statusError = nil;
-<<<<<<< HEAD
-    if (httpResponse.statusCode >= 400) {
-        NSString *descriptionFormat = @"The session data task failed. Original request was: %@";
-        NSString *reasonFormat = @"The status code was %ld";
-        NSString *description = [NSString stringWithFormat:descriptionFormat, request ?: [NSNull null]];
-        NSString *reason = [NSString stringWithFormat:reasonFormat, (long)httpResponse.statusCode];
-        NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
-=======
     if (httpResponse.statusCode >= 400) { // all 4xx and 5xx errors should be reported
         NSString *description = [NSString stringWithFormat:@"The session data task failed. Original request was: %@",
             request ?: [NSNull null]];
         NSString *reason = [NSString stringWithFormat:@"The status code was %ld", (long)httpResponse.statusCode];
         NSMutableDictionary *userInfo = [NSMutableDictionary new];
->>>>>>> Make error handling and reporting more consistent for all the network calls
         [userInfo setValue:description forKey:NSLocalizedDescriptionKey];
         [userInfo setValue:reason forKey:NSLocalizedFailureReasonErrorKey];
         [userInfo setValue:httpResponse forKey:MMEResponseKey];
@@ -277,22 +248,6 @@ int const kMMEMaxRequestCount = 1000;
     return statusError;
 }
 
-<<<<<<< HEAD
-- (NSError *)unexpectedResponseErrorFromRequest:(nonnull NSURLRequest *)request andResponse:(NSURLResponse *)response {
-    NSString *descriptionFormat = @"The session data task failed. Original request was: %@";
-    NSString *description = [NSString stringWithFormat:descriptionFormat, request ?: [NSNull null]];
-    NSString *reason = @"Unexpected response";
-    NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
-    [userInfo setValue:description forKey:NSLocalizedDescriptionKey];
-    [userInfo setValue:reason forKey:NSLocalizedFailureReasonErrorKey];
-    [userInfo setValue:response forKey:MMEResponseKey];
-    
-    NSError *statusError = [NSError errorWithDomain:MMEErrorDomain code:MMEUnexpectedResponseError userInfo:userInfo];
-    return statusError;
-}
-
-=======
->>>>>>> Make error handling and reporting more consistent for all the network calls
 - (NSURLRequest *)requestForConfiguration {
     NSString *path = [NSString stringWithFormat:@"%@?access_token=%@", MMEAPIClientEventsConfigPath, NSUserDefaults.mme_configuration.mme_accessToken];
     NSURL *configServiceURL = [NSURL URLWithString:path relativeToURL:NSUserDefaults.mme_configuration.mme_configServiceURL];

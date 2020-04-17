@@ -42,12 +42,10 @@
 		408596601ED086DF003BD29D /* MMELocationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C9E27E1EA5473F00744FE7 /* MMELocationManager.m */; platformFilter = ios; };
 		408596641ED086EB003BD29D /* MMEUIApplicationWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AE58421EA6C86C0046B437 /* MMEUIApplicationWrapper.m */; platformFilter = ios; };
 		408596661ED086F1003BD29D /* MMEUniqueIdentifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AE58591EA9373F0046B437 /* MMEUniqueIdentifier.m */; platformFilter = ios; };
-		4085966A1ED08FA9003BD29D /* MapboxMobileEvents.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 404807BC1EA186D8008A6D50 /* MapboxMobileEvents.h */; };
-		408596D81ED0B1F6003BD29D /* MMEEvent.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 40AE586B1EA95EDD0046B437 /* MMEEvent.h */; };
-		408596D91ED0B1F6003BD29D /* MMEEventsManager.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 40C9E2791EA542BC00744FE7 /* MMEEventsManager.h */; };
-		408596DA1ED0BF35003BD29D /* MMEConstants.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 40AE58541EA932DB0046B437 /* MMEConstants.h */; };
-		409115351F16BCD200F4250B /* MMECategoryLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = 409115331F16BCD200F4250B /* MMECategoryLoader.h */; };
-		409115371F16BCD200F4250B /* MMECategoryLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 409115341F16BCD200F4250B /* MMECategoryLoader.m */; platformFilter = ios; };
+		4085966A1ED08FA9003BD29D /* MapboxMobileEvents.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = 404807BC1EA186D8008A6D50 /* MapboxMobileEvents.h */; };
+		408596D81ED0B1F6003BD29D /* MMEEvent.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = 40AE586B1EA95EDD0046B437 /* MMEEvent.h */; };
+		408596D91ED0B1F6003BD29D /* MMEEventsManager.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = 40C9E2791EA542BC00744FE7 /* MMEEventsManager.h */; };
+		408596DA1ED0BF35003BD29D /* MMEConstants.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = 40AE58541EA932DB0046B437 /* MMEConstants.h */; };
 		40AE58431EA6C86C0046B437 /* MMEUIApplicationWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 40AE58411EA6C86C0046B437 /* MMEUIApplicationWrapper.h */; };
 		40AE58441EA6C86C0046B437 /* MMEUIApplicationWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AE58421EA6C86C0046B437 /* MMEUIApplicationWrapper.m */; };
 		40AE584E1EA926710046B437 /* MMETypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 40AE584C1EA926710046B437 /* MMETypes.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -68,7 +66,7 @@
 		40F133551F200524007B4096 /* NSData+MMEGZIP.m in Sources */ = {isa = PBXBuildFile; fileRef = 40F133511F20051E007B4096 /* NSData+MMEGZIP.m */; platformFilter = ios; };
 		40F16C811F02DA9F00DF338D /* MMEDate.h in Headers */ = {isa = PBXBuildFile; fileRef = 40F16C7F1F02DA9F00DF338D /* MMEDate.h */; };
 		40F16C831F02DA9F00DF338D /* MMEDate.m in Sources */ = {isa = PBXBuildFile; fileRef = 40F16C801F02DA9F00DF338D /* MMEDate.m */; platformFilter = ios; };
-		40F16C901F042F2A00DF338D /* MMETypes.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 40AE584C1EA926710046B437 /* MMETypes.h */; };
+		40F16C901F042F2A00DF338D /* MMETypes.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = 40AE584C1EA926710046B437 /* MMETypes.h */; };
 		40F16C961F04514100DF338D /* MMEReachability.h in Headers */ = {isa = PBXBuildFile; fileRef = 40F16C941F04514100DF338D /* MMEReachability.h */; };
 		40F16C971F04514100DF338D /* MMEReachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 40F16C951F04514100DF338D /* MMEReachability.m */; };
 		40F16C981F04514100DF338D /* MMEReachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 40F16C951F04514100DF338D /* MMEReachability.m */; platformFilter = ios; };
@@ -102,12 +100,6 @@
 		9C65A28C225D41F2006E3FED /* UIKit+MMEMobileEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C65A28A225D41F2006E3FED /* UIKit+MMEMobileEvents.m */; };
 		9C65A28D225D41F2006E3FED /* UIKit+MMEMobileEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C65A28A225D41F2006E3FED /* UIKit+MMEMobileEvents.m */; platformFilter = ios; };
 		9C794C86235505340027B9D4 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C794C85235505340027B9D4 /* XCTest.framework */; platformFilter = ios; };
-<<<<<<< HEAD
-		9CA284FE23D248D40097BE53 /* MMEEvent+SystemInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 9CA284FC23D248D40097BE53 /* MMEEvent+SystemInfo.h */; };
-		9CA284FF23D248D40097BE53 /* MMEEvent+SystemInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CA284FD23D248D40097BE53 /* MMEEvent+SystemInfo.m */; };
-		9CA2850023D248D40097BE53 /* MMEEvent+SystemInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CA284FD23D248D40097BE53 /* MMEEvent+SystemInfo.m */; };
-		9CA7536B240EF2DD005C26C9 /* MMEEvent+SystemInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CA284FD23D248D40097BE53 /* MMEEvent+SystemInfo.m */; };
-=======
 		9C8E04902418954600D6C641 /* MMECrashTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C65A2C3227B971D006E3FED /* MMECrashTests.m */; };
 		9C8E0493241AD4D200D6C641 /* MMEAPIClientFake.m in Sources */ = {isa = PBXBuildFile; fileRef = 4036EFBA1ED36F06009C40BA /* MMEAPIClientFake.m */; };
 		9C8E0494241AD4D700D6C641 /* MMEBundleInfoFake.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CDC34BC234FD62A00852FF0 /* MMEBundleInfoFake.m */; };
@@ -125,7 +117,6 @@
 		9CA284FF23D248D40097BE53 /* NSProcessInfo+SystemInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CA284FD23D248D40097BE53 /* NSProcessInfo+SystemInfo.m */; };
 		9CA2850023D248D40097BE53 /* NSProcessInfo+SystemInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CA284FD23D248D40097BE53 /* NSProcessInfo+SystemInfo.m */; };
 		9CA7536B240EF2DD005C26C9 /* NSProcessInfo+SystemInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CA284FD23D248D40097BE53 /* NSProcessInfo+SystemInfo.m */; };
->>>>>>> Fix tests, remove Cedar targets, remove Cartfiles
 		9CA7536C240EF2DD005C26C9 /* MMEConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AE58551EA932DB0046B437 /* MMEConstants.m */; };
 		9CA7536D240EF2DD005C26C9 /* MMEUINavigation.m in Sources */ = {isa = PBXBuildFile; fileRef = ACE4F0191FD6102100035880 /* MMEUINavigation.m */; };
 		9CA7536E240EF2DD005C26C9 /* NSUserDefaults+MMEConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CDC34B7234FD35800852FF0 /* NSUserDefaults+MMEConfiguration.m */; };
@@ -135,7 +126,6 @@
 		9CA75372240EF2DD005C26C9 /* MMEDispatchManager.m in Sources */ = {isa = PBXBuildFile; fileRef = AC2C715D2112408A004179E0 /* MMEDispatchManager.m */; };
 		9CA75373240EF2DD005C26C9 /* MMEDate.m in Sources */ = {isa = PBXBuildFile; fileRef = 40F16C801F02DA9F00DF338D /* MMEDate.m */; };
 		9CA75374240EF2DD005C26C9 /* NSString+MMEVersions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CF0003D2370D674009A2700 /* NSString+MMEVersions.m */; };
-		9CA75375240EF2DD005C26C9 /* MMECategoryLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 409115341F16BCD200F4250B /* MMECategoryLoader.m */; };
 		9CA75376240EF2DD005C26C9 /* CLLocation+MMEMobileEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AE58681EA953970046B437 /* CLLocation+MMEMobileEvents.m */; };
 		9CA75377240EF2DD005C26C9 /* CLLocationManager+MMEMobileEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = AC1B091022137BB000DB56C8 /* CLLocationManager+MMEMobileEvents.m */; };
 		9CA75378240EF2DD005C26C9 /* MMEAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AE58701EAA87960046B437 /* MMEAPIClient.m */; };
@@ -164,7 +154,6 @@
 		9CA75391240EF2DD005C26C9 /* MMEUniqueIdentifier.h in Headers */ = {isa = PBXBuildFile; fileRef = 40AE58581EA9373F0046B437 /* MMEUniqueIdentifier.h */; };
 		9CA75392240EF2DD005C26C9 /* NSString+MMEVersions.h in Headers */ = {isa = PBXBuildFile; fileRef = 9CF0003E2370D674009A2700 /* NSString+MMEVersions.h */; };
 		9CA75393240EF2DD005C26C9 /* CLLocationManager+MMEMobileEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = AC1B090F22137BB000DB56C8 /* CLLocationManager+MMEMobileEvents.h */; };
-		9CA75394240EF2DD005C26C9 /* MMECategoryLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = 409115331F16BCD200F4250B /* MMECategoryLoader.h */; };
 		9CA75395240EF2DD005C26C9 /* MMEMetrics.h in Headers */ = {isa = PBXBuildFile; fileRef = AC61FA5A217A04CC008519F5 /* MMEMetrics.h */; };
 		9CA75396240EF2DD005C26C9 /* MMEDispatchManager.h in Headers */ = {isa = PBXBuildFile; fileRef = AC2C715C21124089004179E0 /* MMEDispatchManager.h */; };
 		9CA75397240EF2DD005C26C9 /* MMECertPin.h in Headers */ = {isa = PBXBuildFile; fileRef = CF93A6572241EDD500BBA199 /* MMECertPin.h */; };
@@ -181,40 +170,10 @@
 		9CA753A2240EF2DD005C26C9 /* MMEAPIClient_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 9C3F930A2351180A00F99907 /* MMEAPIClient_Private.h */; };
 		9CA753AB241027E6005C26C9 /* MMELoggerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CA753AA241027E6005C26C9 /* MMELoggerTests.m */; };
 		9CDC34B8234FD35800852FF0 /* NSUserDefaults+MMEConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = 9CDC34B6234FD35800852FF0 /* NSUserDefaults+MMEConfiguration.h */; settings = {ATTRIBUTES = (Public, ); }; };
-<<<<<<< HEAD
-		9CDC34BB234FD36E00852FF0 /* NSUserDefaults+MMEConfigurationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CDC34BA234FD36E00852FF0 /* NSUserDefaults+MMEConfigurationTests.m */; platformFilter = ios; };
-		9CDC34BE234FD62A00852FF0 /* MMEBundleInfoFake.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CDC34BC234FD62A00852FF0 /* MMEBundleInfoFake.m */; platformFilter = ios; };
-		9CDC34C923502F8700852FF0 /* MMEUniqueIdentifierFake.m in Sources */ = {isa = PBXBuildFile; fileRef = 40031E5D1EFC5CA1009EAB33 /* MMEUniqueIdentifierFake.m */; platformFilter = ios; };
-		9CDC34CA23502F8700852FF0 /* MMELocationManagerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = ACB6F21D1F7BF71B0032A916 /* MMELocationManagerTests.mm */; platformFilter = ios; };
-		9CDC34CC23502F8700852FF0 /* MMEMetricsManagerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = AC61FA08216BE7A0008519F5 /* MMEMetricsManagerTests.mm */; platformFilter = ios; };
-		9CDC34CD23502F8700852FF0 /* MMEUIApplicationWrapperFake.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AE58461EA6C9F10046B437 /* MMEUIApplicationWrapperFake.m */; platformFilter = ios; };
-		9CDC34CE23502F8700852FF0 /* MMEDateTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 403834FE1F7AC55D004205B9 /* MMEDateTests.mm */; platformFilter = ios; };
-		9CDC34CF23502F8700852FF0 /* MMEDateFakes.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C65A2902267AF34006E3FED /* MMEDateFakes.m */; platformFilter = ios; };
-		9CDC34D223502F8700852FF0 /* MMEBundleInfoFake.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CDC34BC234FD62A00852FF0 /* MMEBundleInfoFake.m */; platformFilter = ios; };
-		9CDC34D423502F8700852FF0 /* MMEAPIClientFake.m in Sources */ = {isa = PBXBuildFile; fileRef = 4036EFBA1ED36F06009C40BA /* MMEAPIClientFake.m */; platformFilter = ios; };
-		9CDC34D623502F8700852FF0 /* MMEDispatchManagerFake.m in Sources */ = {isa = PBXBuildFile; fileRef = ACA65F392135C67E00537748 /* MMEDispatchManagerFake.m */; platformFilter = ios; };
-		9CDC34D823502F8700852FF0 /* MMEEventsManagerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4002E6351F83155E0090D724 /* MMEEventsManagerTests.mm */; platformFilter = ios; };
-		9CDC34DA23502F8700852FF0 /* MMEEventTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9C6D98A322371DA400679292 /* MMEEventTests.mm */; platformFilter = ios; };
-		9CDC34DB23502F8700852FF0 /* MMEEventFake.m in Sources */ = {isa = PBXBuildFile; fileRef = AC956E0D23072F6700AC3D5B /* MMEEventFake.m */; platformFilter = ios; };
-		9CDC34DC23502F8700852FF0 /* MMELocationManagerFake.m in Sources */ = {isa = PBXBuildFile; fileRef = 40F16C7D1F01DF5700DF338D /* MMELocationManagerFake.m */; platformFilter = ios; };
-		9CDC34DD23502F8700852FF0 /* MMECrashTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9C65A2C3227B971D006E3FED /* MMECrashTests.mm */; platformFilter = ios; };
-		9CDC34DE23502F8700852FF0 /* MMENSURLSessionWrapperFake.m in Sources */ = {isa = PBXBuildFile; fileRef = 405172E41EB13C6D00F8CDA1 /* MMENSURLSessionWrapperFake.m */; platformFilter = ios; };
-		9CDC34E023502F8700852FF0 /* MMEAPIClientTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = ACD86D9F1F96A77700DD2A8D /* MMEAPIClientTests.mm */; platformFilter = ios; };
-		9CDC34E123502F8700852FF0 /* MMEDependencyManagerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 403835051F7AF860004205B9 /* MMEDependencyManagerTests.mm */; platformFilter = ios; };
-		9CDC34E323502F8700852FF0 /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 404807B91EA186D8008A6D50 /* MapboxMobileEvents.framework */; platformFilter = ios; };
-		9CDC34E423502F8700852FF0 /* Cedar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40A7F9911F79A743002B931F /* Cedar.framework */; platformFilter = ios; };
-		9CE132C42358EC25005E23F1 /* config-long-ago.json in Resources */ = {isa = PBXBuildFile; fileRef = 9CE132C32358EC25005E23F1 /* config-long-ago.json */; };
-		9CE132C5235926B3005E23F1 /* MMECertPinTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CF93A66222488A4500BBA199 /* MMECertPinTests.m */; };
-		9CE132C72359296B005E23F1 /* config-crl.json in Resources */ = {isa = PBXBuildFile; fileRef = 9CE132C62359296A005E23F1 /* config-crl.json */; };
-		9CE132CC235A7F8B005E23F1 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C794C85235505340027B9D4 /* XCTest.framework */; };
-		9CF00039236FDD67009A2700 /* Cedar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40A7F9911F79A743002B931F /* Cedar.framework */; };
-		9CF0003A236FDD6D009A2700 /* Cedar.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 40A7F9911F79A743002B931F /* Cedar.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-=======
 		9CDC34BB234FD36E00852FF0 /* NSUserDefaults+MMEConfigurationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CDC34BA234FD36E00852FF0 /* NSUserDefaults+MMEConfigurationTests.m */; };
 		9CE132C42358EC25005E23F1 /* config-long-ago.json in Resources */ = {isa = PBXBuildFile; fileRef = 9CE132C32358EC25005E23F1 /* config-long-ago.json */; };
 		9CE132C5235926B3005E23F1 /* MMECertPinTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CF93A66222488A4500BBA199 /* MMECertPinTests.m */; };
 		9CE132C72359296B005E23F1 /* config-crl.json in Resources */ = {isa = PBXBuildFile; fileRef = 9CE132C62359296A005E23F1 /* config-crl.json */; };
->>>>>>> Fix tests, remove Cedar targets, remove Cartfiles
 		9CF000402370D674009A2700 /* NSString+MMEVersions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CF0003D2370D674009A2700 /* NSString+MMEVersions.m */; };
 		9CF000412370D674009A2700 /* NSString+MMEVersions.h in Headers */ = {isa = PBXBuildFile; fileRef = 9CF0003E2370D674009A2700 /* NSString+MMEVersions.h */; };
 		9CF000432370D7B2009A2700 /* NSString+MMEVersions_Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CF000422370D7B2009A2700 /* NSString+MMEVersions_Tests.m */; };
@@ -241,13 +200,6 @@
 		9CF0005F2371037E009A2700 /* config-number-tag.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933A23512FD300F99907 /* config-number-tag.json */; };
 		9CF000602371037E009A2700 /* config-type1-tto.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933923512FD300F99907 /* config-type1-tto.json */; };
 		9CF000612371037E009A2700 /* config-100m-gfo.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F934023512FD300F99907 /* config-100m-gfo.json */; };
-<<<<<<< HEAD
-		9CF000642371037E009A2700 /* Cedar.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 40A7F9911F79A743002B931F /* Cedar.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		AC03B2C423A851160043271D /* MMEUniqueIdentifierFake.m in Sources */ = {isa = PBXBuildFile; fileRef = 40031E5D1EFC5CA1009EAB33 /* MMEUniqueIdentifierFake.m */; };
-		AC03B2C523A851410043271D /* MMEUIApplicationWrapperFake.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AE58461EA6C9F10046B437 /* MMEUIApplicationWrapperFake.m */; };
-		AC03B2C623AB05F00043271D /* MMENSURLSessionWrapperFake.m in Sources */ = {isa = PBXBuildFile; fileRef = 405172E41EB13C6D00F8CDA1 /* MMENSURLSessionWrapperFake.m */; };
-=======
->>>>>>> Fix tests, remove Cedar targets, remove Cartfiles
 		AC03B2C823AC477A0043271D /* MMEMetricsManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AC03B2C723AC477A0043271D /* MMEMetricsManagerTests.m */; };
 		AC03B2CA23AD55A10043271D /* MMEEventTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AC03B2C923AD55A10043271D /* MMEEventTests.m */; };
 		AC03B2F423B1A74B0043271D /* MMEDateTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AC03B2F323B1A74B0043271D /* MMEDateTests.m */; };
@@ -263,7 +215,6 @@
 		AC86FE1D2169250000D1B89C /* MMEMetricsManager.h in Headers */ = {isa = PBXBuildFile; fileRef = AC86FE1B2169250000D1B89C /* MMEMetricsManager.h */; };
 		ACAF8D27238DDED20033745A /* MMEAPIClientTests.m in Sources */ = {isa = PBXBuildFile; fileRef = ACAF8D26238DDED20033745A /* MMEAPIClientTests.m */; };
 		ACAF8D28238DEE980033745A /* NSString+MMEVersions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CF0003D2370D674009A2700 /* NSString+MMEVersions.m */; };
-		ACAF8D29238DEEC60033745A /* MMECategoryLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 409115341F16BCD200F4250B /* MMECategoryLoader.m */; };
 		ACAF8D2A238DEF270033745A /* MMEConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AE58551EA932DB0046B437 /* MMEConstants.m */; };
 		ACAF8D2B238DEF5C0033745A /* MMEDate.m in Sources */ = {isa = PBXBuildFile; fileRef = 40F16C801F02DA9F00DF338D /* MMEDate.m */; };
 		ACAF8D2C238DEF720033745A /* MMEDispatchManager.m in Sources */ = {isa = PBXBuildFile; fileRef = AC2C715D2112408A004179E0 /* MMEDispatchManager.m */; };
@@ -274,7 +225,7 @@
 		ACAF8D31238DF00D0033745A /* NSUserDefaults+MMEConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CDC34B7234FD35800852FF0 /* NSUserDefaults+MMEConfiguration.m */; };
 		ACBD2E5923709F920082F037 /* MMEEventsManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = ACBD2E5823709F920082F037 /* MMEEventsManagerTests.m */; };
 		ACE4F01A1FD6102100035880 /* MMEUINavigation.h in Headers */ = {isa = PBXBuildFile; fileRef = ACE4F0181FD6102100035880 /* MMEUINavigation.h */; };
-		CA0FAA2C237C80C000C9F3C9 /* NSUserDefaults+MMEConfiguration.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9CDC34B6234FD35800852FF0 /* NSUserDefaults+MMEConfiguration.h */; };
+		CA0FAA2C237C80C000C9F3C9 /* NSUserDefaults+MMEConfiguration.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = 9CDC34B6234FD35800852FF0 /* NSUserDefaults+MMEConfiguration.h */; };
 		CF93A6582241EDD500BBA199 /* MMECertPin.m in Sources */ = {isa = PBXBuildFile; fileRef = CF93A6562241EDD500BBA199 /* MMECertPin.m */; };
 		CF93A6592241EDD500BBA199 /* MMECertPin.m in Sources */ = {isa = PBXBuildFile; fileRef = CF93A6562241EDD500BBA199 /* MMECertPin.m */; platformFilter = ios; };
 		CF93A65B2241EDD500BBA199 /* MMECertPin.h in Headers */ = {isa = PBXBuildFile; fileRef = CF93A6572241EDD500BBA199 /* MMECertPin.h */; };
@@ -291,23 +242,6 @@
 			remoteGlobalIDString = 9C65A2652256C110006E3FED;
 			remoteInfo = MMETestHost;
 		};
-<<<<<<< HEAD
-		9C16238E23577E17005DB983 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 404807B01EA186D8008A6D50 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 9C65A2652256C110006E3FED;
-			remoteInfo = MMETestHost;
-		};
-		9C16239023577E66005DB983 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 404807B01EA186D8008A6D50 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 404807B81EA186D8008A6D50;
-			remoteInfo = MapboxMobileEvents;
-		};
-=======
->>>>>>> Fix tests, remove Cedar targets, remove Cartfiles
 		9C63226A221377C900653792 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 404807B01EA186D8008A6D50 /* Project object */;
@@ -321,20 +255,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 408596521ED084C0003BD29D;
 			remoteInfo = MapboxMobileEventsStatic;
-		};
-		9CF0006A23710389009A2700 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 404807B01EA186D8008A6D50 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 408596521ED084C0003BD29D;
-			remoteInfo = libMapboxMobileEvents;
-		};
-		AC881B1423FDEDBF00E614B7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 404807B01EA186D8008A6D50 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 404807B81EA186D8008A6D50;
-			remoteInfo = MapboxMobileEvents;
 		};
 		9C8E04A0241BF6E900D6C641 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -364,22 +284,37 @@
 			remoteGlobalIDString = 404807C11EA186D8008A6D50;
 			remoteInfo = MMETests;
 		};
+		9CF0006A23710389009A2700 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 404807B01EA186D8008A6D50 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 408596521ED084C0003BD29D;
+			remoteInfo = libMapboxMobileEvents;
+		};
+		AC881B1423FDEDBF00E614B7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 404807B01EA186D8008A6D50 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 404807B81EA186D8008A6D50;
+			remoteInfo = MapboxMobileEvents;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		408596511ED084C0003BD29D /* CopyFiles */ = {
+		408596511ED084C0003BD29D /* Copy Headers */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = include/MapboxMobileEvents;
 			dstSubfolderSpec = 16;
 			files = (
-				CA0FAA2C237C80C000C9F3C9 /* NSUserDefaults+MMEConfiguration.h in CopyFiles */,
-				4085966A1ED08FA9003BD29D /* MapboxMobileEvents.h in CopyFiles */,
-				408596DA1ED0BF35003BD29D /* MMEConstants.h in CopyFiles */,
-				408596D81ED0B1F6003BD29D /* MMEEvent.h in CopyFiles */,
-				408596D91ED0B1F6003BD29D /* MMEEventsManager.h in CopyFiles */,
-				40F16C901F042F2A00DF338D /* MMETypes.h in CopyFiles */,
+				CA0FAA2C237C80C000C9F3C9 /* NSUserDefaults+MMEConfiguration.h in Copy Headers */,
+				4085966A1ED08FA9003BD29D /* MapboxMobileEvents.h in Copy Headers */,
+				408596DA1ED0BF35003BD29D /* MMEConstants.h in Copy Headers */,
+				408596D81ED0B1F6003BD29D /* MMEEvent.h in Copy Headers */,
+				408596D91ED0B1F6003BD29D /* MMEEventsManager.h in Copy Headers */,
+				40F16C901F042F2A00DF338D /* MMETypes.h in Copy Headers */,
 			);
+			name = "Copy Headers";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		9C65A2832256C1CF006E3FED /* Embed Frameworks */ = {
@@ -389,7 +324,6 @@
 			dstSubfolderSpec = 10;
 			files = (
 				9C65A2802256C1CF006E3FED /* MapboxMobileEvents.framework in Embed Frameworks */,
-				9CF0003A236FDD6D009A2700 /* Cedar.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -400,7 +334,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				9CF000642371037E009A2700 /* Cedar.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -428,8 +361,6 @@
 		405172E31EB13C6D00F8CDA1 /* MMENSURLSessionWrapperFake.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMENSURLSessionWrapperFake.h; sourceTree = "<group>"; };
 		405172E41EB13C6D00F8CDA1 /* MMENSURLSessionWrapperFake.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMENSURLSessionWrapperFake.m; sourceTree = "<group>"; };
 		408596531ED084C0003BD29D /* libMapboxMobileEvents.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libMapboxMobileEvents.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		409115331F16BCD200F4250B /* MMECategoryLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMECategoryLoader.h; sourceTree = "<group>"; };
-		409115341F16BCD200F4250B /* MMECategoryLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMECategoryLoader.m; sourceTree = "<group>"; };
 		40A7F9911F79A743002B931F /* Cedar.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cedar.framework; path = Carthage/Build/iOS/Cedar.framework; sourceTree = "<group>"; };
 		40AE58411EA6C86C0046B437 /* MMEUIApplicationWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEUIApplicationWrapper.h; sourceTree = "<group>"; };
 		40AE58421EA6C86C0046B437 /* MMEUIApplicationWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEUIApplicationWrapper.m; sourceTree = "<group>"; };
@@ -505,14 +436,9 @@
 		9C6D9883221F37FA00679292 /* package.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = package.json; sourceTree = "<group>"; };
 		9C6D9884221F37FA00679292 /* codecov.yml */ = {isa = PBXFileReference; lastKnownFileType = text; path = codecov.yml; sourceTree = "<group>"; };
 		9C794C85235505340027B9D4 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-<<<<<<< HEAD
-		9CA284FC23D248D40097BE53 /* MMEEvent+SystemInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MMEEvent+SystemInfo.h"; sourceTree = "<group>"; };
-		9CA284FD23D248D40097BE53 /* MMEEvent+SystemInfo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "MMEEvent+SystemInfo.m"; sourceTree = "<group>"; };
-=======
 		9C8E049F241BF5A800D6C641 /* MapboxMobileEvents (All Targets).xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; name = "MapboxMobileEvents (All Targets).xctestplan"; path = "Plans/MapboxMobileEvents (All Targets).xctestplan"; sourceTree = "<group>"; };
 		9CA284FC23D248D40097BE53 /* NSProcessInfo+SystemInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSProcessInfo+SystemInfo.h"; sourceTree = "<group>"; };
 		9CA284FD23D248D40097BE53 /* NSProcessInfo+SystemInfo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSProcessInfo+SystemInfo.m"; sourceTree = "<group>"; };
->>>>>>> Fix tests, remove Cedar targets, remove Cartfiles
 		9CA753A8240EF2DD005C26C9 /* MapboxMobileEvents.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MapboxMobileEvents.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9CA753AA241027E6005C26C9 /* MMELoggerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMELoggerTests.m; sourceTree = "<group>"; };
 		9CCB47E922976B5E00DF551B /* LICENSE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = LICENSE.md; sourceTree = "<group>"; };
@@ -586,7 +512,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				9C65A27F2256C1CF006E3FED /* MapboxMobileEvents.framework in Frameworks */,
-				9CF00039236FDD67009A2700 /* Cedar.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -597,19 +522,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-<<<<<<< HEAD
-		9CDC34E223502F8700852FF0 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				9CE132CC235A7F8B005E23F1 /* XCTest.framework in Frameworks */,
-				9CDC34E423502F8700852FF0 /* Cedar.framework in Frameworks */,
-				9CDC34E323502F8700852FF0 /* MapboxMobileEvents.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-=======
->>>>>>> Fix tests, remove Cedar targets, remove Cartfiles
 		9CF0004A2371037E009A2700 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -731,24 +643,12 @@
 		40AE58601EA94E4A0046B437 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
-				409115331F16BCD200F4250B /* MMECategoryLoader.h */,
-				409115341F16BCD200F4250B /* MMECategoryLoader.m */,
 				40AE58671EA953970046B437 /* CLLocation+MMEMobileEvents.h */,
 				40AE58681EA953970046B437 /* CLLocation+MMEMobileEvents.m */,
 				AC1B090F22137BB000DB56C8 /* CLLocationManager+MMEMobileEvents.h */,
 				AC1B091022137BB000DB56C8 /* CLLocationManager+MMEMobileEvents.m */,
-<<<<<<< HEAD
-<<<<<<< HEAD
-				409115331F16BCD200F4250B /* MMECategoryLoader.h */,
-				409115341F16BCD200F4250B /* MMECategoryLoader.m */,
 				F4684FF22432A1610079B389 /* NSBundle+MMEMobileEvents.h */,
 				F4684FF32432A1610079B389 /* NSBundle+MMEMobileEvents.m */,
-=======
-				9CA284FC23D248D40097BE53 /* MMEEvent+SystemInfo.h */,
-				9CA284FD23D248D40097BE53 /* MMEEvent+SystemInfo.m */,
->>>>>>> Mapbox Mobile Events 1.0-beta1
-=======
->>>>>>> Fix tests, remove Cedar targets, remove Cartfiles
 				40F133521F20051E007B4096 /* NSData+MMEGZIP.h */,
 				40F133511F20051E007B4096 /* NSData+MMEGZIP.m */,
 				9CA284FC23D248D40097BE53 /* NSProcessInfo+SystemInfo.h */,
@@ -906,7 +806,6 @@
 				40AE585A1EA9373F0046B437 /* MMEUniqueIdentifier.h in Headers */,
 				9CF000412370D674009A2700 /* NSString+MMEVersions.h in Headers */,
 				AC1B091122137BB000DB56C8 /* CLLocationManager+MMEMobileEvents.h in Headers */,
-				409115351F16BCD200F4250B /* MMECategoryLoader.h in Headers */,
 				AC61FA5C217A04CC008519F5 /* MMEMetrics.h in Headers */,
 				AC2C715E2112408A004179E0 /* MMEDispatchManager.h in Headers */,
 				CF93A65B2241EDD500BBA199 /* MMECertPin.h in Headers */,
@@ -942,7 +841,6 @@
 				9CA75391240EF2DD005C26C9 /* MMEUniqueIdentifier.h in Headers */,
 				9CA75392240EF2DD005C26C9 /* NSString+MMEVersions.h in Headers */,
 				9CA75393240EF2DD005C26C9 /* CLLocationManager+MMEMobileEvents.h in Headers */,
-				9CA75394240EF2DD005C26C9 /* MMECategoryLoader.h in Headers */,
 				9CA75395240EF2DD005C26C9 /* MMEMetrics.h in Headers */,
 				9CA75396240EF2DD005C26C9 /* MMEDispatchManager.h in Headers */,
 				9CA75397240EF2DD005C26C9 /* MMECertPin.h in Headers */,
@@ -1004,9 +902,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4085965B1ED084C0003BD29D /* Build configuration list for PBXNativeTarget "libMapboxMobileEvents" */;
 			buildPhases = (
+				408596511ED084C0003BD29D /* Copy Headers */,
 				4085964F1ED084C0003BD29D /* Sources */,
 				408596501ED084C0003BD29D /* Frameworks */,
-				408596511ED084C0003BD29D /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -1029,7 +927,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				9C16239123577E66005DB983 /* PBXTargetDependency */,
 			);
 			name = MMETestHost;
 			productName = MMETestHost;
@@ -1230,7 +1127,6 @@
 				ACAF8D2C238DEF720033745A /* MMEDispatchManager.m in Sources */,
 				ACAF8D2B238DEF5C0033745A /* MMEDate.m in Sources */,
 				ACAF8D28238DEE980033745A /* NSString+MMEVersions.m in Sources */,
-				ACAF8D29238DEEC60033745A /* MMECategoryLoader.m in Sources */,
 				40AE586A1EA953970046B437 /* CLLocation+MMEMobileEvents.m in Sources */,
 				AC1B091222137BB000DB56C8 /* CLLocationManager+MMEMobileEvents.m in Sources */,
 				40AE58721EAA87960046B437 /* MMEAPIClient.m in Sources */,
@@ -1287,7 +1183,6 @@
 			files = (
 				9CA2850023D248D40097BE53 /* NSProcessInfo+SystemInfo.m in Sources */,
 				AC1B091322137BB000DB56C8 /* CLLocationManager+MMEMobileEvents.m in Sources */,
-				409115371F16BCD200F4250B /* MMECategoryLoader.m in Sources */,
 				F4684FF62432A2770079B389 /* NSBundle+MMEMobileEvents.m in Sources */,
 				CF93A6592241EDD500BBA199 /* MMECertPin.m in Sources */,
 				4085965C1ED086D3003BD29D /* MMEConstants.m in Sources */,
@@ -1332,7 +1227,6 @@
 				9CA75372240EF2DD005C26C9 /* MMEDispatchManager.m in Sources */,
 				9CA75373240EF2DD005C26C9 /* MMEDate.m in Sources */,
 				9CA75374240EF2DD005C26C9 /* NSString+MMEVersions.m in Sources */,
-				9CA75375240EF2DD005C26C9 /* MMECategoryLoader.m in Sources */,
 				9CA75376240EF2DD005C26C9 /* CLLocation+MMEMobileEvents.m in Sources */,
 				9CA75377240EF2DD005C26C9 /* CLLocationManager+MMEMobileEvents.m in Sources */,
 				9CA75378240EF2DD005C26C9 /* MMEAPIClient.m in Sources */,
@@ -1367,20 +1261,6 @@
 			target = 9C65A2652256C110006E3FED /* MMETestHost */;
 			targetProxy = 9C16238C23577E13005DB983 /* PBXContainerItemProxy */;
 		};
-<<<<<<< HEAD
-		9C16238F23577E17005DB983 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			platformFilter = ios;
-			target = 9C65A2652256C110006E3FED /* MMETestHost */;
-			targetProxy = 9C16238E23577E17005DB983 /* PBXContainerItemProxy */;
-		};
-		9C16239123577E66005DB983 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 404807B81EA186D8008A6D50 /* MapboxMobileEvents */;
-			targetProxy = 9C16239023577E66005DB983 /* PBXContainerItemProxy */;
-		};
-=======
->>>>>>> Fix tests, remove Cedar targets, remove Cartfiles
 		9C63226B221377C900653792 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 404807B81EA186D8008A6D50 /* MapboxMobileEvents */;
@@ -1390,17 +1270,6 @@
 			isa = PBXTargetDependency;
 			target = 408596521ED084C0003BD29D /* libMapboxMobileEvents */;
 			targetProxy = 9C63226C221377CD00653792 /* PBXContainerItemProxy */;
-		};
-		9CF0006B23710389009A2700 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 408596521ED084C0003BD29D /* libMapboxMobileEvents */;
-			targetProxy = 9CF0006A23710389009A2700 /* PBXContainerItemProxy */;
-		};
-		AC881B1523FDEDBF00E614B7 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			platformFilter = ios;
-			target = 404807B81EA186D8008A6D50 /* MapboxMobileEvents */;
-			targetProxy = AC881B1423FDEDBF00E614B7 /* PBXContainerItemProxy */;
 		};
 		9C8E04A1241BF6E900D6C641 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1421,6 +1290,17 @@
 			isa = PBXTargetDependency;
 			target = 404807C11EA186D8008A6D50 /* MMETests */;
 			targetProxy = 9C8E04A6241BF70200D6C641 /* PBXContainerItemProxy */;
+		};
+		9CF0006B23710389009A2700 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 408596521ED084C0003BD29D /* libMapboxMobileEvents */;
+			targetProxy = 9CF0006A23710389009A2700 /* PBXContainerItemProxy */;
+		};
+		AC881B1523FDEDBF00E614B7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			platformFilter = ios;
+			target = 404807B81EA186D8008A6D50 /* MapboxMobileEvents */;
+			targetProxy = AC881B1423FDEDBF00E614B7 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1658,6 +1538,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MMETests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTS_MACCATALYST = NO;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MMETestHost.app/MMETestHost";
 			};
 			name = Debug;
@@ -1682,6 +1563,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MMETests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTS_MACCATALYST = NO;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MMETestHost.app/MMETestHost";
 			};
 			name = Release;
@@ -1695,6 +1577,7 @@
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = MapboxMobileEvents;
 				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
 			};
 			name = Debug;
 		};
@@ -1707,6 +1590,7 @@
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = MapboxMobileEvents;
 				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
 			};
 			name = Release;
 		};
@@ -1715,6 +1599,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTS_MACCATALYST = NO;
 			};
 			name = Debug;
 		};
@@ -1723,6 +1608,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTS_MACCATALYST = NO;
 			};
 			name = Release;
 		};
@@ -2017,6 +1903,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTS_MACCATALYST = NO;
 			};
 			name = RelWithDebInfo;
 		};
@@ -2062,6 +1949,7 @@
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = MapboxMobileEvents;
 				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
 			};
 			name = RelWithDebInfo;
 		};
@@ -2085,6 +1973,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MMETests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTS_MACCATALYST = NO;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MMETestHost.app/MMETestHost";
 			};
 			name = RelWithDebInfo;

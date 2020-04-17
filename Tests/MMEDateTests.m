@@ -17,12 +17,7 @@
 - (void)testHTTPDateFormatter {
     NSDate *date = [NSDate dateWithTimeIntervalSince1970:214123];
     NSString *dateString = [MMEDate.HTTPDateFormatter stringFromDate:date];
-<<<<<<< HEAD
     XCTAssert([dateString isEqualToString:@"Sat, 3 Jan 1970 11:28:43 +0000"], @"%@", dateString);
-=======
-    
-    XCTAssert([dateString isEqualToString:@"Sat, 3 Jan 1970 11:28:43 +0000"]);
->>>>>>> Fix tests, remove Cedar targets, remove Cartfiles
 }
 
 - (void)testNSSecureCoding {
