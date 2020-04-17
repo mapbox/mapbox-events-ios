@@ -23,13 +23,13 @@ DOCS_LICENSE = LICENSE.md
 LOWDOWN_PATH = $(shell which lowdown)
 MARKDOWN_PATH = $(shell which multimarkdown)
 
-DEBUG_SCHEME ?= "MapboxMobileEvents"
-RELEASE_SCHEME ?= "MapboxMobileEvents (Release)"
-DEPRECATION_SCHEME ?= "MapboxMobileEvents (Deprecation)"
+DEBUG_SCHEME ?= MapboxMobileEvents
+RELEASE_SCHEME ?= MapboxMobileEvents (Release)
+DEPRECATION_SCHEME ?= MapboxMobileEvents (Deprecation)
 BUILD_SCHEME ?= $(RELEASE_SCHEME)
 
 XCODEBUILD ?= xcodebuild
-DESTINATION ?= "name=Generic iOS Device"
+DESTINATION ?= name=Generic iOS Device
 
 ifneq ($(LOWDOWN_PATH),)
 	MARKDOWN_TOOL = $(LOWDOWN_PATH)
