@@ -218,6 +218,8 @@
 		F4684FF62432A2770079B389 /* NSBundle+MMEMobileEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = F4684FF32432A1610079B389 /* NSBundle+MMEMobileEvents.m */; };
 		F4913F452453610800C28338 /* MMEEventConfigProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = F4913F442453610800C28338 /* MMEEventConfigProviding.h */; };
 		F4913F462453610800C28338 /* MMEEventConfigProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = F4913F442453610800C28338 /* MMEEventConfigProviding.h */; };
+		F4EAFDFC24538B6500D2B17B /* MMEDependencyProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = F4EAFDFB24538B6500D2B17B /* MMEDependencyProviding.h */; };
+		F4EAFDFD24538B6500D2B17B /* MMEDependencyProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = F4EAFDFB24538B6500D2B17B /* MMEDependencyProviding.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -470,6 +472,7 @@
 		F4684FF22432A1610079B389 /* NSBundle+MMEMobileEvents.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSBundle+MMEMobileEvents.h"; sourceTree = "<group>"; };
 		F4684FF32432A1610079B389 /* NSBundle+MMEMobileEvents.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+MMEMobileEvents.m"; sourceTree = "<group>"; };
 		F4913F442453610800C28338 /* MMEEventConfigProviding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEEventConfigProviding.h; sourceTree = "<group>"; };
+		F4EAFDFB24538B6500D2B17B /* MMEDependencyProviding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEDependencyProviding.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -565,6 +568,7 @@
 		404807BB1EA186D8008A6D50 /* MapboxMobileEvents */ = {
 			isa = PBXGroup;
 			children = (
+				F4EAFDFA24538B3F00D2B17B /* Protocols */,
 				404807BD1EA186D8008A6D50 /* Info.plist */,
 				404807BC1EA186D8008A6D50 /* MapboxMobileEvents.h */,
 				40AE586F1EAA87960046B437 /* MMEAPIClient.h */,
@@ -574,7 +578,6 @@
 				40AE58551EA932DB0046B437 /* MMEConstants.m */,
 				40AE586B1EA95EDD0046B437 /* MMEEvent.h */,
 				40AE586C1EA95EDD0046B437 /* MMEEvent.m */,
-				F4913F442453610800C28338 /* MMEEventConfigProviding.h */,
 				40C9E2791EA542BC00744FE7 /* MMEEventsManager.h */,
 				9C3F930C235128F500F99907 /* MMEEventsManager_Private.h */,
 				40C9E27A1EA542BC00744FE7 /* MMEEventsManager.m */,
@@ -782,6 +785,14 @@
 				F44C8BF72461029700E515AD /* NSBundle+TestBundle.m */,
 			);
 			path = Categories;
+		};
+		F4EAFDFA24538B3F00D2B17B /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				F4913F442453610800C28338 /* MMEEventConfigProviding.h */,
+				F4EAFDFB24538B6500D2B17B /* MMEDependencyProviding.h */,
+			);
+			path = Protocols;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -807,6 +818,7 @@
 				40AE585A1EA9373F0046B437 /* MMEUniqueIdentifier.h in Headers */,
 				9CF000412370D674009A2700 /* NSString+MMEVersions.h in Headers */,
 				AC1B091122137BB000DB56C8 /* CLLocationManager+MMEMobileEvents.h in Headers */,
+				F4EAFDFC24538B6500D2B17B /* MMEDependencyProviding.h in Headers */,
 				AC61FA5C217A04CC008519F5 /* MMEMetrics.h in Headers */,
 				AC2C715E2112408A004179E0 /* MMEDispatchManager.h in Headers */,
 				CF93A65B2241EDD500BBA199 /* MMECertPin.h in Headers */,
@@ -838,6 +850,7 @@
 				9CA7538D240EF2DD005C26C9 /* MMETypes.h in Headers */,
 				9CA7538E240EF2DD005C26C9 /* NSProcessInfo+SystemInfo.h in Headers */,
 				9CA7538F240EF2DD005C26C9 /* NSData+MMEGZIP.h in Headers */,
+				F4EAFDFD24538B6500D2B17B /* MMEDependencyProviding.h in Headers */,
 				F4913F462453610800C28338 /* MMEEventConfigProviding.h in Headers */,
 				9CA75390240EF2DD005C26C9 /* MMEUIApplicationWrapper.h in Headers */,
 				9CA75391240EF2DD005C26C9 /* MMEUniqueIdentifier.h in Headers */,

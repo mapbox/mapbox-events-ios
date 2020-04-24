@@ -1,10 +1,10 @@
 #import <Foundation/Foundation.h>
+#import "MMEDependencyProviding.h"
 
 @class CLLocationManager;
 
-@interface MMEDependencyManager : NSObject
-
-+ (instancetype)sharedManager;
+// Consider new name? What is this managing?
+@interface MMEDependencyManager : NSObject <MMEDependencyProviding>
 
 - (CLLocationManager *)locationManagerInstance;
 

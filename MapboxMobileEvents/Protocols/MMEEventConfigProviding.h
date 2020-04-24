@@ -1,5 +1,7 @@
 @import Foundation;
 
+NS_ASSUME_NONNULL_BEGIN
+
 /// Provides the necessary readonly config values for determining behaviors
 @protocol MMEEventConfigProviding <NSObject>
 
@@ -82,3 +84,5 @@
 @property (nonatomic, copy, readonly) NSDictionary *mme_certificatePinningConfig;
 
 @end
+
+NS_ASSUME_NONNULL_END
