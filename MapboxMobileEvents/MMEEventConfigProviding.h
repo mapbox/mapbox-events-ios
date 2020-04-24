@@ -1,17 +1,7 @@
 @import Foundation;
-@import CoreLocation;
-#import "MMEEventConfigProviding.h"
 
-NS_ASSUME_NONNULL_BEGIN
-
-// MARK: -
-
-@class MMEDate;
-
-@interface NSUserDefaults (MMEConfiguration) <MMEEventConfigProviding>
-
-/// the shared NSUserDefaults object with the MMEConfigurationDomain loaded and our defaults registered
-+ (instancetype)mme_configuration;
+/// Provides the necessary readonly config values for determining behaviors
+@protocol MMEEventConfigProviding <NSObject>
 
 // MARK: - Event Manager Configuration
 
@@ -36,16 +26,16 @@ NS_ASSUME_NONNULL_BEGIN
 // MARK: - Volatile Configuration
 
 /// Access Token
-@property (nonatomic, copy, setter=mme_setAccessToken:) NSString *mme_accessToken;
+@property (nonatomic, copy, readonly) NSString *mme_accessToken;
 
 /// User-Agent Base
-@property (nonatomic, copy, setter=mme_setLegacyUserAgentBase:) NSString *mme_legacyUserAgentBase;
+@property (nonatomic, copy, readonly) NSString *mme_legacyUserAgentBase;
 
 /// Host SDK Version
-@property (nonatomic, copy, setter=mme_setLegacyHostSDKVersion:) NSString *mme_legacyHostSDKVersion;
+@property (nonatomic, copy, readonly) NSString *mme_legacyHostSDKVersion;
 
 /// CN Region Setting
-@property (nonatomic, assign, setter=mme_setIsCNRegion:) BOOL mme_isCNRegion;
+@property (nonatomic, assign, readonly) BOOL mme_isCNRegion;
 
 // MARK: - Service Configuration
 
@@ -64,14 +54,10 @@ NS_ASSUME_NONNULL_BEGIN
 /// Legacy User-Agent String
 @property (nonatomic, readonly) NSString *mme_legacyUserAgentString;
 
-// MARK: - Update Configuration
-
-@property (nonatomic, nullable, setter=mme_setConfigUpdateDate:) MMEDate *mme_configUpdateDate;
-
 // MARK: - Location Collection
 
 /// This property is only settable by the end user
-@property (nonatomic, setter=mme_setIsCollectionEnabled:) BOOL mme_isCollectionEnabled;
+@property (nonatomic, readonly) BOOL mme_isCollectionEnabled;
 
 /// This property is volatile
 @property (nonatomic, readonly) BOOL mme_isCollectionEnabledInSimulator;
@@ -96,5 +82,3 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) NSDictionary *mme_certificatePinningConfig;
 
 @end
-
-NS_ASSUME_NONNULL_END
