@@ -4,12 +4,15 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class MMEEvent;
+@class MMELogger;
 
 @interface MMEMetricsManager : NSObject
 
 @property (nonatomic, readonly) MMEMetrics *metrics;
+@property (nonatomic, readonly) MMELogger *logger;
 
-+ (instancetype)sharedManager;
+- (instancetype)init NS_UNAVAILABLE;
+- (instancetype)initWithLogger:(MMELogger*)logger;
 
 - (void)updateSentBytes:(NSUInteger)bytes;
 - (void)updateReceivedBytes:(NSUInteger)bytes;

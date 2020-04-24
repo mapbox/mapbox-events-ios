@@ -43,6 +43,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, getter=isPaused) BOOL paused;
 @property (nonatomic) id<MMEUIApplicationWrapper> application;
 @property (nonatomic) UIBackgroundTaskIdentifier backgroundTaskIdentifier;
+@property (nonatomic) MMELogger *logger;
+@property (nonatomic) MMEMetricsManager *metricsManager;
 
 @end
 
@@ -72,6 +74,8 @@ NS_ASSUME_NONNULL_BEGIN
         _uniqueIdentifer = [[MMEUniqueIdentifier alloc] initWithTimeInterval:NSUserDefaults.mme_configuration.mme_identifierRotationInterval];
         _application = [[MMEUIApplicationWrapper alloc] init];
         _dispatchManager = [[MMEDispatchManager alloc] init];
+        _logger = [[MMELogger alloc] init];
+        _metricsManager = [[MMEMetricsManager alloc] initWithLogger:_logger];
     }
     return self;
 }
@@ -93,8 +97,9 @@ NS_ASSUME_NONNULL_BEGIN
         }
 
         self.apiClient = [MMEAPIClient.alloc initWithAccessToken:accessToken
-            userAgentBase:userAgentBase
-            hostSDKVersion:hostSDKVersion];
+                                                   userAgentBase:userAgentBase
+                                                  hostSDKVersion:hostSDKVersion
+                                                  metricsManager:self.metricsManager];
 
         [self sendPendingTelemetryMetricsEvent];
 
@@ -123,7 +128,7 @@ NS_ASSUME_NONNULL_BEGIN
             }
 
             strongSelf.paused = YES;
-            strongSelf.locationManager = [[MMELocationManager alloc] init];
+            strongSelf.locationManager = [[MMELocationManager alloc] initWithMetricsManager: self.metricsManager];
             strongSelf.locationManager.delegate = strongSelf;
             [strongSelf resumeMetricsCollection];
         };
@@ -257,7 +262,7 @@ NS_ASSUME_NONNULL_BEGIN
                 __strong __typeof__(weakSelf) strongSelf = weakSelf;
 
                 if (error) {
-                    [MMELogger.sharedLogger logEvent:[MMEEvent debugEventWithError:error]];
+                    [self.logger logEvent:[MMEEvent debugEventWithError:error]];
                 } else {
                     MMELog(MMELogInfo, MMEDebugEventTypePost, ([NSString stringWithFormat:@"post: %@, instance: %@",
                         @(events.count),self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
@@ -372,12 +377,12 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void)sendPendingTelemetryMetricsEvent {
-    MMEEvent *pendingMetricsEvent = [MMEMetricsManager.sharedManager loadPendingTelemetryMetricsEvent];
+    MMEEvent *pendingMetricsEvent = [self.metricsManager loadPendingTelemetryMetricsEvent];
 
     if (pendingMetricsEvent) {
         [self.apiClient postEvent:pendingMetricsEvent completionHandler:^(NSError * _Nullable error) {
             if (error) {
-                [MMELogger.sharedLogger logEvent:[MMEEvent debugEventWithError:error]];
+                [self.logger logEvent:[MMEEvent debugEventWithError:error]];
                 return;
             }
             MMELog(MMELogInfo, MMEDebugEventTypeTelemetryMetrics, ([NSString stringWithFormat:@"Sent pendingTelemetryMetrics event, instance: %@",
@@ -388,14 +393,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)sendTelemetryMetricsEvent {
     @try {
-        MMEEvent *telemetryMetricsEvent = [MMEMetricsManager.sharedManager generateTelemetryMetricsEvent];
+        MMEEvent *telemetryMetricsEvent = [self.metricsManager generateTelemetryMetricsEvent];
         
         MMELog(MMELogInfo, MMEDebugEventTypeTelemetryMetrics, ([NSString stringWithFormat:@"Sending telemetryMetrics event: %@, instance: %@",
             telemetryMetricsEvent, self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
         
         if (telemetryMetricsEvent) {
             [self.apiClient postEvent:telemetryMetricsEvent completionHandler:^(NSError * _Nullable error) {
-                [MMEMetricsManager.sharedManager resetMetrics];
+                [self.metricsManager resetMetrics];
                 if (error) {
                     MMELog(MMELogInfo, MMEDebugEventTypeTelemetryMetrics, ([NSString stringWithFormat:@"Could not send telemetryMetrics event: %@, instance: %@",
                         [error localizedDescription], self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
@@ -420,11 +425,11 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL)isDebugLoggingEnabled {
-    return [MMELogger.sharedLogger isEnabled];
+    return [self.logger isEnabled];
 }
 
 - (void)setDebugHandler:(void (^)(NSUInteger, NSString *, NSString *))handler {
-    [MMELogger.sharedLogger setHandler:handler];
+    [self.logger setHandler:handler];
 }
 
 // MARK: - Error & Exception Reporting
@@ -444,7 +449,7 @@ NS_ASSUME_NONNULL_BEGIN
             [self pushEvent:errorEvent];
         }
         else {
-            [MMELogger.sharedLogger logEvent:[MMEEvent debugEventWithError:createError]];
+            [self.logger logEvent:[MMEEvent debugEventWithError:createError]];
         }
     }
     @catch(NSException *except) {
@@ -588,7 +593,7 @@ NS_ASSUME_NONNULL_BEGIN
 
     if (event) {
         #if DEBUG
-        [MMELogger.sharedLogger pushDebugEventWithAttributes:@{
+        [self.logger pushDebugEventWithAttributes:@{
             @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
             MMEDebugEventType: MMEDebugEventTypePush,
             MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Pushing event: %@", event]}];
@@ -597,7 +602,7 @@ NS_ASSUME_NONNULL_BEGIN
     } else {
         event = [MMEEvent eventWithDateString:[MMEDate.iso8601DateFormatter stringFromDate:now] name:name attributes:attributes];
         #if DEBUG
-        [MMELogger.sharedLogger pushDebugEventWithAttributes:@{
+        [self.logger pushDebugEventWithAttributes:@{
             @"instance": self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil",
             MMEDebugEventType: MMEDebugEventTypePush,
             MMEEventKeyLocalDebugDescription: [NSString stringWithFormat:@"Pushing generic event: %@", event]}];

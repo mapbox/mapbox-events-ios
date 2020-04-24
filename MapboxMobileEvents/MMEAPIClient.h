@@ -4,16 +4,24 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class MMEEvent;
+@class MMEMetricsManager;
 
+/// Asynchronous Interface with API
 @interface MMEAPIClient : NSObject
+
 /// Are we currently getting configuration updates?
+/// TODO: No need for this state. Client should no need to know this info. Only needs to wrap API calls
 @property (nonatomic, readonly) BOOL isGettingConfigUpdates;
 
-- (instancetype)initWithAccessToken:(NSString *)accessToken userAgentBase:(NSString *)userAgentBase hostSDKVersion:(NSString *)hostSDKVersion;
+- (instancetype)init NS_UNAVAILABLE;
+- (instancetype)initWithAccessToken:(NSString *)accessToken
+                      userAgentBase:(NSString *)userAgentBase
+                     hostSDKVersion:(NSString *)hostSDKVersion
+                     metricsManager:(MMEMetricsManager*)metricsManager;
 
 // MARK: - Events Service
 
-- (void)postEvents:(NSArray *)events completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler;
+- (void)postEvents:(NSArray <MMEEvent*> *)events completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler;
 - (void)postEvent:(MMEEvent *)event completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler;
 - (void)postMetadata:(NSArray *)metadata filePaths:(NSArray *)filePaths completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler;
 
