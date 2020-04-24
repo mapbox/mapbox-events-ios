@@ -23,6 +23,7 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
 @property (nonatomic) NSDate *backgroundLocationServiceTimeoutAllowedDate;
 @property (nonatomic) NSTimer *backgroundLocationServiceTimeoutTimer;
 @property (nonatomic) BOOL hostAppHasBackgroundCapability;
+@property (nonatomic, strong) MMEDependencyManager * dependencyManager;
 
 @end
 
@@ -38,6 +39,7 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
         _application = [[MMEUIApplicationWrapper alloc] init];
         NSArray *backgroundModes = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UIBackgroundModes"];
         _hostAppHasBackgroundCapability = [backgroundModes containsObject:@"location"];
+        _dependencyManager = [[MMEDependencyManager alloc] init];
     }
     return self;
 }
@@ -50,7 +52,7 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
         return;
     }
 
-    self.locationManager = [[MMEDependencyManager sharedManager] locationManagerInstance];
+    self.locationManager = [self.dependencyManager locationManagerInstance];
     [self configurePassiveLocationManager];
     [self startLocationServices];
 }
