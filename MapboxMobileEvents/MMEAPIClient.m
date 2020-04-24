@@ -28,6 +28,7 @@ typedef NS_ENUM(NSInteger, MMEErrorCode) {
 @property (nonatomic) NSTimer *configurationUpdateTimer;
 @property (nonatomic) id<MMENSURLSessionWrapper> sessionWrapper;
 @property (nonatomic) NSBundle *applicationBundle;
+@property (nonatomic) MMEMetricsManager *metricsManager;
 
 @end
 
@@ -37,13 +38,14 @@ int const kMMEMaxRequestCount = 1000;
 
 @implementation MMEAPIClient
 
-- (instancetype)initWithAccessToken:(NSString *)accessToken userAgentBase:(NSString *)userAgentBase hostSDKVersion:(NSString *)hostSDKVersion {
+- (instancetype)initWithAccessToken:(NSString *)accessToken userAgentBase:(NSString *)userAgentBase hostSDKVersion:(NSString *)hostSDKVersion metricsManager:(MMEMetricsManager*)metricsManager {
     self = [super init];
     if (self) {
         [NSUserDefaults.mme_configuration mme_setAccessToken:accessToken];
         [NSUserDefaults.mme_configuration mme_setLegacyUserAgentBase:userAgentBase];
         [NSUserDefaults.mme_configuration mme_setLegacyHostSDKVersion:hostSDKVersion];
         _sessionWrapper = [[MMENSURLSessionWrapper alloc] init];
+        self.metricsManager = metricsManager;
         [self startGettingConfigUpdates];
     }
     return self;
@@ -73,7 +75,7 @@ int const kMMEMaxRequestCount = 1000;
 }
 
 - (void)postEvents:(NSArray *)events completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
-    [MMEMetricsManager.sharedManager updateMetricsFromEventQueue:events];
+    [self.metricsManager updateMetricsFromEventQueue:events];
     
     NSArray *eventBatches = [self batchFromEvents:events];
     
@@ -92,24 +94,24 @@ int const kMMEMaxRequestCount = 1000;
 
                     // check the data object, log the Rx bytes and try to load the config
                     if (data) {
-                        [MMEMetricsManager.sharedManager updateReceivedBytes:data.length];
+                        [self.metricsManager updateReceivedBytes:data.length];
                     }
                 }
                 else if (error) { // check the session error and report it if the response appears invalid
                     [MMEEventsManager.sharedManager reportError:error];
                 }
                 
-                [MMEMetricsManager.sharedManager updateMetricsFromEventCount:events.count request:request error:error];
+                [self.metricsManager updateMetricsFromEventCount:events.count request:request error:error];
                 
                 if (completionHandler) {
                     completionHandler(error);
                 }
             }];
         }
-        [MMEMetricsManager.sharedManager updateMetricsFromEventCount:events.count request:nil error:nil];
+        [self.metricsManager updateMetricsFromEventCount:events.count request:nil error:nil];
     }
 
-    [MMEMetricsManager.sharedManager generateTelemetryMetricsEvent];
+    [self.metricsManager generateTelemetryMetricsEvent];
 }
 
 - (void)postEvent:(MMEEvent *)event completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
@@ -134,15 +136,15 @@ int const kMMEMaxRequestCount = 1000;
             }
             
             if (data) { // always log the Rx bytes
-                [MMEMetricsManager.sharedManager updateReceivedBytes:data.length];
+                [self.metricsManager updateReceivedBytes:data.length];
             }
         }
         else if (error) { // check the session error and report it if the response appears invalid
             [MMEEventsManager.sharedManager reportError:error];
         }
 
-        [MMEMetricsManager.sharedManager updateMetricsFromEventCount:filePaths.count request:request error:error];
-        [MMEMetricsManager.sharedManager generateTelemetryMetricsEvent];
+        [self.metricsManager updateMetricsFromEventCount:filePaths.count request:request error:error];
+        [self.metricsManager generateTelemetryMetricsEvent];
         
         if (completionHandler) {
             completionHandler(error);
@@ -183,7 +185,7 @@ int const kMMEMaxRequestCount = 1000;
 
                             // check the data object, log the Rx bytes and try to load the config
                             if (data) {
-                                [MMEMetricsManager.sharedManager updateReceivedBytes:data.length];
+                                [self.metricsManager updateReceivedBytes:data.length];
 
                                 NSError *configError = [NSUserDefaults.mme_configuration mme_updateFromConfigServiceData:(NSData * _Nonnull)data];
                                 if (configError) {
@@ -201,8 +203,8 @@ int const kMMEMaxRequestCount = 1000;
                         [MMEEventsManager.sharedManager reportError:error];
                     }
 
-                    [MMEMetricsManager.sharedManager updateMetricsFromEventCount:0 request:request error:error];
-                    [MMEMetricsManager.sharedManager generateTelemetryMetricsEvent];
+                    [self.metricsManager updateMetricsFromEventCount:0 request:request error:error];
+                    [self.metricsManager generateTelemetryMetricsEvent];
                 }];
             }];
         
@@ -311,7 +313,7 @@ int const kMMEMaxRequestCount = 1000;
             [request setHTTPBody:jsonData];
         }
     } else if (jsonError) {
-        [MMELogger.sharedLogger logEvent:[MMEEvent debugEventWithError:jsonError]];
+        [self.metricsManager.logger logEvent:[MMEEvent debugEventWithError:jsonError]];
         return nil;
     }
     
@@ -345,7 +347,7 @@ int const kMMEMaxRequestCount = 1000;
         [httpBody appendData:jsonData];
         [httpBody appendData:[[NSString stringWithFormat:@"\r\n\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
     } else if (jsonError) {
-        [MMELogger.sharedLogger logEvent:[MMEEvent debugEventWithError:jsonError]];
+        [self.metricsManager.logger logEvent:[MMEEvent debugEventWithError:jsonError]];
     }
 
     for (NSString *path in filePaths) { // add a file part for each

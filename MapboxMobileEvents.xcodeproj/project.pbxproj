@@ -220,6 +220,8 @@
 		F4913F462453610800C28338 /* MMEEventConfigProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = F4913F442453610800C28338 /* MMEEventConfigProviding.h */; };
 		F4EAFDFC24538B6500D2B17B /* MMEDependencyProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = F4EAFDFB24538B6500D2B17B /* MMEDependencyProviding.h */; };
 		F4EAFDFD24538B6500D2B17B /* MMEDependencyProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = F4EAFDFB24538B6500D2B17B /* MMEDependencyProviding.h */; };
+		F4EAFDFE2453B08F00D2B17B /* NSBundle+MMEMobileEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = F4684FF22432A1610079B389 /* NSBundle+MMEMobileEvents.h */; };
+		F4EAFDFF2453B09100D2B17B /* NSBundle+MMEMobileEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = F4684FF32432A1610079B389 /* NSBundle+MMEMobileEvents.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -856,6 +858,7 @@
 				9CA75391240EF2DD005C26C9 /* MMEUniqueIdentifier.h in Headers */,
 				9CA75392240EF2DD005C26C9 /* NSString+MMEVersions.h in Headers */,
 				9CA75393240EF2DD005C26C9 /* CLLocationManager+MMEMobileEvents.h in Headers */,
+				F4EAFDFE2453B08F00D2B17B /* NSBundle+MMEMobileEvents.h in Headers */,
 				9CA75395240EF2DD005C26C9 /* MMEMetrics.h in Headers */,
 				9CA75396240EF2DD005C26C9 /* MMEDispatchManager.h in Headers */,
 				9CA75397240EF2DD005C26C9 /* MMECertPin.h in Headers */,
@@ -1235,6 +1238,7 @@
 				9CA7537C240EF2DD005C26C9 /* MMELogger.m in Sources */,
 				9CA7537D240EF2DD005C26C9 /* MMELocationManager.m in Sources */,
 				9CA7537E240EF2DD005C26C9 /* MMENSURLSessionWrapper.m in Sources */,
+				F4EAFDFF2453B09100D2B17B /* NSBundle+MMEMobileEvents.m in Sources */,
 				9CA7537F240EF2DD005C26C9 /* MMEReachability.m in Sources */,
 				9CA75380240EF2DD005C26C9 /* MMEUIApplicationWrapper.m in Sources */,
 				9CA75381240EF2DD005C26C9 /* MMEUniqueIdentifier.m in Sources */,

@@ -10,12 +10,14 @@
 #import "NSUserDefaults+MMEConfiguration.h"
 #import "MMELogger.h"
 #import "NSProcessInfo+SystemInfo.h"
+#import "NSBundle+MMEMobileEvents.h"
 
 // MARK: -
 
 @interface MMEMetricsManager ()
 
 @property (nonatomic) MMEMetrics *metrics;
+@property (nonatomic) MMELogger *logger;
 
 @end
 
@@ -23,24 +25,14 @@
 
 @implementation MMEMetricsManager
 
-+ (instancetype)sharedManager {
-    static MMEMetricsManager *_sharedManager;
-    static dispatch_once_t onceToken;
-    
-    dispatch_once(&onceToken, ^{
-        _sharedManager = [[MMEMetricsManager alloc] init];
-    });
-    
-    return _sharedManager;
-}
-
-+ (NSString *)pendingMetricsEventPath {
+- (NSString *)pendingMetricsEventPath {
     static NSString *pendingMetricFile = nil;
     static dispatch_once_t onceToken;
 
     dispatch_once(&onceToken, ^{
         NSString *libraryPath = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).lastObject;
-        NSString *frameworkLibraryPath = [libraryPath stringByAppendingPathComponent:[NSBundle bundleForClass:self].bundleIdentifier];
+
+        NSString *frameworkLibraryPath = [libraryPath stringByAppendingPathComponent: [NSBundle mme_bundle].bundleIdentifier];
 
         pendingMetricFile = [frameworkLibraryPath stringByAppendingPathComponent:@"pending-metrics.event"];
     });
@@ -48,13 +40,13 @@
     return pendingMetricFile;
 }
 
-+ (BOOL)deletePendingMetricsEventFile {
+- (BOOL)deletePendingMetricsEventFile {
     BOOL success = NO;
-    if ([NSFileManager.defaultManager fileExistsAtPath:MMEMetricsManager.pendingMetricsEventPath]) {
+    if ([NSFileManager.defaultManager fileExistsAtPath: self.pendingMetricsEventPath]) {
         NSError *fileError = nil;
-        if (![NSFileManager.defaultManager removeItemAtPath:MMEMetricsManager.pendingMetricsEventPath error:&fileError]) {
+        if (![NSFileManager.defaultManager removeItemAtPath: self.pendingMetricsEventPath error:&fileError]) {
             MMEEvent *errorEvent = [MMEEvent debugEventWithError:fileError];
-            [MMELogger.sharedLogger logEvent:errorEvent];
+            [self.logger logEvent:errorEvent];
         }
         else {  // we successfully removed the file
             success = YES;
@@ -67,8 +59,8 @@
     return success;
 }
 
-+ (BOOL)createFrameworkMetricsEventDir {
-    NSString *sdkPath = MMEMetricsManager.pendingMetricsEventPath.stringByDeletingLastPathComponent;
+- (BOOL)createFrameworkMetricsEventDir {
+    NSString *sdkPath = self.pendingMetricsEventPath.stringByDeletingLastPathComponent;
     BOOL sdkPathIsDir = NO;
     BOOL sdkPathExtant = [NSFileManager.defaultManager fileExistsAtPath:sdkPath isDirectory:&sdkPathIsDir];
     NSError* sdkPathError = nil;
@@ -78,7 +70,7 @@
             sdkPathExtant = NO;
         }
         else {
-            [MMELogger.sharedLogger logEvent:[MMEEvent debugEventWithError:sdkPathError]];
+            [self.logger logEvent:[MMEEvent debugEventWithError:sdkPathError]];
         }
     }
 
@@ -88,11 +80,11 @@
                 sdkPathIsDir = YES;
             }
             else {
-                [MMELogger.sharedLogger logEvent:[MMEEvent debugEventWithError:sdkPathError]];
+                [self.logger logEvent:[MMEEvent debugEventWithError:sdkPathError]];
             }
         }
         else {
-            [MMELogger.sharedLogger logEvent:[MMEEvent debugEventWithError:sdkPathError]];
+            [self.logger logEvent:[MMEEvent debugEventWithError:sdkPathError]];
         }
     }
 
@@ -101,10 +93,12 @@
 
 // MARK: -
 
-- (instancetype)init {
-    if (self = [super init]) {
+- (instancetype)initWithLogger:(MMELogger*)logger {
+    if ((self = super.init)) {
+        self.logger = logger;
         [self resetMetrics];
     }
+
     return self;
 }
 
@@ -237,20 +231,20 @@
 - (MMEEvent *)loadPendingTelemetryMetricsEvent {
     MMEEvent* pending = nil;
 
-    if ([NSFileManager.defaultManager fileExistsAtPath:MMEMetricsManager.pendingMetricsEventPath]) {
+    if ([NSFileManager.defaultManager fileExistsAtPath:self.pendingMetricsEventPath]) {
         @try {
-            NSData *thenData = [NSData dataWithContentsOfFile:MMEMetricsManager.pendingMetricsEventPath];
+            NSData *thenData = [NSData dataWithContentsOfFile: self.pendingMetricsEventPath];
             NSKeyedUnarchiver* unarchiver = [NSKeyedUnarchiver.alloc initForReadingWithData:thenData];
             unarchiver.requiresSecureCoding = YES;
             pending = [unarchiver decodeObjectOfClass:MMEEvent.class forKey:NSKeyedArchiveRootObjectKey];
         }
         @catch (NSException *exception) {
-            [MMELogger.sharedLogger logEvent:[MMEEvent debugEventWithException:exception]];
+            [self.logger logEvent:[MMEEvent debugEventWithException:exception]];
         }
     }
     //decoding failed; deleting metrics event
     if (pending == nil) {
-        [MMEMetricsManager deletePendingMetricsEventFile];
+        [self deletePendingMetricsEventFile];
     }
     return pending;
 }
@@ -262,28 +256,28 @@
 
     if (zeroHour.timeIntervalSinceNow > 0) { // it's not time to send metrics yet
         if (@available(iOS 10.0, macos 10.12, tvOS 10.0, watchOS 3.0, *)) { // write them to a pending file
-            [MMEMetricsManager deletePendingMetricsEventFile];
+            [self deletePendingMetricsEventFile];
 
-            if ([MMEMetricsManager createFrameworkMetricsEventDir]) {
+            if ([self createFrameworkMetricsEventDir]) {
                 @try { // to write the metrics event to the pending metrics event path
                     NSKeyedArchiver *archiver = [NSKeyedArchiver new];
                     archiver.requiresSecureCoding = YES;
                     [archiver encodeObject:telemetryMetrics forKey:NSKeyedArchiveRootObjectKey];
 
-                    if (![archiver.encodedData writeToFile:MMEMetricsManager.pendingMetricsEventPath atomically:YES]) {
+                    if (![archiver.encodedData writeToFile: self.pendingMetricsEventPath atomically:YES]) {
                         MMELog(MMELogInfo, MMEDebugEventTypeTelemetryMetrics, ([NSString stringWithFormat:@"Failed to archiveRootObject: %@ toFile: %@",
-                        telemetryMetrics, MMEMetricsManager.pendingMetricsEventPath]));
+                                                                                telemetryMetrics, self.pendingMetricsEventPath]));
                     }
                 }
                 @catch (NSException* exception) {
-                    [MMELogger.sharedLogger logEvent:[MMEEvent debugEventWithException:exception]];
+                    [self.logger logEvent:[MMEEvent debugEventWithException:exception]];
                 }
             }
         }
         return nil;
     }
-    [MMELogger.sharedLogger logEvent:telemetryMetrics];
-    [MMEMetricsManager deletePendingMetricsEventFile];
+    [self.logger logEvent:telemetryMetrics];
+    [self deletePendingMetricsEventFile];
     
     return telemetryMetrics;
 }
@@ -300,7 +294,7 @@
         if (jsonData) {
             jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
         } else if (jsonError) {
-            [MMELogger.sharedLogger logEvent:[MMEEvent debugEventWithError:jsonError]];
+            [self.logger logEvent:[MMEEvent debugEventWithError:jsonError]];
         }
         return jsonString;
     }

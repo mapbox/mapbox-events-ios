@@ -7,11 +7,11 @@
 + (instancetype)sharedLogger {
     static MMELogger *_sharedLogger;
     static dispatch_once_t onceToken;
-    
+
     dispatch_once(&onceToken, ^{
         _sharedLogger = MMELogger.new;
     });
-    
+
     return _sharedLogger;
 }
 
@@ -84,7 +84,7 @@
     MMEMutableMapboxEventAttributes *combinedAttributes = [MMEMutableMapboxEventAttributes dictionaryWithDictionary:attributes];
     [combinedAttributes setObject:[MMEDate.iso8601DateFormatter stringFromDate:[NSDate date]] forKey:@"created"];
     MMEEvent *debugEvent = [MMEEvent debugEventWithAttributes:combinedAttributes];
-    [MMELogger.sharedLogger logEvent:debugEvent];
+    [self logEvent:debugEvent];
 }
 
 @end

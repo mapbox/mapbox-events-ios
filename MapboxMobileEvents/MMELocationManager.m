@@ -4,6 +4,8 @@
 #import "MMELocationManager.h"
 #import "MMEMetricsManager.h"
 #import "MMEUIApplicationWrapper.h"
+
+// TODO: Remove imports once constructed and provided elsewhere
 #import "NSUserDefaults+MMEConfiguration.h"
 
 static const NSTimeInterval MMELocationManagerHibernationTimeout = 300.0;
@@ -24,6 +26,8 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
 @property (nonatomic) NSTimer *backgroundLocationServiceTimeoutTimer;
 @property (nonatomic) BOOL hostAppHasBackgroundCapability;
 @property (nonatomic, strong) MMEDependencyManager * dependencyManager;
+@property (nonatomic) MMEMetricsManager *metricsManager;
+
 
 @end
 
@@ -33,13 +37,14 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
     _locationManager.delegate = nil;
 }
 
-- (instancetype)init {
+- (instancetype)initWithMetricsManager:(MMEMetricsManager*)metricsManager {
     self = [super init];
     if (self) {
         _application = [[MMEUIApplicationWrapper alloc] init];
         NSArray *backgroundModes = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UIBackgroundModes"];
         _hostAppHasBackgroundCapability = [backgroundModes containsObject:@"location"];
         _dependencyManager = [[MMEDependencyManager alloc] init];
+        self.metricsManager = metricsManager;
     }
     return self;
 }
@@ -206,7 +211,8 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
     if ([self.delegate respondsToSelector:@selector(locationManager:didUpdateLocations:)]) {
         [self.delegate locationManager:self didUpdateLocations:locations];
     }
-    [[MMEMetricsManager sharedManager] updateCoordinate:location.coordinate];
+
+    [self.metricsManager updateCoordinate:location.coordinate];
     
     if (location.horizontalAccuracy < MMERadiusAccuracyMax) {
         for(CLRegion *region in self.locationManager.monitoredRegions) {
@@ -225,7 +231,7 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
 - (void)locationManager:(CLLocationManager *)locationManager didExitRegion:(CLRegion *)region {
     [self startBackgroundTimeoutTimer];
     [self.locationManager startUpdatingLocation];
-    [[MMEMetricsManager sharedManager] incrementAppWakeUpCount];
+    [self.metricsManager incrementAppWakeUpCount];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didVisit:(CLVisit *)visit {
