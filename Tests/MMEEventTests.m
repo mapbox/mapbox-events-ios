@@ -66,7 +66,7 @@
      MMEEvent *unarchived = [unarchiver decodeObjectOfClass:MMEEvent.class forKey:NSKeyedArchiveRootObjectKey];
 
      XCTAssertNotNil(unarchived);
-     XCTAssert(unarchived == event);
+     XCTAssertEqualObjects(unarchived, event);
 }
 
 - (void)testNSSecuredDecodeingOfMMEEvent {
