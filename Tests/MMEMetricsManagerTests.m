@@ -60,11 +60,11 @@
 }
 
 - (void)testAttributesDoesntExcludesNullFloat {
-    CLLocation *notNullIsland = [[CLLocation alloc] initWithLatitude:0.4 longitude:0.2];
+    CLLocation *notNullIsland = [[CLLocation alloc] initWithLatitude:4 longitude:2];
     
     [self.metricsManager updateCoordinate:notNullIsland.coordinate];
-    XCTAssert([self.metricsManager.attributes[MMEEventDeviceLat] isEqualToNumber:@0.4]);
-    XCTAssert([self.metricsManager.attributes[MMEEventDeviceLon] isEqualToNumber:@0.2]);
+    XCTAssert([self.metricsManager.attributes[MMEEventDeviceLat] isEqualToNumber:@4]);
+    XCTAssert([self.metricsManager.attributes[MMEEventDeviceLon] isEqualToNumber:@2]);
 }
 
 // TODO: - Convert Cedar Tests
