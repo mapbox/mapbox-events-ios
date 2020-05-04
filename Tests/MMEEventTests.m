@@ -67,7 +67,7 @@
 
      XCTAssertNotNil(unarchived);
      XCTAssertNotEqual(unarchived, event);
-     XCTAssert([unarchived isEqual:event]);
+     XCTAssertEqualObjects(unarchived, event);
 }
 
 - (void)testNSSecuredDecodeingOfMMEEvent {
