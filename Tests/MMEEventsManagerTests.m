@@ -164,8 +164,6 @@
     
     [self.eventsManager pushEvent:locationEvent];
     XCTAssert(self.eventsManager.eventQueue.count > 0);
-    
-    XCTAssert(self.eventsManager.eventQueue.count == 0);
 }
 
 - (void)testCollectionNotEnabledWhilePausedAndAlwaysAuth {
