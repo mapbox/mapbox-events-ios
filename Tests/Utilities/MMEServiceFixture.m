@@ -4,6 +4,7 @@
 #import <sys/socket.h>
 #import <netinet/in.h>
 #import <arpa/inet.h>
+#import "NSBundle+TestBundle.h"
 
 NSUInteger const MMEFixtureDefaultPort = 8888; // not 8080 which the test server uses
 
@@ -57,7 +58,7 @@ NSUInteger const MMEPrivledgedPort = 1024;
 }
 
 + (MMEServiceFixture *)serviceFixtureWithResource:(NSString *)fixtureName {
-    NSString *fixtureFile = [NSBundle.mainBundle pathForResource:fixtureName ofType:@"json"];
+    NSString *fixtureFile = [NSBundle.testBundle pathForResource:fixtureName ofType:@"json"];
     return [self serviceFixtureWithFile:fixtureFile];
 }
 

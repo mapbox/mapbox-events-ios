@@ -73,21 +73,6 @@
 		96AB510B21641A6000A261B8 /* MMEUINavigation.m in Sources */ = {isa = PBXBuildFile; fileRef = ACE4F0191FD6102100035880 /* MMEUINavigation.m */; platformFilter = ios; };
 		9C3F930B2351180A00F99907 /* MMEAPIClient_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 9C3F930A2351180A00F99907 /* MMEAPIClient_Private.h */; };
 		9C3F930D235128F500F99907 /* MMEEventsManager_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 9C3F930C235128F500F99907 /* MMEEventsManager_Private.h */; };
-		9C3F934423512FD300F99907 /* config-10s-bso.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933523512FD200F99907 /* config-10s-bso.json */; };
-		9C3F934523512FD300F99907 /* config-10000m-gfo.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933623512FD200F99907 /* config-10000m-gfo.json */; };
-		9C3F934623512FD300F99907 /* config-null.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933723512FD200F99907 /* config-null.json */; };
-		9C3F934723512FD300F99907 /* config-100s-bso.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933823512FD300F99907 /* config-100s-bso.json */; };
-		9C3F934823512FD300F99907 /* config-type1-tto.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933923512FD300F99907 /* config-type1-tto.json */; };
-		9C3F934923512FD300F99907 /* config-number-tag.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933A23512FD300F99907 /* config-number-tag.json */; };
-		9C3F934A23512FD300F99907 /* config-all.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933B23512FD300F99907 /* config-all.json */; };
-		9C3F934B23512FD300F99907 /* events-201.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933C23512FD300F99907 /* events-201.json */; };
-		9C3F934C23512FD300F99907 /* config-type2-tto.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933D23512FD300F99907 /* config-type2-tto.json */; };
-		9C3F934D23512FD300F99907 /* config-null-tag.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933E23512FD300F99907 /* config-null-tag.json */; };
-		9C3F934E23512FD300F99907 /* config-1s-bso.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933F23512FD300F99907 /* config-1s-bso.json */; };
-		9C3F934F23512FD300F99907 /* config-100m-gfo.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F934023512FD300F99907 /* config-100m-gfo.json */; };
-		9C3F935023512FD300F99907 /* config-all-wrong.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F934123512FD300F99907 /* config-all-wrong.json */; };
-		9C3F935123512FD300F99907 /* config-1000m-gfo.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F934223512FD300F99907 /* config-1000m-gfo.json */; };
-		9C3F935223512FD300F99907 /* config-test-tag.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F934323512FD300F99907 /* config-test-tag.json */; };
 		9C3F93582351317F00F99907 /* MMEAPIConfigTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C3F93572351317F00F99907 /* MMEAPIConfigTests.m */; };
 		9C3F935B235138FD00F99907 /* MMETestDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C3F9359235138FD00F99907 /* MMETestDelegate.m */; };
 		9C5B4CD7237104D000FB283C /* libMapboxMobileEvents.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 408596531ED084C0003BD29D /* libMapboxMobileEvents.a */; };
@@ -171,35 +156,16 @@
 		9CA753AB241027E6005C26C9 /* MMELoggerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CA753AA241027E6005C26C9 /* MMELoggerTests.m */; };
 		9CDC34B8234FD35800852FF0 /* NSUserDefaults+MMEConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = 9CDC34B6234FD35800852FF0 /* NSUserDefaults+MMEConfiguration.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9CDC34BB234FD36E00852FF0 /* NSUserDefaults+MMEConfigurationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CDC34BA234FD36E00852FF0 /* NSUserDefaults+MMEConfigurationTests.m */; };
-		9CE132C42358EC25005E23F1 /* config-long-ago.json in Resources */ = {isa = PBXBuildFile; fileRef = 9CE132C32358EC25005E23F1 /* config-long-ago.json */; };
 		9CE132C5235926B3005E23F1 /* MMECertPinTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CF93A66222488A4500BBA199 /* MMECertPinTests.m */; };
-		9CE132C72359296B005E23F1 /* config-crl.json in Resources */ = {isa = PBXBuildFile; fileRef = 9CE132C62359296A005E23F1 /* config-crl.json */; };
 		9CF000402370D674009A2700 /* NSString+MMEVersions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CF0003D2370D674009A2700 /* NSString+MMEVersions.m */; };
 		9CF000412370D674009A2700 /* NSString+MMEVersions.h in Headers */ = {isa = PBXBuildFile; fileRef = 9CF0003E2370D674009A2700 /* NSString+MMEVersions.h */; };
 		9CF000432370D7B2009A2700 /* NSString+MMEVersions_Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CF000422370D7B2009A2700 /* NSString+MMEVersions_Tests.m */; };
 		9CF00044237102B8009A2700 /* NSUserDefaults+MMEConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CDC34B7234FD35800852FF0 /* NSUserDefaults+MMEConfiguration.m */; platformFilter = ios; };
 		9CF000492371037E009A2700 /* MMETestDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C3F9359235138FD00F99907 /* MMETestDelegate.m */; };
 		9CF0004C2371037E009A2700 /* Cedar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40A7F9911F79A743002B931F /* Cedar.framework */; };
-		9CF0004E2371037E009A2700 /* events-201.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933C23512FD300F99907 /* events-201.json */; };
-		9CF0004F2371037E009A2700 /* config-10000m-gfo.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933623512FD200F99907 /* config-10000m-gfo.json */; };
-		9CF000502371037E009A2700 /* config-test-tag.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F934323512FD300F99907 /* config-test-tag.json */; };
 		9CF000512371037E009A2700 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9C65A2732256C112006E3FED /* LaunchScreen.storyboard */; };
-		9CF000522371037E009A2700 /* config-1000m-gfo.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F934223512FD300F99907 /* config-1000m-gfo.json */; };
-		9CF000532371037E009A2700 /* config-all-wrong.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F934123512FD300F99907 /* config-all-wrong.json */; };
-		9CF000542371037E009A2700 /* config-100s-bso.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933823512FD300F99907 /* config-100s-bso.json */; };
-		9CF000552371037E009A2700 /* config-long-ago.json in Resources */ = {isa = PBXBuildFile; fileRef = 9CE132C32358EC25005E23F1 /* config-long-ago.json */; };
-		9CF000562371037E009A2700 /* config-null-tag.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933E23512FD300F99907 /* config-null-tag.json */; };
 		9CF000572371037E009A2700 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9C65A2712256C112006E3FED /* Assets.xcassets */; };
-		9CF000582371037E009A2700 /* config-1s-bso.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933F23512FD300F99907 /* config-1s-bso.json */; };
-		9CF000592371037E009A2700 /* config-crl.json in Resources */ = {isa = PBXBuildFile; fileRef = 9CE132C62359296A005E23F1 /* config-crl.json */; };
 		9CF0005A2371037E009A2700 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9C65A26E2256C110006E3FED /* Main.storyboard */; };
-		9CF0005B2371037E009A2700 /* config-null.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933723512FD200F99907 /* config-null.json */; };
-		9CF0005C2371037E009A2700 /* config-10s-bso.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933523512FD200F99907 /* config-10s-bso.json */; };
-		9CF0005D2371037E009A2700 /* config-type2-tto.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933D23512FD300F99907 /* config-type2-tto.json */; };
-		9CF0005E2371037E009A2700 /* config-all.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933B23512FD300F99907 /* config-all.json */; };
-		9CF0005F2371037E009A2700 /* config-number-tag.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933A23512FD300F99907 /* config-number-tag.json */; };
-		9CF000602371037E009A2700 /* config-type1-tto.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933923512FD300F99907 /* config-type1-tto.json */; };
-		9CF000612371037E009A2700 /* config-100m-gfo.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F934023512FD300F99907 /* config-100m-gfo.json */; };
 		AC03B2C823AC477A0043271D /* MMEMetricsManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AC03B2C723AC477A0043271D /* MMEMetricsManagerTests.m */; };
 		AC03B2CA23AD55A10043271D /* MMEEventTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AC03B2C923AD55A10043271D /* MMEEventTests.m */; };
 		AC03B2F423B1A74B0043271D /* MMEDateTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AC03B2F323B1A74B0043271D /* MMEDateTests.m */; };
@@ -229,6 +195,24 @@
 		CF93A6582241EDD500BBA199 /* MMECertPin.m in Sources */ = {isa = PBXBuildFile; fileRef = CF93A6562241EDD500BBA199 /* MMECertPin.m */; };
 		CF93A6592241EDD500BBA199 /* MMECertPin.m in Sources */ = {isa = PBXBuildFile; fileRef = CF93A6562241EDD500BBA199 /* MMECertPin.m */; platformFilter = ios; };
 		CF93A65B2241EDD500BBA199 /* MMECertPin.h in Headers */ = {isa = PBXBuildFile; fileRef = CF93A6572241EDD500BBA199 /* MMECertPin.h */; };
+		F44C8BF82461029700E515AD /* NSBundle+TestBundle.m in Sources */ = {isa = PBXBuildFile; fileRef = F44C8BF72461029700E515AD /* NSBundle+TestBundle.m */; };
+		F44C8BF924610B7E00E515AD /* config-1s-bso.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933F23512FD300F99907 /* config-1s-bso.json */; };
+		F44C8BFA24610B8000E515AD /* config-10s-bso.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933523512FD200F99907 /* config-10s-bso.json */; };
+		F44C8BFB24610B8500E515AD /* config-100m-gfo.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F934023512FD300F99907 /* config-100m-gfo.json */; };
+		F44C8BFC24610B8800E515AD /* config-100s-bso.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933823512FD300F99907 /* config-100s-bso.json */; };
+		F44C8BFD24610B8A00E515AD /* config-1000m-gfo.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F934223512FD300F99907 /* config-1000m-gfo.json */; };
+		F44C8BFE24610B8E00E515AD /* config-10000m-gfo.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933623512FD200F99907 /* config-10000m-gfo.json */; };
+		F44C8BFF24610B9300E515AD /* config-all-wrong.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F934123512FD300F99907 /* config-all-wrong.json */; };
+		F44C8C0024610B9700E515AD /* config-all.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933B23512FD300F99907 /* config-all.json */; };
+		F44C8C0124610B9900E515AD /* config-null-tag.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933E23512FD300F99907 /* config-null-tag.json */; };
+		F44C8C0224610B9D00E515AD /* config-null.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933723512FD200F99907 /* config-null.json */; };
+		F44C8C0324610BA100E515AD /* config-number-tag.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933A23512FD300F99907 /* config-number-tag.json */; };
+		F44C8C0424610BA400E515AD /* config-test-tag.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F934323512FD300F99907 /* config-test-tag.json */; };
+		F44C8C0524610BA700E515AD /* config-type1-tto.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933923512FD300F99907 /* config-type1-tto.json */; };
+		F44C8C0624610BAA00E515AD /* config-type2-tto.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933D23512FD300F99907 /* config-type2-tto.json */; };
+		F44C8C0724610BAF00E515AD /* events-201.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933C23512FD300F99907 /* events-201.json */; };
+		F44C8C0824610BB200E515AD /* config-long-ago.json in Resources */ = {isa = PBXBuildFile; fileRef = 9CE132C32358EC25005E23F1 /* config-long-ago.json */; };
+		F44C8C0924610BB500E515AD /* config-crl.json in Resources */ = {isa = PBXBuildFile; fileRef = 9CE132C62359296A005E23F1 /* config-crl.json */; };
 		F4684FF42432A1610079B389 /* NSBundle+MMEMobileEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = F4684FF22432A1610079B389 /* NSBundle+MMEMobileEvents.h */; };
 		F4684FF52432A1610079B389 /* NSBundle+MMEMobileEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = F4684FF32432A1610079B389 /* NSBundle+MMEMobileEvents.m */; };
 		F4684FF62432A2770079B389 /* NSBundle+MMEMobileEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = F4684FF32432A1610079B389 /* NSBundle+MMEMobileEvents.m */; };
@@ -479,6 +463,8 @@
 		CF93A6562241EDD500BBA199 /* MMECertPin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMECertPin.m; sourceTree = "<group>"; };
 		CF93A6572241EDD500BBA199 /* MMECertPin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMECertPin.h; sourceTree = "<group>"; };
 		CF93A66222488A4500BBA199 /* MMECertPinTests.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = MMECertPinTests.m; sourceTree = "<group>"; };
+		F44C8BF62461029700E515AD /* NSBundle+TestBundle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSBundle+TestBundle.h"; sourceTree = "<group>"; };
+		F44C8BF72461029700E515AD /* NSBundle+TestBundle.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+TestBundle.m"; sourceTree = "<group>"; };
 		F4684FF22432A1610079B389 /* NSBundle+MMEMobileEvents.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSBundle+MMEMobileEvents.h"; sourceTree = "<group>"; };
 		F4684FF32432A1610079B389 /* NSBundle+MMEMobileEvents.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+MMEMobileEvents.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -620,6 +606,7 @@
 				AC03B2F523B1AEE60043271D /* MMEUniqueIdentifierTests.m */,
 				9CF000422370D7B2009A2700 /* NSString+MMEVersions_Tests.m */,
 				9CDC34BA234FD36E00852FF0 /* NSUserDefaults+MMEConfigurationTests.m */,
+				F44C8BF52461023300E515AD /* Categories */,
 				40C9E28B1EA5762F00744FE7 /* Fakes */,
 				40AE58481EA80E5E0046B437 /* Utilities */,
 				9C3F931623512F5D00F99907 /* Fixtures */,
@@ -782,6 +769,15 @@
 				404C5E221F85809400C026DD /* Scanfile */,
 			);
 			name = Packaging;
+			sourceTree = "<group>";
+		};
+		F44C8BF52461023300E515AD /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				F44C8BF62461029700E515AD /* NSBundle+TestBundle.h */,
+				F44C8BF72461029700E515AD /* NSBundle+TestBundle.m */,
+			);
+			path = Categories;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1046,6 +1042,23 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F44C8BFC24610B8800E515AD /* config-100s-bso.json in Resources */,
+				F44C8C0124610B9900E515AD /* config-null-tag.json in Resources */,
+				F44C8C0224610B9D00E515AD /* config-null.json in Resources */,
+				F44C8C0824610BB200E515AD /* config-long-ago.json in Resources */,
+				F44C8BFD24610B8A00E515AD /* config-1000m-gfo.json in Resources */,
+				F44C8BF924610B7E00E515AD /* config-1s-bso.json in Resources */,
+				F44C8C0724610BAF00E515AD /* events-201.json in Resources */,
+				F44C8C0024610B9700E515AD /* config-all.json in Resources */,
+				F44C8BFA24610B8000E515AD /* config-10s-bso.json in Resources */,
+				F44C8C0524610BA700E515AD /* config-type1-tto.json in Resources */,
+				F44C8BFF24610B9300E515AD /* config-all-wrong.json in Resources */,
+				F44C8C0424610BA400E515AD /* config-test-tag.json in Resources */,
+				F44C8C0624610BAA00E515AD /* config-type2-tto.json in Resources */,
+				F44C8BFE24610B8E00E515AD /* config-10000m-gfo.json in Resources */,
+				F44C8C0924610BB500E515AD /* config-crl.json in Resources */,
+				F44C8BFB24610B8500E515AD /* config-100m-gfo.json in Resources */,
+				F44C8C0324610BA100E515AD /* config-number-tag.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1053,26 +1066,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9C3F934B23512FD300F99907 /* events-201.json in Resources */,
-				9C3F934523512FD300F99907 /* config-10000m-gfo.json in Resources */,
-				9C3F935223512FD300F99907 /* config-test-tag.json in Resources */,
 				9C65A2752256C112006E3FED /* LaunchScreen.storyboard in Resources */,
-				9C3F935123512FD300F99907 /* config-1000m-gfo.json in Resources */,
-				9C3F935023512FD300F99907 /* config-all-wrong.json in Resources */,
-				9C3F934723512FD300F99907 /* config-100s-bso.json in Resources */,
-				9CE132C42358EC25005E23F1 /* config-long-ago.json in Resources */,
-				9C3F934D23512FD300F99907 /* config-null-tag.json in Resources */,
 				9C65A2722256C112006E3FED /* Assets.xcassets in Resources */,
-				9C3F934E23512FD300F99907 /* config-1s-bso.json in Resources */,
-				9CE132C72359296B005E23F1 /* config-crl.json in Resources */,
 				9C65A2702256C110006E3FED /* Main.storyboard in Resources */,
-				9C3F934623512FD300F99907 /* config-null.json in Resources */,
-				9C3F934423512FD300F99907 /* config-10s-bso.json in Resources */,
-				9C3F934C23512FD300F99907 /* config-type2-tto.json in Resources */,
-				9C3F934A23512FD300F99907 /* config-all.json in Resources */,
-				9C3F934923512FD300F99907 /* config-number-tag.json in Resources */,
-				9C3F934823512FD300F99907 /* config-type1-tto.json in Resources */,
-				9C3F934F23512FD300F99907 /* config-100m-gfo.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1087,26 +1083,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9CF0004E2371037E009A2700 /* events-201.json in Resources */,
-				9CF0004F2371037E009A2700 /* config-10000m-gfo.json in Resources */,
-				9CF000502371037E009A2700 /* config-test-tag.json in Resources */,
 				9CF000512371037E009A2700 /* LaunchScreen.storyboard in Resources */,
-				9CF000522371037E009A2700 /* config-1000m-gfo.json in Resources */,
-				9CF000532371037E009A2700 /* config-all-wrong.json in Resources */,
-				9CF000542371037E009A2700 /* config-100s-bso.json in Resources */,
-				9CF000552371037E009A2700 /* config-long-ago.json in Resources */,
-				9CF000562371037E009A2700 /* config-null-tag.json in Resources */,
 				9CF000572371037E009A2700 /* Assets.xcassets in Resources */,
-				9CF000582371037E009A2700 /* config-1s-bso.json in Resources */,
-				9CF000592371037E009A2700 /* config-crl.json in Resources */,
 				9CF0005A2371037E009A2700 /* Main.storyboard in Resources */,
-				9CF0005B2371037E009A2700 /* config-null.json in Resources */,
-				9CF0005C2371037E009A2700 /* config-10s-bso.json in Resources */,
-				9CF0005D2371037E009A2700 /* config-type2-tto.json in Resources */,
-				9CF0005E2371037E009A2700 /* config-all.json in Resources */,
-				9CF0005F2371037E009A2700 /* config-number-tag.json in Resources */,
-				9CF000602371037E009A2700 /* config-type1-tto.json in Resources */,
-				9CF000612371037E009A2700 /* config-100m-gfo.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1159,6 +1138,7 @@
 				AC69502D238E000C00D095EB /* MMELocationManagerTests.m in Sources */,
 				9CA753AB241027E6005C26C9 /* MMELoggerTests.m in Sources */,
 				AC03B2C823AC477A0043271D /* MMEMetricsManagerTests.m in Sources */,
+				F44C8BF82461029700E515AD /* NSBundle+TestBundle.m in Sources */,
 				AC03B2F623B1AEE60043271D /* MMEUniqueIdentifierTests.m in Sources */,
 				9CF000432370D7B2009A2700 /* NSString+MMEVersions_Tests.m in Sources */,
 				9CDC34BB234FD36E00852FF0 /* NSUserDefaults+MMEConfigurationTests.m in Sources */,
