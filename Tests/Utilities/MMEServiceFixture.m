@@ -3,6 +3,7 @@
 #import <Foundation/Foundation.h>
 #import <netinet/in.h>
 #import <arpa/inet.h>
+#import "NSBundle+TestBundle.h"
 
 in_port_t const MMEFixtureDefaultPort = 8000;
 
@@ -56,7 +57,7 @@ NSUInteger const MMEPrivledgedPort = 1024;
 }
 
 + (MMEServiceFixture *)serviceFixtureWithResource:(NSString *)fixtureName {
-    NSString *fixtureFile = [NSBundle.mainBundle pathForResource:fixtureName ofType:@"json"];
+    NSString *fixtureFile = [NSBundle.testBundle pathForResource:fixtureName ofType:@"json"];
     return [self serviceFixtureWithFile:fixtureFile];
 }
 
