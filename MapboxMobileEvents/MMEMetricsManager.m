@@ -217,7 +217,8 @@
     attributes[MMEEventAppWakeups] = @(self.metrics.appWakeups);
     attributes[MMEEventRequests] = @(self.metrics.requests);
     attributes[MMEEventDeviceTimeDrift] = @(MMEDate.recordedTimeOffsetFromServer);
-    if (lround(self.metrics.deviceLat) != 0 && lround(self.metrics.deviceLon) != 0) {
+    // check for null-island and don't add a location if we're there
+    if (self.metrics.deviceLat != 0 && self.metrics.deviceLon != 0) {
         attributes[MMEEventDeviceLat] = @(self.metrics.deviceLat);
         attributes[MMEEventDeviceLon] = @(self.metrics.deviceLon);
     }
