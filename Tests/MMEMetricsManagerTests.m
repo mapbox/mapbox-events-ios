@@ -3,11 +3,12 @@
 #import "MMEMetricsManager.h"
 #import "MMEEvent.h"
 #import "MMEConstants.h"
+#import "MMELogger.h"
 
 @interface MMEMetricsManager (Tests)
 
-+ (BOOL)createFrameworkMetricsEventDir;
-+ (NSString *)pendingMetricsEventPath;
+- (BOOL)createFrameworkMetricsEventDir;
+- (NSString *)pendingMetricsEventPath;
 
 @end
 
@@ -22,17 +23,17 @@
 @implementation MMEMetricsManagerTests
 
 - (void)setUp {
-    self.metricsManager = [[MMEMetricsManager alloc] init];
+    self.metricsManager = [[MMEMetricsManager alloc] initWithLogger:[[MMELogger alloc] init]];
     
     self.dateFormatter = [[NSDateFormatter alloc] init];
     self.dateFormatter.dateFormat = @"yyyy-MM-dd";
 }
 
 - (void)testCreateFrameworkMetricsEventDirCreatesNewFile {
-    NSString *sdkPath = MMEMetricsManager.pendingMetricsEventPath.stringByDeletingLastPathComponent;
+    NSString *sdkPath = self.metricsManager.pendingMetricsEventPath.stringByDeletingLastPathComponent;
     [NSFileManager.defaultManager removeItemAtPath:sdkPath error:nil];
     
-    BOOL frameworkDirCreated = [MMEMetricsManager createFrameworkMetricsEventDir];
+    BOOL frameworkDirCreated = [self.metricsManager createFrameworkMetricsEventDir];
     
     XCTAssert(frameworkDirCreated);
     XCTAssert([NSFileManager.defaultManager fileExistsAtPath:sdkPath isDirectory:nil]);

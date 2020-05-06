@@ -5,7 +5,8 @@
 #import "MMENSURLSessionWrapperFake.h"
 #import "MMEEvent.h"
 #import "MMEConstants.h"
-
+#import "MMEMetricsManager.h"
+#import "MMELogger.h"
 #import "NSUserDefaults+MMEConfiguration.h"
 #import "NSUserDefaults+MMEConfiguration_Private.h"
 #import "NSData+MMEGZIP.h"
@@ -44,9 +45,12 @@
 @implementation MMEAPIClientTests
 
 - (void)setUp {
+
+    MMEMetricsManager *metricsManager = [[MMEMetricsManager alloc] initWithLogger:[[MMELogger alloc] init]];
     self.apiClient = [[MMEAPIClient alloc] initWithAccessToken:@"access-token"
-                                            userAgentBase:@"user-agent-base"
-                                           hostSDKVersion:@"host-sdk-1"];
+                                                 userAgentBase:@"user-agent-base"
+                                                hostSDKVersion:@"host-sdk-1"
+                                                metricsManager: metricsManager];
     
     self.sessionWrapper = (MMENSURLSessionWrapper *)self.apiClient.sessionWrapper;
     self.sessionWrapperFake = [[MMENSURLSessionWrapperFake alloc] init];

@@ -32,7 +32,7 @@
     dispatch_once(&onceToken, ^{
         NSString *libraryPath = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).lastObject;
 
-        NSString *frameworkLibraryPath = [libraryPath stringByAppendingPathComponent: [NSBundle mme_bundle].bundleIdentifier];
+        NSString *frameworkLibraryPath = [libraryPath stringByAppendingPathComponent:[NSBundle bundleForClass:self.class].bundleIdentifier];
 
         pendingMetricFile = [frameworkLibraryPath stringByAppendingPathComponent:@"pending-metrics.event"];
     });
@@ -61,7 +61,7 @@
 
 - (BOOL)createFrameworkMetricsEventDir {
     NSString *sdkPath = self.pendingMetricsEventPath.stringByDeletingLastPathComponent;
-    BOOL sdkPathIsDir = NO;
+    BOOL sdkPathIsDir = YES;
     BOOL sdkPathExtant = [NSFileManager.defaultManager fileExistsAtPath:sdkPath isDirectory:&sdkPathIsDir];
     NSError* sdkPathError = nil;
 
