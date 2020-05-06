@@ -72,17 +72,17 @@
     self.apiClient = MMEEventsManager.sharedManager.apiClient;
 }
 
-- (void)test001_checkCNHashCount {
+- (void)testCheckCNHashCount {
     NSArray *cnHashes = NSUserDefaults.mme_configuration.mme_certificatePinningConfig[@"events.mapbox.cn"];
     XCTAssert(cnHashes.count == 54);
 }
 
--(void)test002_checkCOMHashCount {
+-(void)testCheckCOMHashCount {
     NSArray *comHashes = NSUserDefaults.mme_configuration.mme_certificatePinningConfig[@"events.mapbox.com"];
     XCTAssert(comHashes.count == 54);
 }
     
--(void)test003_countCNHashesWithBlacklist {
+-(void)testCountCNHashesWithBlacklist {
     NSError *configError = nil;
     MMEServiceFixture *configFixture = [MMEServiceFixture serviceFixtureWithResource:@"config-crl"];
     [self.apiClient startGettingConfigUpdates];
@@ -93,7 +93,7 @@
     XCTAssert(cnHashes.count == 53);
 }
             
--(void)test004_countCOMHashesWithBlacklist {
+-(void)testCountCOMHashesWithBlacklist {
     NSError *configError = nil;
     MMEServiceFixture *configFixture = [MMEServiceFixture serviceFixtureWithResource:@"config-crl"];
     [self.apiClient startGettingConfigUpdates];
@@ -104,7 +104,7 @@
     XCTAssert(comHashes.count == 53);
 }
 
--(void)test005_validateCNHashes {
+-(void)testValidateCNHashes {
     NSArray *cnHashes = NSUserDefaults.mme_configuration.mme_certificatePinningConfig[@"events.mapbox.cn"];
     NSMutableArray *invalidHashes = [[NSMutableArray alloc] init];
     
@@ -118,7 +118,7 @@
     XCTAssert(invalidHashes.count == 0);
 }
 
--(void)test006_validateCOMHashes {
+-(void)testValidateCOMHashes {
     NSArray *comHashes = NSUserDefaults.mme_configuration.mme_certificatePinningConfig[@"events.mapbox.com"];
     NSMutableArray *invalidHashes = [[NSMutableArray alloc] init];
     

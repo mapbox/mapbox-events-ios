@@ -43,11 +43,11 @@
 
 // MARK: -
 
-- (void) test001_TestHostConfigURL {
+- (void) testHostConfigURL {
     XCTAssert([NSUserDefaults.mme_configuration.mme_configServiceURL isEqual:MMEServiceFixture.serviceURL]);
 }
 
-- (void) test002_StaringConfigUdpate {
+- (void) testStaringConfigUdpate {
     NSError *configError = nil;
     MMEServiceFixture *configFixture = [MMEServiceFixture serviceFixtureWithResource:@"config-null"];
     
@@ -57,12 +57,12 @@
     XCTAssertNil(configError);
 }
 
-- (void) test003_StoppingConfigUpdate {
+- (void) testStoppingConfigUpdate {
     [self.apiClient stopGettingConfigUpdates];
     XCTAssert(!self.apiClient.isGettingConfigUpdates);
 }
 
-- (void) test004_ShortUpdateInterval {
+- (void) testShortUpdateInterval {
     NSError *configError = nil;
     MMEServiceFixture *configFixture = [MMEServiceFixture serviceFixtureWithResource:@"config-null"];
     [NSUserDefaults.mme_configuration registerDefaults:@{MMEConfigurationUpdateInterval: @(MME1sTimeout)}];
@@ -74,7 +74,7 @@
     XCTAssertNil(configError);
 }
 
-- (void) test005_1sBSO {
+- (void) test1sBSO {
     NSError *configError = nil;
     MMEServiceFixture *configFixture = [MMEServiceFixture serviceFixtureWithResource:@"config-1s-bso"];
     [self.apiClient startGettingConfigUpdates];
@@ -85,7 +85,7 @@
     XCTAssert(NSUserDefaults.mme_configuration.mme_backgroundStartupDelay == 1);
 }
 
-- (void) test006_10sBSO {
+- (void) test10sBSO {
     NSError *configError = nil;
     MMEServiceFixture *configFixture = [MMEServiceFixture serviceFixtureWithResource:@"config-10s-bso"];
     [self.apiClient startGettingConfigUpdates];
@@ -96,7 +96,7 @@
     XCTAssert(NSUserDefaults.mme_configuration.mme_backgroundStartupDelay == 10);
 }
 
-- (void) test007_100mGFO {
+- (void) test100mGFO {
     NSError *configError = nil;
     MMEServiceFixture *configFixture = [MMEServiceFixture serviceFixtureWithResource:@"config-100m-gfo"];
     [self.apiClient startGettingConfigUpdates];
@@ -107,7 +107,7 @@
     XCTAssert(NSUserDefaults.mme_configuration.mme_backgroundGeofence == 300); // default value
 }
 
-- (void) test008_1000mGFO {
+- (void) test1000mGFO {
     NSError *configError = nil;
     MMEServiceFixture *configFixture = [MMEServiceFixture serviceFixtureWithResource:@"config-1000m-gfo"];
     [self.apiClient startGettingConfigUpdates];
@@ -118,7 +118,7 @@
     XCTAssert(NSUserDefaults.mme_configuration.mme_backgroundGeofence == 1000); // configured value
 }
 
-- (void) test009_10000mGFO {
+- (void) test10000mGFO {
     NSError *configError = nil;
     MMEServiceFixture *configFixture = [MMEServiceFixture serviceFixtureWithResource:@"config-10000m-gfo"];
     [self.apiClient startGettingConfigUpdates];
@@ -129,7 +129,7 @@
     XCTAssert(NSUserDefaults.mme_configuration.mme_backgroundGeofence == 300); // default value
 }
 
-- (void) test010_NullConfig {
+- (void) testNullConfig {
     NSError *configError = nil;
     MMEServiceFixture *configFixture = [MMEServiceFixture serviceFixtureWithResource:@"config-null"];
     [self.apiClient startGettingConfigUpdates];
@@ -139,7 +139,7 @@
     XCTAssertNil(self.eventsError);
 }
 
-- (void) test010_NullTag {
+- (void) testNullTag {
     NSError *configError = nil;
     MMEServiceFixture *configFixture = [MMEServiceFixture serviceFixtureWithResource:@"config-null-tag"];
     [self.apiClient startGettingConfigUpdates];
@@ -150,7 +150,7 @@
     XCTAssertNil(NSUserDefaults.mme_configuration.mme_eventTag);
 }
 
-- (void) test011_NumberTag {
+- (void) testNumberTag {
     NSError *configError = nil;
     MMEServiceFixture *configFixture = [MMEServiceFixture serviceFixtureWithResource:@"config-number-tag"];
     [self.apiClient startGettingConfigUpdates];
@@ -161,7 +161,7 @@
     XCTAssertNil(NSUserDefaults.mme_configuration.mme_eventTag);
 }
 
-- (void) test012_TestTag {
+- (void) testTestTag {
     NSError *configError = nil;
     MMEServiceFixture *configFixture = [MMEServiceFixture serviceFixtureWithResource:@"config-test-tag"];
     [self.apiClient startGettingConfigUpdates];
@@ -171,7 +171,7 @@
     XCTAssertNil(self.eventsError);
 }
 
-- (void) test013_Type1TTO {
+- (void) testType1TTO {
     NSError *configError = nil;
     MMEServiceFixture *configFixture = [MMEServiceFixture serviceFixtureWithResource:@"config-type1-tto"];
     [self.apiClient startGettingConfigUpdates];
@@ -183,7 +183,7 @@
     XCTAssertFalse(NSUserDefaults.mme_configuration.mme_isCollectionEnabledInBackground);
 }
 
-- (void) test014_Type2TTO {
+- (void) testType2TTO {
     NSError *configError = nil;
     MMEServiceFixture *configFixture = [MMEServiceFixture serviceFixtureWithResource:@"config-type2-tto"];
     [self.apiClient startGettingConfigUpdates];
@@ -195,7 +195,7 @@
     XCTAssertFalse(NSUserDefaults.mme_configuration.mme_isCollectionEnabledInBackground);
 }
 
-- (void) test015_All {
+- (void) testAll {
     NSError *configError = nil;
     MMEServiceFixture *configFixture = [MMEServiceFixture serviceFixtureWithResource:@"config-all"];
     [self.apiClient startGettingConfigUpdates];
@@ -208,7 +208,7 @@
     XCTAssert([NSUserDefaults.mme_configuration.mme_eventTag isEqualToString:@"all"]);
 }
 
-- (void) test016_AllWrong {
+- (void) testAllWrong {
     NSError *configError = nil;
     MMEServiceFixture *configFixture = [MMEServiceFixture serviceFixtureWithResource:@"config-all-wrong"];
     [self.apiClient startGettingConfigUpdates];
@@ -221,13 +221,13 @@
     XCTAssertNil(NSUserDefaults.mme_configuration.mme_eventTag); // default
 }
 
-- (void) test017_configShouldNotAcceptFutureDate {
+- (void) testconfigShouldNotAcceptFutureDate {
     [NSUserDefaults.mme_configuration mme_setConfigUpdateDate:(MMEDate *)[MMEDate distantFuture]];
     
     XCTAssertNil(NSUserDefaults.mme_configuration.mme_configUpdateDate);
 }
 
-- (void) test018_configShouldUpdateOnStartWithPastDate {
+- (void) testconfigShouldUpdateOnStartWithPastDate {
     [NSUserDefaults.mme_configuration mme_setConfigUpdateDate:(MMEDate *)[MMEDate distantPast]];
     NSError *configError = nil;
     MMEServiceFixture *configFixture = [MMEServiceFixture serviceFixtureWithResource:@"config-null"];
@@ -238,7 +238,7 @@
     XCTAssertNil(configError);
 }
 
-- (void) test019_configShouldUpdateClockOffset {
+- (void) testconfigShouldUpdateClockOffset {
     NSError *configError = nil;
     MMEServiceFixture *configFixture = [MMEServiceFixture serviceFixtureWithResource:@"config-long-ago"];
     [self.apiClient startGettingConfigUpdates];
