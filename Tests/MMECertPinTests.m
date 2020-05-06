@@ -100,10 +100,6 @@
     XCTAssert([configFixture waitForConnectionWithTimeout:MME10sTimeout error:&configError]); // fetch the config fixture
     XCTAssertNil(configError);
 
-    NSArray *comHashes = NSUserDefaults.mme_configuration.mme_certificatePinningConfig[@"events.mapbox.com"];
-    XCTAssert(comHashes.count == 53);
-}
-
 -(void)testValidateCNHashes {
     NSArray *cnHashes = NSUserDefaults.mme_configuration.mme_certificatePinningConfig[@"events.mapbox.cn"];
     NSMutableArray *invalidHashes = [[NSMutableArray alloc] init];
