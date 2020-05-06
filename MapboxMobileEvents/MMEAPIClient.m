@@ -8,17 +8,14 @@
 #import "MMEEventsManager.h"
 #import "MMEEventsManager_Private.h"
 #import "MMELogger.h"
+#import "NSError+APIClient.h"
+#import "NSURLRequest+APIClientFactory.h"
 
 #import "NSData+MMEGZIP.h"
 #import "NSUserDefaults+MMEConfiguration.h"
 #import "NSUserDefaults+MMEConfiguration_Private.h"
 
 static NSString * const MMEMapboxAgent = @"X-Mapbox-Agent";
-
-typedef NS_ENUM(NSInteger, MMEErrorCode) {
-    MMESessionFailedError,
-    MMEUnexpectedResponseError
-};
 
 @import MobileCoreServices;
 
@@ -86,7 +83,7 @@ int const kMMEMaxRequestCount = 1000;
                 // check the response object for HTTP error code
                 if (response && [response isKindOfClass:NSHTTPURLResponse.class]) {
                     NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-                    NSError *statusError = [self statusErrorFromRequest:request andHTTPResponse:httpResponse sessionError:error];
+                    NSError *statusError = [[NSError alloc] initWith:request httpResponse:httpResponse error:error];
 
                     if (statusError) { // report the status error
                         [MMEEventsManager.sharedManager reportError:statusError];
@@ -129,8 +126,8 @@ int const kMMEMaxRequestCount = 1000;
         // check the response object for HTTP error code
         if (response && [response isKindOfClass:NSHTTPURLResponse.class]) {
             NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-            NSError *statusError = [self statusErrorFromRequest:request andHTTPResponse:httpResponse sessionError:error];
-            
+            NSError *statusError = [[NSError alloc] initWith:request httpResponse:httpResponse error:error];
+
             if (statusError) { // always report the status error
                 [MMEEventsManager.sharedManager reportError:statusError];
             }
@@ -160,17 +157,24 @@ int const kMMEMaxRequestCount = 1000;
     }
 
     if (@available(iOS 10.0, macos 10.12, tvOS 10.0, watchOS 3.0, *)) {
+
+        __weak __typeof__(self) weakSelf = self;
         self.configurationUpdateTimer = [NSTimer
             scheduledTimerWithTimeInterval:NSUserDefaults.mme_configuration.mme_configUpdateInterval
             repeats:YES
             block:^(NSTimer * _Nonnull timer) {
-                NSURLRequest *request = [self requestForConfiguration];
-                
-                [self.sessionWrapper processRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+
+                __strong __typeof__(weakSelf) strongSelf = weakSelf;
+                if (strongSelf == nil) {
+                    return;
+                }
+
+                NSURLRequest *request = [NSURLRequest configurationRequest];
+                [strongSelf.sessionWrapper processRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
                     // check the response object for HTTP error code, update the local clock offset
                     if (response && [response isKindOfClass:NSHTTPURLResponse.class]) {
                         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-                        NSError *statusError = [self statusErrorFromRequest:request andHTTPResponse:httpResponse sessionError:error];
+                        NSError *statusError = [[NSError alloc] initWith:request httpResponse:httpResponse error:error];
 
                         if (!statusError) {
                             // check for time-offset from the server
@@ -230,37 +234,6 @@ int const kMMEMaxRequestCount = 1000;
 }
 
 // MARK: - Utilities
-
-- (NSError *)statusErrorFromRequest:(NSURLRequest *)request andHTTPResponse:(NSHTTPURLResponse *)httpResponse sessionError:(NSError *)error {
-    NSError *statusError = nil;
-    if (httpResponse.statusCode >= 400) { // all 4xx and 5xx errors should be reported
-        NSString *description = [NSString stringWithFormat:@"The session data task failed. Original request was: %@",
-            request ?: [NSNull null]];
-        NSString *reason = [NSString stringWithFormat:@"The status code was %ld", (long)httpResponse.statusCode];
-        NSMutableDictionary *userInfo = [NSMutableDictionary new];
-        [userInfo setValue:description forKey:NSLocalizedDescriptionKey];
-        [userInfo setValue:reason forKey:NSLocalizedFailureReasonErrorKey];
-        [userInfo setValue:httpResponse forKey:MMEResponseKey];
-        if (error) { // record the session error as the underlying error
-            [userInfo setValue:error forKey:NSUnderlyingErrorKey];
-        }
-        
-        statusError = [NSError errorWithDomain:MMEErrorDomain code:MMESessionFailedError userInfo:userInfo];
-    }
-    return statusError;
-}
-
-- (NSURLRequest *)requestForConfiguration {
-    NSString *path = [NSString stringWithFormat:@"%@?access_token=%@", MMEAPIClientEventsConfigPath, NSUserDefaults.mme_configuration.mme_accessToken];
-    NSURL *configServiceURL = [NSURL URLWithString:path relativeToURL:NSUserDefaults.mme_configuration.mme_configServiceURL];
-    NSMutableURLRequest *request = [NSMutableURLRequest.alloc initWithURL:configServiceURL];
-    
-    [request setValue:NSUserDefaults.mme_configuration.mme_userAgentString forHTTPHeaderField:MMEAPIClientHeaderFieldUserAgentKey];
-    [request setValue:MMEAPIClientHeaderFieldContentTypeValue forHTTPHeaderField:MMEAPIClientHeaderFieldContentTypeKey];
-    [request setHTTPMethod:MMEAPIClientHTTPMethodPost];
-    
-    return request;
-}
 
 - (NSURLRequest *)requestForBinary:(NSData *)binaryData boundary:(NSString *)boundary {
     NSString *path = [NSString stringWithFormat:@"%@?access_token=%@", MMEAPIClientAttachmentsPath, NSUserDefaults.mme_configuration.mme_accessToken];

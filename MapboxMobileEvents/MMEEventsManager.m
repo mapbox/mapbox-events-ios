@@ -167,13 +167,18 @@ NS_ASSUME_NONNULL_BEGIN
         if (appIsInBackground && _backgroundTaskIdentifier == UIBackgroundTaskInvalid) {
             MMELog(MMELogInfo, MMEDebugEventTypeBackgroundTask, ([NSString stringWithFormat:@"Initiated background task: %@, instance: %@",
                 @(self.backgroundTaskIdentifier),self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
-            
+
+            __weak __typeof__(self) weakSelf = self;
             _backgroundTaskIdentifier = [self.application beginBackgroundTaskWithExpirationHandler:^{
-                MMELog(MMELogInfo, MMEDebugEventTypeBackgroundTask, ([NSString stringWithFormat:@"Ending background task: %@, instance: %@",
-                    @(self.backgroundTaskIdentifier),self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
+
+                MMELog(
+                       MMELogInfo,
+                       MMEDebugEventTypeBackgroundTask,
+                       ([NSString stringWithFormat:@"Ending background task: %@, instance: %@", @(weakSelf.backgroundTaskIdentifier) ?: @"nil", weakSelf.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"])
+                       );
                 
-                [self.application endBackgroundTask:self.backgroundTaskIdentifier];
-                self.backgroundTaskIdentifier = UIBackgroundTaskInvalid;
+                [weakSelf.application endBackgroundTask:self.backgroundTaskIdentifier];
+                weakSelf.backgroundTaskIdentifier = UIBackgroundTaskInvalid;
             }];
             
             [self flush];
@@ -260,16 +265,18 @@ NS_ASSUME_NONNULL_BEGIN
         [self.apiClient postEvents:events completionHandler:^(NSError * _Nullable error) {
             @try {
                 __strong __typeof__(weakSelf) strongSelf = weakSelf;
-
+                if (strongSelf == nil) {
+                    return;
+                }
                 if (error) {
                     [self.logger logEvent:[MMEEvent debugEventWithError:error]];
                 } else {
                     MMELog(MMELogInfo, MMEDebugEventTypePost, ([NSString stringWithFormat:@"post: %@, instance: %@",
-                        @(events.count),self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
+                        @(events.count),strongSelf.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
                 }
 
                 if (strongSelf.backgroundTaskIdentifier != UIBackgroundTaskInvalid) {
-                    MMELog(MMELogInfo, MMEDebugEventTypeBackgroundTask, ([NSString stringWithFormat:@"Ending background task: %@, instance: %@",@(self.backgroundTaskIdentifier),self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
+                    MMELog(MMELogInfo, MMEDebugEventTypeBackgroundTask, ([NSString stringWithFormat:@"Ending background task: %@, instance: %@",@(strongSelf.backgroundTaskIdentifier),strongSelf.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
                     
                     [strongSelf.application endBackgroundTask:strongSelf.backgroundTaskIdentifier];
                     strongSelf.backgroundTaskIdentifier = UIBackgroundTaskInvalid;
@@ -354,17 +361,20 @@ NS_ASSUME_NONNULL_BEGIN
         [self.apiClient postEvent:turnstileEvent completionHandler:^(NSError * _Nullable error) {
             @try {
                 __strong __typeof__(weakSelf) strongSelf = weakSelf;
+                if (strongSelf == nil) {
+                    return;
+                }
 
                 if (error) {
                     MMELog(MMELogInfo, MMEDebugEventTypeTurnstileFailed, ([NSString stringWithFormat:@"Could not send turnstile event: %@, instance: %@",
-                        [error localizedDescription] , self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
+                        [error localizedDescription] , strongSelf.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
                     return;
                 }
 
                 [strongSelf updateNextTurnstileSendDate];
                 
                 MMELog(MMELogInfo, MMEDebugEventTypeTurnstile, ([NSString stringWithFormat:@"Sent turnstile event, instance: %@",
-                    self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
+                    strongSelf.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
             }
             @catch(NSException *except) {
                 [self reportException:except];
@@ -380,13 +390,16 @@ NS_ASSUME_NONNULL_BEGIN
     MMEEvent *pendingMetricsEvent = [self.metricsManager loadPendingTelemetryMetricsEvent];
 
     if (pendingMetricsEvent) {
+
+        __weak __typeof__(self) weakSelf = self;
         [self.apiClient postEvent:pendingMetricsEvent completionHandler:^(NSError * _Nullable error) {
             if (error) {
                 [self.logger logEvent:[MMEEvent debugEventWithError:error]];
                 return;
             }
+
             MMELog(MMELogInfo, MMEDebugEventTypeTelemetryMetrics, ([NSString stringWithFormat:@"Sent pendingTelemetryMetrics event, instance: %@",
-                self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
+                weakSelf.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
         }];
     }
 }
@@ -399,15 +412,17 @@ NS_ASSUME_NONNULL_BEGIN
             telemetryMetricsEvent, self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
         
         if (telemetryMetricsEvent) {
+
+            __weak __typeof__(self) weakSelf = self;
             [self.apiClient postEvent:telemetryMetricsEvent completionHandler:^(NSError * _Nullable error) {
                 [self.metricsManager resetMetrics];
                 if (error) {
                     MMELog(MMELogInfo, MMEDebugEventTypeTelemetryMetrics, ([NSString stringWithFormat:@"Could not send telemetryMetrics event: %@, instance: %@",
-                        [error localizedDescription], self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
+                        [error localizedDescription], weakSelf.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
                     return;
                 }
                 MMELog(MMELogInfo, MMEDebugEventTypeTelemetryMetrics, ([NSString stringWithFormat:@"Sent telemetryMetrics event, instance: %@",
-                    self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
+                    weakSelf.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
             }];
         }
     }

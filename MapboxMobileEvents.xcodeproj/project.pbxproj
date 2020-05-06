@@ -222,6 +222,16 @@
 		F4EAFDFD24538B6500D2B17B /* MMEDependencyProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = F4EAFDFB24538B6500D2B17B /* MMEDependencyProviding.h */; };
 		F4EAFDFE2453B08F00D2B17B /* NSBundle+MMEMobileEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = F4684FF22432A1610079B389 /* NSBundle+MMEMobileEvents.h */; };
 		F4EAFDFF2453B09100D2B17B /* NSBundle+MMEMobileEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = F4684FF32432A1610079B389 /* NSBundle+MMEMobileEvents.m */; };
+		F49675E224620F4300F8914D /* NSError+APIClient.h in Headers */ = {isa = PBXBuildFile; fileRef = F49675E024620F4300F8914D /* NSError+APIClient.h */; };
+		F49675E324620F4300F8914D /* NSError+APIClient.h in Headers */ = {isa = PBXBuildFile; fileRef = F49675E024620F4300F8914D /* NSError+APIClient.h */; };
+		F49675E424620F4300F8914D /* NSError+APIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = F49675E124620F4300F8914D /* NSError+APIClient.m */; };
+		F49675E524620F4300F8914D /* NSError+APIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = F49675E124620F4300F8914D /* NSError+APIClient.m */; };
+		F49675E624620F5100F8914D /* NSError+APIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = F49675E124620F4300F8914D /* NSError+APIClient.m */; };
+		F49675E92462127500F8914D /* NSURLRequest+APIClientFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = F49675E72462127500F8914D /* NSURLRequest+APIClientFactory.h */; };
+		F49675EA2462127500F8914D /* NSURLRequest+APIClientFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = F49675E72462127500F8914D /* NSURLRequest+APIClientFactory.h */; };
+		F49675EB2462127500F8914D /* NSURLRequest+APIClientFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = F49675E82462127500F8914D /* NSURLRequest+APIClientFactory.m */; };
+		F49675EC2462127500F8914D /* NSURLRequest+APIClientFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = F49675E82462127500F8914D /* NSURLRequest+APIClientFactory.m */; };
+		F49675ED2462134500F8914D /* NSURLRequest+APIClientFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = F49675E82462127500F8914D /* NSURLRequest+APIClientFactory.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -475,6 +485,10 @@
 		F4684FF32432A1610079B389 /* NSBundle+MMEMobileEvents.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+MMEMobileEvents.m"; sourceTree = "<group>"; };
 		F4913F442453610800C28338 /* MMEEventConfigProviding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEEventConfigProviding.h; sourceTree = "<group>"; };
 		F4EAFDFB24538B6500D2B17B /* MMEDependencyProviding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEDependencyProviding.h; sourceTree = "<group>"; };
+		F49675E024620F4300F8914D /* NSError+APIClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSError+APIClient.h"; sourceTree = "<group>"; };
+		F49675E124620F4300F8914D /* NSError+APIClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSError+APIClient.m"; sourceTree = "<group>"; };
+		F49675E72462127500F8914D /* NSURLRequest+APIClientFactory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSURLRequest+APIClientFactory.h"; sourceTree = "<group>"; };
+		F49675E82462127500F8914D /* NSURLRequest+APIClientFactory.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSURLRequest+APIClientFactory.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -647,6 +661,8 @@
 				F4684FF32432A1610079B389 /* NSBundle+MMEMobileEvents.m */,
 				40F133521F20051E007B4096 /* NSData+MMEGZIP.h */,
 				40F133511F20051E007B4096 /* NSData+MMEGZIP.m */,
+				F49675E024620F4300F8914D /* NSError+APIClient.h */,
+				F49675E124620F4300F8914D /* NSError+APIClient.m */,
 				9CA284FC23D248D40097BE53 /* NSProcessInfo+SystemInfo.h */,
 				9CA284FD23D248D40097BE53 /* NSProcessInfo+SystemInfo.m */,
 				9CF0003E2370D674009A2700 /* NSString+MMEVersions.h */,
@@ -654,6 +670,8 @@
 				9CDC34BF234FD78200852FF0 /* NSUserDefaults+MMEConfiguration_Private.h */,
 				9CDC34B6234FD35800852FF0 /* NSUserDefaults+MMEConfiguration.h */,
 				9CDC34B7234FD35800852FF0 /* NSUserDefaults+MMEConfiguration.m */,
+				F49675E72462127500F8914D /* NSURLRequest+APIClientFactory.h */,
+				F49675E82462127500F8914D /* NSURLRequest+APIClientFactory.m */,
 				9C65A289225D41F2006E3FED /* UIKit+MMEMobileEvents.h */,
 				9C65A28A225D41F2006E3FED /* UIKit+MMEMobileEvents.m */,
 			);
@@ -814,11 +832,13 @@
 				40C9E27F1EA5473F00744FE7 /* MMELocationManager.h in Headers */,
 				40F16C811F02DA9F00DF338D /* MMEDate.h in Headers */,
 				40AE584E1EA926710046B437 /* MMETypes.h in Headers */,
+				F49675E92462127500F8914D /* NSURLRequest+APIClientFactory.h in Headers */,
 				9CA284FE23D248D40097BE53 /* NSProcessInfo+SystemInfo.h in Headers */,
 				40F133541F20051E007B4096 /* NSData+MMEGZIP.h in Headers */,
 				40AE58431EA6C86C0046B437 /* MMEUIApplicationWrapper.h in Headers */,
 				40AE585A1EA9373F0046B437 /* MMEUniqueIdentifier.h in Headers */,
 				9CF000412370D674009A2700 /* NSString+MMEVersions.h in Headers */,
+				F49675E224620F4300F8914D /* NSError+APIClient.h in Headers */,
 				AC1B091122137BB000DB56C8 /* CLLocationManager+MMEMobileEvents.h in Headers */,
 				F4EAFDFC24538B6500D2B17B /* MMEDependencyProviding.h in Headers */,
 				AC61FA5C217A04CC008519F5 /* MMEMetrics.h in Headers */,
@@ -842,6 +862,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F49675EA2462127500F8914D /* NSURLRequest+APIClientFactory.h in Headers */,
 				9CA75386240EF2DD005C26C9 /* NSUserDefaults+MMEConfiguration.h in Headers */,
 				9CA75387240EF2DD005C26C9 /* MapboxMobileEvents.h in Headers */,
 				9CA75388240EF2DD005C26C9 /* MMEConstants.h in Headers */,
@@ -872,6 +893,7 @@
 				9CA7539F240EF2DD005C26C9 /* MMEMetricsManager.h in Headers */,
 				9CA753A0240EF2DD005C26C9 /* MMEUINavigation.h in Headers */,
 				9CA753A1240EF2DD005C26C9 /* MMEReachability.h in Headers */,
+				F49675E324620F4300F8914D /* NSError+APIClient.h in Headers */,
 				9CA753A2240EF2DD005C26C9 /* MMEAPIClient_Private.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1135,10 +1157,12 @@
 				403835031F7AF145004205B9 /* MMEDependencyManager.m in Sources */,
 				40AE586E1EA95EDD0046B437 /* MMEEvent.m in Sources */,
 				4036EFBF1ED37D56009C40BA /* MMELogger.m in Sources */,
+				F49675E424620F4300F8914D /* NSError+APIClient.m in Sources */,
 				40C9E2801EA5473F00744FE7 /* MMELocationManager.m in Sources */,
 				405172DE1EAFFA9400F8CDA1 /* MMENSURLSessionWrapper.m in Sources */,
 				40F16C971F04514100DF338D /* MMEReachability.m in Sources */,
 				40AE58441EA6C86C0046B437 /* MMEUIApplicationWrapper.m in Sources */,
+				F49675EB2462127500F8914D /* NSURLRequest+APIClientFactory.m in Sources */,
 				F4684FF52432A1610079B389 /* NSBundle+MMEMobileEvents.m in Sources */,
 				40AE585B1EA9373F0046B437 /* MMEUniqueIdentifier.m in Sources */,
 				40F133531F20051E007B4096 /* NSData+MMEGZIP.m in Sources */,
@@ -1184,6 +1208,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9CA2850023D248D40097BE53 /* NSProcessInfo+SystemInfo.m in Sources */,
+				F49675E624620F5100F8914D /* NSError+APIClient.m in Sources */,
 				AC1B091322137BB000DB56C8 /* CLLocationManager+MMEMobileEvents.m in Sources */,
 				F4684FF62432A2770079B389 /* NSBundle+MMEMobileEvents.m in Sources */,
 				CF93A6592241EDD500BBA199 /* MMECertPin.m in Sources */,
@@ -1196,6 +1221,7 @@
 				4085965F1ED086DC003BD29D /* MMEEventsManager.m in Sources */,
 				408596601ED086DF003BD29D /* MMELocationManager.m in Sources */,
 				AC61FA5E217A04CC008519F5 /* MMEMetrics.m in Sources */,
+				F49675ED2462134500F8914D /* NSURLRequest+APIClientFactory.m in Sources */,
 				40F16C981F04514100DF338D /* MMEReachability.m in Sources */,
 				408596641ED086EB003BD29D /* MMEUIApplicationWrapper.m in Sources */,
 				96AB510B21641A6000A261B8 /* MMEUINavigation.m in Sources */,
@@ -1224,6 +1250,7 @@
 				9CA7536D240EF2DD005C26C9 /* MMEUINavigation.m in Sources */,
 				9CA7536E240EF2DD005C26C9 /* NSUserDefaults+MMEConfiguration.m in Sources */,
 				9CA7536F240EF2DD005C26C9 /* MMEMetricsManager.m in Sources */,
+				F49675EC2462127500F8914D /* NSURLRequest+APIClientFactory.m in Sources */,
 				9CA75370240EF2DD005C26C9 /* MMEEventsManager.m in Sources */,
 				9CA75371240EF2DD005C26C9 /* MMEMetrics.m in Sources */,
 				9CA75372240EF2DD005C26C9 /* MMEDispatchManager.m in Sources */,
@@ -1244,6 +1271,7 @@
 				9CA75381240EF2DD005C26C9 /* MMEUniqueIdentifier.m in Sources */,
 				9CA75382240EF2DD005C26C9 /* NSData+MMEGZIP.m in Sources */,
 				9CA75383240EF2DD005C26C9 /* UIKit+MMEMobileEvents.m in Sources */,
+				F49675E524620F4300F8914D /* NSError+APIClient.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
