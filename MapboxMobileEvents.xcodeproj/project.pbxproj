@@ -195,7 +195,6 @@
 		CF93A6582241EDD500BBA199 /* MMECertPin.m in Sources */ = {isa = PBXBuildFile; fileRef = CF93A6562241EDD500BBA199 /* MMECertPin.m */; };
 		CF93A6592241EDD500BBA199 /* MMECertPin.m in Sources */ = {isa = PBXBuildFile; fileRef = CF93A6562241EDD500BBA199 /* MMECertPin.m */; platformFilter = ios; };
 		CF93A65B2241EDD500BBA199 /* MMECertPin.h in Headers */ = {isa = PBXBuildFile; fileRef = CF93A6572241EDD500BBA199 /* MMECertPin.h */; };
-		F44C8BF82461029700E515AD /* NSBundle+TestBundle.m in Sources */ = {isa = PBXBuildFile; fileRef = F44C8BF72461029700E515AD /* NSBundle+TestBundle.m */; };
 		F44C8BF924610B7E00E515AD /* config-1s-bso.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933F23512FD300F99907 /* config-1s-bso.json */; };
 		F44C8BFA24610B8000E515AD /* config-10s-bso.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933523512FD200F99907 /* config-10s-bso.json */; };
 		F44C8BFB24610B8500E515AD /* config-100m-gfo.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F934023512FD300F99907 /* config-100m-gfo.json */; };
@@ -213,15 +212,12 @@
 		F44C8C0724610BAF00E515AD /* events-201.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933C23512FD300F99907 /* events-201.json */; };
 		F44C8C0824610BB200E515AD /* config-long-ago.json in Resources */ = {isa = PBXBuildFile; fileRef = 9CE132C32358EC25005E23F1 /* config-long-ago.json */; };
 		F44C8C0924610BB500E515AD /* config-crl.json in Resources */ = {isa = PBXBuildFile; fileRef = 9CE132C62359296A005E23F1 /* config-crl.json */; };
+		F44D1203246328CB00DF4ED1 /* NSBundle+TestBundle.m in Sources */ = {isa = PBXBuildFile; fileRef = F44D1201246328CB00DF4ED1 /* NSBundle+TestBundle.m */; };
 		F4684FF42432A1610079B389 /* NSBundle+MMEMobileEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = F4684FF22432A1610079B389 /* NSBundle+MMEMobileEvents.h */; };
 		F4684FF52432A1610079B389 /* NSBundle+MMEMobileEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = F4684FF32432A1610079B389 /* NSBundle+MMEMobileEvents.m */; };
 		F4684FF62432A2770079B389 /* NSBundle+MMEMobileEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = F4684FF32432A1610079B389 /* NSBundle+MMEMobileEvents.m */; };
 		F4913F452453610800C28338 /* MMEEventConfigProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = F4913F442453610800C28338 /* MMEEventConfigProviding.h */; };
 		F4913F462453610800C28338 /* MMEEventConfigProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = F4913F442453610800C28338 /* MMEEventConfigProviding.h */; };
-		F4EAFDFC24538B6500D2B17B /* MMEDependencyProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = F4EAFDFB24538B6500D2B17B /* MMEDependencyProviding.h */; };
-		F4EAFDFD24538B6500D2B17B /* MMEDependencyProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = F4EAFDFB24538B6500D2B17B /* MMEDependencyProviding.h */; };
-		F4EAFDFE2453B08F00D2B17B /* NSBundle+MMEMobileEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = F4684FF22432A1610079B389 /* NSBundle+MMEMobileEvents.h */; };
-		F4EAFDFF2453B09100D2B17B /* NSBundle+MMEMobileEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = F4684FF32432A1610079B389 /* NSBundle+MMEMobileEvents.m */; };
 		F49675E224620F4300F8914D /* NSError+APIClient.h in Headers */ = {isa = PBXBuildFile; fileRef = F49675E024620F4300F8914D /* NSError+APIClient.h */; };
 		F49675E324620F4300F8914D /* NSError+APIClient.h in Headers */ = {isa = PBXBuildFile; fileRef = F49675E024620F4300F8914D /* NSError+APIClient.h */; };
 		F49675E424620F4300F8914D /* NSError+APIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = F49675E124620F4300F8914D /* NSError+APIClient.m */; };
@@ -232,6 +228,10 @@
 		F49675EB2462127500F8914D /* NSURLRequest+APIClientFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = F49675E82462127500F8914D /* NSURLRequest+APIClientFactory.m */; };
 		F49675EC2462127500F8914D /* NSURLRequest+APIClientFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = F49675E82462127500F8914D /* NSURLRequest+APIClientFactory.m */; };
 		F49675ED2462134500F8914D /* NSURLRequest+APIClientFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = F49675E82462127500F8914D /* NSURLRequest+APIClientFactory.m */; };
+		F4EAFDFC24538B6500D2B17B /* MMEDependencyProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = F4EAFDFB24538B6500D2B17B /* MMEDependencyProviding.h */; };
+		F4EAFDFD24538B6500D2B17B /* MMEDependencyProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = F4EAFDFB24538B6500D2B17B /* MMEDependencyProviding.h */; };
+		F4EAFDFE2453B08F00D2B17B /* NSBundle+MMEMobileEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = F4684FF22432A1610079B389 /* NSBundle+MMEMobileEvents.h */; };
+		F4EAFDFF2453B09100D2B17B /* NSBundle+MMEMobileEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = F4684FF32432A1610079B389 /* NSBundle+MMEMobileEvents.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -479,16 +479,16 @@
 		CF93A6562241EDD500BBA199 /* MMECertPin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMECertPin.m; sourceTree = "<group>"; };
 		CF93A6572241EDD500BBA199 /* MMECertPin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMECertPin.h; sourceTree = "<group>"; };
 		CF93A66222488A4500BBA199 /* MMECertPinTests.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = MMECertPinTests.m; sourceTree = "<group>"; };
-		F44C8BF62461029700E515AD /* NSBundle+TestBundle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSBundle+TestBundle.h"; sourceTree = "<group>"; };
-		F44C8BF72461029700E515AD /* NSBundle+TestBundle.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+TestBundle.m"; sourceTree = "<group>"; };
+		F44D1201246328CB00DF4ED1 /* NSBundle+TestBundle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+TestBundle.m"; sourceTree = "<group>"; };
+		F44D1202246328CB00DF4ED1 /* NSBundle+TestBundle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+TestBundle.h"; sourceTree = "<group>"; };
 		F4684FF22432A1610079B389 /* NSBundle+MMEMobileEvents.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSBundle+MMEMobileEvents.h"; sourceTree = "<group>"; };
 		F4684FF32432A1610079B389 /* NSBundle+MMEMobileEvents.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+MMEMobileEvents.m"; sourceTree = "<group>"; };
 		F4913F442453610800C28338 /* MMEEventConfigProviding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEEventConfigProviding.h; sourceTree = "<group>"; };
-		F4EAFDFB24538B6500D2B17B /* MMEDependencyProviding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEDependencyProviding.h; sourceTree = "<group>"; };
 		F49675E024620F4300F8914D /* NSError+APIClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSError+APIClient.h"; sourceTree = "<group>"; };
 		F49675E124620F4300F8914D /* NSError+APIClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSError+APIClient.m"; sourceTree = "<group>"; };
 		F49675E72462127500F8914D /* NSURLRequest+APIClientFactory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSURLRequest+APIClientFactory.h"; sourceTree = "<group>"; };
 		F49675E82462127500F8914D /* NSURLRequest+APIClientFactory.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSURLRequest+APIClientFactory.m"; sourceTree = "<group>"; };
+		F4EAFDFB24538B6500D2B17B /* MMEDependencyProviding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEDependencyProviding.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -629,7 +629,7 @@
 				AC03B2F523B1AEE60043271D /* MMEUniqueIdentifierTests.m */,
 				9CF000422370D7B2009A2700 /* NSString+MMEVersions_Tests.m */,
 				9CDC34BA234FD36E00852FF0 /* NSUserDefaults+MMEConfigurationTests.m */,
-				F44C8BF52461023300E515AD /* Categories */,
+				F44D11FD246328A400DF4ED1 /* Categories */,
 				40C9E28B1EA5762F00744FE7 /* Fakes */,
 				40AE58481EA80E5E0046B437 /* Utilities */,
 				9C3F931623512F5D00F99907 /* Fixtures */,
@@ -798,13 +798,14 @@
 			name = Packaging;
 			sourceTree = "<group>";
 		};
-		F44C8BF52461023300E515AD /* Categories */ = {
+		F44D11FD246328A400DF4ED1 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
-				F44C8BF62461029700E515AD /* NSBundle+TestBundle.h */,
-				F44C8BF72461029700E515AD /* NSBundle+TestBundle.m */,
+				F44D1202246328CB00DF4ED1 /* NSBundle+TestBundle.h */,
+				F44D1201246328CB00DF4ED1 /* NSBundle+TestBundle.m */,
 			);
 			path = Categories;
+			sourceTree = "<group>";
 		};
 		F4EAFDFA24538B3F00D2B17B /* Protocols */ = {
 			isa = PBXGroup;
@@ -1184,7 +1185,7 @@
 				AC69502D238E000C00D095EB /* MMELocationManagerTests.m in Sources */,
 				9CA753AB241027E6005C26C9 /* MMELoggerTests.m in Sources */,
 				AC03B2C823AC477A0043271D /* MMEMetricsManagerTests.m in Sources */,
-				F44C8BF82461029700E515AD /* NSBundle+TestBundle.m in Sources */,
+				F44D1203246328CB00DF4ED1 /* NSBundle+TestBundle.m in Sources */,
 				AC03B2F623B1AEE60043271D /* MMEUniqueIdentifierTests.m in Sources */,
 				9CF000432370D7B2009A2700 /* NSString+MMEVersions_Tests.m in Sources */,
 				9CDC34BB234FD36E00852FF0 /* NSUserDefaults+MMEConfigurationTests.m in Sources */,
