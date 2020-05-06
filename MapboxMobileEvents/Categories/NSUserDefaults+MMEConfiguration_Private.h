@@ -99,7 +99,7 @@ static NSTimeInterval const MMEStartupDelayMaximum = 100;
 // MARK: -
 
 @interface NSUserDefaults (MMEConfiguration_Private)
-@property(nonatomic,readonly) NSString *mme_clietnId;
+@property(nonatomic,readonly) NSString *mme_clientId;
 
 + (void)mme_resetConfiguration;
 
