@@ -4,19 +4,40 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class MMEEvent;
-@class MMEMetricsManager;
 @protocol MMEEventConfigProviding;
+
+typedef void(^OnErrorBlock)(NSError *error);
+typedef void(^OnBytesReceived)(NSUInteger bytes);
+typedef void(^OnEventQueueUpdate)(NSArray * eventQueue);
+typedef void(^OnEventCountUpdate)(NSUInteger eventCount, NSURLRequest* _Nullable request, NSError * _Nullable error);
+typedef void(^OnGenerateTelemetryEvent)(void);
+typedef void(^OnLogEvent)(MMEEvent* event);
 
 /// Asynchronous Interface with API
 @interface MMEAPIClient : NSObject
 
-/// Are we currently getting configuration updates?
-/// TODO: No need for this state. Client should no need to know this info. Only needs to wrap API calls
 @property (nonatomic, readonly) BOOL isGettingConfigUpdates;
 
+
 - (instancetype)init NS_UNAVAILABLE;
+
+
+/** Designated Initializer
+ @param config Provider of Shared Client Model Information
+ @param onError Called on the instance of an error for an API calls
+ @param onBytesReceived Called on bytes received an API calls
+ @param onEventQueueUpdate Called on the EventQueue updates
+ @param onEventCountUpdate Called on the EventCount Udpates
+ @param onGenerateTelemetryEvent Called on the Generation of Telemetry Events
+ @param onLogEvent Called Upon Event Logging
+ */
 - (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config
-                metricsManager:(MMEMetricsManager*)metricsManager;
+                       onError: (OnErrorBlock)onError
+               onBytesReceived: (OnBytesReceived)onBytesReceived
+            onEventQueueUpdate: (OnEventQueueUpdate)onEventQueueUpdate
+            onEventCountUpdate: (OnEventCountUpdate)onEventCountUpdate
+      onGenerateTelemetryEvent: (OnGenerateTelemetryEvent)onGenerateTelemetryEvent
+                    onLogEvent: (OnLogEvent)onLogEvent;
 
 // MARK: - Events Service
 

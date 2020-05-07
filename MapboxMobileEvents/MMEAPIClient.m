@@ -4,15 +4,10 @@
 #import "MMENSURLSessionWrapper.h"
 #import "MMEDate.h"
 #import "MMEEvent.h"
-#import "MMEMetricsManager.h"
-#import "MMEEventsManager.h"
-#import "MMEEventsManager_Private.h"
-#import "MMELogger.h"
 #import "NSError+APIClient.h"
 #import "NSURLRequest+APIClientFactory.h"
 #import "MMENSURLRequestFactory.h"
-
-#import "NSData+MMEGZIP.h"
+#import "MMEEventConfigProviding.h"
 #import "NSUserDefaults+MMEConfiguration.h"
 #import "NSUserDefaults+MMEConfiguration_Private.h"
 
@@ -24,9 +19,16 @@
 @property (nonatomic) NSTimer *configurationUpdateTimer;
 @property (nonatomic) id<MMENSURLSessionWrapper> sessionWrapper;
 @property (nonatomic) NSBundle *applicationBundle;
-@property (nonatomic) MMEMetricsManager *metricsManager;
 @property (nonatomic) id<MMEEventConfigProviding> config;
 @property (nonatomic) MMENSURLRequestFactory *requestFactory;
+
+@property (nonatomic, copy, readonly) OnErrorBlock onError;
+@property (nonatomic, copy, readonly) OnBytesReceived onBytesReceived;
+@property (nonatomic, copy, readonly) OnEventQueueUpdate onEventQueueUpdate;
+@property (nonatomic, copy, readonly) OnEventCountUpdate onEventCountUpdate;
+@property (nonatomic, copy, readonly) OnGenerateTelemetryEvent onGenerateTelemetryEvent;
+@property (nonatomic, copy, readonly) OnLogEvent onLogEvent;
+
 
 @end
 
@@ -38,13 +40,24 @@ int const kMMEMaxRequestCount = 1000;
 
 
 - (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config
-                metricsManager:(MMEMetricsManager*)metricsManager {
+                       onError: (OnErrorBlock)onError
+               onBytesReceived: (OnBytesReceived)onBytesReceived
+            onEventQueueUpdate: (OnEventQueueUpdate)onEventQueueUpdate
+            onEventCountUpdate: (OnEventCountUpdate)onEventCountUpdate
+      onGenerateTelemetryEvent: (OnGenerateTelemetryEvent)onGenerateTelemetryEvent
+                    onLogEvent: (OnLogEvent)onLogEvent {
     self = [super init];
     if (self) {
         _config = config;
         _requestFactory = [[MMENSURLRequestFactory alloc] initWithConfig:config];
         _sessionWrapper = [[MMENSURLSessionWrapper alloc] init];
-        self.metricsManager = metricsManager;
+        _onError = onError;
+        _onBytesReceived = onBytesReceived;
+        _onEventQueueUpdate = onEventQueueUpdate;
+        _onEventCountUpdate = onEventCountUpdate;
+        _onGenerateTelemetryEvent = onGenerateTelemetryEvent;
+        _onLogEvent = onLogEvent;
+
         [self startGettingConfigUpdates];
     }
     return self;
@@ -74,13 +87,15 @@ int const kMMEMaxRequestCount = 1000;
 }
 
 - (void)postEvents:(NSArray *)events completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
-    [self.metricsManager updateMetricsFromEventQueue:events];
+    self.onEventQueueUpdate(events);
     
     NSArray *eventBatches = [self batchFromEvents:events];
     
     for (NSArray *batch in eventBatches) {
         NSURLRequest *request = [self requestForEvents:batch];
         if (request) {
+
+            __weak __typeof__(self) weakSelf = self;
             [self.sessionWrapper processRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
                 // check the response object for HTTP error code
                 if (response && [response isKindOfClass:NSHTTPURLResponse.class]) {
@@ -88,29 +103,29 @@ int const kMMEMaxRequestCount = 1000;
                     NSError *statusError = [[NSError alloc] initWith:request httpResponse:httpResponse error:error];
 
                     if (statusError) { // report the status error
-                        [MMEEventsManager.sharedManager reportError:statusError];
+                        weakSelf.onError(statusError);
                     }
 
                     // check the data object, log the Rx bytes and try to load the config
                     if (data) {
-                        [self.metricsManager updateReceivedBytes:data.length];
+                        weakSelf.onBytesReceived(data.length);
                     }
                 }
                 else if (error) { // check the session error and report it if the response appears invalid
-                    [MMEEventsManager.sharedManager reportError:error];
+                    weakSelf.onError(error);
                 }
                 
-                [self.metricsManager updateMetricsFromEventCount:events.count request:request error:error];
+                weakSelf.onEventCountUpdate(events.count, request, error);
                 
                 if (completionHandler) {
                     completionHandler(error);
                 }
             }];
         }
-        [self.metricsManager updateMetricsFromEventCount:events.count request:nil error:nil];
+        self.onEventCountUpdate(events.count, nil, nil);
     }
 
-    [self.metricsManager generateTelemetryMetricsEvent];
+    self.onGenerateTelemetryEvent();
 }
 
 - (void)postEvent:(MMEEvent *)event completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
@@ -129,6 +144,7 @@ int const kMMEMaxRequestCount = 1000;
                                                                           data:binaryData
                                                                       boundary:boundary];
 
+    __weak __typeof__(self) weakSelf = self;
     [self.sessionWrapper processRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         
         // check the response object for HTTP error code
@@ -137,19 +153,19 @@ int const kMMEMaxRequestCount = 1000;
             NSError *statusError = [[NSError alloc] initWith:request httpResponse:httpResponse error:error];
 
             if (statusError) { // always report the status error
-                [MMEEventsManager.sharedManager reportError:statusError];
+                weakSelf.onError(statusError);
             }
             
             if (data) { // always log the Rx bytes
-                [self.metricsManager updateReceivedBytes:data.length];
+                weakSelf.onBytesReceived(data.length);
             }
         }
         else if (error) { // check the session error and report it if the response appears invalid
-            [MMEEventsManager.sharedManager reportError:error];
+            weakSelf.onError(error);
         }
 
-        [self.metricsManager updateMetricsFromEventCount:filePaths.count request:request error:error];
-        [self.metricsManager generateTelemetryMetricsEvent];
+        weakSelf.onEventCountUpdate(filePaths.count, request, error);
+        weakSelf.onGenerateTelemetryEvent();
         
         if (completionHandler) {
             completionHandler(error);
@@ -168,7 +184,7 @@ int const kMMEMaxRequestCount = 1000;
 
         __weak __typeof__(self) weakSelf = self;
         self.configurationUpdateTimer = [NSTimer
-            scheduledTimerWithTimeInterval:NSUserDefaults.mme_configuration.mme_configUpdateInterval
+                                         scheduledTimerWithTimeInterval:self.config.mme_configUpdateInterval
             repeats:YES
             block:^(NSTimer * _Nonnull timer) {
 
@@ -197,26 +213,26 @@ int const kMMEMaxRequestCount = 1000;
 
                             // check the data object, log the Rx bytes and try to load the config
                             if (data) {
-                                [self.metricsManager updateReceivedBytes:data.length];
+                                weakSelf.onBytesReceived(data.length);
 
                                 NSError *configError = [NSUserDefaults.mme_configuration mme_updateFromConfigServiceData:(NSData * _Nonnull)data];
                                 if (configError) {
-                                    [MMEEventsManager.sharedManager reportError:configError];
+                                    weakSelf.onError(configError);
                                 }
                                 
                                 NSUserDefaults.mme_configuration.mme_configUpdateDate = MMEDate.date;
                             }
                         }
                         else {
-                            [MMEEventsManager.sharedManager reportError:statusError];
+                            weakSelf.onError(statusError);
                         }
                     }
                     else if (error) { // check the session error and report it if the response appears invalid
-                        [MMEEventsManager.sharedManager reportError:error];
+                        weakSelf.onError(error);
                     }
 
-                    [self.metricsManager updateMetricsFromEventCount:0 request:request error:error];
-                    [self.metricsManager generateTelemetryMetricsEvent];
+                    weakSelf.onEventCountUpdate(0, request, error);
+                    weakSelf.onGenerateTelemetryEvent();
                 }];
             }];
         
@@ -224,6 +240,7 @@ int const kMMEMaxRequestCount = 1000;
         self.configurationUpdateTimer.tolerance = 60;
 
         // check to see if time since the last update is greater than our update interval
+        // TODO: Retain This Setter/Getter until Config Mutation is moved outside of Client
         if (!NSUserDefaults.mme_configuration.mme_configUpdateDate // we've never updated
          || (fabs(NSUserDefaults.mme_configuration.mme_configUpdateDate.timeIntervalSinceNow)
           > NSUserDefaults.mme_configuration.mme_configUpdateInterval)) { // or it's been a while
@@ -266,8 +283,8 @@ int const kMMEMaxRequestCount = 1000;
                                         error:&jsonError];
 
    if (jsonError) {
-        [self.metricsManager.logger logEvent:[MMEEvent debugEventWithError:jsonError]];
-        return nil;
+       self.onLogEvent([MMEEvent debugEventWithError:jsonError]);
+       return nil;
     }
     
     return [request copy];
@@ -300,7 +317,7 @@ int const kMMEMaxRequestCount = 1000;
         [httpBody appendData:jsonData];
         [httpBody appendData:[[NSString stringWithFormat:@"\r\n\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
     } else if (jsonError) {
-        [self.metricsManager.logger logEvent:[MMEEvent debugEventWithError:jsonError]];
+        self.onLogEvent([MMEEvent debugEventWithError:jsonError]);
     }
 
     for (NSString *path in filePaths) { // add a file part for each

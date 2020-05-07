@@ -96,11 +96,27 @@ NS_ASSUME_NONNULL_BEGIN
             [NSUserDefaults.mme_configuration mme_setAccessToken:accessToken];
         }
 
-        self.apiClient = [[MMEAPIClient alloc] initWithConfig:NSUserDefaults.mme_configuration metricsManager:self.metricsManager];
+
+        __weak __typeof__(self) weakSelf = self;
+//        [[MMEAPIClient alloc] initWithConfig:<#(nonnull id<MMEEventConfigProviding>)#> onError:<#^(NSError * _Nonnull error)onError#> onBytesReceived:<#^(NSUInteger bytes)onBytesReceived#> onEventQueueUpdate:<#^(NSArray * _Nonnull eventQueue)onEventQueueUpdate#> onEventCountUpdate:<#^(NSUInteger eventCount, NSURLRequest * _Nullable request, NSError * _Nullable error)onEventCountUpdate#> onGenerateTelemetryEvent:<#^(void)onGenerateTelemetryEvent#>]
+
+        self.apiClient = [[MMEAPIClient alloc] initWithConfig:NSUserDefaults.mme_configuration
+                                                     onError:^(NSError * _Nonnull error) {
+            [weakSelf reportError:error];
+        } onBytesReceived:^(NSUInteger bytes) {
+            [weakSelf.metricsManager updateReceivedBytes:bytes];
+        } onEventQueueUpdate:^(NSArray * _Nonnull eventQueue) {
+            [weakSelf.metricsManager updateMetricsFromEventQueue:eventQueue];
+        } onEventCountUpdate:^(NSUInteger eventCount, NSURLRequest * _Nullable request, NSError * _Nullable error) {
+            [weakSelf.metricsManager updateMetricsFromEventCount:eventCount request:request error:error];
+        } onGenerateTelemetryEvent:^{
+            [weakSelf.metricsManager generateTelemetryMetricsEvent];
+        } onLogEvent:^(MMEEvent * _Nonnull event) {
+            [weakSelf.metricsManager.logger logEvent:event];
+        }];
 
         [self sendPendingTelemetryMetricsEvent];
 
-        __weak __typeof__(self) weakSelf = self;
         void(^initialization)(void) = ^{
             __strong __typeof__(weakSelf) strongSelf = weakSelf;
 

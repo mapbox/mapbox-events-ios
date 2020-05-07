@@ -11,6 +11,7 @@
 #import "NSUserDefaults+MMEConfiguration_Private.h"
 #import "NSData+MMEGZIP.h"
 #import "MMEMockEventConfig.h"
+#import "MMEAPIClientBlockCounter.h"
 
 @interface MMENSURLSessionWrapper (Private)
 @property (nonatomic) NSURLSession *session;
@@ -27,6 +28,7 @@
 @property (nonatomic) NSURLSession *urlSession;
 @property (nonatomic) NSURLSession *capturedSession;
 @property (nonatomic) NSURLAuthenticationChallenge *challenge;
+@property (nonatomic) MMEAPIClientBlockCounter* blockCounter;
 
 @end
 
@@ -47,10 +49,33 @@
 
 - (void)setUp {
 
-    MMEMetricsManager *metricsManager = [[MMEMetricsManager alloc] initWithLogger:[[MMELogger alloc] init]];
     MMEMockEventConfig *eventConfig = [[MMEMockEventConfig alloc] init];
+    self.blockCounter = [[MMEAPIClientBlockCounter alloc] init];
+
+    __weak __typeof__(self) weakSelf = self;
+
+    // Configure Client with Block Counter to inspect interal Call behaviors
     self.apiClient = [[MMEAPIClient alloc] initWithConfig:eventConfig
-                                          metricsManager:metricsManager];
+                                                  onError:^(NSError * _Nonnull error) {
+        [weakSelf.blockCounter.onErrors addObject:error];
+                                                }
+                                          onBytesReceived:^(NSUInteger bytes) {
+        [weakSelf.blockCounter.onBytesReceived addObject:[NSNumber numberWithUnsignedInteger:bytes]];
+                                                }
+                                       onEventQueueUpdate:^(NSArray * _Nonnull eventQueue) {
+
+        [weakSelf.blockCounter.eventQueue addObject:eventQueue];
+                                                }
+                                       onEventCountUpdate:^(NSUInteger eventCount, NSURLRequest * _Nullable request, NSError * _Nullable error) {
+                                                    // TBD Call Verification
+        [weakSelf.blockCounter.eventCount addObject:[NSNumber numberWithUnsignedInteger:eventCount]];
+                                                }
+                                 onGenerateTelemetryEvent:^{
+        weakSelf.blockCounter.generateTelemetry += 1;
+                                                }
+                                               onLogEvent:^(MMEEvent * _Nonnull event) {
+        [weakSelf.blockCounter.logEvents addObject:event];
+    }];
 
     self.sessionWrapper = (MMENSURLSessionWrapper *)self.apiClient.sessionWrapper;
     self.sessionWrapperFake = [[MMENSURLSessionWrapperFake alloc] init];
@@ -60,7 +85,7 @@
 }
 
 - (void)tearDown {
-//    [NSUserDefaults mme_resetConfiguration];
+
 }
 
 - (void)testSessionWrapperInvalidates {
@@ -126,7 +151,6 @@
     XCTAssert([(MMETestStub*)self.apiClient.sessionWrapper received:@selector(processRequest:completionHandler:)]);
 }
 
-// TODO: Migrate to URLRequest Factory
 - (void)testPostEventsCompression {
     self.apiClient.sessionWrapper = self.sessionWrapperFake;
         
@@ -153,6 +177,13 @@
     XCTAssert(data.length < uncompressedData.length);
     
     XCTAssert(data.mme_gunzippedData.length == uncompressedData.length);
+
+    // Inspect Block Calls Validating Block Callback Behavior
+    XCTAssertEqual(self.blockCounter.onBytesReceived.count, 0);
+    XCTAssertEqual(self.blockCounter.eventQueue.count, 1);
+    XCTAssertEqual(self.blockCounter.eventCount.count, 1);
+    XCTAssertEqual(self.blockCounter.generateTelemetry, 1);
+    XCTAssertEqual(self.blockCounter.logEvents.count, 0);
 }
 
 - (void) testMMEAPIClientSetup {
