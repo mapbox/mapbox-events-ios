@@ -5,6 +5,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class MMEEvent;
 @class MMEMetricsManager;
+@protocol MMEEventConfigProviding;
 
 /// Asynchronous Interface with API
 @interface MMEAPIClient : NSObject
@@ -14,10 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) BOOL isGettingConfigUpdates;
 
 - (instancetype)init NS_UNAVAILABLE;
-- (instancetype)initWithAccessToken:(NSString *)accessToken
-                      userAgentBase:(NSString *)userAgentBase
-                     hostSDKVersion:(NSString *)hostSDKVersion
-                     metricsManager:(MMEMetricsManager*)metricsManager;
+- (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config
+                metricsManager:(MMEMetricsManager*)metricsManager;
 
 // MARK: - Events Service
 

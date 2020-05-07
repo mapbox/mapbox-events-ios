@@ -1,12 +1,10 @@
-@import Foundation;
-@import CoreLocation;
+#import <Foundation/Foundation.h>
+#import "MMEEventConfigProviding.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-/// Provides the necessary readonly config values for determining behaviors
-@protocol MMEEventConfigProviding <NSObject>
-
-// MARK: - Event Manager Configuration
+/*! @brief Mock Immutable Config */
+@interface MMEMockEventConfig : NSObject <MMEEventConfigProviding>
 
 /// Interval to wait before starting up when the application launches
 @property (nonatomic, readonly) NSTimeInterval mme_startupDelay;
@@ -84,6 +82,32 @@ NS_ASSUME_NONNULL_BEGIN
 /// The Certificate Pinning config
 @property (nonatomic, copy, readonly) NSDictionary *mme_certificatePinningConfig;
 
+/*! @brief Default Values Initializer */
+- (instancetype)init;
+
+/*! @brief Designated Initializer */
+- (instancetype)initWithStartupDelay:(NSTimeInterval)startupDelay
+                     eventFlushCount:(NSUInteger)flushCount
+                       flushInterval:(NSUInteger)flushInterval
+          identifierRotationInterval:(NSTimeInterval)identifierRotationInterval
+                configUpdateInterval:(NSTimeInterval)configUpdateInterval
+                            eventTag:(NSString*)eventTag
+                         accessToken:(NSString*)accessToken
+                 legacyUserAgentBase:(NSString*)legacyUserAgentBase
+                legacyHostSDKVersion:(NSString*)legacyHostSDKVersion
+                       isChinaRegion:(BOOL)isChinaRegion
+                              apiURL:(NSURL*)apiURL
+                           eventsURL:(NSURL*)eventsURL
+                           configURL:(NSURL*)configURL
+                           userAgent:(NSString*)userAgent
+                     legacyUserAgent:(NSString*)legacyUserAgent
+                 isCollectionEnabled:(BOOL)isCollectionEnabled
+      isCollectionEnabledInSimulator:(BOOL)isCollectionEnabledInSimulator
+     isCollectionEnabledInBackground:(BOOL)isCollectionEnabledInBackground
+              backgroundStartupDelay:(NSTimeInterval)backgroundStartupDelay
+                  backgroundGeofence:(CLLocationDistance)backgroundGeofence
+           certificateRevocationList:(NSArray<NSString*>*)certificationRevocationList
+            certificatePinningConfig:(NSDictionary<NSString*, NSArray<NSString*>*>*)certificatePinningConfig;
 @end
 
 NS_ASSUME_NONNULL_END

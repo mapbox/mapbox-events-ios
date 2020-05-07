@@ -96,10 +96,7 @@ NS_ASSUME_NONNULL_BEGIN
             [NSUserDefaults.mme_configuration mme_setAccessToken:accessToken];
         }
 
-        self.apiClient = [MMEAPIClient.alloc initWithAccessToken:accessToken
-                                                   userAgentBase:userAgentBase
-                                                  hostSDKVersion:hostSDKVersion
-                                                  metricsManager:self.metricsManager];
+        self.apiClient = [[MMEAPIClient alloc] initWithConfig:NSUserDefaults.mme_configuration metricsManager:self.metricsManager];
 
         [self sendPendingTelemetryMetricsEvent];
 

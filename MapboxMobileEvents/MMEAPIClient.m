@@ -10,12 +10,11 @@
 #import "MMELogger.h"
 #import "NSError+APIClient.h"
 #import "NSURLRequest+APIClientFactory.h"
+#import "MMENSURLRequestFactory.h"
 
 #import "NSData+MMEGZIP.h"
 #import "NSUserDefaults+MMEConfiguration.h"
 #import "NSUserDefaults+MMEConfiguration_Private.h"
-
-static NSString * const MMEMapboxAgent = @"X-Mapbox-Agent";
 
 @import MobileCoreServices;
 
@@ -26,6 +25,8 @@ static NSString * const MMEMapboxAgent = @"X-Mapbox-Agent";
 @property (nonatomic) id<MMENSURLSessionWrapper> sessionWrapper;
 @property (nonatomic) NSBundle *applicationBundle;
 @property (nonatomic) MMEMetricsManager *metricsManager;
+@property (nonatomic) id<MMEEventConfigProviding> config;
+@property (nonatomic) MMENSURLRequestFactory *requestFactory;
 
 @end
 
@@ -35,12 +36,13 @@ int const kMMEMaxRequestCount = 1000;
 
 @implementation MMEAPIClient
 
-- (instancetype)initWithAccessToken:(NSString *)accessToken userAgentBase:(NSString *)userAgentBase hostSDKVersion:(NSString *)hostSDKVersion metricsManager:(MMEMetricsManager*)metricsManager {
+
+- (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config
+                metricsManager:(MMEMetricsManager*)metricsManager {
     self = [super init];
     if (self) {
-        [NSUserDefaults.mme_configuration mme_setAccessToken:accessToken];
-        [NSUserDefaults.mme_configuration mme_setLegacyUserAgentBase:userAgentBase];
-        [NSUserDefaults.mme_configuration mme_setLegacyHostSDKVersion:hostSDKVersion];
+        _config = config;
+        _requestFactory = [[MMENSURLRequestFactory alloc] initWithConfig:config];
         _sessionWrapper = [[MMENSURLSessionWrapper alloc] init];
         self.metricsManager = metricsManager;
         [self startGettingConfigUpdates];
@@ -120,7 +122,13 @@ int const kMMEMaxRequestCount = 1000;
 - (void)postMetadata:(NSArray *)metadata filePaths:(NSArray *)filePaths completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
     NSString *boundary = NSUUID.UUID.UUIDString;
     NSData *binaryData = [self createBodyWithBoundary:boundary metadata:metadata filePaths:filePaths];
-    NSURLRequest *request = [self requestForBinary:binaryData boundary:boundary];
+    NSURLRequest* request = [self.requestFactory multipartURLRequestWithMethod:MMEAPIClientHTTPMethodPost
+                                                                       baseURL:self.config.mme_eventsServiceURL
+                                                                          path:MMEAPIClientAttachmentsPath
+                                                             additionalHeaders:@{}
+                                                                          data:binaryData
+                                                                      boundary:boundary];
+
     [self.sessionWrapper processRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         
         // check the response object for HTTP error code
@@ -235,35 +243,7 @@ int const kMMEMaxRequestCount = 1000;
 
 // MARK: - Utilities
 
-- (NSURLRequest *)requestForBinary:(NSData *)binaryData boundary:(NSString *)boundary {
-    NSString *path = [NSString stringWithFormat:@"%@?access_token=%@", MMEAPIClientAttachmentsPath, NSUserDefaults.mme_configuration.mme_accessToken];
-    
-    NSURL *url = [NSURL URLWithString:path relativeToURL:NSUserDefaults.mme_configuration.mme_eventsServiceURL];
-    NSMutableURLRequest *request = [NSMutableURLRequest.alloc initWithURL:url];
-    
-    NSString *contentType = [NSString stringWithFormat:@"%@; boundary=\"%@\"",MMEAPIClientAttachmentsHeaderFieldContentTypeValue,boundary];
-    
-    [request setValue:NSUserDefaults.mme_configuration.mme_userAgentString forHTTPHeaderField:MMEMapboxAgent];
-    [request setValue:NSUserDefaults.mme_configuration.mme_legacyUserAgentString forHTTPHeaderField:MMEAPIClientHeaderFieldUserAgentKey];
-    [request setValue:contentType forHTTPHeaderField:MMEAPIClientHeaderFieldContentTypeKey];
-    [request setHTTPMethod:MMEAPIClientHTTPMethodPost];
-    
-    [request setValue:nil forHTTPHeaderField:MMEAPIClientHeaderFieldContentEncodingKey];
-    [request setHTTPBody:binaryData];
-    
-    return request;
-}
-
 - (NSURLRequest *)requestForEvents:(NSArray *)events {
-    NSString *path = [NSString stringWithFormat:@"%@?access_token=%@", MMEAPIClientEventsPath, NSUserDefaults.mme_configuration.mme_accessToken];
-
-    NSURL *url = [NSURL URLWithString:path relativeToURL:NSUserDefaults.mme_configuration.mme_eventsServiceURL];
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
-
-    [request setValue:NSUserDefaults.mme_configuration.mme_userAgentString forHTTPHeaderField:MMEMapboxAgent];
-    [request setValue:NSUserDefaults.mme_configuration.mme_legacyUserAgentString forHTTPHeaderField:MMEAPIClientHeaderFieldUserAgentKey];
-    [request setValue:MMEAPIClientHeaderFieldContentTypeValue forHTTPHeaderField:MMEAPIClientHeaderFieldContentTypeKey];
-    [request setHTTPMethod:MMEAPIClientHTTPMethodPost];
 
     NSMutableArray *eventAttributes = [NSMutableArray arrayWithCapacity:events.count];
     [events enumerateObjectsUsingBlock:^(MMEEvent * _Nonnull event, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -272,20 +252,20 @@ int const kMMEMaxRequestCount = 1000;
         }
     }];
 
-    NSError* jsonError = nil;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:eventAttributes options:0 error:&jsonError];
+    NSDictionary<NSString*, NSString*>* additionalHeaders = @{
+        MMEAPIClientHeaderFieldContentTypeKey: MMEAPIClientHeaderFieldContentTypeValue
+    };
 
-    if (jsonData) { // we were able to convert the eventAttributes, attempt compression
-        // Compressing less than 2 events can have a negative impact on the size.
-        if (events.count >= 2) {
-            NSData *compressedData = [jsonData mme_gzippedData];
-            [request setValue:@"gzip" forHTTPHeaderField:MMEAPIClientHeaderFieldContentEncodingKey];
-            [request setHTTPBody:compressedData];
-        } else {
-            [request setValue:nil forHTTPHeaderField:MMEAPIClientHeaderFieldContentEncodingKey];
-            [request setHTTPBody:jsonData];
-        }
-    } else if (jsonError) {
+    NSError* jsonError = nil;
+    NSURLRequest* request = [self.requestFactory urlRequestWithMethod:MMEAPIClientHTTPMethodPost
+                                      baseURL:self.config.mme_eventsServiceURL
+                                         path:MMEAPIClientEventsPath
+                            additionalHeaders:additionalHeaders
+                                   shouldGZIP: events.count >= 2
+                                   jsonObject:eventAttributes
+                                        error:&jsonError];
+
+   if (jsonError) {
         [self.metricsManager.logger logEvent:[MMEEvent debugEventWithError:jsonError]];
         return nil;
     }

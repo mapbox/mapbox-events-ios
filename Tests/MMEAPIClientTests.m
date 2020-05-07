@@ -10,6 +10,7 @@
 #import "NSUserDefaults+MMEConfiguration.h"
 #import "NSUserDefaults+MMEConfiguration_Private.h"
 #import "NSData+MMEGZIP.h"
+#import "MMEMockEventConfig.h"
 
 @interface MMENSURLSessionWrapper (Private)
 @property (nonatomic) NSURLSession *session;
@@ -47,11 +48,10 @@
 - (void)setUp {
 
     MMEMetricsManager *metricsManager = [[MMEMetricsManager alloc] initWithLogger:[[MMELogger alloc] init]];
-    self.apiClient = [[MMEAPIClient alloc] initWithAccessToken:@"access-token"
-                                                 userAgentBase:@"user-agent-base"
-                                                hostSDKVersion:@"host-sdk-1"
-                                                metricsManager: metricsManager];
-    
+    MMEMockEventConfig *eventConfig = [[MMEMockEventConfig alloc] init];
+    self.apiClient = [[MMEAPIClient alloc] initWithConfig:eventConfig
+                                          metricsManager:metricsManager];
+
     self.sessionWrapper = (MMENSURLSessionWrapper *)self.apiClient.sessionWrapper;
     self.sessionWrapperFake = [[MMENSURLSessionWrapperFake alloc] init];
     
@@ -60,7 +60,7 @@
 }
 
 - (void)tearDown {
-    [NSUserDefaults mme_resetConfiguration];
+//    [NSUserDefaults mme_resetConfiguration];
 }
 
 - (void)testSessionWrapperInvalidates {
@@ -126,6 +126,7 @@
     XCTAssert([(MMETestStub*)self.apiClient.sessionWrapper received:@selector(processRequest:completionHandler:)]);
 }
 
+// TODO: Migrate to URLRequest Factory
 - (void)testPostEventsCompression {
     self.apiClient.sessionWrapper = self.sessionWrapperFake;
         
@@ -142,7 +143,8 @@
     }];
     
     NSData *uncompressedData = [NSJSONSerialization dataWithJSONObject:eventAttributes options:0 error:nil];
-    
+
+    // NSURLTask
     [self.apiClient postEvents:@[event, eventTwo] completionHandler:nil];
     
     XCTAssert([self.sessionWrapperFake.request.allHTTPHeaderFields[MMEAPIClientHeaderFieldContentEncodingKey] isEqualToString:@"gzip"]);
