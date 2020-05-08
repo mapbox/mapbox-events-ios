@@ -98,8 +98,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 
         __weak __typeof__(self) weakSelf = self;
-//        [[MMEAPIClient alloc] initWithConfig:<#(nonnull id<MMEEventConfigProviding>)#> onError:<#^(NSError * _Nonnull error)onError#> onBytesReceived:<#^(NSUInteger bytes)onBytesReceived#> onEventQueueUpdate:<#^(NSArray * _Nonnull eventQueue)onEventQueueUpdate#> onEventCountUpdate:<#^(NSUInteger eventCount, NSURLRequest * _Nullable request, NSError * _Nullable error)onEventCountUpdate#> onGenerateTelemetryEvent:<#^(void)onGenerateTelemetryEvent#>]
-
         self.apiClient = [[MMEAPIClient alloc] initWithConfig:NSUserDefaults.mme_configuration
                                                      onError:^(NSError * _Nonnull error) {
             [weakSelf reportError:error];
@@ -407,7 +405,7 @@ NS_ASSUME_NONNULL_BEGIN
         __weak __typeof__(self) weakSelf = self;
         [self.apiClient postEvent:pendingMetricsEvent completionHandler:^(NSError * _Nullable error) {
             if (error) {
-                [self.logger logEvent:[MMEEvent debugEventWithError:error]];
+                [weakSelf.logger logEvent:[MMEEvent debugEventWithError:error]];
                 return;
             }
 
@@ -428,7 +426,7 @@ NS_ASSUME_NONNULL_BEGIN
 
             __weak __typeof__(self) weakSelf = self;
             [self.apiClient postEvent:telemetryMetricsEvent completionHandler:^(NSError * _Nullable error) {
-                [self.metricsManager resetMetrics];
+                [weakSelf.metricsManager resetMetrics];
                 if (error) {
                     MMELog(MMELogInfo, MMEDebugEventTypeTelemetryMetrics, ([NSString stringWithFormat:@"Could not send telemetryMetrics event: %@, instance: %@",
                         [error localizedDescription], weakSelf.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));

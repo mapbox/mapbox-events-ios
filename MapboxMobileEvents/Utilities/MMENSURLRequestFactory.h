@@ -34,7 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
                                           path:(NSString*)path
                              additionalHeaders:(NSDictionary<NSString*, NSString*>*)additionalHeaders
                                     shouldGZIP: (BOOL) shouldGZIP
-                                    jsonObject: (id)jsonObject
+                                    jsonObject: (nullable id)jsonObject
                                          error:(NSError **)error;
 
 /**

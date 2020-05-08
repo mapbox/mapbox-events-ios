@@ -5,6 +5,10 @@
 
 static NSString * const MMEMapboxAgent = @"X-Mapbox-Agent";
 
+@interface MMENSURLRequestFactory ()
+@property (nonatomic, copy) NSDictionary<NSString*, NSString*>* defaultHeaders;
+@end
+
 // Factory for building Requests with shared components
 @implementation MMENSURLRequestFactory
 
@@ -12,6 +16,9 @@ static NSString * const MMEMapboxAgent = @"X-Mapbox-Agent";
     self = [super init];
     if (self) {
         _config = config;
+        _defaultHeaders = @{
+            MMEAPIClientHeaderFieldContentTypeKey: MMEAPIClientHeaderFieldContentTypeValue
+        };
     }
     return self;
 }
@@ -22,22 +29,24 @@ static NSString * const MMEMapboxAgent = @"X-Mapbox-Agent";
                                           path:(NSString*)path
                              additionalHeaders:(NSDictionary<NSString*, NSString*>*)additionalHeaders
                                     shouldGZIP: (BOOL) shouldGZip
-                                          jsonObject: (id)jsonObject
+                                          jsonObject: (nullable id)jsonObject
                                          error:(NSError **)error {
 
     NSMutableDictionary<NSString*, NSString*>* headers = [additionalHeaders mutableCopy];
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonObject options:0 error:error];
-
     NSData* data;
-    if (jsonData) {
-        if (shouldGZip) {
-            data = [jsonData mme_gzippedData];
-            headers[MMEAPIClientHeaderFieldContentEncodingKey] = @"gzip";
-        } else {
-            data = jsonData;
-        }
+    if (jsonObject) {
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonObject options:0 error:error];
+        if (jsonData) {
+            if (shouldGZip) {
+                data = [jsonData mme_gzippedData];
+                headers[MMEAPIClientHeaderFieldContentEncodingKey] = @"gzip";
+            } else {
+                data = jsonData;
+            }
 
+        }
     }
+
     return [self urlRequestWithMethod:method
                               baseURL:baseURL
                                  path:path
@@ -57,7 +66,7 @@ static NSString * const MMEMapboxAgent = @"X-Mapbox-Agent";
     headers[MMEAPIClientHeaderFieldContentTypeKey] = contentType;
     headers[MMEAPIClientHeaderFieldContentEncodingKey] = nil;
 
-    return [self urlRequestWithMethod:method baseURL:baseURL path:path additionalHeaders:headers httpBody:data];
+    return [self urlRequestWithMethod:method baseURL:baseURL path:path additionalHeaders:additionalHeaders httpBody:data];
 
 
 }
@@ -67,6 +76,10 @@ static NSString * const MMEMapboxAgent = @"X-Mapbox-Agent";
                                           path:(NSString*)path
                              additionalHeaders:(NSDictionary<NSString*, NSString*>*)additionalHeaders
                                       httpBody: (NSData*)data {
+
+    // Build Headers (First with Defaults
+    NSMutableDictionary<NSString*, NSString*>* headers = [self.defaultHeaders mutableCopy];
+    [headers addEntriesFromDictionary:additionalHeaders];
 
     // Build URL
     NSURL* url = [baseURL URLByAppendingPathComponent:path];
@@ -88,10 +101,10 @@ static NSString * const MMEMapboxAgent = @"X-Mapbox-Agent";
     NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:url];
     [request setHTTPMethod:method];
 
-    // Set additional Headers (Should not override defaults)
-    [request setAllHTTPHeaderFields:additionalHeaders];
+    // Set additional Headers (Include Defaults)
+    [request setAllHTTPHeaderFields:headers];
 
-    // Set Defaults
+    // Set UserAgent Separately to ensure not overwritted
     [request setValue:self.config.mme_userAgentString forHTTPHeaderField:MMEMapboxAgent];
     [request setValue:self.config.mme_legacyUserAgentString forHTTPHeaderField:MMEAPIClientHeaderFieldUserAgentKey];
 

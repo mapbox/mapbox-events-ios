@@ -1,13 +1,13 @@
 #import "MMEAPIClient.h"
 #import "MMEAPIClient_Private.h"
+#import "MMEConfig.h"
 #import "MMEConstants.h"
-#import "MMENSURLSessionWrapper.h"
 #import "MMEDate.h"
 #import "MMEEvent.h"
-#import "NSError+APIClient.h"
-#import "NSURLRequest+APIClientFactory.h"
-#import "MMENSURLRequestFactory.h"
 #import "MMEEventConfigProviding.h"
+#import "MMENSURLRequestFactory.h"
+#import "MMENSURLSessionWrapper.h"
+#import "NSError+APIClient.h"
 #import "NSUserDefaults+MMEConfiguration.h"
 #import "NSUserDefaults+MMEConfiguration_Private.h"
 
@@ -15,29 +15,31 @@
 
 // MARK: -
 
+/*! @Brief Private Client Properties */
 @interface MMEAPIClient ()
-@property (nonatomic) NSTimer *configurationUpdateTimer;
+
+@property (nullable, nonatomic) NSTimer *configurationUpdateTimer;
 @property (nonatomic) id<MMENSURLSessionWrapper> sessionWrapper;
 @property (nonatomic) NSBundle *applicationBundle;
-@property (nonatomic) id<MMEEventConfigProviding> config;
-@property (nonatomic) MMENSURLRequestFactory *requestFactory;
 
+// Factory for building URLRequests with shared components provided by Config
+@property (nonatomic, readonly) MMENSURLRequestFactory *requestFactory;
+
+// Metrics and statistics gathering hooks (Likely eligible to move to a private hader)
 @property (nonatomic, copy, readonly) OnErrorBlock onError;
 @property (nonatomic, copy, readonly) OnBytesReceived onBytesReceived;
 @property (nonatomic, copy, readonly) OnEventQueueUpdate onEventQueueUpdate;
 @property (nonatomic, copy, readonly) OnEventCountUpdate onEventCountUpdate;
 @property (nonatomic, copy, readonly) OnGenerateTelemetryEvent onGenerateTelemetryEvent;
 @property (nonatomic, copy, readonly) OnLogEvent onLogEvent;
-
-
 @end
 
 int const kMMEMaxRequestCount = 1000;
 
-// MARK: -
 
 @implementation MMEAPIClient
 
+// MARK: - Lifecycle
 
 - (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config
                        onError: (OnErrorBlock)onError
@@ -68,13 +70,54 @@ int const kMMEMaxRequestCount = 1000;
     [self.sessionWrapper invalidate];
 }
 
+// MARK: - Requests
+
+/** Designated Method to perform any API request. All requests should flow through here for shared general metric logging */
+- (void)performRequest:(NSURLRequest*)request
+     completion:(nullable void (^)(NSData * _Nullable data, NSHTTPURLResponse * _Nullable response, NSError * _Nullable error))completion {
+
+    __weak __typeof__(self) weakSelf = self;
+
+    // General Request
+    [self.sessionWrapper processRequest:request
+                      completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        // Inspect for General Response Reporting
+        if (response && [response isKindOfClass:NSHTTPURLResponse.class]) {
+            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+            NSError *statusError = [[NSError alloc] initWith:request httpResponse:httpResponse error:error];
+
+            // General Error Reporting
+            if (statusError) {
+                weakSelf.onError(statusError);
+            }
+
+            // Report Metrics
+            if (data) {
+                weakSelf.onBytesReceived(data.length);
+            }
+
+            if (completion) {
+                completion(data, httpResponse, error);
+            }
+        }
+        else if (error) {
+            // General Error Reporting
+            weakSelf.onError(error);
+
+            if (completion) {
+                completion(data, nil, error);
+            }
+        }
+    }];
+}
+
 // MARK: - Events Service
 
 - (NSArray *)batchFromEvents:(NSArray *)events {
     NSMutableArray *eventBatches = [[NSMutableArray alloc] init];
     int eventsRemaining = (int)[events count];
     int i = 0;
-    
+
     while (eventsRemaining) {
         NSRange range = NSMakeRange(i, MIN(kMMEMaxRequestCount, eventsRemaining));
         NSArray *batchArray = [events subarrayWithRange:range];
@@ -82,41 +125,60 @@ int const kMMEMaxRequestCount = 1000;
         eventsRemaining -= range.length;
         i += range.length;
     }
-    
+
     return eventBatches;
 }
 
-- (void)postEvents:(NSArray *)events completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
+- (NSURLRequest *)requestForEvents:(NSArray *)events {
+
+    NSMutableArray *eventAttributes = [NSMutableArray arrayWithCapacity:events.count];
+    [events enumerateObjectsUsingBlock:^(MMEEvent * _Nonnull event, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (event.attributes) {
+            [eventAttributes addObject:event.attributes];
+        }
+    }];
+
+    NSDictionary<NSString*, NSString*>* additionalHeaders = @{
+        MMEAPIClientHeaderFieldContentTypeKey: MMEAPIClientHeaderFieldContentTypeValue
+    };
+
+    NSError* jsonError = nil;
+    NSURLRequest* request = [self.requestFactory urlRequestWithMethod:MMEAPIClientHTTPMethodPost
+                                                              baseURL:self.config.mme_eventsServiceURL
+                                                                 path:MMEAPIClientEventsPath
+                                                    additionalHeaders:additionalHeaders
+                                                           shouldGZIP: events.count >= 2
+                                                           jsonObject:eventAttributes
+                                                                error:&jsonError];
+
+    if (jsonError) {
+        self.onLogEvent([MMEEvent debugEventWithError:jsonError]);
+        return nil;
+    }
+
+    return [request copy];
+}
+
+- (void)postEvent:(MMEEvent *)event completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
+    [self postEvents:@[event] completionHandler:completionHandler];
+}
+
+- (void)postEvents:(NSArray <MMEEvent*> *)events completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
+
     self.onEventQueueUpdate(events);
-    
+
     NSArray *eventBatches = [self batchFromEvents:events];
-    
+
     for (NSArray *batch in eventBatches) {
         NSURLRequest *request = [self requestForEvents:batch];
         if (request) {
 
             __weak __typeof__(self) weakSelf = self;
-            [self.sessionWrapper processRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-                // check the response object for HTTP error code
-                if (response && [response isKindOfClass:NSHTTPURLResponse.class]) {
-                    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-                    NSError *statusError = [[NSError alloc] initWith:request httpResponse:httpResponse error:error];
+            [self performRequest:request
+                      completion:^(NSData * _Nullable data, NSHTTPURLResponse * _Nullable response, NSError * _Nullable error) {
 
-                    if (statusError) { // report the status error
-                        weakSelf.onError(statusError);
-                    }
-
-                    // check the data object, log the Rx bytes and try to load the config
-                    if (data) {
-                        weakSelf.onBytesReceived(data.length);
-                    }
-                }
-                else if (error) { // check the session error and report it if the response appears invalid
-                    weakSelf.onError(error);
-                }
-                
                 weakSelf.onEventCountUpdate(events.count, request, error);
-                
+
                 if (completionHandler) {
                     completionHandler(error);
                 }
@@ -128,8 +190,65 @@ int const kMMEMaxRequestCount = 1000;
     self.onGenerateTelemetryEvent();
 }
 
-- (void)postEvent:(MMEEvent *)event completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
-    [self postEvents:@[event] completionHandler:completionHandler];
+// MARK: - URLRequest Construction
+- (NSURLRequest *)eventConfigurationRequest {
+    NSError *jsonError = nil;
+    return [self.requestFactory urlRequestWithMethod:MMEAPIClientHTTPMethodPost
+                                             baseURL:self.config.mme_configServiceURL
+                                                path:MMEAPIClientEventsConfigPath
+                                   additionalHeaders:@{}
+                                          shouldGZIP: NO
+                                          jsonObject:nil
+                                               error:&jsonError];
+}
+
+// MARK: - Configuration Service
+
+- (void)getEventConfigWithCompletionHandler:(nullable void (^)(MMEConfig* _Nullable jsonObject, NSError * _Nullable error))completion {
+
+    NSURLRequest* request = [self eventConfigurationRequest];
+
+    __weak __typeof__(self) weakSelf = self;
+    [self performRequest:request
+              completion:^(NSData * _Nullable data, NSHTTPURLResponse * _Nullable response, NSError * _Nullable error) {
+
+        if (error) {
+            completion(nil, error);
+            return;
+        }
+
+        // Inspect Header for TimeOffset from server
+        NSString *dateHeader = response.allHeaderFields[@"Date"];
+        if (dateHeader){
+            NSDate *date = [MMEDate.HTTPDateFormatter dateFromString:dateHeader];
+            if (date) {
+                [MMEDate recordTimeOffsetFromServer:date];
+            }
+        }
+
+        NSDictionary<NSString*, id <NSObject>>* json = nil;
+        NSError *decodingError = nil;
+        MMEConfig* config = nil;
+
+        // Decode Data
+        if (data) {
+            json = [NSJSONSerialization JSONObjectWithData:data
+                                                   options:kNilOptions
+                                                     error:&decodingError];
+
+            // Map to MMEConfig
+            if (json) {
+                config = [[MMEConfig alloc] initWithDictionary:json error:&decodingError];
+            }
+        }
+
+        // Error Metric Reporting
+        if (decodingError) {
+            weakSelf.onError(decodingError);
+        }
+
+        completion(config, decodingError);
+    }];
 }
 
 // MARK: - Metadata Service
@@ -193,7 +312,7 @@ int const kMMEMaxRequestCount = 1000;
                     return;
                 }
 
-                NSURLRequest *request = [NSURLRequest configurationRequest];
+                NSURLRequest *request = [self eventConfigurationRequest];
                 [strongSelf.sessionWrapper processRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
                     // check the response object for HTTP error code, update the local clock offset
                     if (response && [response isKindOfClass:NSHTTPURLResponse.class]) {
@@ -259,36 +378,6 @@ int const kMMEMaxRequestCount = 1000;
 }
 
 // MARK: - Utilities
-
-- (NSURLRequest *)requestForEvents:(NSArray *)events {
-
-    NSMutableArray *eventAttributes = [NSMutableArray arrayWithCapacity:events.count];
-    [events enumerateObjectsUsingBlock:^(MMEEvent * _Nonnull event, NSUInteger idx, BOOL * _Nonnull stop) {
-        if (event.attributes) {
-            [eventAttributes addObject:event.attributes];
-        }
-    }];
-
-    NSDictionary<NSString*, NSString*>* additionalHeaders = @{
-        MMEAPIClientHeaderFieldContentTypeKey: MMEAPIClientHeaderFieldContentTypeValue
-    };
-
-    NSError* jsonError = nil;
-    NSURLRequest* request = [self.requestFactory urlRequestWithMethod:MMEAPIClientHTTPMethodPost
-                                      baseURL:self.config.mme_eventsServiceURL
-                                         path:MMEAPIClientEventsPath
-                            additionalHeaders:additionalHeaders
-                                   shouldGZIP: events.count >= 2
-                                   jsonObject:eventAttributes
-                                        error:&jsonError];
-
-   if (jsonError) {
-       self.onLogEvent([MMEEvent debugEventWithError:jsonError]);
-       return nil;
-    }
-    
-    return [request copy];
-}
 
 - (NSString *)mimeTypeForPath:(NSString *)path {
     CFStringRef extension = (__bridge CFStringRef)[path pathExtension];
