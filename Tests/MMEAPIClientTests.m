@@ -12,6 +12,7 @@
 #import "NSData+MMEGZIP.h"
 #import "MMEMockEventConfig.h"
 #import "MMEAPIClientBlockCounter.h"
+#import "MMEAPIClient+Mock.h"
 
 @interface MMENSURLSessionWrapper (Private)
 @property (nonatomic) NSURLSession *session;
@@ -134,6 +135,35 @@
     
     XCTAssert(isMainThread = YES);
     XCTAssert(self.receivedDisposition = NSURLSessionAuthChallengeCancelAuthenticationChallenge);
+}
+
+- (void)testGetConfigURLRequest {
+    MMEAPIClient* client = [MMEAPIClient clientWithMockConfig];
+    NSURLRequest* request = client.eventConfigurationRequest;
+    NSDictionary<NSString*, NSString*>* headers = @{
+        @"Content-Type": @"application/json",
+        @"User-Agent":  @"<LegacyUserAgent>",
+        @"X-Mapbox-Agent": @"<UserAgent>"
+    };
+
+    XCTAssertEqualObjects(@"https://config.mapbox.com/events-config?access_token=access-token", request.URL.absoluteString);
+    XCTAssertEqualObjects(headers, request.allHTTPHeaderFields);
+    XCTAssertNil(request.HTTPBody);
+}
+
+- (void)testPostEvent {
+    MMEAPIClient* client = [MMEAPIClient clientWithMockConfig];
+    MMEEvent* event = [MMEEvent turnstileEventWithAttributes:@{}];
+    NSURLRequest* request = [client requestForEvents:@[event]];
+    NSDictionary<NSString*, NSString*>* headers = @{
+        @"Content-Type": @"application/json",
+        @"User-Agent":  @"<LegacyUserAgent>",
+        @"X-Mapbox-Agent": @"<UserAgent>"
+    };
+
+    XCTAssertEqualObjects(@"https://events.mapbox.com/events/v2?access_token=access-token", request.URL.absoluteString);
+    XCTAssertEqualObjects(headers, request.allHTTPHeaderFields);
+    XCTAssertNotNil(request.HTTPBody);
 }
 
 - (void)testPostMetadata {

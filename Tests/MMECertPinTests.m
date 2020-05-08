@@ -35,14 +35,6 @@
 
 // MARK: -
 
-@interface MMEAPIClient ()
-@property (nonatomic) id<MMENSURLSessionWrapper> sessionWrapper;
-
-@end
-
-
-// MARK: -
-
 @interface MMECertPinTests : XCTestCase
 @property(nonatomic) MMENSURLSessionWrapper *sessionWrapper;
 @property(nonatomic) MMEEventsConfiguration *configuration;

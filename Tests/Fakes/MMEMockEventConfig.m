@@ -15,9 +15,9 @@
                   legacyUserAgentBase:@"user-agent-base"
                  legacyHostSDKVersion:@"1.0"
                         isChinaRegion:NO
-                               apiURL:[NSURL URLWithString:MMEAPIClientBaseEventsURL]
-                            eventsURL:[NSURL URLWithString:MMEEventsServiceURL]
-                            configURL:[NSURL URLWithString:MMEConfigServiceURL]
+                               apiURL:[NSURL URLWithString:MMEAPIClientBaseAPIURL]
+                            eventsURL:[NSURL URLWithString:MMEAPIClientBaseEventsURL]
+                            configURL:[NSURL URLWithString:MMEAPIClientBaseConfigURL]
                             userAgent:@"<UserAgent>"
                       legacyUserAgent:@"<LegacyUserAgent>"
                   isCollectionEnabled:YES

@@ -7,6 +7,7 @@
 #import "NSString+MMEVersions.h"
 #import "NSUserDefaults+MMEConfiguration.h"
 #import "NSUserDefaults+MMEConfiguration_Private.h"
+#import "MMEConfig.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -599,68 +600,35 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)mme_updateFromConfigServiceObject:(NSDictionary *)configDictionary updateError:(NSError **)updateError{
     BOOL success = NO;
     if (configDictionary) {
-        if ([configDictionary.allKeys containsObject:MMERevokedCertKeys]) {
-            NSError *error = [NSError errorWithDomain:MMEErrorDomain code:MMEErrorConfigUpdateError userInfo:@{
-                NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Config object contains invalid key: %@", MMERevokedCertKeys]
-            }];
-            
-            if (error && updateError) {
-                *updateError = error;
-            }
-            
-            return success;
-        }
 
-        id configCRL = [configDictionary objectForKey:MMEConfigCRLKey];
-        if ([configCRL isKindOfClass:NSArray.class]) {
-            for (NSString *publicKeyHash in configCRL) {
-                NSData *pinnedKeyHash = [[NSData alloc] initWithBase64EncodedString:publicKeyHash options:(NSDataBase64DecodingOptions)0];
-                if ([pinnedKeyHash length] != CC_SHA256_DIGEST_LENGTH){
-                    NSError *error = [NSError errorWithDomain:MMEErrorDomain code:MMEErrorConfigUpdateError userInfo:@{
-                        NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Hash value invalid: %@", pinnedKeyHash]
-                    }];
-                    
-                    if (error && updateError) {
-                        *updateError = error;
-                    }
-                    
-                    return success;
-                }
+        MMEConfig* config = [[MMEConfig alloc] initWithDictionary:configDictionary
+                                                            error:updateError];
+        if (config) {
+            // TODO: Clarify Config Update Expectations
+            // Migrated this directly, but confused by the differentiated behaviors of replacing/resetting/ignoring
+            [self mme_setObject:config.certificateRevocationList forPersistentKey:MMECertificateRevocationList];
+
+            if (config.telemetryTypeOverride) {
+                [self mme_updateFromAccountType:[config.telemetryTypeOverride integerValue]];
             }
-            
-            [self mme_setObject:configCRL forPersistentKey:MMECertificateRevocationList];
-        }
-        
-        id configTTO = [configDictionary objectForKey:MMEConfigTTOKey];
-        if ([configTTO isKindOfClass:NSNumber.class]) {
-            [self mme_updateFromAccountType:[configTTO integerValue]];
-        }
-        
-        id configGFO = [configDictionary objectForKey:MMEConfigGFOKey];
-        if ([configGFO isKindOfClass:NSNumber.class]) {
-            CLLocationDistance gfoDistance = [configGFO doubleValue];
-            if (gfoDistance >= MMECustomGeofenceRadiusMinimum
-             && gfoDistance <= MMECustomGeofenceRadiusMaximum) {
-                [self mme_setObject:@(gfoDistance) forPersistentKey:MMEBackgroundGeofence];
-            }
-            else { // fallback to the default
+
+            if (config.geofenceOverride) {
+                [self mme_setObject:config.geofenceOverride forPersistentKey:MMEBackgroundGeofence];
+            } else {
+                // fallback to the default
                 [self removeObjectForKey:MMEBackgroundGeofence];
             }
-        }
-        
-        id configBSO = [configDictionary objectForKey:MMEConfigBSOKey];
-        if ([configBSO isKindOfClass:NSNumber.class]) {
-            NSTimeInterval bsoInterval = [configBSO doubleValue];
-            if (bsoInterval > 0 && bsoInterval <= MMEStartupDelayMaximum) {
-                [self mme_setObject:@(bsoInterval) forPersistentKey:MMEBackgroundStartupDelay];
+
+            if (config.backgroundStartupOverride) {
+                [self mme_setObject:config.backgroundStartupOverride forPersistentKey:MMEBackgroundStartupDelay];
             }
+
+            if (config.eventTag) {
+                [self mme_setObject:config.eventTag forPersistentKey:MMEConfigEventTag];
+            }
+
         }
-        
-        id configTag = [configDictionary objectForKey:MMEConfigTagKey];
-        if ([configTag isKindOfClass:NSString.class]) {
-            [self mme_setObject:configTag forPersistentKey:MMEConfigEventTag];
-        }
-        
+
         success = YES;
     }
     return success;
