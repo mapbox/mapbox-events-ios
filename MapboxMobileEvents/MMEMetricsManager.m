@@ -199,9 +199,6 @@
 
 - (NSDictionary *)attributes {
     MMEMutableMapboxEventAttributes *attributes = [MMEMutableMapboxEventAttributes dictionary];
-    if (self.metrics.recordingStarted) {
-        attributes[MMEEventDateUTC] = [MMEDate.iso8601DateOnlyFormatter stringFromDate:self.metrics.recordingStarted];
-    }
     attributes[MMEEventKeyFailedRequests] = [self jsonStringfromDict:self.metrics.failedRequestsDict];
     attributes[MMEEventEventCountPerType] = [self jsonStringfromDict:self.metrics.eventCountPerType];
     attributes[MMEEventConfigResponse] = [self jsonStringfromDict:self.metrics.configResponseDict];
@@ -217,19 +214,22 @@
     attributes[MMEEventAppWakeups] = @(self.metrics.appWakeups);
     attributes[MMEEventRequests] = @(self.metrics.requests);
     attributes[MMEEventDeviceTimeDrift] = @(MMEDate.recordedTimeOffsetFromServer);
-    // check for null-island and don't add a location if we're there
-    if (self.metrics.deviceLat != 0 && self.metrics.deviceLon != 0) {
-        attributes[MMEEventDeviceLat] = @(self.metrics.deviceLat);
-        attributes[MMEEventDeviceLon] = @(self.metrics.deviceLon);
-    }
     attributes[MMEEventKeyModel] = NSProcessInfo.mme_hardwareModel;
     attributes[MMEEventKeyPlatform] = NSProcessInfo.mme_platformName;
     attributes[MMEEventKeyOperatingSystem] = NSProcessInfo.mme_osVersion;
     attributes[MMEEventKeyDevice] = NSProcessInfo.mme_deviceModel;
-    
     attributes[MMEEventSDKIdentifier] = NSUserDefaults.mme_configuration.mme_legacyUserAgentBase;
     attributes[MMEEventSDKVersion] = NSUserDefaults.mme_configuration.mme_legacyHostSDKVersion;
     attributes[MMEEventKeyUserAgent] = NSUserDefaults.mme_configuration.mme_userAgentString;
+
+    if (self.metrics.deviceLat != 0 && self.metrics.deviceLon != 0) { // check for null-island
+        attributes[MMEEventDeviceLat] = @(self.metrics.deviceLat);
+        attributes[MMEEventDeviceLon] = @(self.metrics.deviceLon);
+    }
+
+    if (self.metrics.recordingStarted) {
+        attributes[MMEEventDateUTC] = [MMEDate.iso8601DateOnlyFormatter stringFromDate:self.metrics.recordingStarted];
+    }
 
     return attributes;
 }
