@@ -15,11 +15,6 @@
 
 static NSString * const MMEMapboxAgent = @"X-Mapbox-Agent";
 
-typedef NS_ENUM(NSInteger, MMEErrorCode) {
-    MMESessionFailedError,
-    MMEUnexpectedResponseError
-};
-
 @import MobileCoreServices;
 
 // MARK: -
