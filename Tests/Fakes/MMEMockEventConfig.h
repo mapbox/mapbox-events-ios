@@ -108,6 +108,9 @@ NS_ASSUME_NONNULL_BEGIN
                   backgroundGeofence:(CLLocationDistance)backgroundGeofence
            certificateRevocationList:(NSArray<NSString*>*)certificationRevocationList
             certificatePinningConfig:(NSDictionary<NSString*, NSArray<NSString*>*>*)certificatePinningConfig;
+
+/*! @Brief Defaults (except Update Interface is 1s) targeting local host */
++ (instancetype)oneSecondConfigUpdate;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -28,6 +28,8 @@ typedef void(^OnLogEvent)(MMEEvent* event);
 
 - (instancetype)init NS_UNAVAILABLE;
 
+/*! Brief Basic Client Setup */
+- (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config;
 
 /** Designated Initializer
  @param config Provider of Shared Client Model Information
@@ -61,10 +63,10 @@ typedef void(^OnLogEvent)(MMEEvent* event);
 // MARK: - Events Service
 
 /*!
- @Brief Construct URLRequest for Events
+ @Brief Construct URLRequest for reporting Events
  @param events Array of Events
  */
-- (NSURLRequest *)requestForEvents:(NSArray *)events;
+- (nullable NSURLRequest *)requestForEvents:(NSArray *)events;
 
 /*!
  @Brief Track a single event
@@ -81,17 +83,19 @@ typedef void(^OnLogEvent)(MMEEvent* event);
 - (void)postEvents:(NSArray <MMEEvent*> *)events completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler;
 
 
-- (void)postMetadata:(NSArray *)metadata filePaths:(NSArray *)filePaths completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler;
+- (void)postMetadata:(NSArray *)metadata
+           filePaths:(NSArray *)filePaths
+   completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler;
 
 
 // MARK: - Configuration Service
 
-- (NSURLRequest *)eventConfigurationRequest;
+- (nullable NSURLRequest *)eventConfigurationRequest;
 
 /** Fetch Event Config (Service Driven Behavior Reporting)
  @param completion Block called at the end of network operation (Result being JSON Object or NSError)
  */
-- (void)getEventConfigWithCompletionHandler:(nullable void (^)(MMEConfig* _Nullable jsonObject, NSError * _Nullable error))completion;
+- (void)getEventConfigWithCompletionHandler:(nullable void (^)(MMEConfig* _Nullable config, NSError * _Nullable error))completion;
 
 /// Start the Configuration update process
 - (void)startGettingConfigUpdates;

@@ -9,6 +9,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, readonly) id <MMEEventConfigProviding> config;
 
+// MARK: - Initializers
+
 - (instancetype)init NS_UNAVAILABLE;
 
 /**
@@ -17,6 +19,8 @@ NS_ASSUME_NONNULL_BEGIN
  * @param config A datasource providing shared values to configure URLRequests such as accessToken
  */
 - (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config;
+
+// MARK: - Requests
 
 /**
  * Constructs an NSURLRequest for Data Tasks

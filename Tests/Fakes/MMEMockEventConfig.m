@@ -1,6 +1,7 @@
 #import "MMEMockEventConfig.h"
 #import "NSUserDefaults+MMEConfiguration_Private.h"
 #import "MMEConstants.h"
+#import "MMEServiceFixture.h"
 
 @implementation MMEMockEventConfig
 
@@ -77,6 +78,31 @@
         _mme_certificatePinningConfig = [certificatePinningConfig copy];
     }
     return self;
+}
+
++ (instancetype)oneSecondConfigUpdate {
+    return [[MMEMockEventConfig alloc] initWithStartupDelay:MMEStartupDelayDefault
+                      eventFlushCount:MMEEventFlushCountDefault
+                        flushInterval:MMEEventFlushIntervalDefault
+           identifierRotationInterval:MMEIdentifierRotationIntervalDefault
+                 configUpdateInterval:1
+                             eventTag:@"42"
+                          accessToken:@"access-token"
+                  legacyUserAgentBase:@"user-agent-base"
+                 legacyHostSDKVersion:@"1.0"
+                        isChinaRegion:NO
+                               apiURL:[NSURL URLWithString:MMEAPIClientBaseAPIURL]
+                            eventsURL:[NSURL URLWithString:MMEAPIClientBaseEventsURL]
+                            configURL:MMEServiceFixture.serviceURL
+                            userAgent:@"<UserAgent>"
+                      legacyUserAgent:@"<LegacyUserAgent>"
+                  isCollectionEnabled:YES
+       isCollectionEnabledInSimulator:YES
+      isCollectionEnabledInBackground:YES
+               backgroundStartupDelay:MMEBackgroundStartupDelayDefault
+                   backgroundGeofence:MMEBackgroundGeofenceDefault
+            certificateRevocationList:@[]
+             certificatePinningConfig:@{}];
 }
 
 @end
