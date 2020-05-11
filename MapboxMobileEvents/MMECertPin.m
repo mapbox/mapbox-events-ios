@@ -1,11 +1,67 @@
-#import <CommonCrypto/CommonDigest.h>
+@import Security;
+@import CommonCrypto;
 
 #import "MMECertPin.h"
 #import "MMEConstants.h"
 #import "MMELogger.h"
 
-
 #import "NSUserDefaults+MMEConfiguration.h"
+
+// MARK: ASN1 Headers
+
+// These are the ASN1 headers for the Subject Public Key Info section of a certificate
+static const unsigned char rsa2048Asn1Header[] = {
+    0x30, 0x82, 0x01, 0x22, 0x30, 0x0d, 0x06, 0x09, 0x2a, 0x86, 0x48, 0x86,
+    0xf7, 0x0d, 0x01, 0x01, 0x01, 0x05, 0x00, 0x03, 0x82, 0x01, 0x0f, 0x00
+};
+
+static const unsigned char rsa4096Asn1Header[] = {
+    0x30, 0x82, 0x02, 0x22, 0x30, 0x0d, 0x06, 0x09, 0x2a, 0x86, 0x48, 0x86,
+    0xf7, 0x0d, 0x01, 0x01, 0x01, 0x05, 0x00, 0x03, 0x82, 0x02, 0x0f, 0x00
+};
+
+static const unsigned char ecDsaSecp256r1Asn1Header[] = {
+    0x30, 0x59, 0x30, 0x13, 0x06, 0x07, 0x2a, 0x86, 0x48, 0xce, 0x3d, 0x02,
+    0x01, 0x06, 0x08, 0x2a, 0x86, 0x48, 0xce, 0x3d, 0x03, 0x01, 0x07, 0x03,
+    0x42, 0x00
+};
+
+static const unsigned char ecDsaSecp384r1Asn1Header[] = {
+    0x30, 0x76, 0x30, 0x10, 0x06, 0x07, 0x2a, 0x86, 0x48, 0xce, 0x3d, 0x02,
+    0x01, 0x06, 0x05, 0x2b, 0x81, 0x04, 0x00, 0x22, 0x03, 0x62, 0x00
+};
+
+typedef enum {
+    MMEKeySizeRSA2048 = 2048,
+    MMEKeySizeRSA4096 = 4096,
+    MMEKeySizeECC256 = 256,
+    MMEKeySizeECC384 = 384
+} MMEKeySizes;
+
+BOOL ASN1HeaderForPublicKeyAlgorithm(size_t algo, const unsigned char ** headerBytes, size_t * headerSize) {
+    BOOL headerFound = NO;
+    switch (algo) {
+        case MMEKeySizeRSA2048:
+            *headerBytes = (const unsigned char *)&rsa2048Asn1Header;
+            *headerSize = sizeof(rsa4096Asn1Header);
+            headerFound = YES;
+        case MMEKeySizeRSA4096:
+            *headerBytes = (const unsigned char *)&rsa4096Asn1Header;
+            *headerSize = sizeof(rsa4096Asn1Header);
+            headerFound = YES;
+        case MMEKeySizeECC256:
+            *headerBytes = (const unsigned char *)&ecDsaSecp256r1Asn1Header;
+            *headerSize = sizeof(ecDsaSecp256r1Asn1Header);
+            headerFound = YES;
+        case MMEKeySizeECC384:
+            *headerBytes = (const unsigned char *)&ecDsaSecp384r1Asn1Header;
+            *headerSize = sizeof(ecDsaSecp384r1Asn1Header);
+            headerFound = YES;
+    }
+    return headerFound;
+}
+
+// MARK: -
 
 @interface MMECertPin()
 
@@ -55,7 +111,7 @@
             BOOL found = NO;
             for (int lc = 0; lc < numKeys; lc++) {
                 SecCertificateRef remoteCertificate = SecTrustGetCertificateAtIndex(serverTrust, lc);
-                NSData *remoteCertificatePublicKeyHash = [self hashSubjectPublicKeyInfoFromCertificate:remoteCertificate];
+                NSData *remoteCertificatePublicKeyHash = [self hashSubjectPublicKeyInfoFromCertificate:remoteCertificate error:nil];
                 NSString *publicKeyHashString = [remoteCertificatePublicKeyHash base64EncodedStringWithOptions:0];
                 NSArray *pinnedHashStrings = NSUserDefaults.mme_configuration.mme_certificatePinningConfig[challenge.protectionSpace.host];
                 
@@ -104,7 +160,7 @@
     
 }
 
-- (NSData *)hashSubjectPublicKeyInfoFromCertificate:(SecCertificateRef)certificate{
+- (NSData *)hashSubjectPublicKeyInfoFromCertificate:(SecCertificateRef)certificate error:(NSError **)inError {
     __block NSData *cachedSubjectPublicKeyInfo;
    
     // Have we seen this certificate before?
@@ -122,8 +178,12 @@
     
     // We didn't have this certificate in the cache
     // First extract the public key bytes
-    NSData *publicKeyData = [self getPublicKeyDataFromCertificate:certificate];
-    if (publicKeyData == nil) {
+    size_t publicKeySize = 0;
+    NSData *publicKeyData = [self getPublicKeyDataFromCertificate:certificate keySize:&publicKeySize];
+    if (publicKeySize == 0 || publicKeyData == nil) {
+        *inError = [NSError.alloc initWithDomain:MMEErrorDomain code:MMEInvalidCertificate userInfo:@{
+            NSLocalizedDescriptionKey: @"Invalid Certificate"
+        }];
         return nil;
     }
     
@@ -132,8 +192,17 @@
     CC_SHA256_CTX shaCtx;
     CC_SHA256_Init(&shaCtx);
     
+    const unsigned char * headerBytes = NULL;
+    size_t headerSize = 0;
+    
+    if (!ASN1HeaderForPublicKeyAlgorithm(publicKeySize, &headerBytes, &headerSize)) {
+        *inError = [NSError.alloc initWithDomain:MMEErrorDomain code:MMEInvalidPublicKeyAlgo userInfo:@{
+            NSLocalizedDescriptionKey: @"Invalid Public Key Algorithim"
+        }];
+        return nil;
+    }
     // Add the missing ASN1 header for public keys to re-create the subject public key info
-    CC_SHA256_Update(&shaCtx, rsa2048Asn1Header, sizeof(rsa2048Asn1Header));
+    CC_SHA256_Update(&shaCtx, headerBytes, sizeof(rsa2048Asn1Header));
     
     // Add the public key
     CC_SHA256_Update(&shaCtx, [publicKeyData bytes], (unsigned int)[publicKeyData length]);
@@ -153,13 +222,8 @@
 
 static const NSString *kMMEKeychainPublicKeyTag = @"MMEKeychainPublicKeyTag"; // Used to add and find the public key in the Keychain
 
-// These are the ASN1 headers for the Subject Public Key Info section of a certificate
-static const unsigned char rsa2048Asn1Header[] = {
-    0x30, 0x82, 0x01, 0x22, 0x30, 0x0d, 0x06, 0x09, 0x2a, 0x86, 0x48, 0x86,
-    0xf7, 0x0d, 0x01, 0x01, 0x01, 0x05, 0x00, 0x03, 0x82, 0x01, 0x0f, 0x00
-};
-
-- (NSData *)getPublicKeyDataFromCertificate:(SecCertificateRef)certificate{
+// TODO refactor this into a single function with an @avaiable check
+- (NSData *)getPublicKeyDataFromCertificate:(SecCertificateRef)certificate keySize:(size_t *)publicKeySize {
     // ****** iOS ******
 #if __IPHONE_OS_VERSION_MAX_ALLOWED < 100000
     // Base SDK is iOS 8 or 9
@@ -171,17 +235,17 @@ static const unsigned char rsa2048Asn1Header[] = {
         && [processInfo isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){10, 0, 0}])
     {
         // iOS 10+
-        return [self getPublicKeyDataFromCertificate_unified:certificate];
+        return [self getPublicKeyDataFromCertificate_unified:certificate keySize:publicKeySize];
     }
     else
     {
         // iOS 8 or 9
-        return [self getPublicKeyDataFromCertificate_legacy_ios:certificate];
+        return [self getPublicKeyDataFromCertificate_legacy_ios:certificate keySize:publicKeySize];
     }
 #endif
 }
 
-- (NSData *)getPublicKeyDataFromCertificate_legacy_ios:(SecCertificateRef)certificate
+- (NSData *)getPublicKeyDataFromCertificate_legacy_ios:(SecCertificateRef)certificate keySize:(size_t *)publicKeySize
 {
     __block NSData *publicKeyData = nil;
     __block OSStatus resultAdd, __block resultDel = noErr;
@@ -217,24 +281,28 @@ static const unsigned char rsa2048Asn1Header[] = {
     publicKeyGet[(__bridge id)kSecAttrApplicationTag] = kMMEKeychainPublicKeyTag;
     publicKeyGet[(__bridge id)kSecReturnData] = @YES;
     
-    
     // Get the key bytes from the Keychain atomically
     dispatch_sync(dispatch_queue_create("MMEKeychainLock", DISPATCH_QUEUE_SERIAL), ^{
         resultAdd = SecItemAdd((__bridge CFDictionaryRef) peerPublicKeyAdd, (void *)&publicKeyData);
         resultDel = SecItemDelete((__bridge CFDictionaryRef)publicKeyGet);
     });
     
+    if (publicKeySize) {
+        // TODO fetch record the key size for the caller using older API (example below requires 10.10)
+        *publicKeySize = MMEKeySizeRSA2048;
+    }
+
     CFRelease(publicKey);
-    if ((resultAdd != errSecSuccess) || (resultDel != errSecSuccess))
-    {
+    if ((resultAdd != errSecSuccess) || (resultDel != errSecSuccess)) {
         // Something went wrong with the Keychain we won't know if we did get the right key data
         publicKeyData = nil;
+        *publicKeySize = 0;
     }
     
     return publicKeyData;
 }
 
-- (NSData *)getPublicKeyDataFromCertificate_unified:(SecCertificateRef)certificate
+- (NSData *)getPublicKeyDataFromCertificate_unified:(SecCertificateRef)certificate keySize:(size_t *)publicKeySize
 {
     // Create an X509 trust using the using the certificate
     SecTrustRef trust;
@@ -254,8 +322,20 @@ static const unsigned char rsa2048Asn1Header[] = {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wpartial-availability"
     CFDataRef publicKeyData = SecKeyCopyExternalRepresentation(publicKey, NULL);
+
+    // record the key size for the caller
+    if (publicKeySize) {
+        CFDictionaryRef keyAttributes = SecKeyCopyAttributes(publicKey);
+        CFNumberRef keySizeInBits = CFDictionaryGetValue(keyAttributes, kSecAttrKeySizeInBits);
+        if (keySizeInBits) {
+            CFNumberGetValue(keySizeInBits, kCFNumberLongType, (void *)publicKeySize);
+        }
+        if (keyAttributes) {
+            CFRelease(keyAttributes);
+        }
+    }
 #pragma clang diagnostic pop
-    
+
     CFRelease(publicKey);
     
     return (__bridge_transfer NSData *)publicKeyData;

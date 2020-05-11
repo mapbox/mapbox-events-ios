@@ -172,7 +172,8 @@ typedef NS_ENUM(NSInteger, MMEErrorNumber) {
     MMEErrorConfigUpdateError   = 10008,
     MMESessionFailedError       = 10009,
     MMEUnexpectedResponseError  = 10010,
-    MMEInvalidPublicKeyAlgo     = 10011
+    MMEInvalidCertificate       = 10011,
+    MMEInvalidPublicKeyAlgo     = 10012
 };
 
 /// key for MMEErrorEventInit userInfo dictionary containing the attributes which failed to create the event
