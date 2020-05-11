@@ -60,27 +60,47 @@ docs: $(DOCS_DIR) headerdoc docindex
 list:
 	@$(MAKE) -pRrq -f $(lastword $(MAKEFILE_LIST)) : 2>/dev/null | awk -v RS= -F: '/^# File/,/^# Finished Make data base/ {if ($$1 !~ "^[#.]") {print $$1}}' | sort | egrep -v -e '^[^[:alnum:]]' -e '^$@$$'
 
-# driver targets
+# Build Driver Targets
+
 .PHONY: prep
 prep:
-
-.PHONY: lint
-lint: pod-lint
+	@echo "TODO prep Project"
 
 .PHONY: build
 build:
 	$(XCODEBUILD) -scheme "$(BUILD_SCHEME)" build
-	
+
 .PHONY: test
 test:
 	$(XCODEBUILD) -scheme "$(BUILD_SCHEME)" test
 
 .PHONY: docs
 docs:
+	@echo "TODO docs Project"
 
 .PHONY: pack
 pack:
+	@echo "TODO pack Project"
+
+.PHONY: farm
+farm:
+	@echo "TODO farm Project"
+
+.PHONY: stage
+stage:
+	@echo "TODO stage Project"
 
 .PHONY: clean
 clean:
 	rm -fr $(OUTPUT_PATH)
+
+.PHONY: lint
+lint: pod-lint
+
+# local and ci build Targets
+
+.DEFAULT: build
+run: prep build test docs pack
+
+.PHONY: ci-build
+ci-run: tools build
