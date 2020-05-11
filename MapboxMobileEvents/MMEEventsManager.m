@@ -221,9 +221,14 @@ NS_ASSUME_NONNULL_BEGIN
         }
 
         [self sendTelemetryMetricsEvent];
+
         NSArray *events = [self.eventQueue copy];
         [self postEvents:events];
         [self resetEventQueuing];
+
+        if (self.delegate && [self.delegate respondsToSelector:@selector(eventsManager:didSendEvents:)]) {
+            [self.delegate eventsManager:self didSendEvents:events];
+        }
 
         MMELog(MMELogInfo, MMEDebugEventTypeFlush, ([NSString stringWithFormat:@"flush, instance: %@",
             self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
