@@ -1,4 +1,5 @@
 @import Foundation;
+#import <sys/socket.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -6,7 +7,7 @@ extern NSErrorDomain const MMEServiceFixtureErrorDomain;
 extern NSTimeInterval const MME1sTimeout;
 extern NSTimeInterval const MME10sTimeout;
 extern NSTimeInterval const MME100sTimeout;
-extern NSUInteger const MMEFixtureDefaultPort;
+extern in_port_t const MMEFixtureDefaultPort;
 
 typedef NS_ENUM(NSInteger, MMEServiceFixtureErrorNumber) { // 11000 - 11999
     MMEServiceFixtureNoError = 0,
@@ -16,7 +17,7 @@ typedef NS_ENUM(NSInteger, MMEServiceFixtureErrorNumber) { // 11000 - 11999
 };
 
 @interface MMEServiceFixture : NSObject
-@property(class,nonatomic,assign) NSUInteger servicePort;
+@property(class,nonatomic,assign) in_port_t servicePort;
 @property(class,nonatomic,readonly) NSURL *serviceURL;
 
 + (MMEServiceFixture *)serviceFixtureWithFile:(NSString *)fixtureFile;

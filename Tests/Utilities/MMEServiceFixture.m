@@ -1,13 +1,12 @@
 #import "MMEServiceFixture.h"
 
 #import <Foundation/Foundation.h>
-#import <sys/socket.h>
 #import <netinet/in.h>
 #import <arpa/inet.h>
 
-NSUInteger const MMEFixtureDefaultPort = 8888; // not 8080 which the test server uses
+in_port_t const MMEFixtureDefaultPort = 8000;
 
-static NSUInteger MMEServiceFixturePort = MMEFixtureDefaultPort;
+static in_port_t MMEServiceFixturePort = MMEFixtureDefaultPort;
 static NSURL *MMEServiceFixtureURL;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -23,7 +22,7 @@ NSUInteger const MMEPrivledgedPort = 1024;
 @property(nonatomic) NSString *fixtureFile;
 @property(nonatomic) NSFileHandle *listeningHandle;
 @property(nonatomic) NSError *serviceError;
-@property(nonatomic, nullable) id serverSocket;
+@property(nonatomic, assign, nullable) CFSocketRef serverSocket;
 
 @end
 
@@ -31,11 +30,11 @@ NSUInteger const MMEPrivledgedPort = 1024;
 
 @implementation MMEServiceFixture
 
-+ (NSUInteger)servicePort {
++ (in_port_t)servicePort {
     return MMEServiceFixturePort;
 }
 
-+ (void)setServicePort:(NSUInteger)newPort {
++ (void)setServicePort:(in_port_t)newPort {
     if (newPort > MMEPrivledgedPort) {
         MMEServiceFixturePort = newPort;
         MMEServiceFixtureURL = nil;
@@ -75,7 +74,8 @@ NSUInteger const MMEPrivledgedPort = 1024;
 
 - (void)cleanupSocket {
     if (self.serverSocket) {
-        CFSocketInvalidate((CFSocketRef)self.serverSocket);
+        CFSocketInvalidate(self.serverSocket);
+        CFRelease(self.serverSocket);
         self.serverSocket = nil;
     }
 }
@@ -115,8 +115,7 @@ exit:
 - (void)startServer {
     CFDataRef addressData = nil;
     [self.serviceLock lock];
-    CFSocketRef serverSocketRef = CFSocketCreate(kCFAllocatorDefault, PF_INET, SOCK_STREAM, IPPROTO_TCP, 0, NULL, NULL);
-    self.serverSocket = CFBridgingRelease(serverSocketRef);
+    self.serverSocket = CFSocketCreate(kCFAllocatorDefault, PF_INET, SOCK_STREAM, IPPROTO_TCP, 0, NULL, NULL);
     if (!self.serverSocket) {
         self.serviceError = [NSError errorWithDomain:MMEServiceFixtureErrorDomain code:MMEServiceFixtureSocketCreateError userInfo:@{
             NSLocalizedDescriptionKey:@"Unable to create socket."
@@ -125,7 +124,7 @@ exit:
     }
 
     int reuse = true;
-    int fileDescriptor = CFSocketGetNative((CFSocketRef)self.serverSocket);
+    int fileDescriptor = CFSocketGetNative(self.serverSocket);
     if (setsockopt(fileDescriptor, SOL_SOCKET, SO_REUSEADDR, (void *)&reuse, sizeof(int)) != noErr) {
         self.serviceError = [NSError errorWithDomain:MMEServiceFixtureErrorDomain code:MMEServiceFixtureSocketOptionsError userInfo:@{
             NSLocalizedDescriptionKey:@"Unable to set SO_REUSEADDR option"
@@ -145,10 +144,10 @@ exit:
     address.sin_len = sizeof(address);
     address.sin_family = AF_INET;
     address.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
-    address.sin_port = htons(MMEServiceFixture.servicePort);
+    address.sin_port = MMEServiceFixture.servicePort;
     addressData = CFDataCreate(kCFAllocatorDefault, (const UInt8 *)&address, sizeof(address));
         
-    if (CFSocketSetAddress((CFSocketRef)self.serverSocket, addressData) != kCFSocketSuccess) {
+    if (CFSocketSetAddress(self.serverSocket, addressData) != kCFSocketSuccess) {
         self.serviceError = [NSError errorWithDomain:MMEServiceFixtureErrorDomain code:MMEServiceFixtureSocketBindError userInfo:@{
             NSLocalizedDescriptionKey:@"Unable to bind socket to address"
         }];
