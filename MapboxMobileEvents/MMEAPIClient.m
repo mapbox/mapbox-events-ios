@@ -41,6 +41,18 @@ int const kMMEMaxRequestCount = 1000;
 
 // MARK: - Lifecycle
 
+- (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config {
+    if (self = [super init]) {
+        self = [self initWithConfig:config
+                     onError:^(NSError * _Nonnull error) {}
+             onBytesReceived:^(NSUInteger bytes) {} onEventQueueUpdate:^(NSArray * _Nonnull eventQueue) {}
+          onEventCountUpdate:^(NSUInteger eventCount, NSURLRequest * _Nullable request, NSError * _Nullable error) {}
+    onGenerateTelemetryEvent:^{}
+                  onLogEvent:^(MMEEvent * _Nonnull event) {}];
+    }
+    return self;
+}
+
 - (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config
                        onError: (OnErrorBlock)onError
                onBytesReceived: (OnBytesReceived)onBytesReceived
@@ -129,7 +141,7 @@ int const kMMEMaxRequestCount = 1000;
     return eventBatches;
 }
 
-- (NSURLRequest *)requestForEvents:(NSArray *)events {
+- (nullable NSURLRequest *)requestForEvents:(NSArray *)events {
 
     NSMutableArray *eventAttributes = [NSMutableArray arrayWithCapacity:events.count];
     [events enumerateObjectsUsingBlock:^(MMEEvent * _Nonnull event, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -191,7 +203,8 @@ int const kMMEMaxRequestCount = 1000;
 }
 
 // MARK: - URLRequest Construction
-- (NSURLRequest *)eventConfigurationRequest {
+
+- (nullable NSURLRequest *)eventConfigurationRequest {
     NSError *jsonError = nil;
     return [self.requestFactory urlRequestWithMethod:MMEAPIClientHTTPMethodPost
                                              baseURL:self.config.mme_configServiceURL
@@ -204,7 +217,7 @@ int const kMMEMaxRequestCount = 1000;
 
 // MARK: - Configuration Service
 
-- (void)getEventConfigWithCompletionHandler:(nullable void (^)(MMEConfig* _Nullable jsonObject, NSError * _Nullable error))completion {
+- (void)getEventConfigWithCompletionHandler:(nullable void (^)(MMEConfig* _Nullable config, NSError * _Nullable error))completion {
 
     NSURLRequest* request = [self eventConfigurationRequest];
 
@@ -222,6 +235,7 @@ int const kMMEMaxRequestCount = 1000;
         if (dateHeader){
             NSDate *date = [MMEDate.HTTPDateFormatter dateFromString:dateHeader];
             if (date) {
+                // TODO: Do we need to record this if we don't get data?
                 [MMEDate recordTimeOffsetFromServer:date];
             }
         }
@@ -246,6 +260,9 @@ int const kMMEMaxRequestCount = 1000;
         if (decodingError) {
             weakSelf.onError(decodingError);
         }
+
+        weakSelf.onEventCountUpdate(0, request, error);
+        weakSelf.onGenerateTelemetryEvent();
 
         completion(config, decodingError);
     }];

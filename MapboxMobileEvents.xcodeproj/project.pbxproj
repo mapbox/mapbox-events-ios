@@ -227,6 +227,11 @@
 		F47265562465F5FD00BD7055 /* MMEConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = F47265532465F5FD00BD7055 /* MMEConfig.m */; };
 		F47265572465F5FD00BD7055 /* MMEConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = F47265532465F5FD00BD7055 /* MMEConfig.m */; };
 		F472656124662D7700BD7055 /* MMEAPIClient+Mock.m in Sources */ = {isa = PBXBuildFile; fileRef = F472655F24662A9D00BD7055 /* MMEAPIClient+Mock.m */; };
+		F4726564246633CD00BD7055 /* MMEConfigService.h in Headers */ = {isa = PBXBuildFile; fileRef = F4726562246633CD00BD7055 /* MMEConfigService.h */; };
+		F4726565246633CD00BD7055 /* MMEConfigService.h in Headers */ = {isa = PBXBuildFile; fileRef = F4726562246633CD00BD7055 /* MMEConfigService.h */; };
+		F4726566246633CD00BD7055 /* MMEConfigService.m in Sources */ = {isa = PBXBuildFile; fileRef = F4726563246633CD00BD7055 /* MMEConfigService.m */; };
+		F4726567246633CD00BD7055 /* MMEConfigService.m in Sources */ = {isa = PBXBuildFile; fileRef = F4726563246633CD00BD7055 /* MMEConfigService.m */; };
+		F47265692466872200BD7055 /* MMEConfigServiceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F47265682466872200BD7055 /* MMEConfigServiceTests.m */; };
 		F4913F452453610800C28338 /* MMEEventConfigProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = F4913F442453610800C28338 /* MMEEventConfigProviding.h */; };
 		F4913F462453610800C28338 /* MMEEventConfigProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = F4913F442453610800C28338 /* MMEEventConfigProviding.h */; };
 		F49675E224620F4300F8914D /* NSError+APIClient.h in Headers */ = {isa = PBXBuildFile; fileRef = F49675E024620F4300F8914D /* NSError+APIClient.h */; };
@@ -499,6 +504,9 @@
 		F47265532465F5FD00BD7055 /* MMEConfig.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEConfig.m; sourceTree = "<group>"; };
 		F472655E24662A9D00BD7055 /* MMEAPIClient+Mock.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MMEAPIClient+Mock.h"; sourceTree = "<group>"; };
 		F472655F24662A9D00BD7055 /* MMEAPIClient+Mock.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "MMEAPIClient+Mock.m"; sourceTree = "<group>"; };
+		F4726562246633CD00BD7055 /* MMEConfigService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEConfigService.h; sourceTree = "<group>"; };
+		F4726563246633CD00BD7055 /* MMEConfigService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEConfigService.m; sourceTree = "<group>"; };
+		F47265682466872200BD7055 /* MMEConfigServiceTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEConfigServiceTests.m; sourceTree = "<group>"; };
 		F4913F442453610800C28338 /* MMEEventConfigProviding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEEventConfigProviding.h; sourceTree = "<group>"; };
 		F49675E024620F4300F8914D /* NSError+APIClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSError+APIClient.h"; sourceTree = "<group>"; };
 		F49675E124620F4300F8914D /* NSError+APIClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSError+APIClient.m"; sourceTree = "<group>"; };
@@ -608,6 +616,8 @@
 				F47265532465F5FD00BD7055 /* MMEConfig.m */,
 				40AE58541EA932DB0046B437 /* MMEConstants.h */,
 				40AE58551EA932DB0046B437 /* MMEConstants.m */,
+				F4726562246633CD00BD7055 /* MMEConfigService.h */,
+				F4726563246633CD00BD7055 /* MMEConfigService.m */,
 				40AE586B1EA95EDD0046B437 /* MMEEvent.h */,
 				40AE586C1EA95EDD0046B437 /* MMEEvent.m */,
 				40C9E2791EA542BC00744FE7 /* MMEEventsManager.h */,
@@ -635,6 +645,7 @@
 				9C3F93572351317F00F99907 /* MMEAPIConfigTests.m */,
 				ACAF8D26238DDED20033745A /* MMEAPIClientTests.m */,
 				CF93A66222488A4500BBA199 /* MMECertPinTests.m */,
+				F47265682466872200BD7055 /* MMEConfigServiceTests.m */,
 				AC03B2F323B1A74B0043271D /* MMEDateTests.m */,
 				9C65A2C3227B971D006E3FED /* MMECrashTests.m */,
 				AC03B2C923AD55A10043271D /* MMEEventTests.m */,
@@ -851,6 +862,7 @@
 				F4684FF42432A1610079B389 /* NSBundle+MMEMobileEvents.h in Headers */,
 				40AE58561EA932DB0046B437 /* MMEConstants.h in Headers */,
 				40AE586D1EA95EDD0046B437 /* MMEEvent.h in Headers */,
+				F4726564246633CD00BD7055 /* MMEConfigService.h in Headers */,
 				40C9E27B1EA542BC00744FE7 /* MMEEventsManager.h in Headers */,
 				40C9E27F1EA5473F00744FE7 /* MMELocationManager.h in Headers */,
 				40F16C811F02DA9F00DF338D /* MMEDate.h in Headers */,
@@ -892,6 +904,7 @@
 				9CA75389240EF2DD005C26C9 /* MMEEvent.h in Headers */,
 				9CA7538A240EF2DD005C26C9 /* MMEEventsManager.h in Headers */,
 				9CA7538B240EF2DD005C26C9 /* MMELocationManager.h in Headers */,
+				F4726565246633CD00BD7055 /* MMEConfigService.h in Headers */,
 				9CA7538C240EF2DD005C26C9 /* MMEDate.h in Headers */,
 				9CA7538D240EF2DD005C26C9 /* MMETypes.h in Headers */,
 				9CA7538E240EF2DD005C26C9 /* NSProcessInfo+SystemInfo.h in Headers */,
@@ -1189,6 +1202,7 @@
 				405172DE1EAFFA9400F8CDA1 /* MMENSURLSessionWrapper.m in Sources */,
 				40F16C971F04514100DF338D /* MMEReachability.m in Sources */,
 				40AE58441EA6C86C0046B437 /* MMEUIApplicationWrapper.m in Sources */,
+				F4726566246633CD00BD7055 /* MMEConfigService.m in Sources */,
 				F4684FF52432A1610079B389 /* NSBundle+MMEMobileEvents.m in Sources */,
 				40AE585B1EA9373F0046B437 /* MMEUniqueIdentifier.m in Sources */,
 				40F133531F20051E007B4096 /* NSData+MMEGZIP.m in Sources */,
@@ -1205,6 +1219,7 @@
 				9CE132C5235926B3005E23F1 /* MMECertPinTests.m in Sources */,
 				AC03B2F423B1A74B0043271D /* MMEDateTests.m in Sources */,
 				9C8E04902418954600D6C641 /* MMECrashTests.m in Sources */,
+				F47265692466872200BD7055 /* MMEConfigServiceTests.m in Sources */,
 				AC03B2CA23AD55A10043271D /* MMEEventTests.m in Sources */,
 				ACBD2E5923709F920082F037 /* MMEEventsManagerTests.m in Sources */,
 				AC69502D238E000C00D095EB /* MMELocationManagerTests.m in Sources */,
@@ -1297,6 +1312,7 @@
 				F4EAFDFF2453B09100D2B17B /* NSBundle+MMEMobileEvents.m in Sources */,
 				9CA7537F240EF2DD005C26C9 /* MMEReachability.m in Sources */,
 				9CA75380240EF2DD005C26C9 /* MMEUIApplicationWrapper.m in Sources */,
+				F4726567246633CD00BD7055 /* MMEConfigService.m in Sources */,
 				9CA75381240EF2DD005C26C9 /* MMEUniqueIdentifier.m in Sources */,
 				9CA75382240EF2DD005C26C9 /* NSData+MMEGZIP.m in Sources */,
 				9CA75383240EF2DD005C26C9 /* UIKit+MMEMobileEvents.m in Sources */,
