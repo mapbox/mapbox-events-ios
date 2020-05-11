@@ -346,14 +346,14 @@
                 self = nil;
             }
             else if (self = [super init]) {
-                    _dateStorage = MMEDate.date;
-                    NSMutableDictionary* eventAttributesStorage = [eventAttributes mutableCopy];
+                _dateStorage = MMEDate.date;
+                NSMutableDictionary* eventAttributesStorage = [eventAttributes mutableCopy];
 
-                    if (![eventAttributesStorage.allKeys containsObject:MMEEventKeyCreated]) {
-                        eventAttributesStorage[MMEEventKeyCreated] = [MMEDate.iso8601DateFormatter stringFromDate:_dateStorage];
-                    }
+                if (![eventAttributesStorage.allKeys containsObject:MMEEventKeyCreated]) {
+                    eventAttributesStorage[MMEEventKeyCreated] = [MMEDate.iso8601DateFormatter stringFromDate:_dateStorage];
+                }
 
-                    self.attributesStorage = eventAttributesStorage;
+                self.attributesStorage = eventAttributesStorage;
             }
         }
         else {
