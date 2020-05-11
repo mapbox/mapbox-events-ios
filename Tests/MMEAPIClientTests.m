@@ -14,6 +14,7 @@
 #import "MMEAPIClientBlockCounter.h"
 #import "MMEAPIClient+Mock.h"
 #import "EventConfigStubProtocol.h"
+#import "EventStubProtocol.h"
 #import "MMEConfig.h"
 
 @interface MMENSURLSessionWrapper (Private)
@@ -180,7 +181,7 @@
     [self waitForExpectations:@[expectation] timeout:3];
 }
 
-- (void)testPostEvent {
+- (void)testPostEventURLRequest {
     MMEAPIClient* client = [MMEAPIClient clientWithMockConfig];
     MMEEvent* event = [MMEEvent turnstileEventWithAttributes:@{}];
     NSURLRequest* request = [client requestForEvents:@[event]];
@@ -193,6 +194,24 @@
     XCTAssertEqualObjects(@"https://events.mapbox.com/events/v2?access_token=access-token", request.URL.absoluteString);
     XCTAssertEqualObjects(headers, request.allHTTPHeaderFields);
     XCTAssertNotNil(request.HTTPBody);
+}
+
+- (void)testPostEvent {
+    NSURLSessionConfiguration* sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
+    sessionConfiguration.protocolClasses = @[EventStubProtocol.self];
+    MMENSURLSessionWrapper* session = [MMENSURLSessionWrapper.new initWithConfiguration:sessionConfiguration];
+    MMEMockEventConfig* eventConfig = MMEMockEventConfig.oneSecondConfigUpdate;
+
+    MMEAPIClient* client = [MMEAPIClient.new initWithConfig:eventConfig
+                                                    session:session];
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Post Event"];
+    MMEEvent* event = [MMEEvent turnstileEventWithAttributes:@{}];
+    [client postEvent:event completionHandler:^(NSError * _Nullable error) {
+        XCTAssertNil(error);
+        [expectation fulfill];
+    }];
+
+    [self waitForExpectations:@[expectation] timeout:2];
 }
 
 - (void)testPostMetadata {

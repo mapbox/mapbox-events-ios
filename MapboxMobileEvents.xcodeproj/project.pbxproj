@@ -199,6 +199,7 @@
 		F40995902469E68600E94BFF /* EventConfigStubProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = F409958D2469E68600E94BFF /* EventConfigStubProtocol.h */; };
 		F40995932469ED6300E94BFF /* EventConfigStubProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = F409958E2469E68600E94BFF /* EventConfigStubProtocol.m */; };
 		F4099596246A009A00E94BFF /* events-config.json in Resources */ = {isa = PBXBuildFile; fileRef = F4099595246A009A00E94BFF /* events-config.json */; };
+		F4099599246A073A00E94BFF /* EventStubProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = F4099598246A073A00E94BFF /* EventStubProtocol.m */; };
 		F44C8BF924610B7E00E515AD /* config-1s-bso.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933F23512FD300F99907 /* config-1s-bso.json */; };
 		F44C8BFA24610B8000E515AD /* config-10s-bso.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933523512FD200F99907 /* config-10s-bso.json */; };
 		F44C8BFB24610B8500E515AD /* config-100m-gfo.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F934023512FD300F99907 /* config-100m-gfo.json */; };
@@ -497,6 +498,8 @@
 		F409958D2469E68600E94BFF /* EventConfigStubProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EventConfigStubProtocol.h; sourceTree = "<group>"; };
 		F409958E2469E68600E94BFF /* EventConfigStubProtocol.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EventConfigStubProtocol.m; sourceTree = "<group>"; };
 		F4099595246A009A00E94BFF /* events-config.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "events-config.json"; sourceTree = "<group>"; };
+		F4099597246A073A00E94BFF /* EventStubProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EventStubProtocol.h; sourceTree = "<group>"; };
+		F4099598246A073A00E94BFF /* EventStubProtocol.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EventStubProtocol.m; sourceTree = "<group>"; };
 		F44D1201246328CB00DF4ED1 /* NSBundle+TestBundle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+TestBundle.m"; sourceTree = "<group>"; };
 		F44D1202246328CB00DF4ED1 /* NSBundle+TestBundle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+TestBundle.h"; sourceTree = "<group>"; };
 		F44D120A246377E000DF4ED1 /* MMENSURLRequestFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMENSURLRequestFactory.h; path = Utilities/MMENSURLRequestFactory.h; sourceTree = "<group>"; };
@@ -843,6 +846,8 @@
 			isa = PBXGroup;
 			children = (
 				F4099594246A005D00E94BFF /* Resources */,
+				F4099597246A073A00E94BFF /* EventStubProtocol.h */,
+				F4099598246A073A00E94BFF /* EventStubProtocol.m */,
 				F409958D2469E68600E94BFF /* EventConfigStubProtocol.h */,
 				F409958E2469E68600E94BFF /* EventConfigStubProtocol.m */,
 			);
@@ -1243,6 +1248,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F4099599246A073A00E94BFF /* EventStubProtocol.m in Sources */,
 				9C3F93582351317F00F99907 /* MMEAPIConfigTests.m in Sources */,
 				ACAF8D27238DDED20033745A /* MMEAPIClientTests.m in Sources */,
 				9CE132C5235926B3005E23F1 /* MMECertPinTests.m in Sources */,
