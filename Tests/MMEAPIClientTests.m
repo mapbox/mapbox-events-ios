@@ -13,6 +13,8 @@
 #import "MMEMockEventConfig.h"
 #import "MMEAPIClientBlockCounter.h"
 #import "MMEAPIClient+Mock.h"
+#import "EventConfigStubProtocol.h"
+#import "MMEConfig.h"
 
 @interface MMENSURLSessionWrapper (Private)
 @property (nonatomic) NSURLSession *session;
@@ -149,6 +151,33 @@
     XCTAssertEqualObjects(@"https://config.mapbox.com/events-config?access_token=access-token", request.URL.absoluteString);
     XCTAssertEqualObjects(headers, request.allHTTPHeaderFields);
     XCTAssertNil(request.HTTPBody);
+}
+
+- (void)testGetConfigResponse {
+
+    NSURLSessionConfiguration* sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
+    sessionConfiguration.protocolClasses = @[EventConfigStubProtocol.self];
+    MMENSURLSessionWrapper* session = [MMENSURLSessionWrapper.new initWithConfiguration:sessionConfiguration];
+    MMEMockEventConfig* eventConfig = MMEMockEventConfig.oneSecondConfigUpdate;
+
+    MMEAPIClient* client = [MMEAPIClient.new initWithConfig:eventConfig
+                                                        session:session];
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Fetch Event Config"];
+
+    [client getEventConfigWithCompletionHandler:^(
+                                                 MMEConfig * _Nullable config,
+                                                 NSError * _Nullable error) {
+        XCTAssertNotNil(config);
+
+        XCTAssertEqualObjects(config.certificateRevocationList, nil);
+        XCTAssertEqualObjects(config.telemetryTypeOverride, @2.0);
+        XCTAssertEqualObjects(config.geofenceOverride, @444.0);
+        XCTAssertEqualObjects(config.backgroundStartupOverride, @44.0);
+        XCTAssertEqualObjects(config.eventTag, @"all");
+        [expectation fulfill];
+    }];
+
+    [self waitForExpectations:@[expectation] timeout:3];
 }
 
 - (void)testPostEvent {

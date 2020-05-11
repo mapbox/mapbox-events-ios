@@ -2,6 +2,9 @@
 #import "MMEConfigService.h"
 #import "MMEMockEventConfig.h"
 #import "MMEServiceFixture.h"
+#import "MMEAPIClient.h"
+#import "MMENSURLSessionWrapper.h"
+#import "EventConfigStubProtocol.h"
 
 @interface MMEConfigServiceTests : XCTestCase
 
@@ -11,27 +14,28 @@
 
 - (void)testConfigPolling {
 
-    id <MMEEventConfigProviding> config = [MMEMockEventConfig oneSecondConfigUpdate];
-    MMEAPIClient* client = [[MMEAPIClient alloc] initWithConfig:config];
+    NSURLSessionConfiguration* sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
+    sessionConfiguration.protocolClasses = @[EventConfigStubProtocol.self];
+    MMENSURLSessionWrapper* session = [[MMENSURLSessionWrapper alloc] initWithConfiguration:sessionConfiguration];
+    MMEMockEventConfig* eventConfig = MMEMockEventConfig.oneSecondConfigUpdate;
+    MMEAPIClient* client = [[MMEAPIClient alloc] initWithConfig:eventConfig session:session];
 
     XCTestExpectation *expectation = [self expectationWithDescription:@"Config Polling"];
     __block int configLoadCount;
 
-    MMEConfigService* service = [[MMEConfigService alloc] init:config
+    MMEConfigService* service = [[MMEConfigService alloc] init:eventConfig
                                                               client:client
                                                         onConfigLoad:^(MMEConfig * _Nonnull config) {
         configLoadCount +=1;
+
+        // Expect Service to Poll at least 2 times based on the Mock Event Config specifying 1s interval
         if (configLoadCount >= 2) {
             [expectation fulfill];
         }
     }];
 
-    NSError *configError = nil;
-    MMEServiceFixture *configFixture = [MMEServiceFixture serviceFixtureWithResource:@"config-all"];
     [service startUpdates];
-
-    XCTAssert([configFixture waitForConnectionWithTimeout:MME10sTimeout error:&configError]);
-    XCTAssertNil(configError);
+    [self waitForExpectations:@[expectation] timeout:3];
 }
 
 @end

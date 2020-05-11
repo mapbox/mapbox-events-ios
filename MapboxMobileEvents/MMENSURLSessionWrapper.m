@@ -14,20 +14,57 @@
 
 @interface MMENSURLSessionWrapper ()
 
+/*! Resulting Call Queue*/
 @property (nonatomic) dispatch_queue_t serialQueue;
+
+/*! Controller handling the responsibility of Cert Pinning*/
 @property (nonatomic) MMECertPin *certPin;
+
+/*! URLSession instance used to make calls*/
 @property (nonatomic) NSURLSession *session;
 
 @end
 
 @implementation MMENSURLSessionWrapper
 
+// MARK: - Defaults
+
++ (dispatch_queue_t)makeDispatchQueue {
+    return dispatch_queue_create(
+                                 [[NSString stringWithFormat:@"%@.events.serial", NSStringFromClass([self class])] UTF8String], DISPATCH_QUEUE_SERIAL);
+}
+
++ (MMECertPin*)makeCertPin {
+    return [[MMECertPin alloc] init];
+}
+
+// MARK: - Lifecycle
+
 - (instancetype)init {
+
+    NSURLSessionConfiguration* configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+    return [self initWithConfiguration:configuration
+                       completionQueue:[MMENSURLSessionWrapper makeDispatchQueue]
+                               certPin:[MMENSURLSessionWrapper makeCertPin]];
+}
+
+- (instancetype)initWithConfiguration:(NSURLSessionConfiguration*)configuration {
+
+    return [self initWithConfiguration:configuration
+                       completionQueue:[MMENSURLSessionWrapper makeDispatchQueue]
+                               certPin:[MMENSURLSessionWrapper makeCertPin]];
+}
+
+- (instancetype)initWithConfiguration:(NSURLSessionConfiguration*)configuration
+         completionQueue:(dispatch_queue_t)queue
+                 certPin:(MMECertPin*)certPin {
     self = [super init];
     if (self) {
-        _session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:nil];
-        _serialQueue = dispatch_queue_create([[NSString stringWithFormat:@"%@.events.serial", NSStringFromClass([self class])] UTF8String], DISPATCH_QUEUE_SERIAL);
-        _certPin = [[MMECertPin alloc] init];
+        _session = [NSURLSession sessionWithConfiguration:configuration
+                                                 delegate:self
+                                            delegateQueue:nil];
+        _serialQueue = queue;
+        _certPin = certPin;
     }
     return self;
 }
