@@ -42,15 +42,28 @@ int const kMMEMaxRequestCount = 1000;
 // MARK: - Lifecycle
 
 - (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config {
-    if (self = [super init]) {
-        self = [self initWithConfig:config
-                     onError:^(NSError * _Nonnull error) {}
-             onBytesReceived:^(NSUInteger bytes) {} onEventQueueUpdate:^(NSArray * _Nonnull eventQueue) {}
-          onEventCountUpdate:^(NSUInteger eventCount, NSURLRequest * _Nullable request, NSError * _Nullable error) {}
-    onGenerateTelemetryEvent:^{}
-                  onLogEvent:^(MMEEvent * _Nonnull event) {}];
-    }
-    return self;
+    return [self initWithConfig:config
+                 requestFactory:[[MMENSURLRequestFactory alloc] initWithConfig:config]
+                        session:[[MMENSURLSessionWrapper alloc] init]
+                        onError:^(NSError * _Nonnull error) {}
+                onBytesReceived:^(NSUInteger bytes) {} onEventQueueUpdate:^(NSArray * _Nonnull eventQueue) {}
+             onEventCountUpdate:^(NSUInteger eventCount, NSURLRequest * _Nullable request, NSError * _Nullable error) {}
+       onGenerateTelemetryEvent:^{}
+                     onLogEvent:^(MMEEvent * _Nonnull event) {}];
+
+}
+
+- (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config
+                       session:(MMENSURLSessionWrapper*)session {
+
+    return [self initWithConfig:config
+                 requestFactory:[[MMENSURLRequestFactory alloc]
+                                 initWithConfig:config] session:session
+                        onError:^(NSError * _Nonnull error) {}
+                onBytesReceived:^(NSUInteger bytes) {} onEventQueueUpdate:^(NSArray * _Nonnull eventQueue) {}
+             onEventCountUpdate:^(NSUInteger eventCount, NSURLRequest * _Nullable request, NSError * _Nullable error) {}
+       onGenerateTelemetryEvent:^{}
+                     onLogEvent:^(MMEEvent * _Nonnull event) {}];
 }
 
 - (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config
@@ -60,11 +73,34 @@ int const kMMEMaxRequestCount = 1000;
             onEventCountUpdate: (OnEventCountUpdate)onEventCountUpdate
       onGenerateTelemetryEvent: (OnGenerateTelemetryEvent)onGenerateTelemetryEvent
                     onLogEvent: (OnLogEvent)onLogEvent {
+
+    return [self initWithConfig:config
+                 requestFactory:[[MMENSURLRequestFactory alloc] initWithConfig:config]
+                        session:[[MMENSURLSessionWrapper alloc] init]
+                        onError:onError
+                onBytesReceived:onBytesReceived
+             onEventQueueUpdate:onEventQueueUpdate
+             onEventCountUpdate:onEventCountUpdate
+       onGenerateTelemetryEvent:onGenerateTelemetryEvent
+                     onLogEvent:onLogEvent];
+
+}
+
+- (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config
+                requestFactory:(MMENSURLRequestFactory*)requestFactory
+                       session:(MMENSURLSessionWrapper*)session
+                       onError: (OnErrorBlock)onError
+               onBytesReceived: (OnBytesReceived)onBytesReceived
+            onEventQueueUpdate: (OnEventQueueUpdate)onEventQueueUpdate
+            onEventCountUpdate: (OnEventCountUpdate)onEventCountUpdate
+      onGenerateTelemetryEvent: (OnGenerateTelemetryEvent)onGenerateTelemetryEvent
+                    onLogEvent: (OnLogEvent)onLogEvent {
+
     self = [super init];
     if (self) {
         _config = config;
-        _requestFactory = [[MMENSURLRequestFactory alloc] initWithConfig:config];
-        _sessionWrapper = [[MMENSURLSessionWrapper alloc] init];
+        _requestFactory = requestFactory;
+        _sessionWrapper = session;
         _onError = onError;
         _onBytesReceived = onBytesReceived;
         _onEventQueueUpdate = onEventQueueUpdate;

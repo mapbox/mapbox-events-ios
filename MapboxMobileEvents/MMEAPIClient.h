@@ -6,6 +6,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class MMEConfig;
 @class MMEEvent;
 @class MMENSURLRequestFactory;
+@class MMENSURLSessionWrapper;
 @protocol MMEEventConfigProviding;
 
 typedef void(^OnErrorBlock)(NSError *error);
@@ -28,10 +29,17 @@ typedef void(^OnLogEvent)(MMEEvent* event);
 
 - (instancetype)init NS_UNAVAILABLE;
 
-/*! Brief Basic Client Setup */
+/*! @Brief Default Client Setup */
 - (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config;
 
-/** Designated Initializer
+/*! @Brief Initializes a Client with a custom session wrapper without event hooks
+ @param config Provider of Shared Client Model Information
+ @param session Session responsible for owning URLSession and Cert pinning
+ */
+- (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config
+                       session:(MMENSURLSessionWrapper*)session;
+
+/*! @Brief Initializes a Client with hooks and default sesion setup
  @param config Provider of Shared Client Model Information
  @param onError Called on the instance of an error for an API calls
  @param onBytesReceived Called on bytes received an API calls
@@ -47,6 +55,27 @@ typedef void(^OnLogEvent)(MMEEvent* event);
             onEventCountUpdate: (OnEventCountUpdate)onEventCountUpdate
       onGenerateTelemetryEvent: (OnGenerateTelemetryEvent)onGenerateTelemetryEvent
                     onLogEvent: (OnLogEvent)onLogEvent;
+
+/** Designated Initializer
+ @param config Provider of Shared Client Model Information
+ @param requestFactory Factory Responsibile for building requests
+ @param session Session responsible for owning URLSession and Cert pinning
+ @param onError Called on the instance of an error for an API calls
+ @param onBytesReceived Called on bytes received an API calls
+ @param onEventQueueUpdate Called on the EventQueue updates
+ @param onEventCountUpdate Called on the EventCount Udpates
+ @param onGenerateTelemetryEvent Called on the Generation of Telemetry Events
+ @param onLogEvent Called Upon Event Logging
+ */
+- (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config
+                requestFactory:(MMENSURLRequestFactory*)requestFactory
+                       session:(MMENSURLSessionWrapper*)session
+                       onError:(OnErrorBlock)onError
+               onBytesReceived:(OnBytesReceived)onBytesReceived
+            onEventQueueUpdate:(OnEventQueueUpdate)onEventQueueUpdate
+            onEventCountUpdate:(OnEventCountUpdate)onEventCountUpdate
+      onGenerateTelemetryEvent:(OnGenerateTelemetryEvent)onGenerateTelemetryEvent
+                    onLogEvent:(OnLogEvent)onLogEvent;
 
 
 // MARK: - Requests

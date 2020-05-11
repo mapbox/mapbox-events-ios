@@ -204,6 +204,8 @@ exit:
         }
         
         NSData *responseData = [NSData dataWithContentsOfFile:self.fixtureFile];
+        NSString* foo = [[NSString alloc] initWithData:read encoding:NSUTF8StringEncoding];
+        NSLog(@"Dane - Foo %@", foo);
         [requestHandle writeData:responseData];
         [requestHandle closeFile];
     }
