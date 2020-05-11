@@ -532,6 +532,10 @@ NS_ASSUME_NONNULL_BEGIN
                 repeats:YES];
         }
     }
+    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(eventsManager:didEnqueueEvent:)]) {
+        [self.delegate eventsManager:self didEnqueueEvent:event];
+    }
 }
 
 // MARK: - Deperecated API
