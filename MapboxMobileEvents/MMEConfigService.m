@@ -36,20 +36,20 @@
                       repeats:YES
                       block:^(NSTimer * _Nonnull timer) {
 
-            [weakSelf.client getEventConfigWithCompletionHandler:^(
-                                                                     MMEConfig * _Nullable config,
-                                                                     NSError * _Nullable error) {
-                __strong __typeof__(weakSelf) strongSelf = weakSelf;
-                if (strongSelf == nil) {
-                    return;
-                }
-
-                if (config) {
-                    weakSelf.onConfigLoad(config);
-                }
-
-            }];
+            if (weakSelf) {
+                [weakSelf.client getEventConfigWithCompletionHandler:^(
+                                                                       MMEConfig * _Nullable config,
+                                                                       NSError * _Nullable error) {
+                    __strong __typeof__(weakSelf) strongSelf = weakSelf;
+                    if (strongSelf) {
+                        if (config) {
+                            strongSelf.onConfigLoad(config);
+                        }
+                    }
+                }];
+            }
         }];
+        
         self.timer.tolerance = 60;
 
         // Manually Fetch if last updated date is older than our update interval

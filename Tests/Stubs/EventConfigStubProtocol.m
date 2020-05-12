@@ -23,26 +23,28 @@ static NSString* name = @"events-config";
     // Dispatch of initial thread to follow asynchronous resource loading expectations
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 
-        // Load file: config=all.json
+        __strong __typeof__(weakSelf) strongSelf = weakSelf;
+        if (strongSelf) {
+            // Load File
+            NSURL* url = [NSBundle.testBundle URLForResource:@"events-config"
+                                               withExtension:@"json"];
+            NSData* data = [NSData dataWithContentsOfURL:url];
 
-        NSURL* url = [NSBundle.testBundle URLForResource:@"events-config"
-                                           withExtension:@"json"];
-        NSData* data = [NSData dataWithContentsOfURL:url];
-
-        NSHTTPURLResponse* response = [[NSHTTPURLResponse alloc] initWithURL:self.request.URL
-                                                                  statusCode:200
-                                                                 HTTPVersion:@"1.1"
-                                                                headerFields:@{
-                                                                    @"Content-Type": @"application/json; charset=utf-8",
-                                                                }];
+            NSHTTPURLResponse* response = [[NSHTTPURLResponse alloc] initWithURL:self.request.URL
+                                                                      statusCode:200
+                                                                     HTTPVersion:@"1.1"
+                                                                    headerFields:@{
+                                                                        @"Content-Type": @"application/json; charset=utf-8",
+                                                                    }];
 
 
-        [weakSelf.client URLProtocol:self
-              didReceiveResponse:response
-              cacheStoragePolicy:NSURLCacheStorageNotAllowed];
+            [strongSelf.client URLProtocol:self
+                      didReceiveResponse:response
+                      cacheStoragePolicy:NSURLCacheStorageNotAllowed];
 
-        [weakSelf.client URLProtocol:self didLoadData:data];
-        [weakSelf.client URLProtocolDidFinishLoading:self];
+            [strongSelf.client URLProtocol:self didLoadData:data];
+            [strongSelf.client URLProtocolDidFinishLoading:self];
+        }
     });
 }
 

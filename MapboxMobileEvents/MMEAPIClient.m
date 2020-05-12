@@ -125,31 +125,36 @@ int const kMMEMaxRequestCount = 1000;
     // General Request
     [self.sessionWrapper processRequest:request
                       completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        // Inspect for General Response Reporting
-        if (response && [response isKindOfClass:NSHTTPURLResponse.class]) {
-            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-            NSError *statusError = [[NSError alloc] initWith:request httpResponse:httpResponse error:error];
 
-            // General Error Reporting
-            if (statusError) {
-                weakSelf.onError(statusError);
+        __strong __typeof__(weakSelf) strongSelf = weakSelf;
+        if (strongSelf) {
+
+            // Inspect for General Response Reporting
+            if (response && [response isKindOfClass:NSHTTPURLResponse.class]) {
+                NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+                NSError *statusError = [[NSError alloc] initWith:request httpResponse:httpResponse error:error];
+
+                // General Error Reporting
+                if (statusError) {
+                    strongSelf.onError(statusError);
+                }
+
+                // Report Metrics
+                if (data) {
+                    strongSelf.onBytesReceived(data.length);
+                }
+
+                if (completion) {
+                    completion(data, httpResponse, error);
+                }
             }
+            else if (error) {
+                // General Error Reporting
+                strongSelf.onError(error);
 
-            // Report Metrics
-            if (data) {
-                weakSelf.onBytesReceived(data.length);
-            }
-
-            if (completion) {
-                completion(data, httpResponse, error);
-            }
-        }
-        else if (error) {
-            // General Error Reporting
-            weakSelf.onError(error);
-
-            if (completion) {
-                completion(data, nil, error);
+                if (completion) {
+                    completion(data, nil, error);
+                }
             }
         }
     }];
@@ -221,11 +226,15 @@ int const kMMEMaxRequestCount = 1000;
             [self performRequest:request
                       completion:^(NSData * _Nullable data, NSHTTPURLResponse * _Nullable response, NSError * _Nullable error) {
 
-                weakSelf.onEventCountUpdate(events.count, request, error);
+                __strong __typeof__(weakSelf) strongSelf = weakSelf;
+                if (strongSelf) {
+                    strongSelf.onEventCountUpdate(events.count, request, error);
 
-                if (completionHandler) {
-                    completionHandler(error);
+                    if (completionHandler) {
+                        completionHandler(error);
+                    }
                 }
+
             }];
         }
         self.onEventCountUpdate(events.count, nil, nil);
@@ -257,46 +266,49 @@ int const kMMEMaxRequestCount = 1000;
     [self performRequest:request
               completion:^(NSData * _Nullable data, NSHTTPURLResponse * _Nullable response, NSError * _Nullable error) {
 
-        if (error) {
-            completion(nil, error);
-            return;
-        }
-
-        // Inspect Header for TimeOffset from server
-        NSString *dateHeader = response.allHeaderFields[@"Date"];
-        if (dateHeader){
-            NSDate *date = [MMEDate.HTTPDateFormatter dateFromString:dateHeader];
-            if (date) {
-                // TODO: Do we need to record this if we don't get data?
-                [MMEDate recordTimeOffsetFromServer:date];
+        __strong __typeof__(weakSelf) strongSelf = weakSelf;
+        if (strongSelf) {
+            if (error) {
+                completion(nil, error);
+                return;
             }
-        }
 
-        NSDictionary<NSString*, id <NSObject>>* json = nil;
-        NSError *decodingError = nil;
-        MMEConfig* config = nil;
-
-        // Decode Data
-        if (data) {
-            json = [NSJSONSerialization JSONObjectWithData:data
-                                                   options:kNilOptions
-                                                     error:&decodingError];
-
-            // Map to MMEConfig
-            if (json) {
-                config = [[MMEConfig alloc] initWithDictionary:json error:&decodingError];
+            // Inspect Header for TimeOffset from server
+            NSString *dateHeader = response.allHeaderFields[@"Date"];
+            if (dateHeader){
+                NSDate *date = [MMEDate.HTTPDateFormatter dateFromString:dateHeader];
+                if (date) {
+                    // TODO: Do we need to record this if we don't get data?
+                    [MMEDate recordTimeOffsetFromServer:date];
+                }
             }
+
+            NSDictionary<NSString*, id <NSObject>>* json = nil;
+            NSError *decodingError = nil;
+            MMEConfig* config = nil;
+
+            // Decode Data
+            if (data) {
+                json = [NSJSONSerialization JSONObjectWithData:data
+                                                       options:kNilOptions
+                                                         error:&decodingError];
+
+                // Map to MMEConfig
+                if (json) {
+                    config = [[MMEConfig alloc] initWithDictionary:json error:&decodingError];
+                }
+            }
+
+            // Error Metric Reporting
+            if (decodingError) {
+                strongSelf.onError(decodingError);
+            }
+
+            strongSelf.onEventCountUpdate(0, request, error);
+            strongSelf.onGenerateTelemetryEvent();
+
+            completion(config, decodingError);
         }
-
-        // Error Metric Reporting
-        if (decodingError) {
-            weakSelf.onError(decodingError);
-        }
-
-        weakSelf.onEventCountUpdate(0, request, error);
-        weakSelf.onGenerateTelemetryEvent();
-
-        completion(config, decodingError);
     }];
 }
 
@@ -338,10 +350,10 @@ int const kMMEMaxRequestCount = 1000;
 
             strongSelf.onEventCountUpdate(filePaths.count, request, error);
             strongSelf.onGenerateTelemetryEvent();
-        }
 
-        if (completionHandler) {
-            completionHandler(error);
+            if (completionHandler) {
+                completionHandler(error);
+            }
         }
     }];
 }

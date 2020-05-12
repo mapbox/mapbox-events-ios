@@ -19,19 +19,22 @@
     // Dispatch of initial thread to follow asynchronous resource loading expectations
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 
-        // Event Reporting is an empty 201 acknowledgement
-        NSHTTPURLResponse* response = [[NSHTTPURLResponse alloc] initWithURL:self.request.URL
-                                                                  statusCode:201
-                                                                 HTTPVersion:@"1.1"
-                                                                headerFields:nil];
+        __strong __typeof__(weakSelf) strongSelf = weakSelf;
+        if (strongSelf) {
+            // Event Reporting is an empty 201 acknowledgement
+            NSHTTPURLResponse* response = [[NSHTTPURLResponse alloc] initWithURL:self.request.URL
+                                                                      statusCode:201
+                                                                     HTTPVersion:@"1.1"
+                                                                    headerFields:nil];
 
 
-        [weakSelf.client URLProtocol:self
-                  didReceiveResponse:response
-                  cacheStoragePolicy:NSURLCacheStorageNotAllowed];
+            [strongSelf.client URLProtocol:self
+                      didReceiveResponse:response
+                      cacheStoragePolicy:NSURLCacheStorageNotAllowed];
 
-        [weakSelf.client URLProtocol:self didLoadData:[NSData new]];
-        [weakSelf.client URLProtocolDidFinishLoading:self];
+            [strongSelf.client URLProtocol:self didLoadData:[NSData new]];
+            [strongSelf.client URLProtocolDidFinishLoading:self];
+        }
     });
 }
 

@@ -61,24 +61,27 @@
     // Configure Client with Block Counter to inspect interal Call behaviors
     self.apiClient = [[MMEAPIClient alloc] initWithConfig:eventConfig
                                                   onError:^(NSError * _Nonnull error) {
-        [weakSelf.blockCounter.onErrors addObject:error];
+        [[[weakSelf blockCounter] onErrors] addObject:error];
                                                 }
                                           onBytesReceived:^(NSUInteger bytes) {
-        [weakSelf.blockCounter.onBytesReceived addObject:[NSNumber numberWithUnsignedInteger:bytes]];
+        [[[weakSelf blockCounter] onBytesReceived] addObject:[NSNumber numberWithUnsignedInteger:bytes]];
                                                 }
                                        onEventQueueUpdate:^(NSArray * _Nonnull eventQueue) {
 
-        [weakSelf.blockCounter.eventQueue addObject:eventQueue];
+        [[[weakSelf blockCounter] eventQueue] addObject:eventQueue];
                                                 }
                                        onEventCountUpdate:^(NSUInteger eventCount, NSURLRequest * _Nullable request, NSError * _Nullable error) {
                                                     // TBD Call Verification
-        [weakSelf.blockCounter.eventCount addObject:[NSNumber numberWithUnsignedInteger:eventCount]];
+        [[[weakSelf blockCounter] eventCount] addObject:[NSNumber numberWithUnsignedInteger:eventCount]];
                                                 }
                                  onGenerateTelemetryEvent:^{
-        weakSelf.blockCounter.generateTelemetry += 1;
+        __strong __typeof__(weakSelf) strongSelf = weakSelf;
+        if (strongSelf) {
+            strongSelf.blockCounter.generateTelemetry += 1;
+        }
                                                 }
                                                onLogEvent:^(MMEEvent * _Nonnull event) {
-        [weakSelf.blockCounter.logEvents addObject:event];
+        [[[weakSelf blockCounter] logEvents] addObject:event];
     }];
 
     self.sessionWrapper = (MMENSURLSessionWrapper *)self.apiClient.sessionWrapper;
@@ -274,8 +277,6 @@
     MMENSURLSessionWrapperFake *wrapper = MMENSURLSessionWrapperFake.new;
     self.apiClient.sessionWrapper = wrapper;
     MMEEvent *event = [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-1" commonEventData:nil];
-
-    
 }
 
 // TODO: - Convert Cedar Tests

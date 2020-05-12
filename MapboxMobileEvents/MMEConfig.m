@@ -5,7 +5,7 @@
 
 @implementation MMEConfig
 
-- (instancetype)initWithDictionary:(NSDictionary<NSString*,id <NSObject>>*)dictionary
+- (nullable instancetype)initWithDictionary:(NSDictionary<NSString*,id <NSObject>>*)dictionary
                              error:(NSError**)error {
 
     self = [super init];
@@ -69,7 +69,7 @@
         if ([configGFO isKindOfClass:NSNumber.class]) {
             CLLocationDistance gfoDistance = [configGFO doubleValue];
 
-
+            // TODO: Is this where this should be done
             if (gfoDistance >= MMECustomGeofenceRadiusMinimum &&
                 gfoDistance <= MMECustomGeofenceRadiusMaximum) {
                 _geofenceOverride = @(gfoDistance);

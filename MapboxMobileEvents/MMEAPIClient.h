@@ -18,8 +18,10 @@ typedef void(^OnEventCountUpdate)(NSUInteger eventCount, NSURLRequest* _Nullable
 typedef void(^OnGenerateTelemetryEvent)(void);
 typedef void(^OnLogEvent)(MMEEvent* event);
 
-/*! @Brief Mapbox API Abstraction
-    @Discussion MMEAPIClient provides root network setup as well as asynchronous api call abstractions
+/*!
+ @Brief Mapbox API Abstraction
+ @Discussion MMEAPIClient provides root network setup as well as asynchronous api call abstractions
+ @Note Completion blocks will not be called if Client is not retained
  */
 @interface MMEAPIClient : NSObject
 

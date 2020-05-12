@@ -61,9 +61,6 @@ NS_ASSUME_NONNULL_BEGIN
     
     dispatch_once(&onceToken, ^{
         _sharedManager = [MMEEventsManager.alloc initShared];
-
-//        // Dane - (Start fetching updates)
-//        [self startGettingConfigUpdates];
     });
     
     return _sharedManager;
@@ -102,24 +99,26 @@ NS_ASSUME_NONNULL_BEGIN
             [NSUserDefaults.mme_configuration mme_setAccessToken:accessToken];
         }
 
-
         __weak __typeof__(self) weakSelf = self;
 
 
         // Setup Client
+        // Use function accessors instead of properties for easier memory management
+        // Given we can message null, a method call to null will return null.
+        // This save time unwrapping if (weakSelf) each time we're accessing a nullable object's property
         self.apiClient = [[MMEAPIClient alloc] initWithConfig:NSUserDefaults.mme_configuration
                                                      onError:^(NSError * _Nonnull error) {
             [weakSelf reportError:error];
         } onBytesReceived:^(NSUInteger bytes) {
-            [weakSelf.metricsManager updateReceivedBytes:bytes];
+            [[weakSelf metricsManager] updateReceivedBytes:bytes];
         } onEventQueueUpdate:^(NSArray * _Nonnull eventQueue) {
-            [weakSelf.metricsManager updateMetricsFromEventQueue:eventQueue];
+            [[weakSelf metricsManager] updateMetricsFromEventQueue:eventQueue];
         } onEventCountUpdate:^(NSUInteger eventCount, NSURLRequest * _Nullable request, NSError * _Nullable error) {
-            [weakSelf.metricsManager updateMetricsFromEventCount:eventCount request:request error:error];
+            [[weakSelf metricsManager] updateMetricsFromEventCount:eventCount request:request error:error];
         } onGenerateTelemetryEvent:^{
-            [weakSelf.metricsManager generateTelemetryMetricsEvent];
+            [[weakSelf metricsManager] generateTelemetryMetricsEvent];
         } onLogEvent:^(MMEEvent * _Nonnull event) {
-            [weakSelf.metricsManager.logger logEvent:event];
+            [[[weakSelf metricsManager] logger] logEvent:event];
         }];
 
         // Setup Service to Poll/Handle Configuration updates
@@ -127,7 +126,7 @@ NS_ASSUME_NONNULL_BEGIN
                                                      client:self.apiClient
                                                onConfigLoad:^(MMEConfig * _Nonnull config) {
 
-//            [NSUserDefaults.mme_configuration mme_updateFromConfig:config];
+            [NSUserDefaults.mme_configuration mme_updateFromConfig:config];
         }];
         [self.configService startUpdates];
 
@@ -424,12 +423,12 @@ NS_ASSUME_NONNULL_BEGIN
         __weak __typeof__(self) weakSelf = self;
         [self.apiClient postEvent:pendingMetricsEvent completionHandler:^(NSError * _Nullable error) {
             if (error) {
-                [weakSelf.logger logEvent:[MMEEvent debugEventWithError:error]];
+                [[weakSelf logger] logEvent:[MMEEvent debugEventWithError:error]];
                 return;
             }
 
             MMELog(MMELogInfo, MMEDebugEventTypeTelemetryMetrics, ([NSString stringWithFormat:@"Sent pendingTelemetryMetrics event, instance: %@",
-                weakSelf.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
+                [[weakSelf uniqueIdentifer] rollingInstanceIdentifer] ?: @"nil"]));
         }];
     }
 }
@@ -445,14 +444,14 @@ NS_ASSUME_NONNULL_BEGIN
 
             __weak __typeof__(self) weakSelf = self;
             [self.apiClient postEvent:telemetryMetricsEvent completionHandler:^(NSError * _Nullable error) {
-                [weakSelf.metricsManager resetMetrics];
+                [[weakSelf metricsManager] resetMetrics];
                 if (error) {
                     MMELog(MMELogInfo, MMEDebugEventTypeTelemetryMetrics, ([NSString stringWithFormat:@"Could not send telemetryMetrics event: %@, instance: %@",
-                        [error localizedDescription], weakSelf.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
+                        [error localizedDescription], [[weakSelf uniqueIdentifer] rollingInstanceIdentifer] ?: @"nil"]));
                     return;
                 }
                 MMELog(MMELogInfo, MMEDebugEventTypeTelemetryMetrics, ([NSString stringWithFormat:@"Sent telemetryMetrics event, instance: %@",
-                    weakSelf.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
+                    [[weakSelf uniqueIdentifer] rollingInstanceIdentifer] ?: @"nil"]));
             }];
         }
     }
