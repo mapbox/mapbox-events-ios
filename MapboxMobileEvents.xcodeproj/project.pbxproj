@@ -162,7 +162,6 @@
 		9CF000432370D7B2009A2700 /* NSString+MMEVersions_Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CF000422370D7B2009A2700 /* NSString+MMEVersions_Tests.m */; };
 		9CF00044237102B8009A2700 /* NSUserDefaults+MMEConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CDC34B7234FD35800852FF0 /* NSUserDefaults+MMEConfiguration.m */; platformFilter = ios; };
 		9CF000492371037E009A2700 /* MMETestDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C3F9359235138FD00F99907 /* MMETestDelegate.m */; };
-		9CF0004C2371037E009A2700 /* Cedar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40A7F9911F79A743002B931F /* Cedar.framework */; };
 		9CF000512371037E009A2700 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9C65A2732256C112006E3FED /* LaunchScreen.storyboard */; };
 		9CF000572371037E009A2700 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9C65A2712256C112006E3FED /* Assets.xcassets */; };
 		9CF0005A2371037E009A2700 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9C65A26E2256C110006E3FED /* Main.storyboard */; };
@@ -569,7 +568,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				9C5B4CD7237104D000FB283C /* libMapboxMobileEvents.a in Frameworks */,
-				9CF0004C2371037E009A2700 /* Cedar.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1738,10 +1736,6 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = "MMETestHost/MMETestHost-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
@@ -1767,10 +1761,6 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = "MMETestHost/MMETestHost-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
@@ -1906,10 +1896,6 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = "MMETestHost/MMETestHost-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
@@ -1935,10 +1921,6 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = "MMETestHost/MMETestHost-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
@@ -2104,10 +2086,6 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = "MMETestHost/MMETestHost-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
@@ -2132,10 +2110,6 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = "MMETestHost/MMETestHost-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.1;

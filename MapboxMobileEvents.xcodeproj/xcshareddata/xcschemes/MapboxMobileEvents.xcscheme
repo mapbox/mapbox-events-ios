@@ -37,7 +37,7 @@
          <BuildActionEntry
             buildForTesting = "YES"
             buildForRunning = "NO"
-            buildForProfiling = "NO"
+            buildForProfiling = "YES"
             buildForArchiving = "NO"
             buildForAnalyzing = "NO">
             <BuildableReference
@@ -107,15 +107,16 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <MacroExpansion>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "404807B81EA186D8008A6D50"
-            BuildableName = "MapboxMobileEvents.framework"
-            BlueprintName = "MapboxMobileEvents"
+            BlueprintIdentifier = "9C65A2652256C110006E3FED"
+            BuildableName = "MMETestHost.app"
+            BlueprintName = "MMETestHost"
             ReferencedContainer = "container:MapboxMobileEvents.xcodeproj">
          </BuildableReference>
-      </MacroExpansion>
+      </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">
