@@ -9,6 +9,8 @@ NS_ASSUME_NONNULL_BEGIN
 @class MMENSURLSessionWrapper;
 @protocol MMEEventConfigProviding;
 
+// MARK: - Types
+
 typedef void(^OnErrorBlock)(NSError *error);
 typedef void(^OnBytesReceived)(NSUInteger bytes);
 typedef void(^OnEventQueueUpdate)(NSArray * eventQueue);
@@ -21,11 +23,13 @@ typedef void(^OnLogEvent)(MMEEvent* event);
  */
 @interface MMEAPIClient : NSObject
 
+// MARK: - Properties
+
 /*! @brief Configuration Providing Shared Values for constructing Requests */
 @property (nonatomic, readonly) id<MMEEventConfigProviding> config;
 
-@property (nonatomic, readonly) BOOL isGettingConfigUpdates;
 
+// MARK: - Initializers
 
 - (instancetype)init NS_UNAVAILABLE;
 
@@ -125,12 +129,6 @@ typedef void(^OnLogEvent)(MMEEvent* event);
  @param completion Block called at the end of network operation (Result being JSON Object or NSError)
  */
 - (void)getEventConfigWithCompletionHandler:(nullable void (^)(MMEConfig* _Nullable config, NSError * _Nullable error))completion;
-
-/// Start the Configuration update process
-- (void)startGettingConfigUpdates;
-
-/// Stop the Configuration update process
-- (void)stopGettingConfigUpdates;
 
 @end
 

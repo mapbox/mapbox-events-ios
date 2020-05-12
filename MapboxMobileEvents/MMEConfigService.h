@@ -31,7 +31,10 @@ typedef void(^OnConfigLoad)(MMEConfig *config);
               client:(MMEAPIClient*)client
         onConfigLoad:(OnConfigLoad)onConfigLoad;
 
-/// Start the Configuration update process (Periodically Fetched)
+/*!
+ @brief Start the Configuration update process (Periodically Fetched)
+ @discussion If last update is older than update interval fetches immediately. Otherwise, fetches on a configured time
+ */
 - (void)startUpdates;
 
 /// Stop the Configuration update process

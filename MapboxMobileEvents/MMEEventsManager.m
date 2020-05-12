@@ -24,6 +24,8 @@
 #import "MMEUniqueIdentifier.h"
 #import "NSUserDefaults+MMEConfiguration.h"
 #import "NSProcessInfo+SystemInfo.h"
+#import "MMEConfigService.h"
+#import "NSUserDefaults+MMEConfiguration_Private.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -45,6 +47,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) UIBackgroundTaskIdentifier backgroundTaskIdentifier;
 @property (nonatomic) MMELogger *logger;
 @property (nonatomic) MMEMetricsManager *metricsManager;
+@property (nullable, nonatomic) MMEConfigService* configService;
 
 @end
 
@@ -58,6 +61,9 @@ NS_ASSUME_NONNULL_BEGIN
     
     dispatch_once(&onceToken, ^{
         _sharedManager = [MMEEventsManager.alloc initShared];
+
+//        // Dane - (Start fetching updates)
+//        [self startGettingConfigUpdates];
     });
     
     return _sharedManager;
@@ -98,6 +104,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 
         __weak __typeof__(self) weakSelf = self;
+
+
+        // Setup Client
         self.apiClient = [[MMEAPIClient alloc] initWithConfig:NSUserDefaults.mme_configuration
                                                      onError:^(NSError * _Nonnull error) {
             [weakSelf reportError:error];
@@ -112,6 +121,16 @@ NS_ASSUME_NONNULL_BEGIN
         } onLogEvent:^(MMEEvent * _Nonnull event) {
             [weakSelf.metricsManager.logger logEvent:event];
         }];
+
+        // Setup Service to Poll/Handle Configuration updates
+        self.configService = [[MMEConfigService alloc] init:NSUserDefaults.mme_configuration
+                                                     client:self.apiClient
+                                               onConfigLoad:^(MMEConfig * _Nonnull config) {
+
+//            [NSUserDefaults.mme_configuration mme_updateFromConfig:config];
+        }];
+        [self.configService startUpdates];
+
 
         [self sendPendingTelemetryMetricsEvent];
 

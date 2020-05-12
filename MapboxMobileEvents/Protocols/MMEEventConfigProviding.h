@@ -3,6 +3,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class MMEDate;
+
 /// Provides the necessary readonly config values for determining behaviors
 @protocol MMEEventConfigProviding <NSObject>
 
@@ -22,6 +24,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// Interval at which we check for updated configuration
 @property (nonatomic, readonly) NSTimeInterval mme_configUpdateInterval;
+
+@property (nullable, nonatomic, readonly) MMEDate* mme_configUpdateDate;
 
 /// Tag for events
 @property (nonatomic, readonly) NSString *mme_eventTag;

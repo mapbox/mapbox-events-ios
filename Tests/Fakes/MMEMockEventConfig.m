@@ -2,6 +2,7 @@
 #import "NSUserDefaults+MMEConfiguration_Private.h"
 #import "MMEConstants.h"
 #import "MMEServiceFixture.h"
+#import "MMEDate.h"
 
 @implementation MMEMockEventConfig
 
@@ -11,6 +12,7 @@
                         flushInterval:MMEEventFlushIntervalDefault
            identifierRotationInterval:MMEIdentifierRotationIntervalDefault
                  configUpdateInterval:MMEConfigurationUpdateIntervalDefault
+                     lastConfigUpdate:[MMEDate dateWithDate:NSDate.distantPast]
                              eventTag:@"42"
                           accessToken:@"access-token"
                   legacyUserAgentBase:@"user-agent-base"
@@ -35,6 +37,7 @@
                        flushInterval:(NSUInteger)flushInterval
           identifierRotationInterval:(NSTimeInterval)identifierRotationInterval
                 configUpdateInterval:(NSTimeInterval)configUpdateInterval
+                    lastConfigUpdate:(MMEDate*)lastConfigUpdate
                             eventTag:(NSString*)eventTag
                          accessToken:(NSString*)accessToken
                  legacyUserAgentBase:(NSString*)legacyUserAgentBase
@@ -59,6 +62,7 @@
         _mme_eventFlushInterval = flushInterval;
         _mme_identifierRotationInterval = identifierRotationInterval;
         _mme_configUpdateInterval = configUpdateInterval;
+        _mme_configUpdateDate = lastConfigUpdate;
         _mme_eventTag = [eventTag copy];
         _mme_accessToken = [accessToken copy];
         _mme_legacyUserAgentBase = [legacyUserAgentBase copy];
@@ -82,27 +86,28 @@
 
 + (instancetype)oneSecondConfigUpdate {
     return [[MMEMockEventConfig alloc] initWithStartupDelay:MMEStartupDelayDefault
-                      eventFlushCount:MMEEventFlushCountDefault
-                        flushInterval:MMEEventFlushIntervalDefault
-           identifierRotationInterval:MMEIdentifierRotationIntervalDefault
-                 configUpdateInterval:1
-                             eventTag:@"42"
-                          accessToken:@"access-token"
-                  legacyUserAgentBase:@"user-agent-base"
-                 legacyHostSDKVersion:@"1.0"
-                        isChinaRegion:NO
-                               apiURL:[NSURL URLWithString:MMEAPIClientBaseAPIURL]
-                            eventsURL:[NSURL URLWithString:MMEAPIClientBaseEventsURL]
-                            configURL:MMEServiceFixture.serviceURL
-                            userAgent:@"<UserAgent>"
-                      legacyUserAgent:@"<LegacyUserAgent>"
-                  isCollectionEnabled:YES
-       isCollectionEnabledInSimulator:YES
-      isCollectionEnabledInBackground:YES
-               backgroundStartupDelay:MMEBackgroundStartupDelayDefault
-                   backgroundGeofence:MMEBackgroundGeofenceDefault
-            certificateRevocationList:@[]
-             certificatePinningConfig:@{}];
+                                            eventFlushCount:MMEEventFlushCountDefault
+                                              flushInterval:MMEEventFlushIntervalDefault
+                                 identifierRotationInterval:MMEIdentifierRotationIntervalDefault
+                                       configUpdateInterval:1
+                                           lastConfigUpdate:[MMEDate dateWithDate:NSDate.distantPast]
+                                                   eventTag:@"42"
+                                                accessToken:@"access-token"
+                                        legacyUserAgentBase:@"user-agent-base"
+                                       legacyHostSDKVersion:@"1.0"
+                                              isChinaRegion:NO
+                                                     apiURL:[NSURL URLWithString:MMEAPIClientBaseAPIURL]
+                                                  eventsURL:[NSURL URLWithString:MMEAPIClientBaseEventsURL]
+                                                  configURL:MMEServiceFixture.serviceURL
+                                                  userAgent:@"<UserAgent>"
+                                            legacyUserAgent:@"<LegacyUserAgent>"
+                                        isCollectionEnabled:YES
+                             isCollectionEnabledInSimulator:YES
+                            isCollectionEnabledInBackground:YES
+                                     backgroundStartupDelay:MMEBackgroundStartupDelayDefault
+                                         backgroundGeofence:MMEBackgroundGeofenceDefault
+                                  certificateRevocationList:@[]
+                                   certificatePinningConfig:@{}];
 }
 
 @end

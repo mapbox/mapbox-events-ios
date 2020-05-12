@@ -18,7 +18,6 @@
 /*! @Brief Private Client Properties */
 @interface MMEAPIClient ()
 
-@property (nullable, nonatomic) NSTimer *configurationUpdateTimer;
 @property (nonatomic) id<MMENSURLSessionWrapper> sessionWrapper;
 @property (nonatomic) NSBundle *applicationBundle;
 
@@ -26,12 +25,12 @@
 @property (nonatomic, readonly) MMENSURLRequestFactory *requestFactory;
 
 // Metrics and statistics gathering hooks (Likely eligible to move to a private hader)
-@property (nonatomic, copy, readonly) OnErrorBlock onError;
-@property (nonatomic, copy, readonly) OnBytesReceived onBytesReceived;
-@property (nonatomic, copy, readonly) OnEventQueueUpdate onEventQueueUpdate;
-@property (nonatomic, copy, readonly) OnEventCountUpdate onEventCountUpdate;
-@property (nonatomic, copy, readonly) OnGenerateTelemetryEvent onGenerateTelemetryEvent;
-@property (nonatomic, copy, readonly) OnLogEvent onLogEvent;
+@property (nonatomic, copy) OnErrorBlock onError;
+@property (nonatomic, copy) OnBytesReceived onBytesReceived;
+@property (nonatomic, copy) OnEventQueueUpdate onEventQueueUpdate;
+@property (nonatomic, copy) OnEventCountUpdate onEventCountUpdate;
+@property (nonatomic, copy) OnGenerateTelemetryEvent onGenerateTelemetryEvent;
+@property (nonatomic, copy) OnLogEvent onLogEvent;
 @end
 
 int const kMMEMaxRequestCount = 1000;
@@ -39,7 +38,7 @@ int const kMMEMaxRequestCount = 1000;
 
 @implementation MMEAPIClient
 
-// MARK: - Lifecycle
+// MARK: - Initializers
 
 - (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config {
     return [self initWithConfig:config
@@ -101,20 +100,17 @@ int const kMMEMaxRequestCount = 1000;
         _config = config;
         _requestFactory = requestFactory;
         _sessionWrapper = session;
-        _onError = onError;
-        _onBytesReceived = onBytesReceived;
-        _onEventQueueUpdate = onEventQueueUpdate;
-        _onEventCountUpdate = onEventCountUpdate;
-        _onGenerateTelemetryEvent = onGenerateTelemetryEvent;
-        _onLogEvent = onLogEvent;
-
-        [self startGettingConfigUpdates];
+        self.onError = onError;
+        self.onBytesReceived = onBytesReceived;
+        self.onEventQueueUpdate = onEventQueueUpdate;
+        self.onEventCountUpdate = onEventCountUpdate;
+        self.onGenerateTelemetryEvent = onGenerateTelemetryEvent;
+        self.onLogEvent = onLogEvent;
     }
     return self;
 }
 
 - (void) dealloc {
-    [self stopGettingConfigUpdates];
     [self.sessionWrapper invalidate];
 }
 
@@ -317,118 +313,39 @@ int const kMMEMaxRequestCount = 1000;
                                                                       boundary:boundary];
 
     __weak __typeof__(self) weakSelf = self;
-    [self.sessionWrapper processRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        
-        // check the response object for HTTP error code
-        if (response && [response isKindOfClass:NSHTTPURLResponse.class]) {
-            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-            NSError *statusError = [[NSError alloc] initWith:request httpResponse:httpResponse error:error];
+    [self.sessionWrapper processRequest:request
+                      completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
 
-            if (statusError) { // always report the status error
-                weakSelf.onError(statusError);
+        __strong __typeof__(weakSelf) strongSelf = weakSelf;
+        if (strongSelf) {
+
+            // check the response object for HTTP error code
+            if (response && [response isKindOfClass:NSHTTPURLResponse.class]) {
+                NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+                NSError *statusError = [[NSError alloc] initWith:request httpResponse:httpResponse error:error];
+
+                if (statusError) { // always report the status error
+                    strongSelf.onError(statusError);
+                }
+
+                if (data) { // always log the Rx bytes
+                    strongSelf.onBytesReceived(data.length);
+                }
             }
-            
-            if (data) { // always log the Rx bytes
-                weakSelf.onBytesReceived(data.length);
+            else if (error) { // check the session error and report it if the response appears invalid
+                strongSelf.onError(error);
             }
-        }
-        else if (error) { // check the session error and report it if the response appears invalid
-            weakSelf.onError(error);
+
+            strongSelf.onEventCountUpdate(filePaths.count, request, error);
+            strongSelf.onGenerateTelemetryEvent();
         }
 
-        weakSelf.onEventCountUpdate(filePaths.count, request, error);
-        weakSelf.onGenerateTelemetryEvent();
-        
         if (completionHandler) {
             completionHandler(error);
         }
     }];
 }
 
-// MARK: - Configuration Service
-
-- (void)startGettingConfigUpdates {
-    if (self.isGettingConfigUpdates) {
-        [self stopGettingConfigUpdates];
-    }
-
-    if (@available(iOS 10.0, macos 10.12, tvOS 10.0, watchOS 3.0, *)) {
-
-        __weak __typeof__(self) weakSelf = self;
-        self.configurationUpdateTimer = [NSTimer
-                                         scheduledTimerWithTimeInterval:self.config.mme_configUpdateInterval
-            repeats:YES
-            block:^(NSTimer * _Nonnull timer) {
-
-                __strong __typeof__(weakSelf) strongSelf = weakSelf;
-                if (strongSelf == nil) {
-                    return;
-                }
-
-                NSURLRequest *request = [self eventConfigurationRequest];
-                [strongSelf.sessionWrapper processRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-                    // check the response object for HTTP error code, update the local clock offset
-                    if (response && [response isKindOfClass:NSHTTPURLResponse.class]) {
-                        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-                        NSError *statusError = [[NSError alloc] initWith:request httpResponse:httpResponse error:error];
-
-                        if (!statusError) {
-                            // check for time-offset from the server
-                            NSString *dateHeader = httpResponse.allHeaderFields[@"Date"];
-                            if (dateHeader) {
-                                // parse the server date, compute the offset
-                                NSDate *date = [MMEDate.HTTPDateFormatter dateFromString:dateHeader];
-                                if (date) {
-                                    [MMEDate recordTimeOffsetFromServer:date];
-                                } // else failed to parse date
-                            }
-
-                            // check the data object, log the Rx bytes and try to load the config
-                            if (data) {
-                                weakSelf.onBytesReceived(data.length);
-
-                                NSError *configError = [NSUserDefaults.mme_configuration mme_updateFromConfigServiceData:(NSData * _Nonnull)data];
-                                if (configError) {
-                                    weakSelf.onError(configError);
-                                }
-                                
-                                NSUserDefaults.mme_configuration.mme_configUpdateDate = MMEDate.date;
-                            }
-                        }
-                        else {
-                            weakSelf.onError(statusError);
-                        }
-                    }
-                    else if (error) { // check the session error and report it if the response appears invalid
-                        weakSelf.onError(error);
-                    }
-
-                    weakSelf.onEventCountUpdate(0, request, error);
-                    weakSelf.onGenerateTelemetryEvent();
-                }];
-            }];
-        
-        // be power conscious and give this timer a minute of slack so it can be coalesced
-        self.configurationUpdateTimer.tolerance = 60;
-
-        // check to see if time since the last update is greater than our update interval
-        // TODO: Retain This Setter/Getter until Config Mutation is moved outside of Client
-        if (!NSUserDefaults.mme_configuration.mme_configUpdateDate // we've never updated
-         || (fabs(NSUserDefaults.mme_configuration.mme_configUpdateDate.timeIntervalSinceNow)
-          > NSUserDefaults.mme_configuration.mme_configUpdateInterval)) { // or it's been a while
-            [self.configurationUpdateTimer fire]; // update now
-        }
-    }
-}
-
-- (void)stopGettingConfigUpdates {
-    [self.configurationUpdateTimer invalidate];
-    self.configurationUpdateTimer = nil;
-}
-
-- (BOOL)isGettingConfigUpdates {
-    return self.configurationUpdateTimer.isValid;
-}
 
 // MARK: - Utilities
 

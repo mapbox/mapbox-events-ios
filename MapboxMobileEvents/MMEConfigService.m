@@ -1,10 +1,12 @@
 #import "MMEConfigService.h"
 #import "MMEEventConfigProviding.h"
+#import "MMEDate.h"
 
 @interface MMEConfigService ()
 
 /*! Poll Timer */
 @property (nullable, nonatomic) NSTimer *timer;
+@property (nonatomic, copy) OnConfigLoad onConfigLoad;
 
 @end
 
@@ -17,7 +19,7 @@
     if (self = [super init]) {
         _config = config;
         _client = client;
-        _onConfigLoad = onConfigLoad;
+        self.onConfigLoad = onConfigLoad;
     }
 
     return self;
@@ -37,6 +39,11 @@
             [weakSelf.client getEventConfigWithCompletionHandler:^(
                                                                      MMEConfig * _Nullable config,
                                                                      NSError * _Nullable error) {
+                __strong __typeof__(weakSelf) strongSelf = weakSelf;
+                if (strongSelf == nil) {
+                    return;
+                }
+
                 if (config) {
                     weakSelf.onConfigLoad(config);
                 }
@@ -44,6 +51,13 @@
             }];
         }];
         self.timer.tolerance = 60;
+
+        // Manually Fetch if last updated date is older than our update interval
+        // TODO: - Given we're setting our time interval upon initialization, it could be quite a ways in the future. I wonder if we should fetch on init, then set a timer to repeat upon completion? Or perhaps set a timer based on a fire date calculated from last update?
+        if (!self.config.mme_configUpdateDate ||
+            (fabs(self.config.mme_configUpdateDate.timeIntervalSinceNow) > self.config.mme_configUpdateInterval)) {
+            [self.timer fire];
+        }
     }
 }
 

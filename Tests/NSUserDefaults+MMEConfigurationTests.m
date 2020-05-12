@@ -210,55 +210,6 @@
 
 // MARK: - Utilities
 
-- (void)testInvalidCRL {
-    NSDictionary *jsonDict = @{MMEConfigCRLKey: @[@"not-a-key-hash"]};
-    NSError *jsonError = nil;
-    NSData *data = [NSJSONSerialization dataWithJSONObject:jsonDict options:NSJSONWritingPrettyPrinted error:&jsonError];
-    NSError *updateError = [NSUserDefaults.mme_configuration mme_updateFromConfigServiceData:data];
-    XCTAssertNil(jsonError);
-    XCTAssertNotNil(updateError);
-}
-
-- (void)testRevokedCertKeys {
-    NSDictionary *jsonDict = @{MMERevokedCertKeys: @[@"not-a-key-hash"]};
-    NSError *jsonError = nil;
-    NSData *data = [NSJSONSerialization dataWithJSONObject:jsonDict options:NSJSONWritingPrettyPrinted error:&jsonError];
-    NSError *updateError = [NSUserDefaults.mme_configuration mme_updateFromConfigServiceData:data];
-    XCTAssertNil(jsonError);
-    XCTAssertNotNil(updateError);
-}
-
-- (void)testUpdateFromConfigServiceData {
-    NSDictionary *jsonDict = @{MMEConfigCRLKey: @[],
-                               MMEConfigTTOKey: @2,
-                               MMEConfigGFOKey: @500,
-                               MMEConfigBSOKey: @10,
-                               MMEConfigTagKey: @"TAG"
-    };
-    NSError *updateError = nil;
-    NSData *data = [NSJSONSerialization dataWithJSONObject:jsonDict options:NSJSONWritingPrettyPrinted error:&updateError];
-
-    [NSUserDefaults.mme_configuration mme_updateFromConfigServiceData:data];
-    XCTAssertNil(updateError);
-    XCTAssertNotNil(data);
-    XCTAssert(NSUserDefaults.mme_configuration.mme_backgroundGeofence == 500);
-    XCTAssert(NSUserDefaults.mme_configuration.mme_certificateRevocationList.count == 0);
-    XCTAssertFalse(NSUserDefaults.mme_configuration.mme_isCollectionEnabledInBackground);
-    XCTAssert(NSUserDefaults.mme_configuration.mme_backgroundStartupDelay == 10);
-    XCTAssert([NSUserDefaults.mme_configuration.mme_eventTag isEqualToString:@"TAG"]);
-}
-
-- (void)testUpdateFromConfigServiceDataAlternatives {
-    NSDictionary *jsonDict = @{MMEConfigTTOKey: @1,
-                               MMEConfigGFOKey: @90000, //over 9,000
-    };
-    NSData *data = [NSJSONSerialization dataWithJSONObject:jsonDict options:NSJSONWritingPrettyPrinted error:nil];
-    
-    [NSUserDefaults.mme_configuration mme_updateFromConfigServiceData:data];
-    XCTAssert(NSUserDefaults.mme_configuration.mme_backgroundGeofence == 300);
-    XCTAssertFalse(NSUserDefaults.mme_configuration.mme_isCollectionEnabled);
-}
-
 - (void)testSetAccessToken {
     NSUserDefaults.mme_configuration.mme_accessToken = @"pk.12345";
     XCTAssert([NSUserDefaults.mme_configuration.mme_accessToken isEqualToString:@"pk.12345"]);

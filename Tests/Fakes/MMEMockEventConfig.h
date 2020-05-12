@@ -1,6 +1,8 @@
 #import <Foundation/Foundation.h>
 #import "MMEEventConfigProviding.h"
 
+@class MMEDate;
+
 NS_ASSUME_NONNULL_BEGIN
 
 /*! @brief Mock Immutable Config */
@@ -14,6 +16,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// Maximum Time interval between event flush
 @property (nonatomic, readonly) NSTimeInterval mme_eventFlushInterval;
+
+/// Most Recent date config was updated
+@property (nonatomic, readonly) MMEDate* mme_configUpdateDate;
 
 /// Interval at which we rotate the unique identifier for this SDK instance
 @property (nonatomic, readonly) NSTimeInterval mme_identifierRotationInterval;
@@ -91,6 +96,7 @@ NS_ASSUME_NONNULL_BEGIN
                        flushInterval:(NSUInteger)flushInterval
           identifierRotationInterval:(NSTimeInterval)identifierRotationInterval
                 configUpdateInterval:(NSTimeInterval)configUpdateInterval
+                    lastConfigUpdate:(NSDate*)lastConfigUpdate
                             eventTag:(NSString*)eventTag
                          accessToken:(NSString*)accessToken
                  legacyUserAgentBase:(NSString*)legacyUserAgentBase

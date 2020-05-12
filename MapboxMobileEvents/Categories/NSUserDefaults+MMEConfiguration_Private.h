@@ -2,6 +2,7 @@
 #define NSUserDefaults_MMEConfiguration_Private_h
 
 #import <CoreLocation/CoreLocation.h>
+@class MMEConfig;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -106,7 +107,8 @@ static NSTimeInterval const MMEStartupDelayMaximum = 100;
 // MARK: -
 
 - (void)mme_registerDefaults;
-- (NSError *)mme_updateFromConfigServiceData:(NSData *)configData;
+//- (NSError *)mme_updateFromConfigServiceData:(NSData *)configData;
+- (void)mme_updateFromConfig:(MMEConfig*)config;
 
 - (void)mme_setObject:(NSObject *)value forVolatileKey:(MMEVolatileKey *)key;
 - (void)mme_setObject:(id)value forPersistentKey:(MMEPersistentKey *)key;

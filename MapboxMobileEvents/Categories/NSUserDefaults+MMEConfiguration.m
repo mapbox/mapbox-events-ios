@@ -576,17 +576,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 // MARK: - Configuration Service
 
-- (NSError *)mme_updateFromConfigServiceData:(NSData *)configData {
-    NSError *updateError = nil;
-    if (configData) {
-        NSDictionary *json = [NSJSONSerialization JSONObjectWithData:configData options:kNilOptions error:&updateError];
-        if (json) {
-            [self mme_updateFromConfigServiceObject:json updateError:&updateError];
-        }
-    }
-    
-    return updateError;
-}
 
 - (void)mme_updateFromAccountType:(NSInteger)typeCode {
     if (typeCode == MMEAccountType1) {
@@ -597,6 +586,29 @@ NS_ASSUME_NONNULL_BEGIN
     }
 }
 
+- (void)mme_updateFromConfig:(MMEConfig*)config {
+
+    [self mme_setObject:config.certificateRevocationList forPersistentKey:MMECertificateRevocationList];
+
+    if (config.telemetryTypeOverride) {
+        [self mme_updateFromAccountType:[config.telemetryTypeOverride integerValue]];
+    }
+
+    if (config.geofenceOverride) {
+        [self mme_setObject:config.geofenceOverride forPersistentKey:MMEBackgroundGeofence];
+    } else {
+        // fallback to the default
+        [self removeObjectForKey:MMEBackgroundGeofence];
+    }
+
+    if (config.backgroundStartupOverride) {
+        [self mme_setObject:config.backgroundStartupOverride forPersistentKey:MMEBackgroundStartupDelay];
+    }
+
+    if (config.eventTag) {
+        [self mme_setObject:config.eventTag forPersistentKey:MMEConfigEventTag];
+    }
+}
 - (BOOL)mme_updateFromConfigServiceObject:(NSDictionary *)configDictionary updateError:(NSError **)updateError{
     BOOL success = NO;
     if (configDictionary) {
@@ -604,29 +616,7 @@ NS_ASSUME_NONNULL_BEGIN
         MMEConfig* config = [[MMEConfig alloc] initWithDictionary:configDictionary
                                                             error:updateError];
         if (config) {
-            // TODO: Clarify Config Update Expectations
-            // Migrated this directly, but confused by the differentiated behaviors of replacing/resetting/ignoring
-            [self mme_setObject:config.certificateRevocationList forPersistentKey:MMECertificateRevocationList];
-
-            if (config.telemetryTypeOverride) {
-                [self mme_updateFromAccountType:[config.telemetryTypeOverride integerValue]];
-            }
-
-            if (config.geofenceOverride) {
-                [self mme_setObject:config.geofenceOverride forPersistentKey:MMEBackgroundGeofence];
-            } else {
-                // fallback to the default
-                [self removeObjectForKey:MMEBackgroundGeofence];
-            }
-
-            if (config.backgroundStartupOverride) {
-                [self mme_setObject:config.backgroundStartupOverride forPersistentKey:MMEBackgroundStartupDelay];
-            }
-
-            if (config.eventTag) {
-                [self mme_setObject:config.eventTag forPersistentKey:MMEConfigEventTag];
-            }
-
+            [self mme_updateFromConfig:config];
         }
 
         success = YES;
