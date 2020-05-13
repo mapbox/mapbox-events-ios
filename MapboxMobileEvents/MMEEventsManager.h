@@ -34,6 +34,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 // MARK: -
 
+- (instancetype)init NS_UNAVAILABLE;
+
 /// Shared Mapbox Mobile Events Manager
 + (instancetype)sharedManager;
 

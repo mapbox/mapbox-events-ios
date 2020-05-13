@@ -60,17 +60,14 @@ NS_ASSUME_NONNULL_BEGIN
     static dispatch_once_t onceToken;
     
     dispatch_once(&onceToken, ^{
-        _sharedManager = [MMEEventsManager.alloc initShared];
+        _sharedManager = [[MMEEventsManager alloc] initWithDefaults];
     });
     
     return _sharedManager;
 }
 
-- (instancetype)init {
-    return self.class.sharedManager;
-}
-
-- (instancetype)initShared {
+/*! @Brief Initializes new instance of EventsManager with default values */
+- (instancetype)initWithDefaults {
     if (self = [super init]) {
         _paused = YES;
         _eventQueue = [NSMutableArray array];

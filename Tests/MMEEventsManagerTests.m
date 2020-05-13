@@ -25,12 +25,11 @@
 @property (nonatomic) MMECommonEventData *commonEventData;
 @property (nonatomic) id<MMELocationManager> locationManager;
 @property (nonatomic) id<MMEUniqueIdentifer> uniqueIdentifer;
-//@property (nonatomic) MMETimerManager *timerManager;
 @property (nonatomic) NSDate *nextTurnstileSendDate;
 @property (nonatomic) id<MMEUIApplicationWrapper> application;
 @property (nonatomic) UIBackgroundTaskIdentifier backgroundTaskIdentifier;
 
-- (instancetype)initShared;
+- (instancetype)initWithDefaults;
 - (void)pushEvent:(MMEEvent *)event;
 - (void)processAuthorizationStatus:(CLAuthorizationStatus)authStatus andApplicationState:(UIApplicationState)applicationState;
 - (void)powerStateDidChange:(NSNotification *)notification;
@@ -49,7 +48,7 @@
 @implementation MMEEventsManagerTests
 
 - (void)setUp {
-    self.eventsManager = [MMEEventsManager.alloc initShared];
+    self.eventsManager = [[MMEEventsManager alloc] initWithDefaults];
     self.eventsManager.application = [[MMEUIApplicationWrapperFake alloc] init];
         
     [NSUserDefaults.mme_configuration mme_registerDefaults];
