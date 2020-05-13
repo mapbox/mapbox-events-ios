@@ -3,9 +3,14 @@
 @implementation MMEBundleInfoFake
 
 + (MMEBundleInfoFake *)bundleWithFakeInfo:(NSDictionary *)fakeInfo {
-    MMEBundleInfoFake *fakeBundle = [MMEBundleInfoFake new];
-    fakeBundle.infoDictionaryFake = fakeInfo;
-    return fakeBundle;
+    return [[MMEBundleInfoFake new] initWithInfoDictionary:fakeInfo];
+}
+
+-(instancetype)initWithInfoDictionary:(NSDictionary*)dictionary {
+    if (self = [super init]) {
+        self.infoDictionaryFake = dictionary;
+    }
+    return self;
 }
 
 - (NSDictionary*) infoDictionary {

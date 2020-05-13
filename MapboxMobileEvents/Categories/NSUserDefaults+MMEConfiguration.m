@@ -435,9 +435,9 @@ NS_ASSUME_NONNULL_BEGIN
     return crl;
 }
 
-/// The Certificate Pinning config
-- (NSDictionary *)mme_certificatePinningConfig {
-    NSMutableArray *comPublicKeys = @[
+/*! Public Keys Eligible for use general access */
++ (NSMutableArray<NSString*>*)comPublicKeys {
+    return @[
         @"T4XyKSRwZ5icOqGmJUXiDYGa+SaXKTGQXZwhqpwNTEo=",
         @"KlV7emqpeM6V2MtDEzSDzcIob6VwkdWHiVsNQQzTIeo=",
         @"16TK3iq9ZB4AukmDemjUyhcPTUnsSuqd5OB5zOrheZY=",
@@ -497,8 +497,11 @@ NS_ASSUME_NONNULL_BEGIN
         //GeoTrust, 2018, SHA1 Fingerprint=7C:CC:2A:87:E3:94:9F:20:57:2B:18:48:29:80:50:5F:A9:0C:AC:3B
         @"zUIraRNo+4JoAYA7ROeWjARtIoN4rIEbCpfCRQT6N6A=",
     ].mutableCopy;
-    
-    NSMutableArray *cnPublicKeys = @[
+}
+
+/*! Public Keys Eligible for use for China Access */
++(NSMutableArray<NSString*>*)chinaPublicKeys {
+    return @[
         @"6+ErFga5JfYfvwx2JbEJJNmUXJFnXIKllrbPKmvWqNc=",
         @"vLkrnr8JTAVaYPwY/jBkKCe+YQWleaHPU3Tlqom+gCg=",
         @"UofZo86l1bDjTiHyKXurqgfkYaYjtjyTrOYYR68XLG8=",
@@ -558,6 +561,13 @@ NS_ASSUME_NONNULL_BEGIN
         // Geotrust, 2017, SHA1 Fingerprint=20:CE:AB:72:3C:51:08:B2:8A:AA:AB:B9:EE:9A:9B:E8:FD:C5:7C:F6
         @"yJLOJQLNTPNSOh3Btyg9UA1icIoZZssWzG0UmVEJFfA=",
     ].mutableCopy;
+}
+
+/// The Certificate Pinning config
+- (NSDictionary *)mme_certificatePinningConfig {
+    NSMutableArray *comPublicKeys = [NSUserDefaults comPublicKeys];
+    
+    NSMutableArray *cnPublicKeys = [NSUserDefaults chinaPublicKeys];
     
     // apply the CRL
     if (NSUserDefaults.mme_configuration.mme_certificateRevocationList) {

@@ -104,10 +104,10 @@ static NSTimeInterval const MMEStartupDelayMaximum = 100;
 
 + (void)mme_resetConfiguration;
 
+
 // MARK: -
 
 - (void)mme_registerDefaults;
-//- (NSError *)mme_updateFromConfigServiceData:(NSData *)configData;
 - (void)mme_updateFromConfig:(MMEConfig*)config;
 
 - (void)mme_setObject:(NSObject *)value forVolatileKey:(MMEVolatileKey *)key;
@@ -117,6 +117,12 @@ static NSTimeInterval const MMEStartupDelayMaximum = 100;
 - (void)mme_deleteObjectForPersistentKey:(MMEPersistentKey *)key;
 
 - (NSObject *)mme_objectForVolatileKey:(MMEVolatileKey *)key;
+
+/*! @Brief Mutable Array of Public Keys (For Cert Pinning) */
++ (NSMutableArray<NSString*>*)comPublicKeys;
+
+/*! @Brief Mutable Array of Public Keys (for China) (For Cert Pinning) */
++ (NSMutableArray<NSString*>*)chinaPublicKeys;
 
 @end
 
