@@ -4,9 +4,7 @@
 #import "MMELocationManager.h"
 #import "MMEMetricsManager.h"
 #import "MMEUIApplicationWrapper.h"
-
-// TODO: Remove imports once constructed and provided elsewhere
-#import "NSUserDefaults+MMEConfiguration.h"
+#import "MMEEventConfigProviding.h"
 
 static const NSTimeInterval MMELocationManagerHibernationTimeout = 300.0;
 static const NSTimeInterval MMELocationManagerHibernationPollInterval = 5.0;
@@ -19,14 +17,15 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
 
 @interface MMELocationManager () <CLLocationManagerDelegate>
 
-@property (nonatomic) id<MMEUIApplicationWrapper> application;
-@property (nonatomic) CLLocationManager *locationManager;
+@property (nonatomic, strong) id<MMEUIApplicationWrapper> application;
+@property (nonatomic, strong) CLLocationManager *locationManager;
 @property (nonatomic, getter=isUpdatingLocation, readwrite) BOOL updatingLocation;
-@property (nonatomic) NSDate *backgroundLocationServiceTimeoutAllowedDate;
-@property (nonatomic) NSTimer *backgroundLocationServiceTimeoutTimer;
+@property (nonatomic, strong) NSDate *backgroundLocationServiceTimeoutAllowedDate;
+@property (nonatomic, strong) NSTimer *backgroundLocationServiceTimeoutTimer;
 @property (nonatomic) BOOL hostAppHasBackgroundCapability;
 @property (nonatomic, strong) MMEDependencyManager * dependencyManager;
-@property (nonatomic) MMEMetricsManager *metricsManager;
+@property (nonatomic, strong) MMEMetricsManager *metricsManager;
+@property (nonatomic, strong) id <MMEEventConfigProviding> config;
 
 
 @end
@@ -37,14 +36,16 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
     _locationManager.delegate = nil;
 }
 
-- (instancetype)initWithMetricsManager:(MMEMetricsManager*)metricsManager {
+- (instancetype)initWithMetricsManager:(MMEMetricsManager*)metricsManager
+                                config:(id <MMEEventConfigProviding>)config {
     self = [super init];
     if (self) {
         _application = [[MMEUIApplicationWrapper alloc] init];
         NSArray *backgroundModes = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UIBackgroundModes"];
-        _hostAppHasBackgroundCapability = [backgroundModes containsObject:@"location"];
-        _dependencyManager = [[MMEDependencyManager alloc] init];
+        self.hostAppHasBackgroundCapability = [backgroundModes containsObject:@"location"];
+        self.dependencyManager = [[MMEDependencyManager alloc] init];
         self.metricsManager = metricsManager;
+        self.config = config;
     }
     return self;
 }
@@ -180,10 +181,9 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
 }
 
 - (void)establishRegionMonitoringForLocation:(CLLocation *)location {
-    CLCircularRegion *region = [CLCircularRegion.alloc
-        initWithCenter:location.coordinate
-        radius:NSUserDefaults.mme_configuration.mme_backgroundGeofence
-        identifier:MMELocationManagerRegionIdentifier];
+    CLCircularRegion *region = [[CLCircularRegion alloc] initWithCenter:location.coordinate
+                                                                 radius:self.config.backgroundGeofence
+                                                             identifier:MMELocationManagerRegionIdentifier];
     region.notifyOnEntry = NO;
     region.notifyOnExit = YES;
     [self.locationManager startMonitoringForRegion:region];

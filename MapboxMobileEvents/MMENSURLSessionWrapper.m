@@ -34,25 +34,14 @@
                                  [[NSString stringWithFormat:@"%@.events.serial", NSStringFromClass([self class])] UTF8String], DISPATCH_QUEUE_SERIAL);
 }
 
-+ (MMECertPin*)makeCertPin {
-    return [[MMECertPin alloc] init];
-}
-
 // MARK: - Lifecycle
 
-- (instancetype)init {
+- (instancetype)initWithSessionConfiguration:(NSURLSessionConfiguration*)sessionConfiguration
+                          eventConfiguration:(id <MMEEventConfigProviding>)eventConfiguration {
 
-    NSURLSessionConfiguration* configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    return [self initWithConfiguration:configuration
+    return [self initWithConfiguration:sessionConfiguration
                        completionQueue:[MMENSURLSessionWrapper makeDispatchQueue]
-                               certPin:[MMENSURLSessionWrapper makeCertPin]];
-}
-
-- (instancetype)initWithConfiguration:(NSURLSessionConfiguration*)configuration {
-
-    return [self initWithConfiguration:configuration
-                       completionQueue:[MMENSURLSessionWrapper makeDispatchQueue]
-                               certPin:[MMENSURLSessionWrapper makeCertPin]];
+                               certPin:[[MMECertPin alloc] initWithConfig:eventConfiguration]];
 }
 
 - (instancetype)initWithConfiguration:(NSURLSessionConfiguration*)configuration

@@ -11,13 +11,15 @@
 #import "MMELogger.h"
 #import "NSProcessInfo+SystemInfo.h"
 #import "NSBundle+MMEMobileEvents.h"
+#import "MMEEventConfigProviding.h"
 
 // MARK: -
 
 @interface MMEMetricsManager ()
 
-@property (nonatomic) MMEMetrics *metrics;
-@property (nonatomic) MMELogger *logger;
+@property (nonatomic, strong) MMEMetrics *metrics;
+@property (nonatomic, strong) MMELogger *logger;
+@property (nonatomic, strong) id <MMEEventConfigProviding> config;
 
 @end
 
@@ -93,9 +95,11 @@
 
 // MARK: -
 
-- (instancetype)initWithLogger:(MMELogger*)logger {
+- (instancetype)initWithLogger:(MMELogger*)logger
+                        config:(id <MMEEventConfigProviding>)config {
     if ((self = super.init)) {
         self.logger = logger;
+        self.config = config;
         [self resetMetrics];
     }
 
@@ -212,9 +216,9 @@
     attributes[MMEEventKeyPlatform] = NSProcessInfo.mme_platformName;
     attributes[MMEEventKeyOperatingSystem] = NSProcessInfo.mme_osVersion;
     attributes[MMEEventKeyDevice] = NSProcessInfo.mme_deviceModel;
-    attributes[MMEEventSDKIdentifier] = NSUserDefaults.mme_configuration.mme_legacyUserAgentBase;
-    attributes[MMEEventSDKVersion] = NSUserDefaults.mme_configuration.mme_legacyHostSDKVersion;
-    attributes[MMEEventKeyUserAgent] = NSUserDefaults.mme_configuration.mme_userAgentString;
+    attributes[MMEEventSDKIdentifier] = self.config.legacyUserAgentBase;
+    attributes[MMEEventSDKVersion] = self.config.legacyHostSDKVersion;
+    attributes[MMEEventKeyUserAgent] = self.config.userAgentString;
 
     if (self.metrics.deviceLat != 0 && self.metrics.deviceLon != 0) { // check for null-island
         attributes[MMEEventDeviceLat] = @(self.metrics.deviceLat);

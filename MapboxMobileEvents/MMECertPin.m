@@ -1,38 +1,37 @@
 #import <CommonCrypto/CommonDigest.h>
-
 #import "MMECertPin.h"
 #import "MMEConstants.h"
 #import "MMELogger.h"
-
-
-#import "NSUserDefaults+MMEConfiguration.h"
+#import "MMEEventConfigProviding.h"
 
 @interface MMECertPin()
 
-@property (nonatomic) NSMutableDictionary<NSData *, NSData *> *publicKeyInfoHashesCache;
+@property (nonatomic, strong) NSMutableDictionary<NSData *, NSData *> *publicKeyInfoHashesCache;
 @property (nonatomic) NSURLSessionAuthChallengeDisposition lastAuthChallengeDisposition;
-
+@property (nonatomic, strong) id <MMEEventConfigProviding> config;
 @property (nonatomic) dispatch_queue_t lockQueue;
 
 @end
 
 @implementation MMECertPin
 
-- (instancetype)init {
+- (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config {
     if (self = [super init]) {
-        _publicKeyInfoHashesCache = [NSMutableDictionary dictionary];
+        self.publicKeyInfoHashesCache = [NSMutableDictionary dictionary];
         _lockQueue = dispatch_queue_create("MMECertHashLock", DISPATCH_QUEUE_CONCURRENT);
+        self.config = config;
     }
 
     return self;
 }
 
-- (void) handleChallenge:(NSURLAuthenticationChallenge * _Nonnull)challenge completionHandler:(void (^ _Nonnull)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential * _Nullable credential))completionHandler{
+- (void) handleChallenge:(NSURLAuthenticationChallenge * _Nonnull)challenge
+       completionHandler:(void (^ _Nonnull)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential * _Nullable credential))completionHandler{
     
     if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
         
         //Domain should be included
-        if (![NSUserDefaults.mme_configuration.mme_certificatePinningConfig.allKeys containsObject:challenge.protectionSpace.host]) {
+        if (![self.config.certificatePinningConfig.allKeys containsObject:challenge.protectionSpace.host]) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.lastAuthChallengeDisposition = NSURLSessionAuthChallengePerformDefaultHandling;
                 completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
@@ -57,7 +56,7 @@
                 SecCertificateRef remoteCertificate = SecTrustGetCertificateAtIndex(serverTrust, lc);
                 NSData *remoteCertificatePublicKeyHash = [self hashSubjectPublicKeyInfoFromCertificate:remoteCertificate];
                 NSString *publicKeyHashString = [remoteCertificatePublicKeyHash base64EncodedStringWithOptions:0];
-                NSArray *pinnedHashStrings = NSUserDefaults.mme_configuration.mme_certificatePinningConfig[challenge.protectionSpace.host];
+                NSArray *pinnedHashStrings = self.config.certificatePinningConfig[challenge.protectionSpace.host];
                 
                 if ([pinnedHashStrings containsObject:publicKeyHashString]) {
                     dispatch_async(dispatch_get_main_queue(), ^{

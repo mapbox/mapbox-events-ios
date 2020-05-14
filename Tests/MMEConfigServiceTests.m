@@ -16,9 +16,12 @@
 
     NSURLSessionConfiguration* sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
     sessionConfiguration.protocolClasses = @[EventConfigStubProtocol.self];
-    MMENSURLSessionWrapper* session = [[MMENSURLSessionWrapper alloc] initWithConfiguration:sessionConfiguration];
     MMEMockEventConfig* eventConfig = MMEMockEventConfig.oneSecondConfigUpdate;
-    MMEAPIClient* client = [[MMEAPIClient alloc] initWithConfig:eventConfig session:session];
+
+    MMENSURLSessionWrapper* session = [[MMENSURLSessionWrapper alloc] initWithSessionConfiguration:sessionConfiguration
+                                                                                eventConfiguration:eventConfig];
+    MMEAPIClient* client = [[MMEAPIClient alloc] initWithConfig:eventConfig
+                                                        session:session];
 
     XCTestExpectation *expectation = [self expectationWithDescription:@"Config Polling"];
     __block int configLoadCount;

@@ -161,10 +161,11 @@
 
     NSURLSessionConfiguration* sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
     sessionConfiguration.protocolClasses = @[EventConfigStubProtocol.self];
-    MMENSURLSessionWrapper* session = [MMENSURLSessionWrapper.new initWithConfiguration:sessionConfiguration];
+    MMENSURLSessionWrapper* session = [[MMENSURLSessionWrapper alloc] initWithSessionConfiguration:sessionConfiguration
+                                                                                eventConfiguration:[[MMEMockEventConfig alloc] init]];
     MMEMockEventConfig* eventConfig = MMEMockEventConfig.oneSecondConfigUpdate;
 
-    MMEAPIClient* client = [MMEAPIClient.new initWithConfig:eventConfig
+    MMEAPIClient* client = [[MMEAPIClient alloc] initWithConfig:eventConfig
                                                         session:session];
     XCTestExpectation *expectation = [self expectationWithDescription:@"Fetch Event Config"];
 
@@ -202,10 +203,11 @@
 - (void)testPostEvent {
     NSURLSessionConfiguration* sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
     sessionConfiguration.protocolClasses = @[EventStubProtocol.self];
-    MMENSURLSessionWrapper* session = [MMENSURLSessionWrapper.new initWithConfiguration:sessionConfiguration];
     MMEMockEventConfig* eventConfig = MMEMockEventConfig.oneSecondConfigUpdate;
+    MMENSURLSessionWrapper* session = [[MMENSURLSessionWrapper alloc] initWithSessionConfiguration:sessionConfiguration
+                                                                                eventConfiguration:eventConfig]; 
 
-    MMEAPIClient* client = [MMEAPIClient.new initWithConfig:eventConfig
+    MMEAPIClient* client = [[MMEAPIClient alloc] initWithConfig:eventConfig
                                                     session:session];
     XCTestExpectation *expectation = [self expectationWithDescription:@"Post Event"];
     MMEEvent* event = [MMEEvent turnstileEventWithAttributes:@{}];
@@ -274,7 +276,7 @@
 }
 
 - (void) testPostSingleEvent {
-    MMENSURLSessionWrapperFake *wrapper = MMENSURLSessionWrapperFake.new;
+    MMENSURLSessionWrapperFake *wrapper = [[MMENSURLSessionWrapperFake alloc] init];
     self.apiClient.sessionWrapper = wrapper;
     MMEEvent *event = [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-1" commonEventData:nil];
 }

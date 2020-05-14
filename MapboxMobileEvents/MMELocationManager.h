@@ -3,6 +3,7 @@
 #import <CoreLocation/CoreLocation.h>
 
 @protocol MMELocationManagerDelegate;
+@protocol MMEEventConfigProviding;
 @class MMEMetricsManager;
 
 @protocol MMELocationManager <NSObject>
@@ -27,7 +28,8 @@ extern NSString * const MMELocationManagerRegionIdentifier;
 @property (nonatomic, getter=isMetricsEnabledForInUsePermissions) BOOL metricsEnabledForInUsePermissions;
 
 - (instancetype)init NS_UNAVAILABLE;
-- (instancetype)initWithMetricsManager:(MMEMetricsManager*)metricsManager;
+- (instancetype)initWithMetricsManager:(MMEMetricsManager*)metricsManager
+                                config:(id <MMEEventConfigProviding>)config;
 
 - (void)startUpdatingLocation;
 - (void)stopUpdatingLocation;

@@ -228,6 +228,7 @@
 		F44D120F246377E000DF4ED1 /* MMENSURLRequestFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = F44D120B246377E000DF4ED1 /* MMENSURLRequestFactory.m */; };
 		F44D12162463D0BF00DF4ED1 /* MMEMockEventConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = F44D12112463C82400DF4ED1 /* MMEMockEventConfig.m */; };
 		F44D121F2464A5E000DF4ED1 /* MMEAPIClientBlockCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = F44D121E2464A5E000DF4ED1 /* MMEAPIClientBlockCounter.m */; };
+		F466B8E3246D11A80056AB21 /* MMEEventConfigProviding.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = F4913F442453610800C28338 /* MMEEventConfigProviding.h */; };
 		F4684FF42432A1610079B389 /* NSBundle+MMEMobileEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = F4684FF22432A1610079B389 /* NSBundle+MMEMobileEvents.h */; };
 		F4684FF52432A1610079B389 /* NSBundle+MMEMobileEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = F4684FF32432A1610079B389 /* NSBundle+MMEMobileEvents.m */; };
 		F4684FF62432A2770079B389 /* NSBundle+MMEMobileEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = F4684FF32432A1610079B389 /* NSBundle+MMEMobileEvents.m */; };
@@ -241,8 +242,8 @@
 		F4726566246633CD00BD7055 /* MMEConfigService.m in Sources */ = {isa = PBXBuildFile; fileRef = F4726563246633CD00BD7055 /* MMEConfigService.m */; };
 		F4726567246633CD00BD7055 /* MMEConfigService.m in Sources */ = {isa = PBXBuildFile; fileRef = F4726563246633CD00BD7055 /* MMEConfigService.m */; };
 		F47265692466872200BD7055 /* MMEConfigServiceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F47265682466872200BD7055 /* MMEConfigServiceTests.m */; };
-		F4913F452453610800C28338 /* MMEEventConfigProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = F4913F442453610800C28338 /* MMEEventConfigProviding.h */; };
-		F4913F462453610800C28338 /* MMEEventConfigProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = F4913F442453610800C28338 /* MMEEventConfigProviding.h */; };
+		F4913F452453610800C28338 /* MMEEventConfigProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = F4913F442453610800C28338 /* MMEEventConfigProviding.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F4913F462453610800C28338 /* MMEEventConfigProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = F4913F442453610800C28338 /* MMEEventConfigProviding.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F49675E224620F4300F8914D /* NSError+APIClient.h in Headers */ = {isa = PBXBuildFile; fileRef = F49675E024620F4300F8914D /* NSError+APIClient.h */; };
 		F49675E324620F4300F8914D /* NSError+APIClient.h in Headers */ = {isa = PBXBuildFile; fileRef = F49675E024620F4300F8914D /* NSError+APIClient.h */; };
 		F49675E424620F4300F8914D /* NSError+APIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = F49675E124620F4300F8914D /* NSError+APIClient.m */; };
@@ -327,6 +328,7 @@
 			dstPath = include/MapboxMobileEvents;
 			dstSubfolderSpec = 16;
 			files = (
+				F466B8E3246D11A80056AB21 /* MMEEventConfigProviding.h in Copy Headers */,
 				CA0FAA2C237C80C000C9F3C9 /* NSUserDefaults+MMEConfiguration.h in Copy Headers */,
 				4085966A1ED08FA9003BD29D /* MapboxMobileEvents.h in Copy Headers */,
 				408596DA1ED0BF35003BD29D /* MMEConstants.h in Copy Headers */,
@@ -942,6 +944,7 @@
 			files = (
 				9CA75386240EF2DD005C26C9 /* NSUserDefaults+MMEConfiguration.h in Headers */,
 				9CA75387240EF2DD005C26C9 /* MapboxMobileEvents.h in Headers */,
+				F4913F462453610800C28338 /* MMEEventConfigProviding.h in Headers */,
 				9CA75388240EF2DD005C26C9 /* MMEConstants.h in Headers */,
 				9CA75389240EF2DD005C26C9 /* MMEEvent.h in Headers */,
 				9CA7538A240EF2DD005C26C9 /* MMEEventsManager.h in Headers */,
@@ -953,7 +956,6 @@
 				9CA7538F240EF2DD005C26C9 /* NSData+MMEGZIP.h in Headers */,
 				F4312856246A626C004472CE /* MMEPreferences.h in Headers */,
 				F4EAFDFD24538B6500D2B17B /* MMEDependencyProviding.h in Headers */,
-				F4913F462453610800C28338 /* MMEEventConfigProviding.h in Headers */,
 				9CA75390240EF2DD005C26C9 /* MMEUIApplicationWrapper.h in Headers */,
 				9CA75391240EF2DD005C26C9 /* MMEUniqueIdentifier.h in Headers */,
 				9CA75392240EF2DD005C26C9 /* NSString+MMEVersions.h in Headers */,

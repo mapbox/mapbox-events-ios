@@ -6,10 +6,11 @@
 #import "MMEDate.h"
 #import "MMEEventsManager.h"
 #import "MMEReachability.h"
+#import "MMEEventConfigProviding.h"
 
 #import "NSProcessInfo+SystemInfo.h"
 
-#import "NSUserDefaults+MMEConfiguration.h"
+//#import "NSUserDefaults+MMEConfiguration.h"
 #if TARGET_OS_IOS || TARGET_OS_TVOS
 #import "UIKit+MMEMobileEvents.h"
 #import "NSBundle+MMEMobileEvents.h"
@@ -67,6 +68,8 @@
 + (instancetype)eventWithAttributes:(NSDictionary *)attributes {
     NSError *eventError = nil;
     MMEEvent *newEvent = [self eventWithAttributes:attributes error:&eventError];
+
+    // TODO: This side effects makes it difficult to test? Perhaps there's another approach for reporting?
     if (eventError != nil) {
         [MMEEventsManager.sharedManager reportError:eventError];
     }
@@ -106,7 +109,9 @@
     errorAttributes[MMEEventKeyBuildType] = @"release";
 #endif
     errorAttributes[MMEEventKeyIsSilentCrash] = @"yes";
-    errorAttributes[MMEEventSDKIdentifier] = NSUserDefaults.mme_configuration.mme_userAgentString;
+
+    // TODO: Enable this to come from extra parameter or included a suplamental content injected just before sending?
+    errorAttributes[MMEEventSDKIdentifier] = MMEEventsManager.sharedManager.configuration.userAgentString;
     errorAttributes[MMEEventKeyAppID] = (NSBundle.mainBundle.bundleIdentifier ?: @"unknown");
     errorAttributes[MMEEventKeyAppVersion] = [NSString stringWithFormat:@"%@ %@",
         NSBundle.mainBundle.infoDictionary[@"CFBundleShortVersionString"],
@@ -327,7 +332,6 @@
 
 // MARK: - Designated Initializer
 
-
 - (instancetype)init {
     return [self initWithAttributes:MMEEvent.nilAttributes error:nil];
 }
@@ -451,6 +455,9 @@ static NSString * const MMEEventAttributesKey = @"MMEEventAttributes";
         if (encodedVersion > MMEEventVersion2) {
             NSString *errorString = [[NSString alloc] initWithFormat:@"%@ %@ encodedVersion %li > MMEEventVersion %li",
                                      self.name ?: @"nil", NSStringFromClass(self.class), (long)encodedVersion, (long)MMEEventVersion1];
+
+            // TODO: - if this is a nullable type perhaps this could expose an error/exception for reporting outside the init
+            // for known behaviors
             NSError *encodingError = [NSError errorWithDomain:MMEErrorDomain code:MMEErrorEventEncoding userInfo:@{MMEErrorDescriptionKey: errorString}];
             [MMEEventsManager.sharedManager reportError:encodingError];
             return nil;

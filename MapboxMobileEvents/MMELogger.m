@@ -9,7 +9,7 @@
     static dispatch_once_t onceToken;
 
     dispatch_once(&onceToken, ^{
-        _sharedLogger = MMELogger.new;
+        _sharedLogger = [[MMELogger alloc] init];
     });
 
     return _sharedLogger;

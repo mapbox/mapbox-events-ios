@@ -4,20 +4,32 @@
 #import "MMEConstants.h"
 #import "MMEDate.h"
 #import "MMEConfig.h"
+#import "MMELogger.h"
 
 // TODO: Consider moving these constant Definitions
 #import "NSUserDefaults+MMEConfiguration_Private.h"
 
+
+@interface MMEPreferences ()
+@property (nonatomic, strong) NSBundle* bundle;
+@property (nonatomic, strong) NSUserDefaults* userDefaults;
+@end
+
 @implementation MMEPreferences
 
 // MARK: - Initializers
-- (instancetype)initWithBundle:(NSBundle *)bundle
-                     dataStore:(NSUserDefaults *)userDefaults
-{
+
+- (instancetype)init {
+    return [self initWithBundle:NSBundle.mainBundle
+                      dataStore:[[NSUserDefaults alloc] init]];
+}
+
+-(instancetype)initWithBundle:(NSBundle*)bundle
+                    dataStore:(NSUserDefaults*)userDefaults {
     self = [super init];
     if (self) {
-        _bundle = bundle;
-        _userDefaults = userDefaults;
+        self.bundle = bundle;
+        self.userDefaults = userDefaults;
     }
     return self;
 }
@@ -85,7 +97,7 @@
 }
 
 
-- (NSUInteger)flushCount {
+- (NSUInteger)eventFlushCount {
     if ([self.userDefaults objectForKey:MMEEventFlushCount]) {
         return (NSUInteger)[[self.userDefaults objectForKey:MMEEventFlushCount] unsignedIntValue];
     } else {
@@ -93,7 +105,11 @@
     }
 }
 
-- (NSTimeInterval)flushInterval {
+-(void)setEventFlushCount:(NSUInteger)eventFlushCount {
+    [self.userDefaults setInteger:eventFlushCount forKey:MMEEventFlushCount];
+}
+
+- (NSTimeInterval)eventFlushInterval {
     if ([self.userDefaults objectForKey:MMEEventFlushInterval]) {
         return (NSTimeInterval)[self.userDefaults doubleForKey:MMEEventFlushInterval];
     } else {
@@ -352,6 +368,8 @@
 // MARK: - Location Collection
 
 - (BOOL)isCollectionEnabled {
+
+    // By inverting this value, we default to collection enabled
     BOOL collectionEnabled = ![self.userDefaults boolForKey:MMECollectionDisabled];
 
 #if TARGET_OS_SIMULATOR

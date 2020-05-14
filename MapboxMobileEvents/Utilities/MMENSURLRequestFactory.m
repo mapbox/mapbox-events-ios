@@ -90,7 +90,7 @@ static NSString * const MMEMapboxAgent = @"X-Mapbox-Agent";
     // Construct Query Params vis Query Items
     NSURLComponents *components = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:true];
     components.queryItems = @[
-        [NSURLQueryItem queryItemWithName:@"access_token" value: self.config.mme_accessToken]
+        [NSURLQueryItem queryItemWithName:@"access_token" value: self.config.accessToken]
     ];
 
     url = components.URL;
@@ -105,8 +105,8 @@ static NSString * const MMEMapboxAgent = @"X-Mapbox-Agent";
     [request setAllHTTPHeaderFields:headers];
 
     // Set UserAgent Separately to ensure not overwritted
-    [request setValue:self.config.mme_userAgentString forHTTPHeaderField:MMEMapboxAgent];
-    [request setValue:self.config.mme_legacyUserAgentString forHTTPHeaderField:MMEAPIClientHeaderFieldUserAgentKey];
+    [request setValue:self.config.userAgentString forHTTPHeaderField:MMEMapboxAgent];
+    [request setValue:self.config.legacyUserAgentString forHTTPHeaderField:MMEAPIClientHeaderFieldUserAgentKey];
 
     if (data) {
         [request setHTTPBody:data];

@@ -5,6 +5,7 @@
 #import "NSUserDefaults+MMEConfiguration_Private.h"
 #import "MMEMetricsManager.h"
 #import "MMELogger.h"
+#import "MMEMockEventConfig.h"
 
 @interface MMELocationManagerTests : XCTestCase <MMELocationManagerDelegate>
 
@@ -25,8 +26,11 @@
     [NSUserDefaults mme_resetConfiguration];
     
     self.locationManager = [[CLLocationManager alloc] init];
-    MMEMetricsManager * metricsManager = [[MMEMetricsManager alloc] initWithLogger:[[MMELogger alloc] init]];
-    self.mme_locationManager = [[MMELocationManager alloc] initWithMetricsManager:metricsManager];
+    MMEMockEventConfig* config = [[MMEMockEventConfig alloc] init];
+    MMEMetricsManager * metricsManager = [[MMEMetricsManager alloc] initWithLogger:[[MMELogger alloc] init]
+                                                                            config:config];
+    self.mme_locationManager = [[MMELocationManager alloc] initWithMetricsManager:metricsManager
+                                                                           config:config];
 
 
     self.mme_locationManager.locationManager = self.locationManager;

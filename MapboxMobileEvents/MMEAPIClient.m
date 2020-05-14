@@ -41,9 +41,12 @@ int const kMMEMaxRequestCount = 1000;
 // MARK: - Initializers
 
 - (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config {
+
+    MMENSURLSessionWrapper* session = [[MMENSURLSessionWrapper alloc] initWithSessionConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]
+                                                                                eventConfiguration:config];
     return [self initWithConfig:config
                  requestFactory:[[MMENSURLRequestFactory alloc] initWithConfig:config]
-                        session:[[MMENSURLSessionWrapper alloc] init]
+                        session:session
                         onError:^(NSError * _Nonnull error) {}
                 onBytesReceived:^(NSUInteger bytes) {} onEventQueueUpdate:^(NSArray * _Nonnull eventQueue) {}
              onEventCountUpdate:^(NSUInteger eventCount, NSURLRequest * _Nullable request, NSError * _Nullable error) {}
@@ -56,8 +59,8 @@ int const kMMEMaxRequestCount = 1000;
                        session:(MMENSURLSessionWrapper*)session {
 
     return [self initWithConfig:config
-                 requestFactory:[[MMENSURLRequestFactory alloc]
-                                 initWithConfig:config] session:session
+                 requestFactory:[[MMENSURLRequestFactory alloc] initWithConfig:config]
+                        session:session
                         onError:^(NSError * _Nonnull error) {}
                 onBytesReceived:^(NSUInteger bytes) {} onEventQueueUpdate:^(NSArray * _Nonnull eventQueue) {}
              onEventCountUpdate:^(NSUInteger eventCount, NSURLRequest * _Nullable request, NSError * _Nullable error) {}
@@ -73,9 +76,13 @@ int const kMMEMaxRequestCount = 1000;
       onGenerateTelemetryEvent: (OnGenerateTelemetryEvent)onGenerateTelemetryEvent
                     onLogEvent: (OnLogEvent)onLogEvent {
 
+    NSURLSessionConfiguration* sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
+    MMENSURLSessionWrapper* session = [[MMENSURLSessionWrapper alloc] initWithSessionConfiguration:sessionConfiguration
+                                                                                eventConfiguration:config];
+    
     return [self initWithConfig:config
                  requestFactory:[[MMENSURLRequestFactory alloc] initWithConfig:config]
-                        session:[[MMENSURLSessionWrapper alloc] init]
+                        session:session
                         onError:onError
                 onBytesReceived:onBytesReceived
              onEventQueueUpdate:onEventQueueUpdate
@@ -193,7 +200,7 @@ int const kMMEMaxRequestCount = 1000;
 
     NSError* jsonError = nil;
     NSURLRequest* request = [self.requestFactory urlRequestWithMethod:MMEAPIClientHTTPMethodPost
-                                                              baseURL:self.config.mme_eventsServiceURL
+                                                              baseURL:self.config.eventsServiceURL
                                                                  path:MMEAPIClientEventsPath
                                                     additionalHeaders:additionalHeaders
                                                            shouldGZIP: events.count >= 2
@@ -248,7 +255,7 @@ int const kMMEMaxRequestCount = 1000;
 - (nullable NSURLRequest *)eventConfigurationRequest {
     NSError *jsonError = nil;
     return [self.requestFactory urlRequestWithMethod:MMEAPIClientHTTPMethodPost
-                                             baseURL:self.config.mme_configServiceURL
+                                             baseURL:self.config.configServiceURL
                                                 path:MMEAPIClientEventsConfigPath
                                    additionalHeaders:@{}
                                           shouldGZIP: NO
@@ -318,7 +325,7 @@ int const kMMEMaxRequestCount = 1000;
     NSString *boundary = NSUUID.UUID.UUIDString;
     NSData *binaryData = [self createBodyWithBoundary:boundary metadata:metadata filePaths:filePaths];
     NSURLRequest* request = [self.requestFactory multipartURLRequestWithMethod:MMEAPIClientHTTPMethodPost
-                                                                       baseURL:self.config.mme_eventsServiceURL
+                                                                       baseURL:self.config.eventsServiceURL
                                                                           path:MMEAPIClientAttachmentsPath
                                                              additionalHeaders:@{}
                                                                           data:binaryData

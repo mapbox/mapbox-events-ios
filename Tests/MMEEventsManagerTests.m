@@ -16,6 +16,12 @@
 #import "MMEAPIClientFake.h"
 #import "MMELocationManagerFake.h"
 #import "MMEUIApplicationWrapperFake.h"
+#import "MMEPreferences.h"
+#import "MMELogger.h"
+#import "MMEMetricsManager.h"
+#import "MMEDispatchManager.h"
+#import "MMEEventsManager_Private.h"
+#import "MMEBundleInfoFake.h"
 
 
 @interface MMEEventsManager (Tests)
@@ -29,7 +35,6 @@
 @property (nonatomic) id<MMEUIApplicationWrapper> application;
 @property (nonatomic) UIBackgroundTaskIdentifier backgroundTaskIdentifier;
 
-- (instancetype)initWithDefaults;
 - (void)pushEvent:(MMEEvent *)event;
 - (void)processAuthorizationStatus:(CLAuthorizationStatus)authStatus andApplicationState:(UIApplicationState)applicationState;
 - (void)powerStateDidChange:(NSNotification *)notification;
@@ -40,24 +45,63 @@
 
 @end
 
+@interface MMEPreferences (Tests)
+-(void)setEventFlushCount:(NSUInteger)eventFlushCount;
+@end
+
 @interface MMEEventsManagerTests : XCTestCase
-@property (nonatomic) MMEEventsManager *eventsManager;
+@property (nonatomic, strong) MMEPreferences* preferences;
+@property (nonatomic, strong) MMEEventsManager* eventsManager;
 
 @end
 
 @implementation MMEEventsManagerTests
 
 - (void)setUp {
-    self.eventsManager = [[MMEEventsManager alloc] initWithDefaults];
-    self.eventsManager.application = [[MMEUIApplicationWrapperFake alloc] init];
-        
-    [NSUserDefaults.mme_configuration mme_registerDefaults];
-    [NSUserDefaults.mme_configuration mme_setAccessToken:@"access-token"];
-    [NSUserDefaults.mme_configuration mme_setIsCollectionEnabled:YES];
+
+    MMELogger* logger = [[MMELogger alloc] init];
+
+    // Initialize With Default Preferences
+    NSUserDefaults* userDefaults = NSUserDefaults.mme_configuration;
+    [userDefaults setPersistentDomain:@{} forName:MMEConfigurationDomain];
+    [userDefaults setVolatileDomain:@{} forName:MMEConfigurationVolatileDomain];
+
+    self.preferences = [[MMEPreferences alloc] initWithBundle:[MMEBundleInfoFake new]
+                                                    dataStore:userDefaults];
+
+    MMEMetricsManager* metricsManager = [[MMEMetricsManager alloc] initWithLogger:logger config:self.preferences];
+
+
+    self.preferences.accessToken = @"access-token";
+    self.preferences.isCollectionEnabled = YES;
+
+    self.eventsManager = [[MMEEventsManager alloc] initWithPreferences:self.preferences
+                                                      uniqueIdentifier:[[MMEUniqueIdentifier alloc] initWithTimeInterval:self.preferences.identifierRotationInterval]
+                                                            application:[[MMEUIApplicationWrapperFake alloc] init]
+                                                        metricsManager:metricsManager
+                                                       dispatchManager:[[MMEDispatchManager alloc] init]
+                                                                logger:logger];
+
 }
 
 - (void)tearDown {
-    [NSUserDefaults mme_resetConfiguration];
+
+}
+
+- (void)testAccessTokenSetter {
+    self.preferences.accessToken = @"Foo";
+    XCTAssertEqualObjects(self.preferences.accessToken, @"Foo");
+
+    self.preferences.accessToken = @"Bar";
+    XCTAssertEqualObjects(self.preferences.accessToken, @"Bar");
+}
+
+- (void)testIsCollectionSetter {
+    self.preferences.isCollectionEnabled = NO;
+    XCTAssertEqual(self.preferences.isCollectionEnabled, NO);
+
+    self.preferences.isCollectionEnabled = YES;
+    XCTAssertEqual(self.preferences.isCollectionEnabled, YES);
 }
 
 - (void)testPausesWithWhenInUseAuthAndBackgrounded {
@@ -113,6 +157,7 @@
     self.eventsManager.paused = NO;
     [self.eventsManager enqueueEventWithName:MMEEventTypeMapLoad];
     XCTAssert(self.eventsManager.eventQueue.count > 0);
+
     [self.eventsManager pauseOrResumeMetricsCollectionIfRequired];
     XCTAssert(self.eventsManager.eventQueue.count == 0);
     XCTAssert(self.eventsManager.paused = YES);
@@ -127,9 +172,9 @@
 
 - (void)testEventCountThresholdReached {
     self.eventsManager.paused = NO;
-    
-    [NSUserDefaults.mme_configuration setObject:@2 forKey:MMEEventFlushCount];
-    
+
+    [self.preferences setEventFlushCount:2];
+
     CLLocation *location = [[CLLocation alloc] initWithLatitude:0.0 longitude:0.0];
     
     MMEMapboxEventAttributes *eventAttributes = @{
@@ -143,8 +188,9 @@
                             
     [self.eventsManager pushEvent:locationEvent];
     XCTAssert(self.eventsManager.eventQueue.count > 0);
+
     [self.eventsManager pushEvent:locationEvent];
-    XCTAssert(self.eventsManager.eventQueue.count == 0);
+    XCTAssertEqual(self.eventsManager.eventQueue.count, 0);
 }
 
 - (void)testTimerReachedWithEventQueued {
@@ -167,74 +213,80 @@
 
 - (void)testCollectionNotEnabledWhilePausedAndAlwaysAuth {
     self.eventsManager.paused = YES;
-    
-    [NSUserDefaults.mme_configuration mme_setIsCollectionEnabled:NO];
+
+    self.preferences.isCollectionEnabled = NO;
+
+    // This is an asynchronous task
     [self.eventsManager processAuthorizationStatus:kCLAuthorizationStatusAuthorizedAlways andApplicationState:UIApplicationStateActive];
-    
-    XCTAssert(self.eventsManager.paused == YES);
+
+    // TODO: - Something is going on here??? It is not deterministic? Why?
+    XCTAssertTrue(self.eventsManager.paused);
 }
+
+
 
 - (void)testCollectionNotEnabledWhileNOTPausedAndAlwaysAuth {
     self.eventsManager.paused = NO;
-    
-    [NSUserDefaults.mme_configuration mme_setIsCollectionEnabled:NO];
+
+    self.preferences.isCollectionEnabled = NO;
     [self.eventsManager processAuthorizationStatus:kCLAuthorizationStatusAuthorizedAlways andApplicationState:UIApplicationStateActive];
     
-    XCTAssert(self.eventsManager.paused == YES);
+    XCTAssertTrue(self.eventsManager.paused);
 }
 
 - (void)testCollectionNotEnabledWhilePausedAndAlwaysAuthAndBackgrounded {
     self.eventsManager.paused = YES;
-    
-    [NSUserDefaults.mme_configuration mme_setIsCollectionEnabled:NO];
+
+    self.preferences.isCollectionEnabled = NO;
     [self.eventsManager processAuthorizationStatus:kCLAuthorizationStatusAuthorizedAlways andApplicationState:UIApplicationStateBackground];
     
-    XCTAssert(self.eventsManager.paused == YES);
+    XCTAssertTrue(self.eventsManager.paused);
 }
 
 - (void)testCollectionNotEnabledWhileNOTPausedAndAlwaysAuthAndBackgrounded {
     self.eventsManager.paused = NO;
     
-    [NSUserDefaults.mme_configuration mme_setIsCollectionEnabled:NO];
+    self.preferences.isCollectionEnabled = NO;
     [self.eventsManager processAuthorizationStatus:kCLAuthorizationStatusAuthorizedAlways andApplicationState:UIApplicationStateBackground];
     
-    XCTAssert(self.eventsManager.paused == YES);
+    XCTAssertTrue(self.eventsManager.paused);
 }
 
 - (void)testCollectionNotEnabledWhilePausedAndWhenInUseAuth {
     self.eventsManager.paused = YES;
     
-    [NSUserDefaults.mme_configuration mme_setIsCollectionEnabled:NO];
+    self.preferences.isCollectionEnabled = NO;
+
     [self.eventsManager processAuthorizationStatus:kCLAuthorizationStatusAuthorizedWhenInUse andApplicationState:UIApplicationStateActive];
     
-    XCTAssert(self.eventsManager.paused == YES);
+    XCTAssertTrue(self.eventsManager.paused);
 }
 
 - (void)testCollectionNotEnabledWhileNOTPausedAndWhenInUseAuth {
     self.eventsManager.paused = NO;
     
-    [NSUserDefaults.mme_configuration mme_setIsCollectionEnabled:NO];
+    self.preferences.isCollectionEnabled = NO;
     [self.eventsManager processAuthorizationStatus:kCLAuthorizationStatusAuthorizedWhenInUse andApplicationState:UIApplicationStateActive];
     
-    XCTAssert(self.eventsManager.paused == YES);
+    XCTAssertTrue(self.eventsManager.paused);
 }
 
 - (void)testCollectionNotEnabledWhilePausedAndWhenInUseAuthAndBackgrounded {
     self.eventsManager.paused = YES;
     
-    [NSUserDefaults.mme_configuration mme_setIsCollectionEnabled:NO];
+    self.preferences.isCollectionEnabled = NO;
     [self.eventsManager processAuthorizationStatus:kCLAuthorizationStatusAuthorizedWhenInUse andApplicationState:UIApplicationStateBackground];
     
-    XCTAssert(self.eventsManager.paused == YES);
+    XCTAssertTrue(self.eventsManager.paused);
 }
 
 - (void)testCollectionNotEnabledWhileNOTPausedAndWhenInUseAuthAndBackgrounded {
     self.eventsManager.paused = NO;
     
-    [NSUserDefaults.mme_configuration mme_setIsCollectionEnabled:NO];
+    self.preferences.isCollectionEnabled = NO;
     [self.eventsManager processAuthorizationStatus:kCLAuthorizationStatusAuthorizedWhenInUse andApplicationState:UIApplicationStateBackground];
     
-    XCTAssert(self.eventsManager.paused == YES);
+    XCTAssertTrue(self.eventsManager.paused);
 }
 
 - (void)testEventsFlushWhenCollectionIsDisabled {
@@ -254,11 +306,11 @@
     
     self.eventsManager.paused = NO;
     
-    [NSUserDefaults.mme_configuration mme_setIsCollectionEnabled:NO];
-    
+    self.preferences.isCollectionEnabled = NO;
+
     [self.eventsManager processAuthorizationStatus:kCLAuthorizationStatusAuthorizedAlways andApplicationState:UIApplicationStateActive];
-    XCTAssert(self.eventsManager.paused == YES);
-    XCTAssert(self.eventsManager.eventQueue.count == 0);
+    XCTAssertTrue(self.eventsManager.paused);
+    XCTAssertEqual(self.eventsManager.eventQueue.count, 0);
 }
 
 - (void)testPauseOrResumeFlushInBackground {
@@ -289,14 +341,13 @@
 - (void)testSendsTurnstileWhenCollectionDisabled {
     XCTAssert(self.eventsManager.nextTurnstileSendDate == nil);
 
-    NSUserDefaults.mme_configuration.mme_isCollectionEnabled = NO; // on device or in simulator
-    
+    self.preferences.isCollectionEnabled = NO; // on device or in simulator
+    self.preferences.accessToken = @"access-token";
+    self.preferences.legacyUserAgentBase = @"user-agent-base";
+    self.preferences.legacyHostSDKVersion = @"host-sdk-version";
+
     MMEAPIClientFake *fakeAPIClient = [[MMEAPIClientFake alloc] init];
-    
-    NSUserDefaults.mme_configuration.mme_accessToken = @"access-token";
-    NSUserDefaults.mme_configuration.mme_legacyUserAgentBase = @"user-agent-base";
-    NSUserDefaults.mme_configuration.mme_legacyHostSDKVersion = @"host-sdk-version";
-    
+
     self.eventsManager.apiClient = fakeAPIClient;
     
     self.eventsManager.nextTurnstileSendDate = MMEDate.distantPast;
@@ -310,13 +361,12 @@
 - (void)testSendsTurnstileWhenCollectionEnabled {
     XCTAssert(self.eventsManager.nextTurnstileSendDate == nil);
 
-    NSUserDefaults.mme_configuration.mme_isCollectionEnabled = YES; // on device or in simulator
-    
+    self.preferences.isCollectionEnabled = YES; // on device or in simulator
     MMEAPIClientFake *fakeAPIClient = [[MMEAPIClientFake alloc] init];
-    
-    NSUserDefaults.mme_configuration.mme_accessToken = @"access-token";
-    NSUserDefaults.mme_configuration.mme_legacyUserAgentBase = @"user-agent-base";
-    NSUserDefaults.mme_configuration.mme_legacyHostSDKVersion = @"host-sdk-version";
+
+    self.preferences.accessToken = @"access-token";
+    self.preferences.legacyUserAgentBase = @"user-agent-base";
+    self.preferences.legacyHostSDKVersion = @"host-sdk-version";
     
     self.eventsManager.apiClient = fakeAPIClient;
     
@@ -325,19 +375,19 @@
     [self.eventsManager sendTurnstileEvent];
     
     XCTAssert([(MMETestStub*)self.eventsManager.apiClient received:@selector(postEvent:completionHandler:)]);
-    XCTAssert(self.eventsManager.eventQueue.count == 0);
+    XCTAssertEqual(self.eventsManager.eventQueue.count, 0);
 }
 
 - (void)testDoesNotSendTurnstileWithFutureSendDateAndCollectionEnabled {
     XCTAssert(self.eventsManager.nextTurnstileSendDate == nil);
 
-    NSUserDefaults.mme_configuration.mme_isCollectionEnabled = YES; // on device or in simulator
-    
+    self.preferences.isCollectionEnabled = YES; // on device or in simulator
+
     MMEAPIClientFake *fakeAPIClient = [[MMEAPIClientFake alloc] init];
-    
-    NSUserDefaults.mme_configuration.mme_accessToken = @"access-token";
-    NSUserDefaults.mme_configuration.mme_legacyUserAgentBase = @"user-agent-base";
-    NSUserDefaults.mme_configuration.mme_legacyHostSDKVersion = @"host-sdk-version";
+
+    self.preferences.accessToken = @"access-token";
+    self.preferences.legacyUserAgentBase = @"user-agent-base";
+    self.preferences.legacyHostSDKVersion = @"host-sdk-version";
     
     self.eventsManager.apiClient = fakeAPIClient;
     
@@ -346,26 +396,28 @@
     [self.eventsManager sendTurnstileEvent];
     
     XCTAssertFalse([(MMETestStub*)self.eventsManager.apiClient received:@selector(postEvent:completionHandler:)]);
-    XCTAssert(self.eventsManager.eventQueue.count == 0);
+    XCTAssertEqual(self.eventsManager.eventQueue.count, 0);
 }
 
 - (void)testDisableLocationMetrics {
-    NSUserDefaults.mme_configuration.mme_isCollectionEnabled = YES;
-    
+    self.preferences.isCollectionEnabled = YES;
+
     [self.eventsManager disableLocationMetrics];
-    XCTAssertFalse(NSUserDefaults.mme_configuration.mme_isCollectionEnabled);
+    XCTAssertFalse(self.preferences.isCollectionEnabled);
 }
 
 - (void)testLowPowerMode {
     XCTestExpectation *lowPowerCompletionExpectation = [self expectationWithDescription:@"It should flush and pause"];
-    [NSUserDefaults.mme_configuration mme_setIsCollectionEnabled:YES];
+
+    // If enabled and paused, it appears as though that kicks off the flow again?
+    self.preferences.isCollectionEnabled = YES;
     self.eventsManager.paused = NO;
     
     CLLocation *location = [[CLLocation alloc] initWithLatitude:0.0 longitude:0.0];
     CLLocation *location2 = [[CLLocation alloc] initWithLatitude:0.001 longitude:0.001];
-    
+
     [self.eventsManager locationManager:self.eventsManager.locationManager didUpdateLocations:@[location, location2]];
-    XCTAssert(self.eventsManager.eventQueue.count == 2);
+    XCTAssertEqual(self.eventsManager.eventQueue.count, 2);
 
     //simulating low power mode
     [self.eventsManager powerStateDidChange:nil];
@@ -377,8 +429,8 @@
 
     [self waitForExpectations:@[lowPowerCompletionExpectation] timeout:1];
 
-    XCTAssert(self.eventsManager.eventQueue.count == 0);
-    XCTAssert(self.eventsManager.paused == YES);
+    XCTAssertEqual(self.eventsManager.eventQueue.count, 0);
+    XCTAssertTrue(self.eventsManager.paused);
 }
 
 - (void)testQueueLocationEvents {
@@ -386,7 +438,7 @@
     CLLocation *location2 = [[CLLocation alloc] initWithLatitude:0.001 longitude:0.001];
     
     [self.eventsManager locationManager:self.eventsManager.locationManager didUpdateLocations:@[location, location2]];
-    XCTAssert(self.eventsManager.eventQueue.count == 2);
+    XCTAssertEqual(self.eventsManager.eventQueue.count, 2);
 }
 
 

@@ -10,6 +10,7 @@
 #import "MMECertPin.h"
 #import "MMEEvent.h"
 #import "MMEEventsManager.h"
+#import "MMEEventsManager_Private.h"
 #import "MMENSURLSessionWrapper.h"
 
 #import "MMEServiceFixture.h"
@@ -17,6 +18,12 @@
 
 #import "NSUserDefaults+MMEConfiguration.h"
 #import "NSUserDefaults+MMEConfiguration_Private.h"
+#import "MMEPreferences.h"
+#import "MMELogger.h"
+#import "MMEMetricsManager.h"
+#import "MMEUniqueIdentifier.h"
+#import "MMEUIApplicationWrapperFake.h"
+#import "MMEDispatchManager.h"
 
 @interface MMENSURLSessionWrapper (MMECertPinTests)
 
@@ -40,6 +47,7 @@
 @property(nonatomic) MMEEventsConfiguration *configuration;
 @property(nonatomic) NSArray *blacklistFake;
 @property(nonatomic) MMEAPIClient<MMEAPIClient> *apiClient;
+@property(nonatomic, strong) MMEEventsManager* eventsManager;
 
 @end
 
@@ -48,20 +56,32 @@
 @implementation MMECertPinTests
 
 - (void)setUp {
-    [MMEEventsManager.sharedManager initializeWithAccessToken:@"test-access-token" userAgentBase:@"user-agent-base-sucks" hostSDKVersion:@"1.2.3"];
-    
-    // reset configuration, set a test access token
-    [NSUserDefaults mme_resetConfiguration];
-    NSUserDefaults.mme_configuration.mme_accessToken = @"test-access-token";
+    MMELogger* logger = [[MMELogger alloc] init];
 
-    // inject our config service URL from the MMEService Fixtures
+    // Initialize With Default Preferences
+    // Use new Bundle, as well as separate UserDefaults instance to ensure main bundle Info.plist
+    // does not interfear with test
     NSMutableDictionary *infoDictionary = NSBundle.mainBundle.infoDictionary.mutableCopy;
     infoDictionary[MMEConfigServiceURL] = MMEServiceFixture.serviceURL;
     MMEBundleInfoFake *fakeBundle = [MMEBundleInfoFake new];
-    fakeBundle.infoDictionaryFake = infoDictionary;
-    NSBundle.mme_mainBundle = fakeBundle;
 
-    self.apiClient = MMEEventsManager.sharedManager.apiClient;
+    MMEPreferences* preferences = [[MMEPreferences alloc] initWithBundle:fakeBundle
+                                                               dataStore:NSUserDefaults.mme_configuration];
+
+    MMEMetricsManager* metricsManager = [[MMEMetricsManager alloc] initWithLogger:logger config:preferences];
+
+
+    self.eventsManager = [[MMEEventsManager alloc] initWithPreferences:preferences
+                                                      uniqueIdentifier:[[MMEUniqueIdentifier alloc] initWithTimeInterval:preferences.identifierRotationInterval]
+                                                           application:[[MMEUIApplicationWrapperFake alloc] init]
+                                                        metricsManager:metricsManager
+                                                       dispatchManager:[[MMEDispatchManager alloc] init]
+                                                                logger:logger];
+
+    [self.eventsManager startEventsManagerWithToken:@"test-access-token"
+                                      userAgentBase:@"user-agent-base-sucks"
+                                     hostSDKVersion:@"1.2.3"];
+    self.apiClient = self.eventsManager.apiClient;
 }
 
 - (void)testCheckCNHashCount {

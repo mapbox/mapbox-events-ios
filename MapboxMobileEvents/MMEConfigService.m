@@ -32,7 +32,7 @@
     // Configure Timer Polling
     if (@available(iOS 10.0, macos 10.12, tvOS 10.0, watchOS 3.0, *)) {
         self.timer = [NSTimer
-                      scheduledTimerWithTimeInterval:self.config.mme_configUpdateInterval
+                      scheduledTimerWithTimeInterval:self.config.configUpdateInterval
                       repeats:YES
                       block:^(NSTimer * _Nonnull timer) {
 
@@ -54,8 +54,8 @@
 
         // Manually Fetch if last updated date is older than our update interval
         // TODO: - Given we're setting our time interval upon initialization, it could be quite a ways in the future. I wonder if we should fetch on init, then set a timer to repeat upon completion? Or perhaps set a timer based on a fire date calculated from last update?
-        if (!self.config.mme_configUpdateDate ||
-            (fabs(self.config.mme_configUpdateDate.timeIntervalSinceNow) > self.config.mme_configUpdateInterval)) {
+        if (!self.config.configUpdateDate ||
+            (fabs(self.config.configUpdateDate.timeIntervalSinceNow) > self.config.configUpdateInterval)) {
             [self.timer fire];
         }
     }

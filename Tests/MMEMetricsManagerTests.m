@@ -4,6 +4,7 @@
 #import "MMEEvent.h"
 #import "MMEConstants.h"
 #import "MMELogger.h"
+#import "MMEMockEventConfig.h"
 
 @interface MMEMetricsManager (Tests)
 
@@ -23,7 +24,8 @@
 @implementation MMEMetricsManagerTests
 
 - (void)setUp {
-    self.metricsManager = [[MMEMetricsManager alloc] initWithLogger:[[MMELogger alloc] init]];
+    self.metricsManager = [[MMEMetricsManager alloc] initWithLogger:[[MMELogger alloc] init]
+                                                             config:[[MMEMockEventConfig alloc] init]];
     
     self.dateFormatter = [[NSDateFormatter alloc] init];
     self.dateFormatter.dateFormat = @"yyyy-MM-dd";

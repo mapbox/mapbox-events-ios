@@ -3,13 +3,14 @@
 #import "MMEConstants.h"
 #import "MMEServiceFixture.h"
 #import "MMEDate.h"
+#import "MMEEventConfigProviding.h"
 
 @implementation MMEMockEventConfig
 
 - (instancetype)init {
     return [self initWithStartupDelay:MMEStartupDelayDefault
                       eventFlushCount:MMEEventFlushCountDefault
-                        flushInterval:MMEEventFlushIntervalDefault
+                   eventFlushInterval:MMEEventFlushIntervalDefault
            identifierRotationInterval:MMEIdentifierRotationIntervalDefault
                  configUpdateInterval:MMEConfigurationUpdateIntervalDefault
                      lastConfigUpdate:[MMEDate dateWithDate:NSDate.distantPast]
@@ -33,8 +34,8 @@
 }
 
 - (instancetype)initWithStartupDelay:(NSTimeInterval)startupDelay
-                     eventFlushCount:(NSUInteger)flushCount
-                       flushInterval:(NSUInteger)flushInterval
+                     eventFlushCount:(NSUInteger)eventFlushCount
+                  eventFlushInterval:(NSUInteger)eventFlushInterval
           identifierRotationInterval:(NSTimeInterval)identifierRotationInterval
                 configUpdateInterval:(NSTimeInterval)configUpdateInterval
                     lastConfigUpdate:(MMEDate*)lastConfigUpdate
@@ -57,29 +58,29 @@
             certificatePinningConfig:(NSDictionary<NSString*, NSArray<NSString*>*>*)certificatePinningConfig {
 
     if (self = [super init]) {
-        _mme_startupDelay = startupDelay;
-        _mme_eventFlushCount = flushCount;
-        _mme_eventFlushInterval = flushInterval;
-        _mme_identifierRotationInterval = identifierRotationInterval;
-        _mme_configUpdateInterval = configUpdateInterval;
-        _mme_configUpdateDate = lastConfigUpdate;
-        _mme_eventTag = [eventTag copy];
-        _mme_accessToken = [accessToken copy];
-        _mme_legacyUserAgentBase = [legacyUserAgentBase copy];
-        _mme_legacyHostSDKVersion = [legacyHostSDKVersion copy];
-        _mme_isCNRegion = isChinaRegion;
-        _mme_APIServiceURL = [apiURL copy];
-        _mme_eventsServiceURL = [eventsURL copy];
-        _mme_configServiceURL = [configURL copy];
-        _mme_userAgentString = [userAgent copy];
-        _mme_legacyUserAgentString = [legacyUserAgent copy];
-        _mme_isCollectionEnabled = isCollectionEnabled;
-        _mme_isCollectionEnabledInSimulator = isCollectionEnabledInSimulator;
-        _mme_isCollectionEnabledInBackground = isCollectionEnabledInBackground;
-        _mme_backgroundStartupDelay = backgroundStartupDelay;
-        _mme_backgroundGeofence = backgroundGeofence;
-        _mme_certificateRevocationList = [certificationRevocationList copy];
-        _mme_certificatePinningConfig = [certificatePinningConfig copy];
+        self.startupDelay = startupDelay;
+        self.eventFlushCount = eventFlushCount;
+        self.eventFlushInterval = eventFlushInterval;
+        self.identifierRotationInterval = identifierRotationInterval;
+        self.configUpdateInterval = configUpdateInterval;
+        self.configUpdateDate = lastConfigUpdate;
+        self.eventTag = eventTag;
+        self.accessToken = accessToken;
+        self.legacyUserAgentBase = legacyUserAgentBase;
+        self.legacyHostSDKVersion = legacyHostSDKVersion;
+        self.isChinaRegion = isChinaRegion;
+        self.apiServiceURL = apiURL;
+        self.eventsServiceURL = eventsURL;
+        self.configServiceURL = configURL;
+        self.userAgentString = userAgent;
+        self.legacyUserAgentString = legacyUserAgent;
+        self.isCollectionEnabled = isCollectionEnabled;
+        self.isCollectionEnabledInSimulator = isCollectionEnabledInSimulator;
+        self.isCollectionEnabledInBackground = isCollectionEnabledInBackground;
+        self.backgroundStartupDelay = backgroundStartupDelay;
+        self.backgroundGeofence = backgroundGeofence;
+        self.certificateRevocationList = certificationRevocationList;
+        self.certificatePinningConfig = certificatePinningConfig;
     }
     return self;
 }
@@ -87,7 +88,7 @@
 + (instancetype)oneSecondConfigUpdate {
     return [[MMEMockEventConfig alloc] initWithStartupDelay:MMEStartupDelayDefault
                                             eventFlushCount:MMEEventFlushCountDefault
-                                              flushInterval:MMEEventFlushIntervalDefault
+                                         eventFlushInterval:MMEEventFlushIntervalDefault
                                  identifierRotationInterval:MMEIdentifierRotationIntervalDefault
                                        configUpdateInterval:1
                                            lastConfigUpdate:[MMEDate dateWithDate:NSDate.distantPast]

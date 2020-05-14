@@ -3,6 +3,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class MMECertPin;
+@protocol MMEEventConfigProviding;
 
 @protocol MMENSURLSessionWrapper <NSObject>
 
@@ -17,16 +18,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface MMENSURLSessionWrapper : NSObject <MMENSURLSessionWrapper, NSURLSessionDelegate>
 
-/*! @Brief Initializes Default instance*/
-- (instancetype)init;
+- (instancetype)init NS_UNAVAILABLE;
 
 /*! @Brief Initializes instance with configuration */
-- (instancetype)initWithConfiguration:(NSURLSessionConfiguration*)configuration;
+- (instancetype)initWithSessionConfiguration:(NSURLSessionConfiguration*)sessionConfiguration
+                          eventConfiguration:(id <MMEEventConfigProviding>)eventConfiguration;
 
 /*! @Brief Designated Initializer */
 - (instancetype)initWithConfiguration:(NSURLSessionConfiguration*)configuration
                       completionQueue:(dispatch_queue_t)queue
-                              certPin:(MMECertPin*)certPin;
+                              certPin:(MMECertPin*)certPin NS_DESIGNATED_INITIALIZER;
 
 @end
 

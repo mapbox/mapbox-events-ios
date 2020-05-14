@@ -81,7 +81,7 @@ typedef void(^OnLogEvent)(MMEEvent* event);
             onEventQueueUpdate:(OnEventQueueUpdate)onEventQueueUpdate
             onEventCountUpdate:(OnEventCountUpdate)onEventCountUpdate
       onGenerateTelemetryEvent:(OnGenerateTelemetryEvent)onGenerateTelemetryEvent
-                    onLogEvent:(OnLogEvent)onLogEvent;
+                    onLogEvent:(OnLogEvent)onLogEvent NS_DESIGNATED_INITIALIZER;
 
 
 // MARK: - Requests

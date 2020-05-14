@@ -26,6 +26,7 @@
 #import "NSProcessInfo+SystemInfo.h"
 #import "MMEConfigService.h"
 #import "NSUserDefaults+MMEConfiguration_Private.h"
+#import "MMEPreferences.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -38,6 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic) id<MMELocationManager> locationManager;
 @property (nonatomic) NS_MUTABLE_ARRAY_OF(MMEEvent *) *eventQueue;
+@property (nonatomic) MMEPreferences* preferences;
 @property (nonatomic) id<MMEUniqueIdentifer> uniqueIdentifer;
 @property (nonatomic) NSDate *nextTurnstileSendDate;
 @property (nonatomic) NSTimer *queueTimer;
@@ -68,21 +70,47 @@ NS_ASSUME_NONNULL_BEGIN
 
 /*! @Brief Initializes new instance of EventsManager with default values */
 - (instancetype)initWithDefaults {
+    MMELogger* logger = [[MMELogger alloc] init];
+    MMEPreferences* preferences = [[MMEPreferences alloc] initWithBundle:NSBundle.mainBundle
+                                                               dataStore:NSUserDefaults.mme_configuration];
+    MMEMetricsManager* metricsManager = [[MMEMetricsManager alloc] initWithLogger:logger config:preferences];
+
+    return [self initWithPreferences:preferences
+               uniqueIdentifier:[[MMEUniqueIdentifier alloc] initWithTimeInterval:self.preferences.identifierRotationInterval]
+                    application:[[MMEUIApplicationWrapper alloc] init]
+                 metricsManager:metricsManager
+                dispatchManager:[[MMEDispatchManager alloc] init]
+                         logger:logger];
+}
+
+/*! @Brief Designated Initializer */
+- (instancetype)initWithPreferences:(MMEPreferences*)preferences
+              uniqueIdentifier:(MMEUniqueIdentifier*)uniqueIdentifier
+                   application:(id <MMEUIApplicationWrapper>)application
+                metricsManager:(MMEMetricsManager*)metricsManager
+               dispatchManager:(MMEDispatchManager*)dispatchManager
+                        logger:(MMELogger*)logger {
     if (self = [super init]) {
-        _paused = YES;
-        _eventQueue = [NSMutableArray array];
-        _uniqueIdentifer = [[MMEUniqueIdentifier alloc] initWithTimeInterval:NSUserDefaults.mme_configuration.mme_identifierRotationInterval];
-        _application = [[MMEUIApplicationWrapper alloc] init];
-        _dispatchManager = [[MMEDispatchManager alloc] init];
-        _logger = [[MMELogger alloc] init];
-        _metricsManager = [[MMEMetricsManager alloc] initWithLogger:_logger];
+        self.paused = YES;
+        self.eventQueue = [NSMutableArray array];
+        self.preferences = preferences;
+        self.uniqueIdentifer = uniqueIdentifier;
+        self.application = application;
+        self.metricsManager = metricsManager;
+        self.dispatchManager = dispatchManager;
+        self.logger = logger;
     }
     return self;
+
 }
 
 - (void)dealloc {
     [NSNotificationCenter.defaultCenter removeObserver:self];
     [self pauseMetricsCollection];
+}
+
+-(id <MMEEventConfigProviding>)configuration {
+    return self.preferences;
 }
 
 - (void)startEventsManagerWithToken:(NSString *)accessToken {
@@ -93,7 +121,7 @@ NS_ASSUME_NONNULL_BEGIN
     @try {
         if (self.apiClient) { // stop the existing API client, set the new token then recreate the client
             [self stopEventsManager];
-            [NSUserDefaults.mme_configuration mme_setAccessToken:accessToken];
+            self.preferences.accessToken = accessToken;
         }
 
         __weak __typeof__(self) weakSelf = self;
@@ -103,7 +131,7 @@ NS_ASSUME_NONNULL_BEGIN
         // Use function accessors instead of properties for easier memory management
         // Given we can message null, a method call to null will return null.
         // This save time unwrapping if (weakSelf) each time we're accessing a nullable object's property
-        self.apiClient = [[MMEAPIClient alloc] initWithConfig:NSUserDefaults.mme_configuration
+        self.apiClient = [[MMEAPIClient alloc] initWithConfig:self.preferences
                                                      onError:^(NSError * _Nonnull error) {
             [weakSelf reportError:error];
         } onBytesReceived:^(NSUInteger bytes) {
@@ -119,12 +147,16 @@ NS_ASSUME_NONNULL_BEGIN
         }];
 
         // Setup Service to Poll/Handle Configuration updates
-        self.configService = [[MMEConfigService alloc] init:NSUserDefaults.mme_configuration
+        self.configService = [[MMEConfigService alloc] init:self.preferences
                                                      client:self.apiClient
                                                onConfigLoad:^(MMEConfig * _Nonnull config) {
 
-            [NSUserDefaults.mme_configuration mme_updateFromConfig:config];
+             __strong __typeof__(weakSelf) strongSelf = weakSelf;
+            if (strongSelf) {
+                [strongSelf.preferences updateWithConfig:config];
+            }
         }];
+        
         [self.configService startUpdates];
 
 
@@ -154,12 +186,13 @@ NS_ASSUME_NONNULL_BEGIN
             }
 
             strongSelf.paused = YES;
-            strongSelf.locationManager = [[MMELocationManager alloc] initWithMetricsManager: self.metricsManager];
+            strongSelf.locationManager = [[MMELocationManager alloc] initWithMetricsManager: self.metricsManager
+                                                                                     config:self.preferences];
             strongSelf.locationManager.delegate = strongSelf;
             [strongSelf resumeMetricsCollection];
         };
 
-        [self.dispatchManager scheduleBlock:initialization afterDelay:NSUserDefaults.mme_configuration.mme_startupDelay];
+        [self.dispatchManager scheduleBlock:initialization afterDelay:self.preferences.startupDelay];
     }
     @catch(NSException *except) {
         [self reportException:except];
@@ -218,23 +251,25 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void)processAuthorizationStatus:(CLAuthorizationStatus)authStatus andApplicationState:(UIApplicationState)applicationState {
+
     // check the system authorization status, then decide what we should be doing
     if (authStatus == kCLAuthorizationStatusAuthorizedAlways) {
-        if (((applicationState != UIApplicationStateBackground && NSUserDefaults.mme_configuration.mme_isCollectionEnabled)
-         || (applicationState == UIApplicationStateBackground && NSUserDefaults.mme_configuration.mme_isCollectionEnabledInBackground))
+
+        if (((applicationState != UIApplicationStateBackground && self.preferences.isCollectionEnabled)
+         || (applicationState == UIApplicationStateBackground && self.preferences.isCollectionEnabledInBackground))
          && self.isPaused) {
             [self resumeMetricsCollection];
         } else if ((applicationState == UIApplicationStateBackground
-                   && NSUserDefaults.mme_configuration.mme_isCollectionEnabledInBackground == NO)
-                   || NSUserDefaults.mme_configuration.mme_isCollectionEnabled == NO) {
+                   && self.preferences.isCollectionEnabledInBackground == NO)
+                   || self.preferences.isCollectionEnabled == NO) {
             [self pauseMetricsCollection];
         }
     } else if (authStatus == kCLAuthorizationStatusAuthorizedWhenInUse) {
-        if (NSUserDefaults.mme_configuration.mme_isCollectionEnabled && self.paused) {  // Prevent blue status bar
+        if (self.preferences.isCollectionEnabled && self.paused) {  // Prevent blue status bar
             [self resumeMetricsCollection];
         } else if (applicationState == UIApplicationStateBackground) { // check for user preferences
             [self pauseMetricsCollection];
-        } else if (!NSUserDefaults.mme_configuration.mme_isCollectionEnabled) {
+        } else if (!self.preferences.isCollectionEnabled) {
             [self pauseMetricsCollection];
         }
     } else {
@@ -248,7 +283,7 @@ NS_ASSUME_NONNULL_BEGIN
             return;
         }
 
-        if (NSUserDefaults.mme_configuration.mme_accessToken == nil) {
+        if (self.preferences.accessToken == nil) {
             return;
         }
 
@@ -326,7 +361,7 @@ NS_ASSUME_NONNULL_BEGIN
             return;
         }
 
-        if (!NSUserDefaults.mme_configuration.mme_accessToken) {
+        if (!self.preferences.accessToken) {
             MMELog(MMELogInfo, MMEDebugEventTypeTurnstileFailed, ([NSString stringWithFormat:@"No access token sent - can not send turntile event, instance: %@",
                 self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
             return;
@@ -351,14 +386,14 @@ NS_ASSUME_NONNULL_BEGIN
         }
 
         // TODO: remove this check when we switch to reformed UA strings for the events api
-        if (!NSUserDefaults.mme_configuration.mme_legacyUserAgentBase) {
+        if (!self.preferences.legacyUserAgentBase) {
             MMELog(MMELogInfo, MMEDebugEventTypeTurnstileFailed, ([NSString stringWithFormat:@"No user agent base set - can not send turntile event, instance: %@",
                 self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
             return;
         }
 
         // TODO: remove this check when we switch to reformed UA strings for the events api
-        if (!NSUserDefaults.mme_configuration.mme_legacyHostSDKVersion) {
+        if (!self.preferences.legacyHostSDKVersion) {
             MMELog(MMELogInfo, MMEDebugEventTypeTurnstileFailed, ([NSString stringWithFormat:@"No host SDK version set - can not send turntile event, instance: %@",
                 self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
             return;
@@ -370,9 +405,9 @@ NS_ASSUME_NONNULL_BEGIN
             MMEEventKeyVendorId: NSProcessInfo.mme_vendorId,
             MMEEventKeyDevice: NSProcessInfo.mme_deviceModel, // MMEEventKeyDevice is synonomous with MMEEventKeyModel but the server will only accept "device" in turnstile events
             MMEEventKeyOperatingSystem: NSProcessInfo.mme_osVersion,
-            MMEEventSDKIdentifier: NSUserDefaults.mme_configuration.mme_legacyUserAgentBase,
-            MMEEventSDKVersion: NSUserDefaults.mme_configuration.mme_legacyHostSDKVersion,
-            MMEEventKeyEnabledTelemetry: @(NSUserDefaults.mme_configuration.mme_isCollectionEnabled),
+            MMEEventSDKIdentifier: self.preferences.legacyUserAgentBase,
+            MMEEventSDKVersion: self.preferences.legacyHostSDKVersion,
+            MMEEventKeyEnabledTelemetry: @(self.preferences.isCollectionEnabled),
             MMEEventKeyLocationEnabled: @(CLLocationManager.locationServicesEnabled),
             MMEEventKeyLocationAuthorization: CLLocationManager.mme_authorizationStatusString,
             MMEEventKeySkuId: self.skuId ?: NSNull.null
@@ -534,7 +569,7 @@ NS_ASSUME_NONNULL_BEGIN
     MMELog(MMELogInfo, MMEDebugEventTypeMetricCollection, ([NSString stringWithFormat:@"Resuming metrics collection..., instance: %@",
         self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
 
-    if (!self.isPaused || !NSUserDefaults.mme_configuration.mme_isCollectionEnabled) {
+    if (!self.isPaused || !self.preferences.isCollectionEnabled) {
         MMELog(MMELogInfo, MMEDebugEventTypeMetricCollection, ([NSString stringWithFormat:@"Already running, instance: %@",
             self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
         return;
@@ -542,7 +577,7 @@ NS_ASSUME_NONNULL_BEGIN
     
     self.paused = NO;
 
-    if (NSUserDefaults.mme_configuration.mme_isCollectionEnabled) {
+    if (self.preferences.isCollectionEnabled) {
         [self.locationManager startUpdatingLocation];
     }
     MMELog(MMELogInfo, MMEDebugEventTypeLocationManager, ([NSString stringWithFormat:@"Resumed and location manager started, instance: %@",
@@ -568,15 +603,15 @@ NS_ASSUME_NONNULL_BEGIN
 
     MMELog(MMELogInfo, MMEDebugEventTypePush, ([NSString stringWithFormat:@"Added event to event queue; event queue now has %ld events, instance: %@",
         (long)self.eventQueue.count, self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
-    
-    if (self.eventQueue.count >= NSUserDefaults.mme_configuration.mme_eventFlushCount) {
+
+    if (self.eventQueue.count >= self.preferences.eventFlushCount) {
         [self flush];
     }
     
     if (self.eventQueue.count == 1) {
         if (!self.queueTimer || !self.queueTimer.valid) {
             self.queueTimer = [NSTimer
-                scheduledTimerWithTimeInterval:NSUserDefaults.mme_configuration.mme_eventFlushInterval
+                scheduledTimerWithTimeInterval:self.preferences.eventFlushInterval
                 target:self
                 selector:@selector(flush)
                 userInfo:nil
@@ -662,7 +697,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)disableLocationMetrics {
     @try {
-        NSUserDefaults.mme_configuration.mme_isCollectionEnabled = NO;
+        self.preferences.isCollectionEnabled = NO;
         [self.locationManager stopUpdatingLocation];
     }
     @catch (NSException *except) {

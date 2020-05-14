@@ -1,16 +1,18 @@
 #import <Foundation/Foundation.h>
+#import "MMEEventConfigProviding.h"
 @import CoreLocation;
 
 NS_ASSUME_NONNULL_BEGIN
 
 @class MMEDate;
+@class MMEConfig;
 
 /*!
  @Brief Container of App Preferences as well as Remote Preferendes
  @Discussion MMEPreferences provides an interface to define default values, as well as provide support
     for loading values from Bundle plist, or loaded Remote Config.
  */
-@interface MMEPreferences : NSObject
+@interface MMEPreferences : NSObject <MMEEventConfigProviding>
 
 // MARK: - Initializer
 
@@ -22,24 +24,23 @@ NS_ASSUME_NONNULL_BEGIN
 -(instancetype)initWithBundle:(NSBundle*)bundle
                     dataStore:(NSUserDefaults*)userDefaults;
 
-
 // MARK: - Properties
 
 /// Bundle Providing App Provided defaults
-@property (nonatomic, readonly) NSBundle* bundle;
+@property (nonatomic, strong, readonly) NSBundle* bundle;
 
 /// DataStorage Instance for the values
-@property (nonatomic, readonly) NSUserDefaults* userDefaults;
+@property (nonatomic, strong, readonly) NSUserDefaults* userDefaults;
 
 
 /// Interval to wait before starting up when the application launches
 @property (nonatomic, assign, readonly) NSTimeInterval startupDelay;
 
 /// Number of events to put into a batch, the MMEEventsManager will flush it's queue at this threshold
-@property (nonatomic, assign, readonly) NSUInteger flushCount;
+@property (nonatomic, assign, readonly) NSUInteger eventFlushCount;
 
 /// Maximum Time interval between event flush
-@property (nonatomic, assign, readonly) NSTimeInterval flushInterval;
+@property (nonatomic, assign, readonly) NSTimeInterval eventFlushInterval;
 
 /// Interval at which we rotate the unique identifier for this SDK instance
 @property (nonatomic, assign, readonly) NSTimeInterval identifierRotationInterval;
@@ -48,7 +49,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign, readonly) NSTimeInterval configUpdateInterval;
 
 /// Tag for events
-@property (nullable, nonatomic, readonly) NSString *eventTag;
+@property (nullable, nonatomic, copy, readonly) NSString *eventTag;
 
 // MARK: - Volatile Configuration
 
@@ -67,19 +68,19 @@ NS_ASSUME_NONNULL_BEGIN
 // MARK: - Service Configuration
 
 /// API Service URL for the current region
-@property (nonatomic, readonly) NSURL *apiServiceURL;
+@property (nonatomic, copy, readonly) NSURL *apiServiceURL;
 
 /// Events Service URL for the current region
-@property (nonatomic, readonly) NSURL *eventsServiceURL;
+@property (nonatomic, copy, readonly) NSURL *eventsServiceURL;
 
 /// Config Service URL for the current region
-@property (nonatomic, readonly) NSURL *configServiceURL;
+@property (nonatomic, copy, readonly) NSURL *configServiceURL;
 
 /// Reformed User-Agent String
-@property (nonatomic, readonly) NSString *userAgentString;
+@property (nonatomic, copy, readonly) NSString *userAgentString;
 
 /// Legacy User-Agent String
-@property (nonatomic, readonly) NSString *legacyUserAgentString;
+@property (nonatomic, copy, readonly) NSString *legacyUserAgentString;
 
 // MARK: - Update Configuration
 
@@ -111,6 +112,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// The Certificate Pinning config
 @property (nonatomic, copy, readonly) NSDictionary *certificatePinningConfig;
+
+// MARK: - Update
+
+/*! Updates Preferences from Config*/
+- (void)updateWithConfig:(MMEConfig*)config;
 
 @end
 
