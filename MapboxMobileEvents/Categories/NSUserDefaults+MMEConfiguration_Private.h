@@ -119,10 +119,10 @@ static NSTimeInterval const MMEStartupDelayMaximum = 100;
 - (NSObject *)mme_objectForVolatileKey:(MMEVolatileKey *)key;
 
 /*! @Brief Mutable Array of Public Keys (For Cert Pinning) */
-+ (NSMutableArray<NSString*>*)comPublicKeys;
++ (NSMutableArray<NSString*>*)mme_comPublicKeys;
 
 /*! @Brief Mutable Array of Public Keys (for China) (For Cert Pinning) */
-+ (NSMutableArray<NSString*>*)chinaPublicKeys;
++ (NSMutableArray<NSString*>*)mme_chinaPublicKeys;
 
 @end
 

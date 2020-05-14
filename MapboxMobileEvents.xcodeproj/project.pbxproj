@@ -228,6 +228,7 @@
 		F44D120F246377E000DF4ED1 /* MMENSURLRequestFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = F44D120B246377E000DF4ED1 /* MMENSURLRequestFactory.m */; };
 		F44D12162463D0BF00DF4ED1 /* MMEMockEventConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = F44D12112463C82400DF4ED1 /* MMEMockEventConfig.m */; };
 		F44D121F2464A5E000DF4ED1 /* MMEAPIClientBlockCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = F44D121E2464A5E000DF4ED1 /* MMEAPIClientBlockCounter.m */; };
+		F46267FF246DF5AC00E01C83 /* MMEPreferencesTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F46267FE246DF5AC00E01C83 /* MMEPreferencesTests.m */; };
 		F466B8E3246D11A80056AB21 /* MMEEventConfigProviding.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = F4913F442453610800C28338 /* MMEEventConfigProviding.h */; };
 		F4684FF42432A1610079B389 /* NSBundle+MMEMobileEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = F4684FF22432A1610079B389 /* NSBundle+MMEMobileEvents.h */; };
 		F4684FF52432A1610079B389 /* NSBundle+MMEMobileEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = F4684FF32432A1610079B389 /* NSBundle+MMEMobileEvents.m */; };
@@ -517,6 +518,7 @@
 		F44D12112463C82400DF4ED1 /* MMEMockEventConfig.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEMockEventConfig.m; sourceTree = "<group>"; };
 		F44D121D2464A5E000DF4ED1 /* MMEAPIClientBlockCounter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEAPIClientBlockCounter.h; sourceTree = "<group>"; };
 		F44D121E2464A5E000DF4ED1 /* MMEAPIClientBlockCounter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEAPIClientBlockCounter.m; sourceTree = "<group>"; };
+		F46267FE246DF5AC00E01C83 /* MMEPreferencesTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEPreferencesTests.m; sourceTree = "<group>"; };
 		F4684FF22432A1610079B389 /* NSBundle+MMEMobileEvents.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSBundle+MMEMobileEvents.h"; sourceTree = "<group>"; };
 		F4684FF32432A1610079B389 /* NSBundle+MMEMobileEvents.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+MMEMobileEvents.m"; sourceTree = "<group>"; };
 		F47265522465F5FD00BD7055 /* MMEConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEConfig.h; sourceTree = "<group>"; };
@@ -675,6 +677,7 @@
 				AC69502C238E000C00D095EB /* MMELocationManagerTests.m */,
 				9CA753AA241027E6005C26C9 /* MMELoggerTests.m */,
 				AC03B2C723AC477A0043271D /* MMEMetricsManagerTests.m */,
+				F46267FE246DF5AC00E01C83 /* MMEPreferencesTests.m */,
 				AC03B2F523B1AEE60043271D /* MMEUniqueIdentifierTests.m */,
 				9CF000422370D7B2009A2700 /* NSString+MMEVersions_Tests.m */,
 				9CDC34BA234FD36E00852FF0 /* NSUserDefaults+MMEConfigurationTests.m */,
@@ -1272,6 +1275,7 @@
 				AC03B2CA23AD55A10043271D /* MMEEventTests.m in Sources */,
 				ACBD2E5923709F920082F037 /* MMEEventsManagerTests.m in Sources */,
 				AC69502D238E000C00D095EB /* MMELocationManagerTests.m in Sources */,
+				F46267FF246DF5AC00E01C83 /* MMEPreferencesTests.m in Sources */,
 				F472656124662D7700BD7055 /* MMEAPIClient+Mock.m in Sources */,
 				9CA753AB241027E6005C26C9 /* MMELoggerTests.m in Sources */,
 				AC03B2C823AC477A0043271D /* MMEMetricsManagerTests.m in Sources */,

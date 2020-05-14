@@ -8,6 +8,8 @@
 
 // TODO: Consider moving these constant Definitions
 #import "NSUserDefaults+MMEConfiguration_Private.h"
+#import "NSUserDefaults+MMEConfiguration.h"
+
 
 
 @interface MMEPreferences ()
@@ -21,7 +23,7 @@
 
 - (instancetype)init {
     return [self initWithBundle:NSBundle.mainBundle
-                      dataStore:[[NSUserDefaults alloc] init]];
+                      dataStore:NSUserDefaults.mme_configuration];
 }
 
 -(instancetype)initWithBundle:(NSBundle*)bundle
@@ -469,8 +471,8 @@
 }
 
 -(NSDictionary<NSString*, NSArray<NSString*>*>*)certificatePinningConfig {
-    NSMutableArray *comPublicKeys = [NSUserDefaults comPublicKeys];
-    NSMutableArray *chinaPublicKeys = [NSUserDefaults chinaPublicKeys];
+    NSMutableArray *comPublicKeys = [NSUserDefaults mme_comPublicKeys];
+    NSMutableArray *chinaPublicKeys = [NSUserDefaults mme_chinaPublicKeys];
 
     // Filter out Revoked Keys
     if (self.certificateRevocationList){

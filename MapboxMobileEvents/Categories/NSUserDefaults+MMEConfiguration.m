@@ -436,7 +436,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 /*! Public Keys Eligible for use general access */
-+ (NSMutableArray<NSString*>*)comPublicKeys {
++ (NSMutableArray<NSString*>*)mme_comPublicKeys {
     return @[
         @"T4XyKSRwZ5icOqGmJUXiDYGa+SaXKTGQXZwhqpwNTEo=",
         @"KlV7emqpeM6V2MtDEzSDzcIob6VwkdWHiVsNQQzTIeo=",
@@ -500,7 +500,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 /*! Public Keys Eligible for use for China Access */
-+(NSMutableArray<NSString*>*)chinaPublicKeys {
++(NSMutableArray<NSString*>*)mme_chinaPublicKeys {
     return @[
         @"6+ErFga5JfYfvwx2JbEJJNmUXJFnXIKllrbPKmvWqNc=",
         @"vLkrnr8JTAVaYPwY/jBkKCe+YQWleaHPU3Tlqom+gCg=",
@@ -565,9 +565,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// The Certificate Pinning config
 - (NSDictionary *)mme_certificatePinningConfig {
-    NSMutableArray *comPublicKeys = [NSUserDefaults comPublicKeys];
+    NSMutableArray *comPublicKeys = [NSUserDefaults mme_comPublicKeys];
     
-    NSMutableArray *cnPublicKeys = [NSUserDefaults chinaPublicKeys];
+    NSMutableArray *cnPublicKeys = [NSUserDefaults mme_chinaPublicKeys];
     
     // apply the CRL
     if (NSUserDefaults.mme_configuration.mme_certificateRevocationList) {
