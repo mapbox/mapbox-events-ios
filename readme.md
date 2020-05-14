@@ -3,7 +3,9 @@
 [![Bitrise](https://app.bitrise.io/app/63d52d847cdb36db/status.svg?token=DDdEMfpVR8emhdGSgToskA&branch=master)](https://www.bitrise.io/app/63d52d847cdb36db)
 ![codecov](https://codecov.io/gh/mapbox/mapbox-events-ios/branch/master/graph/badge.svg)
 
-The Mapbox Mobile Events SDK collects [anonymous data](https://www.mapbox.com/telemetry/) about the map and device location to continuously update and improve your maps.
+The Mapbox Mobile Events SDK collects [anonymous data](https://www.mapbox.com/telemetry/) about the map and device location to 
+continuously update and improve your maps.
+
 
 ### 📦 Client Frameworks
 
@@ -12,18 +14,20 @@ The Mapbox Mobile Events SDK collects [anonymous data](https://www.mapbox.com/te
 - [Mapbox Vision SDK](https://github.com/mapbox/mapbox-vision-ios)
 - [Mapbox ReactNative SDK](https://github.com/mapbox/react-native-mapbox-gl)
 
-### 📖 Quick Start
 
-Include `MapboxMobileEvents.framework` in your application, in the application delegate's  `…didFinishLaunching…` method, add:
+### 🏎 Quick Start
+
+If you are using another Mapbox SDK, you should not need to do any spcial setup to use Mapbox Mobile Events.
+
+If you are integrating Mapbox Mobile Events into an application which does not use another Mapbox SDK you will need
+to include `MapboxMobileEvents.framework` in your application, and in the application delegate's  `…didFinishLaunching…` 
+method, add:
 
 ```objc
 MMEEventsManager *manager = [MMEventsManager.sharedManager 
     initializeWithAccessToken:@"your-mapbox-token" 
     userAgentBase:@"user-agent-string"
     hostSDKVersion:@"1.0.0"];
-manager.delegate = self;
-manager.isMetricsEnabledInSimulator = YES;
-manager.isDebugLoggingEnabled = (DEBUG ? YES : NO);
 [manager sendTurnstileEvent];
 ```
 
@@ -34,23 +38,44 @@ let eventsManager = MMEEventsManager.sharedManager().initialize(
     withAccessToken: "your-mapbox-token", 
     userAgentBase: "user-agent-string", 
     hostSDKVersion: "1.0.0")
-eventsManager.delgate = self;
-eventsManager.isMetricsEnabledInSimulator = true
-eventsManager.isDebugLoggingEnabled = (DEBUG ? true : false)
 eventsManager.sendTurnstileEvent()
+```
+
+### 🎟 Sending Events
+
+The preferred API for creating and sending an events uses the private method `-MMEEventManager pushEvent:` if you think your
+application needs to send events please contact your Technical Account Manager or open an issue in this repository with details.
+
+
+### 💣 Debugging
+
+Usualy when running the Mobile Events SDK in the Emulator it does not send events or emit debug
+messages, you can enable these by setting properties on the `sharedManager`:
+
+```objc
+if (DEBUG) {
+    MMEventsManager.sharedManager.isMetricsEnabledInSimulator = YES;
+    MMEventsManager.sharedManager.isDebugLoggingEnabled = YES;
+}
 ```
 
 ### 🗺 Foreground and Background Location Collection
 
-The MapboxMobileEvents frameworks collect location data to help us improve the map. We strive to maintain a low power and network usage profile for this collection and take great care to anonymize all data in accordance with our [privacy policy](https://www.mapbox.com/legal/privacy).
+The MapboxMobileEvents frameworks collect location data to help us improve the map. We strive to maintain a low power and network 
+usage profile for this collection and take great care to anonymize all data in accordance with our 
+[privacy policy](https://www.mapbox.com/legal/privacy).
 
 The use of Mapbox SDKs and APIs on mobile devices are governed by our 
-[Terms of Service](https://www.mapbox.com/legal/tos#[MomMom]) which requires your app not interfere with or limit the data that the Mapbox SDK sends to us, whether by modifying the SDK or by other means. If your application requires different terms, please contact [Mapbox Sales](https://www.mapbox.com/contact/sales/).
+[Terms of Service](https://www.mapbox.com/legal/tos#[MomMom]) which requires your app not interfere with or limit the data that the 
+Mapbox SDK sends to us, whether by modifying the SDK or by other means. If your application requires different terms, please contact 
+[Mapbox Sales](https://www.mapbox.com/contact/sales/).
 
 #### Background Location in iOS 13
 
-If your application enables background location, the MapboxMobileEvents framework collects telemetry in the background using a passive method which allows for very low power usage. If your application does not use background location, make sure that the permissions keys for it are removed in the `Info.plist`:
-`NSLocationAlwaysAndWhenInUseUsageDescription`, `NSLocationAlwaysUsageDescription`, as well as  the `UIBackgroundMode` `location`.
+If your application enables background location, the MapboxMobileEvents framework collects telemetry in the background using a 
+passive method which allows for very low power usage. If your application does not use background location, make sure that the 
+permissions keys for it are removed in the `Info.plist`: `NSLocationAlwaysAndWhenInUseUsageDescription`, 
+`NSLocationAlwaysUsageDescription`, as well as  the `UIBackgroundMode` `location`.
 
 ### ⚠️ Error and Exception Handling and Reporting
 
@@ -95,21 +120,3 @@ brew install carthage
 cd $PROJECT_DIR
 carthage bootstrap
 ```
-
-### 🔎Enable debug logging within your app.
-
-**Pre-v1.0**
-
-Maps SDK: To enable debug logs in your console set `MGLMapboxMetricsDebugLoggingEnabled` in your plist as a boolean to `YES`.
-Nav SDK: To enable debug logs in your console set `MBNavigationMetricsDebugLoggingEnabled` in your plist as a boolean to `YES`.
-
-**Post-v1.0**
-
-1. To enable debug logs in your console set `MMEDebugLogging` in your plist as a boolean to `YES`.
-<img width="448" alt="Screen Shot 2020-02-07 at 5 10 41 PM" src="https://user-images.githubusercontent.com/10932745/74076682-992a5380-49ce-11ea-97a4-c93c518d1d42.png">
-
-2. Run app
-
-3. Watch console for logs
-<img width="777" alt="Screen Shot 2020-02-07 at 5 10 26 PM" src="https://user-images.githubusercontent.com/10932745/74076691-afd0aa80-49ce-11ea-9d9f-1a8219852b7a.png">
-
