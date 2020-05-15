@@ -2,6 +2,11 @@
 
 #import "MMEEvent.h"
 #import "MMEEventFake.h"
+#import "MMEExceptionalDictionary.h"
+
+@interface MMEEvent (Tests)
++ (NSDictionary *)nilAttributes;
+@end
 
 @interface MMEEventTests : XCTestCase
 @property(nonatomic,retain) NSString *testName;
@@ -49,6 +54,8 @@
     }
 }
 
+// MARK: - Coding / Decoding
+
 - (void)testNSSecureCodingOfMMEEvent {
      MMEEvent *event = [MMEEvent eventWithName:self.testName attributes:self.testAttrs];
      NSKeyedArchiver *archiver = [NSKeyedArchiver new];
@@ -70,7 +77,7 @@
      XCTAssertEqualObjects(unarchived, event);
 }
 
-- (void)testNSSecuredDecodeingOfMMEEvent {
+- (void)testNSSecuredDecodingOfMMEEvent {
      // uses MMEEventFake to override `encodeWithCoder:`
      MMEEventFake *futureVersionEvent = [MMEEventFake eventWithName:self.testName attributes:self.testAttrs];
          
@@ -86,170 +93,150 @@
      XCTAssertNil(unarchived);
 }
 
-// TODO: Convert Cedar Tests
+- (void)testNSSecuredDecodingOfMMEEventFromFile {
+    MMEEvent *event = [MMEEvent eventWithName:self.testName attributes:self.testAttrs];
+    NSString *tempFile = [NSTemporaryDirectory() stringByAppendingPathComponent:@"MMEEvent-test.data"];
 
-/*
+    if ([NSFileManager.defaultManager fileExistsAtPath:tempFile]) {
+        [NSFileManager.defaultManager removeItemAtPath:tempFile error:nil];
+    }
 
- context(@"NSKeyedArchiver", ^{
-     MMEEvent *event = [MMEEvent eventWithName:testName attributes:testAttrs];
-     NSString *tempFile = [NSTemporaryDirectory() stringByAppendingPathComponent:@"MMEEvent-test.data"];
+    [NSKeyedArchiver archiveRootObject:event toFile:tempFile];
 
-     if ([NSFileManager.defaultManager fileExistsAtPath:tempFile]) {
-         [NSFileManager.defaultManager removeItemAtPath:tempFile error:nil];
-     }
+    XCTAssertTrue([NSFileManager.defaultManager fileExistsAtPath:tempFile]);
 
-     [NSKeyedArchiver archiveRootObject:event toFile:tempFile];
+    NSData *thenData = [NSData dataWithContentsOfFile:tempFile];
+    NSKeyedUnarchiver* unarchiver = [NSKeyedUnarchiver.alloc initForReadingWithData:thenData];
+    unarchiver.requiresSecureCoding = YES;
+    MMEEvent *unarchived = [unarchiver decodeObjectOfClass:MMEEvent.class forKey:NSKeyedArchiveRootObjectKey];
 
-     it(@"should write encoded data to a file", ^{
-         [NSFileManager.defaultManager fileExistsAtPath:tempFile] should be_truthy;
-     });
+    XCTAssertNotNil(unarchived);
+    XCTAssertEqualObjects(unarchived, event);
 
-     it(@"should read encoded data from a file", ^{
-         NSData *thenData = [NSData dataWithContentsOfFile:tempFile];
-         NSKeyedUnarchiver* unarchiver = [NSKeyedUnarchiver.alloc initForReadingWithData:thenData];
-         unarchiver.requiresSecureCoding = YES;
-         MMEEvent *unarchived = [unarchiver decodeObjectOfClass:MMEEvent.class forKey:NSKeyedArchiveRootObjectKey];
+}
 
-         unarchived should_not be_nil;
-         unarchived should equal(event);
-     });
- });
+// MARK: - Nullable Initializer Checks
 
- context(@"debugEventWithError", ^{
-     NSError *errorWithNoInfo = [NSError errorWithDomain:NSCocoaErrorDomain code:0 userInfo:nil];
-     NSError *errorWithAllInfo = [NSError errorWithDomain:NSCocoaErrorDomain code:1 userInfo:@{
-         NSURLErrorKey: [NSURL URLWithString:@"http://mapbox.com"],
-         NSHelpAnchorErrorKey: @"NSHelpAnchorErrorKey",
-         NSLocalizedDescriptionKey: @"NSLocalizedDescriptionKey",
-         NSLocalizedFailureReasonErrorKey: @"NSLocalizedFailureReasonErrorKey",
-         NSLocalizedRecoveryOptionsErrorKey: @[@"Abort", @"Retry", @"Fail"],
-         NSLocalizedRecoverySuggestionErrorKey: @"NSLocalizedRecoverySuggestionErrorKey",
-         NSStringEncodingErrorKey: @(NSUTF8StringEncoding),
-         NSUnderlyingErrorKey: errorWithNoInfo,
-         NSDebugDescriptionErrorKey: @"PC LOAD LETTER"
-     }];
+- (void)testErrorEventInitWithError {
+    NSError *errorWithNoInfo = [NSError errorWithDomain:NSCocoaErrorDomain code:0 userInfo:nil];
+    NSError *errorWithAllInfo = [NSError errorWithDomain:NSCocoaErrorDomain code:1 userInfo:@{
+        NSURLErrorKey: [NSURL URLWithString:@"http://mapbox.com"],
+        NSHelpAnchorErrorKey: @"NSHelpAnchorErrorKey",
+        NSLocalizedDescriptionKey: @"NSLocalizedDescriptionKey",
+        NSLocalizedFailureReasonErrorKey: @"NSLocalizedFailureReasonErrorKey",
+        NSLocalizedRecoveryOptionsErrorKey: @[@"Abort", @"Retry", @"Fail"],
+        NSLocalizedRecoverySuggestionErrorKey: @"NSLocalizedRecoverySuggestionErrorKey",
+        NSStringEncodingErrorKey: @(NSUTF8StringEncoding),
+        NSUnderlyingErrorKey: errorWithNoInfo,
+        NSDebugDescriptionErrorKey: @"PC LOAD LETTER"
+    }];
 
-     it(@"should create an MMEEvent from errorWithNoInfo", ^{
-         MMEEvent *errorEventWithNoInfo = [MMEEvent debugEventWithError:errorWithNoInfo];
-         errorEventWithNoInfo should_not be_nil;
-     });
+    MMEEvent *errorEventWithNoInfo = [MMEEvent debugEventWithError:errorWithNoInfo];
+    XCTAssertNotNil(errorEventWithNoInfo);
 
-     it(@"should crteate an MMEEvent from errorWithAllInfo", ^{
-         MMEEvent *errorEventWithAllInfo = [MMEEvent debugEventWithError:errorWithAllInfo];
-         errorEventWithAllInfo should_not be_nil;
-     });
- });
+    MMEEvent *errorEventWithAllInfo = [MMEEvent debugEventWithError:errorWithAllInfo];
+    XCTAssertNotNil(errorEventWithAllInfo);
+}
 
- context(@"debugEventWithException", ^{
-     NSException *exceptionWithNoInfo = [NSException exceptionWithName:NSGenericException reason:nil userInfo:nil];
-     NSException *exceptionWithAllInfo = [NSException exceptionWithName:NSGenericException reason:@"TestReason" userInfo:@{
-         @"ExceptionUserInfo": @"ExceptionUserInfo"
-     }];
+-(void)testDebugEventWithException {
+    NSException *exceptionWithNoInfo = [NSException exceptionWithName:NSGenericException reason:nil userInfo:nil];
+    NSException *exceptionWithAllInfo = [NSException exceptionWithName:NSGenericException reason:@"TestReason" userInfo:@{
+        @"ExceptionUserInfo": @"ExceptionUserInfo"
+    }];
 
-     it(@"should create an MMEEvent from exceptionWithNoInfo", ^{
-         MMEEvent *exceptionEventWithNoInfo = [MMEEvent debugEventWithException:exceptionWithNoInfo];
-         exceptionEventWithNoInfo should_not be_nil;
-     });
+    // should create an MMEEvent from exceptionWithNoInfo
+    MMEEvent *exceptionEventWithNoInfo = [MMEEvent debugEventWithException:exceptionWithNoInfo];
+    XCTAssertNotNil(exceptionEventWithNoInfo);
 
-     it(@"should create an MMEEvent from exceptionWithAllInfo", ^{
-         MMEEvent *exceptionEventWithAllInfo = [MMEEvent debugEventWithException:exceptionWithAllInfo];
-         exceptionEventWithAllInfo should_not be_nil;
-     });
- });
+    // should create an MMEEvent from exceptionWithAllInfo
+    MMEEvent *exceptionEventWithAllInfo = [MMEEvent debugEventWithException:exceptionWithAllInfo];
+    XCTAssertNotNil(exceptionEventWithAllInfo);
+}
 
- context(@"eventWithAttributes:error:", ^{
-     it(@"should not init with invalid attributes", ^{
-         NSError *error = nil;
-         MMEEvent *invalid = [MMEEvent eventWithAttributes:@{@"Invalid": [NSError errorWithDomain:NSCocoaErrorDomain code:0 userInfo:nil]} error:&error];
+-(void)testEventInitWithInvalidAttributes {
+    // Should not init with invalid attributes
+    NSError *error = nil;
+    MMEEvent *invalid = [MMEEvent eventWithAttributes:@{@"Invalid": [NSError errorWithDomain:NSCocoaErrorDomain code:0 userInfo:nil]} error:&error];
 
-         invalid should be_nil;
-         error should_not be_nil;
-         error.code should equal(MMEErrorEventInitInvalid);
-     });
+    XCTAssertNil(invalid) ;
+    XCTAssertNotNil(error);
+    XCTAssertEqual(error.code, MMEErrorEventInitInvalid);
+}
 
-     it(@"should init with nil attributes for initWithCoder:", ^{
-         NSError *error = nil;
-         MMEEvent *invalid = [MMEEvent eventWithAttributes:MMEEvent.nilAttributes error:&error];
+-(void)testEventInitWithInitWthNilAttributes {
+    // Should init with nil attributes for initWithCoder:", ^{
+    NSError *error = nil;
+    MMEEvent *invalid = [MMEEvent eventWithAttributes:MMEEvent.nilAttributes error:&error];
 
-         invalid.attributes should be_nil;
-         error should be_nil;
-     });
+    XCTAssertNil(invalid.attributes);
+    XCTAssertNil(error);
+}
 
-     it(@"should not init without MMEEventKeyEvent", ^{
-         NSError *error = nil;
-         MMEEvent *invalid = [MMEEvent eventWithAttributes:@{@"foo":@"bar"} error:&error];
+-(void)testInitWithoutEventKey {
+    // Should not init without MMEEventKeyEvent
+    NSError *error = nil;
+    MMEEvent *invalid = [MMEEvent eventWithAttributes:@{@"foo":@"bar"} error:&error];
 
-         invalid should be_nil;
-         error should_not be_nil;
-         error.code should equal(MMEErrorEventInitMissingKey);
-     });
+    XCTAssertNil(invalid);
+    XCTAssertNotNil(error);
+    XCTAssertEqual(error.code, MMEErrorEventInitMissingKey);
+}
 
-     it(@"should contain an exceptional dictionary", ^{
-         NSError *error = nil;
-         MMEEvent *exceptional = [MMEEvent eventWithAttributes:[MMEExceptionalDictionary dictionaryWithDictionary:@{MMEEventKeyEvent:@"exception"}] error:&error];
+-(void)testInitWithExceptionDictionary {
+    // Should contain an exceptional dictionary
+    NSError *error = nil;
+    MMEEvent *exceptional = [MMEEvent eventWithAttributes:[MMEExceptionalDictionary dictionaryWithDictionary:@{MMEEventKeyEvent:@"exception"}] error:&error];
+    XCTAssertNil(exceptional);
+    XCTAssertNotNil(error);
+    XCTAssertEqual(error.code,MMEErrorEventInitException);
+}
 
-         exceptional should be_nil;
-         error should_not be_nil;
-         error.code should equal(MMEErrorEventInitException);
-     });
- });
+-(void)testWithInvalidAttributes {
+    MMEEvent *attributed = [MMEEvent eventWithAttributes:@{@"invalid":@"attributes"}];
+    XCTAssertNil(attributed);
+}
 
- context(@"eventWithAttributes:", ^{
-     MMEEvent *attributed = [MMEEvent eventWithAttributes:@{@"invalid":@"attributes"}];
+-(void)testInitWithCarplay {
+    MMEEvent *carplay = [MMEEvent carplayEventWithName:MMEventTypeNavigationCarplayConnect attributes:self.testAttrs];
+    XCTAssertNotNil(carplay);
+}
 
-     it(@"should return nil with invalid attributes:", ^{
-         attributed should be_nil;
-     });
- });
+// MARK: - Equatability
 
- context(@"carplayEvent", ^{
-     MMEEvent *carplay = [MMEEvent carplayEventWithName:MMEventTypeNavigationCarplayConnect attributes:testAttrs];
+-(void)testEventEquatability {
+    NSDictionary *eventAttributes = @{MMEEventKeyEvent: @"test.event"};
+    MMEEvent *firstEvent = [MMEEvent eventWithAttributes:eventAttributes];
+    MMEEvent *secondEvent = [MMEEvent eventWithAttributes:eventAttributes];
 
-     it(@"should create a carplay event", ^{
-         carplay should_not be_nil;
-     });
- });
 
- context(@"isEqualToEvent:", ^{
-     NSDictionary *eventAttributes = @{MMEEventKeyEvent: @"test.event"};
-     MMEEvent *firstEvent = [MMEEvent eventWithAttributes:eventAttributes];
-     MMEEvent *secondEvent = [MMEEvent eventWithAttributes:eventAttributes];
+    XCTAssertNotNil(firstEvent);
+    XCTAssertNotNil(secondEvent);
+    XCTAssertEqualObjects(firstEvent, firstEvent);
 
-     it(@"should not be true for two consective events with the same attributes, or for nil", ^{
-         [firstEvent isEqual:secondEvent] should_not be_truthy;
-     });
+    // should not be true for two consective events with the same attributes, or for nil
+    XCTAssertNotEqual(firstEvent, secondEvent);
 
-     it(@"should be false for nil", ^{
-         [firstEvent isEqual:nil] should_not be_truthy;
-     });
+    // Should be false for an object of a different class
+    XCTAssertNotEqualObjects(firstEvent, eventAttributes);
+}
 
-     it(@"should be true in the identity case", ^{
-         [firstEvent isEqual:firstEvent] should be_truthy;
-     });
+// MARK: - Hashable
 
-     it(@"should be false for an object of a different class", ^{
-         [firstEvent isEqual:eventAttributes] should_not be_truthy;
-     });
- });
+-(void)testHash {
+    // Should compute a non-0 hash
+    MMEEvent *hashEvent = [MMEEvent eventWithAttributes:@{MMEEventKeyEvent: @"test.event"}];
+    XCTAssertNotEqual(hashEvent.hash, 0);
+}
 
- context(@"hash:", ^{
-     it(@"should compute a non-0 hash", ^{
-         MMEEvent *hashEvent = [MMEEvent eventWithAttributes:@{MMEEventKeyEvent: @"test.event"}];
-         NSUInteger hashcode = hashEvent.hash;
+// MARK: - NSCopying
 
-         hashcode should_not equal(0);
-     });
- });
+-(void)testCopying {
+    // Should create an isEqual: but not identity copy
+    MMEEvent *original = [MMEEvent eventWithAttributes:@{MMEEventKeyEvent: @"test.event"}];
+    MMEEvent *duplicate = original.copy;
 
- context(@"NSCopying", ^{
-     it(@"should create an isEqual: but not identity copy", ^{
-         MMEEvent *original = [MMEEvent eventWithAttributes:@{MMEEventKeyEvent: @"test.event"}];
-         MMEEvent *duplicate = original.copy;
-
-         [original isEqual:duplicate] should be_truthy;
-         (original == duplicate) should_not be_truthy;
-     });
- });
-*/
+    XCTAssertEqualObjects(original, duplicate);
+    XCTAssertNotEqual(original, duplicate);
+}
 
 @end

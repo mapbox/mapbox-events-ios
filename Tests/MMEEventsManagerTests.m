@@ -84,13 +84,16 @@
 - (void)testResponseListener {
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"Registered Response listener should receive a callback"];
+    __block BOOL hasSeenCallback = false;
     [self.eventsManager registerOnURLResponseListener:^(NSData * _Nullable data, NSURLRequest * _Nonnull request, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        // Expected Error due to invalid access token
-        [expectation fulfill];
+
+        // Expected at least one callback Error due to invalid access token
+        if (!hasSeenCallback) {
+            [expectation fulfill];
+        }
+        hasSeenCallback = YES;
     }];
 
-    // Set date to be old so config is requested
-    self.preferences.configUpdateDate = [MMEDate dateWithDate:[NSDate distantPast]];
     [self.eventsManager startEventsManagerWithToken:@"coocoo"];
 
     [self waitForExpectations:@[expectation] timeout:2];
