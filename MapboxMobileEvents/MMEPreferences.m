@@ -32,8 +32,25 @@
     if (self) {
         self.bundle = bundle;
         self.userDefaults = userDefaults;
+        [self reset];
     }
     return self;
+}
+
+- (void)reset {
+    [self.userDefaults setPersistentDomain:@{} forName:MMEConfigurationDomain];
+    [self.userDefaults setVolatileDomain:@{} forName:MMEConfigurationVolatileDomain];
+
+    // Are these defalut loading necessary? Vs using calculated preferences with the aiblity to override?
+    id debugLoggingEnabled = [self.bundle objectForInfoDictionaryKey:MMEDebugLogging];
+    if ([debugLoggingEnabled isKindOfClass:NSNumber.class]) {
+        [MMELogger.sharedLogger setEnabled:[debugLoggingEnabled boolValue]];
+    }
+
+    id accountType = [self.bundle objectForInfoDictionaryKey:MMEAccountType];
+    if ([accountType isKindOfClass:NSNumber.class]) {
+        [self updateFromAccountType:[accountType integerValue]];
+    }
 }
 
 // MARK: - Volitile Domain
@@ -168,18 +185,32 @@
 }
 
 - (NSString*)legacyUserAgentBase {
-    // Is there a default here?
-    return (NSString*)[self objectForVolatileKey:MMEAccessToken];
+    if ([self objectForVolatileKey:MMELegacyUserAgentBase]) {
+        return (NSString*)[self objectForVolatileKey:MMELegacyUserAgentBase];
+    } else {
+        id object = [self.bundle objectForInfoDictionaryKey:@"MMEMapboxUserAgentBase"];
+        if ([object isKindOfClass:NSString.class]) {
+            return (NSString*)object;
+        }
+    }
+    return nil;
 }
 
 - (void)setLegacyUserAgentBase:(NSString *)legacyUserAgentBase {
-    // TODO: Why does this delete user agent?
     [self setObject:legacyUserAgentBase forVolatileKey:MMELegacyUserAgentBase];
     [self deleteObjectForVolatileKey:MMELegacyUserAgent];
 }
 
 - (NSString*)legacyHostSDKVersion {
-    return (NSString *)[self objectForVolatileKey:MMELegacyHostSDKVersion];
+    if ([self objectForVolatileKey:MMELegacyHostSDKVersion]) {
+        return (NSString *)[self objectForVolatileKey:MMELegacyHostSDKVersion];
+    } else {
+        id object = [self.bundle objectForInfoDictionaryKey:@"MMEMapboxHostSDKVersion"];
+        if ([object isKindOfClass:NSString.class]) {
+            return (NSString*)object;
+        }
+    }
+    return nil;
 }
 
 - (void)setLegacyHostSDKVersion:(NSString *)legacyHostSDKVersion {
@@ -187,7 +218,6 @@
         NSLog(@"WARNING mme_setLegacyHostSDKVersion: version string (%@) is not a valid semantic version string: http://semver.org", legacyHostSDKVersion);
     }
 
-    // TODO: Why is this deleting another key?
     [self setObject:legacyHostSDKVersion forVolatileKey:MMELegacyHostSDKVersion];
     [self deleteObjectForVolatileKey:MMELegacyUserAgent];
 }
@@ -208,14 +238,19 @@
 // MARK: - Service Configuration
 
 - (BOOL)isChinaRegion {
-    BOOL isCNRegion = NO;
-    id isCNRegionNumber = [self objectForVolatileKey:MMEIsCNRegion];
+    BOOL isChinaRegion = NO;
 
-    if ([isCNRegionNumber isKindOfClass:NSNumber.class]) {
-        isCNRegion = [(NSNumber *)isCNRegionNumber boolValue];
+    id bundleAPIURL = [self.bundle objectForInfoDictionaryKey:MMEGLMapboxAPIBaseURL];
+    if (bundleAPIURL) {
+        isChinaRegion = [bundleAPIURL isEqual:MMEAPIClientBaseChinaAPIURL];
     }
 
-    return isCNRegion;
+    id isCNRegionNumber = [self objectForVolatileKey:MMEIsCNRegion];
+    if ([isCNRegionNumber isKindOfClass:NSNumber.class]) {
+        isChinaRegion = [(NSNumber *)isCNRegionNumber boolValue];
+    }
+
+    return isChinaRegion;
 }
 
 - (void)setIsChinaRegion:(BOOL)isChinaRegion {
@@ -417,6 +452,7 @@
 
 // MARK: - Background Collection
 
+// Dane - disabledKey vs enabled?
 - (BOOL)isCollectionEnabledInBackground {
     BOOL collectionEnabled = self.isCollectionEnabled;
     if (collectionEnabled) { // check to see if it's seperately disabled
@@ -426,6 +462,10 @@
         }
     }
     return collectionEnabled;
+}
+
+- (void)setIsCollectionEnabledInBackground:(BOOL)isCollectionEnabledInBackground {
+    [self setObject:@(!isCollectionEnabledInBackground) forPersistentKey:MMECollectionDisabledInBackground];
 }
 
 - (NSTimeInterval)backgroundStartupDelay {
@@ -494,10 +534,14 @@
 
 - (void)updateFromAccountType:(NSInteger)typeCode {
     if (typeCode == MMEAccountType1) {
-        [self setObject:@(YES) forPersistentKey:MMECollectionDisabled];
+
+        // TDOO: Should this be mutating this value? Or blocking it from being turned on?
+        self.isCollectionEnabled = NO;
     }
     else if (typeCode == MMEAccountType2) {
-        [self setObject:@(YES) forPersistentKey:MMECollectionDisabledInBackground];
+
+        // TDOO: Should this be mutating this value? Or blocking it from being turned on?
+        self.isCollectionEnabledInBackground = NO;
     }
 }
 

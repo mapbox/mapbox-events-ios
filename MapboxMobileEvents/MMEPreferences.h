@@ -97,7 +97,7 @@ NS_ASSUME_NONNULL_BEGIN
 // MARK: - Background Collection
 
 /// Bool, is background collection enabled (disabling isCollectionEnabled automatically disables collection in background)
-@property (nonatomic, readonly) BOOL isCollectionEnabledInBackground;
+@property (nonatomic, assign) BOOL isCollectionEnabledInBackground;
 
 /// Interval to wait before starting telemetry collection in the background
 @property (nonatomic, readonly) NSTimeInterval backgroundStartupDelay;

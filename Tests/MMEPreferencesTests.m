@@ -4,12 +4,342 @@
 #import "NSUserDefaults+MMEConfiguration_Private.h"
 #import "MMEConfig.h"
 #import "MMEPreferences.h"
+#import "MMEBundleInfoFake.h"
+#import "MMELogger.h"
+#import "MMEConstants.h"
+
+@interface MMEPreferences (Tests)
+- (void)reset;
+- (void)updateFromAccountType:(NSInteger)typeCode;
+@end
 
 @interface MMEPreferencesTests : XCTestCase
-
+@property (nonatomic, strong) MMEPreferences* preferences;
 @end
 
 @implementation MMEPreferencesTests
+
+// Info.Plist Mock
+- (NSMutableDictionary*)bundleDefaults {
+    // alternate defaults
+    return [@{
+        MMEStartupDelay: @(MMEStartupDelayDefault), // seconds
+        MMEBackgroundGeofence: @(MMEBackgroundGeofenceDefault), // meters
+        MMEEventFlushCount: @(MMEEventFlushCountDefault), // events
+        MMEEventFlushInterval: @(MMEEventFlushIntervalDefault), // seconds
+        MMEIdentifierRotationInterval: @(MMEIdentifierRotationIntervalDefault), // 24 hours
+        MMEConfigurationUpdateInterval: @(MMEConfigurationUpdateIntervalDefault), // 24 hours
+        MMEBackgroundStartupDelay: @(MMEBackgroundStartupDelayDefault), // seconds
+        MMECollectionDisabled: @NO,
+        MMECollectionEnabledInSimulator: @YES,
+        MMECollectionDisabledInBackground: @YES,
+        MMEConfigEventTag: @"tag",
+        MMECertificateRevocationList:@[
+                @"T4XyKSRwZ5icOqGmJUXiDYGa+SaXKTGQXZwhqpwNTEo=",
+                @"KlV7emqpeM6V2MtDEzSDzcIob6VwkdWHiVsNQQzTIeo="]
+    } mutableCopy];
+
+}
+
+- (void)setUp {
+    [super setUp];
+
+    // Default Setup
+    NSBundle* bundle = [MMEBundleInfoFake bundleWithFakeInfo:[self bundleDefaults]];
+    self.preferences = [[MMEPreferences alloc] initWithBundle:bundle
+                                                    dataStore:NSUserDefaults.mme_configuration];
+    [self.preferences reset];
+}
+
+
+- (void)testResetConfiguration {
+    XCTAssertGreaterThan(self.preferences.userDefaults.volatileDomainNames.count, 0);
+}
+
+- (void)testEventFlushCountDefault {
+    XCTAssertEqual(self.preferences.eventFlushCount, 180);
+}
+
+- (void)testEventFlushIntervalDefault {
+    XCTAssertEqual(self.preferences.eventFlushInterval, 180);
+}
+
+- (void)testEventIdentifierRotationDefault {
+    XCTAssertEqual(self.preferences.identifierRotationInterval, 86400);
+}
+
+- (void)testEventConfigurationUpdateIntervalDefault {
+    XCTAssertEqual(self.preferences.configUpdateInterval, 86400);
+}
+
+- (void)testEventBackgroundStartupDelayDefault {
+    XCTAssertEqual(self.preferences.backgroundStartupDelay, 15);
+}
+
+- (void)testUserAgentGenerationDefault {
+    NSLog(@"User-Agent: %@", self.preferences.userAgentString);
+    XCTAssertNotNil(self.preferences.userAgentString);
+}
+
+- (void)testConfigEventTagDefault {
+    XCTAssertEqualObjects(self.preferences.eventTag, @"tag");
+}
+
+// MARK: - Location Collection
+- (void)testEventIsCollectionEnabledDefault {
+    XCTAssertTrue(self.preferences.isCollectionEnabled);
+}
+
+- (void)testEventIsCollectionEnabledInSimulatorDefault {
+    XCTAssertTrue(self.preferences.isCollectionEnabledInSimulator);
+}
+
+- (void)testCustomProfileOverMaxValues {
+
+    NSBundle* bundle = [MMEBundleInfoFake bundleWithFakeInfo:@{
+        MMEEventsProfile: MMECustomProfile,
+        MMEStartupDelay : @9001,
+        MMECustomGeofenceRadius: @9001
+    }];
+    self.preferences = [[MMEPreferences alloc] initWithBundle:bundle
+                                                    dataStore:NSUserDefaults.mme_configuration];
+
+    XCTAssertEqual(self.preferences.backgroundGeofence, 300);
+    XCTAssertEqual(self.preferences.startupDelay, 1);
+}
+
+- (void)testCustomProfileUnderMinValues {
+    NSBundle* bundle = [MMEBundleInfoFake bundleWithFakeInfo:@{
+        MMEEventsProfile: MMECustomProfile,
+        MMEStartupDelay : @-42,
+        MMECustomGeofenceRadius: @10
+    }];
+    self.preferences = [[MMEPreferences alloc] initWithBundle:bundle
+                                                    dataStore:NSUserDefaults.mme_configuration];
+
+    XCTAssertEqual(self.preferences.backgroundGeofence, 300);
+    XCTAssertEqual(self.preferences.startupDelay, 1);
+}
+
+- (void)testCustomProfile {
+    NSBundle* bundle = [MMEBundleInfoFake bundleWithFakeInfo:@{
+        MMEEventsProfile: MMECustomProfile,
+        MMEStartupDelay : @2,
+        MMECustomGeofenceRadius: @420
+    }];
+    self.preferences = [[MMEPreferences alloc] initWithBundle:bundle
+                                                    dataStore:NSUserDefaults.mme_configuration];
+
+    XCTAssertEqual(self.preferences.backgroundGeofence, 420);
+    XCTAssertEqual(self.preferences.startupDelay, 2);
+}
+
+- (void)testCustomProfileInvalidValues {
+    NSBundle* bundle = [MMEBundleInfoFake bundleWithFakeInfo:@{
+        MMEEventsProfile: MMECustomProfile,
+        MMEStartupDelay : @"unicorn",
+        MMECustomGeofenceRadius: @"fence"
+    }];
+    self.preferences = [[MMEPreferences alloc] initWithBundle:bundle
+                                                    dataStore:NSUserDefaults.mme_configuration];
+
+    XCTAssertEqual(self.preferences.backgroundGeofence, 300);
+    XCTAssertEqual(self.preferences.startupDelay, 1);
+}
+
+- (void)testDebugLoggingEnabledFromBundle {
+    NSBundle* bundle = [MMEBundleInfoFake bundleWithFakeInfo:@{
+        MMEDebugLogging: @YES
+    }];
+    self.preferences = [[MMEPreferences alloc] initWithBundle:bundle
+                                                    dataStore:NSUserDefaults.mme_configuration];
+    XCTAssertTrue([MMELogger.sharedLogger isEnabled]);
+}
+
+- (void)testDefaults {
+    NSBundle* bundle = [MMEBundleInfoFake bundleWithFakeInfo:@{
+        MMEAccountType: @1,
+        @"MMEMapboxUserAgentBase" : @"com.mapbox.test",
+        @"MMEMapboxHostSDKVersion": @"1.0.0"
+    }];
+    self.preferences = [[MMEPreferences alloc] initWithBundle:bundle
+                                                    dataStore:NSUserDefaults.mme_configuration];
+
+    XCTAssertFalse(self.preferences.isCollectionEnabled);
+    XCTAssertEqualObjects(self.preferences.legacyUserAgentBase, @"com.mapbox.test");
+    XCTAssertEqualObjects(self.preferences.legacyHostSDKVersion, @"1.0.0");
+}
+
+- (void)testPersistentObjectSetDelete {
+    [NSUserDefaults.mme_configuration mme_setObject:@2 forPersistentKey:MMEAccountType];
+    XCTAssert([[NSUserDefaults.mme_configuration objectForKey:MMEAccountType] intValue] == 2);
+
+    [NSUserDefaults.mme_configuration mme_deleteObjectForPersistentKey:MMEAccountType];
+    XCTAssertNil([NSUserDefaults.mme_configuration objectForKey:MMEAccountType]);
+}
+
+- (void)testAccountUpdate {
+    self.preferences.isCollectionEnabled = YES;
+    self.preferences.isCollectionEnabledInBackground = YES;
+    [self.preferences updateFromAccountType:MMEAccountType1];
+    XCTAssertEqual(self.preferences.isCollectionEnabled, NO);
+
+    self.preferences.isCollectionEnabled = YES;
+    self.preferences.isCollectionEnabledInBackground = YES;
+
+    [self.preferences updateFromAccountType:MMEAccountType2];
+    XCTAssertEqual(self.preferences.isCollectionEnabledInBackground, NO);
+
+    self.preferences.isCollectionEnabled = YES;
+    self.preferences.isCollectionEnabledInBackground = YES;
+    [self.preferences updateFromAccountType:0];
+    XCTAssertEqual(self.preferences.isCollectionEnabled, YES);
+    XCTAssertEqual(self.preferences.isCollectionEnabledInBackground, YES);
+
+
+
+}
+
+// MARK: - Background Collection
+
+- (void)testEventIsCollectionEnabledInBackgroundDefault {
+    XCTAssertFalse(self.preferences.isCollectionEnabledInBackground);
+}
+
+- (void)testStartupDelayDefault {
+    XCTAssertEqual(self.preferences.startupDelay, 1);
+}
+
+- (void)testEventBackgroundGeofenceDefault {
+    XCTAssertEqual(self.preferences.backgroundGeofence, 300);
+}
+
+// MARK: - Certificate Revocation List
+
+- (void)testCertificateRevocationList {
+    XCTAssertEqual(self.preferences.certificateRevocationList.count, 2);
+}
+
+// MARK: - Utilities
+
+- (void)testSetAccessToken {
+    self.preferences.accessToken = nil;
+    XCTAssertNil(self.preferences.accessToken);
+
+    self.preferences.accessToken = @"pk.12345";;
+    XCTAssertEqualObjects(self.preferences.accessToken, @"pk.12345");
+}
+
+// MARK: - Service Configuration
+
+//- (void)testConfigUpdate {
+//    [NSUserDefaults.mme_configuration mme_setConfigUpdateDate:[MMEDate date]];
+//    XCTAssertNotNil(NSUserDefaults.mme_configuration.mme_configUpdateDate);
+//}
+
+// MARK: - Service URLs (Defaults)
+
+- (void)testEventsServiceURLDefault {
+    XCTAssertEqualObjects(self.preferences.eventsServiceURL.absoluteString, @"https://events.mapbox.com");
+}
+
+- (void)testAPIServiceURLDefault {
+    XCTAssertEqualObjects(self.preferences.apiServiceURL.absoluteString, @"https://api.mapbox.com");
+}
+
+- (void)testConfigServiceURLDefault {
+    XCTAssertEqualObjects(self.preferences.configServiceURL.absoluteString, @"https://config.mapbox.com");
+}
+
+// MARK: - Service URLs (Overrides)
+
+- (void)testEventsServiceURLOverrideWithString {
+    NSMutableDictionary* dictionary = [self bundleDefaults];
+    dictionary[MMEEventsServiceURL] = @"https://test.com";
+    NSBundle* bundle = [MMEBundleInfoFake bundleWithFakeInfo:dictionary];
+    self.preferences = [[MMEPreferences alloc] initWithBundle:bundle dataStore:NSUserDefaults.mme_configuration];
+    XCTAssertEqualObjects(self.preferences.eventsServiceURL.absoluteString, @"https://test.com");
+}
+
+- (void)testAPIServiceURLWithString {
+    NSMutableDictionary* dictionary = [self bundleDefaults];
+    dictionary[MMEEventsServiceURL] = @"https://test.com";
+    NSBundle* bundle = [MMEBundleInfoFake bundleWithFakeInfo:dictionary];
+    self.preferences = [[MMEPreferences alloc] initWithBundle:bundle dataStore:NSUserDefaults.mme_configuration];
+    XCTAssertEqualObjects(self.preferences.apiServiceURL.absoluteString, @"https://test.com");
+}
+
+- (void)testEventsServiceURLOverrideWithURL {
+    NSMutableDictionary* dictionary = [self bundleDefaults];
+    dictionary[MMEEventsServiceURL] = [NSURL URLWithString:@"https://test.com"];
+    NSBundle* bundle = [MMEBundleInfoFake bundleWithFakeInfo:dictionary];
+    self.preferences = [[MMEPreferences alloc] initWithBundle:bundle dataStore:NSUserDefaults.mme_configuration];
+    XCTAssertEqualObjects(self.preferences.eventsServiceURL.absoluteString, @"https://test.com");
+}
+
+- (void)testAPIServiceURLWithURL {
+    NSMutableDictionary* dictionary = [self bundleDefaults];
+    dictionary[MMEEventsServiceURL] = [NSURL URLWithString:@"https://test.com"];
+    NSBundle* bundle = [MMEBundleInfoFake bundleWithFakeInfo:dictionary];
+    self.preferences = [[MMEPreferences alloc] initWithBundle:bundle dataStore:NSUserDefaults.mme_configuration];
+    XCTAssertEqualObjects(self.preferences.apiServiceURL.absoluteString, @"https://test.com");
+}
+
+- (void)testStartupDelayChange {
+    NSMutableDictionary* dictionary = [self bundleDefaults];
+    dictionary[MMEStartupDelay] = @42;
+    NSBundle* bundle = [MMEBundleInfoFake bundleWithFakeInfo:dictionary];
+    self.preferences = [[MMEPreferences alloc] initWithBundle:bundle dataStore:NSUserDefaults.mme_configuration];
+    XCTAssertEqual(self.preferences.startupDelay, 42);
+}
+
+- (void)testChinaRegionSetFromPlist {
+    // set the region to CN in the plist
+    NSBundle* bundle = [MMEBundleInfoFake bundleWithFakeInfo:@{
+        MMEGLMapboxAPIBaseURL: MMEAPIClientBaseChinaAPIURL
+    }];
+    self.preferences = [[MMEPreferences alloc] initWithBundle:bundle
+                                                    dataStore:NSUserDefaults.mme_configuration];
+    XCTAssertTrue(self.preferences.isChinaRegion);
+}
+
+- (void)testChinaRegionSetter {
+    self.preferences.isChinaRegion = YES;
+    XCTAssertTrue(self.preferences.isChinaRegion);
+
+    self.preferences.isChinaRegion = NO;
+    XCTAssertFalse(self.preferences.isChinaRegion);
+
+    self.preferences.isChinaRegion = YES;
+    XCTAssertTrue(self.preferences.isChinaRegion);
+}
+
+- (void)testRestOfWorldRegionURLS {
+    self.preferences.isChinaRegion = NO;
+    XCTAssertEqualObjects(self.preferences.apiServiceURL.absoluteString, @"https://api.mapbox.com");
+    XCTAssertEqualObjects(self.preferences.eventsServiceURL.absoluteString, @"https://events.mapbox.com");
+    XCTAssertEqualObjects(self.preferences.configServiceURL.absoluteString, @"https://config.mapbox.com");
+}
+
+- (void)testChinaRegionURLS {
+    self.preferences.isChinaRegion = YES;
+    XCTAssertEqualObjects(self.preferences.apiServiceURL.absoluteString, @"https://api.mapbox.cn");
+    XCTAssertEqualObjects(self.preferences.eventsServiceURL.absoluteString, @"https://events.mapbox.cn");
+    XCTAssertEqualObjects(self.preferences.configServiceURL.absoluteString, @"https://config.mapbox.cn");
+}
+
+
+
+//- (void)testConfigUpdateDate {
+//    [NSUserDefaults.mme_configuration mme_setConfigUpdateDate:MMEDate.date];
+//    [NSUserDefaults.mme_configuration mme_deleteObjectForVolatileKey:MMEConfigUpdateDate];
+//
+//    MMEDate *date = [NSUserDefaults.mme_configuration mme_configUpdateDate];
+//
+//    XCTAssert(date);
+//}
+
+// MARK: - Certificate Pinning Models
 
 - (void)testExpectedCNHashCount {
     NSArray* chinaHashes = NSUserDefaults.mme_chinaPublicKeys;
@@ -52,10 +382,10 @@
     [preferences updateWithConfig:config];
 
     NSArray *hashes = NSUserDefaults.mme_configuration.mme_certificatePinningConfig[@"events.mapbox.com"];
-    XCTAssert(hashes.count == 53);
+    XCTAssertEqual(hashes.count, 53);
 }
 
--(void)testValidateCNHashes {
+-(void)testValidateChinaHashes {
     NSArray *cnHashes = NSUserDefaults.mme_configuration.mme_certificatePinningConfig[@"events.mapbox.cn"];
     NSMutableArray *invalidHashes = [[NSMutableArray alloc] init];
 
@@ -66,10 +396,10 @@
             [invalidHashes addObject:publicKeyHash];
         }
     }
-    XCTAssert(invalidHashes.count == 0);
+    XCTAssertEqual(invalidHashes.count, 0);
 }
 
--(void)testValidateCOMHashes {
+-(void)testValidateCommercialHashes {
     NSArray *comHashes = NSUserDefaults.mme_configuration.mme_certificatePinningConfig[@"events.mapbox.com"];
     NSMutableArray *invalidHashes = [[NSMutableArray alloc] init];
 
@@ -80,7 +410,7 @@
             [invalidHashes addObject:publicKeyHash];
         }
     }
-    XCTAssert(invalidHashes.count == 0);
+    XCTAssertEqual(invalidHashes.count, 0);
 }
 
 @end

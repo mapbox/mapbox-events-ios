@@ -7,8 +7,6 @@
 #import "MMEConstants.h"
 #import "MMEMetricsManager.h"
 #import "MMELogger.h"
-#import "NSUserDefaults+MMEConfiguration.h"
-#import "NSUserDefaults+MMEConfiguration_Private.h"
 #import "NSData+MMEGZIP.h"
 #import "MMEMockEventConfig.h"
 #import "MMEAPIClientBlockCounter.h"

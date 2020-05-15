@@ -8,8 +8,6 @@
 #import "MMENSURLRequestFactory.h"
 #import "MMENSURLSessionWrapper.h"
 #import "NSError+APIClient.h"
-#import "NSUserDefaults+MMEConfiguration.h"
-#import "NSUserDefaults+MMEConfiguration_Private.h"
 
 @import MobileCoreServices;
 

@@ -37,8 +37,9 @@
     NSURLSessionConfiguration* sessionConfiguration = NSURLSessionConfiguration.defaultSessionConfiguration;
     MMEMockEventConfig* eventConfig = [[MMEMockEventConfig alloc] init];
     MMECertPin* certPin = [[MMECertPin alloc] initWithConfig:eventConfig];
+//    dispatch_queue_t queue = dispatch_queue_create(@"com.mapbox.tests.CertPin", DISPATCH_QUEUE_SERIAL)
     dispatch_queue_t queue = dispatch_queue_create(
-                                                   [[NSString stringWithFormat:@"com.mapbox.tests.CertPin", NSStringFromClass([self class])] UTF8String], DISPATCH_QUEUE_SERIAL
+                                                   [[NSString stringWithFormat:@"com.mapbox.tests.%@", NSStringFromClass([self class])] UTF8String], DISPATCH_QUEUE_SERIAL
                                                    );
     
     [[MMENSURLSessionWrapper alloc] initWithConfiguration:sessionConfiguration

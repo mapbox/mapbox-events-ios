@@ -91,7 +91,7 @@ NS_ASSUME_NONNULL_BEGIN
     if ([infoCollectionEnabledInSimulator isKindOfClass:NSNumber.class]) {
         collectionEnabledInSimulator = [infoCollectionEnabledInSimulator boolValue];
     }
-    
+
     id debugLoggingEnabled = [NSBundle.mme_mainBundle objectForInfoDictionaryKey:MMEDebugLogging];
     if ([debugLoggingEnabled isKindOfClass:NSNumber.class]) {
         [MMELogger.sharedLogger setEnabled:[debugLoggingEnabled boolValue]];

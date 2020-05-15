@@ -60,14 +60,8 @@
 - (void)setUp {
 
     MMELogger* logger = [[MMELogger alloc] init];
-
-    // Initialize With Default Preferences
-    NSUserDefaults* userDefaults = NSUserDefaults.mme_configuration;
-    [userDefaults setPersistentDomain:@{} forName:MMEConfigurationDomain];
-    [userDefaults setVolatileDomain:@{} forName:MMEConfigurationVolatileDomain];
-
     self.preferences = [[MMEPreferences alloc] initWithBundle:[MMEBundleInfoFake new]
-                                                    dataStore:userDefaults];
+                                                    dataStore:NSUserDefaults.mme_configuration];
 
     MMEMetricsManager* metricsManager = [[MMEMetricsManager alloc] initWithLogger:logger config:self.preferences];
 
@@ -96,12 +90,25 @@
     XCTAssertEqualObjects(self.preferences.accessToken, @"Bar");
 }
 
+- (void)testIsCollectionEnabledDefault {
+    self.preferences.isCollectionEnabled = YES;
+}
+
 - (void)testIsCollectionSetter {
     self.preferences.isCollectionEnabled = NO;
     XCTAssertEqual(self.preferences.isCollectionEnabled, NO);
 
     self.preferences.isCollectionEnabled = YES;
     XCTAssertEqual(self.preferences.isCollectionEnabled, YES);
+}
+
+- (void)testIsCollectionEnabledInBackgroundSetter {
+    self.preferences.isCollectionEnabled = YES;
+    self.preferences.isCollectionEnabledInBackground = NO;
+    XCTAssertEqual(self.preferences.isCollectionEnabledInBackground, NO);
+
+    self.preferences.isCollectionEnabledInBackground = YES;
+    XCTAssertEqual(self.preferences.isCollectionEnabledInBackground, YES);
 }
 
 - (void)testPausesWithWhenInUseAuthAndBackgrounded {
@@ -216,10 +223,8 @@
 
     self.preferences.isCollectionEnabled = NO;
 
-    // This is an asynchronous task
     [self.eventsManager processAuthorizationStatus:kCLAuthorizationStatusAuthorizedAlways andApplicationState:UIApplicationStateActive];
 
-    // TODO: - Something is going on here??? It is not deterministic? Why?
     XCTAssertTrue(self.eventsManager.paused);
 }
 
@@ -243,6 +248,7 @@
     XCTAssertTrue(self.eventsManager.paused);
 }
 
+// Dane - results in backgroundCollection Off
 - (void)testCollectionNotEnabledWhileNOTPausedAndAlwaysAuthAndBackgrounded {
     self.eventsManager.paused = NO;
     
@@ -456,20 +462,99 @@
     XCTAssert(capturedDate != self.eventsManager.nextTurnstileSendDate);
 }
 
+
+// Each Initialized EventManager should be different unless using shared
+-(void)testEventManagerInitShouldBeDifferent {
+    MMEEventsManager* eventManager1 = [[MMEEventsManager alloc] initWithDefaults];
+    MMEEventsManager* eventManager2 = [[MMEEventsManager alloc] initWithDefaults];
+    XCTAssertNotEqual(eventManager1, eventManager2);
+}
+
+-(void)testSharedEventManagerIsTheSame {
+    XCTAssertEqual(MMEEventsManager.sharedManager, MMEEventsManager.sharedManager);
+}
+
+-(void)testStartWithAccessToken {
+
+    NSBundle* bundle = [MMEBundleInfoFake bundleWithFakeInfo:@{
+        MMEEventsProfile : MMECustomProfile,
+        MMEStartupDelay: @10,
+        MMECustomGeofenceRadius: @1200
+    }];
+    self.preferences = [[MMEPreferences alloc] initWithBundle:bundle
+                                                    dataStore:NSUserDefaults.mme_configuration];
+
+
+    MMELogger* logger = [[MMELogger alloc] init];
+    MMEMetricsManager* metricsManager = [[MMEMetricsManager alloc] initWithLogger:logger config:self.preferences];
+
+    self.eventsManager = [[MMEEventsManager alloc] initWithPreferences:self.preferences
+                                                      uniqueIdentifier:[[MMEUniqueIdentifier alloc] initWithTimeInterval:self.preferences.identifierRotationInterval]
+                                                           application:[[MMEUIApplicationWrapperFake alloc] init]
+                                                        metricsManager:metricsManager
+                                                       dispatchManager:[[MMEDispatchManager alloc] init]
+                                                                logger:logger];
+
+    [self.eventsManager startEventsManagerWithToken:@"fooToken"];
+    XCTAssertEqualObjects(self.eventsManager.configuration.accessToken, @"fooToken");
+    XCTAssertEqualObjects(self.eventsManager.configuration.legacyUserAgentBase, @"legacy");
+    XCTAssertEqualObjects(self.eventsManager.configuration.legacyHostSDKVersion, @"0.0");
+
+}
+-(void)testStartWithAccessTokenAgentBaseHostSDKVersion {
+    NSBundle* bundle = [MMEBundleInfoFake bundleWithFakeInfo:@{
+        MMEEventsProfile : MMECustomProfile,
+        MMEStartupDelay: @10,
+        MMECustomGeofenceRadius: @1200
+    }];
+    self.preferences = [[MMEPreferences alloc] initWithBundle:bundle
+                                                    dataStore:NSUserDefaults.mme_configuration];
+
+
+    MMELogger* logger = [[MMELogger alloc] init];
+    MMEMetricsManager* metricsManager = [[MMEMetricsManager alloc] initWithLogger:logger config:self.preferences];
+
+    self.eventsManager = [[MMEEventsManager alloc] initWithPreferences:self.preferences
+                                                      uniqueIdentifier:[[MMEUniqueIdentifier alloc] initWithTimeInterval:self.preferences.identifierRotationInterval]
+                                                           application:[[MMEUIApplicationWrapperFake alloc] init]
+                                                        metricsManager:metricsManager
+                                                       dispatchManager:[[MMEDispatchManager alloc] init]
+                                                                logger:logger];
+
+    [self.eventsManager startEventsManagerWithToken:@"fooToken" userAgentBase:@"bar" hostSDKVersion:@"baz"];
+    XCTAssertEqualObjects(self.eventsManager.configuration.accessToken, @"fooToken");
+    XCTAssertEqualObjects(self.eventsManager.configuration.legacyUserAgentBase, @"bar");
+    XCTAssertEqualObjects(self.eventsManager.configuration.legacyHostSDKVersion, @"baz");
+}
+
+-(void)testSkuID {
+    NSBundle* bundle = [MMEBundleInfoFake bundleWithFakeInfo:@{
+        MMEEventsProfile : MMECustomProfile,
+        MMEStartupDelay: @10,
+        MMECustomGeofenceRadius: @1200
+    }];
+    self.preferences = [[MMEPreferences alloc] initWithBundle:bundle
+                                                    dataStore:NSUserDefaults.mme_configuration];
+
+
+    MMELogger* logger = [[MMELogger alloc] init];
+    MMEMetricsManager* metricsManager = [[MMEMetricsManager alloc] initWithLogger:logger config:self.preferences];
+
+    self.eventsManager = [[MMEEventsManager alloc] initWithPreferences:self.preferences
+                                                      uniqueIdentifier:[[MMEUniqueIdentifier alloc] initWithTimeInterval:self.preferences.identifierRotationInterval]
+                                                           application:[[MMEUIApplicationWrapperFake alloc] init]
+                                                        metricsManager:metricsManager
+                                                       dispatchManager:[[MMEDispatchManager alloc] init]
+                                                                logger:logger];
+
+    XCTAssertNil(self.eventsManager.skuId);
+    self.eventsManager.skuId = @"Fluffy";
+    XCTAssertEqualObjects(self.eventsManager.skuId, @"Fluffy");
+}
+
 // TODO: Convert Cedar Tests
 
 /*
-// many of the tests use a manager which is not the shared manager,
-//   in normal operation clietns should not use the private initShared method used for testsing
-describe(@"MMEventsManager.sharedManager", ^{
-    MMEEventsManager *shared = MMEEventsManager.sharedManager;
-    MMEEventsManager *allocated = [MMEEventsManager.alloc init];
-
-    it(@"should equal the allocated manager", ^{
-        shared should equal(allocated);
-    });
-});
-
 describe(@"MMEEventsManager", ^{
     
     __block MMEEventsManager *eventsManager;
@@ -486,146 +571,6 @@ describe(@"MMEEventsManager", ^{
 
         // set a high MMEEventFlushCount to prevent crossing the threshold in the tests
         [NSUserDefaults.mme_configuration setObject:@1000 forKey:MMEEventFlushCount];
-    });
-
-    describe(@"-initializeWithAccessToken:userAgentBase:hostSDKVersion:", ^{
-        context(@"when the custom events profile is set", ^{
-            beforeEach(^{
-                NSBundle.mme_mainBundle = [MMEBundleInfoFake bundleWithFakeInfo:@{
-                    MMEEventsProfile : MMECustomProfile,
-                    MMEStartupDelay: @10,
-                    MMECustomGeofenceRadius: @1200
-                }];
-                [NSUserDefaults.mme_configuration mme_registerDefaults];
-                
-                eventsManager = [MMEEventsManager.alloc initShared];
-                eventsManager.dispatchManager = dispatchManager;
-                [eventsManager initializeWithAccessToken:@"foo" userAgentBase:@"bar" hostSDKVersion:@"baz"];
-            });
-            
-            it(@"should schedule the initialization work with a 10 second delay", ^{
-                dispatchManager.delay should equal(10);
-            });
-
-            it(@"should set the sttartup delay to a 10 second delay", ^{
-                NSUserDefaults.mme_configuration.mme_startupDelay should equal(10);
-            });
-            
-            it(@"should allow for custom geofence radius", ^{
-                NSUserDefaults.mme_configuration.mme_backgroundGeofence should equal(1200);
-            });
-        });
-    
-        context(@"when the custom events profile is set over the max values allowed", ^{
-            beforeEach(^{
-                NSBundle.mme_mainBundle = [MMEBundleInfoFake bundleWithFakeInfo:@{
-                    MMEEventsProfile: MMECustomProfile,
-                    MMEStartupDelay : @9001,
-                    MMECustomGeofenceRadius: @9001
-                }];
-                [NSUserDefaults.mme_configuration mme_registerDefaults];
-
-                eventsManager = [MMEEventsManager.alloc initShared];
-                eventsManager.dispatchManager = dispatchManager;
-                [eventsManager initializeWithAccessToken:@"foo" userAgentBase:@"bar" hostSDKVersion:@"baz"];
-            });
-
-            it(@"should schedule the initialization work with a 1 second delay", ^{
-                dispatchManager.delay should equal(1);
-            });
-            
-            it(@"should revert the sttartup delay to default 1 second delay", ^{
-                NSUserDefaults.mme_configuration.mme_startupDelay should equal(1);
-            });
-            
-            it(@"should revert custom geofence radius to default", ^{
-                NSUserDefaults.mme_configuration.mme_backgroundGeofence should equal(300);
-            });
-        });
-    
-        context(@"when the custom events profile is set under the minimum values allowed", ^{
-            beforeEach(^{
-                NSBundle.mme_mainBundle = [MMEBundleInfoFake bundleWithFakeInfo:@{
-                    MMEEventsProfile: MMECustomProfile,
-                    MMEStartupDelay: @-42,
-                    MMECustomGeofenceRadius : @9
-                }];
-                [NSUserDefaults.mme_configuration mme_registerDefaults];
-
-                eventsManager = [MMEEventsManager.alloc initShared];
-                eventsManager.dispatchManager = dispatchManager;
-                [eventsManager initializeWithAccessToken:@"foo" userAgentBase:@"bar" hostSDKVersion:@"baz"];
-            });
-            
-            it(@"should have the default startup delay", ^{
-                NSUserDefaults.mme_configuration.mme_startupDelay should equal(1);
-            });
-        });
-
-        context(@"when no fancy value is set", ^{
-            beforeEach(^{
-                NSBundle.mme_mainBundle = nil;
-                [NSUserDefaults.mme_configuration mme_registerDefaults];
-
-                eventsManager = [MMEEventsManager.alloc initShared];
-                eventsManager.dispatchManager = dispatchManager;
-                [eventsManager initializeWithAccessToken:@"foo" userAgentBase:@"bar" hostSDKVersion:@"baz"];
-            });
-            
-            it(@"should schedule the initialization work with a 1 second delay", ^{
-                dispatchManager.delay should equal(1);
-            });
-
-            it(@"should revert the sttartup delay to default 1 second delay", ^{
-                NSUserDefaults.mme_configuration.mme_startupDelay should equal(1);
-            });
-            
-            it(@"should revert custom geofence radius to default", ^{
-                NSUserDefaults.mme_configuration.mme_backgroundGeofence should equal(300);
-            });
-        });
-
-        context(@"when no profile is set", ^{
-            beforeEach(^{
-                NSBundle.mme_mainBundle = nil;
-                [NSUserDefaults.mme_configuration mme_registerDefaults];
-
-                eventsManager = [MMEEventsManager.alloc initShared];
-                eventsManager.dispatchManager = dispatchManager;
-                
-                [eventsManager initializeWithAccessToken:@"foo" userAgentBase:@"bar" hostSDKVersion:@"baz"];
-            });
-
-            it(@"should schedule the initialization work with a 1 second delay", ^{
-                dispatchManager.delay should equal(1);
-            });
-            
-            it(@"should revert the sttartup delay to default 1 second delay", ^{
-                NSUserDefaults.mme_configuration.mme_startupDelay should equal(1);
-            });
-            
-            it(@"should revert custom geofence radius to default", ^{
-                NSUserDefaults.mme_configuration.mme_backgroundGeofence should equal(300);
-            });
-        });
-    });
-    
-    describe(@"- setSkuId", ^{
-        __block NSString *aNiceSkuId = @"42";
-        
-        beforeEach(^{
-            [eventsManager initializeWithAccessToken:@"access-token" userAgentBase:@"user-agent-base" hostSDKVersion:@"host-version"];
-        });
-        
-        it(@"shouldn't be set", ^{
-            eventsManager.skuId should be_nil;
-        });
-        
-        it(@"sets the skuId on the events manager", ^{
-            [eventsManager setSkuId:aNiceSkuId];
-            
-            eventsManager.skuId should equal(aNiceSkuId);
-        });
     });
     
     describe(@"- flush", ^{

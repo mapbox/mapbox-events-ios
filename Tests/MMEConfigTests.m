@@ -63,9 +63,8 @@
     XCTAssertEqualObjects(config.backgroundStartupOverride, @10);
     XCTAssertEqualObjects(config.eventTag, @"TAG");
 
-    // TODO: These interpretations need to be able to be verified
+    // TODO: These interpretations need to be able to be verified?
     // XCTAssertFalse(NSUserDefaults.mme_configuration.mme_isCollectionEnabledInBackground);
-    // XCTAssert(NSUserDefaults.mme_configuration.mme_backgroundStartupDelay == 10);
 }
 
 - (void)testNilGeofenceOverrideIfOutOfRange {

@@ -3,8 +3,6 @@
 #import "MMEAPIClient.h"
 #import "MMEEventsManager.h"
 #import "MMEEventsManager_Private.h"
-#import "NSUserDefaults+MMEConfiguration.h"
-#import "NSUserDefaults+MMEConfiguration_Private.h"
 #import "MMEServiceFixture.h"
 #import "MMEBundleInfoFake.h"
 #import "MMEDate.h"

@@ -6,7 +6,7 @@
 #import "MMEDate.h"
 #import "MMEEventsManager.h"
 #import "MMEReachability.h"
-#import "MMEEventConfigProviding.h"
+#import "MMEPreferences.h"
 
 #import "NSProcessInfo+SystemInfo.h"
 
@@ -110,7 +110,7 @@
 #endif
     errorAttributes[MMEEventKeyIsSilentCrash] = @"yes";
 
-    // TODO: Enable this to come from extra parameter or included a suplamental content injected just before sending?
+    // TODO: Enable this to come from extra parameter or included a supplemental content injected just before sending?
     errorAttributes[MMEEventSDKIdentifier] = MMEEventsManager.sharedManager.configuration.userAgentString;
     errorAttributes[MMEEventKeyAppID] = (NSBundle.mainBundle.bundleIdentifier ?: @"unknown");
     errorAttributes[MMEEventKeyAppVersion] = [NSString stringWithFormat:@"%@ %@",

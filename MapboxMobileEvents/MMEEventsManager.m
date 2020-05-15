@@ -25,7 +25,6 @@
 #import "NSUserDefaults+MMEConfiguration.h"
 #import "NSProcessInfo+SystemInfo.h"
 #import "MMEConfigService.h"
-#import "NSUserDefaults+MMEConfiguration_Private.h"
 #import "MMEPreferences.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -121,8 +120,10 @@ NS_ASSUME_NONNULL_BEGIN
     @try {
         if (self.apiClient) { // stop the existing API client, set the new token then recreate the client
             [self stopEventsManager];
-            self.preferences.accessToken = accessToken;
         }
+        self.preferences.accessToken = accessToken;
+        self.preferences.legacyUserAgentBase = userAgentBase;
+        self.preferences.legacyHostSDKVersion = hostSDKVersion;
 
         __weak __typeof__(self) weakSelf = self;
 
