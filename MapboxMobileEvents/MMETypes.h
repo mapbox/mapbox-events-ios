@@ -1,5 +1,8 @@
 #import <Foundation/Foundation.h>
 
+typedef void(^OnURLResponse)(NSData * _Nullable data, NSURLRequest* _Nonnull request, NSURLResponse * _Nullable response, NSError * _Nullable error);
+typedef void(^OnSerializationError)(NSError * _Nonnull error);
+
 #ifndef NS_ARRAY_OF
     // Foundation collection classes adopted lightweight generics in iOS 9.0 and OS X 10.11 SDKs.
     #if __has_feature(objc_generics) && (__IPHONE_OS_VERSION_MAX_ALLOWED >= 90000 || __MAC_OS_X_VERSION_MAX_ALLOWED >= 101100)

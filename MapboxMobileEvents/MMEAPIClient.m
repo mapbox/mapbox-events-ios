@@ -1,5 +1,4 @@
 #import "MMEAPIClient.h"
-#import "MMEAPIClient_Private.h"
 #import "MMEConfig.h"
 #import "MMEConstants.h"
 #import "MMEDate.h"
@@ -7,7 +6,6 @@
 #import "MMEEventConfigProviding.h"
 #import "MMENSURLRequestFactory.h"
 #import "MMENSURLSessionWrapper.h"
-#import "NSError+APIClient.h"
 
 @import MobileCoreServices;
 
@@ -18,17 +16,17 @@
 
 @property (nonatomic) id<MMENSURLSessionWrapper> sessionWrapper;
 @property (nonatomic) NSBundle *applicationBundle;
+@property (nonatomic, strong) id<MMEEventConfigProviding> config;
 
 // Factory for building URLRequests with shared components provided by Config
-@property (nonatomic, readonly) MMENSURLRequestFactory *requestFactory;
+@property (nonatomic, strong) MMENSURLRequestFactory *requestFactory;
 
 // Metrics and statistics gathering hooks (Likely eligible to move to a private hader)
-@property (nonatomic, copy) OnErrorBlock onError;
-@property (nonatomic, copy) OnBytesReceived onBytesReceived;
+@property (nonatomic, copy) OnSerializationError onSerializationError;
+@property (nonatomic, copy) OnURLResponse onURLResponse;
 @property (nonatomic, copy) OnEventQueueUpdate onEventQueueUpdate;
 @property (nonatomic, copy) OnEventCountUpdate onEventCountUpdate;
 @property (nonatomic, copy) OnGenerateTelemetryEvent onGenerateTelemetryEvent;
-@property (nonatomic, copy) OnLogEvent onLogEvent;
 @end
 
 int const kMMEMaxRequestCount = 1000;
@@ -42,37 +40,39 @@ int const kMMEMaxRequestCount = 1000;
 
     MMENSURLSessionWrapper* session = [[MMENSURLSessionWrapper alloc] initWithSessionConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]
                                                                                 eventConfiguration:config];
+
     return [self initWithConfig:config
                  requestFactory:[[MMENSURLRequestFactory alloc] initWithConfig:config]
-                        session:session
-                        onError:^(NSError * _Nonnull error) {}
-                onBytesReceived:^(NSUInteger bytes) {} onEventQueueUpdate:^(NSArray * _Nonnull eventQueue) {}
-             onEventCountUpdate:^(NSUInteger eventCount, NSURLRequest * _Nullable request, NSError * _Nullable error) {}
-       onGenerateTelemetryEvent:^{}
-                     onLogEvent:^(MMEEvent * _Nonnull event) {}];
-
+                        session:session];
 }
 
 - (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config
                        session:(MMENSURLSessionWrapper*)session {
 
     return [self initWithConfig:config
-                 requestFactory:[[MMENSURLRequestFactory alloc] initWithConfig:config]
-                        session:session
-                        onError:^(NSError * _Nonnull error) {}
-                onBytesReceived:^(NSUInteger bytes) {} onEventQueueUpdate:^(NSArray * _Nonnull eventQueue) {}
-             onEventCountUpdate:^(NSUInteger eventCount, NSURLRequest * _Nullable request, NSError * _Nullable error) {}
-       onGenerateTelemetryEvent:^{}
-                     onLogEvent:^(MMEEvent * _Nonnull event) {}];
+            requestFactory:[[MMENSURLRequestFactory alloc] initWithConfig:config]
+                        session:session];
 }
 
 - (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config
-                       onError: (OnErrorBlock)onError
-               onBytesReceived: (OnBytesReceived)onBytesReceived
+                requestFactory:(MMENSURLRequestFactory*)requestFactory
+                       session:(MMENSURLSessionWrapper*)session {
+
+    return [self initWithConfig:config
+                 requestFactory:requestFactory
+                        session:session
+           onSerializationError:^(NSError * _Nonnull error) {}
+                  onURLResponse:^(NSData * _Nullable data, NSURLRequest * _Nonnull request, NSURLResponse * _Nullable response, NSError * _Nullable error) {} onEventQueueUpdate:^(NSArray * _Nonnull eventQueue) {}
+             onEventCountUpdate:^(NSUInteger eventCount, NSURLRequest * _Nullable request, NSError * _Nullable error) {} onGenerateTelemetryEvent:^{}];
+}
+
+/// Initializer with Default Request Feactory
+- (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config
+          onSerializationError:(OnSerializationError)onSerializationError
+                 onURLResponse:(OnURLResponse)onURLResponse
             onEventQueueUpdate: (OnEventQueueUpdate)onEventQueueUpdate
             onEventCountUpdate: (OnEventCountUpdate)onEventCountUpdate
-      onGenerateTelemetryEvent: (OnGenerateTelemetryEvent)onGenerateTelemetryEvent
-                    onLogEvent: (OnLogEvent)onLogEvent {
+      onGenerateTelemetryEvent: (OnGenerateTelemetryEvent)onGenerateTelemetryEvent {
 
     NSURLSessionConfiguration* sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
     MMENSURLSessionWrapper* session = [[MMENSURLSessionWrapper alloc] initWithSessionConfiguration:sessionConfiguration
@@ -81,36 +81,34 @@ int const kMMEMaxRequestCount = 1000;
     return [self initWithConfig:config
                  requestFactory:[[MMENSURLRequestFactory alloc] initWithConfig:config]
                         session:session
-                        onError:onError
-                onBytesReceived:onBytesReceived
+           onSerializationError:onSerializationError
+                  onURLResponse:onURLResponse
              onEventQueueUpdate:onEventQueueUpdate
              onEventCountUpdate:onEventCountUpdate
-       onGenerateTelemetryEvent:onGenerateTelemetryEvent
-                     onLogEvent:onLogEvent];
+       onGenerateTelemetryEvent:onGenerateTelemetryEvent];
 
 }
 
+/// Designated Initializer containing all dependencies
 - (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config
                 requestFactory:(MMENSURLRequestFactory*)requestFactory
                        session:(MMENSURLSessionWrapper*)session
-                       onError: (OnErrorBlock)onError
-               onBytesReceived: (OnBytesReceived)onBytesReceived
+          onSerializationError:(OnSerializationError)onSerializationError
+                 onURLResponse:(OnURLResponse)onURLResponse
             onEventQueueUpdate: (OnEventQueueUpdate)onEventQueueUpdate
             onEventCountUpdate: (OnEventCountUpdate)onEventCountUpdate
-      onGenerateTelemetryEvent: (OnGenerateTelemetryEvent)onGenerateTelemetryEvent
-                    onLogEvent: (OnLogEvent)onLogEvent {
+      onGenerateTelemetryEvent: (OnGenerateTelemetryEvent)onGenerateTelemetryEvent {
 
     self = [super init];
     if (self) {
-        _config = config;
-        _requestFactory = requestFactory;
-        _sessionWrapper = session;
-        self.onError = onError;
-        self.onBytesReceived = onBytesReceived;
+        self.config = config;
+        self.requestFactory = requestFactory;
+        self.sessionWrapper = session;
+        self.onSerializationError = onSerializationError;
+        self.onURLResponse = onURLResponse;
         self.onEventQueueUpdate = onEventQueueUpdate;
         self.onEventCountUpdate = onEventCountUpdate;
         self.onGenerateTelemetryEvent = onGenerateTelemetryEvent;
-        self.onLogEvent = onLogEvent;
     }
     return self;
 }
@@ -134,28 +132,18 @@ int const kMMEMaxRequestCount = 1000;
         __strong __typeof__(weakSelf) strongSelf = weakSelf;
         if (strongSelf) {
 
+            // Report Each URL Response for general Reporting
+            strongSelf.onURLResponse(data, request, response, error);
+
             // Inspect for General Response Reporting
             if (response && [response isKindOfClass:NSHTTPURLResponse.class]) {
                 NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-                NSError *statusError = [[NSError alloc] initWith:request httpResponse:httpResponse error:error];
-
-                // General Error Reporting
-                if (statusError) {
-                    strongSelf.onError(statusError);
-                }
-
-                // Report Metrics
-                if (data) {
-                    strongSelf.onBytesReceived(data.length);
-                }
 
                 if (completion) {
                     completion(data, httpResponse, error);
                 }
             }
             else if (error) {
-                // General Error Reporting
-                strongSelf.onError(error);
 
                 if (completion) {
                     completion(data, nil, error);
@@ -206,7 +194,7 @@ int const kMMEMaxRequestCount = 1000;
                                                                 error:&jsonError];
 
     if (jsonError) {
-        self.onLogEvent([MMEEvent debugEventWithError:jsonError]);
+        self.onSerializationError(jsonError);
         return nil;
     }
 
@@ -306,7 +294,7 @@ int const kMMEMaxRequestCount = 1000;
 
             // Error Metric Reporting
             if (decodingError) {
-                strongSelf.onError(decodingError);
+                strongSelf.onSerializationError(decodingError);
             }
 
             strongSelf.onEventCountUpdate(0, request, error);
@@ -330,28 +318,12 @@ int const kMMEMaxRequestCount = 1000;
                                                                       boundary:boundary];
 
     __weak __typeof__(self) weakSelf = self;
-    [self.sessionWrapper processRequest:request
-                      completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+
+    [self performRequest:request
+              completion:^(NSData * _Nullable data, NSHTTPURLResponse * _Nullable response, NSError * _Nullable error) {
 
         __strong __typeof__(weakSelf) strongSelf = weakSelf;
         if (strongSelf) {
-
-            // check the response object for HTTP error code
-            if (response && [response isKindOfClass:NSHTTPURLResponse.class]) {
-                NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-                NSError *statusError = [[NSError alloc] initWith:request httpResponse:httpResponse error:error];
-
-                if (statusError) { // always report the status error
-                    strongSelf.onError(statusError);
-                }
-
-                if (data) { // always log the Rx bytes
-                    strongSelf.onBytesReceived(data.length);
-                }
-            }
-            else if (error) { // check the session error and report it if the response appears invalid
-                strongSelf.onError(error);
-            }
 
             strongSelf.onEventCountUpdate(filePaths.count, request, error);
             strongSelf.onGenerateTelemetryEvent();
@@ -393,7 +365,7 @@ int const kMMEMaxRequestCount = 1000;
         [httpBody appendData:jsonData];
         [httpBody appendData:[[NSString stringWithFormat:@"\r\n\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
     } else if (jsonError) {
-        self.onLogEvent([MMEEvent debugEventWithError:jsonError]);
+        self.onSerializationError(jsonError);
     }
 
     for (NSString *path in filePaths) { // add a file part for each

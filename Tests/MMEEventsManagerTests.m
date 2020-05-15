@@ -1,5 +1,4 @@
 #import <XCTest/XCTest.h>
-
 #import "MMEEventsManager.h"
 #import "MMEEventsManager_Private.h"
 #import "MMEConstants.h"
@@ -80,6 +79,21 @@
 
 - (void)tearDown {
 
+}
+
+- (void)testResponseListener {
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Registered Response listener should receive a callback"];
+    [self.eventsManager registerOnURLResponseListener:^(NSData * _Nullable data, NSURLRequest * _Nonnull request, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        // Expected Error due to invalid access token
+        [expectation fulfill];
+    }];
+
+    // Set date to be old so config is requested
+    self.preferences.configUpdateDate = [MMEDate dateWithDate:[NSDate distantPast]];
+    [self.eventsManager startEventsManagerWithToken:@"coocoo"];
+
+    [self waitForExpectations:@[expectation] timeout:2];
 }
 
 - (void)testAccessTokenSetter {

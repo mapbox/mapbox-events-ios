@@ -1,6 +1,5 @@
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
-
 #import "MMETypes.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -44,7 +43,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// Shared Mapbox Mobile Events Manager
 + (instancetype)sharedManager;
-
 
 // MARK: - Events Manager Lifecycle
 
@@ -98,6 +96,14 @@ NS_ASSUME_NONNULL_BEGIN
     -Parameter: handler The handler this SDK uses to log messages.
 */
 - (void)setDebugHandler:(void (^)(NSUInteger, NSString *, NSString *))handler;
+
+// MARK: - Listeners
+
+/// Provides mechanism to listen to each API response
+- (void)registerOnURLResponseListener:(OnURLResponse)onURLResponse;
+
+/// Provides mechanism to listen to Serialization/Deserialization Errors
+- (void)registerOnSerializationErrorListener:(OnSerializationError)onSerializationError;
 
 #pragma mark - Deprecated API
 

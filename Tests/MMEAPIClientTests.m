@@ -58,28 +58,19 @@
 
     // Configure Client with Block Counter to inspect interal Call behaviors
     self.apiClient = [[MMEAPIClient alloc] initWithConfig:eventConfig
-                                                  onError:^(NSError * _Nonnull error) {
-        [[[weakSelf blockCounter] onErrors] addObject:error];
-                                                }
-                                          onBytesReceived:^(NSUInteger bytes) {
-        [[[weakSelf blockCounter] onBytesReceived] addObject:[NSNumber numberWithUnsignedInteger:bytes]];
-                                                }
-                                       onEventQueueUpdate:^(NSArray * _Nonnull eventQueue) {
-
+                                     onSerializationError:^(NSError * _Nonnull error) {
+        [[[weakSelf blockCounter] onSerializationErrors] addObject:error];
+    } onURLResponse:^(NSData * _Nullable data, NSURLRequest * _Nonnull request, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        [[[weakSelf blockCounter] onURLResponses] addObject:request];
+    } onEventQueueUpdate:^(NSArray * _Nonnull eventQueue) {
         [[[weakSelf blockCounter] eventQueue] addObject:eventQueue];
-                                                }
-                                       onEventCountUpdate:^(NSUInteger eventCount, NSURLRequest * _Nullable request, NSError * _Nullable error) {
-                                                    // TBD Call Verification
+    } onEventCountUpdate:^(NSUInteger eventCount, NSURLRequest * _Nullable request, NSError * _Nullable error) {
         [[[weakSelf blockCounter] eventCount] addObject:[NSNumber numberWithUnsignedInteger:eventCount]];
-                                                }
-                                 onGenerateTelemetryEvent:^{
+    } onGenerateTelemetryEvent:^{
         __strong __typeof__(weakSelf) strongSelf = weakSelf;
         if (strongSelf) {
             strongSelf.blockCounter.generateTelemetry += 1;
         }
-                                                }
-                                               onLogEvent:^(MMEEvent * _Nonnull event) {
-        [[[weakSelf blockCounter] logEvents] addObject:event];
     }];
 
     self.sessionWrapper = (MMENSURLSessionWrapper *)self.apiClient.sessionWrapper;
@@ -260,11 +251,11 @@
     XCTAssert(data.mme_gunzippedData.length == uncompressedData.length);
 
     // Inspect Block Calls Validating Block Callback Behavior
-    XCTAssertEqual(self.blockCounter.onBytesReceived.count, 0);
+    XCTAssertEqual(self.blockCounter.onURLResponses.count, 0);
+    XCTAssertEqual(self.blockCounter.onSerializationErrors.count, 0);
     XCTAssertEqual(self.blockCounter.eventQueue.count, 1);
     XCTAssertEqual(self.blockCounter.eventCount.count, 1);
     XCTAssertEqual(self.blockCounter.generateTelemetry, 1);
-    XCTAssertEqual(self.blockCounter.logEvents.count, 0);
 }
 
 - (void) testMMEAPIClientSetup {

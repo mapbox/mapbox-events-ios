@@ -4,12 +4,11 @@
 
 - (instancetype)init {
     if (self = [super init]) {
-        _onErrors = @[].mutableCopy;
-        _onBytesReceived = @[].mutableCopy;
-        _eventQueue = @[].mutableCopy;
-        _eventCount = @[].mutableCopy;
-        _generateTelemetry = 0;
-        _logEvents = @[].mutableCopy;
+        self.onSerializationErrors = @[].mutableCopy;
+        self.onURLResponses = @[].mutableCopy;
+        self.eventQueue = @[].mutableCopy;
+        self.eventCount = @[].mutableCopy;
+        self.generateTelemetry = 0;
     }
     return self;
 }

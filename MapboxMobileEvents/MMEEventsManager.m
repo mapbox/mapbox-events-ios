@@ -26,6 +26,7 @@
 #import "NSProcessInfo+SystemInfo.h"
 #import "MMEConfigService.h"
 #import "MMEPreferences.h"
+#import "NSError+APIClient.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -49,6 +50,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) MMELogger *logger;
 @property (nonatomic) MMEMetricsManager *metricsManager;
 @property (nullable, nonatomic) MMEConfigService* configService;
+
+@property (nonatomic, strong) NSMutableArray<OnURLResponse>* urlResponseListeners;
+@property (nonatomic, strong) NSMutableArray<OnSerializationError>* serializationErrorListeners;
 
 @end
 
@@ -98,6 +102,7 @@ NS_ASSUME_NONNULL_BEGIN
         self.metricsManager = metricsManager;
         self.dispatchManager = dispatchManager;
         self.logger = logger;
+        self.urlResponseListeners = [NSMutableArray array];
     }
     return self;
 
@@ -133,18 +138,47 @@ NS_ASSUME_NONNULL_BEGIN
         // Given we can message null, a method call to null will return null.
         // This save time unwrapping if (weakSelf) each time we're accessing a nullable object's property
         self.apiClient = [[MMEAPIClient alloc] initWithConfig:self.preferences
-                                                     onError:^(NSError * _Nonnull error) {
+                        onSerializationError:^(NSError * _Nonnull error) {
             [weakSelf reportError:error];
-        } onBytesReceived:^(NSUInteger bytes) {
-            [[weakSelf metricsManager] updateReceivedBytes:bytes];
+        } onURLResponse:^(NSData * _Nullable data, NSURLRequest * _Nonnull request, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+
+            // Generic URL Response Tracking (Network Errors / Bytes)
+            __strong __typeof__(weakSelf) strongSelf = weakSelf;
+            if (!strongSelf){
+                return;
+            }
+
+            if (response && [response isKindOfClass:NSHTTPURLResponse.class]) {
+                NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+                NSError *statusError = [[NSError alloc] initWith:request httpResponse:httpResponse error:error];
+
+                // General Error Reporting
+                if (statusError) {
+                    [strongSelf reportError:statusError];
+                }
+
+                // Report Metrics
+                if (data) {
+                    [strongSelf.metricsManager updateReceivedBytes:data.length];
+                }
+            }
+            else if (error) {
+                // General Error Reporting
+                [strongSelf reportError:error];
+            }
+
+            // Notify Registered Listeners
+            for (OnURLResponse listener in self.urlResponseListeners) {
+                listener(data, request, response, error);
+            }
+
         } onEventQueueUpdate:^(NSArray * _Nonnull eventQueue) {
             [[weakSelf metricsManager] updateMetricsFromEventQueue:eventQueue];
+
         } onEventCountUpdate:^(NSUInteger eventCount, NSURLRequest * _Nullable request, NSError * _Nullable error) {
             [[weakSelf metricsManager] updateMetricsFromEventCount:eventCount request:request error:error];
         } onGenerateTelemetryEvent:^{
             [[weakSelf metricsManager] generateTelemetryMetricsEvent];
-        } onLogEvent:^(MMEEvent * _Nonnull event) {
-            [[[weakSelf metricsManager] logger] logEvent:event];
         }];
 
         // Setup Service to Poll/Handle Configuration updates
@@ -787,6 +821,14 @@ NS_ASSUME_NONNULL_BEGIN
     if ([self.delegate respondsToSelector:@selector(eventsManager:didVisit:)]) {
         [self.delegate eventsManager:self didVisit:visit];
     }
+}
+
+- (void)registerOnURLResponseListener:(OnURLResponse)onURLResponse {
+    [self.urlResponseListeners addObject:[onURLResponse copy]];
+}
+
+- (void)registerOnSerializationErrorListener:(OnSerializationError)onSerializationError {
+    [self.serializationErrorListeners addObject:[onSerializationError copy]];
 }
 
 @end
