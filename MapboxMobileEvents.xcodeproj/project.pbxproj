@@ -386,7 +386,6 @@
 		405172E31EB13C6D00F8CDA1 /* MMENSURLSessionWrapperFake.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMENSURLSessionWrapperFake.h; sourceTree = "<group>"; };
 		405172E41EB13C6D00F8CDA1 /* MMENSURLSessionWrapperFake.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMENSURLSessionWrapperFake.m; sourceTree = "<group>"; };
 		408596531ED084C0003BD29D /* libMapboxMobileEvents.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libMapboxMobileEvents.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		40A7F9911F79A743002B931F /* Cedar.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cedar.framework; path = Carthage/Build/iOS/Cedar.framework; sourceTree = "<group>"; };
 		40AE58411EA6C86C0046B437 /* MMEUIApplicationWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEUIApplicationWrapper.h; sourceTree = "<group>"; };
 		40AE58421EA6C86C0046B437 /* MMEUIApplicationWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEUIApplicationWrapper.m; sourceTree = "<group>"; };
 		40AE58451EA6C9F10046B437 /* MMEUIApplicationWrapperFake.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEUIApplicationWrapperFake.h; sourceTree = "<group>"; };
@@ -593,7 +592,6 @@
 			isa = PBXGroup;
 			children = (
 				9C794C85235505340027B9D4 /* XCTest.framework */,
-				40A7F9911F79A743002B931F /* Cedar.framework */,
 				4032F47D1F1FEDC6001C1FBD /* libz.tbd */,
 			);
 			name = Frameworks;
