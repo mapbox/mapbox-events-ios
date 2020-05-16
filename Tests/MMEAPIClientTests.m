@@ -13,7 +13,9 @@
 #import "MMEAPIClient+Mock.h"
 #import "EventConfigStubProtocol.h"
 #import "EventStubProtocol.h"
+#import "ErrorStubProtocol.h"
 #import "MMEConfig.h"
+#import "MMENSURLRequestFactory.h"
 
 @interface MMENSURLSessionWrapper (Private)
 @property (nonatomic) NSURLSession *session;
@@ -132,6 +134,7 @@
     XCTAssert(self.receivedDisposition = NSURLSessionAuthChallengeCancelAuthenticationChallenge);
 }
 
+// MARK: - Requests
 - (void)testGetConfigURLRequest {
     MMEAPIClient* client = [MMEAPIClient clientWithMockConfig];
     NSURLRequest* request = client.eventConfigurationRequest;
@@ -144,34 +147,6 @@
     XCTAssertEqualObjects(@"https://config.mapbox.com/events-config?access_token=access-token", request.URL.absoluteString);
     XCTAssertEqualObjects(headers, request.allHTTPHeaderFields);
     XCTAssertNil(request.HTTPBody);
-}
-
-- (void)testGetConfigResponse {
-
-    NSURLSessionConfiguration* sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    sessionConfiguration.protocolClasses = @[EventConfigStubProtocol.self];
-    MMENSURLSessionWrapper* session = [[MMENSURLSessionWrapper alloc] initWithSessionConfiguration:sessionConfiguration
-                                                                                eventConfiguration:[[MMEMockEventConfig alloc] init]];
-    MMEMockEventConfig* eventConfig = MMEMockEventConfig.oneSecondConfigUpdate;
-
-    MMEAPIClient* client = [[MMEAPIClient alloc] initWithConfig:eventConfig
-                                                        session:session];
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Fetch Event Config"];
-
-    [client getEventConfigWithCompletionHandler:^(
-                                                 MMEConfig * _Nullable config,
-                                                 NSError * _Nullable error) {
-        XCTAssertNotNil(config);
-
-        XCTAssertEqualObjects(config.certificateRevocationList, nil);
-        XCTAssertEqualObjects(config.telemetryTypeOverride, @2.0);
-        XCTAssertEqualObjects(config.geofenceOverride, @444.0);
-        XCTAssertEqualObjects(config.backgroundStartupOverride, @44.0);
-        XCTAssertEqualObjects(config.eventTag, @"all");
-        [expectation fulfill];
-    }];
-
-    [self waitForExpectations:@[expectation] timeout:3];
 }
 
 - (void)testPostEventURLRequest {
@@ -189,6 +164,63 @@
     XCTAssertNotNil(request.HTTPBody);
 }
 
+// MARK: - Round Trip Request -> Responses
+
+- (void)testGetConfigResponse {
+
+    NSURLSessionConfiguration* sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
+    sessionConfiguration.protocolClasses = @[EventConfigStubProtocol.self];
+    MMENSURLSessionWrapper* session = [[MMENSURLSessionWrapper alloc] initWithSessionConfiguration:sessionConfiguration
+                                                                                eventConfiguration:[[MMEMockEventConfig alloc] init]];
+    MMEMockEventConfig* eventConfig = MMEMockEventConfig.oneSecondConfigUpdate;
+
+    // Configure Client with Block Counter to inspect interal Call behaviors
+    __weak __typeof__(self) weakSelf = self;
+    MMEAPIClient* client = [[MMEAPIClient alloc] initWithConfig:eventConfig
+                                           requestFactory: [[MMENSURLRequestFactory alloc] initWithConfig:eventConfig]
+                                                  session:session
+                                     onSerializationError:^(NSError * _Nonnull error) {
+
+        [[[weakSelf blockCounter] onSerializationErrors] addObject:error];
+    } onURLResponse:^(NSData * _Nullable data, NSURLRequest * _Nonnull request, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        [[[weakSelf blockCounter] onURLResponses] addObject:request];
+    } onEventQueueUpdate:^(NSArray * _Nonnull eventQueue) {
+        [[[weakSelf blockCounter] eventQueue] addObject:eventQueue];
+    } onEventCountUpdate:^(NSUInteger eventCount, NSURLRequest * _Nullable request, NSError * _Nullable error) {
+        [[[weakSelf blockCounter] eventCount] addObject:[NSNumber numberWithUnsignedInteger:eventCount]];
+    } onGenerateTelemetryEvent:^{
+        __strong __typeof__(weakSelf) strongSelf = weakSelf;
+        if (strongSelf) {
+            strongSelf.blockCounter.generateTelemetry += 1;
+        }
+    }];
+
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Fetch Event Config"];
+
+    [client getEventConfigWithCompletionHandler:^(
+                                                 MMEConfig * _Nullable config,
+                                                 NSError * _Nullable error) {
+        XCTAssertNotNil(config);
+
+        XCTAssertEqualObjects(config.certificateRevocationList, nil);
+        XCTAssertEqualObjects(config.telemetryTypeOverride, @2.0);
+        XCTAssertEqualObjects(config.geofenceOverride, @444.0);
+        XCTAssertEqualObjects(config.backgroundStartupOverride, @44.0);
+        XCTAssertEqualObjects(config.eventTag, @"all");
+
+        // Inspect Block Calls Validating Block Callback Behavior
+        XCTAssertEqual(weakSelf.blockCounter.onURLResponses.count, 1);
+        XCTAssertEqual(weakSelf.blockCounter.onSerializationErrors.count, 0);
+        XCTAssertEqual(weakSelf.blockCounter.eventQueue.count, 0);
+        XCTAssertEqual(weakSelf.blockCounter.eventCount.count, 1);
+        XCTAssertEqual(weakSelf.blockCounter.generateTelemetry, 1);
+
+        [expectation fulfill];
+    }];
+
+    [self waitForExpectations:@[expectation] timeout:3];
+}
+
 - (void)testPostEvent {
     NSURLSessionConfiguration* sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
     sessionConfiguration.protocolClasses = @[EventStubProtocol.self];
@@ -196,17 +228,105 @@
     MMENSURLSessionWrapper* session = [[MMENSURLSessionWrapper alloc] initWithSessionConfiguration:sessionConfiguration
                                                                                 eventConfiguration:eventConfig]; 
 
+    // Configure Client with Block Counter to inspect interal Call behaviors
+    __weak __typeof__(self) weakSelf = self;
     MMEAPIClient* client = [[MMEAPIClient alloc] initWithConfig:eventConfig
-                                                    session:session];
+                                                 requestFactory: [[MMENSURLRequestFactory alloc] initWithConfig:eventConfig]
+                                                        session:session
+                                           onSerializationError:^(NSError * _Nonnull error) {
+
+        [[[weakSelf blockCounter] onSerializationErrors] addObject:error];
+    } onURLResponse:^(NSData * _Nullable data, NSURLRequest * _Nonnull request, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        [[[weakSelf blockCounter] onURLResponses] addObject:request];
+    } onEventQueueUpdate:^(NSArray * _Nonnull eventQueue) {
+        [[[weakSelf blockCounter] eventQueue] addObject:eventQueue];
+    } onEventCountUpdate:^(NSUInteger eventCount, NSURLRequest * _Nullable request, NSError * _Nullable error) {
+        [[[weakSelf blockCounter] eventCount] addObject:[NSNumber numberWithUnsignedInteger:eventCount]];
+    } onGenerateTelemetryEvent:^{
+        __strong __typeof__(weakSelf) strongSelf = weakSelf;
+        if (strongSelf) {
+            strongSelf.blockCounter.generateTelemetry += 1;
+        }
+    }];
+
     XCTestExpectation *expectation = [self expectationWithDescription:@"Post Event"];
     MMEEvent* event = [MMEEvent turnstileEventWithAttributes:@{}];
+
     [client postEvent:event completionHandler:^(NSError * _Nullable error) {
         XCTAssertNil(error);
+
+        // Inspect Block Calls Validating Block Callback Behavior
+        XCTAssertEqual(weakSelf.blockCounter.onURLResponses.count, 1);
+        XCTAssertEqual(weakSelf.blockCounter.onSerializationErrors.count, 0);
+        XCTAssertEqual(weakSelf.blockCounter.eventQueue.count, 1);
+        XCTAssertEqual(weakSelf.blockCounter.eventCount.count, 2);
+        XCTAssertEqual(weakSelf.blockCounter.generateTelemetry, 1);
+
         [expectation fulfill];
     }];
 
+    XCTAssertEqual(self.blockCounter.onURLResponses.count, 0);
+    XCTAssertEqual(self.blockCounter.onSerializationErrors.count, 0);
+    XCTAssertEqual(self.blockCounter.eventQueue.count, 1);
+    XCTAssertEqual(self.blockCounter.eventCount.count, 1);
+    XCTAssertEqual(self.blockCounter.generateTelemetry, 1);
+
     [self waitForExpectations:@[expectation] timeout:2];
 }
+
+-(void)testErrorResponse {
+    NSURLSessionConfiguration* sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
+    sessionConfiguration.protocolClasses = @[ErrorStubProtocol.self];
+    MMEMockEventConfig* eventConfig = MMEMockEventConfig.oneSecondConfigUpdate;
+    MMENSURLSessionWrapper* session = [[MMENSURLSessionWrapper alloc] initWithSessionConfiguration:sessionConfiguration
+                                                                                eventConfiguration:eventConfig];
+
+    // Configure Client with Block Counter to inspect interal Call behaviors
+    __weak __typeof__(self) weakSelf = self;
+    MMEAPIClient* client = [[MMEAPIClient alloc] initWithConfig:eventConfig
+                                                 requestFactory: [[MMENSURLRequestFactory alloc] initWithConfig:eventConfig]
+                                                        session:session
+                                           onSerializationError:^(NSError * _Nonnull error) {
+
+        [[[weakSelf blockCounter] onSerializationErrors] addObject:error];
+    } onURLResponse:^(NSData * _Nullable data, NSURLRequest * _Nonnull request, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        [[[weakSelf blockCounter] onURLResponses] addObject:request];
+    } onEventQueueUpdate:^(NSArray * _Nonnull eventQueue) {
+        [[[weakSelf blockCounter] eventQueue] addObject:eventQueue];
+    } onEventCountUpdate:^(NSUInteger eventCount, NSURLRequest * _Nullable request, NSError * _Nullable error) {
+        [[[weakSelf blockCounter] eventCount] addObject:[NSNumber numberWithUnsignedInteger:eventCount]];
+    } onGenerateTelemetryEvent:^{
+        __strong __typeof__(weakSelf) strongSelf = weakSelf;
+        if (strongSelf) {
+            strongSelf.blockCounter.generateTelemetry += 1;
+        }
+    }];
+
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Error Response"];
+
+    [client getEventConfigWithCompletionHandler:^(MMEConfig * _Nullable config, NSError * _Nullable error) {
+
+        XCTAssertNotNil(error);
+
+        // Inspect Block Calls Validating Block Callback Behavior
+        XCTAssertEqual(weakSelf.blockCounter.onURLResponses.count, 1);
+        XCTAssertEqual(weakSelf.blockCounter.onSerializationErrors.count, 0);
+        XCTAssertEqual(weakSelf.blockCounter.eventQueue.count, 0);
+        XCTAssertEqual(weakSelf.blockCounter.eventCount.count, 0);
+        XCTAssertEqual(weakSelf.blockCounter.generateTelemetry, 0);
+
+        [expectation fulfill];
+    }];
+
+    XCTAssertEqual(self.blockCounter.onURLResponses.count, 0);
+    XCTAssertEqual(self.blockCounter.onSerializationErrors.count, 0);
+    XCTAssertEqual(self.blockCounter.eventQueue.count, 0);
+    XCTAssertEqual(self.blockCounter.eventCount.count, 0);
+    XCTAssertEqual(self.blockCounter.generateTelemetry, 0);
+
+    [self waitForExpectations:@[expectation] timeout:20];
+}
+
 
 - (void)testPostMetadata {
     self.apiClient.sessionWrapper = self.sessionWrapperFake;
@@ -240,17 +360,17 @@
     
     NSData *uncompressedData = [NSJSONSerialization dataWithJSONObject:eventAttributes options:0 error:nil];
 
-    // NSURLTask
+
     [self.apiClient postEvents:@[event, eventTwo] completionHandler:nil];
-    
+    XCTAssert([(MMETestStub*)self.apiClient.sessionWrapper received:@selector(processRequest:completionHandler:)]);
+
     XCTAssert([self.sessionWrapperFake.request.allHTTPHeaderFields[MMEAPIClientHeaderFieldContentEncodingKey] isEqualToString:@"gzip"]);
     
     NSData *data = (NSData *)self.sessionWrapperFake.request.HTTPBody; //compressed data
-    XCTAssert(data.length < uncompressedData.length);
-    
-    XCTAssert(data.mme_gunzippedData.length == uncompressedData.length);
+    XCTAssertLessThan(data.length, uncompressedData.length);
+    XCTAssertEqual(data.mme_gunzippedData.length, uncompressedData.length);
 
-    // Inspect Block Calls Validating Block Callback Behavior
+    // Inspect Synchronous Block Calls Validating Block Callback Behavior
     XCTAssertEqual(self.blockCounter.onURLResponses.count, 0);
     XCTAssertEqual(self.blockCounter.onSerializationErrors.count, 0);
     XCTAssertEqual(self.blockCounter.eventQueue.count, 1);
@@ -264,89 +384,5 @@
     XCTAssert([self.apiClient.sessionWrapper isKindOfClass:MMENSURLSessionWrapper.class]);
 }
 
-- (void) testPostSingleEvent {
-    MMENSURLSessionWrapperFake *wrapper = [[MMENSURLSessionWrapperFake alloc] init];
-    self.apiClient.sessionWrapper = wrapper;
-    MMEEvent *event = [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-1" commonEventData:nil];
-}
-
-// TODO: - Convert Cedar Tests
-
-/*
-describe(@"- postEvent:completionHandler:", ^{
-    __block MMEEvent *event;
-    __block MMENSURLSessionWrapperFake *sessionWrapperFake;
-    __block NSError *capturedError;
-
-beforeEach(^{
-    sessionWrapperFake = [[MMENSURLSessionWrapperFake alloc] init];
-    spy_on(sessionWrapperFake);
-
-    apiClient.sessionWrapper = sessionWrapperFake;
-             
-    event = [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-1" commonEventData:nil];
-});
-         
- context(@"when posting a single event", ^{
-             
-     beforeEach(^{
-         [apiClient postEvent:event completionHandler:^(NSError * _Nullable error) {
-             capturedError = error;
-         }];
-     });
-     
-     it(@"should have received processRequest:completionHandler:", ^{
-         apiClient.sessionWrapper should have_received(@selector(processRequest:completionHandler:)).with(sessionWrapperFake.request).and_with(Arguments::anything);
-     });
-     
-     context(@"when there is a network error", ^{
-         __block NSError *error;
-         
-         beforeEach(^{
-             error = [NSError errorWithDomain:@"test" code:42 userInfo:nil];
-             NSHTTPURLResponse *responseFake = [[NSHTTPURLResponse alloc] initWithURL:NSUserDefaults.mme_configuration.mme_eventsServiceURL statusCode:400 HTTPVersion:nil headerFields:nil];
-             [sessionWrapperFake completeProcessingWithData:nil response:responseFake error:error];
-         });
-         
-         it(@"should equal completed process error", ^{
-             capturedError should equal(error);
-         });
-     });
-     
-     context(@"when there is a response with an invalid status code", ^{
-         beforeEach(^{
-             NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:[NSURL URLWithString:@"http:test.com"]
-                                                                      statusCode:400
-                                                                     HTTPVersion:nil
-                                                                    headerFields:nil];
-             [sessionWrapperFake completeProcessingWithData:nil response:response error:nil];
-         });
-         
-         it(@"should have an error", ^{
-             capturedError should_not be_nil;
-         });
-     });
- });
- 
- context(@"when posting a single event after an access token is set", ^{
-     __block NSString *expectedURLString;
-     
-     beforeEach(^{
-         NSString *stagingAccessToken = @"staging-access-token";
-         NSUserDefaults.mme_configuration.mme_accessToken = stagingAccessToken;
-         [apiClient postEvent:event completionHandler:nil];
-         
-         expectedURLString = [NSString stringWithFormat:@"%@/%@?access_token=%@", MMEAPIClientBaseURL, MMEAPIClientEventsPath, stagingAccessToken];
-     });
-     
-     it(@"should receive processRequest:completionHandler", ^{
-         sessionWrapperFake should have_received(@selector(processRequest:completionHandler:));
-     });
-
-     it(@"should be created properly", ^{
-         sessionWrapperFake.request.URL.absoluteString should equal(expectedURLString);
-     });
-
-});*/
 
 @end

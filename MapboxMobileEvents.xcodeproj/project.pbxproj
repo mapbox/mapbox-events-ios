@@ -194,8 +194,6 @@
 		CF93A6582241EDD500BBA199 /* MMECertPin.m in Sources */ = {isa = PBXBuildFile; fileRef = CF93A6562241EDD500BBA199 /* MMECertPin.m */; };
 		CF93A6592241EDD500BBA199 /* MMECertPin.m in Sources */ = {isa = PBXBuildFile; fileRef = CF93A6562241EDD500BBA199 /* MMECertPin.m */; platformFilter = ios; };
 		CF93A65B2241EDD500BBA199 /* MMECertPin.h in Headers */ = {isa = PBXBuildFile; fileRef = CF93A6572241EDD500BBA199 /* MMECertPin.h */; };
-		F409958F2469E68600E94BFF /* EventConfigStubProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = F409958D2469E68600E94BFF /* EventConfigStubProtocol.h */; };
-		F40995902469E68600E94BFF /* EventConfigStubProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = F409958D2469E68600E94BFF /* EventConfigStubProtocol.h */; };
 		F40995932469ED6300E94BFF /* EventConfigStubProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = F409958E2469E68600E94BFF /* EventConfigStubProtocol.m */; };
 		F4099596246A009A00E94BFF /* events-config.json in Resources */ = {isa = PBXBuildFile; fileRef = F4099595246A009A00E94BFF /* events-config.json */; };
 		F4099599246A073A00E94BFF /* EventStubProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = F4099598246A073A00E94BFF /* EventStubProtocol.m */; };
@@ -230,6 +228,7 @@
 		F44D121F2464A5E000DF4ED1 /* MMEAPIClientBlockCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = F44D121E2464A5E000DF4ED1 /* MMEAPIClientBlockCounter.m */; };
 		F46267FF246DF5AC00E01C83 /* MMEPreferencesTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F46267FE246DF5AC00E01C83 /* MMEPreferencesTests.m */; };
 		F4626802246E579500E01C83 /* MMEPreferences.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = F4312853246A626C004472CE /* MMEPreferences.h */; };
+		F4626805246F6ED100E01C83 /* ErrorStubProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = F4626804246F6ED100E01C83 /* ErrorStubProtocol.m */; };
 		F466B8E3246D11A80056AB21 /* MMEEventConfigProviding.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = F4913F442453610800C28338 /* MMEEventConfigProviding.h */; };
 		F4684FF42432A1610079B389 /* NSBundle+MMEMobileEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = F4684FF22432A1610079B389 /* NSBundle+MMEMobileEvents.h */; };
 		F4684FF52432A1610079B389 /* NSBundle+MMEMobileEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = F4684FF32432A1610079B389 /* NSBundle+MMEMobileEvents.m */; };
@@ -521,6 +520,8 @@
 		F44D121D2464A5E000DF4ED1 /* MMEAPIClientBlockCounter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEAPIClientBlockCounter.h; sourceTree = "<group>"; };
 		F44D121E2464A5E000DF4ED1 /* MMEAPIClientBlockCounter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEAPIClientBlockCounter.m; sourceTree = "<group>"; };
 		F46267FE246DF5AC00E01C83 /* MMEPreferencesTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEPreferencesTests.m; sourceTree = "<group>"; };
+		F4626803246F6ED100E01C83 /* ErrorStubProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ErrorStubProtocol.h; sourceTree = "<group>"; };
+		F4626804246F6ED100E01C83 /* ErrorStubProtocol.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ErrorStubProtocol.m; sourceTree = "<group>"; };
 		F4684FF22432A1610079B389 /* NSBundle+MMEMobileEvents.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSBundle+MMEMobileEvents.h"; sourceTree = "<group>"; };
 		F4684FF32432A1610079B389 /* NSBundle+MMEMobileEvents.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+MMEMobileEvents.m"; sourceTree = "<group>"; };
 		F47265522465F5FD00BD7055 /* MMEConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEConfig.h; sourceTree = "<group>"; };
@@ -866,6 +867,8 @@
 				F4099598246A073A00E94BFF /* EventStubProtocol.m */,
 				F409958D2469E68600E94BFF /* EventConfigStubProtocol.h */,
 				F409958E2469E68600E94BFF /* EventConfigStubProtocol.m */,
+				F4626803246F6ED100E01C83 /* ErrorStubProtocol.h */,
+				F4626804246F6ED100E01C83 /* ErrorStubProtocol.m */,
 			);
 			path = Stubs;
 			sourceTree = "<group>";
@@ -929,7 +932,6 @@
 				AC2C715E2112408A004179E0 /* MMEDispatchManager.h in Headers */,
 				CF93A65B2241EDD500BBA199 /* MMECertPin.h in Headers */,
 				4036EFBE1ED37D56009C40BA /* MMELogger.h in Headers */,
-				F409958F2469E68600E94BFF /* EventConfigStubProtocol.h in Headers */,
 				40AE58711EAA87960046B437 /* MMEAPIClient.h in Headers */,
 				405172DD1EAFFA9400F8CDA1 /* MMENSURLSessionWrapper.h in Headers */,
 				40AE58691EA953970046B437 /* CLLocation+MMEMobileEvents.h in Headers */,
@@ -973,7 +975,6 @@
 				9CA75397240EF2DD005C26C9 /* MMECertPin.h in Headers */,
 				9CA75398240EF2DD005C26C9 /* MMELogger.h in Headers */,
 				9CA75399240EF2DD005C26C9 /* MMEAPIClient.h in Headers */,
-				F40995902469E68600E94BFF /* EventConfigStubProtocol.h in Headers */,
 				9CA7539A240EF2DD005C26C9 /* MMENSURLSessionWrapper.h in Headers */,
 				9CA7539B240EF2DD005C26C9 /* CLLocation+MMEMobileEvents.h in Headers */,
 				9CA7539C240EF2DD005C26C9 /* MMEDependencyManager.h in Headers */,
@@ -1295,6 +1296,7 @@
 				F40995932469ED6300E94BFF /* EventConfigStubProtocol.m in Sources */,
 				9C8E0498241AD4EE00D6C641 /* MMELocationManagerFake.m in Sources */,
 				9C8E0499241AD4F200D6C641 /* MMENSURLSessionWrapperFake.m in Sources */,
+				F4626805246F6ED100E01C83 /* ErrorStubProtocol.m in Sources */,
 				9C8E049A241AD4F800D6C641 /* MMEUIApplicationWrapperFake.m in Sources */,
 				9C8E049B241AD50000D6C641 /* MMEUniqueIdentifierFake.m in Sources */,
 				F44D121F2464A5E000DF4ED1 /* MMEAPIClientBlockCounter.m in Sources */,

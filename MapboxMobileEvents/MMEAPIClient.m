@@ -307,7 +307,8 @@ int const kMMEMaxRequestCount = 1000;
 
 // MARK: - Metadata Service
 
-- (void)postMetadata:(NSArray *)metadata filePaths:(NSArray *)filePaths completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
+- (void)postMetadata:(NSArray *)metadata filePaths:(NSArray *)filePaths
+   completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
     NSString *boundary = NSUUID.UUID.UUIDString;
     NSData *binaryData = [self createBodyWithBoundary:boundary metadata:metadata filePaths:filePaths];
     NSURLRequest* request = [self.requestFactory multipartURLRequestWithMethod:MMEAPIClientHTTPMethodPost
