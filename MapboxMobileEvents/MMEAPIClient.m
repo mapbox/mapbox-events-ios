@@ -171,36 +171,6 @@ int const kMMEMaxRequestCount = 1000;
     return eventBatches;
 }
 
-- (nullable NSURLRequest *)requestForEvents:(NSArray *)events {
-
-    NSMutableArray *eventAttributes = [NSMutableArray arrayWithCapacity:events.count];
-    [events enumerateObjectsUsingBlock:^(MMEEvent * _Nonnull event, NSUInteger idx, BOOL * _Nonnull stop) {
-        if (event.attributes) {
-            [eventAttributes addObject:event.attributes];
-        }
-    }];
-
-    NSDictionary<NSString*, NSString*>* additionalHeaders = @{
-        MMEAPIClientHeaderFieldContentTypeKey: MMEAPIClientHeaderFieldContentTypeValue
-    };
-
-    NSError* jsonError = nil;
-    NSURLRequest* request = [self.requestFactory urlRequestWithMethod:MMEAPIClientHTTPMethodPost
-                                                              baseURL:self.config.eventsServiceURL
-                                                                 path:MMEAPIClientEventsPath
-                                                    additionalHeaders:additionalHeaders
-                                                           shouldGZIP: events.count >= 2
-                                                           jsonObject:eventAttributes
-                                                                error:&jsonError];
-
-    if (jsonError) {
-        self.onSerializationError(jsonError);
-        return nil;
-    }
-
-    return [request copy];
-}
-
 - (void)postEvent:(MMEEvent *)event completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
     [self postEvents:@[event] completionHandler:completionHandler];
 }
@@ -212,7 +182,8 @@ int const kMMEMaxRequestCount = 1000;
     NSArray *eventBatches = [self batchFromEvents:events];
 
     for (NSArray *batch in eventBatches) {
-        NSURLRequest *request = [self requestForEvents:batch];
+        NSError* serializationError = nil;
+        NSURLRequest *request = [self.requestFactory requestForEvents:batch error:&serializationError];
         if (request) {
 
             __weak __typeof__(self) weakSelf = self;
@@ -230,30 +201,22 @@ int const kMMEMaxRequestCount = 1000;
 
             }];
         }
+
+        if (serializationError) {
+            self.onSerializationError(serializationError);
+        }
+
         self.onEventCountUpdate(events.count, nil, nil);
     }
 
     self.onGenerateTelemetryEvent();
 }
 
-// MARK: - URLRequest Construction
-
-- (nullable NSURLRequest *)eventConfigurationRequest {
-    NSError *jsonError = nil;
-    return [self.requestFactory urlRequestWithMethod:MMEAPIClientHTTPMethodPost
-                                             baseURL:self.config.configServiceURL
-                                                path:MMEAPIClientEventsConfigPath
-                                   additionalHeaders:@{}
-                                          shouldGZIP: NO
-                                          jsonObject:nil
-                                               error:&jsonError];
-}
-
 // MARK: - Configuration Service
 
 - (void)getEventConfigWithCompletionHandler:(nullable void (^)(MMEConfig* _Nullable config, NSError * _Nullable error))completion {
 
-    NSURLRequest* request = [self eventConfigurationRequest];
+    NSURLRequest* request = [self.requestFactory requestForConfiguration];
 
     __weak __typeof__(self) weakSelf = self;
     [self performRequest:request

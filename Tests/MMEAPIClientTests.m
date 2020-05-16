@@ -16,6 +16,7 @@
 #import "ErrorStubProtocol.h"
 #import "MMEConfig.h"
 #import "MMENSURLRequestFactory.h"
+#import "MMEAPIClient+Mock.h"
 
 @interface MMENSURLSessionWrapper (Private)
 @property (nonatomic) NSURLSession *session;
@@ -134,35 +135,6 @@
     XCTAssert(self.receivedDisposition = NSURLSessionAuthChallengeCancelAuthenticationChallenge);
 }
 
-// MARK: - Requests
-- (void)testGetConfigURLRequest {
-    MMEAPIClient* client = [MMEAPIClient clientWithMockConfig];
-    NSURLRequest* request = client.eventConfigurationRequest;
-    NSDictionary<NSString*, NSString*>* headers = @{
-        @"Content-Type": @"application/json",
-        @"User-Agent":  @"<LegacyUserAgent>",
-        @"X-Mapbox-Agent": @"<UserAgent>"
-    };
-
-    XCTAssertEqualObjects(@"https://config.mapbox.com/events-config?access_token=access-token", request.URL.absoluteString);
-    XCTAssertEqualObjects(headers, request.allHTTPHeaderFields);
-    XCTAssertNil(request.HTTPBody);
-}
-
-- (void)testPostEventURLRequest {
-    MMEAPIClient* client = [MMEAPIClient clientWithMockConfig];
-    MMEEvent* event = [MMEEvent turnstileEventWithAttributes:@{}];
-    NSURLRequest* request = [client requestForEvents:@[event]];
-    NSDictionary<NSString*, NSString*>* headers = @{
-        @"Content-Type": @"application/json",
-        @"User-Agent":  @"<LegacyUserAgent>",
-        @"X-Mapbox-Agent": @"<UserAgent>"
-    };
-
-    XCTAssertEqualObjects(@"https://events.mapbox.com/events/v2?access_token=access-token", request.URL.absoluteString);
-    XCTAssertEqualObjects(headers, request.allHTTPHeaderFields);
-    XCTAssertNotNil(request.HTTPBody);
-}
 
 // MARK: - Round Trip Request -> Responses
 
@@ -347,7 +319,7 @@
     self.apiClient.sessionWrapper = self.sessionWrapperFake;
         
     MMEEvent *event = [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-1" commonEventData:nil];
-    MMEEvent *eventTwo = [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-1" commonEventData:nil];
+    MMEEvent *eventTwo = [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-2" commonEventData:nil];
     
     NSArray *events = @[event, eventTwo];
     

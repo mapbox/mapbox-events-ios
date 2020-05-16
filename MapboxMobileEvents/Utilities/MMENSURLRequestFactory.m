@@ -2,6 +2,7 @@
 #import "MMEEventConfigProviding.h"
 #import "MMEConstants.h"
 #import "NSData+MMEGZIP.h"
+#import "MMEEvent.h"
 
 static NSString * const MMEMapboxAgent = @"X-Mapbox-Agent";
 
@@ -43,7 +44,6 @@ static NSString * const MMEMapboxAgent = @"X-Mapbox-Agent";
             } else {
                 data = jsonData;
             }
-
         }
     }
 
@@ -114,5 +114,48 @@ static NSString * const MMEMapboxAgent = @"X-Mapbox-Agent";
 
     // Construct URLRequest
     return [request copy];
+}
+
+// MARK: - Events
+- (nullable NSURLRequest *)requestForEvents:(NSArray *)events error:(NSError**)serializationError {
+
+    NSMutableArray *eventAttributes = [NSMutableArray arrayWithCapacity:events.count];
+    [events enumerateObjectsUsingBlock:^(MMEEvent * _Nonnull event, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (event.attributes) {
+            [eventAttributes addObject:event.attributes];
+        }
+    }];
+
+    NSDictionary<NSString*, NSString*>* additionalHeaders = @{
+        MMEAPIClientHeaderFieldContentTypeKey: MMEAPIClientHeaderFieldContentTypeValue
+    };
+
+    NSURLRequest* request = [self urlRequestWithMethod:MMEAPIClientHTTPMethodPost
+                                                              baseURL:self.config.eventsServiceURL
+                                                                 path:MMEAPIClientEventsPath
+                                                    additionalHeaders:additionalHeaders
+                                                           shouldGZIP: events.count >= 2
+                                                           jsonObject:eventAttributes
+                                                                error:serializationError];
+
+//    if (serializationError) {
+//        return nil;
+//    }
+
+    return request;
+}
+
+// MARK: - Event Configuration
+
+- (nullable NSURLRequest *)requestForConfiguration {
+    NSError *jsonError = nil;
+    return [self urlRequestWithMethod:MMEAPIClientHTTPMethodPost
+                                             baseURL:self.config.configServiceURL
+                                                path:MMEAPIClientEventsConfigPath
+                                   additionalHeaders:@{}
+                                          shouldGZIP: NO
+                                          jsonObject:nil
+                                               error:&jsonError];
+    
 }
 @end

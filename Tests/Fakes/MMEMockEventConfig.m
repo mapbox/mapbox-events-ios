@@ -99,7 +99,7 @@
                                               isChinaRegion:NO
                                                      apiURL:[NSURL URLWithString:MMEAPIClientBaseAPIURL]
                                                   eventsURL:[NSURL URLWithString:MMEAPIClientBaseEventsURL]
-                                                  configURL:MMEServiceFixture.serviceURL
+                                                  configURL:[NSURL URLWithString:MMEAPIClientBaseConfigURL]
                                                   userAgent:@"<UserAgent>"
                                             legacyUserAgent:@"<LegacyUserAgent>"
                                         isCollectionEnabled:YES

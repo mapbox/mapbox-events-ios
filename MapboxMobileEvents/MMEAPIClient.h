@@ -93,12 +93,6 @@ typedef void(^OnGenerateTelemetryEvent)(void);
 // MARK: - Events Service
 
 /*!
- @Brief Construct URLRequest for reporting Events
- @param events Array of Events
- */
-- (nullable NSURLRequest *)requestForEvents:(NSArray *)events;
-
-/*!
  @Brief Track a single event
  @param event Event to track
  @param completionHandler Completion event with optional error
@@ -119,8 +113,6 @@ typedef void(^OnGenerateTelemetryEvent)(void);
 
 
 // MARK: - Configuration Service
-
-- (nullable NSURLRequest *)eventConfigurationRequest;
 
 /** Fetch Event Config (Service Driven Behavior Reporting)
  @param completion Block called at the end of network operation (Result being JSON Object or NSError)

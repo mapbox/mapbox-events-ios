@@ -1,5 +1,6 @@
 #import <Foundation/Foundation.h>
 
+@class MMEEvent;
 @protocol MMEEventConfigProviding;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -66,6 +67,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @param path Path appended to baseURL
  * @param additionalHeaders Additional headers other than those provided by config to compose request as necessary
  * @param data HTTP Body Data
+ * @returns URLRequest
  */
 - (nullable NSURLRequest*)urlRequestWithMethod:(NSString*)method
                                        baseURL:(NSURL*)baseURL
@@ -73,6 +75,22 @@ NS_ASSUME_NONNULL_BEGIN
                              additionalHeaders:(NSDictionary<NSString*, NSString*>*)additionalHeaders
                                       httpBody: (NSData*)data;
 
+// MARK: - Events
+
+/*!
+ @Brief Constructs requst for an array of events
+ @param events Array of Events
+ @param serializationError Error (receives serialization errors)
+ @returns URLRequest
+ */
+- (nullable NSURLRequest *)requestForEvents:(NSArray<MMEEvent*>*)events
+                                      error:(NSError**)serializationError;
+
+/*!
+ @Brief Constructs requst for fetching Configuration Response
+ @returns URLRequest
+ */
+- (nullable NSURLRequest *)requestForConfiguration;
 @end
 
 NS_ASSUME_NONNULL_END
