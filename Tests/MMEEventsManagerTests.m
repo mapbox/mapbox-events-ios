@@ -21,6 +21,7 @@
 #import "MMEDispatchManager.h"
 #import "MMEEventsManager_Private.h"
 #import "MMEBundleInfoFake.h"
+#import "NSURL+Files.h"
 
 
 @interface MMEEventsManager (Tests)
@@ -62,7 +63,8 @@
     self.preferences = [[MMEPreferences alloc] initWithBundle:[MMEBundleInfoFake new]
                                                     dataStore:NSUserDefaults.mme_configuration];
 
-    MMEMetricsManager* metricsManager = [[MMEMetricsManager alloc] initWithLogger:logger config:self.preferences];
+    MMEMetricsManager* metricsManager = [[MMEMetricsManager alloc] initWithConfig:self.preferences
+                                                            pendingMetricsFileURL:[NSURL testPendingEventsFile]];
 
 
     self.preferences.accessToken = @"access-token";
@@ -503,7 +505,8 @@
 
 
     MMELogger* logger = [[MMELogger alloc] init];
-    MMEMetricsManager* metricsManager = [[MMEMetricsManager alloc] initWithLogger:logger config:self.preferences];
+    MMEMetricsManager* metricsManager = [[MMEMetricsManager alloc] initWithConfig:self.preferences
+                                                            pendingMetricsFileURL:[NSURL testPendingEventsFile]];
 
     self.eventsManager = [[MMEEventsManager alloc] initWithPreferences:self.preferences
                                                       uniqueIdentifier:[[MMEUniqueIdentifier alloc] initWithTimeInterval:self.preferences.identifierRotationInterval]
@@ -529,7 +532,8 @@
 
 
     MMELogger* logger = [[MMELogger alloc] init];
-    MMEMetricsManager* metricsManager = [[MMEMetricsManager alloc] initWithLogger:logger config:self.preferences];
+    MMEMetricsManager* metricsManager = [[MMEMetricsManager alloc] initWithConfig:self.preferences
+                                                            pendingMetricsFileURL:[NSURL testPendingEventsFile]];
 
     self.eventsManager = [[MMEEventsManager alloc] initWithPreferences:self.preferences
                                                       uniqueIdentifier:[[MMEUniqueIdentifier alloc] initWithTimeInterval:self.preferences.identifierRotationInterval]
@@ -555,7 +559,8 @@
 
 
     MMELogger* logger = [[MMELogger alloc] init];
-    MMEMetricsManager* metricsManager = [[MMEMetricsManager alloc] initWithLogger:logger config:self.preferences];
+    MMEMetricsManager* metricsManager = [[MMEMetricsManager alloc] initWithConfig:self.preferences
+                                                            pendingMetricsFileURL:[NSURL testPendingEventsFile]];
 
     self.eventsManager = [[MMEEventsManager alloc] initWithPreferences:self.preferences
                                                       uniqueIdentifier:[[MMEUniqueIdentifier alloc] initWithTimeInterval:self.preferences.identifierRotationInterval]

@@ -6,6 +6,7 @@
 #import "MMEMetricsManager.h"
 #import "MMELogger.h"
 #import "MMEMockEventConfig.h"
+#import "NSURL+Files.h"
 
 @interface MMELocationManagerTests : XCTestCase <MMELocationManagerDelegate>
 
@@ -27,8 +28,8 @@
     
     self.locationManager = [[CLLocationManager alloc] init];
     MMEMockEventConfig* config = [[MMEMockEventConfig alloc] init];
-    MMEMetricsManager * metricsManager = [[MMEMetricsManager alloc] initWithLogger:[[MMELogger alloc] init]
-                                                                            config:config];
+    MMEMetricsManager * metricsManager = [[MMEMetricsManager alloc] initWithConfig:config
+                                                             pendingMetricsFileURL:[NSURL testPendingEventsFile]];
     self.mme_locationManager = [[MMELocationManager alloc] initWithMetricsManager:metricsManager
                                                                            config:config];
 

@@ -27,6 +27,8 @@
 #import "MMEConfigService.h"
 #import "MMEPreferences.h"
 #import "NSError+APIClient.h"
+#import "NSURL+Directories.h"
+#import "NSBundle+MMEMobileEvents.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -76,7 +78,20 @@ NS_ASSUME_NONNULL_BEGIN
     MMELogger* logger = [[MMELogger alloc] init];
     MMEPreferences* preferences = [[MMEPreferences alloc] initWithBundle:NSBundle.mainBundle
                                                                dataStore:NSUserDefaults.mme_configuration];
-    MMEMetricsManager* metricsManager = [[MMEMetricsManager alloc] initWithLogger:logger config:preferences];
+    NSURL* cachesDirectory =  [NSURL cachesDirectory];
+    NSURL* mmeFolder = [cachesDirectory URLByAppendingPathComponent:NSBundle.mme_bundle.bundleIdentifier];
+    NSURL* pendingFileURL = [mmeFolder URLByAppendingPathComponent:@"pending-metrics.event"];
+
+
+    MMEMetricsManager* metricsManager = [[MMEMetricsManager alloc] initWithConfig:preferences
+                                                             pendingMetricsFileURL:pendingFileURL
+                                                                    onMetricsError:^(NSError * _Nonnull error) {
+
+         [logger logEvent:[MMEEvent debugEventWithError:error]];
+    }
+                                                                onMetricsException:^(NSException * _Nonnull exception) {
+         [logger logEvent:[MMEEvent debugEventWithException:exception]];
+     }];
 
     return [self initWithPreferences:preferences
                uniqueIdentifier:[[MMEUniqueIdentifier alloc] initWithTimeInterval:self.preferences.identifierRotationInterval]
@@ -178,7 +193,9 @@ NS_ASSUME_NONNULL_BEGIN
         } onEventCountUpdate:^(NSUInteger eventCount, NSURLRequest * _Nullable request, NSError * _Nullable error) {
             [[weakSelf metricsManager] updateMetricsFromEventCount:eventCount request:request error:error];
         } onGenerateTelemetryEvent:^{
-            [[weakSelf metricsManager] generateTelemetryMetricsEvent];
+            MMEEvent* event = [[weakSelf metricsManager] generateTelemetryMetricsEvent];
+            [[weakSelf logger] logEvent:event];
+
         }];
 
         // Setup Service to Poll/Handle Configuration updates

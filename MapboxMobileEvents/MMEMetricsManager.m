@@ -2,53 +2,69 @@
 #import "MMEReachability.h"
 #import "MMEConstants.h"
 #import "MMEDate.h"
-#import "MMEEvent.h"
-#import "MMEEventsManager.h"
-#import "MMEEventsManager_Private.h"
-#import "MMEAPIClient.h"
-#import "MMEAPIClient_Private.h"
-#import "NSUserDefaults+MMEConfiguration.h"
-#import "MMELogger.h"
 #import "NSProcessInfo+SystemInfo.h"
-#import "NSBundle+MMEMobileEvents.h"
 #import "MMEEventConfigProviding.h"
+#import "MMEEvent.h"
+#import "MMELogger.h"
 
 // MARK: -
 
 @interface MMEMetricsManager ()
 
 @property (nonatomic, strong) MMEMetrics *metrics;
-@property (nonatomic, strong) MMELogger *logger;
 @property (nonatomic, strong) id <MMEEventConfigProviding> config;
-
+@property (nonatomic, copy) NSURL *pendingMetricsFileURL;
+@property (nonatomic, copy) OnMetricsError onMetricsError;
+@property (nonatomic, copy) OnMetricsException onMetricsException;
 @end
 
 // MARK: -
 
 @implementation MMEMetricsManager
 
-- (NSString *)pendingMetricsEventPath {
-    static NSString *pendingMetricFile = nil;
-    static dispatch_once_t onceToken;
+// MARK: - Initializers
 
-    dispatch_once(&onceToken, ^{
-        NSString *libraryPath = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).lastObject;
+- (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config
+         pendingMetricsFileURL:(NSURL*)pendingMetricsFileURL {
 
-        NSString *frameworkLibraryPath = [libraryPath stringByAppendingPathComponent:[NSBundle bundleForClass:self.class].bundleIdentifier];
-
-        pendingMetricFile = [frameworkLibraryPath stringByAppendingPathComponent:@"pending-metrics.event"];
-    });
-
-    return pendingMetricFile;
+    return [self initWithConfig:config
+          pendingMetricsFileURL:pendingMetricsFileURL
+                 onMetricsError:^(NSError * _Nonnull error) {}
+             onMetricsException:^(NSException * _Nonnull exception) {}];
 }
 
+- (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config
+         pendingMetricsFileURL:(NSURL*)pendingMetricsFileURL
+                onMetricsError:(OnMetricsError)onMetricsError
+            onMetricsException:(OnMetricsException)onMetricsException {
+
+    if ((self = super.init)) {
+
+        self.config = config;
+        self.pendingMetricsFileURL = pendingMetricsFileURL;
+
+        self.onMetricsError = onMetricsError;
+        self.onMetricsException = onMetricsException;
+
+        [self resetMetrics];
+    }
+
+    return self;
+}
+
+// MARK: - File Methods
+
+/// Deletes Pending Metrics Event File (stashed metrics which were not sent)
 - (BOOL)deletePendingMetricsEventFile {
     BOOL success = NO;
-    if ([NSFileManager.defaultManager fileExistsAtPath: self.pendingMetricsEventPath]) {
+
+    if ([NSFileManager.defaultManager fileExistsAtPath: self.pendingMetricsFileURL.path]) {
         NSError *fileError = nil;
-        if (![NSFileManager.defaultManager removeItemAtPath: self.pendingMetricsEventPath error:&fileError]) {
-            MMEEvent *errorEvent = [MMEEvent debugEventWithError:fileError];
-            [self.logger logEvent:errorEvent];
+
+        if (![NSFileManager.defaultManager removeItemAtURL:self.pendingMetricsFileURL
+                                                     error:&fileError]) {
+
+            self.onMetricsError(fileError);
         }
         else {  // we successfully removed the file
             success = YES;
@@ -61,50 +77,57 @@
     return success;
 }
 
-- (BOOL)createFrameworkMetricsEventDir {
-    NSString *sdkPath = self.pendingMetricsEventPath.stringByDeletingLastPathComponent;
-    BOOL sdkPathIsDir = YES;
-    BOOL sdkPathExtant = [NSFileManager.defaultManager fileExistsAtPath:sdkPath isDirectory:&sdkPathIsDir];
+/*!
+ @Brief Creates Metrics Event Directory
+ @Returns Success Status of Directory Creation
+ */
+- (BOOL)createFrameworkMetricsEventDirectory {
+
+    NSURL* mmeDirectory = [self.pendingMetricsFileURL URLByDeletingLastPathComponent];
+    BOOL urlIsDirectory = YES;
+
+    // Check if item exists?
+    BOOL sdkPathExtant = [NSFileManager.defaultManager fileExistsAtPath:mmeDirectory.path
+                                                            isDirectory:&urlIsDirectory];
     NSError* sdkPathError = nil;
 
-    if (!sdkPathIsDir) { // remove it
-        if ([NSFileManager.defaultManager removeItemAtPath:sdkPath error:&sdkPathError]) {
+    // If not a directory (it would prevent us from writing), remove it
+    if (!urlIsDirectory) {
+
+        if ([NSFileManager.defaultManager removeItemAtURL:mmeDirectory error:&sdkPathError]) {
             sdkPathExtant = NO;
         }
         else {
-            [self.logger logEvent:[MMEEvent debugEventWithError:sdkPathError]];
+            self.onMetricsError(sdkPathError);
         }
     }
 
-    if (!sdkPathExtant) { // create it
-        if ([NSFileManager.defaultManager createDirectoryAtPath:sdkPath withIntermediateDirectories:YES attributes:nil error:&sdkPathError]) {
-            if ([[NSURL fileURLWithPath:sdkPath] setResourceValue:@(YES) forKey:NSURLIsExcludedFromBackupKey error:&sdkPathError]) {
-                sdkPathIsDir = YES;
+    // If directly doesn't exist, create it
+    if (!sdkPathExtant) {
+        if ( [NSFileManager.defaultManager createDirectoryAtURL:mmeDirectory
+                                    withIntermediateDirectories:YES
+                                                     attributes:nil
+                                                          error:&sdkPathError]) {
+
+            // Exclude from backup
+            if ([mmeDirectory setResourceValue:@(YES)
+                                        forKey:NSURLIsExcludedFromBackupKey
+                                         error:&sdkPathError]) {
+                urlIsDirectory = YES;
             }
             else {
-                [self.logger logEvent:[MMEEvent debugEventWithError:sdkPathError]];
+                self.onMetricsError(sdkPathError);
             }
         }
         else {
-            [self.logger logEvent:[MMEEvent debugEventWithError:sdkPathError]];
+            self.onMetricsError(sdkPathError);
         }
     }
 
-    return sdkPathIsDir;
+    return urlIsDirectory;
 }
 
-// MARK: -
-
-- (instancetype)initWithLogger:(MMELogger*)logger
-                        config:(id <MMEEventConfigProviding>)config {
-    if ((self = super.init)) {
-        self.logger = logger;
-        self.config = config;
-        [self resetMetrics];
-    }
-
-    return self;
-}
+// MARK: - Update Methods
 
 - (void)updateMetricsFromEventQueue:(NSArray *)eventQueue {
     if (eventQueue.count > 0) {
@@ -118,7 +141,9 @@
     }
 }
 
-- (void)updateMetricsFromEventCount:(NSUInteger)eventCount request:(nullable NSURLRequest *)request error:(nullable NSError *)error {
+- (void)updateMetricsFromEventCount:(NSUInteger)eventCount
+                            request:(nullable NSURLRequest *)request
+                              error:(nullable NSError *)error {
     if (request.HTTPBody) {
         [self updateSentBytes:request.HTTPBody.length];
     }
@@ -235,15 +260,15 @@
 - (MMEEvent *)loadPendingTelemetryMetricsEvent {
     MMEEvent* pending = nil;
 
-    if ([NSFileManager.defaultManager fileExistsAtPath:self.pendingMetricsEventPath]) {
+    if ([NSFileManager.defaultManager fileExistsAtPath:self.pendingMetricsFileURL.path]) {
         @try {
-            NSData *thenData = [NSData dataWithContentsOfFile: self.pendingMetricsEventPath];
+            NSData *thenData = [NSData dataWithContentsOfURL:self.pendingMetricsFileURL];
             NSKeyedUnarchiver* unarchiver = [NSKeyedUnarchiver.alloc initForReadingWithData:thenData];
             unarchiver.requiresSecureCoding = YES;
             pending = [unarchiver decodeObjectOfClass:MMEEvent.class forKey:NSKeyedArchiveRootObjectKey];
         }
         @catch (NSException *exception) {
-            [self.logger logEvent:[MMEEvent debugEventWithException:exception]];
+            self.onMetricsException(exception);
         }
     }
     //decoding failed; deleting metrics event
@@ -262,25 +287,25 @@
         if (@available(iOS 10.0, macos 10.12, tvOS 10.0, watchOS 3.0, *)) { // write them to a pending file
             [self deletePendingMetricsEventFile];
 
-            if ([self createFrameworkMetricsEventDir]) {
+            if ([self createFrameworkMetricsEventDirectory]) {
                 @try { // to write the metrics event to the pending metrics event path
                     NSKeyedArchiver *archiver = [NSKeyedArchiver new];
                     archiver.requiresSecureCoding = YES;
                     [archiver encodeObject:telemetryMetrics forKey:NSKeyedArchiveRootObjectKey];
 
-                    if (![archiver.encodedData writeToFile: self.pendingMetricsEventPath atomically:YES]) {
+
+                    if (![archiver.encodedData writeToURL:self.pendingMetricsFileURL atomically:YES]) {
                         MMELog(MMELogInfo, MMEDebugEventTypeTelemetryMetrics, ([NSString stringWithFormat:@"Failed to archiveRootObject: %@ toFile: %@",
-                                                                                telemetryMetrics, self.pendingMetricsEventPath]));
+                                                                                telemetryMetrics, self.pendingMetricsFileURL.absoluteString]));
                     }
                 }
                 @catch (NSException* exception) {
-                    [self.logger logEvent:[MMEEvent debugEventWithException:exception]];
+                    self.onMetricsException(exception);
                 }
             }
         }
         return nil;
     }
-    [self.logger logEvent:telemetryMetrics];
     [self deletePendingMetricsEventFile];
     
     return telemetryMetrics;
@@ -294,11 +319,11 @@
         NSString *jsonString;
         NSError *jsonError = nil;
         NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dictionary options:0 error:&jsonError];
-        
+
         if (jsonData) {
             jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
         } else if (jsonError) {
-            [self.logger logEvent:[MMEEvent debugEventWithError:jsonError]];
+            self.onMetricsError(jsonError);
         }
         return jsonString;
     }
