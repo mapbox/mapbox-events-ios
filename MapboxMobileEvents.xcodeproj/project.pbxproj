@@ -139,7 +139,7 @@
 		9CA7539E240EF2DD005C26C9 /* UIKit+MMEMobileEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = 9C65A289225D41F2006E3FED /* UIKit+MMEMobileEvents.h */; };
 		9CA7539F240EF2DD005C26C9 /* MMEMetricsManager.h in Headers */ = {isa = PBXBuildFile; fileRef = AC86FE1B2169250000D1B89C /* MMEMetricsManager.h */; };
 		9CA753A1240EF2DD005C26C9 /* MMEReachability.h in Headers */ = {isa = PBXBuildFile; fileRef = 40F16C941F04514100DF338D /* MMEReachability.h */; };
-		9CA753A2240EF2DD005C26C9 /* MMEAPIClient_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 9C3F930A2351180A00F99907 /* MMEAPIClient_Private.h */; };
+		9CA753A2240EF2DD005C26C9 /* MMEAPIClient_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 9C3F930A2351180A00F99907 /* MMEAPIClient_Private.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		9CA753AB241027E6005C26C9 /* MMELoggerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CA753AA241027E6005C26C9 /* MMELoggerTests.m */; };
 		9CDC34B8234FD35800852FF0 /* NSUserDefaults+MMEConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = 9CDC34B6234FD35800852FF0 /* NSUserDefaults+MMEConfiguration.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9CDC34BB234FD36E00852FF0 /* NSUserDefaults+MMEConfigurationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CDC34BA234FD36E00852FF0 /* NSUserDefaults+MMEConfigurationTests.m */; };
@@ -880,6 +880,8 @@
 				9CA75389240EF2DD005C26C9 /* MMEEvent.h in Headers */,
 				9CA7538A240EF2DD005C26C9 /* MMEEventsManager.h in Headers */,
 				9CA7538B240EF2DD005C26C9 /* MMELocationManager.h in Headers */,
+				9CA7539D240EF2DD005C26C9 /* MMEEventsManager_Private.h in Headers */,
+				9CA753A2240EF2DD005C26C9 /* MMEAPIClient_Private.h in Headers */,
 				F4726565246633CD00BD7055 /* MMEConfigService.h in Headers */,
 				9CA7538C240EF2DD005C26C9 /* MMEDate.h in Headers */,
 				9CA7538D240EF2DD005C26C9 /* MMETypes.h in Headers */,
@@ -903,7 +905,6 @@
 				9CA7539F240EF2DD005C26C9 /* MMEMetricsManager.h in Headers */,
 				9CA753A1240EF2DD005C26C9 /* MMEReachability.h in Headers */,
 				F49675E324620F4300F8914D /* NSError+APIClient.h in Headers */,
-				9CA753A2240EF2DD005C26C9 /* MMEAPIClient_Private.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -982,9 +983,9 @@
 			productReference = 9C65A2662256C110006E3FED /* MMETestHost.app */;
 			productType = "com.apple.product-type.application";
 		};
-		9CA75369240EF2DD005C26C9 /* MapboxMobileEvents (Deprecation) */ = {
+		9CA75369240EF2DD005C26C9 /* MapboxMobileEvents (Development) */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 9CA753A4240EF2DD005C26C9 /* Build configuration list for PBXNativeTarget "MapboxMobileEvents (Deprecation)" */;
+			buildConfigurationList = 9CA753A4240EF2DD005C26C9 /* Build configuration list for PBXNativeTarget "MapboxMobileEvents (Development)" */;
 			buildPhases = (
 				9CA7536A240EF2DD005C26C9 /* Sources */,
 				9CA75384240EF2DD005C26C9 /* Frameworks */,
@@ -995,7 +996,7 @@
 			);
 			dependencies = (
 			);
-			name = "MapboxMobileEvents (Deprecation)";
+			name = "MapboxMobileEvents (Development)";
 			productName = MapboxMobileEvents;
 			productReference = 9CA753A8240EF2DD005C26C9 /* MapboxMobileEvents.framework */;
 			productType = "com.apple.product-type.framework";
@@ -1074,7 +1075,7 @@
 			targets = (
 				9C632266221377BF00653792 /* MapboxMobileEvents (All Targets) */,
 				404807B81EA186D8008A6D50 /* MapboxMobileEvents */,
-				9CA75369240EF2DD005C26C9 /* MapboxMobileEvents (Deprecation) */,
+				9CA75369240EF2DD005C26C9 /* MapboxMobileEvents (Development) */,
 				408596521ED084C0003BD29D /* libMapboxMobileEvents */,
 				404807C11EA186D8008A6D50 /* MMETests */,
 				9C65A2652256C110006E3FED /* MMETestHost */,
@@ -1307,7 +1308,7 @@
 		};
 		9C8E04A1241BF6E900D6C641 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 9CA75369240EF2DD005C26C9 /* MapboxMobileEvents (Deprecation) */;
+			target = 9CA75369240EF2DD005C26C9 /* MapboxMobileEvents (Development) */;
 			targetProxy = 9C8E04A0241BF6E900D6C641 /* PBXContainerItemProxy */;
 		};
 		9C8E04A3241BF70200D6C641 /* PBXTargetDependency */ = {
@@ -1495,7 +1496,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				HEADER_SEARCH_PATHS = "$(SRCROOT)/vendor/TrustKit/TrustKit/**";
+				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = MapboxMobileEvents/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1528,7 +1529,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				HEADER_SEARCH_PATHS = "$(SRCROOT)/vendor/TrustKit/TrustKit/**";
+				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = MapboxMobileEvents/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1606,7 +1607,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				DEFINES_MODULE = YES;
-				HEADER_SEARCH_PATHS = "$(SRCROOT)/vendor/TrustKit/TrustKit/**";
+				HEADER_SEARCH_PATHS = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = MapboxMobileEvents;
@@ -1619,7 +1620,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				DEFINES_MODULE = YES;
-				HEADER_SEARCH_PATHS = "$(SRCROOT)/vendor/TrustKit/TrustKit/**";
+				HEADER_SEARCH_PATHS = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = MapboxMobileEvents;
@@ -1704,7 +1705,6 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				HEADER_SEARCH_PATHS = "$(SRCROOT)/vendor/TrustKit/TrustKit/**";
 				INFOPLIST_FILE = MapboxMobileEvents/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1741,7 +1741,6 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				HEADER_SEARCH_PATHS = "$(SRCROOT)/vendor/TrustKit/TrustKit/**";
 				INFOPLIST_FILE = MapboxMobileEvents/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1778,7 +1777,6 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				HEADER_SEARCH_PATHS = "$(SRCROOT)/vendor/TrustKit/TrustKit/**";
 				INFOPLIST_FILE = MapboxMobileEvents/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1934,7 +1932,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				HEADER_SEARCH_PATHS = "$(SRCROOT)/vendor/TrustKit/TrustKit/**";
+				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = MapboxMobileEvents/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1962,7 +1960,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				DEFINES_MODULE = YES;
-				HEADER_SEARCH_PATHS = "$(SRCROOT)/vendor/TrustKit/TrustKit/**";
+				HEADER_SEARCH_PATHS = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = MapboxMobileEvents;
@@ -2107,7 +2105,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		9CA753A4240EF2DD005C26C9 /* Build configuration list for PBXNativeTarget "MapboxMobileEvents (Deprecation)" */ = {
+		9CA753A4240EF2DD005C26C9 /* Build configuration list for PBXNativeTarget "MapboxMobileEvents (Development)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9CA753A5240EF2DD005C26C9 /* Debug */,
