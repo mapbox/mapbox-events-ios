@@ -76,7 +76,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// - Parameter metadata: array of metadata tags
 /// - Parameter filePaths: array of local files to upload
 /// - Parameter completionHandler: if provided, block will be run when the post completes
-- (void)postMetadata:(NSArray *)metadata filePaths:(NSArray *)filePaths completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler;
+- (void)postMetadata:(NSArray *)metadata
+           filePaths:(NSArray *)filePaths
+   completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler;
 
 // MARK: - Error & Exception Reporting
 
@@ -107,7 +109,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Deprecated API
 
-@property (nonatomic, nullable) id<MMEAPIClient> apiClient MME_DEPRECATED;
+@property (nonatomic, strong, nullable) id<MMEAPIClient> apiClient MME_DEPRECATED;
 
 - (void)initializeWithAccessToken:(NSString *)accessToken userAgentBase:(NSString *)userAgentBase hostSDKVersion:(NSString *)hostSDKVersion
     MME_DEPRECATED_GOTO("use startEventsManagerWithToken:", "-startEventsManagerWithToken:");

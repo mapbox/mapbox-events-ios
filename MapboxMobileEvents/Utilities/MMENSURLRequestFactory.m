@@ -138,10 +138,6 @@ static NSString * const MMEMapboxAgent = @"X-Mapbox-Agent";
                                                            jsonObject:eventAttributes
                                                                 error:serializationError];
 
-//    if (serializationError) {
-//        return nil;
-//    }
-
     return request;
 }
 

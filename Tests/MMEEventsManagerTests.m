@@ -22,6 +22,9 @@
 #import "MMEEventsManager_Private.h"
 #import "MMEBundleInfoFake.h"
 #import "NSURL+Files.h"
+#import "MMEMockEventConfig.h"
+#import "MMEAPIClientFake.h"
+#import "MMEAPIClientCallCounter.h"
 
 
 @interface MMEEventsManager (Tests)
@@ -83,6 +86,25 @@
 
 }
 
+// MARK: - Starting Events Manager should not initialize a new object
+
+
+- (void)testEventsManagerReinitialized {
+    MMEEventsManager *capturedEventsManager = self.eventsManager;
+    [self.eventsManager startEventsManagerWithToken:@"access-token" userAgentBase:@"user-agent-base" hostSDKVersion:@"sdk-version"];
+
+    XCTAssert([self.eventsManager isEqual:capturedEventsManager]);
+}
+
+- (void)testEventsManagerReinitializedLegacy {
+    MMEEventsManager *capturedEventsManager = self.eventsManager;
+    [self.eventsManager initializeWithAccessToken:@"access-token" userAgentBase:@"user-agent-base" hostSDKVersion:@"sdk-version"];
+
+    XCTAssert([self.eventsManager isEqual:capturedEventsManager]);
+}
+
+// MARK: - Listeners
+
 - (void)testResponseListener {
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"Registered Response listener should receive a callback"];
@@ -101,25 +123,7 @@
     [self waitForExpectations:@[expectation] timeout:2];
 }
 
-- (void)testAccessTokenSetter {
-    self.preferences.accessToken = @"Foo";
-    XCTAssertEqualObjects(self.preferences.accessToken, @"Foo");
-
-    self.preferences.accessToken = @"Bar";
-    XCTAssertEqualObjects(self.preferences.accessToken, @"Bar");
-}
-
-- (void)testIsCollectionEnabledDefault {
-    self.preferences.isCollectionEnabled = YES;
-}
-
-- (void)testIsCollectionSetter {
-    self.preferences.isCollectionEnabled = NO;
-    XCTAssertEqual(self.preferences.isCollectionEnabled, NO);
-
-    self.preferences.isCollectionEnabled = YES;
-    XCTAssertEqual(self.preferences.isCollectionEnabled, YES);
-}
+// MARK: - Behavior in Various Application States
 
 - (void)testIsCollectionEnabledInBackgroundSetter {
     self.preferences.isCollectionEnabled = YES;
@@ -179,6 +183,39 @@
     XCTAssert(self.eventsManager.paused == YES);
 }
 
+// MARK: - Event Queue Threadhold Triggers
+
+- (void)testQueueuingPushesToQueueWhilePaused {
+    self.eventsManager.paused = true;
+
+    NSDictionary* attributes = attributes = @{
+        @"attribute1": @"a nice attribute"
+
+    };
+    NSString *dateString = @"A nice date";
+    MMEEvent *event = [MMEEvent mapTapEventWithDateString:dateString attributes:attributes];
+    [self.eventsManager enqueueEvent:event];
+
+    XCTAssertEqual(self.eventsManager.eventQueue.count, 1);
+    XCTAssertEqualObjects(self.eventsManager.eventQueue.firstObject, event);
+}
+
+- (void)testQueueuingPushesToQueueWhileActive {
+    self.eventsManager.paused = false;
+
+    NSDictionary* attributes = attributes = @{
+        @"attribute1": @"a nice attribute"
+
+    };
+    NSString *dateString = @"A nice date";
+    MMEEvent *event = [MMEEvent mapTapEventWithDateString:dateString attributes:attributes];
+
+    [self.eventsManager enqueueEvent:event];
+
+    XCTAssertEqual(self.eventsManager.eventQueue.count, 1);
+    XCTAssertEqualObjects(self.eventsManager.eventQueue.firstObject, event);
+}
+
 - (void)testEventQueuedAndFlushed {
     self.eventsManager.paused = NO;
     [self.eventsManager enqueueEventWithName:MMEEventTypeMapLoad];
@@ -187,13 +224,6 @@
     [self.eventsManager pauseOrResumeMetricsCollectionIfRequired];
     XCTAssert(self.eventsManager.eventQueue.count == 0);
     XCTAssert(self.eventsManager.paused = YES);
-}
-
-- (void)testEventsManagerReinitialized {
-    MMEEventsManager *capturedEventsManager = self.eventsManager;
-    [self.eventsManager initializeWithAccessToken:@"access-token" userAgentBase:@"user-agent-base" hostSDKVersion:@"sdk-version"];
-    
-    XCTAssert([self.eventsManager isEqual:capturedEventsManager]);
 }
 
 - (void)testEventCountThresholdReached {
@@ -267,7 +297,6 @@
     XCTAssertTrue(self.eventsManager.paused);
 }
 
-// Dane - results in backgroundCollection Off
 - (void)testCollectionNotEnabledWhileNOTPausedAndAlwaysAuthAndBackgrounded {
     self.eventsManager.paused = NO;
     
@@ -483,6 +512,7 @@
 
 
 // Each Initialized EventManager should be different unless using shared
+
 -(void)testEventManagerInitShouldBeDifferent {
     MMEEventsManager* eventManager1 = [[MMEEventsManager alloc] initWithDefaults];
     MMEEventsManager* eventManager2 = [[MMEEventsManager alloc] initWithDefaults];
@@ -574,448 +604,144 @@
     XCTAssertEqualObjects(self.eventsManager.skuId, @"Fluffy");
 }
 
-// TODO: Convert Cedar Tests
+// MARK: - Pausing
+
+-(void)testPauseEnsuresEventsAreNotSent {
+
+    // Configure Client with
+    MMEAPIClientCallCounter* client = [[MMEAPIClientCallCounter alloc] initWithConfig: self.preferences];
+    self.preferences.eventFlushCount = 1;
+    self.eventsManager.paused = true;
+
+    [self.eventsManager startEventsManagerWithToken:@"access-token"];
+    self.eventsManager.apiClient = client;
+
+    // Enqueue more events than the flush count
+    NSArray<MMEEvent*>* events = @[
+        [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-1" commonEventData:nil],
+        [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-2" commonEventData:nil],
+        [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-3" commonEventData:nil]
+    ];
+
+    for (MMEEvent* event in events) {
+        [self.eventsManager enqueueEvent:event];
+    }
+
+    // Verify we aren't sending events while EventsManager is paushed
+    XCTAssertEqual(self.eventsManager.eventQueue.count, events.count);
+    XCTAssertEqual(client.postEventsCount, 0);
+    XCTAssertEqual(client.performRequestCount, 0);
+}
+
+-(void)testUnpauseWaitsUntilFlushCountToSend {
+
+    // Configure Client with
+    MMEAPIClientCallCounter* client = [[MMEAPIClientCallCounter alloc] initWithConfig: self.preferences];
+    self.preferences.eventFlushCount = 4;
+
+    [self.eventsManager startEventsManagerWithToken:@"access-token"];
+
+    // Set Client after starting to replace client which is created on start
+    self.eventsManager.apiClient = client;
+    self.eventsManager.paused = NO;
+
+    // Enqueue more events than the flush count
+    NSArray<MMEEvent*>* events = @[
+        [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-1" commonEventData:nil],
+        [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-2" commonEventData:nil],
+        [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-3" commonEventData:nil]
+    ];
+
+    for (MMEEvent* event in events) {
+        [self.eventsManager enqueueEvent:event];
+    }
+
+    // Verify we aren't sending events while EventsManager is paushed
+    XCTAssertEqual(self.eventsManager.eventQueue.count, events.count);
+    XCTAssertEqual(client.postEventsCount, 0);
+    XCTAssertEqual(client.performRequestCount, 0);
+
+    MMEEvent* eventFour = [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-4" commonEventData:nil];
+    [self.eventsManager enqueueEvent:eventFour];
+
+    // Verify Client has received instruction to send events
+    XCTAssertEqual(self.eventsManager.eventQueue.count, 0);
+    XCTAssertEqual(client.postEventsCount, 1);
+    XCTAssertEqual(client.performRequestCount, 1);
+}
+
+// MARK: - Turnstile (Minimum Requirements for sending)
+
+-(void)testNoAccessTokenDoesNotPost {
+    // Configure Client with
+    MMEAPIClientCallCounter* client = [[MMEAPIClientCallCounter alloc] initWithConfig: self.preferences];
+    self.preferences.eventFlushCount = 1;
+
+    [self.eventsManager startEventsManagerWithToken:@"access-token"];
+
+    // Clear Access Token
+    self.preferences.accessToken = nil;
+
+    // Set Client after starting to replace client which is created on start
+    self.eventsManager.apiClient = client;
+    self.eventsManager.paused = NO;
+
+    [self.eventsManager sendTurnstileEvent];
+
+    // Turnstile events are directly posted, not queued, so there should be nothing queued
+    XCTAssertEqual(self.eventsManager.eventQueue.count, 0);
+    XCTAssertEqual(client.postEventsCount, 0);
+    XCTAssertEqual(client.performRequestCount, 0);
+}
+
+-(void)testNoUserAgentBaseDoesNotPost {
+    // Configure Client with
+    MMEAPIClientCallCounter* client = [[MMEAPIClientCallCounter alloc] initWithConfig: self.preferences];
+    self.preferences.eventFlushCount = 1;
+
+    [self.eventsManager startEventsManagerWithToken:@"access-token"];
+
+    // Clear Access Token
+    self.preferences.legacyUserAgentBase = nil;
+
+    // Set Client after starting to replace client which is created on start
+    self.eventsManager.apiClient = client;
+    self.eventsManager.paused = NO;
+
+    [self.eventsManager sendTurnstileEvent];
+
+    // Turnstile events are directly posted, not queued, so there should be nothing queued
+    XCTAssertEqual(self.eventsManager.eventQueue.count, 0);
+    XCTAssertEqual(client.postEventsCount, 0);
+    XCTAssertEqual(client.performRequestCount, 0);
+}
+
+-(void)testNoHostSDKVersionBaseDoesNotPost {
+    // Configure Client with
+    MMEAPIClientCallCounter* client = [[MMEAPIClientCallCounter alloc] initWithConfig: self.preferences];
+    self.preferences.eventFlushCount = 1;
+
+    [self.eventsManager startEventsManagerWithToken:@"access-token"];
+
+    // Clear Access Token
+    self.preferences.legacyHostSDKVersion = nil;
+
+    // Set Client after starting to replace client which is created on start
+    self.eventsManager.apiClient = client;
+    self.eventsManager.paused = NO;
+
+    [self.eventsManager sendTurnstileEvent];
+
+    // Turnstile events are directly posted, not queued, so there should be nothing queued
+    XCTAssertEqual(self.eventsManager.eventQueue.count, 0);
+    XCTAssertEqual(client.postEventsCount, 0);
+    XCTAssertEqual(client.performRequestCount, 0);
+}
+
+// MARK: - Queuing Validation
+
 
 /*
-describe(@"MMEEventsManager", ^{
-    
-    __block MMEEventsManager *eventsManager;
-    __block MMEDispatchManagerFake *dispatchManager;
-
-    beforeEach(^{
-        dispatchManager = [[MMEDispatchManagerFake alloc] init];
-        eventsManager = [MMEEventsManager.alloc initShared];
-
-        eventsManager.dispatchManager = dispatchManager;
-        eventsManager.locationManager = nice_fake_for(@protocol(MMELocationManager));
-
-        [eventsManager.eventQueue removeAllObjects];
-
-        // set a high MMEEventFlushCount to prevent crossing the threshold in the tests
-        [NSUserDefaults.mme_configuration setObject:@1000 forKey:MMEEventFlushCount];
-    });
-    
-    describe(@"- flush", ^{
-        
-        beforeEach(^{
-            id<MMEAPIClient> apiClient = nice_fake_for(@protocol(MMEAPIClient));
-            eventsManager.apiClient = apiClient;
-        });
-        
-        context(@"when the events manager is paused", ^{
-            beforeEach(^{
-                eventsManager.paused = YES;
-            });
-            
-            it(@"does not tell the api client to post events", ^{
-                eventsManager.apiClient should_not have_received(@selector(postEvents:completionHandler:));
-            });
-        });
-        
-        context(@"when the events manager is not paused", ^{
-            beforeEach(^{
-                eventsManager.paused = NO;
-            });
-            
-            context(@"when no access token has been set", ^{
-                beforeEach(^{
-                    [NSUserDefaults.mme_configuration mme_deleteObjectForVolatileKey:MMEAccessToken];
-                    [eventsManager flush];
-                });
-                
-                it(@"does NOT tell the api client to post events", ^{
-                    eventsManager.apiClient should_not have_received(@selector(postEvents:completionHandler:));
-                });
-            });
-            
-            context(@"when an access token has been set", ^{
-                beforeEach(^{
-                    NSUserDefaults.mme_configuration.mme_accessToken = @"access-token";
-                });
-                
-                context(@"when there are no events in the queue", ^{
-                    beforeEach(^{
-                        eventsManager.eventQueue.count should equal(0);
-                        [eventsManager flush];
-                    });
-                    
-                    it(@"does NOT tell the api client to post events", ^{
-                        eventsManager.apiClient should_not have_received(@selector(postEvents:completionHandler:));
-                    });
-                });
-                
-                // TODO: move these to an XCTest case
-//                context(@"when there are events in the queue", ^{
-//                    beforeEach(^{
-//                        eventsManager.timerManager = [[MMETimerManager alloc] initWithTimeInterval:1000 target:eventsManager selector:@selector(flush)];
-//                        spy_on(eventsManager.timerManager);
-//                        [eventsManager enqueueEventWithName:MMEEventTypeMapLoad];
-//                        [eventsManager flush];
-//                    });
-//
-//                    it(@"tells the api client to post events", ^{
-//                        eventsManager.apiClient should have_received(@selector(postEvents:completionHandler:));
-//                    });
-//
-//                    it(@"tells its timer manager to cancel", ^{
-//                        eventsManager.timerManager should have_received(@selector(cancel));
-//                    });
-//
-//                    it(@"does nothing if flush is called again", ^{
-//                        [(id<CedarDouble>)eventsManager.apiClient reset_sent_messages];
-//                        [eventsManager flush];
-//                        eventsManager.apiClient should_not have_received(@selector(postEvents:completionHandler:));
-//                    });
-//                });
-            });
-        });
-        
-    });
-    
-    describe(@"- sendTurnstileEvent", ^{
-        
-        context(@"when next turnstile send date is nil", ^{
-            beforeEach(^{
-                eventsManager.nextTurnstileSendDate should be_nil;
-            });
-            
-            describe(@"calling the method before setting up required variables", ^{
-                beforeEach(^{
-                    MMEAPIClientFake *fakeAPIClient = [[MMEAPIClientFake alloc] init];
-                    spy_on(fakeAPIClient);
-                    
-                    NSUserDefaults.mme_configuration.mme_accessToken = @"access-token";
-                    NSUserDefaults.mme_configuration.mme_legacyUserAgentBase = @"user-agent-base";
-                    NSUserDefaults.mme_configuration.mme_legacyHostSDKVersion = @"host-sdk-version";
-                    
-                    eventsManager.apiClient = fakeAPIClient;
-                    });
-                
-                context(@"when the events manager's api client does not have an access token set", ^{
-                    beforeEach(^{
-                        [NSUserDefaults.mme_configuration mme_deleteObjectForVolatileKey:MMEAccessToken];
-                        [eventsManager sendTurnstileEvent];
-                    });
-                    
-                    it(@"does not tell its api client to post the event", ^{
-                        eventsManager.apiClient should_not have_received(@selector(postEvent:completionHandler:));
-                    });
-                });
-                
-                context(@"when the events manager's api client does not have a user agent base set", ^{
-                    beforeEach(^{
-                        [NSUserDefaults.mme_configuration mme_deleteObjectForVolatileKey:MMELegacyUserAgentBase];
-                        [NSUserDefaults.mme_configuration mme_deleteObjectForVolatileKey:MMELegacyUserAgent];
-                        [eventsManager sendTurnstileEvent];
-                    });
-                    
-                    it(@"does not tell its api client to post the event", ^{
-                        eventsManager.apiClient should_not have_received(@selector(postEvent:completionHandler:));
-                    });
-                });
-                
-                context(@"when the events manager's api client does not have a host sdk version set", ^{
-                    beforeEach(^{
-                        [NSUserDefaults.mme_configuration mme_deleteObjectForVolatileKey:MMELegacyHostSDKVersion];
-                        [eventsManager sendTurnstileEvent];
-                    });
-                    
-                    it(@"does not tell its api client to post the event", ^{
-                        eventsManager.apiClient should_not have_received(@selector(postEvent:completionHandler:));
-                    });
-                });
-                
-                context(@"when the events manager's common even data does not have a vendor id", ^{
-                    beforeEach(^{
-                        MMEEvent.class stub_method(@selector(vendorId)).and_return(nil);
-                        [eventsManager sendTurnstileEvent];
-                    });
-                    
-                    it(@"does not tell its api client to post the event", ^{
-                        eventsManager.apiClient should_not have_received(@selector(postEvent:completionHandler:));
-                    });
-                });
-                
-                context(@"when the events manager's common even data does not have a model", ^{
-                    beforeEach(^{
-                        MMEEvent.class stub_method(@selector(model)).and_return(nil);
-                        [eventsManager sendTurnstileEvent];
-                    });
-                    
-                    it(@"does not tell its api client to post the event", ^{
-                        eventsManager.apiClient should_not have_received(@selector(postEvent:completionHandler:));
-                    });
-                });
-                
-                context(@"when the events manager's common even data does not have a ios version", ^{
-                    beforeEach(^{
-                        MMEEvent.class stub_method(@selector(osVersion)).and_return(nil);
-                        [eventsManager sendTurnstileEvent];
-                    });
-                    
-                    it(@"does not tell its api client to post the event", ^{
-                        eventsManager.apiClient should_not have_received(@selector(postEvent:completionHandler:));
-                    });
-                });
-            });
-        });
-    });
-    
-    describe(@"- sendTelemetryMetricsEvent", ^{
-        context(@"when next telemetryMetrics send date is not nil and event manager is correctly configured", ^{
-            beforeEach(^{
-                MMEEvent *event = [MMEEvent mapTapEventWithDateString:@"a nice date" attributes:@{@"attribute1": @"a nice attribute"}];
-                NSArray *eventQueueFake = [[NSArray alloc] initWithObjects:event, nil];
-                eventsManager.eventQueue = [eventQueueFake mutableCopy];
-                [eventsManager flush];
-                
-                MMEAPIClientFake *fakeAPIClient = [[MMEAPIClientFake alloc] init];
-                spy_on(fakeAPIClient);
-                eventsManager.apiClient = fakeAPIClient;
-                
-                NSUserDefaults.mme_configuration.mme_accessToken = @"access-token";
-                NSUserDefaults.mme_configuration.mme_legacyUserAgentBase = @"user-agent-base";
-                NSUserDefaults.mme_configuration.mme_legacyHostSDKVersion = @"host-sdk-version";
-                
-                spy_on([MMEMetricsManager sharedManager].metrics);
-            });
-            
-            afterEach(^{
-                stop_spying_on([MMEMetricsManager sharedManager].metrics);
-            });
-            
-            context(@"when the current time is before the next telemetryMetrics send date", ^{
-                beforeEach(^{
-                    [MMEMetricsManager sharedManager].metrics stub_method(@selector(recordingStarted)).and_return(NSDate.distantFuture);
-                    
-                    [eventsManager sendTelemetryMetricsEvent];
-                });
-                
-                it(@"tells its api client to not post events", ^{
-                    eventsManager.apiClient should_not have_received(@selector(postEvent:completionHandler:));
-                });
-            });
-            
-            context(@"when the current time is after the next telemetryMetrics send date", ^{
-                beforeEach(^{
-                    [MMEMetricsManager sharedManager].metrics stub_method(@selector(recordingStarted)).and_return(NSDate.distantPast);
-                    [eventsManager sendTelemetryMetricsEvent];
-                });
-                
-                it(@"tells its api client to post events", ^{
-                    eventsManager.apiClient should have_received(@selector(postEvent:completionHandler:));
-                });
-            });
-        });
-    });
-    
-    describe(@"- enqueueEventWithName:attributes", ^{
-        __block NSString *dateString;
-        __block NSDictionary *attributes;
-        
-        beforeEach(^{
-            dateString = @"A nice date";
-            NSDateFormatter *dateFormatter = MMEDate.iso8601DateFormatter;
-            spy_on(dateFormatter);
-            dateFormatter stub_method(@selector(stringFromDate:)).and_return(dateString);
-            
-            attributes = @{@"attribute1": @"a nice attribute"};
-        });
-        
-        context(@"when the events manager is not paused", ^{
-            beforeEach(^{
-                eventsManager.paused = NO;
-            });
-            
-            context(@"when a map tap event is pushed", ^{
-                beforeEach(^{
-                    [eventsManager enqueueEventWithName:MMEEventTypeMapTap attributes:attributes];
-                });
-                
-                it(@"has the correct event", ^{
-                    MMEEvent *expectedEvent = [MMEEvent mapTapEventWithDateString:dateString attributes:attributes];
-                    MMEEvent *event = eventsManager.eventQueue.firstObject;
-                    expectedEvent.dateStorage = event.dateStorage;
-
-                    event should equal(expectedEvent);
-                });
-            });
-
-            context(@"when a map drag end event is pushed", ^{
-                beforeEach(^{
-                    [eventsManager enqueueEventWithName:MMEEventTypeMapDragEnd attributes:attributes];
-                });
-                
-                it(@"has the correct event", ^{
-                    MMEEvent *expectedEvent = [MMEEvent mapDragEndEventWithDateString:dateString attributes:attributes];
-                    MMEEvent *event = eventsManager.eventQueue.firstObject;
-                    expectedEvent.dateStorage = [MMEDate dateWithDate:event.date];
-
-                    event should equal(expectedEvent);
-                });
-            });
-            
-            context(@"when a map download start event is pushed", ^{
-                beforeEach(^{
-                    [eventsManager enqueueEventWithName:MMEventTypeOfflineDownloadStart attributes:attributes];
-                });
-                
-                it(@"has the correct event", ^{
-                    MMEEvent *expectedEvent = [MMEEvent mapOfflineDownloadStartEventWithDateString:dateString attributes:attributes];
-                    MMEEvent *event = eventsManager.eventQueue.firstObject;
-                    expectedEvent.dateStorage = [MMEDate dateWithDate:event.date];
-
-                    event should equal(expectedEvent);
-                });
-            });
-            
-            context(@"when a map download end event is pushed", ^{
-                beforeEach(^{
-                    [eventsManager enqueueEventWithName:MMEventTypeOfflineDownloadEnd attributes:attributes];
-                });
-                
-                it(@"has the correct event", ^{
-                    MMEEvent *expectedEvent = [MMEEvent mapOfflineDownloadEndEventWithDateString:dateString attributes:attributes];
-                    MMEEvent *event = eventsManager.eventQueue.firstObject;
-                    expectedEvent.dateStorage = [MMEDate dateWithDate:event.date];
-
-                    event should equal(expectedEvent);
-                });
-            });
-            
-            context(@"when a navigation event is pushed", ^{
-                __block NSString * navigationEventName = @"navigation.*";
-                
-                beforeEach(^{
-                    [eventsManager enqueueEventWithName:navigationEventName attributes:attributes];
-                });
-                
-                it(@"has the correct event", ^{
-                    MMEEvent *expectedEvent = [MMEEvent navigationEventWithName:navigationEventName attributes:attributes];
-                    MMEEvent *event = eventsManager.eventQueue.firstObject;
-                    expectedEvent.dateStorage = event.dateStorage;
-
-                    event should equal(expectedEvent);
-                });
-            });
-            
-            context(@"when a vision event is pushed", ^{
-                __block NSString * visionEventName = @"vision.*";
-                
-                beforeEach(^{
-                    [eventsManager enqueueEventWithName:visionEventName attributes:attributes];
-                });
-                
-                it(@"has the correct event", ^{
-                    MMEEvent *expectedEvent = [MMEEvent visionEventWithName:visionEventName attributes:attributes];
-                    MMEEvent *event = eventsManager.eventQueue.firstObject;
-                    expectedEvent.dateStorage = event.dateStorage;
-
-                    event should equal(expectedEvent);
-                });
-            });
-            
-            context(@"when a search event is pushed", ^{
-                __block NSString * searchEventName = @"search.*";
-                
-                beforeEach(^{
-                    [eventsManager enqueueEventWithName:searchEventName attributes:attributes];
-                });
-                
-                it(@"has the correct event", ^{
-                    MMEEvent *expectedEvent = [MMEEvent searchEventWithName:searchEventName attributes:attributes];
-                    MMEEvent *event = eventsManager.eventQueue.firstObject;
-                    expectedEvent.dateStorage = event.dateStorage;
-
-                    event should equal(expectedEvent);
-                });
-            });
-            
-            context(@"when a generic event is pushed", ^{
-                beforeEach(^{
-                    [eventsManager enqueueEventWithName:@"generic" attributes:attributes];
-                });
-                
-                it(@"does queue the event", ^{
-                    eventsManager.eventQueue.count should equal(1);
-                });
-            });
-        });
-    });
-    
-    describe(@"- enqueueEventWithName:", ^{
-        __block NSString *dateString;
-        
-        beforeEach(^{
-            dateString = @"A nice date";
-            NSDateFormatter *dateFormatter = MMEDate.iso8601DateFormatter;
-            spy_on(dateFormatter);
-            dateFormatter stub_method(@selector(stringFromDate:)).and_return(dateString);
-        });
-        
-        context(@"when the events manager is not paused", ^{
-            beforeEach(^{
-                eventsManager.paused = NO;
-            });
-            
-            context(@"when a map load event is pushed", ^{
-                beforeEach(^{
-                    [eventsManager enqueueEventWithName:MMEEventTypeMapLoad];
-                });
-                
-                it(@"has the correct event", ^{
-                    MMEEvent *expectedEvent = [MMEEvent mapLoadEventWithDateString:dateString commonEventData:nil];
-                    MMEEvent *event = eventsManager.eventQueue.firstObject;
-                    expectedEvent.dateStorage = event.dateStorage;
-
-                    event should equal(expectedEvent);
-                });
-            });
-        });
-        
-        context(@"when the events manager is paused", ^{
-            beforeEach(^{
-                eventsManager.paused = YES;
-            });
-            
-            context(@"when a map load event is pushed", ^{
-                beforeEach(^{
-                    [eventsManager enqueueEventWithName:MMEEventTypeMapLoad];
-                });
-                
-                it(@"should queue events", ^{
-                    eventsManager.eventQueue.count should equal(1);
-                });
-            });
-        });
-    });
-
-    describe(@"- pushEvent:", ^{
-        beforeEach(^{
-            eventsManager.paused = YES;
-        });
-
-        context(@"when an error event is pushed", ^{
-            NSError* testError = [NSError.alloc initWithDomain:NSCocoaErrorDomain code:999 userInfo:@{
-                NSLocalizedDescriptionKey: @"Test Error Description",
-                NSLocalizedFailureReasonErrorKey: @"Test Error Failure Reason"
-            }];
-
-            it(@"should not queue error events", ^{
-                [MMEEventsManager.sharedManager pushEvent:[MMEEvent debugEventWithError:testError]];
-                eventsManager.eventQueue.count should equal(0);
-            });
-        });
-
-        context(@"when an exception event is pushed", ^{
-            NSException* testException = [NSException.alloc initWithName:@"TestExceptionName" reason:@"TestExceptionReason" userInfo:nil];
-
-            it(@"should not queue exception events", ^{
-                [MMEEventsManager.sharedManager pushEvent:[MMEEvent debugEventWithException:testException]];
-                eventsManager.eventQueue.count should equal(0);
-            });
-        });
-    });
 
     describe(@"MMELocationManagerDelegate", ^{
         

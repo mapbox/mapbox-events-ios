@@ -33,13 +33,13 @@ NS_ASSUME_NONNULL_BEGIN
 // MARK: - Volatile Configuration
 
 /// Access Token
-@property (nonatomic, copy, readonly) NSString *accessToken;
+@property (nullable, nonatomic, copy, readonly) NSString *accessToken;
 
 /// User-Agent Base
-@property (nonatomic, copy, readonly) NSString *legacyUserAgentBase;
+@property (nullable, nonatomic, copy, readonly) NSString *legacyUserAgentBase;
 
 /// Host SDK Version
-@property (nonatomic, copy, readonly) NSString *legacyHostSDKVersion;
+@property (nullable, nonatomic, copy, readonly) NSString *legacyHostSDKVersion;
 
 /// CN Region Setting
 @property (nonatomic, assign, readonly) BOOL isChinaRegion;

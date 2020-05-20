@@ -90,6 +90,14 @@
     XCTAssertTrue(self.preferences.isCollectionEnabled);
 }
 
+- (void)testIsCollectionSetter {
+    self.preferences.isCollectionEnabled = NO;
+    XCTAssertEqual(self.preferences.isCollectionEnabled, NO);
+
+    self.preferences.isCollectionEnabled = YES;
+    XCTAssertEqual(self.preferences.isCollectionEnabled, YES);
+}
+
 - (void)testEventIsCollectionEnabledInSimulatorDefault {
     XCTAssertTrue(self.preferences.isCollectionEnabledInSimulator);
 }

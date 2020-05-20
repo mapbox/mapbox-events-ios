@@ -16,6 +16,7 @@
 @property (nonatomic, copy) NSURL *pendingMetricsFileURL;
 @property (nonatomic, copy) OnMetricsError onMetricsError;
 @property (nonatomic, copy) OnMetricsException onMetricsException;
+@property (nonatomic, copy) IsReachableViaWifi isReachableViaWifi;
 @end
 
 // MARK: -
@@ -27,16 +28,21 @@
 - (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config
          pendingMetricsFileURL:(NSURL*)pendingMetricsFileURL {
 
+
     return [self initWithConfig:config
           pendingMetricsFileURL:pendingMetricsFileURL
                  onMetricsError:^(NSError * _Nonnull error) {}
-             onMetricsException:^(NSException * _Nonnull exception) {}];
+             onMetricsException:^(NSException * _Nonnull exception) {}
+             isReachableViaWifi:^BOOL{
+        return [[MMEReachability reachabilityForLocalWiFi] isReachableViaWiFi];
+    }];
 }
 
 - (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config
          pendingMetricsFileURL:(NSURL*)pendingMetricsFileURL
                 onMetricsError:(OnMetricsError)onMetricsError
-            onMetricsException:(OnMetricsException)onMetricsException {
+            onMetricsException:(OnMetricsException)onMetricsException
+            isReachableViaWifi:(IsReachableViaWifi)isReachableViaWifi {
 
     if ((self = super.init)) {
 
@@ -45,6 +51,7 @@
 
         self.onMetricsError = onMetricsError;
         self.onMetricsException = onMetricsException;
+        self.isReachableViaWifi = isReachableViaWifi;
 
         [self resetMetrics];
     }
@@ -184,7 +191,7 @@
 }
 
 - (void)updateSentBytes:(NSUInteger)bytes {
-    if ([[MMEReachability reachabilityForLocalWiFi] isReachableViaWiFi]) {
+    if (self.isReachableViaWifi()) {
         self.metrics.wifiBytesSent += bytes;
     } else {
         self.metrics.cellBytesSent += bytes;
@@ -192,7 +199,7 @@
 }
 
 - (void)updateReceivedBytes:(NSUInteger)bytes {
-    if ([[MMEReachability reachabilityForLocalWiFi] isReachableViaWiFi]) {
+    if (self.isReachableViaWifi()) {
         self.metrics.wifiBytesReceived += bytes;
     } else {
         self.metrics.cellBytesReceived += bytes;
@@ -220,6 +227,7 @@
     self.metrics = [MMEMetrics new];
 }
 
+// Does Metrics Events not use MMEEventKeyEvent?
 - (NSDictionary *)attributes {
     MMEMutableMapboxEventAttributes *attributes = [MMEMutableMapboxEventAttributes dictionary];
     attributes[MMEEventKeyFailedRequests] = [self jsonStringfromDict:self.metrics.failedRequestsDict];
@@ -257,7 +265,7 @@
     return attributes;
 }
 
-- (MMEEvent *)loadPendingTelemetryMetricsEvent {
+- (nullable MMEEvent *)loadPendingTelemetryMetricsEvent {
     MMEEvent* pending = nil;
 
     if ([NSFileManager.defaultManager fileExistsAtPath:self.pendingMetricsFileURL.path]) {
@@ -278,7 +286,7 @@
     return pending;
 }
 
-- (MMEEvent *)generateTelemetryMetricsEvent {
+- (nullable MMEEvent *)generateTelemetryMetricsEvent {
     NSDate *zeroHour = [self.metrics.recordingStarted mme_startOfTomorrow];
     NSString *metricsDate = [MMEDate.iso8601DateFormatter stringFromDate:NSDate.date];
     MMEEvent *telemetryMetrics = [MMEEvent telemetryMetricsEventWithDateString:metricsDate attributes:self.attributes];

@@ -29,6 +29,7 @@
 #import "NSError+APIClient.h"
 #import "NSURL+Directories.h"
 #import "NSBundle+MMEMobileEvents.h"
+#import "MMEReachability.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -84,14 +85,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 
     MMEMetricsManager* metricsManager = [[MMEMetricsManager alloc] initWithConfig:preferences
-                                                             pendingMetricsFileURL:pendingFileURL
-                                                                    onMetricsError:^(NSError * _Nonnull error) {
-
-         [logger logEvent:[MMEEvent debugEventWithError:error]];
+                                                            pendingMetricsFileURL:pendingFileURL
+                                                                   onMetricsError:^(NSError * _Nonnull error) {
+        [logger logEvent:[MMEEvent debugEventWithError:error]];
     }
-                                                                onMetricsException:^(NSException * _Nonnull exception) {
-         [logger logEvent:[MMEEvent debugEventWithException:exception]];
-     }];
+                                                               onMetricsException:^(NSException * _Nonnull exception) {
+        [logger logEvent:[MMEEvent debugEventWithException:exception]];
+    }
+                                                               isReachableViaWifi:^BOOL{
+        return [[MMEReachability reachabilityForLocalWiFi] isReachableViaWiFi];
+    }];
 
     return [self initWithPreferences:preferences
                uniqueIdentifier:[[MMEUniqueIdentifier alloc] initWithTimeInterval:self.preferences.identifierRotationInterval]

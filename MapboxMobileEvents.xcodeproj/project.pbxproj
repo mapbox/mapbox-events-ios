@@ -232,6 +232,7 @@
 		F453B12A24720134002EFB4A /* NSURL+Directories.m in Sources */ = {isa = PBXBuildFile; fileRef = F453B12624720134002EFB4A /* NSURL+Directories.m */; };
 		F45F65BA247210AE00C1772F /* NSURL+Directories.m in Sources */ = {isa = PBXBuildFile; fileRef = F453B12624720134002EFB4A /* NSURL+Directories.m */; };
 		F45F65C12472143900C1772F /* NSURL+Files.m in Sources */ = {isa = PBXBuildFile; fileRef = F45F65BC247212D900C1772F /* NSURL+Files.m */; };
+		F453B1242471D00D002EFB4A /* MMEAPIClientCallCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = F453B1232471D00D002EFB4A /* MMEAPIClientCallCounter.m */; };
 		F46267FF246DF5AC00E01C83 /* MMEPreferencesTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F46267FE246DF5AC00E01C83 /* MMEPreferencesTests.m */; };
 		F4626802246E579500E01C83 /* MMEPreferences.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = F4312853246A626C004472CE /* MMEPreferences.h */; };
 		F4626805246F6ED100E01C83 /* ErrorStubProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = F4626804246F6ED100E01C83 /* ErrorStubProtocol.m */; };
@@ -529,6 +530,8 @@
 		F453B12624720134002EFB4A /* NSURL+Directories.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSURL+Directories.m"; sourceTree = "<group>"; };
 		F45F65BB247212D900C1772F /* NSURL+Files.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSURL+Files.h"; sourceTree = "<group>"; };
 		F45F65BC247212D900C1772F /* NSURL+Files.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSURL+Files.m"; sourceTree = "<group>"; };
+		F453B1222471D00D002EFB4A /* MMEAPIClientCallCounter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEAPIClientCallCounter.h; sourceTree = "<group>"; };
+		F453B1232471D00D002EFB4A /* MMEAPIClientCallCounter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEAPIClientCallCounter.m; sourceTree = "<group>"; };
 		F46267FE246DF5AC00E01C83 /* MMEPreferencesTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEPreferencesTests.m; sourceTree = "<group>"; };
 		F4626803246F6ED100E01C83 /* ErrorStubProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ErrorStubProtocol.h; sourceTree = "<group>"; };
 		F4626804246F6ED100E01C83 /* ErrorStubProtocol.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ErrorStubProtocol.m; sourceTree = "<group>"; };
@@ -776,6 +779,8 @@
 			children = (
 				4036EFB91ED36F06009C40BA /* MMEAPIClientFake.h */,
 				4036EFBA1ED36F06009C40BA /* MMEAPIClientFake.m */,
+				F453B1222471D00D002EFB4A /* MMEAPIClientCallCounter.h */,
+				F453B1232471D00D002EFB4A /* MMEAPIClientCallCounter.m */,
 				9CDC34BD234FD62A00852FF0 /* MMEBundleInfoFake.h */,
 				9CDC34BC234FD62A00852FF0 /* MMEBundleInfoFake.m */,
 				9C65A28F2267AF34006E3FED /* MMEDateFakes.h */,
@@ -1312,6 +1317,7 @@
 				9C8E0495241AD4DA00D6C641 /* MMEDateFakes.m in Sources */,
 				9C8E0496241AD4E000D6C641 /* MMEDispatchManagerFake.m in Sources */,
 				9C8E0497241AD4EA00D6C641 /* MMEEventFake.m in Sources */,
+				F453B1242471D00D002EFB4A /* MMEAPIClientCallCounter.m in Sources */,
 				F40995932469ED6300E94BFF /* EventConfigStubProtocol.m in Sources */,
 				F45F65C12472143900C1772F /* NSURL+Files.m in Sources */,
 				9C8E0498241AD4EE00D6C641 /* MMELocationManagerFake.m in Sources */,

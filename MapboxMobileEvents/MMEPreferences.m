@@ -452,7 +452,6 @@
 
 // MARK: - Background Collection
 
-// Dane - disabledKey vs enabled?
 - (BOOL)isCollectionEnabledInBackground {
     BOOL collectionEnabled = self.isCollectionEnabled;
     if (collectionEnabled) { // check to see if it's seperately disabled

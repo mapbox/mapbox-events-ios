@@ -6,8 +6,14 @@
 #import "MMELogger.h"
 #import "MMEMockEventConfig.h"
 #import "NSURL+Files.h"
+#import "MMEMetrics.h"
+#import "MMEDate.h"
+#import "MMEReachability.h"
+#import "MMEEventFake.h"
 
 @interface MMEMetricsManager (Tests)
+
+@property (nonatomic, strong) MMEMetrics *metrics;
 
 - (BOOL)createFrameworkMetricsEventDirectory;
 - (NSString *)pendingMetricsEventPath;
@@ -51,8 +57,11 @@
     self.eventQueue = [[NSArray alloc] initWithObjects:event1, event2, nil];
     
     [self.metricsManager updateMetricsFromEventQueue:self.eventQueue];
-    
-    XCTAssert([(NSNumber*)[self.metricsManager.metrics.eventCountPerType objectForKey:@"map.click"] isEqualToNumber: @2]);
+
+    XCTAssertEqual(self.metricsManager.metrics.eventCountTotal, 2);
+    XCTAssertEqual(self.metricsManager.metrics.eventCountPerType.count, 1);
+    XCTAssert([(NSNumber*)[self.metricsManager.metrics.eventCountPerType objectForKey:MMEEventTypeMapTap] isEqualToNumber: @2]);
+    XCTAssertNotNil(self.metricsManager.metrics.recordingStarted);
 }
 
 - (void)testAttributesExcludesNullIsland {
@@ -71,252 +80,200 @@
     XCTAssert([self.metricsManager.attributes[MMEEventDeviceLon] isEqualToNumber:@0.2]);
 }
 
-// TODO: - Convert Cedar Tests
+- (void)testDoesNotGenerateTelemetryEarly {
 
-/*
-__block MMEMetricsManager *manager;
+    // Expects Generated Telemetry to be nil if before <x> date
+    self.metricsManager.metrics.recordingStarted = [MMEDate dateWithDate:NSDate.distantFuture];
+    XCTAssertNil([self.metricsManager generateTelemetryMetricsEvent]);
+}
 
-beforeEach(^{
-    manager = [[MMEMetricsManager alloc] init];
-});
+- (void)testDoesGenerateTelemetyAfterDate {
+    // Expects Generated Telemetry to be Non-Nil if after <x> date
+    self.metricsManager.metrics.recordingStarted = [MMEDate dateWithDate:NSDate.distantPast];
+    XCTAssertNotNil([self.metricsManager generateTelemetryMetricsEvent]);
+}
 
-describe(@"- MMEMetricsManagerInstance", ^{
+- (void)testCoordinateRounding {
 
-__block NSArray *eventQueue;
-__block NSDateFormatter *dateFormatter;
-__block NSURLRequest *requestFake;
+    // Coordinates should use less accurate measurements
+    CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(38.644375, -77.289127);
+    [self.metricsManager updateCoordinate:coordinate];
 
-beforeEach(^{
-    NSString *dateString = @"A nice date";
-    NSDictionary *attributes = @{@"attribute1": @"a nice attribute"};
-    
-    dateFormatter = [[NSDateFormatter alloc] init];
+    XCTAssertEqualWithAccuracy(self.metricsManager.metrics.deviceLat, 38.6443, 0.001);
+    XCTAssertEqualWithAccuracy(self.metricsManager.metrics.deviceLon, -77.2891, 0.001);
+    XCTAssertLessThan(self.metricsManager.metrics.deviceLat, coordinate.latitude);
+    XCTAssertGreaterThan(self.metricsManager.metrics.deviceLon, coordinate.longitude);
+}
+
+- (void)testUpdateMetricsWithError {
+
+    // When incrementing failed HTTP response metrics
+    NSURLRequest* requestFake = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"https://areallyniceURL"]];
+    NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:[NSURL URLWithString:@"events.mapbox.com"]
+                                                              statusCode:404
+                                                             HTTPVersion:nil
+                                                            headerFields:nil];
+    NSDictionary *userInfoFake = [NSDictionary dictionaryWithObject:response
+                                                             forKey:MMEResponseKey];
+    NSError *errorFake = [NSError errorWithDomain:@"test" code:42 userInfo:userInfoFake];
+
+    NSArray* eventQueue = @[errorFake, errorFake];
+
+    [self.metricsManager updateMetricsFromEventCount:eventQueue.count request:requestFake error:errorFake];
+    [self.metricsManager updateMetricsFromEventCount:eventQueue.count request:requestFake error:errorFake];
+
+    NSHTTPURLResponse *responseTwo = [[NSHTTPURLResponse alloc] initWithURL:[NSURL URLWithString:@"events.mapbox.com"] statusCode:500 HTTPVersion:nil headerFields:nil];
+    NSDictionary *userInfoFakeTwo = [NSDictionary dictionaryWithObject:responseTwo forKey:MMEResponseKey];
+    NSError *errorFakeTwo = [NSError errorWithDomain:@"test" code:42 userInfo:userInfoFakeTwo];
+
+    [self.metricsManager updateMetricsFromEventCount:eventQueue.count request:requestFake error:errorFakeTwo];
+
+    // Should have failedRequests 404 count increased
+    NSDictionary *failedRequestsDict = [self.metricsManager.metrics.failedRequestsDict objectForKey:MMEEventKeyFailedRequests];
+    XCTAssertEqualObjects([failedRequestsDict objectForKey:@"404"] , @2);
+
+    // Should have failed Requests 500 count increased
+    XCTAssertEqualObjects([failedRequestsDict objectForKey:@"500"] , @1);
+
+    // Should have header in dictionary
+    XCTAssertNotNil([self.metricsManager.metrics.failedRequestsDict objectForKey:MMEEventKeyHeader]);
+
+    // Should have all keys count increased
+    XCTAssertEqual([self.metricsManager.metrics.failedRequestsDict allKeys].count, 2);
+
+    // Should have eventCountFailed count increased (But this isn't increasing?)
+    XCTAssertEqual(self.metricsManager.metrics.eventCountFailed, 6);
+
+    // Should not have total count increase
+    XCTAssertEqual(self.metricsManager.metrics.eventCountTotal, 0);
+
+    // Should have request count NOT increased
+    XCTAssertEqual(self.metricsManager.metrics.requests, 0);
+}
+
+-(void)testUpdateMetricsWithSuccess {
+    NSURLRequest* requestFake = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"https://areallyniceURL"]];
+
+    // When incrementing successful HTTP requests
+    [self.metricsManager updateMetricsFromEventCount:1 request:requestFake error:nil];
+    XCTAssertEqual(self.metricsManager.metrics.requests, 1);
+}
+
+-(void)testUpdateDataAnalyticsOnWifi {
+
+    MMEEvent *event = [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-1" commonEventData:nil];
+    MMEEvent *eventTwo = [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-2" commonEventData:nil];
+
+    NSArray *attributes = @[
+        event.attributes,
+        eventTwo.attributes
+    ];
+
+    NSData* uncompressedData = [NSJSONSerialization dataWithJSONObject:attributes options:0 error:nil];
+
+    // Configure Metrics Manager to treat data transfer as on Wifi Network
+    MMEMetricsManager* metricsManager = [[MMEMetricsManager alloc] initWithConfig:[[MMEMockEventConfig alloc] init]
+                                                            pendingMetricsFileURL:[NSURL testPendingEventsFile]
+                                                                   onMetricsError:^(NSError * _Nonnull error) {}
+                                                               onMetricsException:^(NSException * _Nonnull exception) {}
+                                                               isReachableViaWifi:^BOOL{
+        return YES;
+    }];
+
+    [metricsManager updateSentBytes:uncompressedData.length];
+    [metricsManager updateReceivedBytes:uncompressedData.length];
+
+    XCTAssertEqual(metricsManager.metrics.wifiBytesSent, uncompressedData.length);
+    XCTAssertEqual(metricsManager.metrics.wifiBytesReceived, uncompressedData.length);
+    XCTAssertEqual(metricsManager.metrics.cellBytesSent, 0);
+    XCTAssertEqual(metricsManager.metrics.cellBytesReceived, 0);
+
+
+    // General Network Traffic
+    XCTAssertEqual(metricsManager.metrics.totalBytesSent, uncompressedData.length);
+    XCTAssertEqual(metricsManager.metrics.totalBytesReceived, uncompressedData.length);
+}
+
+-(void)testUpdateDataAnalyticsOnCarrierNetwork {
+
+    MMEEvent *event = [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-1" commonEventData:nil];
+    MMEEvent *eventTwo = [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-2" commonEventData:nil];
+
+    NSArray *attributes = @[
+        event.attributes,
+        eventTwo.attributes
+    ];
+
+    NSData* uncompressedData = [NSJSONSerialization dataWithJSONObject:attributes options:0 error:nil];
+
+    // Configure Metrics Manager to treat data transfer as on Carrier Network
+    MMEMetricsManager* metricsManager = [[MMEMetricsManager alloc] initWithConfig:[[MMEMockEventConfig alloc] init]
+                                                            pendingMetricsFileURL:[NSURL testPendingEventsFile]
+                                                                   onMetricsError:^(NSError * _Nonnull error) {}
+                                                               onMetricsException:^(NSException * _Nonnull exception) {}
+                                                               isReachableViaWifi:^BOOL{
+        return NO;
+    }];
+
+    [metricsManager updateSentBytes:uncompressedData.length];
+    [metricsManager updateReceivedBytes:uncompressedData.length];
+
+    XCTAssertEqual(metricsManager.metrics.wifiBytesSent, 0);
+    XCTAssertEqual(metricsManager.metrics.wifiBytesReceived, 0);
+    XCTAssertEqual(metricsManager.metrics.cellBytesSent, uncompressedData.length);
+    XCTAssertEqual(metricsManager.metrics.cellBytesReceived, uncompressedData.length);
+
+
+    // General Network Traffic
+    XCTAssertEqual(metricsManager.metrics.totalBytesSent, uncompressedData.length);
+    XCTAssertEqual(metricsManager.metrics.totalBytesReceived, uncompressedData.length);
+}
+
+-(void)testNotNilDateAttribute {
+
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     dateFormatter.dateFormat = @"yyyy-MM-dd";
-    
-    MMEEvent *event1 = [MMEEvent mapTapEventWithDateString:dateString attributes:attributes];
-    MMEEvent *event2 = [MMEEvent mapTapEventWithDateString:dateString attributes:attributes];
-    eventQueue = [[NSArray alloc] initWithObjects:event1, event2, nil];
-    
-    requestFake = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:@"https://areallyniceURL"]];
-});
 
-context(@"when incrementing eventQueue metrics", ^{
-    beforeEach(^{
-        [manager updateMetricsFromEventQueue:eventQueue];
-    });
-    
-    it(@"should have total count increase", ^{
-        manager.metrics.eventCountTotal should equal(2);
-    });
-    
-    it(@"should have event count per type increase", ^{
-        manager.metrics.eventCountPerType.count should equal(1);
-    });
-    
-    it(@"should have event count per type object count increase", ^{
-        [manager.metrics.eventCountPerType objectForKey:MMEEventTypeMapTap] should equal(@2);
-    });
-    
-    it(@"should set recordingStarted date", ^{
-        manager.metrics.recordingStarted should_not be_nil;
-    });
-});
+    // When preparing attributes
+    NSString* dateString = self.metricsManager.attributes[MMEEventDateUTC];
 
-context(@"when preparing attributes", ^{
-    __block NSString *dateString = nil;
+    // Should set MMEEventDateUTC attributes
+    XCTAssertNotNil(dateString);
 
-    beforeEach(^{
-        dateString = manager.attributes[MMEEventDateUTC];
-    });
+    // Should set MMEEventDateUTC to ISO 8501 Format
+    XCTAssertNotNil([dateFormatter dateFromString:dateString]);
+}
 
-    it(@"should set MMEEventDateUTC attributes", ^{
-        dateString should_not be_nil;
-    });
+-(void)testAppWakeupCounter {
+    [self.metricsManager incrementAppWakeUpCount];
+    [self.metricsManager incrementAppWakeUpCount];
 
-    it(@"should set MMEEventDateUTC to ISO 8501 Format", ^{
-        [dateFormatter dateFromString:dateString] should_not be_nil;
-    });
-});
+    // When incrementing appWakeUp counter should have appWakeUp count increased
+    XCTAssertEqual(self.metricsManager.metrics.appWakeups, 2);
+}
 
-context(@"when incrementing failed HTTP response metrics", ^{
-    beforeEach(^{
-        NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:[NSURL URLWithString:@"events.mapbox.com"] statusCode:404 HTTPVersion:nil headerFields:nil];
-        NSDictionary *userInfoFake = [NSDictionary dictionaryWithObject:response forKey:MMEResponseKey];
-        NSError *errorFake = [NSError errorWithDomain:@"test" code:42 userInfo:userInfoFake];
-        
-        [manager updateMetricsFromEventCount:eventQueue.count request:requestFake error:errorFake];
-        [manager updateMetricsFromEventCount:eventQueue.count request:requestFake error:errorFake];
-        
-        NSHTTPURLResponse *responseTwo = [[NSHTTPURLResponse alloc] initWithURL:[NSURL URLWithString:@"events.mapbox.com"] statusCode:500 HTTPVersion:nil headerFields:nil];
-        NSDictionary *userInfoFakeTwo = [NSDictionary dictionaryWithObject:responseTwo forKey:MMEResponseKey];
-        NSError *errorFakeTwo = [NSError errorWithDomain:@"test" code:42 userInfo:userInfoFakeTwo];
-        
-        [manager updateMetricsFromEventCount:eventQueue.count request:requestFake error:errorFakeTwo];
-    });
-    
-    it(@"should have failedRequests 404 count increased", ^{
-        NSDictionary *failedRequestsDict = [manager.metrics.failedRequestsDict objectForKey:MMEEventKeyFailedRequests];
-        [failedRequestsDict objectForKey:@"404"] should equal(@2);
-    });
-    
-    it(@"should have failedRequests 500 count increased", ^{
-        NSDictionary *failedRequestsDict = [manager.metrics.failedRequestsDict objectForKey:MMEEventKeyFailedRequests];
-        [failedRequestsDict objectForKey:@"500"] should equal(@1);
-    });
-    
-    it(@"should have header in dictionary", ^{
-        [manager.metrics.failedRequestsDict objectForKey:MMEEventKeyHeader] should_not be_nil;
-    });
-    
-    it(@"should have all keys count increased", ^{
-        [manager.metrics.failedRequestsDict allKeys].count should equal(2);
-    });
-    
-    it(@"should have eventCountFailed count increased", ^{
-        manager.metrics.eventCountFailed should equal(6);
-    });
-    
-    it(@"should not have total count increase", ^{
-        manager.metrics.eventCountTotal should equal(0);
-    });
-    
-    it(@"should have request count NOT increased", ^{
-        manager.metrics.requests should equal(0);
-    });
-});
+-(void)testUpdateConfiguration {
+    NSDictionary *fake = [NSDictionary dictionaryWithObject:@"aniceconfig" forKey:@"anicekey"];
+    [self.metricsManager updateConfigurationJSON:fake];
 
-context(@"when incrementing successful HTTP requests", ^{
-    beforeEach(^{
-        [manager updateMetricsFromEventCount:eventQueue.count request:requestFake error:nil];
-    });
-    
-    it(@"should have request count increased", ^{
-        manager.metrics.requests should equal(1);
-    });
-});
+    // When capturing configuration, should have a configuration assigned
+    XCTAssertNotNil(self.metricsManager.metrics.configResponseDict);
+    XCTAssertEqualObjects(fake, self.metricsManager.metrics.configResponseDict);
+}
 
-context(@"when incrementing data transfer metrics", ^{
-    __block NSData *uncompressedData;
-    
-    beforeEach(^{
-        MMEEvent *event = [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-1" commonEventData:nil];
-        MMEEvent *eventTwo = [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-1" commonEventData:nil];
-        
-        NSArray *events = @[event, eventTwo];
-        
-        NSMutableArray *eventAttributes = [NSMutableArray arrayWithCapacity:events.count];
-        [events enumerateObjectsUsingBlock:^(MMEEvent * _Nonnull event, NSUInteger idx, BOOL * _Nonnull stop) {
-            if (event.attributes) {
-                [eventAttributes addObject:event.attributes];
-            }
-        }];
-        
-        uncompressedData = [NSJSONSerialization dataWithJSONObject:eventAttributes options:0 error:nil];
-        
-        [manager updateSentBytes:uncompressedData.length];
-        [manager updateReceivedBytes:uncompressedData.length];
-    });
-    
-    if ([[MMEReachability reachabilityForLocalWiFi] isReachableViaWiFi]) {
-        it(@"should have wifiBytesSent increase count again", ^{
-            manager.metrics.wifiBytesSent should be_greater_than(0);
-            manager.metrics.wifiBytesReceived should be_greater_than(0);
-        });
-    } else {
-        it(@"should have cellBytesSent increase count again", ^{
-            manager.metrics.cellBytesSent should be_greater_than(0);
-            manager.metrics.cellBytesReceived should be_greater_than(0);
-        });
-    }
-    
-    it(@"should have totalBytes increase count again", ^{
-        manager.metrics.totalBytesSent should be_greater_than(0);
-        manager.metrics.totalBytesReceived should be_greater_than(0);
-    });
-    
-    context(@"when incrementing more data transfer metrics", ^{
-        beforeEach(^{
-            [manager updateSentBytes:uncompressedData.length];
-            [manager updateReceivedBytes:uncompressedData.length];
-        });
-        
-        if ([[MMEReachability reachabilityForLocalWiFi] isReachableViaWiFi]) {
-            it(@"should have wifiBytesSent increase count again", ^{
-                manager.metrics.wifiBytesSent should be_greater_than(300);
-                manager.metrics.wifiBytesReceived should be_greater_than(300);
-            });
-        } else {
-            it(@"should have cellBytesSent increase count again", ^{
-                manager.metrics.cellBytesSent should be_greater_than(300);
-                manager.metrics.cellBytesReceived should be_greater_than(300);
-            });
-        }
-        
-        it(@"should have totalBytesSent increase count again", ^{
-            manager.metrics.totalBytesSent should be_greater_than(400);
-            manager.metrics.totalBytesReceived should be_greater_than(400);
-        });
-    });
-});
-context(@"when incrementing appWakeUp counter", ^{
-    beforeEach(^{
-        [manager incrementAppWakeUpCount];
-        [manager incrementAppWakeUpCount];
-    });
-    
-    it(@"should have appWakeUp count increased", ^{
-        manager.metrics.appWakeups should equal(2);
-    });
-});
-context(@"when capturing configuration", ^{
-    beforeEach(^{
-        NSDictionary *configFake = [NSDictionary dictionaryWithObject:@"aniceconfig" forKey:@"anicekey"];
-        
-        [manager updateConfigurationJSON:configFake];
-    });
-    
-    it(@"should have a configuration assigned", ^{
-        manager.metrics.configResponseDict should_not be_nil;
-    });
-});
-context(@"when capturing coordinates", ^{
-    __block CLLocation *location;
-    
-    beforeEach(^{
-        location = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(38.644375, -77.289127) altitude:0 horizontalAccuracy:0 verticalAccuracy:0 course:0 speed:0.0 timestamp:[NSDate date]];
-        
-        [manager updateCoordinate:location.coordinate];
-    });
-    
-    it(@"should have less accurate values on deviceLat", ^{
-        manager.metrics.deviceLat should be_less_than(location.coordinate.latitude);
-    });
-    
-    it(@"should have less accurate values on deviceLon", ^{
-        manager.metrics.deviceLon should be_greater_than(location.coordinate.longitude);
-    });
-});
-context(@"when sending attributes", ^{
-    it(@"should not be nil attributes", ^{
-        [manager attributes] should_not be_nil;
-    });
-});
-context(@"when storing an event from a future event version", ^{
-    it(@"should encode event into memory and return nil when calling loadPendingTelemetryMetricsEvent", ^{
-        MMEEventFake *futureVersionEvent = [MMEEventFake eventWithName:@"testName" attributes:@{@"aniceattribute":@"aniceattribute"}];
-        
-        NSString *pendingMetricFilePath = MMEMetricsManager.pendingMetricsEventPath;
-        
-        NSKeyedArchiver *archiver = [NSKeyedArchiver new];
-        archiver.requiresSecureCoding = YES;
-        [archiver encodeObject:futureVersionEvent forKey:NSKeyedArchiveRootObjectKey];
-        
-        [archiver.encodedData writeToFile:pendingMetricFilePath atomically:YES];
-        
-        [manager loadPendingTelemetryMetricsEvent] should be_nil;
-    });
-});
-});
-});
-*/
+-(void)testLoadPendingTelemetryMetricsEventNil {
+
+    // When storing an event from a future event version
+    MMEEventFake *futureVersionEvent = [MMEEventFake eventWithName:@"testName" attributes:@{@"aniceattribute":@"aniceattribute"}];
+
+    NSKeyedArchiver *archiver = [NSKeyedArchiver new];
+    archiver.requiresSecureCoding = YES;
+    [archiver encodeObject:futureVersionEvent forKey:NSKeyedArchiveRootObjectKey];
+
+    [archiver.encodedData writeToFile:self.metricsManager.pendingMetricsFileURL.path atomically:YES];
+
+    // Should encode event into memory and return nil when calling loadPendingTelemetryMetricsEvent
+    XCTAssertNil([self.metricsManager loadPendingTelemetryMetricsEvent]);
+}
+
 @end

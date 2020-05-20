@@ -9,6 +9,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 typedef void(^OnMetricsError)(NSError* error);
 typedef void(^OnMetricsException)(NSException* exception);
+typedef BOOL(^IsReachableViaWifi)(void);
 
 @interface MMEMetricsManager : NSObject
 
@@ -35,11 +36,13 @@ typedef void(^OnMetricsException)(NSException* exception);
  @param pendingMetricsFileURL File url for creating/archiving events
  @param onMetricsError Block called with MMEEvent for Error debug logging
  @param onMetricsException Block called with MMEEvent for Exception debug logging
+ @param isReachableViaWifi Block caleld to check if Wifi is reachable
  */
 - (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config
          pendingMetricsFileURL:(NSURL*)pendingMetricsFileURL
                 onMetricsError:(OnMetricsError)onMetricsError
-            onMetricsException:(OnMetricsException)onMetricsException NS_DESIGNATED_INITIALIZER;
+            onMetricsException:(OnMetricsException)onMetricsException
+            isReachableViaWifi:(IsReachableViaWifi)isReachableViaWifi NS_DESIGNATED_INITIALIZER;
 
 // MARK: - Metrics
 
@@ -54,15 +57,16 @@ typedef void(^OnMetricsException)(NSException* exception);
 
 // MARK: - Archived Telemetry Metrics
 
-/** loads any pending telemetry metrics events from ~/Library/Caches */
-- (MMEEvent *)loadPendingTelemetryMetricsEvent;
+/*! loads any pending telemetry metrics events from ~/Library/Caches */
+- (nullable MMEEvent *)loadPendingTelemetryMetricsEvent;
 
-/**
+/*!
  @brief generates an event with the current telemetry metrics
- @returns nil for pending events, or a telemetry event which is ready to send
  @discussion if this method returns nil the framework will write the pending telemetry metrics
-    to a file in ~/Library/Caches, this event may be loaded with -loadPendingTelemetryMetricsEvent */
-- (MMEEvent *)generateTelemetryMetricsEvent;
+    to a file in ~/Library/Caches, this event may be loaded with -loadPendingTelemetryMetricsEvent
+ @returns nil for pending events, or a telemetry event which is ready to send
+*/
+- (nullable MMEEvent *)generateTelemetryMetricsEvent;
 
 // MARK: - MMEEvent
 
