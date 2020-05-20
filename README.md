@@ -19,7 +19,6 @@ Include `MapboxMobileEvents.framework` in your application, in the application d
 
 ```objc
 MMEEventsManager *manager = [MMEventsManager.sharedManager startEventsManagerWithToken:@"your-mapbox-token"];
-manager.delegate = self;
 [manager sendTurnstileEvent];
 ```
 
@@ -27,7 +26,6 @@ Or, in Swift:
 
 ```swift
 let eventsManager = MMEEventsManager.sharedManager().startEventsManager(withToken: "your-mapbox-token");
-eventsManager.delegate = self;
 eventsManager.sendTurnstileEvent()
 ```
 
