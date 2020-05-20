@@ -16,7 +16,7 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "9CA75369240EF2DD005C26C9"
                BuildableName = "MapboxMobileEvents.framework"
-               BlueprintName = "MapboxMobileEvents (Deprecation)"
+               BlueprintName = "MapboxMobileEvents (Development)"
                ReferencedContainer = "container:MapboxMobileEvents.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -62,7 +62,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "9CA75369240EF2DD005C26C9"
             BuildableName = "MapboxMobileEvents.framework"
-            BlueprintName = "MapboxMobileEvents (Deprecation)"
+            BlueprintName = "MapboxMobileEvents (Development)"
             ReferencedContainer = "container:MapboxMobileEvents.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
