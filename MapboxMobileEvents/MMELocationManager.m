@@ -1,5 +1,4 @@
 #import <CoreLocation/CoreLocation.h>
-#import "MMEDependencyManager.h"
 #import "MMELocationManager.h"
 #import "MMEUIApplicationWrapper.h"
 #import "MMEEventConfigProviding.h"
@@ -21,7 +20,6 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
 @property (nonatomic, strong) NSDate *backgroundLocationServiceTimeoutAllowedDate;
 @property (nonatomic, strong) NSTimer *backgroundLocationServiceTimeoutTimer;
 @property (nonatomic) BOOL hostAppHasBackgroundCapability;
-@property (nonatomic, strong) MMEDependencyManager * dependencyManager;
 @property (nonatomic, strong) id <MMEEventConfigProviding> config;
 @property (nonatomic, copy) OnDidExitRegion onDidExitRegion;
 @property (nonatomic, copy) OnDidUpdateCoordinate onDidUpdateCoordinate;
@@ -48,7 +46,6 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
         _application = [[MMEUIApplicationWrapper alloc] init];
         NSArray *backgroundModes = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UIBackgroundModes"];
         self.hostAppHasBackgroundCapability = [backgroundModes containsObject:@"location"];
-        self.dependencyManager = [[MMEDependencyManager alloc] init];
         self.config = config;
         self.onDidExitRegion = onDidExitRegion;
         self.onDidUpdateCoordinate = onDidUpdateCoordinate;
@@ -64,7 +61,7 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
         return;
     }
 
-    self.locationManager = [self.dependencyManager locationManagerInstance];
+    self.locationManager = [[CLLocationManager alloc] init];
     [self configurePassiveLocationManager];
     [self startLocationServices];
 }
