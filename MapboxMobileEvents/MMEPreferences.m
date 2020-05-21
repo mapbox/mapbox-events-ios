@@ -5,8 +5,6 @@
 #import "MMEDate.h"
 #import "MMEConfig.h"
 #import "MMELogger.h"
-
-// TODO: Consider moving these constant Definitions
 #import "NSUserDefaults+MMEConfiguration_Private.h"
 #import "NSUserDefaults+MMEConfiguration.h"
 
@@ -478,6 +476,22 @@
 -(CLLocationDistance)backgroundGeofence {
     CLLocationDistance backgroundGeofence = MMEBackgroundGeofenceDefault;
 
+    // Inspect for local overrides
+    id radius = [self.userDefaults objectForKey:MMEBackgroundGeofence];
+    if ([radius isKindOfClass: NSNumber.class]) {
+        CLLocationDistance infoGeofence = [radius doubleValue];
+
+        if (infoGeofence >= MMECustomGeofenceRadiusMinimum
+            && infoGeofence <= MMECustomGeofenceRadiusMaximum) {
+            backgroundGeofence = infoGeofence;
+        } else {
+            NSLog(@"WARNING Mapbox Mobile Events Profile has invalid geofence radius: %@", radius);
+        }
+
+        return infoGeofence;
+    }
+
+    // Then inspect for values in Bundle
     id radiusNumber = [self.bundle objectForInfoDictionaryKey:MMECustomGeofenceRadius];
     if ([radiusNumber isKindOfClass:NSNumber.class]) {
         CLLocationDistance infoGeofence = [radiusNumber doubleValue];
@@ -489,6 +503,8 @@
             NSLog(@"WARNING Mapbox Mobile Events Profile has invalid geofence radius: %@", radiusNumber);
         }
     }
+
+    // Otherwise use default
     return backgroundGeofence;
 }
 

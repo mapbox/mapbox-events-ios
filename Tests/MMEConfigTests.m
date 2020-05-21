@@ -92,8 +92,8 @@
 
     NSError *error = nil;
     MMEConfig* config = [[MMEConfig alloc] initWithDictionary:dictionary error:&error];
-    XCTAssertNotNil(error);
-    XCTAssertNil(config);
+    XCTAssertNil(error);
+    XCTAssertNotNil(config);
 }
 
 -(void)testInitWithNullTag {

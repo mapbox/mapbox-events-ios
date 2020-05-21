@@ -73,7 +73,6 @@
 		96AB510B21641A6000A261B8 /* MMEUINavigation.m in Sources */ = {isa = PBXBuildFile; fileRef = ACE4F0191FD6102100035880 /* MMEUINavigation.m */; platformFilter = ios; };
 		9C3F930B2351180A00F99907 /* MMEAPIClient_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 9C3F930A2351180A00F99907 /* MMEAPIClient_Private.h */; };
 		9C3F930D235128F500F99907 /* MMEEventsManager_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 9C3F930C235128F500F99907 /* MMEEventsManager_Private.h */; };
-		9C3F93582351317F00F99907 /* MMEAPIConfigTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C3F93572351317F00F99907 /* MMEAPIConfigTests.m */; };
 		9C3F935B235138FD00F99907 /* MMETestDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C3F9359235138FD00F99907 /* MMETestDelegate.m */; };
 		9C5B4CD7237104D000FB283C /* libMapboxMobileEvents.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 408596531ED084C0003BD29D /* libMapboxMobileEvents.a */; };
 		9C65A2702256C110006E3FED /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9C65A26E2256C110006E3FED /* Main.storyboard */; };
@@ -404,7 +403,6 @@
 		9C3F930F23512F1A00F99907 /* MMETestStub.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMETestStub.h; path = Utilities/MMETestStub.h; sourceTree = "<group>"; };
 		9C3F93532351300F00F99907 /* MMEExceptionalDictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMEExceptionalDictionary.m; path = Utilities/MMEExceptionalDictionary.m; sourceTree = "<group>"; };
 		9C3F93542351300F00F99907 /* MMEExceptionalDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMEExceptionalDictionary.h; path = Utilities/MMEExceptionalDictionary.h; sourceTree = "<group>"; };
-		9C3F93572351317F00F99907 /* MMEAPIConfigTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEAPIConfigTests.m; sourceTree = "<group>"; };
 		9C3F9359235138FD00F99907 /* MMETestDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMETestDelegate.m; sourceTree = "<group>"; };
 		9C3F935A235138FD00F99907 /* MMETestDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMETestDelegate.h; sourceTree = "<group>"; };
 		9C6322622213530A00653792 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
@@ -636,7 +634,6 @@
 			children = (
 				40FB437F1EFAFDCF00EC5BC0 /* MMETests-Info.plist */,
 				9C8E049F241BF5A800D6C641 /* MapboxMobileEvents (All Targets).xctestplan */,
-				9C3F93572351317F00F99907 /* MMEAPIConfigTests.m */,
 				ACAF8D26238DDED20033745A /* MMEAPIClientTests.m */,
 				CF93A66222488A4500BBA199 /* MMECertPinTests.m */,
 				F47265682466872200BD7055 /* MMEConfigServiceTests.m */,
@@ -1199,7 +1196,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				F4099599246A073A00E94BFF /* EventStubProtocol.m in Sources */,
-				9C3F93582351317F00F99907 /* MMEAPIConfigTests.m in Sources */,
 				ACAF8D27238DDED20033745A /* MMEAPIClientTests.m in Sources */,
 				9CE132C5235926B3005E23F1 /* MMECertPinTests.m in Sources */,
 				AC03B2F423B1A74B0043271D /* MMEDateTests.m in Sources */,

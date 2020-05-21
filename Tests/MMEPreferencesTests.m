@@ -7,6 +7,7 @@
 #import "MMEBundleInfoFake.h"
 #import "MMELogger.h"
 #import "MMEConstants.h"
+#import "MMEDate.h"
 
 @interface MMEPreferences (Tests)
 - (void)reset;
@@ -51,6 +52,7 @@
     [self.preferences reset];
 }
 
+// MARK: - Defaults
 
 - (void)testResetConfiguration {
     XCTAssertGreaterThan(self.preferences.userDefaults.volatileDomainNames.count, 0);
@@ -86,21 +88,16 @@
 }
 
 // MARK: - Location Collection
+
 - (void)testEventIsCollectionEnabledDefault {
     XCTAssertTrue(self.preferences.isCollectionEnabled);
-}
-
-- (void)testIsCollectionSetter {
-    self.preferences.isCollectionEnabled = NO;
-    XCTAssertEqual(self.preferences.isCollectionEnabled, NO);
-
-    self.preferences.isCollectionEnabled = YES;
-    XCTAssertEqual(self.preferences.isCollectionEnabled, YES);
 }
 
 - (void)testEventIsCollectionEnabledInSimulatorDefault {
     XCTAssertTrue(self.preferences.isCollectionEnabledInSimulator);
 }
+
+// MARK: - Defaults Loaded from Bundle
 
 - (void)testCustomProfileOverMaxValues {
 
@@ -133,12 +130,12 @@
     NSBundle* bundle = [MMEBundleInfoFake bundleWithFakeInfo:@{
         MMEEventsProfile: MMECustomProfile,
         MMEStartupDelay : @2,
-        MMECustomGeofenceRadius: @420
+        MMECustomGeofenceRadius: @300
     }];
     self.preferences = [[MMEPreferences alloc] initWithBundle:bundle
                                                     dataStore:NSUserDefaults.mme_configuration];
 
-    XCTAssertEqual(self.preferences.backgroundGeofence, 420);
+    XCTAssertEqual(self.preferences.backgroundGeofence, 300);
     XCTAssertEqual(self.preferences.startupDelay, 2);
 }
 
@@ -164,7 +161,7 @@
     XCTAssertTrue([MMELogger.sharedLogger isEnabled]);
 }
 
-- (void)testDefaults {
+- (void)testDefaultsFromFomBundle {
     NSBundle* bundle = [MMEBundleInfoFake bundleWithFakeInfo:@{
         MMEAccountType: @1,
         @"MMEMapboxUserAgentBase" : @"com.mapbox.test",
@@ -203,9 +200,6 @@
     [self.preferences updateFromAccountType:0];
     XCTAssertEqual(self.preferences.isCollectionEnabled, YES);
     XCTAssertEqual(self.preferences.isCollectionEnabledInBackground, YES);
-
-
-
 }
 
 // MARK: - Background Collection
@@ -228,7 +222,7 @@
     XCTAssertEqual(self.preferences.certificateRevocationList.count, 2);
 }
 
-// MARK: - Utilities
+// MARK: - Setters and Getters
 
 - (void)testSetAccessToken {
     self.preferences.accessToken = nil;
@@ -238,12 +232,51 @@
     XCTAssertEqualObjects(self.preferences.accessToken, @"pk.12345");
 }
 
-// MARK: - Service Configuration
+- (void)testSetLegacyUserAgentBase {
+    self.preferences.legacyUserAgentBase = @"foo";
+    XCTAssertEqualObjects(self.preferences.legacyUserAgentBase, @"foo");
+}
 
-//- (void)testConfigUpdate {
-//    [NSUserDefaults.mme_configuration mme_setConfigUpdateDate:[MMEDate date]];
-//    XCTAssertNotNil(NSUserDefaults.mme_configuration.mme_configUpdateDate);
-//}
+- (void)testSetLegacyHostSDKVersion {
+    self.preferences.legacyHostSDKVersion = @"bar";
+    XCTAssertEqualObjects(self.preferences.legacyHostSDKVersion, @"bar");
+}
+
+- (void)testChinaRegionSetter {
+    self.preferences.isChinaRegion = YES;
+    XCTAssertTrue(self.preferences.isChinaRegion);
+
+    self.preferences.isChinaRegion = NO;
+    XCTAssertFalse(self.preferences.isChinaRegion);
+
+    self.preferences.isChinaRegion = YES;
+    XCTAssertTrue(self.preferences.isChinaRegion);
+}
+
+- (void)testIsCollectionSetter {
+    self.preferences.isCollectionEnabled = NO;
+    XCTAssertEqual(self.preferences.isCollectionEnabled, NO);
+
+    self.preferences.isCollectionEnabled = YES;
+    XCTAssertEqual(self.preferences.isCollectionEnabled, YES);
+}
+
+- (void)testIsCollectionEnabledInBackgroundSetter {
+    self.preferences.isCollectionEnabledInBackground = NO;
+    XCTAssertEqual(self.preferences.isCollectionEnabledInBackground, NO);
+
+    self.preferences.isCollectionEnabledInBackground = YES;
+    XCTAssertEqual(self.preferences.isCollectionEnabledInBackground, YES);
+}
+
+// MARK: - Service Configuration Update Date
+
+-(void)testConfigUpdates {
+    MMEDate* date = [MMEDate dateWithDate:[NSDate dateWithTimeIntervalSince1970:0]];
+    self.preferences.configUpdateDate = date;
+    XCTAssertNotNil(self.preferences.configUpdateDate);
+    XCTAssertEqualObjects(self.preferences.configUpdateDate, date);
+}
 
 // MARK: - Service URLs (Defaults)
 
@@ -311,17 +344,6 @@
     XCTAssertTrue(self.preferences.isChinaRegion);
 }
 
-- (void)testChinaRegionSetter {
-    self.preferences.isChinaRegion = YES;
-    XCTAssertTrue(self.preferences.isChinaRegion);
-
-    self.preferences.isChinaRegion = NO;
-    XCTAssertFalse(self.preferences.isChinaRegion);
-
-    self.preferences.isChinaRegion = YES;
-    XCTAssertTrue(self.preferences.isChinaRegion);
-}
-
 - (void)testRestOfWorldRegionURLS {
     self.preferences.isChinaRegion = NO;
     XCTAssertEqualObjects(self.preferences.apiServiceURL.absoluteString, @"https://api.mapbox.com");
@@ -336,16 +358,24 @@
     XCTAssertEqualObjects(self.preferences.configServiceURL.absoluteString, @"https://config.mapbox.cn");
 }
 
+-(void)testConfigUpdateWithConfig {
+    NSDictionary *jsonDict = @{
+        MMEConfigCRLKey: @[],
+        MMEConfigTTOKey: @2,
+        MMEConfigGFOKey: @500,
+        MMEConfigBSOKey: @10,
+        MMEConfigTagKey: @"TAG"
+    };
+    NSError *error = nil;
+    MMEConfig* config = [[MMEConfig alloc] initWithDictionary:jsonDict error:&error];
+    XCTAssertNotNil(config);
 
-
-//- (void)testConfigUpdateDate {
-//    [NSUserDefaults.mme_configuration mme_setConfigUpdateDate:MMEDate.date];
-//    [NSUserDefaults.mme_configuration mme_deleteObjectForVolatileKey:MMEConfigUpdateDate];
-//
-//    MMEDate *date = [NSUserDefaults.mme_configuration mme_configUpdateDate];
-//
-//    XCTAssert(date);
-//}
+    [self.preferences updateWithConfig:config];
+    XCTAssertEqual(self.preferences.certificateRevocationList.count, 0);
+    XCTAssertEqual(self.preferences.backgroundGeofence, 500);
+    XCTAssertEqual(self.preferences.backgroundStartupDelay, 10);
+    XCTAssertEqualObjects(self.preferences.eventTag, @"TAG");
+}
 
 // MARK: - Certificate Pinning Models
 
