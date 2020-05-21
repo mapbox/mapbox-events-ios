@@ -95,7 +95,6 @@
 		9C8E049A241AD4F800D6C641 /* MMEUIApplicationWrapperFake.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AE58461EA6C9F10046B437 /* MMEUIApplicationWrapperFake.m */; };
 		9C8E049B241AD50000D6C641 /* MMEUniqueIdentifierFake.m in Sources */ = {isa = PBXBuildFile; fileRef = 40031E5D1EFC5CA1009EAB33 /* MMEUniqueIdentifierFake.m */; };
 		9C8E049C241AD51E00D6C641 /* MMEExceptionalDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C3F93532351300F00F99907 /* MMEExceptionalDictionary.m */; };
-		9C8E049D241AD52B00D6C641 /* MMEServiceFixture.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C3F931123512F1A00F99907 /* MMEServiceFixture.m */; };
 		9C8E049E241AD53500D6C641 /* MMETestStub.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C3F930E23512F1900F99907 /* MMETestStub.m */; };
 		9CA284FE23D248D40097BE53 /* NSProcessInfo+SystemInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 9CA284FC23D248D40097BE53 /* NSProcessInfo+SystemInfo.h */; };
 		9CA284FF23D248D40097BE53 /* NSProcessInfo+SystemInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CA284FD23D248D40097BE53 /* NSProcessInfo+SystemInfo.m */; };
@@ -420,8 +419,6 @@
 		9C3F930C235128F500F99907 /* MMEEventsManager_Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEEventsManager_Private.h; sourceTree = "<group>"; };
 		9C3F930E23512F1900F99907 /* MMETestStub.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMETestStub.m; path = Utilities/MMETestStub.m; sourceTree = "<group>"; };
 		9C3F930F23512F1A00F99907 /* MMETestStub.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMETestStub.h; path = Utilities/MMETestStub.h; sourceTree = "<group>"; };
-		9C3F931023512F1A00F99907 /* MMEServiceFixture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMEServiceFixture.h; path = Utilities/MMEServiceFixture.h; sourceTree = "<group>"; };
-		9C3F931123512F1A00F99907 /* MMEServiceFixture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMEServiceFixture.m; path = Utilities/MMEServiceFixture.m; sourceTree = "<group>"; };
 		9C3F933523512FD200F99907 /* config-10s-bso.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "config-10s-bso.json"; sourceTree = "<group>"; };
 		9C3F933623512FD200F99907 /* config-10000m-gfo.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "config-10000m-gfo.json"; sourceTree = "<group>"; };
 		9C3F933723512FD200F99907 /* config-null.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "config-null.json"; sourceTree = "<group>"; };
@@ -704,8 +701,6 @@
 			children = (
 				9C3F93542351300F00F99907 /* MMEExceptionalDictionary.h */,
 				9C3F93532351300F00F99907 /* MMEExceptionalDictionary.m */,
-				9C3F931023512F1A00F99907 /* MMEServiceFixture.h */,
-				9C3F931123512F1A00F99907 /* MMEServiceFixture.m */,
 				9C3F930F23512F1A00F99907 /* MMETestStub.h */,
 				9C3F930E23512F1900F99907 /* MMETestStub.m */,
 			);
@@ -1315,7 +1310,6 @@
 				9C8E049B241AD50000D6C641 /* MMEUniqueIdentifierFake.m in Sources */,
 				F44D121F2464A5E000DF4ED1 /* MMEAPIClientBlockCounter.m in Sources */,
 				9C8E049C241AD51E00D6C641 /* MMEExceptionalDictionary.m in Sources */,
-				9C8E049D241AD52B00D6C641 /* MMEServiceFixture.m in Sources */,
 				9C8E049E241AD53500D6C641 /* MMETestStub.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

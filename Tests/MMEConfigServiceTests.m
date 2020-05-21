@@ -1,7 +1,6 @@
 #import <XCTest/XCTest.h>
 #import "MMEConfigService.h"
 #import "MMEMockEventConfig.h"
-#import "MMEServiceFixture.h"
 #import "MMEAPIClient.h"
 #import "MMENSURLSessionWrapper.h"
 #import "EventConfigStubProtocol.h"

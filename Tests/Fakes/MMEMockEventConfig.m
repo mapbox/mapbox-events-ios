@@ -1,7 +1,6 @@
 #import "MMEMockEventConfig.h"
 #import "NSUserDefaults+MMEConfiguration_Private.h"
 #import "MMEConstants.h"
-#import "MMEServiceFixture.h"
 #import "MMEDate.h"
 #import "MMEEventConfigProviding.h"
 
