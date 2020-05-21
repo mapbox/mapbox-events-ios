@@ -8,21 +8,18 @@
 
 @implementation MMEConfigTests
 
-//- (void)testInvalidCRL {
-//    NSDictionary *jsonDict = @{
-//        @"crl": @[@"not-a-key-hash"]
-//    };
-//    NSError *jsonError = nil;
-//    [MMEConfig alloc] init
-//
-//    NSData *data = [NSJSONSerialization dataWithJSONObject:jsonDict options:NSJSONWritingPrettyPrinted error:&jsonError];
-//    NSError *updateError = [NSUserDefaults.mme_configuration mme_updateFromConfigServiceData:data];
-//    XCTAssertNil(jsonError);
-//    XCTAssertNotNil(updateError);
-//}
+- (void)testInitWithInvalidCRL {
+    NSDictionary *jsonDict = @{
+        @"crl": @[@"not-a-key-hash"]
+    };
+    NSError *error = nil;
+    MMEConfig* config = [[MMEConfig alloc] initWithDictionary:jsonDict error:&error];
+    XCTAssertNil(config);
+    XCTAssertNotNil(error);
+}
 
 // An Certificate Revocation List containing an invalid value should not result in a usable config
-- (void)testCertificateRevocationListInvalidContent {
+- (void)testInitWithCertificateRevocationListInvalidContent {
     NSDictionary *jsonDict = @{
         @"crl": @[@"not-a-key-hash"]
     };
@@ -34,8 +31,10 @@
 }
 
 // A Config with blacklisted RevokedCertKeys key should not result in a usable config
-- (void)testBlacklistedRevokedCertKeys {
-    NSDictionary *jsonDict = @{MMERevokedCertKeys: @[@"not-a-key-hash"]};
+- (void)testInitWithBlacklistedRevokedCertKeys {
+    NSDictionary *jsonDict = @{
+        MMERevokedCertKeys: @[@"not-a-key-hash"]
+    };
     NSError *error = nil;
     MMEConfig* config = [[MMEConfig alloc] initWithDictionary:jsonDict error:&error];
 
@@ -43,12 +42,13 @@
     XCTAssertNotNil(error);
 }
 
-- (void)testUpdateFromConfigServiceData {
-    NSDictionary *jsonDict = @{MMEConfigCRLKey: @[],
-                               MMEConfigTTOKey: @2,
-                               MMEConfigGFOKey: @500,
-                               MMEConfigBSOKey: @10,
-                               MMEConfigTagKey: @"TAG"
+- (void)testInitFromConfigServiceData {
+    NSDictionary *jsonDict = @{
+        MMEConfigCRLKey: @[],
+        MMEConfigTTOKey: @2,
+        MMEConfigGFOKey: @500,
+        MMEConfigBSOKey: @10,
+        MMEConfigTagKey: @"TAG"
     };
 
     NSError *error = nil;
@@ -67,18 +67,43 @@
     // XCTAssertFalse(NSUserDefaults.mme_configuration.mme_isCollectionEnabledInBackground);
 }
 
-- (void)testNilGeofenceOverrideIfOutOfRange {
-    NSDictionary *jsonDict = @{MMEConfigTTOKey: @1,
-                               MMEConfigGFOKey: @90000, //over 9,000
+- (void)testInitWithNilGeofenceOverrideIfOutOfRange {
+    NSDictionary *dictionary = @{
+        MMEConfigTTOKey: @1,
+        MMEConfigGFOKey: @90000, //over 9,000
     };
     NSError *error = nil;
-    MMEConfig* config = [[MMEConfig alloc] initWithDictionary:jsonDict error:&error];
+    MMEConfig* config = [[MMEConfig alloc] initWithDictionary:dictionary error:&error];
     XCTAssertNil(error);
     XCTAssertNotNil(config);
     XCTAssertNil(config.geofenceOverride);
     XCTAssertEqualObjects(config.telemetryTypeOverride, @1);
 
     // TODO: - Verify in Config update that we are defauling to 300 if out of range
+}
+
+-(void)testInitWithAllWrong {
+    NSDictionary *dictionary = @{
+        @"tto": @"two",
+        @"bso": @"ten",
+        @"gfo": @"one hundred",
+        @"tag": @[@"not",@"two"]
+    };
+
+    NSError *error = nil;
+    MMEConfig* config = [[MMEConfig alloc] initWithDictionary:dictionary error:&error];
+    XCTAssertNotNil(error);
+    XCTAssertNil(config);
+}
+
+-(void)testInitWithNullTag {
+    NSDictionary *dictionary = @{
+        @"tag": NSNull.null
+    };
+    NSError *error = nil;
+    MMEConfig* config = [[MMEConfig alloc] initWithDictionary:dictionary error:&error];
+    XCTAssertNil(error);
+    XCTAssertNotNil(config);
 }
 
 @end

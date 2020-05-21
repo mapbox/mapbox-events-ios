@@ -195,23 +195,6 @@
 		F4312856246A626C004472CE /* MMEPreferences.h in Headers */ = {isa = PBXBuildFile; fileRef = F4312853246A626C004472CE /* MMEPreferences.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F4312857246A626C004472CE /* MMEPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = F4312854246A626C004472CE /* MMEPreferences.m */; };
 		F4312858246A626C004472CE /* MMEPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = F4312854246A626C004472CE /* MMEPreferences.m */; };
-		F44C8BF924610B7E00E515AD /* config-1s-bso.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933F23512FD300F99907 /* config-1s-bso.json */; };
-		F44C8BFA24610B8000E515AD /* config-10s-bso.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933523512FD200F99907 /* config-10s-bso.json */; };
-		F44C8BFB24610B8500E515AD /* config-100m-gfo.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F934023512FD300F99907 /* config-100m-gfo.json */; };
-		F44C8BFC24610B8800E515AD /* config-100s-bso.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933823512FD300F99907 /* config-100s-bso.json */; };
-		F44C8BFD24610B8A00E515AD /* config-1000m-gfo.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F934223512FD300F99907 /* config-1000m-gfo.json */; };
-		F44C8BFE24610B8E00E515AD /* config-10000m-gfo.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933623512FD200F99907 /* config-10000m-gfo.json */; };
-		F44C8BFF24610B9300E515AD /* config-all-wrong.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F934123512FD300F99907 /* config-all-wrong.json */; };
-		F44C8C0024610B9700E515AD /* config-all.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933B23512FD300F99907 /* config-all.json */; };
-		F44C8C0124610B9900E515AD /* config-null-tag.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933E23512FD300F99907 /* config-null-tag.json */; };
-		F44C8C0224610B9D00E515AD /* config-null.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933723512FD200F99907 /* config-null.json */; };
-		F44C8C0324610BA100E515AD /* config-number-tag.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933A23512FD300F99907 /* config-number-tag.json */; };
-		F44C8C0424610BA400E515AD /* config-test-tag.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F934323512FD300F99907 /* config-test-tag.json */; };
-		F44C8C0524610BA700E515AD /* config-type1-tto.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933923512FD300F99907 /* config-type1-tto.json */; };
-		F44C8C0624610BAA00E515AD /* config-type2-tto.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933D23512FD300F99907 /* config-type2-tto.json */; };
-		F44C8C0724610BAF00E515AD /* events-201.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933C23512FD300F99907 /* events-201.json */; };
-		F44C8C0824610BB200E515AD /* config-long-ago.json in Resources */ = {isa = PBXBuildFile; fileRef = 9CE132C32358EC25005E23F1 /* config-long-ago.json */; };
-		F44C8C0924610BB500E515AD /* config-crl.json in Resources */ = {isa = PBXBuildFile; fileRef = 9CE132C62359296A005E23F1 /* config-crl.json */; };
 		F44D1203246328CB00DF4ED1 /* NSBundle+TestBundle.m in Sources */ = {isa = PBXBuildFile; fileRef = F44D1201246328CB00DF4ED1 /* NSBundle+TestBundle.m */; };
 		F44D120C246377E000DF4ED1 /* MMENSURLRequestFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = F44D120A246377E000DF4ED1 /* MMENSURLRequestFactory.h */; };
 		F44D120D246377E000DF4ED1 /* MMENSURLRequestFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = F44D120A246377E000DF4ED1 /* MMENSURLRequestFactory.h */; };
@@ -419,21 +402,6 @@
 		9C3F930C235128F500F99907 /* MMEEventsManager_Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEEventsManager_Private.h; sourceTree = "<group>"; };
 		9C3F930E23512F1900F99907 /* MMETestStub.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMETestStub.m; path = Utilities/MMETestStub.m; sourceTree = "<group>"; };
 		9C3F930F23512F1A00F99907 /* MMETestStub.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMETestStub.h; path = Utilities/MMETestStub.h; sourceTree = "<group>"; };
-		9C3F933523512FD200F99907 /* config-10s-bso.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "config-10s-bso.json"; sourceTree = "<group>"; };
-		9C3F933623512FD200F99907 /* config-10000m-gfo.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "config-10000m-gfo.json"; sourceTree = "<group>"; };
-		9C3F933723512FD200F99907 /* config-null.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "config-null.json"; sourceTree = "<group>"; };
-		9C3F933823512FD300F99907 /* config-100s-bso.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "config-100s-bso.json"; sourceTree = "<group>"; };
-		9C3F933923512FD300F99907 /* config-type1-tto.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "config-type1-tto.json"; sourceTree = "<group>"; };
-		9C3F933A23512FD300F99907 /* config-number-tag.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "config-number-tag.json"; sourceTree = "<group>"; };
-		9C3F933B23512FD300F99907 /* config-all.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "config-all.json"; sourceTree = "<group>"; };
-		9C3F933C23512FD300F99907 /* events-201.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "events-201.json"; sourceTree = "<group>"; };
-		9C3F933D23512FD300F99907 /* config-type2-tto.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "config-type2-tto.json"; sourceTree = "<group>"; };
-		9C3F933E23512FD300F99907 /* config-null-tag.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "config-null-tag.json"; sourceTree = "<group>"; };
-		9C3F933F23512FD300F99907 /* config-1s-bso.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "config-1s-bso.json"; sourceTree = "<group>"; };
-		9C3F934023512FD300F99907 /* config-100m-gfo.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "config-100m-gfo.json"; sourceTree = "<group>"; };
-		9C3F934123512FD300F99907 /* config-all-wrong.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "config-all-wrong.json"; sourceTree = "<group>"; };
-		9C3F934223512FD300F99907 /* config-1000m-gfo.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "config-1000m-gfo.json"; sourceTree = "<group>"; };
-		9C3F934323512FD300F99907 /* config-test-tag.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "config-test-tag.json"; sourceTree = "<group>"; };
 		9C3F93532351300F00F99907 /* MMEExceptionalDictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMEExceptionalDictionary.m; path = Utilities/MMEExceptionalDictionary.m; sourceTree = "<group>"; };
 		9C3F93542351300F00F99907 /* MMEExceptionalDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMEExceptionalDictionary.h; path = Utilities/MMEExceptionalDictionary.h; sourceTree = "<group>"; };
 		9C3F93572351317F00F99907 /* MMEAPIConfigTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEAPIConfigTests.m; sourceTree = "<group>"; };
@@ -472,8 +440,6 @@
 		9CDC34BC234FD62A00852FF0 /* MMEBundleInfoFake.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEBundleInfoFake.m; sourceTree = "<group>"; };
 		9CDC34BD234FD62A00852FF0 /* MMEBundleInfoFake.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEBundleInfoFake.h; sourceTree = "<group>"; };
 		9CDC34BF234FD78200852FF0 /* NSUserDefaults+MMEConfiguration_Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSUserDefaults+MMEConfiguration_Private.h"; sourceTree = "<group>"; };
-		9CE132C32358EC25005E23F1 /* config-long-ago.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "config-long-ago.json"; sourceTree = "<group>"; };
-		9CE132C62359296A005E23F1 /* config-crl.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "config-crl.json"; sourceTree = "<group>"; };
 		9CF0003D2370D674009A2700 /* NSString+MMEVersions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+MMEVersions.m"; sourceTree = "<group>"; };
 		9CF0003E2370D674009A2700 /* NSString+MMEVersions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+MMEVersions.h"; sourceTree = "<group>"; };
 		9CF000422370D7B2009A2700 /* NSString+MMEVersions_Tests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+MMEVersions_Tests.m"; sourceTree = "<group>"; };
@@ -668,7 +634,6 @@
 		404807C61EA186D8008A6D50 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				F409958C2469E66500E94BFF /* Stubs */,
 				40FB437F1EFAFDCF00EC5BC0 /* MMETests-Info.plist */,
 				9C8E049F241BF5A800D6C641 /* MapboxMobileEvents (All Targets).xctestplan */,
 				9C3F93572351317F00F99907 /* MMEAPIConfigTests.m */,
@@ -687,11 +652,11 @@
 				AC03B2F523B1AEE60043271D /* MMEUniqueIdentifierTests.m */,
 				9CF000422370D7B2009A2700 /* NSString+MMEVersions_Tests.m */,
 				9CDC34BA234FD36E00852FF0 /* NSUserDefaults+MMEConfigurationTests.m */,
+				F4626806246F732B00E01C83 /* MMENSURLRequestFactoryTests.m */,
+				F409958C2469E66500E94BFF /* Stubs */,
 				F44D11FD246328A400DF4ED1 /* Categories */,
 				40C9E28B1EA5762F00744FE7 /* Fakes */,
 				40AE58481EA80E5E0046B437 /* Utilities */,
-				9C3F931623512F5D00F99907 /* Fixtures */,
-				F4626806246F732B00E01C83 /* MMENSURLRequestFactoryTests.m */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -800,30 +765,6 @@
 				40F16C951F04514100DF338D /* MMEReachability.m */,
 			);
 			path = Reachability;
-			sourceTree = "<group>";
-		};
-		9C3F931623512F5D00F99907 /* Fixtures */ = {
-			isa = PBXGroup;
-			children = (
-				9C3F933F23512FD300F99907 /* config-1s-bso.json */,
-				9C3F933523512FD200F99907 /* config-10s-bso.json */,
-				9C3F934023512FD300F99907 /* config-100m-gfo.json */,
-				9C3F933823512FD300F99907 /* config-100s-bso.json */,
-				9C3F934223512FD300F99907 /* config-1000m-gfo.json */,
-				9C3F933623512FD200F99907 /* config-10000m-gfo.json */,
-				9C3F934123512FD300F99907 /* config-all-wrong.json */,
-				9C3F933B23512FD300F99907 /* config-all.json */,
-				9C3F933E23512FD300F99907 /* config-null-tag.json */,
-				9C3F933723512FD200F99907 /* config-null.json */,
-				9C3F933A23512FD300F99907 /* config-number-tag.json */,
-				9C3F934323512FD300F99907 /* config-test-tag.json */,
-				9C3F933923512FD300F99907 /* config-type1-tto.json */,
-				9C3F933D23512FD300F99907 /* config-type2-tto.json */,
-				9C3F933C23512FD300F99907 /* events-201.json */,
-				9CE132C32358EC25005E23F1 /* config-long-ago.json */,
-				9CE132C62359296A005E23F1 /* config-crl.json */,
-			);
-			path = Fixtures;
 			sourceTree = "<group>";
 		};
 		9C65A2672256C110006E3FED /* MMETestHost */ = {
@@ -1182,24 +1123,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F44C8BFC24610B8800E515AD /* config-100s-bso.json in Resources */,
-				F44C8C0124610B9900E515AD /* config-null-tag.json in Resources */,
 				F4099596246A009A00E94BFF /* events-config.json in Resources */,
-				F44C8C0224610B9D00E515AD /* config-null.json in Resources */,
-				F44C8C0824610BB200E515AD /* config-long-ago.json in Resources */,
-				F44C8BFD24610B8A00E515AD /* config-1000m-gfo.json in Resources */,
-				F44C8BF924610B7E00E515AD /* config-1s-bso.json in Resources */,
-				F44C8C0724610BAF00E515AD /* events-201.json in Resources */,
-				F44C8C0024610B9700E515AD /* config-all.json in Resources */,
-				F44C8BFA24610B8000E515AD /* config-10s-bso.json in Resources */,
-				F44C8C0524610BA700E515AD /* config-type1-tto.json in Resources */,
-				F44C8BFF24610B9300E515AD /* config-all-wrong.json in Resources */,
-				F44C8C0424610BA400E515AD /* config-test-tag.json in Resources */,
-				F44C8C0624610BAA00E515AD /* config-type2-tto.json in Resources */,
-				F44C8BFE24610B8E00E515AD /* config-10000m-gfo.json in Resources */,
-				F44C8C0924610BB500E515AD /* config-crl.json in Resources */,
-				F44C8BFB24610B8500E515AD /* config-100m-gfo.json in Resources */,
-				F44C8C0324610BA100E515AD /* config-number-tag.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
