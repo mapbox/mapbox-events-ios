@@ -4,19 +4,12 @@
 #import "MMEEvent.h"
 #import "MMEConstants.h"
 #import "MMELogger.h"
-<<<<<<< HEAD
 #import "MMEMockEventConfig.h"
 #import "NSURL+Files.h"
 
 @interface MMEMetricsManager (Tests)
 
 - (BOOL)createFrameworkMetricsEventDirectory;
-=======
-
-@interface MMEMetricsManager (Tests)
-
-- (BOOL)createFrameworkMetricsEventDir;
->>>>>>> [Tests] Get Tests Running
 - (NSString *)pendingMetricsEventPath;
 
 @end
@@ -32,29 +25,18 @@
 @implementation MMEMetricsManagerTests
 
 - (void)setUp {
-<<<<<<< HEAD
     self.metricsManager = [[MMEMetricsManager alloc] initWithConfig:[[MMEMockEventConfig alloc] init]
                                               pendingMetricsFileURL:[NSURL testPendingEventsFile]];
-=======
-    self.metricsManager = [[MMEMetricsManager alloc] initWithLogger:[[MMELogger alloc] init]];
->>>>>>> [Tests] Get Tests Running
     
     self.dateFormatter = [[NSDateFormatter alloc] init];
     self.dateFormatter.dateFormat = @"yyyy-MM-dd";
 }
 
 - (void)testCreateFrameworkMetricsEventDirCreatesNewFile {
-<<<<<<< HEAD
-    NSURL *url = [self.metricsManager.pendingMetricsFileURL URLByDeletingLastPathComponent];
-    [NSFileManager.defaultManager removeItemAtURL:url error:nil];
-
-    BOOL frameworkDirCreated = [self.metricsManager createFrameworkMetricsEventDirectory];
-=======
     NSString *sdkPath = self.metricsManager.pendingMetricsEventPath.stringByDeletingLastPathComponent;
     [NSFileManager.defaultManager removeItemAtPath:sdkPath error:nil];
     
     BOOL frameworkDirCreated = [self.metricsManager createFrameworkMetricsEventDir];
->>>>>>> [Tests] Get Tests Running
     
     XCTAssert(frameworkDirCreated);
     XCTAssertTrue([NSFileManager.defaultManager fileExistsAtPath:url.path]);

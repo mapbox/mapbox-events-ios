@@ -40,13 +40,8 @@
 
     if ((self = super.init)) {
 
-<<<<<<< HEAD
         self.config = config;
         self.pendingMetricsFileURL = pendingMetricsFileURL;
-=======
-        NSString *frameworkLibraryPath = [libraryPath stringByAppendingPathComponent:[NSBundle bundleForClass:self.class].bundleIdentifier];
->>>>>>> [Tests] Get Tests Running
-
         self.onMetricsError = onMetricsError;
         self.onMetricsException = onMetricsException;
 
@@ -81,7 +76,6 @@
     return success;
 }
 
-<<<<<<< HEAD
 /*!
  @Brief Creates Metrics Event Directory
  @Returns Success Status of Directory Creation
@@ -94,12 +88,6 @@
     // Check if item exists?
     BOOL sdkPathExtant = [NSFileManager.defaultManager fileExistsAtPath:mmeDirectory.path
                                                             isDirectory:&urlIsDirectory];
-=======
-- (BOOL)createFrameworkMetricsEventDir {
-    NSString *sdkPath = self.pendingMetricsEventPath.stringByDeletingLastPathComponent;
-    BOOL sdkPathIsDir = YES;
-    BOOL sdkPathExtant = [NSFileManager.defaultManager fileExistsAtPath:sdkPath isDirectory:&sdkPathIsDir];
->>>>>>> [Tests] Get Tests Running
     NSError* sdkPathError = nil;
 
     // If not a directory (it would prevent us from writing), remove it

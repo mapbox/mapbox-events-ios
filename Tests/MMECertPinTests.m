@@ -47,47 +47,4 @@
                                                   certPin:certPin];
 }
 
-
-<<<<<<< HEAD
-
-=======
--(void)testCheckCOMHashCount {
-    NSArray *comHashes = NSUserDefaults.mme_configuration.mme_certificatePinningConfig[@"events.mapbox.com"];
-    XCTAssert(comHashes.count == 54);
-}
-    
--(void)testCountCNHashesWithBlacklist {
-    NSError *configError = nil;
-    MMEServiceFixture *configFixture = [MMEServiceFixture serviceFixtureWithResource:@"config-crl"];
-    [self.apiClient startGettingConfigUpdates];
-    XCTAssert([configFixture waitForConnectionWithTimeout:MME10sTimeout error:&configError]); // fetch the config fixture
-    XCTAssertNil(configError);
-
-    NSArray *cnHashes = NSUserDefaults.mme_configuration.mme_certificatePinningConfig[@"events.mapbox.cn"];
-    XCTAssert(cnHashes.count == 53);
-}
-            
--(void)testCountCOMHashesWithBlacklist {
-    NSError *configError = nil;
-    MMEServiceFixture *configFixture = [MMEServiceFixture serviceFixtureWithResource:@"config-crl"];
-    [self.apiClient startGettingConfigUpdates];
-    XCTAssert([configFixture waitForConnectionWithTimeout:MME10sTimeout error:&configError]); // fetch the config fixture
-    XCTAssertNil(configError);
-
--(void)testValidateCNHashes {
-    NSArray *cnHashes = NSUserDefaults.mme_configuration.mme_certificatePinningConfig[@"events.mapbox.cn"];
-    NSMutableArray *invalidHashes = [[NSMutableArray alloc] init];
-    
-    for (NSString *publicKeyHash in cnHashes) {
-        NSData *pinnedKeyHash = [[NSData alloc] initWithBase64EncodedString:publicKeyHash options:(NSDataBase64DecodingOptions)0];
-        if ([pinnedKeyHash length] != CC_SHA256_DIGEST_LENGTH){
-            // The subject public key info hash doesn't have a valid size
-            [invalidHashes addObject:publicKeyHash];
-        }
-    }
-    XCTAssert(invalidHashes.count == 0);
-}
->>>>>>> [Tests] Get Tests Running
-
-
 @end

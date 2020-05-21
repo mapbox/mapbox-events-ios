@@ -5,11 +5,8 @@
 #import "NSUserDefaults+MMEConfiguration_Private.h"
 #import "MMEMetricsManager.h"
 #import "MMELogger.h"
-<<<<<<< HEAD
 #import "MMEMockEventConfig.h"
 #import "NSURL+Files.h"
-=======
->>>>>>> [Tests] Get Tests Running
 
 @interface MMELocationManagerTests : XCTestCase <MMELocationManagerDelegate>
 
@@ -30,18 +27,12 @@
     [NSUserDefaults mme_resetConfiguration];
     
     self.locationManager = [[CLLocationManager alloc] init];
-<<<<<<< HEAD
     MMEMockEventConfig* config = [[MMEMockEventConfig alloc] init];
     MMEMetricsManager * metricsManager = [[MMEMetricsManager alloc] initWithConfig:config
                                                              pendingMetricsFileURL:[NSURL testPendingEventsFile]];
     self.mme_locationManager = [[MMELocationManager alloc] initWithMetricsManager:metricsManager
                                                                            config:config];
-=======
-    MMEMetricsManager * metricsManager = [[MMEMetricsManager alloc] initWithLogger:[[MMELogger alloc] init]];
-    self.mme_locationManager = [[MMELocationManager alloc] initWithMetricsManager:metricsManager];
->>>>>>> [Tests] Get Tests Running
-
-
+    
     self.mme_locationManager.locationManager = self.locationManager;
     self.mme_locationManager.delegate = self;
 }
