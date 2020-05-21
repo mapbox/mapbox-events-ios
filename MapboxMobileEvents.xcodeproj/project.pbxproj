@@ -233,6 +233,7 @@
 		F4EAFDFE2453B08F00D2B17B /* NSBundle+MMEMobileEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = F4684FF22432A1610079B389 /* NSBundle+MMEMobileEvents.h */; };
 		F4EAFDFF2453B09100D2B17B /* NSBundle+MMEMobileEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = F4684FF32432A1610079B389 /* NSBundle+MMEMobileEvents.m */; };
 		F4EC42872475F7F900FFE1D4 /* MockVisit.m in Sources */ = {isa = PBXBuildFile; fileRef = F4EC42862475F7F900FFE1D4 /* MockVisit.m */; };
+		F4EC4289247660C900FFE1D4 /* NSURLTests+Directories.m in Sources */ = {isa = PBXBuildFile; fileRef = F4EC4288247660C900FFE1D4 /* NSURLTests+Directories.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -496,6 +497,7 @@
 		F4EAFDFB24538B6500D2B17B /* MMEDependencyProviding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEDependencyProviding.h; sourceTree = "<group>"; };
 		F4EC42852475F7F900FFE1D4 /* MockVisit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MockVisit.h; sourceTree = "<group>"; };
 		F4EC42862475F7F900FFE1D4 /* MockVisit.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MockVisit.m; sourceTree = "<group>"; };
+		F4EC4288247660C900FFE1D4 /* NSURLTests+Directories.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSURLTests+Directories.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -643,6 +645,7 @@
 				9CF000422370D7B2009A2700 /* NSString+MMEVersions_Tests.m */,
 				9CDC34BA234FD36E00852FF0 /* NSUserDefaults+MMEConfigurationTests.m */,
 				F4626806246F732B00E01C83 /* MMENSURLRequestFactoryTests.m */,
+				F4EC4288247660C900FFE1D4 /* NSURLTests+Directories.m */,
 				F409958C2469E66500E94BFF /* Stubs */,
 				F44D11FD246328A400DF4ED1 /* Categories */,
 				40C9E28B1EA5762F00744FE7 /* Fakes */,
@@ -1204,6 +1207,7 @@
 				F4312852246A33F9004472CE /* MMEConfigTests.m in Sources */,
 				9CDC34BB234FD36E00852FF0 /* NSUserDefaults+MMEConfigurationTests.m in Sources */,
 				F4EC42872475F7F900FFE1D4 /* MockVisit.m in Sources */,
+				F4EC4289247660C900FFE1D4 /* NSURLTests+Directories.m in Sources */,
 				9C8E0493241AD4D200D6C641 /* MMEAPIClientFake.m in Sources */,
 				9C8E0494241AD4D700D6C641 /* MMEBundleInfoFake.m in Sources */,
 				9C8E0495241AD4DA00D6C641 /* MMEDateFakes.m in Sources */,
