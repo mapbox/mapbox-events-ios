@@ -30,6 +30,6 @@
 
 -(CLLocationAccuracy)horizontalAccuracy {
     return self.mockHorizontalAccuracy;
-
 }
+
 @end

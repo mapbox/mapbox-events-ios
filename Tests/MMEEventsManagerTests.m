@@ -18,7 +18,6 @@
 #import "MMEPreferences.h"
 #import "MMELogger.h"
 #import "MMEMetricsManager.h"
-#import "MMEDispatchManager.h"
 #import "MMEEventsManager_Private.h"
 #import "MMEBundleInfoFake.h"
 #import "NSURL+Files.h"
@@ -78,7 +77,6 @@
                                                       uniqueIdentifier:[[MMEUniqueIdentifier alloc] initWithTimeInterval:self.preferences.identifierRotationInterval]
                                                             application:[[MMEUIApplicationWrapperFake alloc] init]
                                                         metricsManager:metricsManager
-                                                       dispatchManager:[[MMEDispatchManager alloc] init]
                                                                 logger:logger];
 
 }
@@ -543,7 +541,6 @@
                                                       uniqueIdentifier:[[MMEUniqueIdentifier alloc] initWithTimeInterval:self.preferences.identifierRotationInterval]
                                                            application:[[MMEUIApplicationWrapperFake alloc] init]
                                                         metricsManager:metricsManager
-                                                       dispatchManager:[[MMEDispatchManager alloc] init]
                                                                 logger:logger];
 
     [self.eventsManager startEventsManagerWithToken:@"fooToken"];
@@ -570,7 +567,6 @@
                                                       uniqueIdentifier:[[MMEUniqueIdentifier alloc] initWithTimeInterval:self.preferences.identifierRotationInterval]
                                                            application:[[MMEUIApplicationWrapperFake alloc] init]
                                                         metricsManager:metricsManager
-                                                       dispatchManager:[[MMEDispatchManager alloc] init]
                                                                 logger:logger];
 
     [self.eventsManager startEventsManagerWithToken:@"fooToken" userAgentBase:@"bar" hostSDKVersion:@"baz"];
@@ -597,7 +593,6 @@
                                                       uniqueIdentifier:[[MMEUniqueIdentifier alloc] initWithTimeInterval:self.preferences.identifierRotationInterval]
                                                            application:[[MMEUIApplicationWrapperFake alloc] init]
                                                         metricsManager:metricsManager
-                                                       dispatchManager:[[MMEDispatchManager alloc] init]
                                                                 logger:logger];
 
     XCTAssertNil(self.eventsManager.skuId);

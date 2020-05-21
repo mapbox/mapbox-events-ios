@@ -15,7 +15,6 @@
 #import "MMEAPIClient_Private.h"
 #import "MMEConstants.h"
 #import "MMEDate.h"
-#import "MMEDispatchManager.h"
 #import "MMEEvent.h"
 #import "MMELogger.h"
 #import "MMELocationManager.h"
@@ -46,7 +45,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) id<MMEUniqueIdentifer> uniqueIdentifer;
 @property (nonatomic) NSDate *nextTurnstileSendDate;
 @property (nonatomic) NSTimer *queueTimer;
-@property (nonatomic) MMEDispatchManager *dispatchManager;
 @property (nonatomic, getter=isPaused) BOOL paused;
 @property (nonatomic) id<MMEUIApplicationWrapper> application;
 @property (nonatomic) UIBackgroundTaskIdentifier backgroundTaskIdentifier;
@@ -100,7 +98,6 @@ NS_ASSUME_NONNULL_BEGIN
                uniqueIdentifier:[[MMEUniqueIdentifier alloc] initWithTimeInterval:self.preferences.identifierRotationInterval]
                     application:[[MMEUIApplicationWrapper alloc] init]
                  metricsManager:metricsManager
-                dispatchManager:[[MMEDispatchManager alloc] init]
                          logger:logger];
 }
 
@@ -109,7 +106,6 @@ NS_ASSUME_NONNULL_BEGIN
               uniqueIdentifier:(MMEUniqueIdentifier*)uniqueIdentifier
                    application:(id <MMEUIApplicationWrapper>)application
                 metricsManager:(MMEMetricsManager*)metricsManager
-               dispatchManager:(MMEDispatchManager*)dispatchManager
                         logger:(MMELogger*)logger {
     if (self = [super init]) {
         self.paused = YES;
@@ -118,7 +114,6 @@ NS_ASSUME_NONNULL_BEGIN
         self.uniqueIdentifer = uniqueIdentifier;
         self.application = application;
         self.metricsManager = metricsManager;
-        self.dispatchManager = dispatchManager;
         self.logger = logger;
         self.urlResponseListeners = [NSMutableArray array];
     }
@@ -217,38 +212,53 @@ NS_ASSUME_NONNULL_BEGIN
 
         [self sendPendingTelemetryMetricsEvent];
 
-        void(^initialization)(void) = ^{
+
+
+        // Begin Metrics/Location Collection after config provided startup delay
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, self.preferences.startupDelay * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+
             __strong __typeof__(weakSelf) strongSelf = weakSelf;
 
-            if (strongSelf == nil) {
-                return;
-            }
+            if (strongSelf) {
 
-            [NSNotificationCenter.defaultCenter addObserver:strongSelf
-                selector:@selector(pauseOrResumeMetricsCollectionIfRequired)
-                name:UIApplicationDidEnterBackgroundNotification
-                object:nil];
-            [NSNotificationCenter.defaultCenter addObserver:strongSelf
-                selector:@selector(pauseOrResumeMetricsCollectionIfRequired)
-                name:UIApplicationDidBecomeActiveNotification
-                object:nil];
-
-            if (@available(iOS 9.0, *)) {
+                // Observe Application State
                 [NSNotificationCenter.defaultCenter addObserver:strongSelf
-                    selector:@selector(powerStateDidChange:)
-                    name:NSProcessInfoPowerStateDidChangeNotification
-                    object:nil];
+                                                       selector:@selector(pauseOrResumeMetricsCollectionIfRequired)
+                                                           name:UIApplicationDidEnterBackgroundNotification
+                                                         object:nil];
+                [NSNotificationCenter.defaultCenter addObserver:strongSelf
+                                                       selector:@selector(pauseOrResumeMetricsCollectionIfRequired)
+                                                           name:UIApplicationDidBecomeActiveNotification
+                                                         object:nil];
+
+                if (@available(iOS 9.0, *)) {
+                    [NSNotificationCenter.defaultCenter addObserver:strongSelf
+                                                           selector:@selector(powerStateDidChange:)
+                                                               name:NSProcessInfoPowerStateDidChangeNotification
+                                                             object:nil];
+                }
+
+                // Release Metrics Gathering
+                strongSelf.paused = YES;
+
+                // Configure Location Manager / Metrics Updates
+                MMELocationManager* locationManager = [[MMELocationManager alloc] initWithConfig:self.preferences
+                                                                                 onDidExitRegion:^(CLRegion *region) {
+                    [[weakSelf metricsManager] incrementAppWakeUpCount];
+                }
+                                                                           onDidUpdateCoordinate:^(CLLocationCoordinate2D coordinate) {
+                    [[weakSelf metricsManager] updateCoordinate:coordinate];
+                }];
+
+                locationManager.delegate = strongSelf;
+                strongSelf.locationManager = locationManager;
+
+                // Kickoff Metrics Collection
+                [strongSelf resumeMetricsCollection];
             }
-
-            strongSelf.paused = YES;
-            strongSelf.locationManager = [[MMELocationManager alloc] initWithMetricsManager: self.metricsManager
-                                                                                     config:self.preferences];
-            strongSelf.locationManager.delegate = strongSelf;
-            [strongSelf resumeMetricsCollection];
-        };
-
-        [self.dispatchManager scheduleBlock:initialization afterDelay:self.preferences.startupDelay];
+        });
     }
+
     @catch(NSException *except) {
         [self reportException:except];
     }

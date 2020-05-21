@@ -21,6 +21,11 @@
 
 @end
 
+@interface MockBundle: NSBundle
+
+
+@end
+
 @implementation MMELocationManagerTests
 
 - (void)setUp {
@@ -28,10 +33,7 @@
     
     self.locationManager = [[CLLocationManager alloc] init];
     MMEMockEventConfig* config = [[MMEMockEventConfig alloc] init];
-    MMEMetricsManager * metricsManager = [[MMEMetricsManager alloc] initWithConfig:config
-                                                             pendingMetricsFileURL:[NSURL testPendingEventsFile]];
-    self.mme_locationManager = [[MMELocationManager alloc] initWithMetricsManager:metricsManager
-                                                                           config:config];
+    self.mme_locationManager = [[MMELocationManager alloc] initWithConfig:config];
 
 
     self.mme_locationManager.locationManager = self.locationManager;

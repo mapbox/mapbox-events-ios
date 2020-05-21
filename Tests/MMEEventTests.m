@@ -24,6 +24,7 @@
 }
 
 - (void)testEventsWithoutName {
+    // Events without names should not be queued
     NSDictionary *attributes = @{@"attribute1": @"a nice attribute"};
     MMEEvent *event1 = [MMEEvent eventWithAttributes:attributes];
     MMEEvent *event2 = [MMEEvent eventWithAttributes:attributes];
@@ -34,6 +35,7 @@
 }
 
 - (void)testEventWithNameAttributes {
+    // Minimum
     NSDate *now = [NSDate date];
     MMEEvent *event = [MMEEvent eventWithName:self.testName attributes:self.testAttrs];
 

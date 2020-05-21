@@ -9,7 +9,6 @@ NS_ASSUME_NONNULL_BEGIN
 @class MMEUniqueIdentifier;
 @class MMEUIApplicationWrapper;
 @class MMEMetricsManager;
-@class MMEDispatchManager;
 @class MMELogger;
 @protocol MMEUIApplicationWrapper;
 
@@ -23,7 +22,6 @@ NS_ASSUME_NONNULL_BEGIN
                    uniqueIdentifier:(MMEUniqueIdentifier*)uniqueIdentifier
                         application:(id <MMEUIApplicationWrapper>)application
                      metricsManager:(MMEMetricsManager*)metricsManager
-                    dispatchManager:(MMEDispatchManager*)dispatchManager
                              logger:(MMELogger*)logger;
 
 - (void)pushEvent:(MMEEvent *)event;

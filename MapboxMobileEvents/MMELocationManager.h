@@ -4,39 +4,58 @@
 
 @protocol MMELocationManagerDelegate;
 @protocol MMEEventConfigProviding;
-@class MMEMetricsManager;
+
+// MARK: - Block Types
+
+typedef void(^OnDidExitRegion)(CLRegion* region);
+typedef void(^OnDidUpdateCoordinate)(CLLocationCoordinate2D coordinate);
+
+extern const CLLocationDistance MMELocationManagerDistanceFilter;
+extern const CLLocationDistance MMELocationManagerHibernationRadius;
+extern NSString * const MMELocationManagerRegionIdentifier;
+
+// MARK: - MMELocationManager
 
 @protocol MMELocationManager <NSObject>
 @property (nonatomic, weak) id<MMELocationManagerDelegate> delegate;
 @property (nonatomic, getter=isUpdatingLocation, readonly) BOOL updatingLocation;
 @property (nonatomic, getter=isMetricsEnabledForInUsePermissions) BOOL metricsEnabledForInUsePermissions;
 
+/*! Starts the generation of updates that report the user’s current location. */
 - (void)startUpdatingLocation;
+
+/*! Stops the generation of location updates. */
 - (void)stopUpdatingLocation;
 
 @end
 
-// MARK: -
-
-extern const CLLocationDistance MMELocationManagerDistanceFilter;
-extern const CLLocationDistance MMELocationManagerHibernationRadius;
-extern NSString * const MMELocationManagerRegionIdentifier;
-
 @interface MMELocationManager : NSObject <MMELocationManager>
+
+// MARK: - Properties
+
 @property (nonatomic, weak) id<MMELocationManagerDelegate> delegate;
 @property (nonatomic, getter=isUpdatingLocation, readonly) BOOL updatingLocation;
 @property (nonatomic, getter=isMetricsEnabledForInUsePermissions) BOOL metricsEnabledForInUsePermissions;
 
-- (instancetype)init NS_UNAVAILABLE;
-- (instancetype)initWithMetricsManager:(MMEMetricsManager*)metricsManager
-                                config:(id <MMEEventConfigProviding>)config;
+// MARK: - Initializers
 
+- (instancetype)init NS_UNAVAILABLE;
+
+- (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config;
+
+- (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config
+                      onDidExitRegion:(OnDidExitRegion)onDidExitRegion
+                onDidUpdateCoordinate:(OnDidUpdateCoordinate)onDidUpdateCoordinate NS_DESIGNATED_INITIALIZER;
+
+/*! Starts the generation of updates that report the user’s current location. */
 - (void)startUpdatingLocation;
+
+/*! Stops the generation of location updates. */
 - (void)stopUpdatingLocation;
 
 @end
 
-// MARK: -
+// MARK: - MMELocationManagerDelegate
 
 @protocol MMELocationManagerDelegate <NSObject>
 

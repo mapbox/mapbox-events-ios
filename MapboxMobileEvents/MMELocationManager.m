@@ -1,8 +1,6 @@
 #import <CoreLocation/CoreLocation.h>
-
 #import "MMEDependencyManager.h"
 #import "MMELocationManager.h"
-#import "MMEMetricsManager.h"
 #import "MMEUIApplicationWrapper.h"
 #import "MMEEventConfigProviding.h"
 
@@ -24,9 +22,9 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
 @property (nonatomic, strong) NSTimer *backgroundLocationServiceTimeoutTimer;
 @property (nonatomic) BOOL hostAppHasBackgroundCapability;
 @property (nonatomic, strong) MMEDependencyManager * dependencyManager;
-@property (nonatomic, strong) MMEMetricsManager *metricsManager;
 @property (nonatomic, strong) id <MMEEventConfigProviding> config;
-
+@property (nonatomic, copy) OnDidExitRegion onDidExitRegion;
+@property (nonatomic, copy) OnDidUpdateCoordinate onDidUpdateCoordinate;
 
 @end
 
@@ -36,16 +34,24 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
     _locationManager.delegate = nil;
 }
 
-- (instancetype)initWithMetricsManager:(MMEMetricsManager*)metricsManager
-                                config:(id <MMEEventConfigProviding>)config {
+- (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config {
+    return [self initWithConfig:config
+                onDidExitRegion:^(CLRegion* region) {}
+          onDidUpdateCoordinate:^(CLLocationCoordinate2D coordinate) {}];
+}
+
+- (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config
+                      onDidExitRegion:(OnDidExitRegion)onDidExitRegion
+                onDidUpdateCoordinate:(OnDidUpdateCoordinate)onDidUpdateCoordinate {
     self = [super init];
     if (self) {
         _application = [[MMEUIApplicationWrapper alloc] init];
         NSArray *backgroundModes = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UIBackgroundModes"];
         self.hostAppHasBackgroundCapability = [backgroundModes containsObject:@"location"];
         self.dependencyManager = [[MMEDependencyManager alloc] init];
-        self.metricsManager = metricsManager;
         self.config = config;
+        self.onDidExitRegion = onDidExitRegion;
+        self.onDidUpdateCoordinate = onDidUpdateCoordinate;
     }
     return self;
 }
@@ -212,8 +218,8 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
         [self.delegate locationManager:self didUpdateLocations:locations];
     }
 
-    [self.metricsManager updateCoordinate:location.coordinate];
-    
+    self.onDidUpdateCoordinate(location.coordinate);
+
     if (location.horizontalAccuracy < MMERadiusAccuracyMax) {
         for(CLRegion *region in self.locationManager.monitoredRegions) {
             if([region.identifier isEqualToString:MMELocationManagerRegionIdentifier]) {
@@ -231,7 +237,7 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
 - (void)locationManager:(CLLocationManager *)locationManager didExitRegion:(CLRegion *)region {
     [self startBackgroundTimeoutTimer];
     [self.locationManager startUpdatingLocation];
-    [self.metricsManager incrementAppWakeUpCount];
+    self.onDidExitRegion(region);
 }
 
 - (void)locationManager:(CLLocationManager *)manager didVisit:(CLVisit *)visit {
