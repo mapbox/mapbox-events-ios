@@ -11,6 +11,9 @@ typedef void(^OnMetricsError)(NSError* error);
 typedef void(^OnMetricsException)(NSException* exception);
 typedef BOOL(^IsReachableViaWifi)(void);
 
+/*!
+ @brief Event driven interface managing the current state and file loading of SDK metrics
+ */
 @interface MMEMetricsManager : NSObject
 
 // MARK: - Properties
@@ -44,15 +47,31 @@ typedef BOOL(^IsReachableViaWifi)(void);
             onMetricsException:(OnMetricsException)onMetricsException
             isReachableViaWifi:(IsReachableViaWifi)isReachableViaWifi NS_DESIGNATED_INITIALIZER;
 
-// MARK: - Metrics
+// MARK: - Metric Events
 
+/*! @brief Bytes have been sent */
 - (void)updateSentBytes:(NSUInteger)bytes;
+
+/*! @brief Bytes have been received */
 - (void)updateReceivedBytes:(NSUInteger)bytes;
+
+/*! @brief Events are moving from queue to api calls */
 - (void)updateMetricsFromEventQueue:(NSArray *)eventQueue;
-- (void)updateMetricsFromEventCount:(NSUInteger)eventCount request:(nullable NSURLRequest *)request error:(nullable NSError *)error;
+
+/*! @brief Event API call has completed with count */
+- (void)updateMetricsFromEventCount:(NSUInteger)eventCount
+                            request:(nullable NSURLRequest *)request
+                              error:(nullable NSError *)error;
+
 - (void)updateConfigurationJSON:(NSDictionary *)configuration;
+
+/*! @brief Most Recent Coordinate has been received */
 - (void)updateCoordinate:(CLLocationCoordinate2D)coordinate;
+
+/*! @brief Applicatoin has woken up from CLRegion exit */
 - (void)incrementAppWakeUpCount;
+
+/*! @brief Reset Metrics*/
 - (void)resetMetrics;
 
 // MARK: - Archived Telemetry Metrics

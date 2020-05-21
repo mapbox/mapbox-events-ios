@@ -184,6 +184,7 @@ int const kMMEMaxRequestCount = 1000;
     for (NSArray *batch in eventBatches) {
         NSError* serializationError = nil;
         NSURLRequest *request = [self.requestFactory requestForEvents:batch error:&serializationError];
+
         if (request) {
 
             __weak __typeof__(self) weakSelf = self;
@@ -192,7 +193,10 @@ int const kMMEMaxRequestCount = 1000;
 
                 __strong __typeof__(weakSelf) strongSelf = weakSelf;
                 if (strongSelf) {
-                    strongSelf.onEventCountUpdate(events.count, request, error);
+
+                    // TODO: Is this supposed to track the batch sent? Or the original events array?
+                    // If this is tracking on completion of request, batch would be the appropriate model
+                    strongSelf.onEventCountUpdate(batch.count, request, error);
 
                     if (completionHandler) {
                         completionHandler(error);
