@@ -70,7 +70,6 @@
 		40F16C961F04514100DF338D /* MMEReachability.h in Headers */ = {isa = PBXBuildFile; fileRef = 40F16C941F04514100DF338D /* MMEReachability.h */; };
 		40F16C971F04514100DF338D /* MMEReachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 40F16C951F04514100DF338D /* MMEReachability.m */; };
 		40F16C981F04514100DF338D /* MMEReachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 40F16C951F04514100DF338D /* MMEReachability.m */; platformFilter = ios; };
-		96AB510B21641A6000A261B8 /* MMEUINavigation.m in Sources */ = {isa = PBXBuildFile; fileRef = ACE4F0191FD6102100035880 /* MMEUINavigation.m */; platformFilter = ios; };
 		9C3F930B2351180A00F99907 /* MMEAPIClient_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 9C3F930A2351180A00F99907 /* MMEAPIClient_Private.h */; };
 		9C3F930D235128F500F99907 /* MMEEventsManager_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 9C3F930C235128F500F99907 /* MMEEventsManager_Private.h */; };
 		9C3F935B235138FD00F99907 /* MMETestDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C3F9359235138FD00F99907 /* MMETestDelegate.m */; };
@@ -100,7 +99,6 @@
 		9CA2850023D248D40097BE53 /* NSProcessInfo+SystemInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CA284FD23D248D40097BE53 /* NSProcessInfo+SystemInfo.m */; };
 		9CA7536B240EF2DD005C26C9 /* NSProcessInfo+SystemInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CA284FD23D248D40097BE53 /* NSProcessInfo+SystemInfo.m */; };
 		9CA7536C240EF2DD005C26C9 /* MMEConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AE58551EA932DB0046B437 /* MMEConstants.m */; };
-		9CA7536D240EF2DD005C26C9 /* MMEUINavigation.m in Sources */ = {isa = PBXBuildFile; fileRef = ACE4F0191FD6102100035880 /* MMEUINavigation.m */; };
 		9CA7536E240EF2DD005C26C9 /* NSUserDefaults+MMEConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CDC34B7234FD35800852FF0 /* NSUserDefaults+MMEConfiguration.m */; };
 		9CA7536F240EF2DD005C26C9 /* MMEMetricsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = AC86FE1C2169250000D1B89C /* MMEMetricsManager.m */; };
 		9CA75370240EF2DD005C26C9 /* MMEEventsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C9E27A1EA542BC00744FE7 /* MMEEventsManager.m */; };
@@ -145,7 +143,6 @@
 		9CA7539D240EF2DD005C26C9 /* MMEEventsManager_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 9C3F930C235128F500F99907 /* MMEEventsManager_Private.h */; };
 		9CA7539E240EF2DD005C26C9 /* UIKit+MMEMobileEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = 9C65A289225D41F2006E3FED /* UIKit+MMEMobileEvents.h */; };
 		9CA7539F240EF2DD005C26C9 /* MMEMetricsManager.h in Headers */ = {isa = PBXBuildFile; fileRef = AC86FE1B2169250000D1B89C /* MMEMetricsManager.h */; };
-		9CA753A0240EF2DD005C26C9 /* MMEUINavigation.h in Headers */ = {isa = PBXBuildFile; fileRef = ACE4F0181FD6102100035880 /* MMEUINavigation.h */; };
 		9CA753A1240EF2DD005C26C9 /* MMEReachability.h in Headers */ = {isa = PBXBuildFile; fileRef = 40F16C941F04514100DF338D /* MMEReachability.h */; };
 		9CA753A2240EF2DD005C26C9 /* MMEAPIClient_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 9C3F930A2351180A00F99907 /* MMEAPIClient_Private.h */; };
 		9CA753AB241027E6005C26C9 /* MMELoggerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CA753AA241027E6005C26C9 /* MMELoggerTests.m */; };
@@ -178,10 +175,8 @@
 		ACAF8D2D238DEF8E0033745A /* MMEEventsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C9E27A1EA542BC00744FE7 /* MMEEventsManager.m */; };
 		ACAF8D2E238DEFB20033745A /* MMEMetrics.m in Sources */ = {isa = PBXBuildFile; fileRef = AC61FA5B217A04CC008519F5 /* MMEMetrics.m */; };
 		ACAF8D2F238DEFD00033745A /* MMEMetricsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = AC86FE1C2169250000D1B89C /* MMEMetricsManager.m */; };
-		ACAF8D30238DEFEC0033745A /* MMEUINavigation.m in Sources */ = {isa = PBXBuildFile; fileRef = ACE4F0191FD6102100035880 /* MMEUINavigation.m */; };
 		ACAF8D31238DF00D0033745A /* NSUserDefaults+MMEConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CDC34B7234FD35800852FF0 /* NSUserDefaults+MMEConfiguration.m */; };
 		ACBD2E5923709F920082F037 /* MMEEventsManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = ACBD2E5823709F920082F037 /* MMEEventsManagerTests.m */; };
-		ACE4F01A1FD6102100035880 /* MMEUINavigation.h in Headers */ = {isa = PBXBuildFile; fileRef = ACE4F0181FD6102100035880 /* MMEUINavigation.h */; };
 		CA0FAA2C237C80C000C9F3C9 /* NSUserDefaults+MMEConfiguration.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = 9CDC34B6234FD35800852FF0 /* NSUserDefaults+MMEConfiguration.h */; };
 		CF93A6582241EDD500BBA199 /* MMECertPin.m in Sources */ = {isa = PBXBuildFile; fileRef = CF93A6562241EDD500BBA199 /* MMECertPin.m */; };
 		CF93A6592241EDD500BBA199 /* MMECertPin.m in Sources */ = {isa = PBXBuildFile; fileRef = CF93A6562241EDD500BBA199 /* MMECertPin.m */; platformFilter = ios; };
@@ -457,8 +452,6 @@
 		AC956E0D23072F6700AC3D5B /* MMEEventFake.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEEventFake.m; sourceTree = "<group>"; };
 		ACAF8D26238DDED20033745A /* MMEAPIClientTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEAPIClientTests.m; sourceTree = "<group>"; };
 		ACBD2E5823709F920082F037 /* MMEEventsManagerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEEventsManagerTests.m; sourceTree = "<group>"; };
-		ACE4F0181FD6102100035880 /* MMEUINavigation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEUINavigation.h; sourceTree = "<group>"; };
-		ACE4F0191FD6102100035880 /* MMEUINavigation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEUINavigation.m; sourceTree = "<group>"; };
 		CF93A6562241EDD500BBA199 /* MMECertPin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMECertPin.m; sourceTree = "<group>"; };
 		CF93A6572241EDD500BBA199 /* MMECertPin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMECertPin.h; sourceTree = "<group>"; };
 		CF93A66222488A4500BBA199 /* MMECertPinTests.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = MMECertPinTests.m; sourceTree = "<group>"; };
@@ -712,8 +705,6 @@
 				405172DC1EAFFA9400F8CDA1 /* MMENSURLSessionWrapper.m */,
 				40AE58411EA6C86C0046B437 /* MMEUIApplicationWrapper.h */,
 				40AE58421EA6C86C0046B437 /* MMEUIApplicationWrapper.m */,
-				ACE4F0181FD6102100035880 /* MMEUINavigation.h */,
-				ACE4F0191FD6102100035880 /* MMEUINavigation.m */,
 				40AE58581EA9373F0046B437 /* MMEUniqueIdentifier.h */,
 				40AE58591EA9373F0046B437 /* MMEUniqueIdentifier.m */,
 				F44D120A246377E000DF4ED1 /* MMENSURLRequestFactory.h */,
@@ -883,7 +874,6 @@
 				9C3F930D235128F500F99907 /* MMEEventsManager_Private.h in Headers */,
 				9C65A28B225D41F2006E3FED /* UIKit+MMEMobileEvents.h in Headers */,
 				AC86FE1D2169250000D1B89C /* MMEMetricsManager.h in Headers */,
-				ACE4F01A1FD6102100035880 /* MMEUINavigation.h in Headers */,
 				40F16C961F04514100DF338D /* MMEReachability.h in Headers */,
 				9C3F930B2351180A00F99907 /* MMEAPIClient_Private.h in Headers */,
 			);
@@ -925,7 +915,6 @@
 				9CA7539D240EF2DD005C26C9 /* MMEEventsManager_Private.h in Headers */,
 				9CA7539E240EF2DD005C26C9 /* UIKit+MMEMobileEvents.h in Headers */,
 				9CA7539F240EF2DD005C26C9 /* MMEMetricsManager.h in Headers */,
-				9CA753A0240EF2DD005C26C9 /* MMEUINavigation.h in Headers */,
 				9CA753A1240EF2DD005C26C9 /* MMEReachability.h in Headers */,
 				F49675E324620F4300F8914D /* NSError+APIClient.h in Headers */,
 				9CA753A2240EF2DD005C26C9 /* MMEAPIClient_Private.h in Headers */,
@@ -1160,7 +1149,6 @@
 			files = (
 				9CA284FF23D248D40097BE53 /* NSProcessInfo+SystemInfo.m in Sources */,
 				ACAF8D2A238DEF270033745A /* MMEConstants.m in Sources */,
-				ACAF8D30238DEFEC0033745A /* MMEUINavigation.m in Sources */,
 				ACAF8D31238DF00D0033745A /* NSUserDefaults+MMEConfiguration.m in Sources */,
 				ACAF8D2F238DEFD00033745A /* MMEMetricsManager.m in Sources */,
 				ACAF8D2D238DEF8E0033745A /* MMEEventsManager.m in Sources */,
@@ -1254,7 +1242,6 @@
 				F45F65BA247210AE00C1772F /* NSURL+Directories.m in Sources */,
 				40F16C981F04514100DF338D /* MMEReachability.m in Sources */,
 				408596641ED086EB003BD29D /* MMEUIApplicationWrapper.m in Sources */,
-				96AB510B21641A6000A261B8 /* MMEUINavigation.m in Sources */,
 				408596661ED086F1003BD29D /* MMEUniqueIdentifier.m in Sources */,
 				40F133551F200524007B4096 /* NSData+MMEGZIP.m in Sources */,
 				9CF00044237102B8009A2700 /* NSUserDefaults+MMEConfiguration.m in Sources */,
@@ -1277,7 +1264,6 @@
 			files = (
 				9CA7536B240EF2DD005C26C9 /* NSProcessInfo+SystemInfo.m in Sources */,
 				9CA7536C240EF2DD005C26C9 /* MMEConstants.m in Sources */,
-				9CA7536D240EF2DD005C26C9 /* MMEUINavigation.m in Sources */,
 				9CA7536E240EF2DD005C26C9 /* NSUserDefaults+MMEConfiguration.m in Sources */,
 				9CA7536F240EF2DD005C26C9 /* MMEMetricsManager.m in Sources */,
 				9CA75370240EF2DD005C26C9 /* MMEEventsManager.m in Sources */,
