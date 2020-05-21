@@ -25,9 +25,10 @@
 #import "MMEMockEventConfig.h"
 #import "MMEAPIClientFake.h"
 #import "MMEAPIClientCallCounter.h"
+#import "MockVisit.h"
 
-
-@interface MMEEventsManager (Tests)
+// MARK: - Private Interfaces of testing
+@interface MMEEventsManager (Tests) <MMELocationManagerDelegate>
 
 @property (nonatomic) NS_MUTABLE_ARRAY_OF(MMEEvent *) *eventQueue;
 @property (nonatomic, getter=isPaused) BOOL paused;
@@ -738,63 +739,51 @@
     XCTAssertEqual(client.performRequestCount, 0);
 }
 
-// MARK: - Queuing Validation
+// MARK: - Location Manager Interface
+
+#if TARGET_OS_IOS
+
+// TODO: Perhaps the majority of tests related to event structure could move to events tests?
+-(void)testLocationManagerDidVisit {
+
+    CLLocationCoordinate2D coordinate = {10.0, -10.0};
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970:0];
+    CLLocation* location = [[CLLocation alloc] initWithCoordinate:coordinate
+                                                         altitude:13
+                                               horizontalAccuracy:7
+                                                 verticalAccuracy:7
+                                                        timestamp:date];
+
+    MockVisit* visit = [[MockVisit alloc] initWithArrivalDate:date
+                                                departureDate:date
+                                                   coordinate:location.coordinate
+                                           horizontalAccuracy:location.horizontalAccuracy];
 
 
-/*
+    self.eventsManager.paused = YES;
 
-    describe(@"MMELocationManagerDelegate", ^{
-        
-        context(@"-[MMEEventsManager locatizonManager:didVisit:]", ^{
-            __block CLVisit *visit;
-            
-            beforeEach(^{
-                eventsManager.delegate = nice_fake_for(@protocol(MMEEventsManagerDelegate));
-                eventsManager.paused = NO;
-                
-                visit = [[CLVisit alloc] init];
-                spy_on(visit);
-                
-                CLLocationCoordinate2D coordinate = {10.0, -10.0};
-                NSDate *date = [NSDate dateWithTimeIntervalSince1970:0];
-                
-                visit stub_method(@selector(coordinate)).and_return(coordinate);
-                visit stub_method(@selector(arrivalDate)).and_return(date);
-                visit stub_method(@selector(departureDate)).and_return(date);
-                visit stub_method(@selector(horizontalAccuracy)).and_return(42.0);
-                
-                [eventsManager locationManager:eventsManager.locationManager didVisit:visit];
-            });
-            
-            it(@"enqueues the correct event", ^{
-                CLLocation *location = [[CLLocation alloc] initWithLatitude:visit.coordinate.latitude longitude:visit.coordinate.longitude];
-                NSDictionary *attributes = @{
-                    MMEEventKeyCreated: [MMEDate.iso8601DateFormatter stringFromDate:[location timestamp]],
-                    MMEEventKeyLatitude: @([location mme_latitudeRoundedWithPrecision:7]),
-                    MMEEventKeyLongitude: @([location mme_longitudeRoundedWithPrecision:7]),
-                    MMEEventHorizontalAccuracy: @(visit.horizontalAccuracy),
-                    MMEEventKeyArrivalDate: [MMEDate.iso8601DateFormatter stringFromDate:visit.arrivalDate],
-                    MMEEventKeyDepartureDate: [MMEDate.iso8601DateFormatter stringFromDate:visit.departureDate]
-                };
-                MMEEvent *expectedVisitEvent = [MMEEvent visitEventWithAttributes:attributes];
-                MMEEvent *enqueueEvent = eventsManager.eventQueue.firstObject;
+    // Call Delegate Method
+    [self.eventsManager locationManager:self.eventsManager.locationManager didVisit:visit];
 
-                expectedVisitEvent.dateStorage = enqueueEvent.dateStorage;
 
-                NSMutableDictionary *tempDict = [[NSMutableDictionary alloc] init];
-                [tempDict addEntriesFromDictionary:enqueueEvent.attributes];
-                [tempDict setObject:[MMEDate.iso8601DateFormatter stringFromDate:[location timestamp]] forKey:@"created"];
-                enqueueEvent.attributesStorage = tempDict;
-                
-                enqueueEvent should equal(expectedVisitEvent);
-            });
-            
-            it(@"tells its delegate", ^{
-                eventsManager.delegate should have_received(@selector(eventsManager:didVisit:)).with(eventsManager, visit);
-            });
-        });
-    });
-});
-*/
+    // Comparing Event will be flaky here due to creation of Visit Event with a dynamic date.
+    // Construct Expected event
+    // Flaky Test, given Creation date is
+    // TODO: Migrate this to Events
+//    NSDictionary *attributes = @{
+//        MMEEventKeyCreated: [MMEDate.iso8601DateFormatter stringFromDate:[NSDate date]],
+//        MMEEventKeyLatitude: @([location mme_latitudeRoundedWithPrecision:7]),
+//        MMEEventKeyLongitude: @([location mme_longitudeRoundedWithPrecision:7]),
+//        MMEEventHorizontalAccuracy: @(visit.horizontalAccuracy),
+//        MMEEventKeyArrivalDate: [MMEDate.iso8601DateFormatter stringFromDate:visit.arrivalDate],
+//        MMEEventKeyDepartureDate: [MMEDate.iso8601DateFormatter stringFromDate:visit.departureDate]
+//    };
+//    MMEEvent *event = [MMEEvent visitEventWithAttributes:attributes];
+
+    // Verify the Event was constructed as expected AND has been enqueued
+    XCTAssertNotNil(self.eventsManager.eventQueue.firstObject);
+    XCTAssertEqualObjects((MMEEvent*)self.eventsManager.eventQueue.firstObject.attributes[MMEEventKeyEvent], MMEEventTypeVisit);
+}
+#endif
 
 @end
