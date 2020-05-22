@@ -1,9 +1,8 @@
 @import Foundation;
 @import CoreLocation;
+#import "MMEEventConfigProviding.h"
 
 NS_ASSUME_NONNULL_BEGIN
-
-@protocol MMEEventConfigProviding;
 
 // MARK: -
 
