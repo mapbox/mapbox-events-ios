@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(instancetype)init NS_UNAVAILABLE;
 
+
 -(instancetype)initWithArrivalDate:(NSDate*)arrivalDate
                      departureDate:(NSDate*)departureDate
                         coordinate:(CLLocationCoordinate2D)coordinate
