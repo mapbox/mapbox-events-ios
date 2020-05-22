@@ -10,6 +10,7 @@
 #import "MMEDate.h"
 #import "MMEReachability.h"
 #import "MMEEventFake.h"
+#import "CLLocation+Mocks.h"
 
 @interface MMEMetricsManager (Tests)
 
@@ -161,8 +162,8 @@
 
 -(void)testUpdateDataAnalyticsOnWifi {
 
-    MMEEvent *event = [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-1" commonEventData:nil];
-    MMEEvent *eventTwo = [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-2" commonEventData:nil];
+    MMEEvent *event = [MMEEvent locationEventWithID:@"instance-id-1" location:CLLocation.mapboxOffice];
+    MMEEvent *eventTwo = [MMEEvent locationEventWithID:@"instance-id-2" location:CLLocation.mapboxOffice];
 
     NSArray *attributes = @[
         event.attributes,
@@ -196,8 +197,8 @@
 
 -(void)testUpdateDataAnalyticsOnCarrierNetwork {
 
-    MMEEvent *event = [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-1" commonEventData:nil];
-    MMEEvent *eventTwo = [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-2" commonEventData:nil];
+    MMEEvent *event = [MMEEvent locationEventWithID:@"instance-id-1" location:CLLocation.mapboxOffice];
+    MMEEvent *eventTwo = [MMEEvent locationEventWithID:@"instance-id-2" location:CLLocation.mapboxOffice];
 
     NSArray *attributes = @[
         event.attributes,

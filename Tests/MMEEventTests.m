@@ -3,6 +3,10 @@
 #import "MMEEvent.h"
 #import "MMEEventFake.h"
 #import "MMEExceptionalDictionary.h"
+#import "MMEDate.h"
+#import "CLLocation+Mocks.h"
+#import "MMEMockEventConfig.h"
+#import "MockVisit.h"
 
 @interface MMEEvent (Tests)
 + (NSDictionary *)nilAttributes;
@@ -241,4 +245,212 @@
     XCTAssertNotEqual(original, duplicate);
 }
 
+// MARK: - Location Event
+-(void)testConvenienceInitLocationEvent {
+    CLLocation *location = CLLocation.mapboxOffice;
+    MMEEvent *event = [MMEEvent locationEventWithID:@"1234" location:location];
+
+    XCTAssertEqualObjects(event.attributes[@"altitude"], @(0));
+    XCTAssertEqualObjects(event.attributes[@"applicationState"], @"Foreground");
+    XCTAssertEqualObjects(event.attributes[@"course"], @(-1));
+    XCTAssertEqualObjects(event.attributes[@"created"], [MMEDate.iso8601DateFormatter stringFromDate:location.timestamp]);
+    XCTAssertEqualObjects(event.attributes[@"event"], @"location");
+    XCTAssertEqualObjects(event.attributes[@"horizontalAccuracy"], @(0));
+    XCTAssertEqualObjects(event.attributes[@"lat"], @(37.7913));
+    XCTAssertEqualObjects(event.attributes[@"lng"], @(-122.3964));
+    XCTAssertEqualObjects(event.attributes[@"sessionId"], @"1234");
+    XCTAssertEqualObjects(event.attributes[@"sessionId"], @"1234");
+    XCTAssertEqualObjects(event.attributes[@"speed"], @(-1));
+    XCTAssertEqualObjects(event.attributes[@"verticalAccuracy"], @(-1));
+}
+
+-(void)testDesignatedInitLocationEvent {
+    CLLocation *location = CLLocation.mapboxOffice;
+    MMEEvent *event = [MMEEvent locationEventWithID:@"1234"
+                                           location:location
+                                             source:@"MeMyself&I"
+                                    operatingSystem:@"<OperatingSystem>"
+                                   applicationState:@"Foreground"];
+
+    XCTAssertEqualObjects(event.attributes[@"altitude"], @(0));
+    XCTAssertEqualObjects(event.attributes[@"applicationState"], @"Foreground");
+    XCTAssertEqualObjects(event.attributes[@"course"], @(-1));
+    XCTAssertEqualObjects(event.attributes[@"created"], [MMEDate.iso8601DateFormatter stringFromDate:location.timestamp]);
+    XCTAssertEqualObjects(event.attributes[@"event"], @"location");
+    XCTAssertEqualObjects(event.attributes[@"horizontalAccuracy"], @(0));
+    XCTAssertEqualObjects(event.attributes[@"lat"], @(37.7913));
+    XCTAssertEqualObjects(event.attributes[@"lng"], @(-122.3964));
+    XCTAssertEqualObjects(event.attributes[@"sessionId"], @"1234");
+    XCTAssertEqualObjects(event.attributes[@"source"], @"MeMyself&I");
+    XCTAssertEqualObjects(event.attributes[@"operatingSystem"], @"<OperatingSystem>");
+    XCTAssertEqualObjects(event.attributes[@"applicationState"], @"Foreground");
+}
+
+// MARK: - MapLoad Event
+
+-(void)testConvenienceInitMapLoadEvent {
+    NSDate *date = [NSDate date];
+    MMEEvent *event = [MMEEvent mapLoadEventWithCreatedDate:date];
+
+    XCTAssertEqualObjects(event.attributes[@"created"], [MMEDate.iso8601DateFormatter stringFromDate:date]);
+    XCTAssertEqualObjects(event.attributes[@"event"], @"map.load");
+}
+
+-(void)testDesignatedInitMapLoadEvent {
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970:0];
+    MMEEvent *event = [MMEEvent mapLoadEventWithCreatedDate:date
+                                                   vendorID:@"<userId>"
+                                                deviceModel:@"<Device>"
+                                            operatingSystem:@"<OS>"
+                                                screenScale:@(3)
+                                                  fontScale:@(3)
+                                          deviceOrientation:@"Portrait"
+                                         isReachableViaWiFi:YES];
+
+    // Full Mapping Validation
+    NSDictionary *expected = @{
+        @"accessibilityFontScale": @(3),
+        @"created": @"1970-01-01T00:00:00.000+0000",
+        @"event": @"map.load",
+        @"model": @"<Device>",
+        @"operatingSystem": @"<OS>",
+        @"orientation": @"Portrait",
+        @"resolution": @(3),
+        @"userId": @"<userId>",
+        @"wifi": @(1),
+    };
+    XCTAssertEqualObjects(event.attributes, expected);
+}
+
+// MARK: - MapTap Event
+
+-(void)testMapTapEventConvenienceInit {
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970:0];
+    MMEEvent *event = [MMEEvent mapTapEventWithCreatedDate:date];
+    XCTAssertEqualObjects(event.attributes[@"created"], [MMEDate.iso8601DateFormatter stringFromDate:date]);
+    XCTAssertEqualObjects(event.attributes[@"event"], @"map.click");
+}
+
+-(void)testMapTapEventDesignatedInit {
+
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970:0];
+    MMEEvent *event = [MMEEvent mapTapEventWithCreatedDate:date
+                                       deviceOrientation:@"<Portrait>"
+                                      isReachableViaWiFi:YES];
+
+    NSDictionary *expected = @{
+        @"created" : @"1970-01-01T00:00:00.000+0000",
+        @"event" : @"map.click",
+        @"orientation" : @"<Portrait>",
+        @"wifi" : @(YES),
+    };
+
+    XCTAssertEqualObjects(event.attributes, expected);
+}
+
+// MARK: - MapDragEndEvent
+
+-(void)testMapDragEndEventConvenienceInit {
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970:0];
+    MMEEvent *event = [MMEEvent mapDragEndEventWithCreatedDate:date];
+    XCTAssertEqualObjects(event.attributes[@"created"], [MMEDate.iso8601DateFormatter stringFromDate:date]);
+    XCTAssertEqualObjects(event.attributes[@"event"], @"map.dragend");
+}
+
+-(void)testMapDragEndEventDesignatedInit {
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970:0];
+    MMEEvent *event = [MMEEvent mapDragEndEventWithCreatedDate:date
+                                             deviceOrientation:@"<Portrait>"
+                                            isReachableViaWiFi:YES];
+
+    NSDictionary *expected = @{
+        @"created" : @"1970-01-01T00:00:00.000+0000",
+        @"event" : @"map.dragend",
+        @"orientation" : @"<Portrait>",
+        @"wifi" : @(YES),
+    };
+    XCTAssertEqualObjects(event.attributes, expected);
+}
+
+// MARK: - TurnstileEvent
+
+-(void)testTurnstileEventConvenienceInit {
+    MMEMockEventConfig *config = MMEMockEventConfig.oneSecondConfigUpdate;
+    MMEEvent *event = [MMEEvent turnstileEventWithConfiguration:config skuID:nil];
+    XCTAssertNotNil(event);
+    XCTAssertEqualObjects(event.attributes[@"event"], @"appUserTurnstile");
+    XCTAssertEqualObjects(event.attributes[@"skuId"], NSNull.null);
+    XCTAssertEqual(event.attributes.allKeys.count, 11);
+}
+
+-(void)testTurnstileEventInitNullableMissingAccessToken {
+    MMEMockEventConfig *config = MMEMockEventConfig.oneSecondConfigUpdate;
+    config.accessToken = nil;
+    XCTAssertNil([MMEEvent turnstileEventWithConfiguration:config skuID:nil]);
+}
+
+-(void)testTurnstileEventInitNullableMissingLegacyUserAgentBase {
+    MMEMockEventConfig *config = MMEMockEventConfig.oneSecondConfigUpdate;
+    config.legacyUserAgentBase = nil;
+    XCTAssertNil([MMEEvent turnstileEventWithConfiguration:config skuID:nil]);
+}
+
+-(void)testTurnstileEventInitNullableMissingLegacyHostSDKVersion {
+    MMEMockEventConfig *config = MMEMockEventConfig.oneSecondConfigUpdate;
+    config.legacyHostSDKVersion = nil;
+    XCTAssertNil([MMEEvent turnstileEventWithConfiguration:config skuID:nil]);
+}
+
+-(void)testTurnstileEventInit {
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970:0];
+    MMEEvent *event = [MMEEvent turnstileEventWithCreatedDate:date
+                                                     vendorID:@"<VendorId>"
+                                                  deviceModel:@"<DeviceModel>"
+                                              operatingSystem:@"<OperatingSystem>"
+                                                sdkIdentifier:@"<SDKIdentifier"
+                                                   sdkVersion:@"<SDKVersion>"
+                                           isTelemetryEnabled:YES
+                                      locationServicesEnabled:YES
+                                        locationAuthorization:@"<LocationAuthorization>"
+                                                        skuID:@"<SKU>"];
+    NSDictionary *expected = @{
+        @"created" : @"1970-01-01T00:00:00.000+0000",
+        @"device" : @"<DeviceModel>",
+        @"enabled.telemetry" : @(1),
+        @"event" : @"appUserTurnstile",
+        @"locationAuthorization" : @"<LocationAuthorization>",
+        @"locationEnabled" : @(1),
+        @"operatingSystem" : @"<OperatingSystem>",
+        @"sdkIdentifier" : @"<SDKIdentifier",
+        @"sdkVersion" : @"<SDKVersion>",
+        @"skuId" : @"<SKU>",
+        @"userId" : @"<VendorId>"
+    };
+
+    XCTAssertEqualObjects(event.attributes, expected);
+}
+
+// MARK: - Visit Event
+-(void)testVisitEventInit {
+    CLLocation *location = CLLocation.mapboxOffice;
+    MockVisit *visit = [[MockVisit alloc] initWithArrivalDate:[NSDate dateWithTimeIntervalSince1970:0]
+                                                departureDate:[NSDate dateWithTimeIntervalSince1970:0]
+                                                   coordinate:location.coordinate
+                                           horizontalAccuracy:-1];
+
+    MMEEvent *event = [MMEEvent visitEventWithVisit:visit];
+
+    NSDictionary *expected = @{
+        @"arrivalDate" : @"1970-01-01T00:00:00.000+0000",
+        @"created" : [MMEDate.iso8601DateFormatter stringFromDate:location.timestamp],
+        @"departureDate" : @"1970-01-01T00:00:00.000+0000",
+        @"event" : @"visit",
+        @"horizontalAccuracy" : @(-1),
+        @"lat" : @(37.7913),
+        @"lng" : @(-122.3964),
+        @"verticalAccuracy" : @(-1)
+    };
+
+    XCTAssertEqualObjects(event.attributes, expected);
+}
 @end

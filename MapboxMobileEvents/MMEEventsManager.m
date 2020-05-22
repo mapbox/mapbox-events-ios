@@ -426,60 +426,12 @@ NS_ASSUME_NONNULL_BEGIN
             return;
         }
 
-        if (!self.preferences.accessToken) {
-            MMELog(MMELogInfo, MMEDebugEventTypeTurnstileFailed, ([NSString stringWithFormat:@"No access token sent - can not send turntile event, instance: %@",
-                self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
+        MMEEvent *turnstileEvent = [MMEEvent turnstileEventWithConfiguration:self.preferences
+                                                                       skuID:self.uniqueIdentifer.rollingInstanceIdentifer];
+
+        if (!turnstileEvent){
             return;
         }
-
-        if (!NSProcessInfo.mme_vendorId) {
-            MMELog(MMELogInfo, MMEDebugEventTypeTurnstileFailed, ([NSString stringWithFormat:@"No vendor id available - can not send turntile event, instance: %@",
-                self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
-            return;
-        }
-
-        if (!NSProcessInfo.mme_deviceModel) {
-            MMELog(MMELogInfo, MMEDebugEventTypeTurnstileFailed, ([NSString stringWithFormat:@"No model available - can not send turntile event, instance: %@",
-                self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
-            return;
-        }
-
-        if (!NSProcessInfo.mme_osVersion) {
-            MMELog(MMELogInfo, MMEDebugEventTypeTurnstileFailed, ([NSString stringWithFormat:@"No iOS version available - can not send turntile event, instance: %@",
-                self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
-            return;
-        }
-
-        // TODO: remove this check when we switch to reformed UA strings for the events api
-        if (!self.preferences.legacyUserAgentBase) {
-            MMELog(MMELogInfo, MMEDebugEventTypeTurnstileFailed, ([NSString stringWithFormat:@"No user agent base set - can not send turntile event, instance: %@",
-                self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
-            return;
-        }
-
-        // TODO: remove this check when we switch to reformed UA strings for the events api
-        if (!self.preferences.legacyHostSDKVersion) {
-            MMELog(MMELogInfo, MMEDebugEventTypeTurnstileFailed, ([NSString stringWithFormat:@"No host SDK version set - can not send turntile event, instance: %@",
-                self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
-            return;
-        }
-
-        NSDictionary *turnstileEventAttributes = @{
-            MMEEventKeyEvent: MMEEventTypeAppUserTurnstile,
-            MMEEventKeyCreated: [MMEDate.iso8601DateFormatter stringFromDate:[NSDate date]],
-            MMEEventKeyVendorId: NSProcessInfo.mme_vendorId,
-            MMEEventKeyDevice: NSProcessInfo.mme_deviceModel, // MMEEventKeyDevice is synonomous with MMEEventKeyModel but the server will only accept "device" in turnstile events
-            MMEEventKeyOperatingSystem: NSProcessInfo.mme_osVersion,
-            MMEEventSDKIdentifier: self.preferences.legacyUserAgentBase,
-            MMEEventSDKVersion: self.preferences.legacyHostSDKVersion,
-            MMEEventKeyEnabledTelemetry: @(self.preferences.isCollectionEnabled),
-            MMEEventKeyLocationEnabled: @(CLLocationManager.locationServicesEnabled),
-            MMEEventKeyLocationAuthorization: CLLocationManager.mme_authorizationStatusString,
-            MMEEventKeySkuId: self.skuId ?: NSNull.null
-       };
-
-        MMEEvent *turnstileEvent = [MMEEvent turnstileEventWithAttributes:turnstileEventAttributes];
-        
         MMELog(MMELogInfo, MMEDebugEventTypeTurnstile, ([NSString stringWithFormat:@"Sending turnstile event: %@, instance: %@",
             turnstileEvent , self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
 
@@ -777,26 +729,8 @@ NS_ASSUME_NONNULL_BEGIN
         (long)locations.count, self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
     
     for (CLLocation *location in locations) {
-        MMEMutableMapboxEventAttributes *eventAttributes = [[MMEMutableMapboxEventAttributes alloc] init];
-        
-        [eventAttributes addEntriesFromDictionary:@{
-            MMEEventKeyCreated: [MMEDate.iso8601DateFormatter stringFromDate:[location timestamp]],
-            MMEEventKeyLatitude: @([location mme_latitudeRoundedWithPrecision:7]),
-            MMEEventKeyLongitude: @([location mme_longitudeRoundedWithPrecision:7]),
-            MMEEventKeyAltitude: @([location mme_roundedAltitude]),
-            MMEEventHorizontalAccuracy: @([location mme_roundedHorizontalAccuracy]),
-            MMEEventKeyVerticalAccuracy: @([location mme_roundedVerticalAccuracy]),
-            MMEEventKeySpeed: @([location mme_roundedSpeed]),
-            MMEEventKeyCourse: @([location mme_roundedCourse])
-        }];
-        
-        if ([location floor]) {
-            [eventAttributes setValue:@([location floor].level) forKey:MMEEventKeyFloor];
-        }
-
-        [self pushEvent:[MMEEvent locationEventWithAttributes:eventAttributes
-                                            instanceIdentifer:self.uniqueIdentifer.rollingInstanceIdentifer
-                                              commonEventData:nil]];
+        MMEEvent *event = [MMEEvent locationEventWithID:self.uniqueIdentifer.rollingInstanceIdentifer location:location];
+        [self pushEvent:event];
     }
 
     if ([self.delegate respondsToSelector:@selector(eventsManager:didUpdateLocations:)]) {
@@ -827,26 +761,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)locationManager:(MMELocationManager *)locationManager didVisit:(CLVisit *)visit {
     MMELog(MMELogInfo, MMEDebugEventTypeLocationManager, ([NSString stringWithFormat:@"Location manager visit %@, instance: %@",
         visit, self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
-    
-    CLLocation *location = [[CLLocation alloc] initWithLatitude:visit.coordinate.latitude longitude:visit.coordinate.longitude];
-    
-    MMEMutableMapboxEventAttributes *eventAttributes = [[MMEMutableMapboxEventAttributes alloc] init];
-    
-    [eventAttributes addEntriesFromDictionary:@{
-        MMEEventKeyCreated: [MMEDate.iso8601DateFormatter stringFromDate:[location timestamp]],
-        MMEEventKeyLatitude: @([location mme_latitudeRoundedWithPrecision:7]),
-        MMEEventKeyLongitude: @([location mme_longitudeRoundedWithPrecision:7]),
-        MMEEventHorizontalAccuracy: @(visit.horizontalAccuracy),
-        MMEEventKeyVerticalAccuracy: @([location mme_roundedVerticalAccuracy]),
-        MMEEventKeyArrivalDate: [MMEDate.iso8601DateFormatter stringFromDate:visit.arrivalDate],
-        MMEEventKeyDepartureDate: [MMEDate.iso8601DateFormatter stringFromDate:visit.departureDate]
-    }];
-    
-    if ([location floor]) {
-        [eventAttributes setValue:@([location floor].level) forKey:MMEEventKeyFloor];
-    }
-
-    [self pushEvent:[MMEEvent visitEventWithAttributes:eventAttributes]];
+        
+    MMEEvent *event = [MMEEvent visitEventWithVisit:visit];
+    [self pushEvent:event];
 
     if ([self.delegate respondsToSelector:@selector(eventsManager:didVisit:)]) {
         [self.delegate eventsManager:self didVisit:visit];

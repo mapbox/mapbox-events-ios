@@ -4,6 +4,7 @@
 #import "MMENSURLSessionWrapper.h"
 #import "MMENSURLSessionWrapperFake.h"
 #import "MMEEvent.h"
+#import "CLLocation+Mocks.h"
 #import "MMEConstants.h"
 #import "MMEMetricsManager.h"
 #import "MMELogger.h"
@@ -222,7 +223,7 @@
     }];
 
     XCTestExpectation *expectation = [self expectationWithDescription:@"Post Event"];
-    MMEEvent* event = [MMEEvent turnstileEventWithAttributes:@{}];
+    MMEEvent* event = [MMEEvent turnstileEventWithConfiguration:eventConfig skuID:nil];
 
     [client postEvent:event completionHandler:^(NSError * _Nullable error) {
         XCTAssertNil(error);
@@ -317,9 +318,10 @@
 
 - (void)testPostEventsCompression {
     self.apiClient.sessionWrapper = self.sessionWrapperFake;
-        
-    MMEEvent *event = [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-1" commonEventData:nil];
-    MMEEvent *eventTwo = [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-2" commonEventData:nil];
+
+
+    MMEEvent *event = [MMEEvent locationEventWithID:@"instance-id-1" location:CLLocation.mapboxOffice];;
+    MMEEvent *eventTwo = [MMEEvent locationEventWithID:@"instance-id-2" location:CLLocation.mapboxOffice];;
     
     NSArray *events = @[event, eventTwo];
     

@@ -184,6 +184,10 @@
 		F4312856246A626C004472CE /* MMEPreferences.h in Headers */ = {isa = PBXBuildFile; fileRef = F4312853246A626C004472CE /* MMEPreferences.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F4312857246A626C004472CE /* MMEPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = F4312854246A626C004472CE /* MMEPreferences.m */; };
 		F4312858246A626C004472CE /* MMEPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = F4312854246A626C004472CE /* MMEPreferences.m */; };
+		F43F846A247862F900ED2442 /* CLLocation+Mocks.h in Headers */ = {isa = PBXBuildFile; fileRef = F43F8468247862F900ED2442 /* CLLocation+Mocks.h */; };
+		F43F846B247862F900ED2442 /* CLLocation+Mocks.h in Headers */ = {isa = PBXBuildFile; fileRef = F43F8468247862F900ED2442 /* CLLocation+Mocks.h */; };
+		F43F846C247862F900ED2442 /* CLLocation+Mocks.m in Sources */ = {isa = PBXBuildFile; fileRef = F43F8469247862F900ED2442 /* CLLocation+Mocks.m */; };
+		F43F846D247862F900ED2442 /* CLLocation+Mocks.m in Sources */ = {isa = PBXBuildFile; fileRef = F43F8469247862F900ED2442 /* CLLocation+Mocks.m */; };
 		F44D1203246328CB00DF4ED1 /* NSBundle+TestBundle.m in Sources */ = {isa = PBXBuildFile; fileRef = F44D1201246328CB00DF4ED1 /* NSBundle+TestBundle.m */; };
 		F44D120C246377E000DF4ED1 /* MMENSURLRequestFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = F44D120A246377E000DF4ED1 /* MMENSURLRequestFactory.h */; };
 		F44D120D246377E000DF4ED1 /* MMENSURLRequestFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = F44D120A246377E000DF4ED1 /* MMENSURLRequestFactory.h */; };
@@ -455,6 +459,8 @@
 		F4312851246A33F9004472CE /* MMEConfigTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEConfigTests.m; sourceTree = "<group>"; };
 		F4312853246A626C004472CE /* MMEPreferences.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEPreferences.h; sourceTree = "<group>"; };
 		F4312854246A626C004472CE /* MMEPreferences.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEPreferences.m; sourceTree = "<group>"; };
+		F43F8468247862F900ED2442 /* CLLocation+Mocks.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CLLocation+Mocks.h"; sourceTree = "<group>"; };
+		F43F8469247862F900ED2442 /* CLLocation+Mocks.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "CLLocation+Mocks.m"; sourceTree = "<group>"; };
 		F44D1201246328CB00DF4ED1 /* NSBundle+TestBundle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+TestBundle.m"; sourceTree = "<group>"; };
 		F44D1202246328CB00DF4ED1 /* NSBundle+TestBundle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+TestBundle.h"; sourceTree = "<group>"; };
 		F44D120A246377E000DF4ED1 /* MMENSURLRequestFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMENSURLRequestFactory.h; path = Utilities/MMENSURLRequestFactory.h; sourceTree = "<group>"; };
@@ -812,6 +818,8 @@
 				F44D1201246328CB00DF4ED1 /* NSBundle+TestBundle.m */,
 				F45F65BB247212D900C1772F /* NSURL+Files.h */,
 				F45F65BC247212D900C1772F /* NSURL+Files.m */,
+				F43F8468247862F900ED2442 /* CLLocation+Mocks.h */,
+				F43F8469247862F900ED2442 /* CLLocation+Mocks.m */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -841,6 +849,7 @@
 				40AE586D1EA95EDD0046B437 /* MMEEvent.h in Headers */,
 				F4726564246633CD00BD7055 /* MMEConfigService.h in Headers */,
 				40C9E27B1EA542BC00744FE7 /* MMEEventsManager.h in Headers */,
+				F43F846A247862F900ED2442 /* CLLocation+Mocks.h in Headers */,
 				40C9E27F1EA5473F00744FE7 /* MMELocationManager.h in Headers */,
 				40F16C811F02DA9F00DF338D /* MMEDate.h in Headers */,
 				40AE584E1EA926710046B437 /* MMETypes.h in Headers */,
@@ -905,6 +914,7 @@
 				9CA7539F240EF2DD005C26C9 /* MMEMetricsManager.h in Headers */,
 				9CA753A1240EF2DD005C26C9 /* MMEReachability.h in Headers */,
 				F49675E324620F4300F8914D /* NSError+APIClient.h in Headers */,
+				F43F846B247862F900ED2442 /* CLLocation+Mocks.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1156,6 +1166,7 @@
 				405172DE1EAFFA9400F8CDA1 /* MMENSURLSessionWrapper.m in Sources */,
 				40F16C971F04514100DF338D /* MMEReachability.m in Sources */,
 				40AE58441EA6C86C0046B437 /* MMEUIApplicationWrapper.m in Sources */,
+				F43F846C247862F900ED2442 /* CLLocation+Mocks.m in Sources */,
 				F4312857246A626C004472CE /* MMEPreferences.m in Sources */,
 				F4726566246633CD00BD7055 /* MMEConfigService.m in Sources */,
 				F4684FF52432A1610079B389 /* NSBundle+MMEMobileEvents.m in Sources */,
@@ -1270,6 +1281,7 @@
 				F4EAFDFF2453B09100D2B17B /* NSBundle+MMEMobileEvents.m in Sources */,
 				9CA7537F240EF2DD005C26C9 /* MMEReachability.m in Sources */,
 				9CA75380240EF2DD005C26C9 /* MMEUIApplicationWrapper.m in Sources */,
+				F43F846D247862F900ED2442 /* CLLocation+Mocks.m in Sources */,
 				F4312858246A626C004472CE /* MMEPreferences.m in Sources */,
 				F4726567246633CD00BD7055 /* MMEConfigService.m in Sources */,
 				9CA75381240EF2DD005C26C9 /* MMEUniqueIdentifier.m in Sources */,

@@ -83,10 +83,6 @@
     XCTAssertNotNil(self.preferences.userAgentString);
 }
 
-- (void)testConfigEventTagDefault {
-    XCTAssertEqualObjects(self.preferences.eventTag, @"tag");
-}
-
 // MARK: - Location Collection
 
 - (void)testEventIsCollectionEnabledDefault {

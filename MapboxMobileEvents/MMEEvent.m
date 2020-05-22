@@ -1,12 +1,15 @@
 #import <CommonCrypto/CommonDigest.h>
-
+#import <CoreLocation/CoreLocation.h>
 #import "MMEEvent.h"
-
+#import "MMEEventCOnfigProviding.h"
 #import "MMEConstants.h"
 #import "MMEDate.h"
 #import "MMEEventsManager.h"
 #import "MMEReachability.h"
 #import "MMEPreferences.h"
+#import "CLLocation+MMEMobileEvents.h"
+#import "CLLocationManager+MMEMobileEvents.h"
+#import "MMELogger.h"
 
 #import "NSProcessInfo+SystemInfo.h"
 
@@ -83,19 +86,113 @@
 
 // MARK: - Custom Events
 
-+ (instancetype)turnstileEventWithAttributes:(NSDictionary *)attributes {
-    NSMutableDictionary *eventAttributes = attributes.mutableCopy;
-    eventAttributes[MMEEventKeyEvent] = MMEEventTypeAppUserTurnstile;
+/*! TurnstileEvent Convenience Initializer */
++ (nullable instancetype)turnstileEventWithConfiguration:(id <MMEEventConfigProviding>)config
+                                          skuID:(nullable NSString*)skuID {
 
-    return [self eventWithAttributes:eventAttributes];
+    if (!config.accessToken) {
+        MMELog(MMELogInfo, MMEDebugEventTypeTurnstileFailed, ([NSString stringWithFormat:@"No access token sent - can not send turntile event, instance: %@",
+                                                               skuID ?: @"nil"]));
+        return nil;
+    }
+
+    if (!NSProcessInfo.mme_vendorId) {
+        MMELog(MMELogInfo, MMEDebugEventTypeTurnstileFailed, ([NSString stringWithFormat:@"No vendor id available - can not send turntile event, instance: %@",
+                                                               skuID ?: @"nil"]));
+        return nil;
+    }
+
+    if (!NSProcessInfo.mme_deviceModel) {
+        MMELog(MMELogInfo, MMEDebugEventTypeTurnstileFailed, ([NSString stringWithFormat:@"No model available - can not send turntile event, instance: %@",
+                                                               skuID ?: @"nil"]));
+        return nil;
+    }
+
+    if (!NSProcessInfo.mme_osVersion) {
+        MMELog(MMELogInfo, MMEDebugEventTypeTurnstileFailed, ([NSString stringWithFormat:@"No iOS version available - can not send turntile event, instance: %@",
+                                                               skuID ?: @"nil"]));
+        return nil;
+    }
+
+    // TODO: remove this check when we switch to reformed UA strings for the events api
+    if (!config.legacyUserAgentBase) {
+        MMELog(MMELogInfo, MMEDebugEventTypeTurnstileFailed, ([NSString stringWithFormat:@"No user agent base set - can not send turntile event, instance: %@",
+                                                               skuID ?: @"nil"]));
+        return nil;
+    }
+
+    // TODO: remove this check when we switch to reformed UA strings for the events api
+    if (!config.legacyHostSDKVersion) {
+        MMELog(MMELogInfo, MMEDebugEventTypeTurnstileFailed, ([NSString stringWithFormat:@"No host SDK version set - can not send turntile event, instance: %@",
+                                                               skuID ?: @"nil"]));
+        return nil;
+    }
+
+
+    return [self turnstileEventWithCreatedDate:[NSDate date]
+                                      vendorID:NSProcessInfo.mme_vendorId
+                                   deviceModel:NSProcessInfo.mme_deviceModel
+                               operatingSystem:NSProcessInfo.mme_osVersion
+                                 sdkIdentifier:config.legacyUserAgentBase
+                                    sdkVersion:config.legacyHostSDKVersion
+                            isTelemetryEnabled:config.isCollectionEnabled
+                       locationServicesEnabled:CLLocationManager.locationServicesEnabled
+                         locationAuthorization:CLLocationManager.mme_authorizationStatusString
+                                         skuID:skuID];
 }
 
-+ (instancetype)visitEventWithAttributes:(NSDictionary *)attributes {
-    NSMutableDictionary *eventAttributes = attributes.mutableCopy;
-    eventAttributes[MMEEventKeyEvent] = MMEEventTypeVisit;
++(instancetype)turnstileEventWithCreatedDate:(NSDate*)createdDate
+                                    vendorID:(NSString*)vendorID
+                                 deviceModel:(NSString*)deviceModel
+                             operatingSystem:(NSString*)operatingSystem
+                               sdkIdentifier:(NSString*)sdkIdentifier
+                                  sdkVersion:(NSString*)sdkVersion
+                          isTelemetryEnabled:(BOOL)isTelemetryEnabled
+                     locationServicesEnabled:(BOOL)locationServicesEnabled
+                       locationAuthorization:(NSString*)locationAuthorization
+                                       skuID:(nullable NSString*)skuID {
 
-    return [self eventWithAttributes:eventAttributes];
+    NSDictionary *attributes = @{
+        MMEEventKeyEvent: MMEEventTypeAppUserTurnstile,
+        MMEEventKeyCreated: [MMEDate.iso8601DateFormatter stringFromDate:createdDate],
+        MMEEventKeyVendorId: vendorID,
+
+        // MMEEventKeyDevice is synonomous with MMEEventKeyModel but the server will only accept "device" in turnstile events
+        MMEEventKeyDevice: deviceModel,
+        MMEEventKeyOperatingSystem: operatingSystem,
+        MMEEventSDKIdentifier: sdkIdentifier,
+        MMEEventSDKVersion: sdkVersion,
+        MMEEventKeyEnabledTelemetry: @(isTelemetryEnabled),
+        MMEEventKeyLocationEnabled: @(locationServicesEnabled),
+        MMEEventKeyLocationAuthorization: locationAuthorization,
+        MMEEventKeySkuId: skuID ?: NSNull.null
+    };
+    return [self eventWithAttributes: attributes];
 }
+
+
++ (instancetype)visitEventWithVisit:(CLVisit*)visit {
+    CLLocation *location = [[CLLocation alloc] initWithLatitude:visit.coordinate.latitude
+                                                      longitude:visit.coordinate.longitude];
+
+    NSMutableDictionary *attributes =  [@{
+        MMEEventKeyEvent: MMEEventTypeVisit,
+        MMEEventKeyCreated: [MMEDate.iso8601DateFormatter stringFromDate:[location timestamp]],
+        MMEEventKeyLatitude: @([location mme_latitudeRoundedWithPrecision:7]),
+        MMEEventKeyLongitude: @([location mme_longitudeRoundedWithPrecision:7]),
+        MMEEventHorizontalAccuracy: @(visit.horizontalAccuracy),
+        MMEEventKeyVerticalAccuracy: @([location mme_roundedVerticalAccuracy]),
+        MMEEventKeyArrivalDate: [MMEDate.iso8601DateFormatter stringFromDate:visit.arrivalDate],
+        MMEEventKeyDepartureDate: [MMEDate.iso8601DateFormatter stringFromDate:visit.departureDate]
+    } mutableCopy];
+
+    if ([location floor]) {
+        [attributes setValue:@([location floor].level) forKey:MMEEventKeyFloor];
+    }
+
+    return [self eventWithAttributes:attributes];
+}
+
 
 // MARK: - Error Events
 
@@ -221,7 +318,57 @@
     return [self eventWithAttributes:eventAttributes];
 }
 
-+ (instancetype)locationEventWithAttributes:(NSDictionary *)attributes instanceIdentifer:(NSString *)instanceIdentifer commonEventData:(MMECommonEventData *)commonEventData {
+// MARK: - Location Event
+
++(instancetype)locationEventWithID:(NSString*)identifier
+                          location:(CLLocation*)location
+                            source:(NSString*)source
+                   operatingSystem:(NSString*)operatingSystem
+                  applicationState:(nullable NSString*)applicationState {
+
+    NSMutableDictionary* attributes = [@{
+        MMEEventKeyEvent: MMEEventTypeLocation,
+        MMEEventKeyCreated: [MMEDate.iso8601DateFormatter stringFromDate:[location timestamp]],
+        MMEEventKeySource: source,
+        MMEEventKeySessionId: identifier,
+        MMEEventKeyOperatingSystem: operatingSystem,
+        MMEEventKeyLatitude: @([location mme_latitudeRoundedWithPrecision:7]),
+        MMEEventKeyLongitude: @([location mme_longitudeRoundedWithPrecision:7]),
+        MMEEventKeyAltitude: @([location mme_roundedAltitude]),
+        MMEEventHorizontalAccuracy: @([location mme_roundedHorizontalAccuracy]),
+        MMEEventKeyVerticalAccuracy: @([location mme_roundedVerticalAccuracy]),
+        MMEEventKeySpeed: @([location mme_roundedSpeed]),
+        MMEEventKeyCourse: @([location mme_roundedCourse])
+    } mutableCopy];
+
+    if ([location floor]) {
+        [attributes setValue:@([location floor].level) forKey:MMEEventKeyFloor];
+    }
+
+    if (applicationState) {
+        attributes[MMEEventKeyApplicationState] = applicationState;
+    }
+    return [self eventWithAttributes:attributes];
+}
+
++ (instancetype)locationEventWithID:(NSString*)identifier
+                           location:(CLLocation*)location {
+
+    NSString* applicationState = nil;
+    if (![NSProcessInfo.mme_applicationState isEqualToString:MMEApplicationStateUnknown]) {
+        applicationState = NSProcessInfo.mme_applicationState;
+    }
+
+    return [self locationEventWithID:identifier
+                            location:location
+                              source:MMEEventSource
+                     operatingSystem:NSProcessInfo.mme_osVersion
+                    applicationState:applicationState];
+}
+
++ (instancetype)locationEventWithAttributes:(NSDictionary *)attributes
+                          instanceIdentifer:(NSString *)instanceIdentifer
+                            commonEventData:(MMECommonEventData *)commonEventData {
     NSMutableDictionary *eventAttributes = attributes.mutableCopy;
     eventAttributes[MMEEventKeyEvent] = MMEEventTypeLocation;
     eventAttributes[MMEEventKeySource] = MMEEventSource;
@@ -234,7 +381,74 @@
     return [self eventWithAttributes:eventAttributes];
 }
 
-+ (instancetype)mapLoadEventWithDateString:(NSString *)dateString commonEventData:(MMECommonEventData *)commonEventData {
+// MARK: - MapLoad
+
++ (instancetype)mapLoadEventWithCreatedDate:(NSDate*)createdDate
+                               vendorID:(NSString*)vendorID
+                            deviceModel:(NSString*)deviceModel
+                            operatingSystem:(NSString*)operatingSystem
+                            screenScale:(NSNumber*)screenScale
+                              fontScale:(nullable NSNumber*)fontScale
+                      deviceOrientation:(nullable NSString*)deviceOrientation
+                     isReachableViaWiFi:(BOOL)isReachableViaWiFi {
+
+    // Required Params
+    NSMutableDictionary *attributes = [@{
+        MMEEventKeyEvent: MMEEventTypeMapLoad,
+        MMEEventKeyCreated: [MMEDate.iso8601DateFormatter stringFromDate:createdDate],
+        MMEEventKeyVendorID: vendorID,
+        MMEEventKeyModel: deviceModel,
+        MMEEventKeyOperatingSystem: operatingSystem,
+        MMEEventKeyResolution: screenScale,
+        MMEEventKeyWifi: @(isReachableViaWiFi)
+    } mutableCopy];
+
+    // Optional Params
+    if (fontScale){
+        attributes[MMEEventKeyAccessibilityFontScale] = fontScale;
+    }
+
+    if (deviceOrientation){
+        attributes[MMEEventKeyOrientation] = deviceOrientation;
+    }
+
+    return [MMEEvent eventWithAttributes:attributes];
+}
+
+/*! Convenience MapLoad Event Iniitalizer */
++ (instancetype)mapLoadEventWithCreatedDate:(NSDate *)createdDate {
+
+#if TARGET_OS_IOS || TARGET_OS_TVOS
+    NSNumber* fontScale = nil;
+
+    if (NSBundle.mme_isExtension) {
+        fontScale = @(NSExtensionContext.mme_contentSizeScale);
+    } else {
+        fontScale = @(UIApplication.sharedApplication.mme_contentSizeScale);
+    }
+
+#endif
+
+    // Fallthrough to Designated Initializer
+    return [self mapLoadEventWithCreatedDate:createdDate
+                                vendorID:NSProcessInfo.mme_vendorId
+                             deviceModel:NSProcessInfo.mme_deviceModel
+                               operatingSystem:NSProcessInfo.mme_osVersion
+                             screenScale: @(NSProcessInfo.mme_screenScale)
+#if TARGET_OS_IOS || TARGET_OS_TVOS
+
+                               fontScale:fontScale
+                       deviceOrientation:UIDevice.currentDevice.mme_deviceOrientation
+#else
+                               fontScale:nil
+                       deviceOrientation:nil
+#endif
+                      isReachableViaWiFi:MMEReachability.reachabilityForLocalWiFi.isReachableViaWiFi];
+}
+
+/*! Deprecated Convenience MapLoad Event Iniitalizer */
++ (instancetype)mapLoadEventWithDateString:(NSDate *)dateString
+                           commonEventData:(nullable MMECommonEventData *)commonEventData {
     NSMutableDictionary *eventAttributes = NSMutableDictionary.dictionary;
     eventAttributes[MMEEventKeyEvent] = MMEEventTypeMapLoad;
     eventAttributes[MMEEventKeyCreated] = dateString;
@@ -256,6 +470,38 @@
     return [MMEEvent eventWithAttributes:eventAttributes];
 }
 
+// MARK: - Map Tap Event
+
+/*! @Brief Designated Map TapEvent Initializer*/
++(instancetype)mapTapEventWithCreatedDate:(NSDate*)createdDate
+                        deviceOrientation:(nullable NSString*)deviceOrientation
+                       isReachableViaWiFi:(BOOL)isReachableViaWiFi {
+    NSMutableDictionary* attributes = [@{
+        MMEEventKeyEvent: MMEEventTypeMapTap,
+        MMEEventKeyCreated: [MMEDate.iso8601DateFormatter stringFromDate:createdDate],
+        MMEEventKeyWifi: @(isReachableViaWiFi)
+    } mutableCopy];
+
+#if TARGET_OS_IOS || TARGET_OS_TVOS
+    attributes[MMEEventKeyOrientation] = deviceOrientation;
+#endif
+
+    return [MMEEvent eventWithAttributes:attributes];
+}
+
+/*! @Brief Convenience Map TapEvent Initializer*/
++(instancetype)mapTapEventWithCreatedDate:(NSDate*)createdDate {
+
+    NSString* deviceOrientation = nil;
+#if TARGET_OS_IOS || TARGET_OS_TVOS
+    deviceOrientation = UIDevice.currentDevice.mme_deviceOrientation;
+#endif
+    return [self mapTapEventWithCreatedDate:createdDate
+                          deviceOrientation:deviceOrientation
+                         isReachableViaWiFi:MMEReachability.reachabilityForLocalWiFi.isReachableViaWiFi];
+}
+
+/*! @brief Deprecated Convenience Initializer */
 + (instancetype)mapTapEventWithDateString:(NSString *)dateString attributes:(NSDictionary *)attributes {
     NSMutableDictionary *eventAttributes = attributes.mutableCopy;
     eventAttributes[MMEEventKeyEvent] = MMEEventTypeMapTap;
@@ -268,6 +514,39 @@
     return [MMEEvent eventWithAttributes:eventAttributes];
 }
 
+// MARK: - MapDrag
+
+/*! @Brief MapDrag Event Designated Initializer */
++ (instancetype)mapDragEndEventWithCreatedDate:(NSDate*)createdDate
+                             deviceOrientation:(nullable NSString*)deviceOrientation
+                            isReachableViaWiFi:(BOOL)isReachableViaWiFi {
+
+    NSMutableDictionary* attributes = [@{
+        MMEEventKeyEvent: MMEEventTypeMapDragEnd,
+        MMEEventKeyCreated: [MMEDate.iso8601DateFormatter stringFromDate:createdDate],
+        MMEEventKeyWifi: @(isReachableViaWiFi)
+    } mutableCopy];
+
+#if TARGET_OS_IOS || TARGET_OS_TVOS
+    attributes[MMEEventKeyOrientation] = deviceOrientation;
+#endif
+
+    return [MMEEvent eventWithAttributes:attributes];
+}
+
+/*! @Brief Convenience MapDrag Event Initializer*/
++(instancetype)mapDragEndEventWithCreatedDate:(NSDate*)createdDate {
+
+    NSString* deviceOrientation = nil;
+#if TARGET_OS_IOS || TARGET_OS_TVOS
+    deviceOrientation = UIDevice.currentDevice.mme_deviceOrientation;
+#endif
+    return [self mapDragEndEventWithCreatedDate:createdDate
+                          deviceOrientation:deviceOrientation
+                         isReachableViaWiFi:MMEReachability.reachabilityForLocalWiFi.isReachableViaWiFi];
+}
+
+/*! Deprecated Convenience MapDrag Event Iniitalizer */
 + (instancetype)mapDragEndEventWithDateString:(NSString *)dateString attributes:(NSDictionary *)attributes {
     NSMutableDictionary *eventAttributes = attributes.mutableCopy;
     eventAttributes[MMEEventKeyEvent] = MMEEventTypeMapDragEnd;

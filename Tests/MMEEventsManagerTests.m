@@ -25,6 +25,7 @@
 #import "MMEAPIClientFake.h"
 #import "MMEAPIClientCallCounter.h"
 #import "MockVisit.h"
+#import "CLLocation+Mocks.h"
 
 // MARK: - Private Interfaces of testing
 @interface MMEEventsManager (Tests) <MMELocationManagerDelegate>
@@ -230,39 +231,22 @@
 
     [self.preferences setEventFlushCount:2];
 
-    CLLocation *location = [[CLLocation alloc] initWithLatitude:0.0 longitude:0.0];
-    
-    MMEMapboxEventAttributes *eventAttributes = @{
-                            MMEEventKeyCreated: [MMEDate.iso8601DateFormatter stringFromDate:[location timestamp]],
-                            MMEEventKeyLatitude: @([location mme_latitudeRoundedWithPrecision:7]),
-                            MMEEventKeyLongitude: @([location mme_longitudeRoundedWithPrecision:7]),
-                            MMEEventKeyAltitude: @([location mme_roundedAltitude]),
-                            MMEEventHorizontalAccuracy: @([location mme_roundedHorizontalAccuracy])
-    };
-    MMEEvent *locationEvent = [MMEEvent locationEventWithAttributes:eventAttributes instanceIdentifer:self.eventsManager.uniqueIdentifer.rollingInstanceIdentifer commonEventData:nil];
+    MMEEvent *event = [MMEEvent locationEventWithID:self.eventsManager.uniqueIdentifer.rollingInstanceIdentifer
+                                           location:CLLocation.mapboxOffice];
                             
-    [self.eventsManager pushEvent:locationEvent];
+    [self.eventsManager pushEvent:event];
     XCTAssert(self.eventsManager.eventQueue.count > 0);
 
-    [self.eventsManager pushEvent:locationEvent];
+    [self.eventsManager pushEvent:event];
     XCTAssertEqual(self.eventsManager.eventQueue.count, 0);
 }
 
 - (void)testTimerReachedWithEventQueued {
     self.eventsManager.paused = NO;
-    
-    CLLocation *location = [[CLLocation alloc] initWithLatitude:0.0 longitude:0.0];
-    MMEMapboxEventAttributes *eventAttributes = @{
-                            MMEEventKeyCreated: [MMEDate.iso8601DateFormatter stringFromDate:[location timestamp]],
-                            MMEEventKeyLatitude: @([location mme_latitudeRoundedWithPrecision:7]),
-                            MMEEventKeyLongitude: @([location mme_longitudeRoundedWithPrecision:7]),
-                            MMEEventKeyAltitude: @([location mme_roundedAltitude]),
-                            MMEEventHorizontalAccuracy: @([location mme_roundedHorizontalAccuracy])
-    };
-    
-    MMEEvent *locationEvent = [MMEEvent locationEventWithAttributes:eventAttributes instanceIdentifer:self.eventsManager.uniqueIdentifer.rollingInstanceIdentifer commonEventData:nil];
-    
-    [self.eventsManager pushEvent:locationEvent];
+
+    MMEEvent *event = [MMEEvent locationEventWithID:self.eventsManager.uniqueIdentifer.rollingInstanceIdentifer
+                                           location:CLLocation.mapboxOffice];
+    [self.eventsManager pushEvent:event];
     XCTAssert(self.eventsManager.eventQueue.count > 0);
 }
 
@@ -343,18 +327,12 @@
 }
 
 - (void)testEventsFlushWhenCollectionIsDisabled {
-    CLLocation *location = [[CLLocation alloc] initWithLatitude:0.0 longitude:0.0];
+
+    MMEEvent *event = [MMEEvent locationEventWithID:self.eventsManager.uniqueIdentifer.rollingInstanceIdentifer
+                                           location:CLLocation.mapboxOffice];
+
     
-    MMEMapboxEventAttributes *eventAttributes = @{
-                            MMEEventKeyCreated: [MMEDate.iso8601DateFormatter stringFromDate:[location timestamp]],
-                            MMEEventKeyLatitude: @([location mme_latitudeRoundedWithPrecision:7]),
-                            MMEEventKeyLongitude: @([location mme_longitudeRoundedWithPrecision:7]),
-                            MMEEventKeyAltitude: @([location mme_roundedAltitude]),
-                            MMEEventHorizontalAccuracy: @([location mme_roundedHorizontalAccuracy])
-    };
-    MMEEvent *locationEvent = [MMEEvent locationEventWithAttributes:eventAttributes instanceIdentifer:self.eventsManager.uniqueIdentifer.rollingInstanceIdentifer commonEventData:nil];
-    
-    [self.eventsManager pushEvent:locationEvent];
+    [self.eventsManager pushEvent:event];
     XCTAssert(self.eventsManager.eventQueue.count > 0);
     
     self.eventsManager.paused = NO;
@@ -369,18 +347,10 @@
 - (void)testPauseOrResumeFlushInBackground {
     self.eventsManager.paused = NO;
     
-    CLLocation *location = [[CLLocation alloc] initWithLatitude:0.0 longitude:0.0];
-    
-    MMEMapboxEventAttributes *eventAttributes = @{
-                            MMEEventKeyCreated: [MMEDate.iso8601DateFormatter stringFromDate:[location timestamp]],
-                            MMEEventKeyLatitude: @([location mme_latitudeRoundedWithPrecision:7]),
-                            MMEEventKeyLongitude: @([location mme_longitudeRoundedWithPrecision:7]),
-                            MMEEventKeyAltitude: @([location mme_roundedAltitude]),
-                            MMEEventHorizontalAccuracy: @([location mme_roundedHorizontalAccuracy])
-    };
-    MMEEvent *locationEvent = [MMEEvent locationEventWithAttributes:eventAttributes instanceIdentifer:self.eventsManager.uniqueIdentifer.rollingInstanceIdentifer commonEventData:nil];
-    
-    [self.eventsManager pushEvent:locationEvent];
+    MMEEvent *event = [MMEEvent locationEventWithID:self.eventsManager.uniqueIdentifer.rollingInstanceIdentifer
+                                           location:CLLocation.mapboxOffice];
+
+    [self.eventsManager pushEvent:event];
     XCTAssert(self.eventsManager.eventQueue.count > 0);
     
     MMEUIApplicationWrapperFake *fakeApplicationWrapper = (MMEUIApplicationWrapperFake*)self.eventsManager.application;
@@ -614,9 +584,9 @@
 
     // Enqueue more events than the flush count
     NSArray<MMEEvent*>* events = @[
-        [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-1" commonEventData:nil],
-        [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-2" commonEventData:nil],
-        [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-3" commonEventData:nil]
+        [MMEEvent locationEventWithID:@"instance-id-1" location:CLLocation.mapboxOffice],
+        [MMEEvent locationEventWithID:@"instance-id-2" location:CLLocation.mapboxOffice],
+        [MMEEvent locationEventWithID:@"instance-id-3" location:CLLocation.mapboxOffice]
     ];
 
     for (MMEEvent* event in events) {
@@ -643,9 +613,9 @@
 
     // Enqueue more events than the flush count
     NSArray<MMEEvent*>* events = @[
-        [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-1" commonEventData:nil],
-        [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-2" commonEventData:nil],
-        [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-3" commonEventData:nil]
+        [MMEEvent locationEventWithID:@"instance-id-1" location:CLLocation.mapboxOffice],
+        [MMEEvent locationEventWithID:@"instance-id-2" location:CLLocation.mapboxOffice],
+        [MMEEvent locationEventWithID:@"instance-id-3" location:CLLocation.mapboxOffice]
     ];
 
     for (MMEEvent* event in events) {
@@ -657,7 +627,7 @@
     XCTAssertEqual(client.postEventsCount, 0);
     XCTAssertEqual(client.performRequestCount, 0);
 
-    MMEEvent* eventFour = [MMEEvent locationEventWithAttributes:@{} instanceIdentifer:@"instance-id-4" commonEventData:nil];
+    MMEEvent* eventFour = [MMEEvent locationEventWithID:@"instance-id-4" location:CLLocation.mapboxOffice];
     [self.eventsManager enqueueEvent:eventFour];
 
     // Verify Client has received instruction to send events
@@ -759,21 +729,6 @@
 
     // Call Delegate Method
     [self.eventsManager locationManager:self.eventsManager.locationManager didVisit:visit];
-
-
-    // Comparing Event will be flaky here due to creation of Visit Event with a dynamic date.
-    // Construct Expected event
-    // Flaky Test, given Creation date is
-    // TODO: Migrate this to Events
-//    NSDictionary *attributes = @{
-//        MMEEventKeyCreated: [MMEDate.iso8601DateFormatter stringFromDate:[NSDate date]],
-//        MMEEventKeyLatitude: @([location mme_latitudeRoundedWithPrecision:7]),
-//        MMEEventKeyLongitude: @([location mme_longitudeRoundedWithPrecision:7]),
-//        MMEEventHorizontalAccuracy: @(visit.horizontalAccuracy),
-//        MMEEventKeyArrivalDate: [MMEDate.iso8601DateFormatter stringFromDate:visit.arrivalDate],
-//        MMEEventKeyDepartureDate: [MMEDate.iso8601DateFormatter stringFromDate:visit.departureDate]
-//    };
-//    MMEEvent *event = [MMEEvent visitEventWithAttributes:attributes];
 
     // Verify the Event was constructed as expected AND has been enqueued
     XCTAssertNotNil(self.eventsManager.eventQueue.firstObject);

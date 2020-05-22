@@ -39,7 +39,7 @@
 
 - (void)testPostEventURLRequest {
     NSError* error = nil;
-    MMEEvent* event = [MMEEvent turnstileEventWithAttributes:@{}];
+    MMEEvent* event = [MMEEvent turnstileEventWithConfiguration:[[MMEMockEventConfig alloc] init] skuID:nil];
     NSURLRequest* request = [self.factory requestForEvents:@[event] error:&error];
     NSDictionary<NSString*, NSString*>* headers = @{
         @"Content-Type": @"application/json",
