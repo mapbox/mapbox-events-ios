@@ -7,6 +7,7 @@
 void mme_linkCLLocationManagerCategory();
 #pragma clang diagnostic pop
 
+/*! MME String Representation of Authorization Status. */
 + (NSString *)mme_authorizationStatusString;
 
 @end
