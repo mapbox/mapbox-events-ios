@@ -145,16 +145,17 @@ NS_ASSUME_NONNULL_BEGIN
 
         __weak __typeof__(self) weakSelf = self;
 
-
         // Setup Client
+        MMEAPIClient *client = [[MMEAPIClient alloc] initWithConfig:self.preferences];
+
+        // Register Hooks for Reporting Metrics / Logging
         // Use function accessors instead of properties for easier memory management
         // Given we can message null, a method call to null will return null.
         // This save time unwrapping if (weakSelf) each time we're accessing a nullable object's property
-        self.apiClient = [[MMEAPIClient alloc] initWithConfig:self.preferences
-                        onSerializationError:^(NSError * _Nonnull error) {
+        [client registerOnSerializationErrorListener:^(NSError * _Nonnull error) {
             [weakSelf reportError:error];
-        } onURLResponse:^(NSData * _Nullable data, NSURLRequest * _Nonnull request, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-
+        }];
+        [client registerOnURLResponseListener:^(NSData * _Nullable data, NSURLRequest * _Nonnull request, NSURLResponse * _Nullable response, NSError * _Nullable error) {
             // Generic URL Response Tracking (Network Errors / Bytes)
             __strong __typeof__(weakSelf) strongSelf = weakSelf;
             if (!strongSelf){
@@ -184,17 +185,20 @@ NS_ASSUME_NONNULL_BEGIN
             for (OnURLResponse listener in self.urlResponseListeners) {
                 listener(data, request, response, error);
             }
-
-        } onEventQueueUpdate:^(NSArray * _Nonnull eventQueue) {
+        }];
+        [client registerOnEventQueueUpdate:^(NSArray * _Nonnull eventQueue) {
             [[weakSelf metricsManager] updateMetricsFromEventQueue:eventQueue];
-
-        } onEventCountUpdate:^(NSUInteger eventCount, NSURLRequest * _Nullable request, NSError * _Nullable error) {
+        }];
+        [client registerOnEventCountUpdate:^(NSUInteger eventCount, NSURLRequest * _Nullable request, NSError * _Nullable error) {
             [[weakSelf metricsManager] updateMetricsFromEventCount:eventCount request:request error:error];
-        } onGenerateTelemetryEvent:^{
+        }];
+        [client registerOnGenerateTelemetryEvent:^{
             MMEEvent* event = [[weakSelf metricsManager] generateTelemetryMetricsEvent];
             [[weakSelf logger] logEvent:event];
-
         }];
+
+        // Set to iVar (Protocol) Reference
+        self.apiClient = client;
 
         // Setup Service to Poll/Handle Configuration updates
         self.configService = [[MMEConfigService alloc] init:self.preferences
@@ -209,10 +213,7 @@ NS_ASSUME_NONNULL_BEGIN
         
         [self.configService startUpdates];
 
-
         [self sendPendingTelemetryMetricsEvent];
-
-
 
         // Begin Metrics/Location Collection after config provided startup delay
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, self.preferences.startupDelay * NSEC_PER_SEC), dispatch_get_main_queue(), ^{

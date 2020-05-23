@@ -43,40 +43,14 @@ typedef void(^OnGenerateTelemetryEvent)(void);
 - (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config
                        session:(MMENSURLSessionWrapper*)session;
 
-/*! @Brief Initializes a Client with hooks and default sesion setup
+/*!
+ @Brief Initializes a Client with a custom session wrapper without event hooks
  @param config Provider of Shared Client Model Information
- @param onSerializationError Called upon serialization or deserialization errors
- @param onURLResponse Called on URL Responses (useful for analytics/general http error logging).
- @param onEventQueueUpdate Called on the EventQueue updates
- @param onEventCountUpdate Called on the EventCount Udpates
- @param onGenerateTelemetryEvent Called on the Generation of Telemetry Events
- */
-
-- (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config
-          onSerializationError:(OnSerializationError)onSerializationError
-                onURLResponse:(OnURLResponse)onURLResponse
-            onEventQueueUpdate:(OnEventQueueUpdate)onEventQueueUpdate
-            onEventCountUpdate:(OnEventCountUpdate)onEventCountUpdate
-      onGenerateTelemetryEvent:(OnGenerateTelemetryEvent)onGenerateTelemetryEvent;
-
-/** Designated Initializer
- @param config Provider of Shared Client Model Information
- @param requestFactory Factory Responsibile for building requests
  @param session Session responsible for owning URLSession and Cert pinning
- @param onSerializationError Called upon serialization or deserialization errors
- @param onURLResponse Called on URL Responses (useful for analytics/general http error logging)
- @param onEventQueueUpdate Called on the EventQueue updates
- @param onEventCountUpdate Called on the EventCount Udpates
- @param onGenerateTelemetryEvent Called on the Generation of Telemetry Events
  */
 - (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config
                 requestFactory:(MMENSURLRequestFactory*)requestFactory
-                       session:(MMENSURLSessionWrapper*)session
-          onSerializationError:(OnSerializationError)onSerializationError
-                onURLResponse:(OnURLResponse)onURLResponse
-            onEventQueueUpdate:(OnEventQueueUpdate)onEventQueueUpdate
-            onEventCountUpdate:(OnEventCountUpdate)onEventCountUpdate
-      onGenerateTelemetryEvent:(OnGenerateTelemetryEvent)onGenerateTelemetryEvent NS_DESIGNATED_INITIALIZER;
+                       session:(MMENSURLSessionWrapper*)session NS_DESIGNATED_INITIALIZER;
 
 
 // MARK: - Requests
@@ -118,6 +92,23 @@ typedef void(^OnGenerateTelemetryEvent)(void);
  @param completion Block called at the end of network operation (Result being JSON Object or NSError)
  */
 - (void)getEventConfigWithCompletionHandler:(nullable void (^)(MMEConfig* _Nullable config, NSError * _Nullable error))completion;
+
+// MARK: - Observation Hooks (Logging/Metrics)
+
+/*! @brief Block called on deserialization errors */
+- (void)registerOnSerializationErrorListener:(OnSerializationError)onSerializationError;
+
+/*! @brief Block called on url responses  */
+- (void)registerOnURLResponseListener:(OnURLResponse)onURLResponse;
+
+/*! @brief Block called on EventQueue updates  */
+- (void)registerOnEventQueueUpdate:(OnEventQueueUpdate)onEventQueueUpdate;
+
+/*! @brief Block called on EventCount Udpates  */
+- (void)registerOnEventCountUpdate:(OnEventCountUpdate)onEventCountUpdate;
+
+/*! @brief Block called on Generation of Telemetry Events  */
+- (void)registerOnGenerateTelemetryEvent:(OnGenerateTelemetryEvent)onGenerateTelemetryEvent;
 
 @end
 

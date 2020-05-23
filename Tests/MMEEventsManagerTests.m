@@ -736,4 +736,23 @@
 }
 #endif
 
+
+
+-(void)testRegisterOnResponseBlock {
+    MMEEventsManager *eventsManager = [[MMEEventsManager alloc] initWithDefaults];
+    __block BOOL hasSeenCallback = false;
+
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Expect Response Closure to be called on netowork call"];
+
+    [eventsManager registerOnURLResponseListener:^(NSData * _Nullable data, NSURLRequest * _Nonnull request, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        if (!hasSeenCallback) {
+            hasSeenCallback = true;
+            [expectation fulfill];
+        }
+    }];
+
+    [eventsManager startEventsManagerWithToken:@"token"];
+
+    [self waitForExpectations:@[expectation] timeout:2];
+}
 @end

@@ -61,21 +61,27 @@
     __weak __typeof__(self) weakSelf = self;
 
     // Configure Client with Block Counter to inspect interal Call behaviors
-    self.apiClient = [[MMEAPIClient alloc] initWithConfig:eventConfig
-                                     onSerializationError:^(NSError * _Nonnull error) {
+    self.apiClient = [[MMEAPIClient alloc] initWithConfig:eventConfig];
+
+    [self.apiClient registerOnSerializationErrorListener:^(NSError * _Nonnull error) {
         [[[weakSelf blockCounter] onSerializationErrors] addObject:error];
-    } onURLResponse:^(NSData * _Nullable data, NSURLRequest * _Nonnull request, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+    }];
+    [self.apiClient registerOnURLResponseListener:^(NSData * _Nullable data, NSURLRequest * _Nonnull request, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         [[[weakSelf blockCounter] onURLResponses] addObject:request];
-    } onEventQueueUpdate:^(NSArray * _Nonnull eventQueue) {
+    }];
+    [self.apiClient registerOnEventQueueUpdate:^(NSArray * _Nonnull eventQueue) {
         [[[weakSelf blockCounter] eventQueue] addObject:eventQueue];
-    } onEventCountUpdate:^(NSUInteger eventCount, NSURLRequest * _Nullable request, NSError * _Nullable error) {
+    }];
+    [self.apiClient registerOnEventCountUpdate:^(NSUInteger eventCount, NSURLRequest * _Nullable request, NSError * _Nullable error) {
         [[[weakSelf blockCounter] eventCount] addObject:[NSNumber numberWithUnsignedInteger:eventCount]];
-    } onGenerateTelemetryEvent:^{
+    }];
+    [self.apiClient registerOnGenerateTelemetryEvent:^{
         __strong __typeof__(weakSelf) strongSelf = weakSelf;
         if (strongSelf) {
             strongSelf.blockCounter.generateTelemetry += 1;
         }
     }];
+
 
     self.sessionWrapper = (MMENSURLSessionWrapper *)self.apiClient.sessionWrapper;
     self.sessionWrapperFake = [[MMENSURLSessionWrapperFake alloc] init];
@@ -151,17 +157,21 @@
     __weak __typeof__(self) weakSelf = self;
     MMEAPIClient* client = [[MMEAPIClient alloc] initWithConfig:eventConfig
                                            requestFactory: [[MMENSURLRequestFactory alloc] initWithConfig:eventConfig]
-                                                  session:session
-                                     onSerializationError:^(NSError * _Nonnull error) {
+                                                        session:session];
 
+    [client registerOnSerializationErrorListener:^(NSError * _Nonnull error) {
         [[[weakSelf blockCounter] onSerializationErrors] addObject:error];
-    } onURLResponse:^(NSData * _Nullable data, NSURLRequest * _Nonnull request, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+    }];
+    [client registerOnURLResponseListener:^(NSData * _Nullable data, NSURLRequest * _Nonnull request, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         [[[weakSelf blockCounter] onURLResponses] addObject:request];
-    } onEventQueueUpdate:^(NSArray * _Nonnull eventQueue) {
+    }];
+    [client registerOnEventQueueUpdate:^(NSArray * _Nonnull eventQueue) {
         [[[weakSelf blockCounter] eventQueue] addObject:eventQueue];
-    } onEventCountUpdate:^(NSUInteger eventCount, NSURLRequest * _Nullable request, NSError * _Nullable error) {
+    }];
+    [client registerOnEventCountUpdate:^(NSUInteger eventCount, NSURLRequest * _Nullable request, NSError * _Nullable error) {
         [[[weakSelf blockCounter] eventCount] addObject:[NSNumber numberWithUnsignedInteger:eventCount]];
-    } onGenerateTelemetryEvent:^{
+    }];
+    [client registerOnGenerateTelemetryEvent:^{
         __strong __typeof__(weakSelf) strongSelf = weakSelf;
         if (strongSelf) {
             strongSelf.blockCounter.generateTelemetry += 1;
@@ -205,17 +215,21 @@
     __weak __typeof__(self) weakSelf = self;
     MMEAPIClient* client = [[MMEAPIClient alloc] initWithConfig:eventConfig
                                                  requestFactory: [[MMENSURLRequestFactory alloc] initWithConfig:eventConfig]
-                                                        session:session
-                                           onSerializationError:^(NSError * _Nonnull error) {
+                                                        session:session];
 
+    [client registerOnSerializationErrorListener:^(NSError * _Nonnull error) {
         [[[weakSelf blockCounter] onSerializationErrors] addObject:error];
-    } onURLResponse:^(NSData * _Nullable data, NSURLRequest * _Nonnull request, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+    }];
+    [client registerOnURLResponseListener:^(NSData * _Nullable data, NSURLRequest * _Nonnull request, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         [[[weakSelf blockCounter] onURLResponses] addObject:request];
-    } onEventQueueUpdate:^(NSArray * _Nonnull eventQueue) {
+    }];
+    [client registerOnEventQueueUpdate:^(NSArray * _Nonnull eventQueue) {
         [[[weakSelf blockCounter] eventQueue] addObject:eventQueue];
-    } onEventCountUpdate:^(NSUInteger eventCount, NSURLRequest * _Nullable request, NSError * _Nullable error) {
+    }];
+    [client registerOnEventCountUpdate:^(NSUInteger eventCount, NSURLRequest * _Nullable request, NSError * _Nullable error) {
         [[[weakSelf blockCounter] eventCount] addObject:[NSNumber numberWithUnsignedInteger:eventCount]];
-    } onGenerateTelemetryEvent:^{
+    }];
+    [client registerOnGenerateTelemetryEvent:^{
         __strong __typeof__(weakSelf) strongSelf = weakSelf;
         if (strongSelf) {
             strongSelf.blockCounter.generateTelemetry += 1;
@@ -258,17 +272,21 @@
     __weak __typeof__(self) weakSelf = self;
     MMEAPIClient* client = [[MMEAPIClient alloc] initWithConfig:eventConfig
                                                  requestFactory: [[MMENSURLRequestFactory alloc] initWithConfig:eventConfig]
-                                                        session:session
-                                           onSerializationError:^(NSError * _Nonnull error) {
+                                                        session:session];
 
+    [client registerOnSerializationErrorListener:^(NSError * _Nonnull error) {
         [[[weakSelf blockCounter] onSerializationErrors] addObject:error];
-    } onURLResponse:^(NSData * _Nullable data, NSURLRequest * _Nonnull request, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+    }];
+    [client registerOnURLResponseListener:^(NSData * _Nullable data, NSURLRequest * _Nonnull request, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         [[[weakSelf blockCounter] onURLResponses] addObject:request];
-    } onEventQueueUpdate:^(NSArray * _Nonnull eventQueue) {
+    }];
+    [client registerOnEventQueueUpdate:^(NSArray * _Nonnull eventQueue) {
         [[[weakSelf blockCounter] eventQueue] addObject:eventQueue];
-    } onEventCountUpdate:^(NSUInteger eventCount, NSURLRequest * _Nullable request, NSError * _Nullable error) {
+    }];
+    [client registerOnEventCountUpdate:^(NSUInteger eventCount, NSURLRequest * _Nullable request, NSError * _Nullable error) {
         [[[weakSelf blockCounter] eventCount] addObject:[NSNumber numberWithUnsignedInteger:eventCount]];
-    } onGenerateTelemetryEvent:^{
+    }];
+    [client registerOnGenerateTelemetryEvent:^{
         __strong __typeof__(weakSelf) strongSelf = weakSelf;
         if (strongSelf) {
             strongSelf.blockCounter.generateTelemetry += 1;

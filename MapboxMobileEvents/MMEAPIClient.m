@@ -21,12 +21,13 @@
 // Factory for building URLRequests with shared components provided by Config
 @property (nonatomic, strong) MMENSURLRequestFactory *requestFactory;
 
-// Metrics and statistics gathering hooks (Likely eligible to move to a private hader)
-@property (nonatomic, copy) OnSerializationError onSerializationError;
-@property (nonatomic, copy) OnURLResponse onURLResponse;
-@property (nonatomic, copy) OnEventQueueUpdate onEventQueueUpdate;
-@property (nonatomic, copy) OnEventCountUpdate onEventCountUpdate;
-@property (nonatomic, copy) OnGenerateTelemetryEvent onGenerateTelemetryEvent;
+// Event Inspection Hooks
+@property (nonatomic, strong) NSMutableArray<OnSerializationError>* onSerializationErrorListeners;
+@property (nonatomic, strong) NSMutableArray<OnURLResponse>* onUrlResponseListeners;
+@property (nonatomic, strong) NSMutableArray<OnEventQueueUpdate>* onEventQueueUpdateListeners;
+@property (nonatomic, strong) NSMutableArray<OnEventCountUpdate>* onEventCountUpdateListeners;
+@property (nonatomic, strong) NSMutableArray<OnGenerateTelemetryEvent>* onGenerateTelemetryEventListeners;
+
 @end
 
 int const kMMEMaxRequestCount = 1000;
@@ -58,57 +59,16 @@ int const kMMEMaxRequestCount = 1000;
                 requestFactory:(MMENSURLRequestFactory*)requestFactory
                        session:(MMENSURLSessionWrapper*)session {
 
-    return [self initWithConfig:config
-                 requestFactory:requestFactory
-                        session:session
-           onSerializationError:^(NSError * _Nonnull error) {}
-                  onURLResponse:^(NSData * _Nullable data, NSURLRequest * _Nonnull request, NSURLResponse * _Nullable response, NSError * _Nullable error) {} onEventQueueUpdate:^(NSArray * _Nonnull eventQueue) {}
-             onEventCountUpdate:^(NSUInteger eventCount, NSURLRequest * _Nullable request, NSError * _Nullable error) {} onGenerateTelemetryEvent:^{}];
-}
-
-/// Initializer with Default Request Feactory
-- (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config
-          onSerializationError:(OnSerializationError)onSerializationError
-                 onURLResponse:(OnURLResponse)onURLResponse
-            onEventQueueUpdate: (OnEventQueueUpdate)onEventQueueUpdate
-            onEventCountUpdate: (OnEventCountUpdate)onEventCountUpdate
-      onGenerateTelemetryEvent: (OnGenerateTelemetryEvent)onGenerateTelemetryEvent {
-
-    NSURLSessionConfiguration* sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    MMENSURLSessionWrapper* session = [[MMENSURLSessionWrapper alloc] initWithSessionConfiguration:sessionConfiguration
-                                                                                eventConfiguration:config];
-    
-    return [self initWithConfig:config
-                 requestFactory:[[MMENSURLRequestFactory alloc] initWithConfig:config]
-                        session:session
-           onSerializationError:onSerializationError
-                  onURLResponse:onURLResponse
-             onEventQueueUpdate:onEventQueueUpdate
-             onEventCountUpdate:onEventCountUpdate
-       onGenerateTelemetryEvent:onGenerateTelemetryEvent];
-
-}
-
-/// Designated Initializer containing all dependencies
-- (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config
-                requestFactory:(MMENSURLRequestFactory*)requestFactory
-                       session:(MMENSURLSessionWrapper*)session
-          onSerializationError:(OnSerializationError)onSerializationError
-                 onURLResponse:(OnURLResponse)onURLResponse
-            onEventQueueUpdate: (OnEventQueueUpdate)onEventQueueUpdate
-            onEventCountUpdate: (OnEventCountUpdate)onEventCountUpdate
-      onGenerateTelemetryEvent: (OnGenerateTelemetryEvent)onGenerateTelemetryEvent {
-
     self = [super init];
     if (self) {
         self.config = config;
         self.requestFactory = requestFactory;
         self.sessionWrapper = session;
-        self.onSerializationError = onSerializationError;
-        self.onURLResponse = onURLResponse;
-        self.onEventQueueUpdate = onEventQueueUpdate;
-        self.onEventCountUpdate = onEventCountUpdate;
-        self.onGenerateTelemetryEvent = onGenerateTelemetryEvent;
+        self.onSerializationErrorListeners = [NSMutableArray array];
+        self.onUrlResponseListeners = [NSMutableArray array];
+        self.onEventQueueUpdateListeners = [NSMutableArray array];
+        self.onEventCountUpdateListeners = [NSMutableArray array];
+        self.onGenerateTelemetryEventListeners = [NSMutableArray array];
     }
     return self;
 }
@@ -133,7 +93,9 @@ int const kMMEMaxRequestCount = 1000;
         if (strongSelf) {
 
             // Report Each URL Response for general Reporting
-            strongSelf.onURLResponse(data, request, response, error);
+            for (OnURLResponse listener in strongSelf.onUrlResponseListeners) {
+                listener(data, request, response, error);
+            }
 
             // Inspect for General Response Reporting
             if (response && [response isKindOfClass:NSHTTPURLResponse.class]) {
@@ -177,7 +139,10 @@ int const kMMEMaxRequestCount = 1000;
 
 - (void)postEvents:(NSArray <MMEEvent*> *)events completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
 
-    self.onEventQueueUpdate(events);
+    // Message Listeners
+    for (OnEventQueueUpdate listener in self.onEventQueueUpdateListeners) {
+        listener(events);
+    }
 
     NSArray *eventBatches = [self batchFromEvents:events];
 
@@ -194,9 +159,12 @@ int const kMMEMaxRequestCount = 1000;
                 __strong __typeof__(weakSelf) strongSelf = weakSelf;
                 if (strongSelf) {
 
-                    // TODO: Is this supposed to track the batch sent? Or the original events array?
-                    // If this is tracking on completion of request, batch would be the appropriate model
-                    strongSelf.onEventCountUpdate(batch.count, request, error);
+
+                    // Message Listeners
+                    for (OnEventCountUpdate listener in self.onEventCountUpdateListeners) {
+                        // TODO: Is this the right count to report? Should this be going down? Reference batch count vs original events array
+                        listener(events.count, request, error);
+                    }
 
                     if (completionHandler) {
                         completionHandler(error);
@@ -207,13 +175,23 @@ int const kMMEMaxRequestCount = 1000;
         }
 
         if (serializationError) {
-            self.onSerializationError(serializationError);
+
+            // Message Listeners
+            for (OnSerializationError listener in self.onSerializationErrorListeners) {
+                listener(serializationError);
+            }
         }
 
-        self.onEventCountUpdate(events.count, nil, nil);
+        // Message Listeners
+        for (OnEventCountUpdate listener in self.onEventCountUpdateListeners) {
+            listener(events.count, nil, nil);
+        }
     }
 
-    self.onGenerateTelemetryEvent();
+    // Message Listeners
+    for (OnGenerateTelemetryEvent listener in self.onGenerateTelemetryEventListeners) {
+        listener();
+    }
 }
 
 // MARK: - Configuration Service
@@ -261,11 +239,21 @@ int const kMMEMaxRequestCount = 1000;
 
             // Error Metric Reporting
             if (decodingError) {
-                strongSelf.onSerializationError(decodingError);
+
+                // Message Listeners
+                for (OnSerializationError listener in strongSelf.onSerializationErrorListeners) {
+                    listener(decodingError);
+                }
             }
 
-            strongSelf.onEventCountUpdate(0, request, error);
-            strongSelf.onGenerateTelemetryEvent();
+            // Message Listeners
+            for (OnEventCountUpdate listener in strongSelf.onEventCountUpdateListeners) {
+                listener(0, request, error);
+            }
+
+            for (OnGenerateTelemetryEvent listener in strongSelf.onGenerateTelemetryEventListeners) {
+                listener();
+            }
 
             completion(config, decodingError);
         }
@@ -293,8 +281,14 @@ int const kMMEMaxRequestCount = 1000;
         __strong __typeof__(weakSelf) strongSelf = weakSelf;
         if (strongSelf) {
 
-            strongSelf.onEventCountUpdate(filePaths.count, request, error);
-            strongSelf.onGenerateTelemetryEvent();
+            // Message Listeners
+            for (OnEventCountUpdate listener in strongSelf.onEventCountUpdateListeners) {
+                listener(0, request, error);
+            }
+
+            for (OnGenerateTelemetryEvent listener in strongSelf.onGenerateTelemetryEventListeners) {
+                listener();
+            }
 
             if (completionHandler) {
                 completionHandler(error);
@@ -333,7 +327,10 @@ int const kMMEMaxRequestCount = 1000;
         [httpBody appendData:jsonData];
         [httpBody appendData:[[NSString stringWithFormat:@"\r\n\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
     } else if (jsonError) {
-        self.onSerializationError(jsonError);
+        // Message Listeners
+        for (OnSerializationError listener in self.onSerializationErrorListeners) {
+            listener(jsonError);
+        }
     }
 
     for (NSString *path in filePaths) { // add a file part for each
@@ -351,6 +348,34 @@ int const kMMEMaxRequestCount = 1000;
     [httpBody appendData:[[NSString stringWithFormat:@"--%@--\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
     
     return httpBody;
+}
+
+// MARK: - Observation Hooks (Logging/Metrics)
+
+/*! @brief Block called on deserialization errors */
+- (void)registerOnSerializationErrorListener:(OnSerializationError)onSerializationError {
+    [self.onSerializationErrorListeners addObject:[onSerializationError copy]];
+}
+
+/*! @brief Block called on url responses  */
+- (void)registerOnURLResponseListener:(OnURLResponse)onURLResponse {
+    [self.onUrlResponseListeners addObject:[onURLResponse copy]];
+}
+
+/*! @brief Block called on EventQueue updates  */
+- (void)registerOnEventQueueUpdate:(OnEventQueueUpdate)onEventQueueUpdate {
+    [self.onEventQueueUpdateListeners addObject:[onEventQueueUpdate copy]];
+}
+
+/*! @brief Block called on EventCount Udpates  */
+- (void)registerOnEventCountUpdate:(OnEventCountUpdate)onEventCountUpdate {
+    [self.onEventCountUpdateListeners addObject:[onEventCountUpdate copy]];
+
+}
+
+/*! @brief Block called on Generation of Telemetry Events  */
+- (void)registerOnGenerateTelemetryEvent:(OnGenerateTelemetryEvent)onGenerateTelemetryEvent {
+    [self.onGenerateTelemetryEventListeners addObject:[onGenerateTelemetryEvent copy]];
 }
 
 @end
