@@ -15,6 +15,7 @@ void mme_linkUIKitCategories();
 
 @interface UIDevice (MMEMobileEvents)
 
+/*! @brief Mapbox DeviceOrientation Value*/
 - (NSString *)mme_deviceOrientation;
 
 @end
@@ -23,12 +24,20 @@ void mme_linkUIKitCategories();
 
 @interface UIApplication (MMEMobileEvents)
 
+/*! @brief Convenience ContentSizeScale for Application */
 - (NSInteger)mme_contentSizeScale;
+
+/*! @brief Content SizeScale for category*/
+- (NSInteger)mme_contentSizeScaleFor:(UIContentSizeCategory)category;
 
 @end
 
 @interface NSExtensionContext (MMEMobileEvents)
 
+/*! @brief Content Size Scale for UIDevice (Useful for determining sizing for Extensions */
++ (NSInteger)mme_contentSizeForTraitCollection:(UITraitCollection*)traitCollection;
+
+/*! @brief Content SizeScale for category defaulting to UIDevice's traits  */
 + (NSInteger)mme_contentSizeScale;
 
 @end

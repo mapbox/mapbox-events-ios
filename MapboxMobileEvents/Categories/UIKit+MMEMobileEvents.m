@@ -47,74 +47,75 @@ void mme_linkUIKitCategories(){}
 
 @implementation UIApplication (MMEMobileEvents)
 
-- (NSInteger)mme_contentSizeScale {
+- (NSInteger)mme_contentSizeScaleFor:(UIContentSizeCategory)category {
     NSInteger result = -9999;
 
-    NSString *sc = self.preferredContentSizeCategory;
-
-    if ([sc isEqualToString:UIContentSizeCategoryExtraSmall]) {
+    if ([category isEqualToString:UIContentSizeCategoryExtraSmall]) {
         result = -3;
-    } else if ([sc isEqualToString:UIContentSizeCategorySmall]) {
+    } else if ([category isEqualToString:UIContentSizeCategorySmall]) {
         result = -2;
-    } else if ([sc isEqualToString:UIContentSizeCategoryMedium]) {
+    } else if ([category isEqualToString:UIContentSizeCategoryMedium]) {
         result = -1;
-    } else if ([sc isEqualToString:UIContentSizeCategoryLarge]) {
+    } else if ([category isEqualToString:UIContentSizeCategoryLarge]) {
         result = 0;
-    } else if ([sc isEqualToString:UIContentSizeCategoryExtraLarge]) {
+    } else if ([category isEqualToString:UIContentSizeCategoryExtraLarge]) {
         result = 1;
-    } else if ([sc isEqualToString:UIContentSizeCategoryExtraExtraLarge]) {
+    } else if ([category isEqualToString:UIContentSizeCategoryExtraExtraLarge]) {
         result = 2;
-    } else if ([sc isEqualToString:UIContentSizeCategoryExtraExtraExtraLarge]) {
+    } else if ([category isEqualToString:UIContentSizeCategoryExtraExtraExtraLarge]) {
         result = 3;
-    } else if ([sc isEqualToString:UIContentSizeCategoryAccessibilityMedium]) {
-        result = -11;
-    } else if ([sc isEqualToString:UIContentSizeCategoryAccessibilityLarge]) {
+    } else if ([category isEqualToString:UIContentSizeCategoryAccessibilityMedium]) {
+        result = 9;
+    } else if ([category isEqualToString:UIContentSizeCategoryAccessibilityLarge]) {
         result = 10;
-    } else if ([sc isEqualToString:UIContentSizeCategoryAccessibilityExtraLarge]) {
+    } else if ([category isEqualToString:UIContentSizeCategoryAccessibilityExtraLarge]) {
         result = 11;
-    } else if ([sc isEqualToString:UIContentSizeCategoryAccessibilityExtraExtraLarge]) {
+    } else if ([category isEqualToString:UIContentSizeCategoryAccessibilityExtraExtraLarge]) {
         result = 12;
-    } else if ([sc isEqualToString:UIContentSizeCategoryAccessibilityExtraExtraExtraLarge]) {
+    } else if ([category isEqualToString:UIContentSizeCategoryAccessibilityExtraExtraExtraLarge]) {
         result = 13;
     }
 
     return result;
 }
 
+- (NSInteger)mme_contentSizeScale {
+    return [self mme_contentSizeScaleFor:self.preferredContentSizeCategory];
+}
+
 @end
 
 @implementation NSExtensionContext (MMEMobileEvents)
 
-+ (NSInteger)mme_contentSizeScale {
-
++ (NSInteger)mme_contentSizeForTraitCollection:(UITraitCollection*)traitCollection {
     NSInteger result = -9999;
 
     if (@available(iOS 10, *)) {
-        NSString *sc = UIScreen.mainScreen.traitCollection.preferredContentSizeCategory;
+        NSString *category = traitCollection.preferredContentSizeCategory;
 
-        if ([sc isEqualToString:UIContentSizeCategoryExtraSmall]) {
+        if ([category isEqualToString:UIContentSizeCategoryExtraSmall]) {
             result = -3;
-        } else if ([sc isEqualToString:UIContentSizeCategorySmall]) {
+        } else if ([category isEqualToString:UIContentSizeCategorySmall]) {
             result = -2;
-        } else if ([sc isEqualToString:UIContentSizeCategoryMedium]) {
+        } else if ([category isEqualToString:UIContentSizeCategoryMedium]) {
             result = -1;
-        } else if ([sc isEqualToString:UIContentSizeCategoryLarge]) {
+        } else if ([category isEqualToString:UIContentSizeCategoryLarge]) {
             result = 0;
-        } else if ([sc isEqualToString:UIContentSizeCategoryExtraLarge]) {
+        } else if ([category isEqualToString:UIContentSizeCategoryExtraLarge]) {
             result = 1;
-        } else if ([sc isEqualToString:UIContentSizeCategoryExtraExtraLarge]) {
+        } else if ([category isEqualToString:UIContentSizeCategoryExtraExtraLarge]) {
             result = 2;
-        } else if ([sc isEqualToString:UIContentSizeCategoryExtraExtraExtraLarge]) {
+        } else if ([category isEqualToString:UIContentSizeCategoryExtraExtraExtraLarge]) {
             result = 3;
-        } else if ([sc isEqualToString:UIContentSizeCategoryAccessibilityMedium]) {
-            result = -11;
-        } else if ([sc isEqualToString:UIContentSizeCategoryAccessibilityLarge]) {
+        } else if ([category isEqualToString:UIContentSizeCategoryAccessibilityMedium]) {
+            result = 9;
+        } else if ([category isEqualToString:UIContentSizeCategoryAccessibilityLarge]) {
             result = 10;
-        } else if ([sc isEqualToString:UIContentSizeCategoryAccessibilityExtraLarge]) {
+        } else if ([category isEqualToString:UIContentSizeCategoryAccessibilityExtraLarge]) {
             result = 11;
-        } else if ([sc isEqualToString:UIContentSizeCategoryAccessibilityExtraExtraLarge]) {
+        } else if ([category isEqualToString:UIContentSizeCategoryAccessibilityExtraExtraLarge]) {
             result = 12;
-        } else if ([sc isEqualToString:UIContentSizeCategoryAccessibilityExtraExtraExtraLarge]) {
+        } else if ([category isEqualToString:UIContentSizeCategoryAccessibilityExtraExtraExtraLarge]) {
             result = 13;
         }
     } else {
@@ -122,6 +123,10 @@ void mme_linkUIKitCategories(){}
     }
 
     return result;
+}
+
++ (NSInteger)mme_contentSizeScale {
+    return [self mme_contentSizeForTraitCollection:UIScreen.mainScreen.traitCollection];
 }
 
 @end
