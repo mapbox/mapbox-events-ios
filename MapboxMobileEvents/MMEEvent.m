@@ -415,9 +415,8 @@
     return [MMEEvent eventWithAttributes:attributes];
 }
 
-/*! Convenience MapLoad Event Iniitalizer */
-+ (instancetype)mapLoadEventWithCreatedDate:(NSDate *)createdDate {
-
++ (instancetype)mapLoadEvent {
+    NSDate *createdDate = NSDate.new;
 #if TARGET_OS_IOS || TARGET_OS_TVOS
     NSNumber* fontScale = nil;
 
@@ -431,19 +430,19 @@
 
     // Fallthrough to Designated Initializer
     return [self mapLoadEventWithCreatedDate:createdDate
-                                vendorID:NSProcessInfo.mme_vendorId
-                             deviceModel:NSProcessInfo.mme_deviceModel
-                               operatingSystem:NSProcessInfo.mme_osVersion
-                             screenScale: @(NSProcessInfo.mme_screenScale)
+                                    vendorID:NSProcessInfo.mme_vendorId
+                                 deviceModel:NSProcessInfo.mme_deviceModel
+                             operatingSystem:NSProcessInfo.mme_osVersion
+                                 screenScale: @(NSProcessInfo.mme_screenScale)
 #if TARGET_OS_IOS || TARGET_OS_TVOS
 
-                               fontScale:fontScale
-                       deviceOrientation:UIDevice.currentDevice.mme_deviceOrientation
+                                   fontScale:fontScale
+                           deviceOrientation:UIDevice.currentDevice.mme_deviceOrientation
 #else
-                               fontScale:nil
-                       deviceOrientation:nil
+                                   fontScale:nil
+                           deviceOrientation:nil
 #endif
-                      isReachableViaWiFi:MMEReachability.reachabilityForLocalWiFi.isReachableViaWiFi];
+                          isReachableViaWiFi:MMEReachability.reachabilityForLocalWiFi.isReachableViaWiFi];
 }
 
 /*! Deprecated Convenience MapLoad Event Iniitalizer */
@@ -490,7 +489,9 @@
 }
 
 /*! @Brief Convenience Map TapEvent Initializer*/
-+(instancetype)mapTapEventWithCreatedDate:(NSDate*)createdDate {
++(instancetype)mapTapEvent {
+
+    NSDate *createdDate = NSDate.new;
 
     NSString* deviceOrientation = nil;
 #if TARGET_OS_IOS || TARGET_OS_TVOS
@@ -535,8 +536,9 @@
 }
 
 /*! @Brief Convenience MapDrag Event Initializer*/
-+(instancetype)mapDragEndEventWithCreatedDate:(NSDate*)createdDate {
++(instancetype)mapDragEndEvent {
 
+    NSDate *createdDate = NSDate.new;
     NSString* deviceOrientation = nil;
 #if TARGET_OS_IOS || TARGET_OS_TVOS
     deviceOrientation = UIDevice.currentDevice.mme_deviceOrientation;

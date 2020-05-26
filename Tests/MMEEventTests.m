@@ -289,10 +289,9 @@
 // MARK: - MapLoad Event
 
 -(void)testConvenienceInitMapLoadEvent {
-    NSDate *date = [NSDate date];
-    MMEEvent *event = [MMEEvent mapLoadEventWithCreatedDate:date];
+    MMEEvent *event = [MMEEvent mapLoadEvent];
 
-    XCTAssertEqualObjects(event.attributes[@"created"], [MMEDate.iso8601DateFormatter stringFromDate:date]);
+    XCTAssertNotNil(event.attributes[@"created"]);
     XCTAssertEqualObjects(event.attributes[@"event"], @"map.load");
 }
 
@@ -325,9 +324,8 @@
 // MARK: - MapTap Event
 
 -(void)testMapTapEventConvenienceInit {
-    NSDate *date = [NSDate dateWithTimeIntervalSince1970:0];
-    MMEEvent *event = [MMEEvent mapTapEventWithCreatedDate:date];
-    XCTAssertEqualObjects(event.attributes[@"created"], [MMEDate.iso8601DateFormatter stringFromDate:date]);
+    MMEEvent *event = [MMEEvent mapTapEvent];
+    XCTAssertNotNil(event.attributes[@"created"]);
     XCTAssertEqualObjects(event.attributes[@"event"], @"map.click");
 }
 
@@ -351,9 +349,8 @@
 // MARK: - MapDragEndEvent
 
 -(void)testMapDragEndEventConvenienceInit {
-    NSDate *date = [NSDate dateWithTimeIntervalSince1970:0];
-    MMEEvent *event = [MMEEvent mapDragEndEventWithCreatedDate:date];
-    XCTAssertEqualObjects(event.attributes[@"created"], [MMEDate.iso8601DateFormatter stringFromDate:date]);
+    MMEEvent *event = [MMEEvent mapDragEndEvent];
+    XCTAssertNotNil(event.attributes[@"created"]);
     XCTAssertEqualObjects(event.attributes[@"event"], @"map.dragend");
 }
 

@@ -150,11 +150,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 /*!
  @Brief Convenience MapLoad Event Iniitalizer
- @param createdDate Creation Date
- @returns Initialized MapLoadEvent
+ @returns Initialized MapLoadEvent with inferred defaults
  */
-+ (instancetype)mapLoadEventWithCreatedDate:(NSDate *)createdDate;
-
++ (instancetype)mapLoadEvent;
 
 /*!
  @Brief Designated MapTapEvent Initializer
@@ -169,10 +167,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 /*!
  @Brief Convenience Map TapEvent Initializer
- @param createdDate Date event was created
- @returns Initialized MapTapEvent with implicit platform defaults
+ @returns Initialized MapTapEvent with inferred platform defaults
  */
-+(instancetype)mapTapEventWithCreatedDate:(NSDate*)createdDate;
++(instancetype)mapTapEvent;
 
 /*!
  @Brief Designtated MapDragEvent Initializer
@@ -187,10 +184,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 /*!
  @Brief Convenience MapDrag Event Initializer
- @param createdDate Date event was created
  @returns Initialized MapDragEvent with implicit platform defaults
  */
-+(instancetype)mapDragEndEventWithCreatedDate:(NSDate*)createdDate;
++(instancetype)mapDragEndEvent;
 
 /*!
  @Brief Designated Locadtion Event Initializer
