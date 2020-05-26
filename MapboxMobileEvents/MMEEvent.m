@@ -1,7 +1,7 @@
 #import <CommonCrypto/CommonDigest.h>
 #import <CoreLocation/CoreLocation.h>
 #import "MMEEvent.h"
-#import "MMEEventCOnfigProviding.h"
+#import "MMEEventConfigProviding.h"
 #import "MMEConstants.h"
 #import "MMEDate.h"
 #import "MMEEventsManager.h"
