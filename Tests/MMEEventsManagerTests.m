@@ -641,7 +641,7 @@
 -(void)testNoAccessTokenDoesNotPost {
     // Configure Client with
     MMEAPIClientCallCounter* client = [[MMEAPIClientCallCounter alloc] initWithConfig: self.preferences];
-    self.preferences.eventFlushCount = 1;
+    self.preferences.eventFlushCount = 5;
 
     [self.eventsManager startEventsManagerWithToken:@"access-token"];
 
@@ -654,8 +654,9 @@
 
     [self.eventsManager sendTurnstileEvent];
 
-    // Turnstile events are directly posted, not queued, so there should be nothing queued
-    XCTAssertEqual(self.eventsManager.eventQueue.count, 0);
+    // A turnstile init error results in the queing of an error event
+    XCTAssertEqual(self.eventsManager.eventQueue.count, 1);
+    XCTAssertEqualObjects(self.eventsManager.eventQueue.firstObject.name, @"mobile.crash");
     XCTAssertEqual(client.postEventsCount, 0);
     XCTAssertEqual(client.performRequestCount, 0);
 }
@@ -663,7 +664,7 @@
 -(void)testNoUserAgentBaseDoesNotPost {
     // Configure Client with
     MMEAPIClientCallCounter* client = [[MMEAPIClientCallCounter alloc] initWithConfig: self.preferences];
-    self.preferences.eventFlushCount = 1;
+    self.preferences.eventFlushCount = 5;
 
     [self.eventsManager startEventsManagerWithToken:@"access-token"];
 
@@ -676,8 +677,9 @@
 
     [self.eventsManager sendTurnstileEvent];
 
-    // Turnstile events are directly posted, not queued, so there should be nothing queued
-    XCTAssertEqual(self.eventsManager.eventQueue.count, 0);
+    // Given Turnstile Event generated an error, an error event should be queued for sending
+    XCTAssertEqual(self.eventsManager.eventQueue.count, 1);
+    XCTAssertEqualObjects(self.eventsManager.eventQueue.firstObject.name, @"mobile.crash");
     XCTAssertEqual(client.postEventsCount, 0);
     XCTAssertEqual(client.performRequestCount, 0);
 }
@@ -685,7 +687,7 @@
 -(void)testNoHostSDKVersionBaseDoesNotPost {
     // Configure Client with
     MMEAPIClientCallCounter* client = [[MMEAPIClientCallCounter alloc] initWithConfig: self.preferences];
-    self.preferences.eventFlushCount = 1;
+    self.preferences.eventFlushCount = 5;
 
     [self.eventsManager startEventsManagerWithToken:@"access-token"];
 
@@ -698,8 +700,9 @@
 
     [self.eventsManager sendTurnstileEvent];
 
-    // Turnstile events are directly posted, not queued, so there should be nothing queued
-    XCTAssertEqual(self.eventsManager.eventQueue.count, 0);
+    // Given Turnstile Event generated an error, an error event should be queued for sending
+    XCTAssertEqual(self.eventsManager.eventQueue.count, 1);
+    XCTAssertEqualObjects(self.eventsManager.eventQueue.firstObject.name, @"mobile.crash");
     XCTAssertEqual(client.postEventsCount, 0);
     XCTAssertEqual(client.performRequestCount, 0);
 }

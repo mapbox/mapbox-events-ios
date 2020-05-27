@@ -427,12 +427,19 @@ NS_ASSUME_NONNULL_BEGIN
             return;
         }
 
+        NSError *error = nil;
         MMEEvent *turnstileEvent = [MMEEvent turnstileEventWithConfiguration:self.preferences
-                                                                       skuID:self.uniqueIdentifer.rollingInstanceIdentifer];
+                                                                       skuID:self.uniqueIdentifer.rollingInstanceIdentifer
+                                                                       error:&error];
+        // Report any Initialization Failures (eg. Missing Prerequisites)
+        if (error) {
+             [self reportError:error];
+        }
 
         if (!turnstileEvent){
             return;
         }
+
         MMELog(MMELogInfo, MMEDebugEventTypeTurnstile, ([NSString stringWithFormat:@"Sending turnstile event: %@, instance: %@",
             turnstileEvent , self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
 

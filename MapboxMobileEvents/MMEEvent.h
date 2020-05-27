@@ -67,9 +67,11 @@ NS_ASSUME_NONNULL_BEGIN
  @Brief Convenience initializer for TurnstileEvent
  @param config SDK state provoding model
  @param skuID Active SKU Identifier to add to event
+ @param error Error Reference for feedback on any missing requirements to initialize
  */
 + (nullable instancetype)turnstileEventWithConfiguration:(id <MMEEventConfigProviding>)config
-                                          skuID:(nullable NSString*)skuID;
+                                          skuID:(nullable NSString*)skuID
+                                                   error:(NSError**)error;
 
 
 /*!

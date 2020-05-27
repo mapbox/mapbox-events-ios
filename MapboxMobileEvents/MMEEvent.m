@@ -88,29 +88,68 @@
 
 /*! TurnstileEvent Convenience Initializer */
 + (nullable instancetype)turnstileEventWithConfiguration:(id <MMEEventConfigProviding>)config
-                                          skuID:(nullable NSString*)skuID {
+                                                   skuID:(nullable NSString*)skuID
+                                                   error:(NSError**)error {
 
     if (!config.accessToken) {
         MMELog(MMELogInfo, MMEDebugEventTypeTurnstileFailed, ([NSString stringWithFormat:@"No access token sent - can not send turntile event, instance: %@",
                                                                skuID ?: @"nil"]));
+
+        NSError *missingRequirementError = [NSError errorWithDomain:MMEErrorDomain
+                                                          code:MMEErrorEventInitInvalid
+                                                      userInfo:@{
+                                                          NSLocalizedDescriptionKey: @"Turnstile event unable to initialize due to missing accessToken"
+
+                                                      }
+                                       ];
+        *error = missingRequirementError;
         return nil;
     }
 
     if (!NSProcessInfo.mme_vendorId) {
         MMELog(MMELogInfo, MMEDebugEventTypeTurnstileFailed, ([NSString stringWithFormat:@"No vendor id available - can not send turntile event, instance: %@",
                                                                skuID ?: @"nil"]));
+
+        NSError *missingRequirementError = [NSError errorWithDomain:MMEErrorDomain
+                                                               code:MMEErrorEventInitInvalid
+                                                           userInfo:@{
+                                                               NSLocalizedDescriptionKey: @"Turnstile event unable to initialize due to missing accessToken"
+
+                                                           }
+                                            ];
+        *error = missingRequirementError;
         return nil;
     }
 
     if (!NSProcessInfo.mme_deviceModel) {
         MMELog(MMELogInfo, MMEDebugEventTypeTurnstileFailed, ([NSString stringWithFormat:@"No model available - can not send turntile event, instance: %@",
                                                                skuID ?: @"nil"]));
+
+        NSError *missingRequirementError = [NSError errorWithDomain:MMEErrorDomain
+                                                               code:MMEErrorEventInitInvalid
+                                                           userInfo:@{
+                                                               NSLocalizedDescriptionKey: @"Turnstile event unable to initialize due to missing device model"
+
+                                                           }
+                                            ];
+        *error = missingRequirementError;
+
         return nil;
     }
 
     if (!NSProcessInfo.mme_osVersion) {
         MMELog(MMELogInfo, MMEDebugEventTypeTurnstileFailed, ([NSString stringWithFormat:@"No iOS version available - can not send turntile event, instance: %@",
                                                                skuID ?: @"nil"]));
+
+        NSError *missingRequirementError = [NSError errorWithDomain:MMEErrorDomain
+                                                               code:MMEErrorEventInitInvalid
+                                                           userInfo:@{
+                                                               NSLocalizedDescriptionKey: @"Turnstile event unable to initialize due to missing OS Version"
+
+                                                           }
+                                            ];
+        *error = missingRequirementError;
+
         return nil;
     }
 
@@ -118,6 +157,16 @@
     if (!config.legacyUserAgentBase) {
         MMELog(MMELogInfo, MMEDebugEventTypeTurnstileFailed, ([NSString stringWithFormat:@"No user agent base set - can not send turntile event, instance: %@",
                                                                skuID ?: @"nil"]));
+
+        NSError *missingRequirementError = [NSError errorWithDomain:MMEErrorDomain
+                                                               code:MMEErrorEventInitInvalid
+                                                           userInfo:@{
+                                                               NSLocalizedDescriptionKey: @"Turnstile event unable to initialize due to missing user agent base"
+
+                                                           }
+                                            ];
+        *error = missingRequirementError;
+
         return nil;
     }
 
@@ -125,6 +174,16 @@
     if (!config.legacyHostSDKVersion) {
         MMELog(MMELogInfo, MMEDebugEventTypeTurnstileFailed, ([NSString stringWithFormat:@"No host SDK version set - can not send turntile event, instance: %@",
                                                                skuID ?: @"nil"]));
+
+        NSError *missingRequirementError = [NSError errorWithDomain:MMEErrorDomain
+                                                               code:MMEErrorEventInitInvalid
+                                                           userInfo:@{
+                                                               NSLocalizedDescriptionKey: @"Turnstile event unable to initialize due to missing host SDK version"
+
+                                                           }
+                                            ];
+        *error = missingRequirementError;
+
         return nil;
     }
 

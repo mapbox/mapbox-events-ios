@@ -237,7 +237,8 @@
     }];
 
     XCTestExpectation *expectation = [self expectationWithDescription:@"Post Event"];
-    MMEEvent* event = [MMEEvent turnstileEventWithConfiguration:eventConfig skuID:nil];
+    NSError *error = nil;
+    MMEEvent* event = [MMEEvent turnstileEventWithConfiguration:eventConfig skuID:nil error: &error];
 
     [client postEvent:event completionHandler:^(NSError * _Nullable error) {
         XCTAssertNil(error);

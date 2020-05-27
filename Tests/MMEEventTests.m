@@ -373,7 +373,8 @@
 
 -(void)testTurnstileEventConvenienceInit {
     MMEMockEventConfig *config = MMEMockEventConfig.oneSecondConfigUpdate;
-    MMEEvent *event = [MMEEvent turnstileEventWithConfiguration:config skuID:nil];
+    NSError *error = nil;
+    MMEEvent *event = [MMEEvent turnstileEventWithConfiguration:config skuID:nil error: &error];
     XCTAssertNotNil(event);
     XCTAssertEqualObjects(event.attributes[@"event"], @"appUserTurnstile");
     XCTAssertEqualObjects(event.attributes[@"skuId"], NSNull.null);
@@ -383,20 +384,27 @@
 -(void)testTurnstileEventInitNullableMissingAccessToken {
     MMEMockEventConfig *config = MMEMockEventConfig.oneSecondConfigUpdate;
     config.accessToken = nil;
-    XCTAssertNil([MMEEvent turnstileEventWithConfiguration:config skuID:nil]);
+    NSError *error = nil;
+    MMEEvent *event = [MMEEvent turnstileEventWithConfiguration:config skuID:nil error: &error];
+    XCTAssertNil(event);
+    XCTAssertNotNil(error);
 }
 
 -(void)testTurnstileEventInitNullableMissingLegacyUserAgentBase {
     MMEMockEventConfig *config = MMEMockEventConfig.oneSecondConfigUpdate;
     config.legacyUserAgentBase = nil;
-    XCTAssertNil([MMEEvent turnstileEventWithConfiguration:config skuID:nil]);
-}
+    NSError *error = nil;
+    MMEEvent *event = [MMEEvent turnstileEventWithConfiguration:config skuID:nil error: &error];
+    XCTAssertNil(event);
+    XCTAssertNotNil(error);}
 
 -(void)testTurnstileEventInitNullableMissingLegacyHostSDKVersion {
     MMEMockEventConfig *config = MMEMockEventConfig.oneSecondConfigUpdate;
     config.legacyHostSDKVersion = nil;
-    XCTAssertNil([MMEEvent turnstileEventWithConfiguration:config skuID:nil]);
-}
+    NSError *error = nil;
+    MMEEvent *event = [MMEEvent turnstileEventWithConfiguration:config skuID:nil error: &error];
+    XCTAssertNil(event);
+    XCTAssertNotNil(error);}
 
 -(void)testTurnstileEventInit {
     NSDate *date = [NSDate dateWithTimeIntervalSince1970:0];
