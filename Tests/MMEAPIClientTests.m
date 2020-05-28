@@ -4,6 +4,7 @@
 #import "MMENSURLSessionWrapper.h"
 #import "MMENSURLSessionWrapperFake.h"
 #import "MMEEvent.h"
+#import "MMEEvent+Internal.h"
 #import "CLLocation+Mocks.h"
 #import "MMEConstants.h"
 #import "MMEMetricsManager.h"

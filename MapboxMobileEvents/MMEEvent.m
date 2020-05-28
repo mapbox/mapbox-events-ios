@@ -13,7 +13,6 @@
 
 #import "NSProcessInfo+SystemInfo.h"
 
-//#import "NSUserDefaults+MMEConfiguration.h"
 #if TARGET_OS_IOS || TARGET_OS_TVOS
 #import "UIKit+MMEMobileEvents.h"
 #import "NSBundle+MMEMobileEvents.h"
@@ -23,7 +22,6 @@
 @interface MMEEvent ()
 @property(nonatomic) MMEDate *dateStorage;
 @property(nonatomic) NSDictionary *attributesStorage;
-
 @end
 
 // MARK: -

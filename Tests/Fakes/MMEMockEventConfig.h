@@ -1,6 +1,6 @@
 #import <Foundation/Foundation.h>
-#import "MMEEventConfigProviding.h"
 #import <CoreLocation/CLLocation.h>
+#import "MMEEventConfigProviding.h"
 
 @class MMEDate;
 

@@ -15,7 +15,7 @@
 #import "MMEAPIClient_Private.h"
 #import "MMEConstants.h"
 #import "MMEDate.h"
-#import "MMEEvent.h"
+#import "MMEEvent+Internal.h"
 #import "MMELogger.h"
 #import "MMELocationManager.h"
 #import "MMEMetricsManager.h"

@@ -2,6 +2,7 @@
 #import "MMEMockEventConfig.h"
 #import "MMENSURLRequestFactory.h"
 #import "MMEEvent.h"
+#import "MMEEvent+Internal.h"
 
 @interface MMENSURLRequestFactoryTests : XCTestCase
 @property (nonatomic, strong) MMENSURLRequestFactory* factory;

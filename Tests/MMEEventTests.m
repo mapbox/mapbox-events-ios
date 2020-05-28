@@ -1,12 +1,12 @@
 #import <XCTest/XCTest.h>
-
-#import "MMEEvent.h"
 #import "MMEEventFake.h"
 #import "MMEExceptionalDictionary.h"
 #import "MMEDate.h"
 #import "CLLocation+Mocks.h"
 #import "MMEMockEventConfig.h"
 #import "MockVisit.h"
+#import "MMEEvent+Internal.h"
+
 
 @interface MMEEvent (Tests)
 + (NSDictionary *)nilAttributes;

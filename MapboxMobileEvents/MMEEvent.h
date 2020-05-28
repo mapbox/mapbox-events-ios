@@ -1,12 +1,11 @@
-@import Foundation;
-
+#import <Foundation/Foundation.h>
 #import <MapboxMobileEvents/MMETypes.h>
-#import "MMEEventConfigProviding.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @class MMECommonEventData;
 @class CLLocation;
+@class CLVisit;
 
 /// represents a telemetry event, with a name, date and attributes
 @interface MMEEvent : NSObject <NSCopying,NSSecureCoding>
@@ -22,80 +21,35 @@ NS_ASSUME_NONNULL_BEGIN
 
 // MARK: -
 
-/**
-  Create a new Event
-
-  Designated Initilizer
-  
-  - Parameters:
-    - eventAttributes: attributes of the event
-    - error: present if the event could not be created with the properties provided
-    
-  - Returns: a new event with the date, name and attributes provided
-*/
+/*!
+ @Brief Event Initializer
+ @Discussion Initilization errors are reported to the EventsManagerDelegate if `error` is `nil`
+ @param eventAttributes Dictionary of KeyValues representing the event
+ @param error Error reference for init failure feedback
+ @returns A new event
+ */
 - (instancetype)initWithAttributes:(NSDictionary *)eventAttributes error:(NSError **)error NS_DESIGNATED_INITIALIZER;
 
 // MARK: - Generic Events
 
-/**
-  Create a new Event
-  
-  Initilization errors are reported to the EventsManagerDelegate
-  
-  - Parameter attributes: attrs
-  
-  - Returns: a new event
-*/
+/*!
+ @Brief Convenience Event Initializer
+ @Discussion Initilization errors are reported to the EventsManagerDelegate if `error` is `nil`
+ @param attributes Dictionary of KeyValues representing the event
+ @returns A new event
+ */
 + (instancetype)eventWithAttributes:(NSDictionary *)attributes;
 
-/**
-  Create a new Event
-
-  Initilization errors are reported to the EventsManagerDelegate if `error` is `nil`
-
-  - Paramaters:
-    - attributes: attrs
-    - error: present if the event could not be created with the properties provided
-
-  - Returns: a new event
-*/
+/*!
+ @Brief Convenience Event Initializer
+ @Discussion Initilization errors are reported to the EventsManagerDelegate if `error` is `nil`
+ @param attributes Dictionary of KeyValues representing the event
+ @param error Error reference for init failure feedback
+ @returns A new event
+ */
 + (instancetype)eventWithAttributes:(NSDictionary *)attributes error:(NSError **)error;
 
 // MARK: - Custom Events
-
-/*!
- @Brief Convenience initializer for TurnstileEvent
- @param config SDK state provoding model
- @param skuID Active SKU Identifier to add to event
- @param error Error Reference for feedback on any missing requirements to initialize
- */
-+ (nullable instancetype)turnstileEventWithConfiguration:(id <MMEEventConfigProviding>)config
-                                          skuID:(nullable NSString*)skuID
-                                                   error:(NSError**)error;
-
-
-/*!
- @Brief Convenience initializer for TurnstileEvent
- @param createdDate Creation date for this event
- @param vendorID Vendor's ID
- @param deviceModel Device Model eg. iPhone Xs
- @param operatingSystem Operating System eg. iOS 13.2
- @param sdkIdentifier User Agent Base
- @param sdkVersion Host SDK Version
- @param isTelemetryEnabled TelemetryCollection Enable Status
- @param locationAuthorization Location authorization state
- @param skuID Active SKU Identifier to add to event
- */
-+(instancetype)turnstileEventWithCreatedDate:(NSDate*)createdDate
-                                    vendorID:(NSString*)vendorID
-                                 deviceModel:(NSString*)deviceModel
-                             operatingSystem:(NSString*)operatingSystem
-                               sdkIdentifier:(NSString*)sdkIdentifier
-                                  sdkVersion:(NSString*)sdkVersion
-                          isTelemetryEnabled:(BOOL)isTelemetryEnabled
-                     locationServicesEnabled:(BOOL)locationServicesEnabled
-                       locationAuthorization:(NSString*)locationAuthorization
-                                       skuID:(nullable NSString*)skuID;
 
 /*!
  @Brief VisitEvent Initializer
@@ -115,6 +69,12 @@ NS_ASSUME_NONNULL_BEGIN
     
   - Returns: a new error event
 */
+/*!
+ @Brief Error Event Initializer
+ @param eventsError Error
+ @param createError Initialization failure feedback reference
+ @returns Initialized VisitEvent
+ */
 + (instancetype)errorEventReporting:(NSError *)eventsError error:(NSError **)createError;
 
 // MARK: - Deprecated
@@ -127,45 +87,12 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)debugEventWithError:(NSError *)error MME_DEPRECATED;
 + (instancetype)debugEventWithException:(NSException *)except MME_DEPRECATED;
 
-// MARK: - Strong Event Models via Convenience Initializers
-
-/*!
- @brief Designated MapLoad Event Iniitalizer
- @param createdDate Created date
- @param vendorID Vendor ID
- @param deviceModel Device Model
- @param operatingSystem Operating System
- @param screenScale Screen Scale
- @param fontScale Font Scale
- @param deviceOrientation Device Orientation as a String
- @param isReachableViaWiFi Wifi Reachability status
- @returns Initialized MapLoadEvent
- */
-+ (instancetype)mapLoadEventWithCreatedDate:(NSDate*)createdDate
-                               vendorID:(NSString*)vendorID
-                            deviceModel:(NSString*)deviceModel
-                            operatingSystem:(NSString*)operatingSystem
-                            screenScale:(NSNumber*)screenScale
-                              fontScale:(nullable NSNumber*)fontScale
-                      deviceOrientation:(nullable NSString*)deviceOrientation
-                     isReachableViaWiFi:(BOOL)isReachableViaWiFi;
-
 /*!
  @Brief Convenience MapLoad Event Iniitalizer
  @returns Initialized MapLoadEvent with inferred defaults
  */
 + (instancetype)mapLoadEvent;
 
-/*!
- @Brief Designated MapTapEvent Initializer
- @param createdDate Date event was created
- @param deviceOrientation Optional Device Orientation
- @param isReachableViaWiFi Wifi Reachability Status
- @returns Initialized MapTapEvent
- */
-+(instancetype)mapTapEventWithCreatedDate:(NSDate*)createdDate
-                        deviceOrientation:(nullable NSString*)deviceOrientation
-                       isReachableViaWiFi:(BOOL)isReachableViaWiFi;
 
 /*!
  @Brief Convenience Map TapEvent Initializer
@@ -173,36 +100,12 @@ NS_ASSUME_NONNULL_BEGIN
  */
 +(instancetype)mapTapEvent;
 
-/*!
- @Brief Designtated MapDragEvent Initializer
- @param createdDate Date event was created
- @param deviceOrientation DeviceOrientation
- @param isReachableViaWiFi Wifi Reachability status
- @returns Initialized MapDragEvent
- */
-+ (instancetype)mapDragEndEventWithCreatedDate:(NSDate*)createdDate
-                             deviceOrientation:(nullable NSString*)deviceOrientation
-                            isReachableViaWiFi:(BOOL)isReachableViaWiFi;
 
 /*!
  @Brief Convenience MapDrag Event Initializer
  @returns Initialized MapDragEvent with implicit platform defaults
  */
 +(instancetype)mapDragEndEvent;
-
-/*!
- @Brief Designated Locadtion Event Initializer
- @param identifier Session Identifier
- @param source Source of the reporting
- @param operatingSystem Operating System
- @param applicationState (Optional) UIApplicationState
- @returns Initialized LocationEvent
- */
-+(instancetype)locationEventWithID:(NSString*)identifier
-                          location:(CLLocation*)location
-                            source:(NSString*)source
-                   operatingSystem:(NSString*)operatingSystem
-                  applicationState:(nullable NSString*)applicationState;
 
 /*!
  @Brief Convenience Locadtion Event Initializer

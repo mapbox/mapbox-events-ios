@@ -1,16 +1,16 @@
 #import <XCTest/XCTest.h>
-
 #import "MMEMetricsManager.h"
 #import "MMEEvent.h"
 #import "MMEConstants.h"
 #import "MMELogger.h"
-#import "MMEMockEventConfig.h"
+#import "MMEEventConfigProviding.h"
 #import "NSURL+Files.h"
 #import "MMEMetrics.h"
 #import "MMEDate.h"
 #import "MMEReachability.h"
 #import "MMEEventFake.h"
 #import "CLLocation+Mocks.h"
+#import "MMEMockEventConfig.h"
 
 @interface MMEMetricsManager (Tests)
 
