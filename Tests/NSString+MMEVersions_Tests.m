@@ -1,7 +1,7 @@
 #import <XCTest/XCTest.h>
 
 #import "MMEBundleInfoFake.h"
-
+#import "NSBundle+MMEMobileEvents.h"
 #import "NSString+MMEVersions.h"
 #import "NSUserDefaults+MMEConfiguration_Private.h"
 

@@ -2,7 +2,6 @@
 
 #import "MMELocationManager.h"
 #import "NSUserDefaults+MMEConfiguration.h"
-#import "NSUserDefaults+MMEConfiguration_Private.h"
 #import "MMEMetricsManager.h"
 #import "MMELogger.h"
 #import "MMEMockEventConfig.h"
@@ -29,8 +28,7 @@
 @implementation MMELocationManagerTests
 
 - (void)setUp {
-    [NSUserDefaults mme_resetConfiguration];
-    
+
     self.locationManager = [[CLLocationManager alloc] init];
     MMEMockEventConfig* config = [[MMEMockEventConfig alloc] init];
     self.mme_locationManager = [[MMELocationManager alloc] initWithConfig:config];
@@ -41,7 +39,6 @@
 }
 
 - (void)tearDown {
-    [NSUserDefaults mme_resetConfiguration];
 }
 
 - (void)testLocationManagerStartsMonitoringRegions {

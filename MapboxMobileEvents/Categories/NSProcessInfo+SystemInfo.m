@@ -1,7 +1,7 @@
 #import "NSProcessInfo+SystemInfo.h"
-
+#import "MMEEventsManager.h"
+#import "MMEPreferences.h"
 #import "MMEConstants.h"
-//#import "NSUserDefaults+MMEConfiguration.h"
 
 #if TARGET_OS_IOS || TARGET_OS_TVOS
 #import <UIKit/UIKit.h>
@@ -94,7 +94,7 @@ NSString * const MMEApplicationStateUnknown = @"Unknown";
 #if TARGET_OS_IOS || TARGET_OS_TVOS
     vendorId = UIDevice.currentDevice.identifierForVendor.UUIDString;
 #else
-    vendorId = NSUserDefaults.mme_config.mme_clientId;
+    vendorId = MMEEventsManager.sharedManager.configuration.clientId;
 #endif
     return vendorId;
 }

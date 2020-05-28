@@ -1,4 +1,5 @@
 #import "MMEBundleInfoFake.h"
+#import "NSUserDefaults+MMEConfiguration_Private.h"
 
 @implementation MMEBundleInfoFake
 
@@ -11,6 +12,12 @@
         self.infoDictionaryFake = dictionary;
     }
     return self;
+}
+
+-(instancetype)init {
+    return [self initWithInfoDictionary:@{
+        MMECollectionEnabledInSimulator: @YES
+    }];
 }
 
 - (NSDictionary*) infoDictionary {

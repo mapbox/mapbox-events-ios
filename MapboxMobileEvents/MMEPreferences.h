@@ -62,6 +62,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// Host SDK Version
 @property (nullable, nonatomic, copy) NSString *legacyHostSDKVersion;
 
+/// Unique Identifier for the client
+@property (nonatomic, copy, readonly) NSString *clientId;
+
 /// CN Region Setting
 @property (nonatomic, assign) BOOL isChinaRegion;
 
@@ -112,6 +115,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// The Certificate Pinning config
 @property (nonatomic, copy, readonly) NSDictionary *certificatePinningConfig;
+
+/// Public Keys (For Cert Pinning) */
+- (NSMutableArray<NSString*>*)comPublicKeys;
+
+/// Public Keys (for China) (For Cert Pinning) */
+- (NSMutableArray<NSString*>*)chinaPublicKeys;
 
 // MARK: - Update
 

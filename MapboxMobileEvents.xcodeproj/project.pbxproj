@@ -115,7 +115,7 @@
 		9CA75381240EF2DD005C26C9 /* MMEUniqueIdentifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AE58591EA9373F0046B437 /* MMEUniqueIdentifier.m */; };
 		9CA75382240EF2DD005C26C9 /* NSData+MMEGZIP.m in Sources */ = {isa = PBXBuildFile; fileRef = 40F133511F20051E007B4096 /* NSData+MMEGZIP.m */; };
 		9CA75383240EF2DD005C26C9 /* UIKit+MMEMobileEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C65A28A225D41F2006E3FED /* UIKit+MMEMobileEvents.m */; };
-		9CA75386240EF2DD005C26C9 /* NSUserDefaults+MMEConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = 9CDC34B6234FD35800852FF0 /* NSUserDefaults+MMEConfiguration.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9CA75386240EF2DD005C26C9 /* NSUserDefaults+MMEConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = 9CDC34B6234FD35800852FF0 /* NSUserDefaults+MMEConfiguration.h */; };
 		9CA75387240EF2DD005C26C9 /* MapboxMobileEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = 404807BC1EA186D8008A6D50 /* MapboxMobileEvents.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9CA75388240EF2DD005C26C9 /* MMEConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 40AE58541EA932DB0046B437 /* MMEConstants.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9CA75389240EF2DD005C26C9 /* MMEEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 40AE586B1EA95EDD0046B437 /* MMEEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -141,7 +141,7 @@
 		9CA753A1240EF2DD005C26C9 /* MMEReachability.h in Headers */ = {isa = PBXBuildFile; fileRef = 40F16C941F04514100DF338D /* MMEReachability.h */; };
 		9CA753A2240EF2DD005C26C9 /* MMEAPIClient_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 9C3F930A2351180A00F99907 /* MMEAPIClient_Private.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		9CA753AB241027E6005C26C9 /* MMELoggerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CA753AA241027E6005C26C9 /* MMELoggerTests.m */; };
-		9CDC34B8234FD35800852FF0 /* NSUserDefaults+MMEConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = 9CDC34B6234FD35800852FF0 /* NSUserDefaults+MMEConfiguration.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9CDC34B8234FD35800852FF0 /* NSUserDefaults+MMEConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = 9CDC34B6234FD35800852FF0 /* NSUserDefaults+MMEConfiguration.h */; };
 		9CDC34BB234FD36E00852FF0 /* NSUserDefaults+MMEConfigurationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CDC34BA234FD36E00852FF0 /* NSUserDefaults+MMEConfigurationTests.m */; };
 		9CE132C5235926B3005E23F1 /* MMECertPinTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CF93A66222488A4500BBA199 /* MMECertPinTests.m */; };
 		9CF000402370D674009A2700 /* NSString+MMEVersions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CF0003D2370D674009A2700 /* NSString+MMEVersions.m */; };
@@ -172,7 +172,7 @@
 		ACAF8D2F238DEFD00033745A /* MMEMetricsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = AC86FE1C2169250000D1B89C /* MMEMetricsManager.m */; };
 		ACAF8D31238DF00D0033745A /* NSUserDefaults+MMEConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CDC34B7234FD35800852FF0 /* NSUserDefaults+MMEConfiguration.m */; };
 		ACBD2E5923709F920082F037 /* MMEEventsManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = ACBD2E5823709F920082F037 /* MMEEventsManagerTests.m */; };
-		CA0FAA2C237C80C000C9F3C9 /* NSUserDefaults+MMEConfiguration.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = 9CDC34B6234FD35800852FF0 /* NSUserDefaults+MMEConfiguration.h */; };
+		CA0FAA2C237C80C000C9F3C9 /* NSUserDefaults+MMEConfiguration.h in Sources */ = {isa = PBXBuildFile; fileRef = 9CDC34B6234FD35800852FF0 /* NSUserDefaults+MMEConfiguration.h */; };
 		CF93A6582241EDD500BBA199 /* MMECertPin.m in Sources */ = {isa = PBXBuildFile; fileRef = CF93A6562241EDD500BBA199 /* MMECertPin.m */; };
 		CF93A6592241EDD500BBA199 /* MMECertPin.m in Sources */ = {isa = PBXBuildFile; fileRef = CF93A6562241EDD500BBA199 /* MMECertPin.m */; platformFilter = ios; };
 		CF93A65B2241EDD500BBA199 /* MMECertPin.h in Headers */ = {isa = PBXBuildFile; fileRef = CF93A6572241EDD500BBA199 /* MMECertPin.h */; };
@@ -307,7 +307,6 @@
 			files = (
 				F4626802246E579500E01C83 /* MMEPreferences.h in Copy Headers */,
 				F466B8E3246D11A80056AB21 /* MMEEventConfigProviding.h in Copy Headers */,
-				CA0FAA2C237C80C000C9F3C9 /* NSUserDefaults+MMEConfiguration.h in Copy Headers */,
 				4085966A1ED08FA9003BD29D /* MapboxMobileEvents.h in Copy Headers */,
 				408596DA1ED0BF35003BD29D /* MMEConstants.h in Copy Headers */,
 				408596D81ED0B1F6003BD29D /* MMEEvent.h in Copy Headers */,
@@ -844,12 +843,12 @@
 			files = (
 				F453B12724720134002EFB4A /* NSURL+Directories.h in Headers */,
 				F4312855246A626C004472CE /* MMEPreferences.h in Headers */,
-				9CDC34B8234FD35800852FF0 /* NSUserDefaults+MMEConfiguration.h in Headers */,
 				404807CA1EA186D8008A6D50 /* MapboxMobileEvents.h in Headers */,
 				F4913F452453610800C28338 /* MMEEventConfigProviding.h in Headers */,
 				F4684FF42432A1610079B389 /* NSBundle+MMEMobileEvents.h in Headers */,
 				40AE58561EA932DB0046B437 /* MMEConstants.h in Headers */,
 				40AE586D1EA95EDD0046B437 /* MMEEvent.h in Headers */,
+				9CDC34B8234FD35800852FF0 /* NSUserDefaults+MMEConfiguration.h in Headers */,
 				F4726564246633CD00BD7055 /* MMEConfigService.h in Headers */,
 				40C9E27B1EA542BC00744FE7 /* MMEEventsManager.h in Headers */,
 				40C9E27F1EA5473F00744FE7 /* MMELocationManager.h in Headers */,
@@ -884,13 +883,13 @@
 			files = (
 				F453B12824720134002EFB4A /* NSURL+Directories.h in Headers */,
 				F4312856246A626C004472CE /* MMEPreferences.h in Headers */,
-				9CA75386240EF2DD005C26C9 /* NSUserDefaults+MMEConfiguration.h in Headers */,
 				9CA75387240EF2DD005C26C9 /* MapboxMobileEvents.h in Headers */,
 				F4913F462453610800C28338 /* MMEEventConfigProviding.h in Headers */,
 				9CA75388240EF2DD005C26C9 /* MMEConstants.h in Headers */,
 				9CA75389240EF2DD005C26C9 /* MMEEvent.h in Headers */,
 				9CA7538A240EF2DD005C26C9 /* MMEEventsManager.h in Headers */,
 				9CA7538B240EF2DD005C26C9 /* MMELocationManager.h in Headers */,
+				9CA75386240EF2DD005C26C9 /* NSUserDefaults+MMEConfiguration.h in Headers */,
 				9CA7539D240EF2DD005C26C9 /* MMEEventsManager_Private.h in Headers */,
 				9CA753A2240EF2DD005C26C9 /* MMEAPIClient_Private.h in Headers */,
 				F4726565246633CD00BD7055 /* MMEConfigService.h in Headers */,
@@ -1227,6 +1226,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CA0FAA2C237C80C000C9F3C9 /* NSUserDefaults+MMEConfiguration.h in Sources */,
 				9CA2850023D248D40097BE53 /* NSProcessInfo+SystemInfo.m in Sources */,
 				F49675E624620F5100F8914D /* NSError+APIClient.m in Sources */,
 				AC1B091322137BB000DB56C8 /* CLLocationManager+MMEMobileEvents.m in Sources */,

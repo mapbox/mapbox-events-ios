@@ -61,6 +61,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// Legacy User-Agent String
 @property (nonatomic, copy, readonly) NSString *legacyUserAgentString;
 
+/// Unique Identifier for the client
+@property (nonatomic, copy, readonly) NSString *clientId;
+
 // MARK: - Location Collection
 
 /// This property is only settable by the end user

@@ -23,6 +23,7 @@
                             configURL:[NSURL URLWithString:MMEAPIClientBaseConfigURL]
                             userAgent:@"<UserAgent>"
                       legacyUserAgent:@"<LegacyUserAgent>"
+                             clientId:@"<ClientId>"
                   isCollectionEnabled:YES
        isCollectionEnabledInSimulator:YES
       isCollectionEnabledInBackground:YES
@@ -37,17 +38,18 @@
                   eventFlushInterval:(NSUInteger)eventFlushInterval
           identifierRotationInterval:(NSTimeInterval)identifierRotationInterval
                 configUpdateInterval:(NSTimeInterval)configUpdateInterval
-                    lastConfigUpdate:(MMEDate*)lastConfigUpdate
+                    lastConfigUpdate:(NSDate*)lastConfigUpdate
                             eventTag:(NSString*)eventTag
                          accessToken:(NSString*)accessToken
                  legacyUserAgentBase:(NSString*)legacyUserAgentBase
                 legacyHostSDKVersion:(NSString*)legacyHostSDKVersion
                        isChinaRegion:(BOOL)isChinaRegion
-                          apiURL:(NSURL*)apiURL
-                    eventsURL:(NSURL*)eventsURL
+                              apiURL:(NSURL*)apiURL
+                           eventsURL:(NSURL*)eventsURL
                            configURL:(NSURL*)configURL
                            userAgent:(NSString*)userAgent
                      legacyUserAgent:(NSString*)legacyUserAgent
+                            clientId:(NSString*)clientId
                  isCollectionEnabled:(BOOL)isCollectionEnabled
       isCollectionEnabledInSimulator:(BOOL)isCollectionEnabledInSimulator
      isCollectionEnabledInBackground:(BOOL)isCollectionEnabledInBackground
@@ -62,7 +64,7 @@
         self.eventFlushInterval = eventFlushInterval;
         self.identifierRotationInterval = identifierRotationInterval;
         self.configUpdateInterval = configUpdateInterval;
-        self.configUpdateDate = lastConfigUpdate;
+        self.configUpdateDate = [MMEDate dateWithDate:lastConfigUpdate];
         self.eventTag = eventTag;
         self.accessToken = accessToken;
         self.legacyUserAgentBase = legacyUserAgentBase;
@@ -73,6 +75,7 @@
         self.configServiceURL = configURL;
         self.userAgentString = userAgent;
         self.legacyUserAgentString = legacyUserAgent;
+        self.clientId = clientId;
         self.isCollectionEnabled = isCollectionEnabled;
         self.isCollectionEnabledInSimulator = isCollectionEnabledInSimulator;
         self.isCollectionEnabledInBackground = isCollectionEnabledInBackground;
@@ -85,29 +88,13 @@
 }
 
 + (instancetype)oneSecondConfigUpdate {
-    return [[MMEMockEventConfig alloc] initWithStartupDelay:MMEStartupDelayDefault
-                                            eventFlushCount:MMEEventFlushCountDefault
-                                         eventFlushInterval:MMEEventFlushIntervalDefault
-                                 identifierRotationInterval:MMEIdentifierRotationIntervalDefault
-                                       configUpdateInterval:1
-                                           lastConfigUpdate:[MMEDate dateWithDate:NSDate.distantPast]
-                                                   eventTag:@"42"
-                                                accessToken:@"access-token"
-                                        legacyUserAgentBase:@"user-agent-base"
-                                       legacyHostSDKVersion:@"1.0"
-                                              isChinaRegion:NO
-                                                     apiURL:[NSURL URLWithString:MMEAPIClientBaseAPIURL]
-                                                  eventsURL:[NSURL URLWithString:MMEAPIClientBaseEventsURL]
-                                                  configURL:[NSURL URLWithString:MMEAPIClientBaseConfigURL]
-                                                  userAgent:@"<UserAgent>"
-                                            legacyUserAgent:@"<LegacyUserAgent>"
-                                        isCollectionEnabled:YES
-                             isCollectionEnabledInSimulator:YES
-                            isCollectionEnabledInBackground:YES
-                                     backgroundStartupDelay:MMEBackgroundStartupDelayDefault
-                                         backgroundGeofence:MMEBackgroundGeofenceDefault
-                                  certificateRevocationList:@[]
-                                   certificatePinningConfig:@{}];
+
+    // Instantiate defaults, then set update interval to 1
+    MMEMockEventConfig *config = MMEMockEventConfig.new;
+    if (config) {
+        config.configUpdateInterval = 1;
+    }
+    return config;
 }
 
 @end

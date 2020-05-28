@@ -106,7 +106,8 @@
 // MARK: - Listeners
 
 - (void)testResponseListener {
-    
+
+    // Register OnResponse Listener
     XCTestExpectation *expectation = [self expectationWithDescription:@"Registered Response listener should receive a callback"];
     __block BOOL hasSeenCallback = false;
     [self.eventsManager registerOnURLResponseListener:^(NSData * _Nullable data, NSURLRequest * _Nonnull request, NSURLResponse * _Nullable response, NSError * _Nullable error) {
@@ -118,6 +119,7 @@
         hasSeenCallback = YES;
     }];
 
+    // Start manager
     [self.eventsManager startEventsManagerWithToken:@"coocoo"];
 
     [self waitForExpectations:@[expectation] timeout:2];

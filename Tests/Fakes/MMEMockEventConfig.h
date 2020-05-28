@@ -41,6 +41,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// Host SDK Version
 @property (nullable, nonatomic, copy) NSString *legacyHostSDKVersion;
 
+@property (nonatomic, copy) NSString *clientId;
+
 /// China Region Setting
 @property (nonatomic, assign) BOOL isChinaRegion;
 
@@ -93,7 +95,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /*! @brief Designated Initializer */
 - (instancetype)initWithStartupDelay:(NSTimeInterval)startupDelay
-                     eventFlushCount:(NSUInteger)flushCount
+                     eventFlushCount:(NSUInteger)eventFlushCount
                   eventFlushInterval:(NSUInteger)eventFlushInterval
           identifierRotationInterval:(NSTimeInterval)identifierRotationInterval
                 configUpdateInterval:(NSTimeInterval)configUpdateInterval
@@ -108,6 +110,7 @@ NS_ASSUME_NONNULL_BEGIN
                            configURL:(NSURL*)configURL
                            userAgent:(NSString*)userAgent
                      legacyUserAgent:(NSString*)legacyUserAgent
+                            clientId:(NSString*)clientId
                  isCollectionEnabled:(BOOL)isCollectionEnabled
       isCollectionEnabledInSimulator:(BOOL)isCollectionEnabledInSimulator
      isCollectionEnabledInBackground:(BOOL)isCollectionEnabledInBackground

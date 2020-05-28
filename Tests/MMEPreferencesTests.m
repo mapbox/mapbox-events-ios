@@ -10,6 +10,13 @@
 #import "MMEDate.h"
 
 @interface MMEPreferences (Tests)
+
+/// Unique Identifier for the client
+-(void)setClientId:(NSString *)clientId;
+-(void)setEventFlushCount:(NSUInteger)eventFlushCount;
+-(void)setEventFlushInterval:(NSTimeInterval)eventFlushInterval;
+- (void)setIdentifierRotationInterval:(NSTimeInterval)identifierRotationInterval;
+- (void)setConfigUpdateInterval:(NSTimeInterval)configUpdateInterval;
 - (void)reset;
 - (void)updateFromAccountType:(NSInteger)typeCode;
 @end
@@ -171,14 +178,6 @@
     XCTAssertEqualObjects(self.preferences.legacyHostSDKVersion, @"1.0.0");
 }
 
-- (void)testPersistentObjectSetDelete {
-    [NSUserDefaults.mme_configuration mme_setObject:@2 forPersistentKey:MMEAccountType];
-    XCTAssert([[NSUserDefaults.mme_configuration objectForKey:MMEAccountType] intValue] == 2);
-
-    [NSUserDefaults.mme_configuration mme_deleteObjectForPersistentKey:MMEAccountType];
-    XCTAssertNil([NSUserDefaults.mme_configuration objectForKey:MMEAccountType]);
-}
-
 - (void)testAccountUpdate {
     self.preferences.isCollectionEnabled = YES;
     self.preferences.isCollectionEnabledInBackground = YES;
@@ -201,7 +200,7 @@
 // MARK: - Background Collection
 
 - (void)testEventIsCollectionEnabledInBackgroundDefault {
-    XCTAssertFalse(self.preferences.isCollectionEnabledInBackground);
+    XCTAssertTrue(self.preferences.isCollectionEnabledInBackground);
 }
 
 - (void)testStartupDelayDefault {
@@ -265,6 +264,44 @@
     XCTAssertEqual(self.preferences.isCollectionEnabledInBackground, YES);
 }
 
+- (void)testClientId {
+    // Client ID should be non-nil
+    XCTAssertNotNil(self.preferences.clientId);
+
+    // Client ID should be the same on mutple accesses
+    XCTAssertEqualObjects(self.preferences.clientId, self.preferences.clientId);
+}
+
+- (void)testSetClientId {
+
+    // Client ID should be able to be set and retreived
+    self.preferences.clientId = @"foo";
+    XCTAssertEqualObjects(@"foo", self.preferences.clientId);
+}
+
+- (void)testSetEventFlushCount {
+    self.preferences.eventFlushCount = 4;
+    XCTAssertEqual(self.preferences.eventFlushCount, 4);
+}
+
+- (void)testSetEventFlushInterval {
+    self.preferences.eventFlushInterval = 10;
+    XCTAssertEqual(self.preferences.eventFlushInterval, 10);
+}
+
+- (void)testSetEventIdentifierRotation {
+    self.preferences.identifierRotationInterval = 37;
+    XCTAssertEqual(self.preferences.identifierRotationInterval, 37);
+}
+
+- (void)testSetConfigUpdateInterval {
+
+    self.preferences.configUpdateInterval = 13;
+    XCTAssertEqual(self.preferences.configUpdateInterval, 13);
+}
+
+
+
 // MARK: - Service Configuration Update Date
 
 -(void)testConfigUpdates {
@@ -324,10 +361,24 @@
 
 - (void)testStartupDelayChange {
     NSMutableDictionary* dictionary = [self bundleDefaults];
+
+    // Bundle Loading Requires Custom Profile Key/Value
+    dictionary[MMEEventsProfile] = MMECustomProfile;
     dictionary[MMEStartupDelay] = @42;
     NSBundle* bundle = [MMEBundleInfoFake bundleWithFakeInfo:dictionary];
     self.preferences = [[MMEPreferences alloc] initWithBundle:bundle dataStore:NSUserDefaults.mme_configuration];
     XCTAssertEqual(self.preferences.startupDelay, 42);
+}
+
+- (void)testStartupDelayChangeIgnored {
+    NSMutableDictionary* dictionary = [self bundleDefaults];
+
+    // Bundle Loading Requires Custom Profile Key/Value
+    // Given value isn't set, expect this value to be ignored and use default
+    dictionary[MMEStartupDelay] = @42;
+    NSBundle* bundle = [MMEBundleInfoFake bundleWithFakeInfo:dictionary];
+    self.preferences = [[MMEPreferences alloc] initWithBundle:bundle dataStore:NSUserDefaults.mme_configuration];
+    XCTAssertEqual(self.preferences.startupDelay, 1);
 }
 
 - (void)testChinaRegionSetFromPlist {
@@ -376,12 +427,12 @@
 // MARK: - Certificate Pinning Models
 
 - (void)testExpectedCNHashCount {
-    NSArray* chinaHashes = NSUserDefaults.mme_chinaPublicKeys;
+    NSArray* chinaHashes = self.preferences.chinaPublicKeys;
     XCTAssertEqual(chinaHashes.count, 54);
 }
 
 -(void)testExpectedCOMHashCount {
-    NSArray* commercialHashes = NSUserDefaults.mme_comPublicKeys;
+    NSArray* commercialHashes = self.preferences.comPublicKeys;
     XCTAssertEqual(commercialHashes.count, 54);
 }
 
@@ -415,12 +466,12 @@
     MMEPreferences* preferences = [[MMEPreferences alloc] init];
     [preferences updateWithConfig:config];
 
-    NSArray *hashes = NSUserDefaults.mme_configuration.mme_certificatePinningConfig[@"events.mapbox.com"];
+    NSArray *hashes = self.preferences.certificatePinningConfig[@"events.mapbox.com"];
     XCTAssertEqual(hashes.count, 53);
 }
 
 -(void)testValidateChinaHashes {
-    NSArray *cnHashes = NSUserDefaults.mme_configuration.mme_certificatePinningConfig[@"events.mapbox.cn"];
+    NSArray *cnHashes = self.preferences.certificatePinningConfig[@"events.mapbox.cn"];
     NSMutableArray *invalidHashes = [[NSMutableArray alloc] init];
 
     for (NSString *publicKeyHash in cnHashes) {
@@ -434,7 +485,7 @@
 }
 
 -(void)testValidateCommercialHashes {
-    NSArray *comHashes = NSUserDefaults.mme_configuration.mme_certificatePinningConfig[@"events.mapbox.com"];
+    NSArray *comHashes = self.preferences.certificatePinningConfig[@"events.mapbox.com"];
     NSMutableArray *invalidHashes = [[NSMutableArray alloc] init];
 
     for (NSString *publicKeyHash in comHashes) {

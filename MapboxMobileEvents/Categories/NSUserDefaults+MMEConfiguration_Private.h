@@ -99,41 +99,6 @@ static NSTimeInterval const MMEStartupDelayMaximum = 100;
 
 // MARK: -
 
-@interface NSUserDefaults (MMEConfiguration_Private)
-@property(nonatomic,readonly) NSString *mme_clientId;
-
-+ (void)mme_resetConfiguration;
-
-
-// MARK: -
-
-- (void)mme_registerDefaults;
-- (void)mme_updateFromConfig:(MMEConfig*)config;
-
-- (void)mme_setObject:(NSObject *)value forVolatileKey:(MMEVolatileKey *)key;
-- (void)mme_setObject:(id)value forPersistentKey:(MMEPersistentKey *)key;
-
-- (void)mme_deleteObjectForVolatileKey:(MMEVolatileKey *)key;
-- (void)mme_deleteObjectForPersistentKey:(MMEPersistentKey *)key;
-
-- (NSObject *)mme_objectForVolatileKey:(MMEVolatileKey *)key;
-
-/*! @Brief Mutable Array of Public Keys (For Cert Pinning) */
-+ (NSMutableArray<NSString*>*)mme_comPublicKeys;
-
-/*! @Brief Mutable Array of Public Keys (for China) (For Cert Pinning) */
-+ (NSMutableArray<NSString*>*)mme_chinaPublicKeys;
-
-@end
-
-// MARK: -
-
-@interface NSBundle (MMEConfiguration_Private)
-@property(class, nonatomic, null_resettable, setter=mme_setMainBundle:) NSBundle *mme_mainBundle;
-@property(nonatomic, readonly) NSString *mme_bundleVersionString;
-
-@end
-
 NS_ASSUME_NONNULL_END
 
 #endif /* NSUserDefaults_MMEConfiguration_Private_h */
