@@ -914,7 +914,6 @@
 				9CA75399240EF2DD005C26C9 /* MMEAPIClient.h in Headers */,
 				9CA7539A240EF2DD005C26C9 /* MMENSURLSessionWrapper.h in Headers */,
 				9CA7539B240EF2DD005C26C9 /* CLLocation+MMEMobileEvents.h in Headers */,
-				9CA7539D240EF2DD005C26C9 /* MMEEventsManager_Private.h in Headers */,
 				9CA7539E240EF2DD005C26C9 /* UIKit+MMEMobileEvents.h in Headers */,
 				9CA7539F240EF2DD005C26C9 /* MMEMetricsManager.h in Headers */,
 				9CA753A1240EF2DD005C26C9 /* MMEReachability.h in Headers */,
@@ -1040,7 +1039,7 @@
 		404807B01EA186D8008A6D50 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1130;
+				LastUpgradeCheck = 1150;
 				ORGANIZATIONNAME = Mapbox;
 				TargetAttributes = {
 					404807B81EA186D8008A6D50 = {
