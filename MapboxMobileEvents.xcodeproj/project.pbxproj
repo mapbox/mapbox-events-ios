@@ -297,6 +297,13 @@
 			remoteGlobalIDString = 404807B81EA186D8008A6D50;
 			remoteInfo = MapboxMobileEvents;
 		};
+		F419F98124809165000BD2F5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 404807B01EA186D8008A6D50 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 404807B81EA186D8008A6D50;
+			remoteInfo = MapboxMobileEvents;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -990,6 +997,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				F419F98224809165000BD2F5 /* PBXTargetDependency */,
 			);
 			name = MMETestHost;
 			productName = MMETestHost;
@@ -1353,6 +1361,11 @@
 			platformFilter = ios;
 			target = 404807B81EA186D8008A6D50 /* MapboxMobileEvents */;
 			targetProxy = AC881B1423FDEDBF00E614B7 /* PBXContainerItemProxy */;
+		};
+		F419F98224809165000BD2F5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 404807B81EA186D8008A6D50 /* MapboxMobileEvents */;
+			targetProxy = F419F98124809165000BD2F5 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
