@@ -39,7 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface MMEEventsManager () <MMELocationManagerDelegate>
 
-@property (nonatomic) id<MMELocationManager> locationManager;
+@property (nonatomic) id <MMELocationManaging> locationManager;
 @property (nonatomic) NS_MUTABLE_ARRAY_OF(MMEEvent *) *eventQueue;
 @property (nonatomic) MMEPreferences* preferences;
 @property (nonatomic) id<MMEUniqueIdentifer> uniqueIdentifer;
@@ -242,12 +242,13 @@ NS_ASSUME_NONNULL_BEGIN
                 // Release Metrics Gathering
                 strongSelf.paused = YES;
 
-                // Configure Location Manager / Metrics Updates
-                MMELocationManager* locationManager = [[MMELocationManager alloc] initWithConfig:self.preferences
-                                                                                 onDidExitRegion:^(CLRegion *region) {
+                // Configure Location Manager / Register for Events which should be tracked in metrics
+                 MMELocationManager* locationManager = [[MMELocationManager alloc] initWithConfig:self.preferences
+                                                                                 locationManager:CLLocationManager.new];
+                [locationManager registerOnDidExitRegion:^(CLRegion *region) {
                     [[weakSelf metricsManager] incrementAppWakeUpCount];
-                }
-                                                                           onDidUpdateCoordinate:^(CLLocationCoordinate2D coordinate) {
+                }];
+                [locationManager registerOnDidUpdateCoordinate:^(CLLocationCoordinate2D coordinate) {
                     [[weakSelf metricsManager] updateCoordinate:coordinate];
                 }];
 

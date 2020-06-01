@@ -199,6 +199,9 @@
 		F453B12824720134002EFB4A /* NSURL+Directories.h in Headers */ = {isa = PBXBuildFile; fileRef = F453B12524720134002EFB4A /* NSURL+Directories.h */; };
 		F453B12924720134002EFB4A /* NSURL+Directories.m in Sources */ = {isa = PBXBuildFile; fileRef = F453B12624720134002EFB4A /* NSURL+Directories.m */; };
 		F453B12A24720134002EFB4A /* NSURL+Directories.m in Sources */ = {isa = PBXBuildFile; fileRef = F453B12624720134002EFB4A /* NSURL+Directories.m */; };
+		F45C2D472481B4D400EF066C /* LocationManagerCallCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = F45C2D4224819EC900EF066C /* LocationManagerCallCounter.m */; };
+		F45DB3732485C6DE0000E644 /* MMELocationManaging.h in Headers */ = {isa = PBXBuildFile; fileRef = F45DB3722485C6DE0000E644 /* MMELocationManaging.h */; };
+		F45DB3742485C6DE0000E644 /* MMELocationManaging.h in Headers */ = {isa = PBXBuildFile; fileRef = F45DB3722485C6DE0000E644 /* MMELocationManaging.h */; };
 		F45F65BA247210AE00C1772F /* NSURL+Directories.m in Sources */ = {isa = PBXBuildFile; fileRef = F453B12624720134002EFB4A /* NSURL+Directories.m */; };
 		F45F65C12472143900C1772F /* NSURL+Files.m in Sources */ = {isa = PBXBuildFile; fileRef = F45F65BC247212D900C1772F /* NSURL+Files.m */; };
 		F46267FF246DF5AC00E01C83 /* MMEPreferencesTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F46267FE246DF5AC00E01C83 /* MMEPreferencesTests.m */; };
@@ -479,6 +482,9 @@
 		F453B1232471D00D002EFB4A /* MMEAPIClientCallCounter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEAPIClientCallCounter.m; sourceTree = "<group>"; };
 		F453B12524720134002EFB4A /* NSURL+Directories.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSURL+Directories.h"; sourceTree = "<group>"; };
 		F453B12624720134002EFB4A /* NSURL+Directories.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSURL+Directories.m"; sourceTree = "<group>"; };
+		F45C2D4124819EC900EF066C /* LocationManagerCallCounter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LocationManagerCallCounter.h; sourceTree = "<group>"; };
+		F45C2D4224819EC900EF066C /* LocationManagerCallCounter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LocationManagerCallCounter.m; sourceTree = "<group>"; };
+		F45DB3722485C6DE0000E644 /* MMELocationManaging.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMELocationManaging.h; sourceTree = "<group>"; };
 		F45F65BB247212D900C1772F /* NSURL+Files.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSURL+Files.h"; sourceTree = "<group>"; };
 		F45F65BC247212D900C1772F /* NSURL+Files.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSURL+Files.m"; sourceTree = "<group>"; };
 		F46267FE246DF5AC00E01C83 /* MMEPreferencesTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEPreferencesTests.m; sourceTree = "<group>"; };
@@ -595,7 +601,6 @@
 		404807BB1EA186D8008A6D50 /* MapboxMobileEvents */ = {
 			isa = PBXGroup;
 			children = (
-				F4EAFDFA24538B3F00D2B17B /* Protocols */,
 				404807BD1EA186D8008A6D50 /* Info.plist */,
 				404807BC1EA186D8008A6D50 /* MapboxMobileEvents.h */,
 				40AE586F1EAA87960046B437 /* MMEAPIClient.h */,
@@ -624,6 +629,7 @@
 				40AE584C1EA926710046B437 /* MMETypes.h */,
 				40AE58601EA94E4A0046B437 /* Categories */,
 				40F16C931F04514100DF338D /* Reachability */,
+				F4EAFDFA24538B3F00D2B17B /* Protocols */,
 				40C9E2841EA5615900744FE7 /* Utilities */,
 			);
 			path = MapboxMobileEvents;
@@ -750,6 +756,8 @@
 				F472655F24662A9D00BD7055 /* MMEAPIClient+Mock.m */,
 				F4EC42852475F7F900FFE1D4 /* MockVisit.h */,
 				F4EC42862475F7F900FFE1D4 /* MockVisit.m */,
+				F45C2D4124819EC900EF066C /* LocationManagerCallCounter.h */,
+				F45C2D4224819EC900EF066C /* LocationManagerCallCounter.m */,
 			);
 			path = Fakes;
 			sourceTree = "<group>";
@@ -839,6 +847,7 @@
 			isa = PBXGroup;
 			children = (
 				F4913F442453610800C28338 /* MMEEventConfigProviding.h */,
+				F45DB3722485C6DE0000E644 /* MMELocationManaging.h */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -856,6 +865,7 @@
 				404807CA1EA186D8008A6D50 /* MapboxMobileEvents.h in Headers */,
 				F4684FF42432A1610079B389 /* NSBundle+MMEMobileEvents.h in Headers */,
 				40AE58561EA932DB0046B437 /* MMEConstants.h in Headers */,
+				F45DB3732485C6DE0000E644 /* MMELocationManaging.h in Headers */,
 				40AE586D1EA95EDD0046B437 /* MMEEvent.h in Headers */,
 				F4913F452453610800C28338 /* MMEEventConfigProviding.h in Headers */,
 				9CDC34B8234FD35800852FF0 /* NSUserDefaults+MMEConfiguration.h in Headers */,
@@ -897,6 +907,7 @@
 				9CA75387240EF2DD005C26C9 /* MapboxMobileEvents.h in Headers */,
 				9CA75388240EF2DD005C26C9 /* MMEConstants.h in Headers */,
 				9CA75389240EF2DD005C26C9 /* MMEEvent.h in Headers */,
+				F45DB3742485C6DE0000E644 /* MMELocationManaging.h in Headers */,
 				9CA7538A240EF2DD005C26C9 /* MMEEventsManager.h in Headers */,
 				9CA7538B240EF2DD005C26C9 /* MMELocationManager.h in Headers */,
 				F4913F462453610800C28338 /* MMEEventConfigProviding.h in Headers */,
@@ -1202,6 +1213,7 @@
 				F46267FF246DF5AC00E01C83 /* MMEPreferencesTests.m in Sources */,
 				F472656124662D7700BD7055 /* MMEAPIClient+Mock.m in Sources */,
 				9CA753AB241027E6005C26C9 /* MMELoggerTests.m in Sources */,
+				F45C2D472481B4D400EF066C /* LocationManagerCallCounter.m in Sources */,
 				AC03B2C823AC477A0043271D /* MMEMetricsManagerTests.m in Sources */,
 				F44D1203246328CB00DF4ED1 /* NSBundle+TestBundle.m in Sources */,
 				F4626807246F732B00E01C83 /* MMENSURLRequestFactoryTests.m in Sources */,

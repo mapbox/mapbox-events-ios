@@ -33,7 +33,7 @@
 @property (nonatomic) NS_MUTABLE_ARRAY_OF(MMEEvent *) *eventQueue;
 @property (nonatomic, getter=isPaused) BOOL paused;
 @property (nonatomic) MMECommonEventData *commonEventData;
-@property (nonatomic) id<MMELocationManager> locationManager;
+@property (nonatomic) id<MMELocationManaging> locationManager;
 @property (nonatomic) id<MMEUniqueIdentifer> uniqueIdentifer;
 @property (nonatomic) NSDate *nextTurnstileSendDate;
 @property (nonatomic) id<MMEUIApplicationWrapper> application;
