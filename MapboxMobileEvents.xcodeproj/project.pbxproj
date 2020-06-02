@@ -221,8 +221,8 @@
 		F4726566246633CD00BD7055 /* MMEConfigService.m in Sources */ = {isa = PBXBuildFile; fileRef = F4726563246633CD00BD7055 /* MMEConfigService.m */; };
 		F4726567246633CD00BD7055 /* MMEConfigService.m in Sources */ = {isa = PBXBuildFile; fileRef = F4726563246633CD00BD7055 /* MMEConfigService.m */; };
 		F47265692466872200BD7055 /* MMEConfigServiceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F47265682466872200BD7055 /* MMEConfigServiceTests.m */; };
-		F4913F452453610800C28338 /* MMEEventConfigProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = F4913F442453610800C28338 /* MMEEventConfigProviding.h */; };
-		F4913F462453610800C28338 /* MMEEventConfigProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = F4913F442453610800C28338 /* MMEEventConfigProviding.h */; };
+		F4913F452453610800C28338 /* MMEEventConfigProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = F4913F442453610800C28338 /* MMEEventConfigProviding.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F4913F462453610800C28338 /* MMEEventConfigProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = F4913F442453610800C28338 /* MMEEventConfigProviding.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F49675E224620F4300F8914D /* NSError+APIClient.h in Headers */ = {isa = PBXBuildFile; fileRef = F49675E024620F4300F8914D /* NSError+APIClient.h */; };
 		F49675E324620F4300F8914D /* NSError+APIClient.h in Headers */ = {isa = PBXBuildFile; fileRef = F49675E024620F4300F8914D /* NSError+APIClient.h */; };
 		F49675E424620F4300F8914D /* NSError+APIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = F49675E124620F4300F8914D /* NSError+APIClient.m */; };
