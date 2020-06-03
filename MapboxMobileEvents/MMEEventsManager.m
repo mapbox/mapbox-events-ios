@@ -51,7 +51,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) MMELogger *logger;
 @property (nonatomic) MMEMetricsManager *metricsManager;
 @property (nullable, nonatomic) MMEConfigService* configService;
-
+/*! Work to be executed at some time after start has been called */
+@property (nullable, copy) dispatch_block_t delayedStartWork;
 @property (nonatomic, strong) NSMutableArray<OnURLResponse>* urlResponseListeners;
 @property (nonatomic, strong) NSMutableArray<OnSerializationError>* serializationErrorListeners;
 
@@ -122,7 +123,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void)dealloc {
-    [NSNotificationCenter.defaultCenter removeObserver:self];
+    [self removeObservers];
     [self pauseMetricsCollection];
 }
 
@@ -215,49 +216,20 @@ NS_ASSUME_NONNULL_BEGIN
 
         [self sendPendingTelemetryMetricsEvent];
 
-        // Begin Metrics/Location Collection after config provided startup delay
+        // Cancel Existing Work to still be executed if available
+        if (self.delayedStartWork) {
+            dispatch_block_cancel(self.delayedStartWork);
+            self.delayedStartWork = nil;
+        }
+
+        // Retain reference of work for ability to cancel
+        self.delayedStartWork = dispatch_block_create(0, ^{
+            [weakSelf setupPassiveDataCollection];
+        });
+
+        // Schedule to be executed at <t> point in the future
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, self.preferences.startupDelay * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-
-            __strong __typeof__(weakSelf) strongSelf = weakSelf;
-
-            if (strongSelf) {
-
-                // Observe Application State
-                [NSNotificationCenter.defaultCenter addObserver:strongSelf
-                                                       selector:@selector(pauseOrResumeMetricsCollectionIfRequired)
-                                                           name:UIApplicationDidEnterBackgroundNotification
-                                                         object:nil];
-                [NSNotificationCenter.defaultCenter addObserver:strongSelf
-                                                       selector:@selector(pauseOrResumeMetricsCollectionIfRequired)
-                                                           name:UIApplicationDidBecomeActiveNotification
-                                                         object:nil];
-
-                if (@available(iOS 9.0, *)) {
-                    [NSNotificationCenter.defaultCenter addObserver:strongSelf
-                                                           selector:@selector(powerStateDidChange:)
-                                                               name:NSProcessInfoPowerStateDidChangeNotification
-                                                             object:nil];
-                }
-
-                // Release Metrics Gathering
-                strongSelf.paused = YES;
-
-                // Configure Location Manager / Register for Events which should be tracked in metrics
-                 MMELocationManager* locationManager = [[MMELocationManager alloc] initWithConfig:self.preferences
-                                                                                 locationManager:CLLocationManager.new];
-                [locationManager registerOnDidExitRegion:^(CLRegion *region) {
-                    [[weakSelf metricsManager] incrementAppWakeUpCount];
-                }];
-                [locationManager registerOnDidUpdateCoordinate:^(CLLocationCoordinate2D coordinate) {
-                    [[weakSelf metricsManager] updateCoordinate:coordinate];
-                }];
-
-                locationManager.delegate = strongSelf;
-                strongSelf.locationManager = locationManager;
-
-                // Kickoff Metrics Collection
-                [strongSelf resumeMetricsCollection];
-            }
+            [weakSelf delayedStartWork];
         });
     }
 
@@ -266,11 +238,59 @@ NS_ASSUME_NONNULL_BEGIN
     }
 }
 
+/*! Resumes passive collection of data and metrics */
+- (void)setupPassiveDataCollection {
+
+    // Observe Application State
+    [NSNotificationCenter.defaultCenter addObserver:self
+                                           selector:@selector(pauseOrResumeMetricsCollectionIfRequired)
+                                               name:UIApplicationDidEnterBackgroundNotification
+                                             object:nil];
+    [NSNotificationCenter.defaultCenter addObserver:self
+                                           selector:@selector(pauseOrResumeMetricsCollectionIfRequired)
+                                               name:UIApplicationDidBecomeActiveNotification
+                                             object:nil];
+
+    if (@available(iOS 9.0, *)) {
+        [NSNotificationCenter.defaultCenter addObserver:self
+                                               selector:@selector(powerStateDidChange:)
+                                                   name:NSProcessInfoPowerStateDidChangeNotification
+                                                 object:nil];
+    }
+
+    // Release Metrics Gathering
+    self.paused = YES;
+
+    // Configure Location Manager / Register for Events which should be tracked in metrics
+    MMELocationManager* locationManager = [[MMELocationManager alloc] initWithConfig:self.preferences
+                                                                     locationManager:CLLocationManager.new];
+
+    __weak __typeof__(self) weakSelf = self;
+    [locationManager registerOnDidExitRegion:^(CLRegion *region) {
+        [[weakSelf metricsManager] incrementAppWakeUpCount];
+    }];
+    [locationManager registerOnDidUpdateCoordinate:^(CLLocationCoordinate2D coordinate) {
+        [[weakSelf metricsManager] updateCoordinate:coordinate];
+    }];
+
+    locationManager.delegate = self;
+    self.locationManager = locationManager;
+
+    // Kickoff Metrics Collection
+    [self resumeMetricsCollection];
+}
+
 - (void)stopEventsManager {
     [self flushEventsManager]; // send any pending events
     [self sendPendingTelemetryMetricsEvent]; // send then reset any metrics
     self.apiClient = nil;
+    [self removeObservers];
 }
+
+-(void)removeObservers {
+    [NSNotificationCenter.defaultCenter removeObserver:self];
+}
+
 
 // MARK: - NSNotifications
 
