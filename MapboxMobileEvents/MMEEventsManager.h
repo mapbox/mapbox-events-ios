@@ -14,9 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 /** Mapbox Mobile Events Manager
  
  `MMEEventsManager` manages sending telemetry events for Mapbox frameworks.
- 
- ## Theory of Operation
- 
+
  The events manager maintains a queue of pending events, groups them according to configurable rules,
  serializes and compresses the data then posts it to the Mapbox events service.
  
@@ -41,41 +39,51 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)init NS_UNAVAILABLE;
 
-/// Shared Mapbox Mobile Events Manager
+/*! Shared Mapbox Mobile Events Manager */
 + (instancetype)sharedManager;
 
 // MARK: - Events Manager Lifecycle
 
-/// Start the events manager
-/// - Parameter accessToken: Mapbox Access Token
-/// - Throws: no exceptions
+/*!
+ @Brief Start the events manager
+ @param accessToken Mapbox AccessToken
+ */
 - (void)startEventsManagerWithToken:(NSString *)accessToken;
 
-/// To be deprecated when User Agent Reform is Achieved
-- (void)startEventsManagerWithToken:(NSString *)accessToken userAgentBase:(NSString *)userAgentBase hostSDKVersion:(NSString *)hostSDKVersion;
+/*!
+ @Brief Start the events manager
+ @param accessToken Mapbox AccessToken
+ @param userAgentBase User Agent Base
+ @param hostSDKVersion Host SDK Version
+ @note Will be deprecated when User Agent Reform is Achieved
+ */
+- (void)startEventsManagerWithToken:(NSString *)accessToken
+                      userAgentBase:(NSString *)userAgentBase
+                     hostSDKVersion:(NSString *)hostSDKVersion;
 
-/// Attempts to send all pending events immediately
-/// - Throws: no exceptions
+/*! Attempts to send all pending events immediately */
 - (void)flushEventsManager;
 
-/// Flush the event queue and stop accepting new events
-/// - Throws: no exceptions
+/*! lush the event queue and stop accepting new events */
 - (void)stopEventsManager;
 
 // MARK: - Post Events or Files
 
-/// Send a turnstile event for the accessToken, if necessary
-/// - Throws: no exceptions
+/*! Send a turnstile event for the accessToken, if necessary */
 - (void)sendTurnstileEvent;
 
-/// Enqueue an event
-///   - Parameter event: added too the event queue
+/*!
+ @Brief Enqueue an event
+ @param event an event to event queue
+ */
 - (void)enqueueEvent:(MMEEvent *)event;
 
-/// Post files with metadata
-/// - Parameter metadata: array of metadata tags
-/// - Parameter filePaths: array of local files to upload
-/// - Parameter completionHandler: if provided, block will be run when the post completes
+/*!
+ @Brief Post files with metada
+ @param metadata array of metadata tags
+ @param filePaths Array of local files to upload
+ @param completionHandler Block called on Post completion
+ */
 - (void)postMetadata:(NSArray *)metadata
            filePaths:(NSArray *)filePaths
    completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler;

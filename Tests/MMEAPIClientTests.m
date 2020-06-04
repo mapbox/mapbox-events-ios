@@ -248,7 +248,7 @@
         XCTAssertEqual(weakSelf.blockCounter.onURLResponses.count, 1);
         XCTAssertEqual(weakSelf.blockCounter.onSerializationErrors.count, 0);
         XCTAssertEqual(weakSelf.blockCounter.eventQueue.count, 1);
-        XCTAssertEqual(weakSelf.blockCounter.eventCount.count, 2);
+        XCTAssertEqual(weakSelf.blockCounter.eventCount.count, 1);
         XCTAssertEqual(weakSelf.blockCounter.generateTelemetry, 1);
 
         [expectation fulfill];
@@ -257,7 +257,7 @@
     XCTAssertEqual(self.blockCounter.onURLResponses.count, 0);
     XCTAssertEqual(self.blockCounter.onSerializationErrors.count, 0);
     XCTAssertEqual(self.blockCounter.eventQueue.count, 1);
-    XCTAssertEqual(self.blockCounter.eventCount.count, 1);
+    XCTAssertEqual(self.blockCounter.eventCount.count, 0);
     XCTAssertEqual(self.blockCounter.generateTelemetry, 1);
 
     [self waitForExpectations:@[expectation] timeout:2];
@@ -355,7 +355,11 @@
     NSData *uncompressedData = [NSJSONSerialization dataWithJSONObject:eventAttributes options:0 error:nil];
 
 
-    [self.apiClient postEvents:@[event, eventTwo] completionHandler:nil];
+    [self.apiClient postEvents:@[event, eventTwo] completionHandler:^(NSError * _Nullable error) {
+        XCTAssertEqual(self.blockCounter.onURLResponses.count, 1);
+        XCTAssertEqual(self.blockCounter.eventCount.count, 2);
+    }];
+
     XCTAssert([(MMETestStub*)self.apiClient.sessionWrapper received:@selector(processRequest:completionHandler:)]);
 
     XCTAssert([self.sessionWrapperFake.request.allHTTPHeaderFields[MMEAPIClientHeaderFieldContentEncodingKey] isEqualToString:@"gzip"]);
@@ -368,7 +372,7 @@
     XCTAssertEqual(self.blockCounter.onURLResponses.count, 0);
     XCTAssertEqual(self.blockCounter.onSerializationErrors.count, 0);
     XCTAssertEqual(self.blockCounter.eventQueue.count, 1);
-    XCTAssertEqual(self.blockCounter.eventCount.count, 1);
+    XCTAssertEqual(self.blockCounter.eventCount.count, 0);
     XCTAssertEqual(self.blockCounter.generateTelemetry, 1);
 }
 

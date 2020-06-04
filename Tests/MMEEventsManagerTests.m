@@ -26,6 +26,7 @@
 #import "MMEAPIClientCallCounter.h"
 #import "MockVisit.h"
 #import "CLLocation+Mocks.h"
+#import "MMEMetricsManagerCallCounter.h"
 
 // MARK: - Private Interfaces of testing
 @interface MMEEventsManager (Tests) <MMELocationManagerDelegate>
@@ -57,6 +58,14 @@
 @property (nonatomic, strong) MMEPreferences* preferences;
 @property (nonatomic, strong) MMEEventsManager* eventsManager;
 
+@end
+
+@interface MMEAPIClient (Private)
+@property (nonatomic, strong) NSMutableArray<OnSerializationError>* onSerializationErrorListeners;
+@property (nonatomic, strong) NSMutableArray<OnURLResponse>* onUrlResponseListeners;
+@property (nonatomic, strong) NSMutableArray<OnEventQueueUpdate>* onEventQueueUpdateListeners;
+@property (nonatomic, strong) NSMutableArray<OnEventCountUpdate>* onEventCountUpdateListeners;
+@property (nonatomic, strong) NSMutableArray<OnGenerateTelemetryEvent>* onGenerateTelemetryEventListeners;
 @end
 
 @implementation MMEEventsManagerTests
@@ -760,4 +769,183 @@
 
     [self waitForExpectations:@[expectation] timeout:2];
 }
+
+-(void)testClientListenerConfiguration {
+
+    // Configure with lengthy startup delay to run tests without passive data collection adding extra events
+    NSBundle* bundle = [MMEBundleInfoFake bundleWithFakeInfo:@{
+        MMEStartupDelay: @200,
+    }];
+    MMEPreferences *preferences = [[MMEPreferences alloc] initWithBundle:bundle
+                                                    dataStore:NSUserDefaults.mme_configuration];
+
+
+    MMELogger* logger = [[MMELogger alloc] init];
+    MMEMetricsManagerCallCounter* metricsManager = [[MMEMetricsManagerCallCounter alloc] initWithConfig:preferences
+                                                            pendingMetricsFileURL:[NSURL testPendingEventsFile]];
+
+    self.eventsManager = [[MMEEventsManager alloc] initWithPreferences:self.preferences
+                                                      uniqueIdentifier:[[MMEUniqueIdentifier alloc] initWithTimeInterval:self.preferences.identifierRotationInterval]
+                                                           application:[[MMEUIApplicationWrapperFake alloc] init]
+                                                        metricsManager:metricsManager
+                                                                logger:logger];
+
+    MMEAPIClientCallCounter* client = [[MMEAPIClientCallCounter alloc] initWithConfig: preferences];
+    MMEEventsManager *eventsManager = [[MMEEventsManager alloc] initWithDefaults];
+
+    // Configure directly with client allowing for verification this method is doing it's job
+    // without the additional side effect of starting.
+    [eventsManager configureClientListeners:client];
+
+    // Ensure All Client LIsteners have been registered
+    XCTAssertEqual(client.registerOnSerializationErrorListenerCount, 1);
+    XCTAssertEqual(client.registerOnURLResponseCount, 1);
+    XCTAssertEqual(client.registerOnEventQueueUpdateCount, 1);
+    XCTAssertEqual(client.registerOnEventCountUpdateCount, 1);
+    XCTAssertEqual(client.registerOnGenerateTelemetryEventCount, 1);
+}
+
+-(void)testOnSerializationErrorHandling {
+
+    // Configure with lengthy startup delay to run tests without passive data collection adding extra events
+    NSBundle* bundle = [MMEBundleInfoFake bundleWithFakeInfo:@{
+        MMEStartupDelay: @200,
+    }];
+    MMEPreferences *preferences = [[MMEPreferences alloc] initWithBundle:bundle
+                                                               dataStore:NSUserDefaults.mme_configuration];
+
+
+    MMELogger* logger = [[MMELogger alloc] init];
+    MMEMetricsManagerCallCounter* metricsManager = [[MMEMetricsManagerCallCounter alloc] initWithConfig:preferences
+                                                                                  pendingMetricsFileURL:[NSURL testPendingEventsFile]];
+
+    MMEAPIClientCallCounter* client = [[MMEAPIClientCallCounter alloc] initWithConfig: preferences];
+    MMEEventsManager *eventsManager = [[MMEEventsManager alloc] initWithPreferences:preferences
+                                                                   uniqueIdentifier:[[MMEUniqueIdentifier alloc] initWithTimeInterval:preferences.identifierRotationInterval]
+                                                                        application:[[MMEUIApplicationWrapperFake alloc] init]
+                                                                     metricsManager:metricsManager
+                                                                             logger:logger];
+
+    // Configure directly with client allowing for verification this method is doing it's job
+    // without the additional side effect of starting.
+    [eventsManager configureClientListeners:client];
+    
+    // Verify Registered Behaviors perform as expected
+    for (OnSerializationError listener in client.onSerializationErrorListeners) {
+        NSError *error = [NSError errorWithDomain:@"MMEEventsManagerTestsDomain" code:1 userInfo:nil];
+        listener(error);
+    }
+
+    // Expect single error to have been queued
+    XCTAssertEqual(eventsManager.eventQueue.count, 1);
+    XCTAssertEqualObjects([eventsManager.eventQueue.lastObject name], @"mobile.crash");
+}
+
+-(void)testResponseListenerHandling {
+    // Configure with lengthy startup delay to run tests without passive data collection adding extra events
+    NSBundle* bundle = [MMEBundleInfoFake bundleWithFakeInfo:@{
+        MMEStartupDelay: @200,
+    }];
+    MMEPreferences *preferences = [[MMEPreferences alloc] initWithBundle:bundle
+                                                               dataStore:NSUserDefaults.mme_configuration];
+
+
+    MMELogger* logger = [[MMELogger alloc] init];
+    MMEMetricsManagerCallCounter* metricsManager = [[MMEMetricsManagerCallCounter alloc] initWithConfig:preferences
+                                                                                  pendingMetricsFileURL:[NSURL testPendingEventsFile]];
+
+
+    MMEAPIClientCallCounter* client = [[MMEAPIClientCallCounter alloc] initWithConfig: preferences];
+    MMEEventsManager *eventsManager = [[MMEEventsManager alloc] initWithPreferences:preferences
+                                                                   uniqueIdentifier:[[MMEUniqueIdentifier alloc] initWithTimeInterval:preferences.identifierRotationInterval]
+                                                                        application:[[MMEUIApplicationWrapperFake alloc] init]
+                                                                     metricsManager:metricsManager
+                                                                             logger:logger];
+
+    // Configure directly with client allowing for verification this method is doing it's job
+    // without the additional side effect of starting.
+    [eventsManager configureClientListeners:client];
+
+    // Mock Data to be used
+    NSURL *url = [NSURL URLWithString:@"https://mapbox.com"];
+    NSData *data = [@"{}" dataUsingEncoding:NSUTF8StringEncoding];
+    NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url];
+    request.HTTPBody = data;
+    NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:url statusCode:200 HTTPVersion:nil headerFields:@{}];
+
+    for (OnURLResponse listener in client.onUrlResponseListeners) {
+        listener(data, request, response, nil);
+    }
+
+    // Expect the tracking of Received bytes to have been forwarded to metricsManager
+    XCTAssertEqual(metricsManager.updateSentBytesCallCount, 1);
+    XCTAssertEqual(metricsManager.updateReceivedBytesCallCount, 1);
+    XCTAssertEqual(metricsManager.metrics.totalBytesSent, 2);
+    XCTAssertEqual(metricsManager.metrics.totalBytesReceived, 2);
+}
+
+-(void)testOnUpdateEventQueueHandling {
+    // Configure with lengthy startup delay to run tests without passive data collection adding extra events
+    NSBundle* bundle = [MMEBundleInfoFake bundleWithFakeInfo:@{
+        MMEStartupDelay: @200,
+    }];
+    MMEPreferences *preferences = [[MMEPreferences alloc] initWithBundle:bundle
+                                                               dataStore:NSUserDefaults.mme_configuration];
+
+
+    MMELogger* logger = [[MMELogger alloc] init];
+    MMEMetricsManagerCallCounter* metricsManager = [[MMEMetricsManagerCallCounter alloc] initWithConfig:preferences
+                                                                                  pendingMetricsFileURL:[NSURL testPendingEventsFile]];
+
+    MMEAPIClientCallCounter* client = [[MMEAPIClientCallCounter alloc] initWithConfig: preferences];
+    MMEEventsManager *eventsManager = [[MMEEventsManager alloc] initWithPreferences:self.preferences
+                                                                   uniqueIdentifier:[[MMEUniqueIdentifier alloc] initWithTimeInterval:preferences.identifierRotationInterval]
+                                                                        application:[[MMEUIApplicationWrapperFake alloc] init]
+                                                                     metricsManager:metricsManager
+                                                                             logger:logger];
+
+    // Configure directly with client allowing for verification this method is doing it's job
+    // without the additional side effect of starting.
+    [eventsManager configureClientListeners:client];
+
+    for (OnEventQueueUpdate listener in client.onEventQueueUpdateListeners) {
+        MMEEvent *event = [MMEEvent eventWithName:@"Foo" attributes:@{}];
+        listener(@[event]);
+    }
+
+    // Expect a single call to update Metrics Manager
+    XCTAssertEqual(metricsManager.updateFromEventQueueCallCount, 1);
+}
+
+-(void)testOnEventCountUpdateHandling {
+    // Configure with lengthy startup delay to run tests without passive data collection adding extra events
+    NSBundle* bundle = [MMEBundleInfoFake bundleWithFakeInfo:@{
+        MMEStartupDelay: @200,
+    }];
+    MMEPreferences *preferences = [[MMEPreferences alloc] initWithBundle:bundle
+                                                               dataStore:NSUserDefaults.mme_configuration];
+
+
+    MMELogger* logger = [[MMELogger alloc] init];
+    MMEMetricsManagerCallCounter* metricsManager = [[MMEMetricsManagerCallCounter alloc] initWithConfig:preferences
+                                                                                  pendingMetricsFileURL:[NSURL testPendingEventsFile]];
+
+    MMEAPIClientCallCounter* client = [[MMEAPIClientCallCounter alloc] initWithConfig: preferences];
+    MMEEventsManager *eventsManager = [[MMEEventsManager alloc] initWithPreferences:self.preferences
+                                                                   uniqueIdentifier:[[MMEUniqueIdentifier alloc] initWithTimeInterval:preferences.identifierRotationInterval]
+                                                                        application:[[MMEUIApplicationWrapperFake alloc] init]
+                                                                     metricsManager:metricsManager
+                                                                             logger:logger];
+
+    // Configure directly with client allowing for verification this method is doing it's job
+    // without the additional side effect of starting.
+    [eventsManager configureClientListeners:client];
+
+    for (OnEventCountUpdate listener in client.onEventCountUpdateListeners) {
+        listener(1, nil, nil);
+    }
+    // Expect Update from EventCount
+    XCTAssertEqual(metricsManager.updateFromEventCountCallCount, 1);
+}
+
 @end

@@ -11,6 +11,7 @@
 #import "MMEEventFake.h"
 #import "CLLocation+Mocks.h"
 #import "MMEMockEventConfig.h"
+#import "NSError+APIClient.h"
 
 @interface MMEMetricsManager (Tests)
 
@@ -116,7 +117,7 @@
                                                             headerFields:nil];
     NSDictionary *userInfoFake = [NSDictionary dictionaryWithObject:response
                                                              forKey:MMEResponseKey];
-    NSError *errorFake = [NSError errorWithDomain:@"test" code:42 userInfo:userInfoFake];
+    NSError *errorFake = [NSError errorWithDomain:MMEErrorDomain code:MMESessionFailedError userInfo:userInfoFake];
 
     NSArray* eventQueue = @[errorFake, errorFake];
 
@@ -125,7 +126,7 @@
 
     NSHTTPURLResponse *responseTwo = [[NSHTTPURLResponse alloc] initWithURL:[NSURL URLWithString:@"events.mapbox.com"] statusCode:500 HTTPVersion:nil headerFields:nil];
     NSDictionary *userInfoFakeTwo = [NSDictionary dictionaryWithObject:responseTwo forKey:MMEResponseKey];
-    NSError *errorFakeTwo = [NSError errorWithDomain:@"test" code:42 userInfo:userInfoFakeTwo];
+    NSError *errorFakeTwo = [NSError errorWithDomain:MMEErrorDomain code:MMESessionFailedError userInfo:userInfoFakeTwo];
 
     [self.metricsManager updateMetricsFromEventCount:eventQueue.count request:requestFake error:errorFakeTwo];
 
@@ -142,7 +143,7 @@
     // Should have all keys count increased
     XCTAssertEqual([self.metricsManager.metrics.failedRequestsDict allKeys].count, 2);
 
-    // Should have eventCountFailed count increased (But this isn't increasing?)
+    // Should have eventCountFailed count increased (2 for each update above)
     XCTAssertEqual(self.metricsManager.metrics.eventCountFailed, 6);
 
     // Should not have total count increase

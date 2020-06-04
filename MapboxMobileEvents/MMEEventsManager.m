@@ -56,6 +56,22 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSMutableArray<OnURLResponse>* urlResponseListeners;
 @property (nonatomic, strong) NSMutableArray<OnSerializationError>* serializationErrorListeners;
 
+/*!
+ @Brief Configures a client with expected listener behaviors
+ @param client APIClient responsible for making API Calls
+ @returns a new client instance configured with expected metrics gathering observations
+ */
+-(MMEAPIClient*)configureClientListeners:(MMEAPIClient*)client;
+
+/*!
+ ConfigService Factory
+ @param client APIClient responsible for making API Calls
+ @param config Configuration dictating variations in behavior
+ @returns Returns a new ConfigurationsService configured to update preferences on load
+ */
+-(MMEConfigService*)makeConfigServiceWithClient:(MMEAPIClient*)client
+                                         config:(id <MMEEventConfigProviding>)config;
+
 @end
 
 // MARK: -
@@ -149,69 +165,11 @@ NS_ASSUME_NONNULL_BEGIN
         // Setup Client
         MMEAPIClient *client = [[MMEAPIClient alloc] initWithConfig:self.preferences];
 
-        // Register Hooks for Reporting Metrics / Logging
-        // Use function accessors instead of properties for easier memory management
-        // Given we can message null, a method call to null will return null.
-        // This save time unwrapping if (weakSelf) each time we're accessing a nullable object's property
-        [client registerOnSerializationErrorListener:^(NSError * _Nonnull error) {
-            [weakSelf reportError:error];
-        }];
-        [client registerOnURLResponseListener:^(NSData * _Nullable data, NSURLRequest * _Nonnull request, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-            // Generic URL Response Tracking (Network Errors / Bytes)
-            __strong __typeof__(weakSelf) strongSelf = weakSelf;
-            if (!strongSelf){
-                return;
-            }
-
-            if (response && [response isKindOfClass:NSHTTPURLResponse.class]) {
-                NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-                NSError *statusError = [[NSError alloc] initWith:request httpResponse:httpResponse error:error];
-
-                // General Error Reporting
-                if (statusError) {
-                    [strongSelf reportError:statusError];
-                }
-
-                // Report Metrics
-                if (data) {
-                    [strongSelf.metricsManager updateReceivedBytes:data.length];
-                }
-            }
-            else if (error) {
-                // General Error Reporting
-                [strongSelf reportError:error];
-            }
-
-            // Notify Registered Listeners
-            for (OnURLResponse listener in self.urlResponseListeners) {
-                listener(data, request, response, error);
-            }
-        }];
-        [client registerOnEventQueueUpdate:^(NSArray * _Nonnull eventQueue) {
-            [[weakSelf metricsManager] updateMetricsFromEventQueue:eventQueue];
-        }];
-        [client registerOnEventCountUpdate:^(NSUInteger eventCount, NSURLRequest * _Nullable request, NSError * _Nullable error) {
-            [[weakSelf metricsManager] updateMetricsFromEventCount:eventCount request:request error:error];
-        }];
-        [client registerOnGenerateTelemetryEvent:^{
-            MMEEvent* event = [[weakSelf metricsManager] generateTelemetryMetricsEvent];
-            [[weakSelf logger] logEvent:event];
-        }];
-
         // Set to iVar (Protocol) Reference
-        self.apiClient = client;
+        self.apiClient = [self configureClientListeners:client];
 
         // Setup Service to Poll/Handle Configuration updates
-        self.configService = [[MMEConfigService alloc] init:self.preferences
-                                                     client:self.apiClient
-                                               onConfigLoad:^(MMEConfig * _Nonnull config) {
-
-             __strong __typeof__(weakSelf) strongSelf = weakSelf;
-            if (strongSelf) {
-                [strongSelf.preferences updateWithConfig:config];
-            }
-        }];
-        
+        self.configService = [self makeConfigServiceWithClient:client config:self.preferences];
         [self.configService startUpdates];
 
         [self sendPendingTelemetryMetricsEvent];
@@ -236,6 +194,82 @@ NS_ASSUME_NONNULL_BEGIN
     @catch(NSException *except) {
         [self reportException:except];
     }
+}
+
+-(MMEAPIClient*)configureClientListeners:(MMEAPIClient*)client {
+
+    // Setup Client
+    //    MMEAPIClient *client = [[MMEAPIClient alloc] initWithConfig:config];
+
+    // Register Hooks for Reporting Metrics / Logging
+    // Use function accessors instead of properties for easier memory management
+    // Given we can message null, a method call to null will return null.
+    // This save time unwrapping if (weakSelf) each time we're accessing a nullable object's property
+
+    __weak __typeof__(self) weakSelf = self;
+    [client registerOnSerializationErrorListener:^(NSError * _Nonnull error) {
+        [weakSelf reportError:error];
+    }];
+    [client registerOnURLResponseListener:^(NSData * _Nullable data, NSURLRequest * _Nonnull request, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        // Generic URL Response Tracking (Network Errors / Bytes)
+        __strong __typeof__(weakSelf) strongSelf = weakSelf;
+        if (!strongSelf){
+            return;
+        }
+
+        if (response && [response isKindOfClass:NSHTTPURLResponse.class]) {
+            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+            NSError *statusError = [[NSError alloc] initWith:request httpResponse:httpResponse error:error];
+
+            // General Error Reporting
+            if (statusError) {
+                [strongSelf reportError:statusError];
+            }
+
+            // Report Metrics
+            if (request && request.HTTPBody) {
+                [strongSelf.metricsManager updateSentBytes:request.HTTPBody.length];
+            }
+
+            if (data) {
+                [strongSelf.metricsManager updateReceivedBytes:data.length];
+            }
+        }
+        else if (error) {
+            // General Error Reporting
+            [strongSelf reportError:error];
+        }
+
+        // Notify Registered Listeners
+        for (OnURLResponse listener in self.urlResponseListeners) {
+            listener(data, request, response, error);
+        }
+    }];
+    [client registerOnEventQueueUpdate:^(NSArray * _Nonnull eventQueue) {
+        [[weakSelf metricsManager] updateMetricsFromEventQueue:eventQueue];
+    }];
+    [client registerOnEventCountUpdate:^(NSUInteger eventCount, NSURLRequest * _Nullable request, NSError * _Nullable error) {
+        [[weakSelf metricsManager] updateMetricsFromEventCount:eventCount request:request error:error];
+    }];
+    [client registerOnGenerateTelemetryEvent:^{
+        MMEEvent* event = [[weakSelf metricsManager] generateTelemetryMetricsEvent];
+        [[weakSelf logger] logEvent:event];
+    }];
+    return client;
+}
+
+-(MMEConfigService*)makeConfigServiceWithClient:(MMEAPIClient*)client
+                                         config:(id <MMEEventConfigProviding>)config {
+    __weak __typeof__(self) weakSelf = self;
+    return [[MMEConfigService alloc] init:config
+                                   client:client
+                             onConfigLoad:^(MMEConfig * _Nonnull config) {
+
+        __strong __typeof__(weakSelf) strongSelf = weakSelf;
+        if (strongSelf) {
+            [strongSelf.preferences updateWithConfig:config];
+        }
+    }];
 }
 
 /*! Resumes passive collection of data and metrics */

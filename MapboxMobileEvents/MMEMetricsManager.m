@@ -6,6 +6,7 @@
 #import "MMEEventConfigProviding.h"
 #import "MMEEvent.h"
 #import "MMELogger.h"
+#import "NSError+APIClient.h"
 
 // MARK: -
 
@@ -136,7 +137,7 @@
 
 // MARK: - Update Methods
 
-- (void)updateMetricsFromEventQueue:(NSArray *)eventQueue {
+- (void)updateMetricsFromEventQueue:(NSArray<MMEEvent*>*)eventQueue {
     if (eventQueue.count > 0) {
         self.metrics.eventCountTotal += (int)eventQueue.count;
         
@@ -151,38 +152,41 @@
 - (void)updateMetricsFromEventCount:(NSUInteger)eventCount
                             request:(nullable NSURLRequest *)request
                               error:(nullable NSError *)error {
-    if (request.HTTPBody) {
-        [self updateSentBytes:request.HTTPBody.length];
-    }
-    
-    if (request == nil && error == nil) {
-        [self updateEventsFailedCount:eventCount];
-    } else if (error == nil) {
+    // Successful
+    if (request && error == nil) {
+
         //successful request -- the events for this are counted elsewhere
         self.metrics.requests++;
+
     } else {
+
+        // Failure Case
         [self updateEventsFailedCount:eventCount];
 
-        NSHTTPURLResponse *response = (NSHTTPURLResponse *)[error.userInfo objectForKey:MMEResponseKey];
-        NSString *urlString = response.URL.absoluteString;
-        NSNumber *statusCode = @(response.statusCode);
-        NSString *statusCodeKey = [statusCode stringValue];
-        
-        if (urlString && [self.metrics.failedRequestsDict objectForKey:MMEEventKeyHeader] == nil) {
-            [self.metrics.failedRequestsDict setObject:urlString forKey:MMEEventKeyHeader];
+        // For specifically Session Failure Errors, keep history of failed requests
+        if ([error.domain isEqualToString:MMEErrorDomain] && error.code == MMESessionFailedError) {
+
+            NSHTTPURLResponse *response = (NSHTTPURLResponse *)[error.userInfo objectForKey:MMEResponseKey];
+            NSString *urlString = response.URL.absoluteString;
+            NSNumber *statusCode = @(response.statusCode);
+            NSString *statusCodeKey = [statusCode stringValue];
+
+            if (urlString && [self.metrics.failedRequestsDict objectForKey:MMEEventKeyHeader] == nil) {
+                [self.metrics.failedRequestsDict setObject:urlString forKey:MMEEventKeyHeader];
+            }
+
+            if ([self.metrics.failedRequestsDict objectForKey:MMEEventKeyFailedRequests] == nil) {
+                [self.metrics.failedRequestsDict setObject:[NSMutableDictionary new] forKey:MMEEventKeyFailedRequests];
+            }
+
+            NSMutableDictionary *failedRequests = [self.metrics.failedRequestsDict objectForKey:MMEEventKeyFailedRequests];
+
+            NSNumber *failedCount = [failedRequests objectForKey:statusCodeKey];
+            failedCount = [NSNumber numberWithInteger:[failedCount integerValue] + 1];
+            [failedRequests setObject:failedCount forKey:statusCodeKey];
+
+            [self.metrics.failedRequestsDict setObject:failedRequests forKey:MMEEventKeyFailedRequests];
         }
-    
-        if ([self.metrics.failedRequestsDict objectForKey:MMEEventKeyFailedRequests] == nil) {
-            [self.metrics.failedRequestsDict setObject:[NSMutableDictionary new] forKey:MMEEventKeyFailedRequests];
-        }
-        
-        NSMutableDictionary *failedRequests = [self.metrics.failedRequestsDict objectForKey:MMEEventKeyFailedRequests];
-        
-        NSNumber *failedCount = [failedRequests objectForKey:statusCodeKey];
-        failedCount = [NSNumber numberWithInteger:[failedCount integerValue] + 1];
-        [failedRequests setObject:failedCount forKey:statusCodeKey];
-        
-        [self.metrics.failedRequestsDict setObject:failedRequests forKey:MMEEventKeyFailedRequests];
     }
 }
 

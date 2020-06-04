@@ -56,9 +56,20 @@ typedef BOOL(^IsReachableViaWifi)(void);
 - (void)updateReceivedBytes:(NSUInteger)bytes;
 
 /*! @brief Events are moving from queue to api calls */
-- (void)updateMetricsFromEventQueue:(NSArray *)eventQueue;
+- (void)updateMetricsFromEventQueue:(NSArray<MMEEvent*>*)eventQueue;
 
-/*! @brief Event API call has completed with count */
+// TODO: - This appears to be used for most api call tracking?
+// It appears this is looking to evaluate how many element models are lost due to failures
+// Perhaps it would make sense to rename something more generic such as elements?
+
+/*!
+ @brief Event API call has completed with count
+ @discussion Provides mechanism to track the rate of success or failure due to Network/API response or failure to build URLRequest
+             Should be called after request event succeeds/fails, or if  the URLRequest fails to build.
+ @param eventCount The number of events packaged in the request
+ @param request The url Request conveying if the request was created successfuly or not
+ @param error The resulting error from the completion
+ */
 - (void)updateMetricsFromEventCount:(NSUInteger)eventCount
                             request:(nullable NSURLRequest *)request
                               error:(nullable NSError *)error;

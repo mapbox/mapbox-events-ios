@@ -160,10 +160,10 @@ int const kMMEMaxRequestCount = 1000;
                 if (strongSelf) {
 
 
-                    // Message Listeners
+                    // Message Listeners of success/failure on completion
                     for (OnEventCountUpdate listener in self.onEventCountUpdateListeners) {
                         // TODO: Is this the right count to report? Should this be going down? Reference batch count vs original events array
-                        listener(events.count, request, error);
+                        listener(batch.count, request, error);
                     }
 
                     if (completionHandler) {
@@ -172,6 +172,13 @@ int const kMMEMaxRequestCount = 1000;
                 }
 
             }];
+
+        } else {
+
+            // Message Listeners on failure to send batch due to issue building Request
+            for (OnEventCountUpdate listener in self.onEventCountUpdateListeners) {
+                listener(batch.count, nil, nil);
+            }
         }
 
         if (serializationError) {
@@ -182,10 +189,7 @@ int const kMMEMaxRequestCount = 1000;
             }
         }
 
-        // Message Listeners
-        for (OnEventCountUpdate listener in self.onEventCountUpdateListeners) {
-            listener(events.count, nil, nil);
-        }
+
     }
 
     // Message Listeners
@@ -283,7 +287,7 @@ int const kMMEMaxRequestCount = 1000;
 
             // Message Listeners
             for (OnEventCountUpdate listener in strongSelf.onEventCountUpdateListeners) {
-                listener(0, request, error);
+                listener(filePaths.count, request, error);
             }
 
             for (OnGenerateTelemetryEvent listener in strongSelf.onGenerateTelemetryEventListeners) {
