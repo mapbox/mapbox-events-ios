@@ -32,8 +32,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)resetEventQueuing;
 
-- (void)pauseOrResumeMetricsCollectionIfRequired;
-
 /*!
  @Brief Configures a client with expected listener behaviors
  @param client APIClient responsible for making API Calls

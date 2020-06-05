@@ -64,8 +64,11 @@ NS_ASSUME_NONNULL_BEGIN
 /*! Attempts to send all pending events immediately */
 - (void)flushEventsManager;
 
-/*! lush the event queue and stop accepting new events */
+/*! flush the event queue and stop accepting new events */
 - (void)stopEventsManager;
+
+/*! @brief pauseOrResumeMetricsCollectionIfRequired */
+- (void)pauseOrResumeMetricsCollectionIfRequired;
 
 // MARK: - Post Events or Files
 
