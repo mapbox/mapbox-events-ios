@@ -1,7 +1,7 @@
 #import "MMETypes.h"
-
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import "MMELogLevel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -15,32 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 // MARK: - Types
 
-/// Log Levels for Runtime Filtering
-typedef NS_ENUM(NSUInteger, MMELogLevel) {
-    /// Log level for no messages
-    MMELogNone = 0,
-    
-    /// Fatal Error Messages
-    MMELogFatal,
-    
-    /// Error Messages
-    MMELogError,
-    
-    /// Warning Messages
-    MMELogWarn,
-    
-    /// Informational Messages
-    MMELogInfo,
-       
-    /// Event Lifecycle Messages
-    MMELogEvent,
-    
-    /// Network Connection Messages
-    MMELogNetwork,
-    
-    /// All Debug Messages
-    MMELogDebug
-};
+
 
 /** A block to be called when debug logging is enabled.
     - Parameter: priority priority of the error being logged (MMELogLevel enum)

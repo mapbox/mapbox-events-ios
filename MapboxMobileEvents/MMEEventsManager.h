@@ -1,6 +1,7 @@
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
 #import "MMETypes.h"
+#import "MMELogLevel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -109,6 +110,12 @@ NS_ASSUME_NONNULL_BEGIN
     -Parameter: handler The handler this SDK uses to log messages.
 */
 - (void)setDebugHandler:(void (^)(NSUInteger, NSString *, NSString *))handler;
+
+/*!
+ @brief Filter Logging Level
+ @note Defaults to Info for DEBUG builds
+ */
+@property (nonatomic, assign) MMELogLevel logLevel;
 
 // MARK: - Listeners
 

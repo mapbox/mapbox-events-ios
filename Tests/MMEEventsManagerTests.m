@@ -136,6 +136,15 @@
 
 // MARK: - Behavior in Various Application States
 
+- (void)testLogLevel {
+    self.eventsManager.logLevel = MMELogNone;
+    XCTAssertEqual(self.eventsManager.logLevel, MMELogNone);
+    self.eventsManager.logLevel = MMELogDebug;
+    XCTAssertEqual(self.eventsManager.logLevel, MMELogDebug);
+    self.eventsManager.logLevel = MMELogNetwork;
+    XCTAssertEqual(self.eventsManager.logLevel, MMELogNetwork);
+}
+
 - (void)testIsCollectionEnabledInBackgroundSetter {
     self.preferences.isCollectionEnabled = YES;
     self.preferences.isCollectionEnabledInBackground = NO;

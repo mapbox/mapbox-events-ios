@@ -588,6 +588,14 @@ NS_ASSUME_NONNULL_BEGIN
     [self.logger setHandler:handler];
 }
 
+-(MMELogLevel)logLevel {
+    return [self.logger level];
+}
+
+-(void)setLogLevel:(MMELogLevel)logLevel {
+    [self.logger setLevel:logLevel];
+}
+
 // MARK: - Error & Exception Reporting
 
 - (MMEEvent *)reportError:(NSError *)eventsError {
