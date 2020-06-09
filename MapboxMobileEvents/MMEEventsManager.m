@@ -22,6 +22,7 @@
 #import "MMEUIApplicationWrapper.h"
 #import "MMEUniqueIdentifier.h"
 #import "MMEEventLogger.h"
+#import "NSBundle+MMEMobileEvents.h"
 
 #import "CLLocation+MMEMobileEvents.h"
 #import "CLLocationManager+MMEMobileEvents.h"
@@ -75,7 +76,12 @@ NS_ASSUME_NONNULL_BEGIN
         _eventQueue = [NSMutableArray array];
         _commonEventData = [[MMECommonEventData alloc] init];
         _uniqueIdentifer = [[MMEUniqueIdentifier alloc] initWithTimeInterval:NSUserDefaults.mme_configuration.mme_identifierRotationInterval];
-        _application = [[MMEUIApplicationWrapper alloc] init];
+
+        if (NSBundle.mme_isExtension) {
+            _application = [[MMEUIApplicationWrapper alloc] init];
+        } else {
+            _application = [[MMEUIApplicationExtensionWrapper alloc] init];
+        }
         _dispatchManager = [[MMEDispatchManager alloc] init];
     }
     return self;
