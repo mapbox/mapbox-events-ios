@@ -203,6 +203,10 @@
 		CF93A6582241EDD500BBA199 /* MMECertPin.m in Sources */ = {isa = PBXBuildFile; fileRef = CF93A6562241EDD500BBA199 /* MMECertPin.m */; };
 		CF93A6592241EDD500BBA199 /* MMECertPin.m in Sources */ = {isa = PBXBuildFile; fileRef = CF93A6562241EDD500BBA199 /* MMECertPin.m */; platformFilter = ios; };
 		CF93A65B2241EDD500BBA199 /* MMECertPin.h in Headers */ = {isa = PBXBuildFile; fileRef = CF93A6572241EDD500BBA199 /* MMECertPin.h */; };
+		F44600AF249023A6003B297C /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F446009924902382003B297C /* NotificationCenter.framework */; };
+		F44600B3249023A6003B297C /* TodayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F44600B2249023A6003B297C /* TodayViewController.m */; };
+		F44600B6249023A6003B297C /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F44600B4249023A6003B297C /* MainInterface.storyboard */; };
+		F44600BA249023A6003B297C /* TodayWidget.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = F44600AE249023A6003B297C /* TodayWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		F4684FF42432A1610079B389 /* NSBundle+MMEMobileEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = F4684FF22432A1610079B389 /* NSBundle+MMEMobileEvents.h */; };
 		F4684FF52432A1610079B389 /* NSBundle+MMEMobileEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = F4684FF32432A1610079B389 /* NSBundle+MMEMobileEvents.m */; };
 		F4684FF62432A2770079B389 /* NSBundle+MMEMobileEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = F4684FF32432A1610079B389 /* NSBundle+MMEMobileEvents.m */; };
@@ -258,6 +262,20 @@
 			remoteGlobalIDString = 404807B81EA186D8008A6D50;
 			remoteInfo = MapboxMobileEvents;
 		};
+		F44600B8249023A6003B297C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 404807B01EA186D8008A6D50 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F44600AD249023A6003B297C;
+			remoteInfo = TodayWidget;
+		};
+		F44600BF249026CE003B297C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 404807B01EA186D8008A6D50 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 404807B81EA186D8008A6D50;
+			remoteInfo = MapboxMobileEvents;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -297,6 +315,17 @@
 				9CF000642371037E009A2700 /* Cedar.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F44600A924902382003B297C /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				F44600BA249023A6003B297C /* TodayWidget.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -457,6 +486,12 @@
 		CF93A6562241EDD500BBA199 /* MMECertPin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMECertPin.m; sourceTree = "<group>"; };
 		CF93A6572241EDD500BBA199 /* MMECertPin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMECertPin.h; sourceTree = "<group>"; };
 		CF93A66222488A4500BBA199 /* MMECertPinTests.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = MMECertPinTests.m; sourceTree = "<group>"; };
+		F446009924902382003B297C /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
+		F44600AE249023A6003B297C /* TodayWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = TodayWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		F44600B1249023A6003B297C /* TodayViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TodayViewController.h; sourceTree = "<group>"; };
+		F44600B2249023A6003B297C /* TodayViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TodayViewController.m; sourceTree = "<group>"; };
+		F44600B5249023A6003B297C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
+		F44600B7249023A6003B297C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F4684FF22432A1610079B389 /* NSBundle+MMEMobileEvents.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSBundle+MMEMobileEvents.h"; sourceTree = "<group>"; };
 		F4684FF32432A1610079B389 /* NSBundle+MMEMobileEvents.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+MMEMobileEvents.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -513,6 +548,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F44600AB249023A6003B297C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F44600AF249023A6003B297C /* NotificationCenter.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -522,6 +565,7 @@
 				9C794C85235505340027B9D4 /* XCTest.framework */,
 				40A7F9911F79A743002B931F /* Cedar.framework */,
 				4032F47D1F1FEDC6001C1FBD /* libz.tbd */,
+				F446009924902382003B297C /* NotificationCenter.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -531,6 +575,7 @@
 			children = (
 				9C6322632213530A00653792 /* readme.md */,
 				9CCB47E922976B5E00DF551B /* LICENSE.md */,
+				F446009224902284003B297C /* Examples */,
 				404807BB1EA186D8008A6D50 /* MapboxMobileEvents */,
 				404807C61EA186D8008A6D50 /* Tests */,
 				9C65A2672256C110006E3FED /* MMETestHost */,
@@ -550,6 +595,7 @@
 				9C65A2662256C110006E3FED /* MMETestHost.app */,
 				9CDC34ED23502F8700852FF0 /* MMECedarTests.xctest */,
 				9CF000682371037E009A2700 /* MMETestHost (Static).app */,
+				F44600AE249023A6003B297C /* TodayWidget.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -799,6 +845,33 @@
 			name = XCTest;
 			sourceTree = "<group>";
 		};
+		F446009224902284003B297C /* Examples */ = {
+			isa = PBXGroup;
+			children = (
+				F446009324902284003B297C /* Extensions */,
+			);
+			path = Examples;
+			sourceTree = "<group>";
+		};
+		F446009324902284003B297C /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				F44600B0249023A6003B297C /* TodayWidget */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		F44600B0249023A6003B297C /* TodayWidget */ = {
+			isa = PBXGroup;
+			children = (
+				F44600B1249023A6003B297C /* TodayViewController.h */,
+				F44600B2249023A6003B297C /* TodayViewController.m */,
+				F44600B4249023A6003B297C /* MainInterface.storyboard */,
+				F44600B7249023A6003B297C /* Info.plist */,
+			);
+			path = TodayWidget;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -906,11 +979,13 @@
 				9C65A2632256C110006E3FED /* Frameworks */,
 				9C65A2642256C110006E3FED /* Resources */,
 				9C65A2832256C1CF006E3FED /* Embed Frameworks */,
+				F44600A924902382003B297C /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				9C16239123577E66005DB983 /* PBXTargetDependency */,
+				F44600B9249023A6003B297C /* PBXTargetDependency */,
 			);
 			name = MMETestHost;
 			productName = MMETestHost;
@@ -955,12 +1030,31 @@
 			productReference = 9CF000682371037E009A2700 /* MMETestHost (Static).app */;
 			productType = "com.apple.product-type.application";
 		};
+		F44600AD249023A6003B297C /* TodayWidget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F44600BB249023A6003B297C /* Build configuration list for PBXNativeTarget "TodayWidget" */;
+			buildPhases = (
+				F44600AA249023A6003B297C /* Sources */,
+				F44600AB249023A6003B297C /* Frameworks */,
+				F44600AC249023A6003B297C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F44600C0249026CE003B297C /* PBXTargetDependency */,
+			);
+			name = TodayWidget;
+			productName = TodayWidget;
+			productReference = F44600AE249023A6003B297C /* TodayWidget.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		404807B01EA186D8008A6D50 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 1150;
 				LastUpgradeCheck = 1020;
 				ORGANIZATIONNAME = Mapbox;
 				TargetAttributes = {
@@ -997,6 +1091,9 @@
 						DevelopmentTeam = GJZR2MEM28;
 						TestTargetID = 9C65A2652256C110006E3FED;
 					};
+					F44600AD249023A6003B297C = {
+						CreatedOnToolsVersion = 11.5;
+					};
 				};
 			};
 			buildConfigurationList = 404807B31EA186D8008A6D50 /* Build configuration list for PBXProject "MapboxMobileEvents" */;
@@ -1019,6 +1116,7 @@
 				9CDC34C223502F8700852FF0 /* MMECedarTests */,
 				9C65A2652256C110006E3FED /* MMETestHost */,
 				9CF000452371037E009A2700 /* MMETestHost (Static) */,
+				F44600AD249023A6003B297C /* TodayWidget */,
 			);
 		};
 /* End PBXProject section */
@@ -1096,6 +1194,14 @@
 				9CF0005F2371037E009A2700 /* config-number-tag.json in Resources */,
 				9CF000602371037E009A2700 /* config-type1-tto.json in Resources */,
 				9CF000612371037E009A2700 /* config-100m-gfo.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F44600AC249023A6003B297C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F44600B6249023A6003B297C /* MainInterface.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1255,6 +1361,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F44600AA249023A6003B297C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F44600B3249023A6003B297C /* TodayViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -1296,6 +1410,16 @@
 			target = 404807B81EA186D8008A6D50 /* MapboxMobileEvents */;
 			targetProxy = AC881B1423FDEDBF00E614B7 /* PBXContainerItemProxy */;
 		};
+		F44600B9249023A6003B297C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F44600AD249023A6003B297C /* TodayWidget */;
+			targetProxy = F44600B8249023A6003B297C /* PBXContainerItemProxy */;
+		};
+		F44600C0249026CE003B297C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 404807B81EA186D8008A6D50 /* MapboxMobileEvents */;
+			targetProxy = F44600BF249026CE003B297C /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
@@ -1313,6 +1437,14 @@
 				9C65A2742256C112006E3FED /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		F44600B4249023A6003B297C /* MainInterface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F44600B5249023A6003B297C /* Base */,
+			);
+			name = MainInterface.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -1983,6 +2115,79 @@
 			};
 			name = RelWithDebInfo;
 		};
+		F44600BC249023A6003B297C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = GJZR2MEM28;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = Examples/Extensions/TodayWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MMETestHost.TodayWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		F44600BD249023A6003B297C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = GJZR2MEM28;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = Examples/Extensions/TodayWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MMETestHost.TodayWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		F44600BE249023A6003B297C /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = GJZR2MEM28;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = Examples/Extensions/TodayWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MMETestHost.TodayWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = RelWithDebInfo;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -2062,6 +2267,16 @@
 				9CF000662371037E009A2700 /* Debug */,
 				9CF000672371037E009A2700 /* Release */,
 				CAB36C372374A1BA00592F74 /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F44600BB249023A6003B297C /* Build configuration list for PBXNativeTarget "TodayWidget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F44600BC249023A6003B297C /* Debug */,
+				F44600BD249023A6003B297C /* Release */,
+				F44600BE249023A6003B297C /* RelWithDebInfo */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
