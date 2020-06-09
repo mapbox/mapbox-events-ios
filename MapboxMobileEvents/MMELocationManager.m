@@ -5,6 +5,7 @@
 #import "MMEMetricsManager.h"
 #import "MMEUIApplicationWrapper.h"
 #import "NSUserDefaults+MMEConfiguration.h"
+#import "NSBundle+MMEMobileEvents.h"
 
 static const NSTimeInterval MMELocationManagerHibernationTimeout = 300.0;
 static const NSTimeInterval MMELocationManagerHibernationPollInterval = 5.0;
@@ -35,7 +36,13 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
 - (instancetype)init {
     self = [super init];
     if (self) {
-        _application = [[MMEUIApplicationWrapper alloc] init];
+
+        if (NSBundle.mme_isExtension) {
+            _application = [[MMEUIApplicationWrapper alloc] init];
+        } else {
+            _application = [[MMEUIApplicationExtensionWrapper alloc] init];
+        }
+
         NSArray *backgroundModes = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UIBackgroundModes"];
         _hostAppHasBackgroundCapability = [backgroundModes containsObject:@"location"];
     }
