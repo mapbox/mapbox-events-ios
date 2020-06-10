@@ -76,12 +76,7 @@ NS_ASSUME_NONNULL_BEGIN
         _eventQueue = [NSMutableArray array];
         _commonEventData = [[MMECommonEventData alloc] init];
         _uniqueIdentifer = [[MMEUniqueIdentifier alloc] initWithTimeInterval:NSUserDefaults.mme_configuration.mme_identifierRotationInterval];
-
-        if (NSBundle.mme_isExtension) {
-            _application = [[MMEUIApplicationWrapper alloc] init];
-        } else {
-            _application = [[MMEUIApplicationExtensionWrapper alloc] init];
-        }
+        _application = [[MMEUIApplicationWrapper alloc] init];
         _dispatchManager = [[MMEDispatchManager alloc] init];
     }
     return self;
