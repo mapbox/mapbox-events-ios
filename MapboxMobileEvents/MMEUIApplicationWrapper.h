@@ -6,6 +6,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol MMEUIApplicationWrapper <NSObject>
 
+/*! Integer Representation of content size scale (for  metrics) */
+@property (nonatomic, readonly) NSInteger mme_contentSizeScale;
+
 /*! The runtime state of the app. */
 @property(nonatomic, readonly) UIApplicationState applicationState;
 
@@ -47,11 +50,5 @@ NS_ASSUME_NONNULL_BEGIN
 -(instancetype)initWithApplication:(id <MMEUIApplicationWrapper>)application NS_DESIGNATED_INITIALIZER;
 
 @end
-
-// MARK: - App Extension Support
-
-@interface MMEUIApplicationExtensionWrapper : NSObject <MMEUIApplicationWrapper>
-@end
-
 
 NS_ASSUME_NONNULL_END

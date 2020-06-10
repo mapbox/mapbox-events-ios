@@ -6,6 +6,7 @@
 #import "MMECommonEventData.h"
 #import "MMEReachability.h"
 #import "MMEEventsManager.h"
+#import "MMEUIApplicationWrapper.h"
 
 #import "NSUserDefaults+MMEConfiguration.h"
 #if TARGET_OS_IOS || TARGET_OS_TVOS
@@ -233,11 +234,7 @@
     eventAttributes[MMEEventKeyResolution] = @(commonEventData.scale);
 #if TARGET_OS_IOS || TARGET_OS_TVOS
 
-    if (NSBundle.mme_isExtension) {
-        eventAttributes[MMEEventKeyAccessibilityFontScale] = @(NSExtensionContext.mme_contentSizeScale);
-    } else {
-        eventAttributes[MMEEventKeyAccessibilityFontScale] = @(UIApplication.sharedApplication.mme_contentSizeScale);
-    }
+    eventAttributes[MMEEventKeyAccessibilityFontScale] = @(MMEUIApplicationWrapper.new.mme_contentSizeScale);
     eventAttributes[MMEEventKeyOrientation] = UIDevice.currentDevice.mme_deviceOrientation;
 #endif
     eventAttributes[MMEEventKeyWifi] = @(MMEReachability.reachabilityForLocalWiFi.isReachableViaWiFi);

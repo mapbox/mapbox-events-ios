@@ -74,7 +74,6 @@
 		40FB437C1EFAFAE900EC5BC0 /* MMETimerManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 40FB437A1EFAFAE900EC5BC0 /* MMETimerManager.h */; };
 		40FB437D1EFAFAE900EC5BC0 /* MMETimerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 40FB437B1EFAFAE900EC5BC0 /* MMETimerManager.m */; };
 		40FB437E1EFAFAE900EC5BC0 /* MMETimerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 40FB437B1EFAFAE900EC5BC0 /* MMETimerManager.m */; platformFilter = ios; };
-		96AB510B21641A6000A261B8 /* MMEUINavigation.m in Sources */ = {isa = PBXBuildFile; fileRef = ACE4F0191FD6102100035880 /* MMEUINavigation.m */; platformFilter = ios; };
 		9C3F930B2351180A00F99907 /* MMEAPIClient_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 9C3F930A2351180A00F99907 /* MMEAPIClient_Private.h */; };
 		9C3F930D235128F500F99907 /* MMEEventsManager_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 9C3F930C235128F500F99907 /* MMEEventsManager_Private.h */; };
 		9C3F931223512F1A00F99907 /* MMETestStub.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C3F930E23512F1900F99907 /* MMETestStub.m */; platformFilter = ios; };
@@ -194,11 +193,9 @@
 		ACAF8D2D238DEF8E0033745A /* MMEEventsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C9E27A1EA542BC00744FE7 /* MMEEventsManager.m */; };
 		ACAF8D2E238DEFB20033745A /* MMEMetrics.m in Sources */ = {isa = PBXBuildFile; fileRef = AC61FA5B217A04CC008519F5 /* MMEMetrics.m */; };
 		ACAF8D2F238DEFD00033745A /* MMEMetricsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = AC86FE1C2169250000D1B89C /* MMEMetricsManager.m */; };
-		ACAF8D30238DEFEC0033745A /* MMEUINavigation.m in Sources */ = {isa = PBXBuildFile; fileRef = ACE4F0191FD6102100035880 /* MMEUINavigation.m */; };
 		ACAF8D31238DF00D0033745A /* NSUserDefaults+MMEConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CDC34B7234FD35800852FF0 /* NSUserDefaults+MMEConfiguration.m */; };
 		ACBD2E5923709F920082F037 /* MMEEventsManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = ACBD2E5823709F920082F037 /* MMEEventsManagerTests.m */; };
 		ACD1B2B423889BC000C0F0B6 /* MMEAPIClientFake.m in Sources */ = {isa = PBXBuildFile; fileRef = 4036EFBA1ED36F06009C40BA /* MMEAPIClientFake.m */; };
-		ACE4F01A1FD6102100035880 /* MMEUINavigation.h in Headers */ = {isa = PBXBuildFile; fileRef = ACE4F0181FD6102100035880 /* MMEUINavigation.h */; };
 		CA0FAA2C237C80C000C9F3C9 /* NSUserDefaults+MMEConfiguration.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9CDC34B6234FD35800852FF0 /* NSUserDefaults+MMEConfiguration.h */; };
 		CF93A6582241EDD500BBA199 /* MMECertPin.m in Sources */ = {isa = PBXBuildFile; fileRef = CF93A6562241EDD500BBA199 /* MMECertPin.m */; };
 		CF93A6592241EDD500BBA199 /* MMECertPin.m in Sources */ = {isa = PBXBuildFile; fileRef = CF93A6562241EDD500BBA199 /* MMECertPin.m */; platformFilter = ios; };
@@ -482,8 +479,6 @@
 		ACB6F21D1F7BF71B0032A916 /* MMELocationManagerTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MMELocationManagerTests.mm; sourceTree = "<group>"; };
 		ACBD2E5823709F920082F037 /* MMEEventsManagerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEEventsManagerTests.m; sourceTree = "<group>"; };
 		ACD86D9F1F96A77700DD2A8D /* MMEAPIClientTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MMEAPIClientTests.mm; sourceTree = "<group>"; };
-		ACE4F0181FD6102100035880 /* MMEUINavigation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEUINavigation.h; sourceTree = "<group>"; };
-		ACE4F0191FD6102100035880 /* MMEUINavigation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEUINavigation.m; sourceTree = "<group>"; };
 		CF93A6562241EDD500BBA199 /* MMECertPin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMECertPin.m; sourceTree = "<group>"; };
 		CF93A6572241EDD500BBA199 /* MMECertPin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMECertPin.h; sourceTree = "<group>"; };
 		CF93A66222488A4500BBA199 /* MMECertPinTests.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = MMECertPinTests.m; sourceTree = "<group>"; };
@@ -704,8 +699,6 @@
 				405172DC1EAFFA9400F8CDA1 /* MMENSURLSessionWrapper.m */,
 				40AE58411EA6C86C0046B437 /* MMEUIApplicationWrapper.h */,
 				40AE58421EA6C86C0046B437 /* MMEUIApplicationWrapper.m */,
-				ACE4F0181FD6102100035880 /* MMEUINavigation.h */,
-				ACE4F0191FD6102100035880 /* MMEUINavigation.m */,
 				40AE58581EA9373F0046B437 /* MMEUniqueIdentifier.h */,
 				40AE58591EA9373F0046B437 /* MMEUniqueIdentifier.m */,
 			);
@@ -910,7 +903,6 @@
 				9C3F930D235128F500F99907 /* MMEEventsManager_Private.h in Headers */,
 				9C65A28B225D41F2006E3FED /* UIKit+MMEMobileEvents.h in Headers */,
 				AC86FE1D2169250000D1B89C /* MMEMetricsManager.h in Headers */,
-				ACE4F01A1FD6102100035880 /* MMEUINavigation.h in Headers */,
 				40834B9F1FDF62C900C1BD0D /* MMENamespacedDependencies.h in Headers */,
 				40F16C961F04514100DF338D /* MMEReachability.h in Headers */,
 				9C3F930B2351180A00F99907 /* MMEAPIClient_Private.h in Headers */,
@@ -1233,7 +1225,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				ACAF8D2A238DEF270033745A /* MMEConstants.m in Sources */,
-				ACAF8D30238DEFEC0033745A /* MMEUINavigation.m in Sources */,
 				ACAF8D31238DF00D0033745A /* NSUserDefaults+MMEConfiguration.m in Sources */,
 				ACAF8D2F238DEFD00033745A /* MMEMetricsManager.m in Sources */,
 				ACAF8D2D238DEF8E0033745A /* MMEEventsManager.m in Sources */,
@@ -1311,7 +1302,6 @@
 				AC61FA5E217A04CC008519F5 /* MMEMetrics.m in Sources */,
 				40FB437E1EFAFAE900EC5BC0 /* MMETimerManager.m in Sources */,
 				408596641ED086EB003BD29D /* MMEUIApplicationWrapper.m in Sources */,
-				96AB510B21641A6000A261B8 /* MMEUINavigation.m in Sources */,
 				408596661ED086F1003BD29D /* MMEUniqueIdentifier.m in Sources */,
 				40F133551F200524007B4096 /* NSData+MMEGZIP.m in Sources */,
 				9CF00044237102B8009A2700 /* NSUserDefaults+MMEConfiguration.m in Sources */,
@@ -1581,6 +1571,7 @@
 		404807CE1EA186D8008A6D50 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_IDENTITY = "";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
@@ -1601,7 +1592,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
-				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MACCATALYST = YES;
 				WARNING_CFLAGS = (
 					"-Wunused-property-ivar",
 					"-Wsemicolon-before-method-body",
@@ -1614,6 +1605,7 @@
 		404807CF1EA186D8008A6D50 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_IDENTITY = "";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
@@ -1634,7 +1626,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
-				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MACCATALYST = YES;
 				WARNING_CFLAGS = (
 					"-Wunused-property-ivar",
 					"-Wsemicolon-before-method-body",
@@ -1970,6 +1962,7 @@
 		CAB36C322374A1BA00592F74 /* RelWithDebInfo */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_IDENTITY = "";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
@@ -1990,7 +1983,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
-				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MACCATALYST = YES;
 				WARNING_CFLAGS = (
 					"-Wunused-property-ivar",
 					"-Wsemicolon-before-method-body",
