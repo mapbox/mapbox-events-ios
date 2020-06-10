@@ -2,6 +2,10 @@
 
 @implementation MMEUIApplicationWrapperFake
 
+- (NSInteger)mme_contentSizeScale {
+    return 0;
+}
+
 - (UIBackgroundTaskIdentifier)beginBackgroundTaskWithExpirationHandler:(void (^ _Nullable)(void))handler {
     
     _backgroundTaskExpirationHandlerBlock = handler;
