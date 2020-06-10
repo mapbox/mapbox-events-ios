@@ -206,6 +206,11 @@
 		CF93A6582241EDD500BBA199 /* MMECertPin.m in Sources */ = {isa = PBXBuildFile; fileRef = CF93A6562241EDD500BBA199 /* MMECertPin.m */; };
 		CF93A6592241EDD500BBA199 /* MMECertPin.m in Sources */ = {isa = PBXBuildFile; fileRef = CF93A6562241EDD500BBA199 /* MMECertPin.m */; platformFilter = ios; };
 		CF93A65B2241EDD500BBA199 /* MMECertPin.h in Headers */ = {isa = PBXBuildFile; fileRef = CF93A6572241EDD500BBA199 /* MMECertPin.h */; };
+		F4EDB66E2491745F00187C4E /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4EDB66D2491745F00187C4E /* NotificationCenter.framework */; };
+		F4EDB6722491745F00187C4E /* TodayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F4EDB6712491745F00187C4E /* TodayViewController.m */; };
+		F4EDB6752491745F00187C4E /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F4EDB6732491745F00187C4E /* MainInterface.storyboard */; };
+		F4EDB6792491745F00187C4E /* TodayExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = F4EDB66C2491745F00187C4E /* TodayExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		F4EDB684249174B500187C4E /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 404807B91EA186D8008A6D50 /* MapboxMobileEvents.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -251,6 +256,20 @@
 			remoteGlobalIDString = 408596521ED084C0003BD29D;
 			remoteInfo = libMapboxMobileEvents;
 		};
+		F4EDB6772491745F00187C4E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 404807B01EA186D8008A6D50 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F4EDB66B2491745F00187C4E;
+			remoteInfo = TodayExtension;
+		};
+		F4EDB682249174AC00187C4E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 404807B01EA186D8008A6D50 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 404807B81EA186D8008A6D50;
+			remoteInfo = MapboxMobileEvents;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -290,6 +309,17 @@
 				9CF000642371037E009A2700 /* Cedar.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F4EDB67A2491745F00187C4E /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				F4EDB6792491745F00187C4E /* TodayExtension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -449,6 +479,12 @@
 		CF93A6562241EDD500BBA199 /* MMECertPin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMECertPin.m; sourceTree = "<group>"; };
 		CF93A6572241EDD500BBA199 /* MMECertPin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMECertPin.h; sourceTree = "<group>"; };
 		CF93A66222488A4500BBA199 /* MMECertPinTests.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = MMECertPinTests.m; sourceTree = "<group>"; };
+		F4EDB66C2491745F00187C4E /* TodayExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = TodayExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		F4EDB66D2491745F00187C4E /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
+		F4EDB6702491745F00187C4E /* TodayViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TodayViewController.h; sourceTree = "<group>"; };
+		F4EDB6712491745F00187C4E /* TodayViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TodayViewController.m; sourceTree = "<group>"; };
+		F4EDB6742491745F00187C4E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
+		F4EDB6762491745F00187C4E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -503,6 +539,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F4EDB6692491745F00187C4E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F4EDB684249174B500187C4E /* MapboxMobileEvents.framework in Frameworks */,
+				F4EDB66E2491745F00187C4E /* NotificationCenter.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -512,6 +557,7 @@
 				9C794C85235505340027B9D4 /* XCTest.framework */,
 				40A7F9911F79A743002B931F /* Cedar.framework */,
 				4032F47D1F1FEDC6001C1FBD /* libz.tbd */,
+				F4EDB66D2491745F00187C4E /* NotificationCenter.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -519,6 +565,7 @@
 		404807AF1EA186D8008A6D50 = {
 			isa = PBXGroup;
 			children = (
+				F4EDB6802491747B00187C4E /* Examples */,
 				9C6322632213530A00653792 /* readme.md */,
 				9CCB47E922976B5E00DF551B /* LICENSE.md */,
 				404807BB1EA186D8008A6D50 /* MapboxMobileEvents */,
@@ -540,6 +587,7 @@
 				9C65A2662256C110006E3FED /* MMETestHost.app */,
 				9CDC34ED23502F8700852FF0 /* MMECedarTests.xctest */,
 				9CF000682371037E009A2700 /* MMETestHost (Static).app */,
+				F4EDB66C2491745F00187C4E /* TodayExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -786,6 +834,33 @@
 			name = XCTest;
 			sourceTree = "<group>";
 		};
+		F4EDB66F2491745F00187C4E /* TodayExtension */ = {
+			isa = PBXGroup;
+			children = (
+				F4EDB6702491745F00187C4E /* TodayViewController.h */,
+				F4EDB6712491745F00187C4E /* TodayViewController.m */,
+				F4EDB6732491745F00187C4E /* MainInterface.storyboard */,
+				F4EDB6762491745F00187C4E /* Info.plist */,
+			);
+			path = TodayExtension;
+			sourceTree = "<group>";
+		};
+		F4EDB6802491747B00187C4E /* Examples */ = {
+			isa = PBXGroup;
+			children = (
+				F4EDB6812491747B00187C4E /* Extensions */,
+			);
+			path = Examples;
+			sourceTree = "<group>";
+		};
+		F4EDB6812491747B00187C4E /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				F4EDB66F2491745F00187C4E /* TodayExtension */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -892,11 +967,13 @@
 				9C65A2632256C110006E3FED /* Frameworks */,
 				9C65A2642256C110006E3FED /* Resources */,
 				9C65A2832256C1CF006E3FED /* Embed Frameworks */,
+				F4EDB67A2491745F00187C4E /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				9C16239123577E66005DB983 /* PBXTargetDependency */,
+				F4EDB6782491745F00187C4E /* PBXTargetDependency */,
 			);
 			name = MMETestHost;
 			productName = MMETestHost;
@@ -941,6 +1018,24 @@
 			productReference = 9CF000682371037E009A2700 /* MMETestHost (Static).app */;
 			productType = "com.apple.product-type.application";
 		};
+		F4EDB66B2491745F00187C4E /* TodayExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F4EDB67E2491745F00187C4E /* Build configuration list for PBXNativeTarget "TodayExtension" */;
+			buildPhases = (
+				F4EDB6682491745F00187C4E /* Sources */,
+				F4EDB6692491745F00187C4E /* Frameworks */,
+				F4EDB66A2491745F00187C4E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F4EDB683249174AC00187C4E /* PBXTargetDependency */,
+			);
+			name = TodayExtension;
+			productName = TodayExtension;
+			productReference = F4EDB66C2491745F00187C4E /* TodayExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -983,6 +1078,9 @@
 						DevelopmentTeam = GJZR2MEM28;
 						TestTargetID = 9C65A2652256C110006E3FED;
 					};
+					F4EDB66B2491745F00187C4E = {
+						CreatedOnToolsVersion = 11.5;
+					};
 				};
 			};
 			buildConfigurationList = 404807B31EA186D8008A6D50 /* Build configuration list for PBXProject "MapboxMobileEvents" */;
@@ -1005,6 +1103,7 @@
 				9CDC34C223502F8700852FF0 /* MMECedarTests */,
 				9C65A2652256C110006E3FED /* MMETestHost */,
 				9CF000452371037E009A2700 /* MMETestHost (Static) */,
+				F4EDB66B2491745F00187C4E /* TodayExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -1082,6 +1181,14 @@
 				9CF0005F2371037E009A2700 /* config-number-tag.json in Resources */,
 				9CF000602371037E009A2700 /* config-type1-tto.json in Resources */,
 				9CF000612371037E009A2700 /* config-100m-gfo.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F4EDB66A2491745F00187C4E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F4EDB6752491745F00187C4E /* MainInterface.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1247,6 +1354,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F4EDB6682491745F00187C4E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F4EDB6722491745F00187C4E /* TodayViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -1282,6 +1397,16 @@
 			target = 408596521ED084C0003BD29D /* libMapboxMobileEvents */;
 			targetProxy = 9CF0006A23710389009A2700 /* PBXContainerItemProxy */;
 		};
+		F4EDB6782491745F00187C4E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F4EDB66B2491745F00187C4E /* TodayExtension */;
+			targetProxy = F4EDB6772491745F00187C4E /* PBXContainerItemProxy */;
+		};
+		F4EDB683249174AC00187C4E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 404807B81EA186D8008A6D50 /* MapboxMobileEvents */;
+			targetProxy = F4EDB682249174AC00187C4E /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
@@ -1299,6 +1424,14 @@
 				9C65A2742256C112006E3FED /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		F4EDB6732491745F00187C4E /* MainInterface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F4EDB6742491745F00187C4E /* Base */,
+			);
+			name = MainInterface.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -1969,6 +2102,79 @@
 			};
 			name = RelWithDebInfo;
 		};
+		F4EDB67B2491745F00187C4E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = GJZR2MEM28;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = Examples/Extensions/TodayExtension/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MMETestHost.TodayExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		F4EDB67C2491745F00187C4E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = GJZR2MEM28;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = Examples/Extensions/TodayExtension/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MMETestHost.TodayExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		F4EDB67D2491745F00187C4E /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = GJZR2MEM28;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = Examples/Extensions/TodayExtension/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MMETestHost.TodayExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = RelWithDebInfo;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -2048,6 +2254,16 @@
 				9CF000662371037E009A2700 /* Debug */,
 				9CF000672371037E009A2700 /* Release */,
 				CAB36C372374A1BA00592F74 /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F4EDB67E2491745F00187C4E /* Build configuration list for PBXNativeTarget "TodayExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F4EDB67B2491745F00187C4E /* Debug */,
+				F4EDB67C2491745F00187C4E /* Release */,
+				F4EDB67D2491745F00187C4E /* RelWithDebInfo */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
