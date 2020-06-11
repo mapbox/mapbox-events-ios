@@ -13,6 +13,10 @@
 
 @implementation MockApplicationWrapper
 
+- (NSInteger)mme_contentSizeScale {
+    return 0;
+}
+
 - (UIApplicationState)applicationState {
     self.applicationStateCallCount += 1;
     return UIApplicationStateBackground;
