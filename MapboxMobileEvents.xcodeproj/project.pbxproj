@@ -205,6 +205,8 @@
 		F44600B6249023A6003B297C /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F44600B4249023A6003B297C /* MainInterface.storyboard */; };
 		F44600BA249023A6003B297C /* TodayWidget.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = F44600AE249023A6003B297C /* TodayWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		F44600C3249031A2003B297C /* MMEUIApplicationWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = F44600C2249031A2003B297C /* MMEUIApplicationWrapper.m */; };
+		F450766E2491A50200FAE290 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F450766D2491A50200FAE290 /* ViewController.m */; };
+		F450766F2491A50200FAE290 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F450766D2491A50200FAE290 /* ViewController.m */; };
 		F4684FF42432A1610079B389 /* NSBundle+MMEMobileEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = F4684FF22432A1610079B389 /* NSBundle+MMEMobileEvents.h */; };
 		F4684FF52432A1610079B389 /* NSBundle+MMEMobileEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = F4684FF32432A1610079B389 /* NSBundle+MMEMobileEvents.m */; };
 		F4684FF62432A2770079B389 /* NSBundle+MMEMobileEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = F4684FF32432A1610079B389 /* NSBundle+MMEMobileEvents.m */; };
@@ -489,6 +491,9 @@
 		F44600B5249023A6003B297C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		F44600B7249023A6003B297C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F44600C2249031A2003B297C /* MMEUIApplicationWrapper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEUIApplicationWrapper.m; sourceTree = "<group>"; };
+		F450766C2491A50200FAE290 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		F450766D2491A50200FAE290 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		F45076702491A57800FAE290 /* TodayWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TodayWidget.entitlements; sourceTree = "<group>"; };
 		F4684FF22432A1610079B389 /* NSBundle+MMEMobileEvents.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSBundle+MMEMobileEvents.h"; sourceTree = "<group>"; };
 		F4684FF32432A1610079B389 /* NSBundle+MMEMobileEvents.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+MMEMobileEvents.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -771,6 +776,8 @@
 				9C65A2762256C112006E3FED /* MMETestHost-Info.plist */,
 				9C3F935A235138FD00F99907 /* MMETestDelegate.h */,
 				9C3F9359235138FD00F99907 /* MMETestDelegate.m */,
+				F450766C2491A50200FAE290 /* ViewController.h */,
+				F450766D2491A50200FAE290 /* ViewController.m */,
 				9C65A27C2256C175006E3FED /* MMETestHost.entitlements */,
 				9C65A2712256C112006E3FED /* Assets.xcassets */,
 				9C65A2732256C112006E3FED /* LaunchScreen.storyboard */,
@@ -860,6 +867,7 @@
 		F44600B0249023A6003B297C /* TodayWidget */ = {
 			isa = PBXGroup;
 			children = (
+				F45076702491A57800FAE290 /* TodayWidget.entitlements */,
 				F44600B1249023A6003B297C /* TodayViewController.h */,
 				F44600B2249023A6003B297C /* TodayViewController.m */,
 				F44600B4249023A6003B297C /* MainInterface.storyboard */,
@@ -1314,6 +1322,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F450766E2491A50200FAE290 /* ViewController.m in Sources */,
 				9C3F935B235138FD00F99907 /* MMETestDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1351,6 +1360,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F450766F2491A50200FAE290 /* ViewController.m in Sources */,
 				9CF000492371037E009A2700 /* MMETestDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2117,6 +2127,7 @@
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_ENTITLEMENTS = Examples/Extensions/TodayWidget/TodayWidget.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
@@ -2142,6 +2153,7 @@
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_ENTITLEMENTS = Examples/Extensions/TodayWidget/TodayWidget.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
@@ -2166,6 +2178,7 @@
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_ENTITLEMENTS = Examples/Extensions/TodayWidget/TodayWidget.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
