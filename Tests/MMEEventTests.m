@@ -5,7 +5,7 @@
 #import "CLLocation+Mocks.h"
 #import "MMEMockEventConfig.h"
 #import "MockVisit.h"
-#import "MMEEvent+Internal.h"
+#import "MMEEvent+Private.h"
 
 
 @interface MMEEvent (Tests)

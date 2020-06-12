@@ -180,8 +180,8 @@
 		F40995932469ED6300E94BFF /* EventConfigStubProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = F409958E2469E68600E94BFF /* EventConfigStubProtocol.m */; };
 		F4099596246A009A00E94BFF /* events-config.json in Resources */ = {isa = PBXBuildFile; fileRef = F4099595246A009A00E94BFF /* events-config.json */; };
 		F4099599246A073A00E94BFF /* EventStubProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = F4099598246A073A00E94BFF /* EventStubProtocol.m */; };
-		F419F900248070A6000BD2F5 /* MMEEvent+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = F419F8FF248070A6000BD2F5 /* MMEEvent+Internal.h */; };
-		F419F901248070A6000BD2F5 /* MMEEvent+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = F419F8FF248070A6000BD2F5 /* MMEEvent+Internal.h */; };
+		F419F900248070A6000BD2F5 /* MMEEvent+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = F419F8FF248070A6000BD2F5 /* MMEEvent+Private.h */; };
+		F419F901248070A6000BD2F5 /* MMEEvent+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = F419F8FF248070A6000BD2F5 /* MMEEvent+Private.h */; };
 		F426740E24899435006D61D0 /* MMEUIApplicationWrapperTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F426740D24899435006D61D0 /* MMEUIApplicationWrapperTests.m */; };
 		F4312852246A33F9004472CE /* MMEConfigTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F4312851246A33F9004472CE /* MMEConfigTests.m */; };
 		F4312855246A626C004472CE /* MMEConfigation.h in Headers */ = {isa = PBXBuildFile; fileRef = F4312853246A626C004472CE /* MMEConfigation.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -468,7 +468,7 @@
 		F4099595246A009A00E94BFF /* events-config.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "events-config.json"; sourceTree = "<group>"; };
 		F4099597246A073A00E94BFF /* EventStubProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EventStubProtocol.h; sourceTree = "<group>"; };
 		F4099598246A073A00E94BFF /* EventStubProtocol.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EventStubProtocol.m; sourceTree = "<group>"; };
-		F419F8FF248070A6000BD2F5 /* MMEEvent+Internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MMEEvent+Internal.h"; sourceTree = "<group>"; };
+		F419F8FF248070A6000BD2F5 /* MMEEvent+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MMEEvent+Private.h"; sourceTree = "<group>"; };
 		F426740D24899435006D61D0 /* MMEUIApplicationWrapperTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEUIApplicationWrapperTests.m; sourceTree = "<group>"; };
 		F4312851246A33F9004472CE /* MMEConfigTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEConfigTests.m; sourceTree = "<group>"; };
 		F4312853246A626C004472CE /* MMEConfigation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEConfigation.h; sourceTree = "<group>"; };
@@ -622,7 +622,7 @@
 				F4726563246633CD00BD7055 /* MMEConfigService.m */,
 				40AE586B1EA95EDD0046B437 /* MMEEvent.h */,
 				40AE586C1EA95EDD0046B437 /* MMEEvent.m */,
-				F419F8FF248070A6000BD2F5 /* MMEEvent+Internal.h */,
+				F419F8FF248070A6000BD2F5 /* MMEEvent+Private.h */,
 				40C9E2791EA542BC00744FE7 /* MMEEventsManager.h */,
 				9C3F930C235128F500F99907 /* MMEEventsManager_Private.h */,
 				40C9E27A1EA542BC00744FE7 /* MMEEventsManager.m */,
@@ -873,7 +873,7 @@
 			files = (
 				9CDC34B8234FD35800852FF0 /* NSUserDefaults+MMEConfiguration.h in Headers */,
 				F453B12724720134002EFB4A /* NSURL+Directories.h in Headers */,
-				F419F900248070A6000BD2F5 /* MMEEvent+Internal.h in Headers */,
+				F419F900248070A6000BD2F5 /* MMEEvent+Private.h in Headers */,
 				F4312855246A626C004472CE /* MMEConfigation.h in Headers */,
 				404807CA1EA186D8008A6D50 /* MapboxMobileEvents.h in Headers */,
 				F4684FF42432A1610079B389 /* NSBundle+MMEMobileEvents.h in Headers */,
@@ -916,7 +916,7 @@
 			files = (
 				9CA75386240EF2DD005C26C9 /* NSUserDefaults+MMEConfiguration.h in Headers */,
 				F453B12824720134002EFB4A /* NSURL+Directories.h in Headers */,
-				F419F901248070A6000BD2F5 /* MMEEvent+Internal.h in Headers */,
+				F419F901248070A6000BD2F5 /* MMEEvent+Private.h in Headers */,
 				F4312856246A626C004472CE /* MMEConfigation.h in Headers */,
 				9CA75387240EF2DD005C26C9 /* MapboxMobileEvents.h in Headers */,
 				9CA75388240EF2DD005C26C9 /* MMEConstants.h in Headers */,

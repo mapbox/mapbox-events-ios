@@ -5,7 +5,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 // MARK: - Strong Event Models via Convenience Initializers
-@interface MMEEvent (Internal)
+@interface MMEEvent (Private)
 
 // MARK: - Map Events
 
