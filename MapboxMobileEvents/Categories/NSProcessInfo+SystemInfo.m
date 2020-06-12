@@ -1,6 +1,6 @@
 #import "NSProcessInfo+SystemInfo.h"
 #import "MMEEventsManager.h"
-#import "MMEPreferences.h"
+#import "MMEConfigation.h"
 #import "MMEConstants.h"
 
 #if TARGET_OS_IOS || TARGET_OS_TVOS

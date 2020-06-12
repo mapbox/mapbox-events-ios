@@ -16,7 +16,7 @@
 #import "MMEAPIClientFake.h"
 #import "MMELocationManagerFake.h"
 #import "MMEUIApplicationWrapperFake.h"
-#import "MMEPreferences.h"
+#import "MMEConfigation.h"
 #import "MMELogger.h"
 #import "MMEMetricsManager.h"
 #import "MMEEventsManager_Private.h"
@@ -54,7 +54,7 @@
 
 @end
 
-@interface MMEPreferences (Tests)
+@interface MMEConfigation (Tests)
 -(void)setEventFlushCount:(NSUInteger)eventFlushCount;
 @end
 
@@ -69,7 +69,7 @@
 @end
 
 @interface MMEEventsManagerTests : XCTestCase <MMEEventsManagerDelegate>
-@property (nonatomic, strong) MMEPreferences* preferences;
+@property (nonatomic, strong) MMEConfigation* preferences;
 @property (nonatomic, strong) MMEEventsManager* eventsManager;
 
 // MARK: Delegate Call Counters
@@ -90,7 +90,7 @@
 - (void)setUp {
 
     MMELogger* logger = [[MMELogger alloc] init];
-    self.preferences = [[MMEPreferences alloc] initWithBundle:[MMEBundleInfoFake new]
+    self.preferences = [[MMEConfigation alloc] initWithBundle:[MMEBundleInfoFake new]
                                                     dataStore:NSUserDefaults.mme_configuration];
 
     MMEMetricsManager* metricsManager = [[MMEMetricsManager alloc] initWithConfig:self.preferences
@@ -679,7 +679,7 @@
         MMEStartupDelay: @10,
         MMECustomGeofenceRadius: @1200
     }];
-    self.preferences = [[MMEPreferences alloc] initWithBundle:bundle
+    self.preferences = [[MMEConfigation alloc] initWithBundle:bundle
                                                     dataStore:NSUserDefaults.mme_configuration];
 
 
@@ -705,7 +705,7 @@
         MMEStartupDelay: @10,
         MMECustomGeofenceRadius: @1200
     }];
-    self.preferences = [[MMEPreferences alloc] initWithBundle:bundle
+    self.preferences = [[MMEConfigation alloc] initWithBundle:bundle
                                                     dataStore:NSUserDefaults.mme_configuration];
 
 
@@ -731,7 +731,7 @@
         MMEStartupDelay: @10,
         MMECustomGeofenceRadius: @1200
     }];
-    self.preferences = [[MMEPreferences alloc] initWithBundle:bundle
+    self.preferences = [[MMEConfigation alloc] initWithBundle:bundle
                                                     dataStore:NSUserDefaults.mme_configuration];
 
 
@@ -973,7 +973,7 @@
     NSBundle* bundle = [MMEBundleInfoFake bundleWithFakeInfo:@{
         MMEStartupDelay: @200,
     }];
-    MMEPreferences *preferences = [[MMEPreferences alloc] initWithBundle:bundle
+    MMEConfigation *preferences = [[MMEConfigation alloc] initWithBundle:bundle
                                                     dataStore:NSUserDefaults.mme_configuration];
 
 
@@ -1008,7 +1008,7 @@
     NSBundle* bundle = [MMEBundleInfoFake bundleWithFakeInfo:@{
         MMEStartupDelay: @200,
     }];
-    MMEPreferences *preferences = [[MMEPreferences alloc] initWithBundle:bundle
+    MMEConfigation *preferences = [[MMEConfigation alloc] initWithBundle:bundle
                                                                dataStore:NSUserDefaults.mme_configuration];
 
 
@@ -1043,7 +1043,7 @@
     NSBundle* bundle = [MMEBundleInfoFake bundleWithFakeInfo:@{
         MMEStartupDelay: @200,
     }];
-    MMEPreferences *preferences = [[MMEPreferences alloc] initWithBundle:bundle
+    MMEConfigation *preferences = [[MMEConfigation alloc] initWithBundle:bundle
                                                                dataStore:NSUserDefaults.mme_configuration];
 
 
@@ -1086,7 +1086,7 @@
     NSBundle* bundle = [MMEBundleInfoFake bundleWithFakeInfo:@{
         MMEStartupDelay: @200,
     }];
-    MMEPreferences *preferences = [[MMEPreferences alloc] initWithBundle:bundle
+    MMEConfigation *preferences = [[MMEConfigation alloc] initWithBundle:bundle
                                                                dataStore:NSUserDefaults.mme_configuration];
 
 
@@ -1119,7 +1119,7 @@
     NSBundle* bundle = [MMEBundleInfoFake bundleWithFakeInfo:@{
         MMEStartupDelay: @200,
     }];
-    MMEPreferences *preferences = [[MMEPreferences alloc] initWithBundle:bundle
+    MMEConfigation *preferences = [[MMEConfigation alloc] initWithBundle:bundle
                                                                dataStore:NSUserDefaults.mme_configuration];
 
 

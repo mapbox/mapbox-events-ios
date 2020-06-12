@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
  @Discussion MMEPreferences provides an interface to define default values, as well as provide support
     for loading values from Bundle plist, or loaded Remote Config.
  */
-@interface MMEPreferences : NSObject <MMEConfigurationProviding>
+@interface MMEConfigation : NSObject <MMEConfigurationProviding>
 
 // MARK: - Initializer
 

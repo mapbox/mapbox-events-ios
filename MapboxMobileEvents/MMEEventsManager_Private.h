@@ -5,7 +5,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class MMEAPIClient;
 @class MMECommonEventData;
-@class MMEPreferences;
+@class MMEConfigation;
 @class MMEUniqueIdentifier;
 @class MMEUIApplicationWrapper;
 @class MMEMetricsManager;
@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithDefaults;
 
 /*! @Brief Designated Initializer */
-- (instancetype)initWithPreferences:(MMEPreferences*)preferences
+- (instancetype)initWithPreferences:(MMEConfigation*)preferences
                    uniqueIdentifier:(MMEUniqueIdentifier*)uniqueIdentifier
                         application:(id <MMEUIApplicationWrapper>)application
                      metricsManager:(MMEMetricsManager*)metricsManager

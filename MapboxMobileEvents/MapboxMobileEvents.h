@@ -3,6 +3,6 @@
 #import <MapboxMobileEvents/MMEEvent.h>
 #import <MapboxMobileEvents/MMETypes.h>
 #import <MapboxMobileEvents/MMEEventsManager.h>
-#import <MapboxMobileEvents/MMEPreferences.h>
+#import <MapboxMobileEvents/MMEConfigation.h>
 #import <MapboxMobileEvents/NSUserDefaults+MMEConfiguration.h>
 #import <MapboxMobileEvents/MMELogLevel.h>

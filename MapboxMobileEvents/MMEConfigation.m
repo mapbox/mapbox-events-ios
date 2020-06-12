@@ -1,4 +1,4 @@
-#import "MMEPreferences.h"
+#import "MMEConfigation.h"
 #import "NSString+MMEVersions.h"
 #import "MMEConstants.h"
 #import "MMEDate.h"
@@ -8,12 +8,12 @@
 #import "NSUserDefaults+MMEConfiguration_Private.h"
 #import "NSBundle+MMEMobileEvents.h"
 
-@interface MMEPreferences ()
+@interface MMEConfigation ()
 @property (nonatomic, strong) NSBundle* bundle;
 @property (nonatomic, strong) NSUserDefaults* userDefaults;
 @end
 
-@implementation MMEPreferences
+@implementation MMEConfigation
 
 // MARK: - Initializers
 

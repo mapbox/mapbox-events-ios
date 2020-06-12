@@ -24,7 +24,7 @@
 #import "NSUserDefaults+MMEConfiguration.h"
 #import "NSProcessInfo+SystemInfo.h"
 #import "MMEConfigService.h"
-#import "MMEPreferences.h"
+#import "MMEConfigation.h"
 #import "NSError+APIClient.h"
 #import "NSURL+Directories.h"
 #import "NSBundle+MMEMobileEvents.h"
@@ -41,7 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic) id <MMELocationManaging> locationManager;
 @property (nonatomic) NS_MUTABLE_ARRAY_OF(MMEEvent *) *eventQueue;
-@property (nonatomic) MMEPreferences* preferences;
+@property (nonatomic) MMEConfigation* preferences;
 @property (nonatomic) id<MMEUniqueIdentifer> uniqueIdentifer;
 @property (nonatomic) NSDate *nextTurnstileSendDate;
 @property (nonatomic) NSTimer *queueTimer;
@@ -92,7 +92,7 @@ NS_ASSUME_NONNULL_BEGIN
 /*! @Brief Initializes new instance of EventsManager with default values */
 - (instancetype)initWithDefaults {
     MMELogger* logger = [[MMELogger alloc] init];
-    MMEPreferences* preferences = [[MMEPreferences alloc] initWithBundle:NSBundle.mainBundle
+    MMEConfigation* preferences = [[MMEConfigation alloc] initWithBundle:NSBundle.mainBundle
                                                                dataStore:NSUserDefaults.mme_configuration];
     NSURL* cachesDirectory =  [NSURL cachesDirectory];
     NSURL* mmeFolder = [cachesDirectory URLByAppendingPathComponent:NSBundle.mme_bundle.bundleIdentifier];
@@ -119,7 +119,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 /*! @Brief Designated Initializer */
-- (instancetype)initWithPreferences:(MMEPreferences*)preferences
+- (instancetype)initWithPreferences:(MMEConfigation*)preferences
               uniqueIdentifier:(MMEUniqueIdentifier*)uniqueIdentifier
                    application:(id <MMEUIApplicationWrapper>)application
                 metricsManager:(MMEMetricsManager*)metricsManager

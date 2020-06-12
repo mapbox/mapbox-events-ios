@@ -6,7 +6,7 @@
 #import "MMEDate.h"
 #import "MMEEventsManager.h"
 #import "MMEReachability.h"
-#import "MMEPreferences.h"
+#import "MMEConfigation.h"
 #import "CLLocation+MMEMobileEvents.h"
 #import "CLLocationManager+MMEMobileEvents.h"
 #import "MMELogger.h"

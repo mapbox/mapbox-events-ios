@@ -7,7 +7,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class MMEEvent;
 @class MMEAPIClient;
-@class MMEPreferences;
+@class MMEConfigation;
 @protocol MMEAPIClient;
 @protocol MMEConfigurationProviding;
 @protocol MMEEventsManagerDelegate;
@@ -34,7 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *skuId;
 
 /// Configuration EventsManager is running in
-@property (nonatomic, readonly) MMEPreferences* configuration;
+@property (nonatomic, readonly) MMEConfigation* configuration;
 
 // MARK: -
 
