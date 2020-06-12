@@ -43,7 +43,8 @@
     [super postMetadata:metadata filePaths:filePaths completionHandler:completionHandler];
 }
 
-- (void)performRequest:(NSURLRequest *)request completion:(void (^)(NSData * _Nullable, NSHTTPURLResponse * _Nullable, NSError * _Nullable))completion {
+- (void)performRequest:(NSURLRequest *)request
+            completion:(void (^)(NSData * _Nullable, NSHTTPURLResponse * _Nullable, NSError * _Nullable))completion {
     self.performRequestCount += 1;
     [super performRequest:request completion:completion];
 }

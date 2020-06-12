@@ -26,7 +26,19 @@ NS_ASSUME_NONNULL_BEGIN
                      metricsManager:(MMEMetricsManager*)metricsManager
                              logger:(MMELogger*)logger;
 
+/*! Configure Event Manger to monitor for passive data gathering */
+- (void)setupPassiveDataCollection;
+
 - (void)pushEvent:(MMEEvent *)event;
+
+/*!
+ @Brief Deprecated Event Pushing Support
+ @Discussion Provides a mapping based on an event name to some particular structures.
+ No longer suggested for use as it doesn't scale and is prone to developer error/typo
+ @param name Event Name
+ @param attributes Event Attributes
+ */
+- (void)createAndPushEventBasedOnName:(NSString *)name attributes:(NSDictionary *)attributes;
 
 - (void)sendTelemetryMetricsEvent;
 
@@ -47,6 +59,24 @@ NS_ASSUME_NONNULL_BEGIN
  */
 -(MMEConfigService*)makeConfigServiceWithClient:(MMEAPIClient*)client
                                          config:(id <MMEEventConfigProviding>)config;
+
+
+
+// MARK: - API COmpletion Handlers
+
+/*!
+ @Brief Send Turnstile Event Completion Handler
+ @param error API Error Response
+ */
+-(void)sendTurnstileEventCompletionHandler:(NSError* _Nullable)error;
+
+/*!
+ @Brief Post Events Completion handler
+ @param events Array of Events posted
+ @param error Optional error provided on the status of the request
+ */
+-(void)postEventsCompletionHandler:(NSArray *)events
+                             error:(NSError * _Nullable)error;
 
 @end
 

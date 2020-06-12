@@ -133,6 +133,7 @@ NS_ASSUME_NONNULL_BEGIN
         self.metricsManager = metricsManager;
         self.logger = logger;
         self.urlResponseListeners = [NSMutableArray array];
+        self.serializationErrorListeners = [NSMutableArray array];
     }
     return self;
 
@@ -441,38 +442,41 @@ NS_ASSUME_NONNULL_BEGIN
 
 }
 
+-(void)postEventsCompletionHandler:(NSArray *)events
+                             error:(NSError * _Nullable)error {
+    @try {
+        if (error) {
+            [self.logger logEvent:[MMEEvent debugEventWithError:error]];
+        } else {
+            MMELog(MMELogInfo, MMEDebugEventTypePost, ([NSString stringWithFormat:@"post: %@, instance: %@", @(events.count), self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
+        }
+
+        if (self.backgroundTaskIdentifier != UIBackgroundTaskInvalid) {
+            MMELog(MMELogInfo, MMEDebugEventTypeBackgroundTask, ([NSString stringWithFormat:@"Ending background task: %@, instance: %@",@(self.backgroundTaskIdentifier),self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
+        }
+    }
+    @catch(NSException *except) {
+        [self reportException:except];
+    }
+    
+    [self.application endBackgroundTask:self.backgroundTaskIdentifier];
+    self.backgroundTaskIdentifier = UIBackgroundTaskInvalid;
+}
+
 - (void)postEvents:(NSArray *)events {
     @try {
         __weak __typeof__(self) weakSelf = self;
         [self.apiClient postEvents:events completionHandler:^(NSError * _Nullable error) {
-            @try {
-                __strong __typeof__(weakSelf) strongSelf = weakSelf;
-                if (strongSelf == nil) {
-                    return;
-                }
-                if (error) {
-                    [self.logger logEvent:[MMEEvent debugEventWithError:error]];
-                } else {
-                    MMELog(MMELogInfo, MMEDebugEventTypePost, ([NSString stringWithFormat:@"post: %@, instance: %@",
-                        @(events.count),strongSelf.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
-                }
+            [weakSelf postEventsCompletionHandler:events error:error];
 
-                if (strongSelf.backgroundTaskIdentifier != UIBackgroundTaskInvalid) {
-                    MMELog(MMELogInfo, MMEDebugEventTypeBackgroundTask, ([NSString stringWithFormat:@"Ending background task: %@, instance: %@",@(strongSelf.backgroundTaskIdentifier),strongSelf.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
-                    
-                    [strongSelf.application endBackgroundTask:strongSelf.backgroundTaskIdentifier];
-                    strongSelf.backgroundTaskIdentifier = UIBackgroundTaskInvalid;
-                }
-            }
-            @catch(NSException *except) {
-                [self reportException:except];
-            }
         }];
     }
     @catch(NSException *except) {
         [self reportException:except];
     }
 }
+
+
 
 - (void)sendTurnstileEvent {
     @try {
@@ -500,27 +504,26 @@ NS_ASSUME_NONNULL_BEGIN
 
         __weak __typeof__(self) weakSelf = self;
         [self.apiClient postEvent:turnstileEvent completionHandler:^(NSError * _Nullable error) {
-            @try {
-                __strong __typeof__(weakSelf) strongSelf = weakSelf;
-                if (strongSelf == nil) {
-                    return;
-                }
-
-                if (error) {
-                    MMELog(MMELogInfo, MMEDebugEventTypeTurnstileFailed, ([NSString stringWithFormat:@"Could not send turnstile event: %@, instance: %@",
-                        [error localizedDescription] , strongSelf.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
-                    return;
-                }
-
-                [strongSelf updateNextTurnstileSendDate];
-                
-                MMELog(MMELogInfo, MMEDebugEventTypeTurnstile, ([NSString stringWithFormat:@"Sent turnstile event, instance: %@",
-                    strongSelf.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
-            }
-            @catch(NSException *except) {
-                [self reportException:except];
-            }
+            [weakSelf sendTurnstileEventCompletionHandler:error];
         }];
+    }
+    @catch(NSException *except) {
+        [self reportException:except];
+    }
+}
+
+-(void)sendTurnstileEventCompletionHandler:(NSError* _Nullable)error {
+    @try {
+        if (error) {
+            MMELog(MMELogInfo, MMEDebugEventTypeTurnstileFailed, ([NSString stringWithFormat:@"Could not send turnstile event: %@, instance: %@",
+                                                                   [error localizedDescription] , self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
+            return;
+        }
+
+        [self updateNextTurnstileSendDate];
+
+        MMELog(MMELogInfo, MMEDebugEventTypeTurnstile, ([NSString stringWithFormat:@"Sent turnstile event, instance: %@",
+                                                         self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
     }
     @catch(NSException *except) {
         [self reportException:except];
@@ -572,7 +575,10 @@ NS_ASSUME_NONNULL_BEGIN
     }
 }
 
-- (void)postMetadata:(NSArray *)metadata filePaths:(NSArray *)filePaths completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
+- (void)postMetadata:(NSArray *)metadata
+           filePaths:(NSArray *)filePaths
+   completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler {
+
     [self.apiClient postMetadata:metadata filePaths:filePaths completionHandler:^(NSError * _Nullable error) {
         if (completionHandler) {
             completionHandler(error);

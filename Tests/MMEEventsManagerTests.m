@@ -5,6 +5,7 @@
 #import "MMEDate.h"
 #import "MMEEvent.h"
 #import "MMEUniqueIdentifier.h"
+#import "MMEEvent.h"
 #import "MMEUIApplicationWrapper.h"
 
 #import "NSUserDefaults+MMEConfiguration.h"
@@ -40,6 +41,9 @@
 @property (nonatomic) id<MMEUIApplicationWrapper> application;
 @property (nonatomic) UIBackgroundTaskIdentifier backgroundTaskIdentifier;
 
+@property (nonatomic, readonly) NSMutableArray<OnURLResponse>* urlResponseListeners;
+@property (nonatomic, readonly) NSMutableArray<OnSerializationError>* serializationErrorListeners;
+
 - (void)pushEvent:(MMEEvent *)event;
 - (void)processAuthorizationStatus:(CLAuthorizationStatus)authStatus andApplicationState:(UIApplicationState)applicationState;
 - (void)powerStateDidChange:(NSNotification *)notification;
@@ -54,11 +58,7 @@
 -(void)setEventFlushCount:(NSUInteger)eventFlushCount;
 @end
 
-@interface MMEEventsManagerTests : XCTestCase
-@property (nonatomic, strong) MMEPreferences* preferences;
-@property (nonatomic, strong) MMEEventsManager* eventsManager;
 
-@end
 
 @interface MMEAPIClient (Private)
 @property (nonatomic, strong) NSMutableArray<OnSerializationError>* onSerializationErrorListeners;
@@ -68,7 +68,24 @@
 @property (nonatomic, strong) NSMutableArray<OnGenerateTelemetryEvent>* onGenerateTelemetryEventListeners;
 @end
 
+@interface MMEEventsManagerTests : XCTestCase <MMEEventsManagerDelegate>
+@property (nonatomic, strong) MMEPreferences* preferences;
+@property (nonatomic, strong) MMEEventsManager* eventsManager;
+
+// MARK: Delegate Call Counters
+
+@property (nonatomic, strong) NSMutableArray<CLVisit*> *didVisitCalls;
+@property (nonatomic, strong) NSMutableArray<MMEEvent*>* didEnqueueEventCalls;
+@property (nonatomic, strong) NSMutableArray<NSError*>* didReportErrorCalls;
+@property (nonatomic, strong) NSMutableArray<NSArray<CLLocation*>*>* didUpdateLocationCalls;
+@property (nonatomic, strong) NSMutableArray<NSArray<MMEEvent *> *>* didSendEventsCalls;
+
+
+@end
+
 @implementation MMEEventsManagerTests
+
+// MARK: - Lifecycle
 
 - (void)setUp {
 
@@ -89,10 +106,37 @@
                                                         metricsManager:metricsManager
                                                                 logger:logger];
 
+    self.didVisitCalls = [NSMutableArray array];
+    self.didEnqueueEventCalls = [NSMutableArray array];
+    self.didReportErrorCalls = [NSMutableArray array];
+    self.didUpdateLocationCalls = [NSMutableArray array];
+    self.didSendEventsCalls = [NSMutableArray array];
+
 }
 
 - (void)tearDown {
 
+}
+
+// MARK: - MMEEventsManagerDelegate (For Delegate Call Testing)
+- (void)eventsManager:(MMEEventsManager *)eventsManager didVisit:(CLVisit *)visit {
+    [self.didVisitCalls addObject:visit];
+}
+
+- (void)eventsManager:(MMEEventsManager *)eventsManager didEnqueueEvent:(MMEEvent *)enqueued {
+    [self.didEnqueueEventCalls addObject:enqueued];
+}
+
+- (void)eventsManager:(MMEEventsManager *)eventsManager didEncounterError:(NSError *)error {
+    [self.didReportErrorCalls addObject:error];
+}
+
+- (void)eventsManager:(MMEEventsManager *)eventsManager didUpdateLocations:(NSArray<CLLocation *> *)locations {
+    [self.didUpdateLocationCalls addObject:locations];
+}
+
+- (void)eventsManager:(MMEEventsManager *)eventsManager didSendEvents:(NSArray<MMEEvent *> *)events {
+    [self.didSendEventsCalls addObject:events];
 }
 
 // MARK: - Starting Events Manager should not initialize a new object
@@ -112,6 +156,18 @@
     XCTAssert([self.eventsManager isEqual:capturedEventsManager]);
 }
 
+- (void)testSetupPassiveDataGathering {
+
+    // Expect locationManager to be nil
+    XCTAssertNil(self.eventsManager.locationManager);
+    
+    [self.eventsManager setupPassiveDataCollection];
+
+    // Expect Location Manager To be configured
+    XCTAssertNotNil(self.eventsManager.locationManager);
+    XCTAssertEqual(self.eventsManager.locationManager.delegate, self.eventsManager);
+}
+
 // MARK: - Listeners
 
 - (void)testResponseListener {
@@ -128,10 +184,17 @@
         hasSeenCallback = YES;
     }];
 
+    XCTAssertEqual(self.eventsManager.urlResponseListeners.count, 1);
+
     // Start manager
     [self.eventsManager startEventsManagerWithToken:@"coocoo"];
 
     [self waitForExpectations:@[expectation] timeout:2];
+}
+
+- (void)testOnSerializationListener {
+    [self.eventsManager registerOnSerializationErrorListener:^(NSError * _Nonnull error) {}];
+    XCTAssertEqual(self.eventsManager.serializationErrorListeners.count, 1);
 }
 
 // MARK: - Behavior in Various Application States
@@ -203,10 +266,71 @@
     XCTAssert(self.eventsManager.paused == YES);
 }
 
+// MARK: - Flush
+
+- (void)testFlushNoAccessToken {
+
+    // Configure Manager with Client
+    MMEAPIClientCallCounter* client = [[MMEAPIClientCallCounter alloc] initWithConfig: self.preferences];
+    self.preferences.accessToken = nil;
+    [self.eventsManager.eventQueue addObject:[MMEEvent mapTapEvent]];
+    self.eventsManager.apiClient = client;
+    self.eventsManager.paused = NO;
+
+    [self.eventsManager flush];
+
+    // Expect no api call (Due to missing Access Token)
+    XCTAssertEqual(client.performRequestCount, 0);
+}
+
+- (void)testFlushEmptyQueue {
+    // Configure Manager with Client
+    MMEAPIClientCallCounter* client = [[MMEAPIClientCallCounter alloc] initWithConfig: self.preferences];
+    self.preferences.accessToken = @"abc123";
+    [self.eventsManager.eventQueue removeAllObjects];
+    self.eventsManager.apiClient = client;
+    self.eventsManager.paused = NO;
+
+    [self.eventsManager flush];
+
+    // Expect no api call (Due to empty Queue)
+    XCTAssertEqual(client.performRequestCount, 0);
+}
+
+- (void)testFlush {
+    // Configure Manager with Client
+    MMEAPIClientCallCounter* client = [[MMEAPIClientCallCounter alloc] initWithConfig: self.preferences];
+    self.preferences.accessToken = @"abc123";
+    [self.eventsManager.eventQueue addObject:[MMEEvent mapTapEvent]];
+    self.eventsManager.apiClient = client;
+    self.eventsManager.delegate = self;
+    self.eventsManager.paused = NO;
+
+
+    [self.eventsManager flush];
+
+    // Expect Telemetry Metrics Sent
+
+
+    // Expect Post Events Sent
+    XCTAssertEqual(client.performRequestCount, 1);
+
+    // Expect Queuing to be reset
+    XCTAssertEqual(self.eventsManager.eventQueue.count, 0);
+
+    // Expect Delegate Messaging
+    XCTAssertEqual(self.didSendEventsCalls.count, 1);
+}
+
+
+
+
+
 // MARK: - Event Queue Threadhold Triggers
 
 - (void)testQueueuingPushesToQueueWhilePaused {
     self.eventsManager.paused = true;
+    self.eventsManager.delegate = self;
 
     NSDictionary* attributes = attributes = @{
         @"attribute1": @"a nice attribute"
@@ -214,10 +338,15 @@
     };
     NSString *dateString = @"A nice date";
     MMEEvent *event = [MMEEvent mapTapEventWithDateString:dateString attributes:attributes];
+
     [self.eventsManager enqueueEvent:event];
 
+    // Verify Event was queued
     XCTAssertEqual(self.eventsManager.eventQueue.count, 1);
     XCTAssertEqualObjects(self.eventsManager.eventQueue.firstObject, event);
+
+    // Verify Delegate was notified of queuing
+    XCTAssertEqualObjects(self.didEnqueueEventCalls.firstObject, event);
 }
 
 - (void)testQueueuingPushesToQueueWhileActive {
@@ -442,6 +571,24 @@
     XCTAssertEqual(self.eventsManager.eventQueue.count, 0);
 }
 
+- (void)testSendTurnstileCompletionSuccess {
+
+    self.eventsManager.nextTurnstileSendDate = nil;
+    [self.eventsManager sendTurnstileEventCompletionHandler:nil];
+
+    // Expect Next Turnstile to not be updated
+    XCTAssertEqualObjects(self.eventsManager.nextTurnstileSendDate, [NSDate.date mme_startOfTomorrow]);
+}
+
+- (void)testSendTurnstileCompletionFailure {
+    self.eventsManager.nextTurnstileSendDate = nil;
+    NSError *error = [NSError errorWithDomain:@"domain" code:100 userInfo:@{}];
+    [self.eventsManager sendTurnstileEventCompletionHandler:error];
+
+    // Expect Next Turnstile to not be updated
+    XCTAssertNil(self.eventsManager.nextTurnstileSendDate);
+}
+
 - (void)testDisableLocationMetrics {
     self.preferences.isCollectionEnabled = YES;
 
@@ -455,12 +602,19 @@
     // If enabled and paused, it appears as though that kicks off the flow again?
     self.preferences.isCollectionEnabled = YES;
     self.eventsManager.paused = NO;
+    self.eventsManager.delegate = self;
     
     CLLocation *location = [[CLLocation alloc] initWithLatitude:0.0 longitude:0.0];
     CLLocation *location2 = [[CLLocation alloc] initWithLatitude:0.001 longitude:0.001];
+    NSArray *locations = @[location, location2];
 
-    [self.eventsManager locationManager:self.eventsManager.locationManager didUpdateLocations:@[location, location2]];
+    [self.eventsManager locationManager:self.eventsManager.locationManager didUpdateLocations:locations];
     XCTAssertEqual(self.eventsManager.eventQueue.count, 2);
+    XCTAssertEqual(self.didUpdateLocationCalls.count, 1);
+
+    // Expect Delegate to be notified
+    XCTAssertEqual(self.didUpdateLocationCalls.firstObject, locations);
+
 
     //simulating low power mode
     [self.eventsManager powerStateDidChange:nil];
@@ -477,11 +631,17 @@
 }
 
 - (void)testQueueLocationEvents {
+    self.eventsManager.delegate = self;
+
     CLLocation *location = [[CLLocation alloc] initWithLatitude:0.0 longitude:0.0];
     CLLocation *location2 = [[CLLocation alloc] initWithLatitude:0.001 longitude:0.001];
-    
-    [self.eventsManager locationManager:self.eventsManager.locationManager didUpdateLocations:@[location, location2]];
+    NSArray *locations = @[location, location2];
+
+    [self.eventsManager locationManager:self.eventsManager.locationManager didUpdateLocations:locations];
     XCTAssertEqual(self.eventsManager.eventQueue.count, 2);
+
+    // Expect Delegate to be notified
+    XCTAssertEqual(self.didUpdateLocationCalls.firstObject, locations);
 }
 
 
@@ -727,6 +887,29 @@
     XCTAssertEqual(client.performRequestCount, 0);
 }
 
+- (void)testPostEventsCompletionSuccess {
+    MMEEvent *event = [MMEEvent eventWithName:@"Foo" attributes:@{}];
+
+    // Values Set during request
+    self.eventsManager.backgroundTaskIdentifier = 15;
+    [self.eventsManager postEventsCompletionHandler:@[event] error:nil];
+
+    // Expect background identifier to be reset
+    XCTAssertEqual(self.eventsManager.backgroundTaskIdentifier, UIBackgroundTaskInvalid);
+}
+
+- (void)testPostEventsCompletionError {
+    MMEEvent *event = [MMEEvent eventWithName:@"Foo" attributes:@{}];
+    NSError *error = [NSError errorWithDomain:@"domain" code:100 userInfo:@{}];
+
+    // Values Set during request
+    self.eventsManager.backgroundTaskIdentifier = 15;
+    [self.eventsManager postEventsCompletionHandler:@[event] error:error];
+
+    // Expedt background identifier to be reset
+    XCTAssertEqual(self.eventsManager.backgroundTaskIdentifier, UIBackgroundTaskInvalid);
+}
+
 // MARK: - Location Manager Interface
 
 #if TARGET_OS_IOS
@@ -749,6 +932,7 @@
 
 
     self.eventsManager.paused = YES;
+    self.eventsManager.delegate = self;
 
     // Call Delegate Method
     [self.eventsManager locationManager:self.eventsManager.locationManager didVisit:visit];
@@ -756,6 +940,10 @@
     // Verify the Event was constructed as expected AND has been enqueued
     XCTAssertNotNil(self.eventsManager.eventQueue.firstObject);
     XCTAssertEqualObjects((MMEEvent*)self.eventsManager.eventQueue.firstObject.attributes[MMEEventKeyEvent], MMEEventTypeVisit);
+
+    // Verify Events Manager notified delegate of the visit
+    XCTAssertEqual(self.didVisitCalls.count, 1);
+    XCTAssertEqualObjects(self.didVisitCalls.firstObject, visit);
 }
 #endif
 
@@ -955,6 +1143,69 @@
     }
     // Expect Update from EventCount
     XCTAssertEqual(metricsManager.updateFromEventCountCallCount, 1);
+}
+
+- (void)testReportError {
+    self.eventsManager.delegate = self;
+
+    NSError *error = [NSError errorWithDomain:@"domain" code:100 userInfo:@{}];
+    [self.eventsManager reportError:error];
+
+    XCTAssertEqual(self.didReportErrorCalls.count, 1);
+    XCTAssertEqualObjects(self.didReportErrorCalls.firstObject, error);
+}
+
+// MARK: - Deprecated Create & Push
+
+- (void)testCreateAndPush {
+
+    // Pause Manager and queue up events
+    self.eventsManager.paused = YES;
+
+    // Map Events (Expect Events to be created and queued)
+    [self.eventsManager createAndPushEventBasedOnName:@"map.load" attributes:@{}];
+    XCTAssertEqualObjects(self.eventsManager.eventQueue.lastObject.attributes[MMEEventKeyEvent], MMEEventTypeMapLoad);
+    XCTAssertNotNil(self.eventsManager.eventQueue.lastObject.attributes[MMEEventKeyCreated]);
+
+    [self.eventsManager createAndPushEventBasedOnName:@"map.click" attributes:@{}];
+    XCTAssertEqualObjects(self.eventsManager.eventQueue.lastObject.attributes[MMEEventKeyEvent], MMEEventTypeMapTap);
+    XCTAssertNotNil(self.eventsManager.eventQueue.lastObject.attributes[MMEEventKeyCreated]);
+
+    [self.eventsManager createAndPushEventBasedOnName:@"map.dragend" attributes:@{}];
+    XCTAssertEqualObjects(self.eventsManager.eventQueue.lastObject.attributes[MMEEventKeyEvent], MMEEventTypeMapDragEnd);
+    XCTAssertNotNil(self.eventsManager.eventQueue.lastObject.attributes[MMEEventKeyCreated]);
+
+    [self.eventsManager createAndPushEventBasedOnName:@"map.offlineDownload.start" attributes:@{}];
+    XCTAssertEqualObjects(self.eventsManager.eventQueue.lastObject.attributes[MMEEventKeyEvent], MMEventTypeOfflineDownloadStart);
+    XCTAssertNotNil(self.eventsManager.eventQueue.lastObject.attributes[MMEEventKeyCreated]);
+
+    [self.eventsManager createAndPushEventBasedOnName:@"map.offlineDownload.end" attributes:@{}];
+    XCTAssertEqualObjects(self.eventsManager.eventQueue.lastObject.attributes[MMEEventKeyEvent], MMEventTypeOfflineDownloadEnd);
+    XCTAssertNotNil(self.eventsManager.eventQueue.lastObject.attributes[MMEEventKeyCreated]);
+
+    // Navigation Events (Expect events to be created and queue)
+    [self.eventsManager createAndPushEventBasedOnName:@"navigation.depart" attributes:@{}];
+    XCTAssertEqualObjects(self.eventsManager.eventQueue.lastObject.attributes[MMEEventKeyEvent], MMEEventTypeNavigationDepart);
+    XCTAssertNotNil(self.eventsManager.eventQueue.lastObject.attributes[MMEEventKeyCreated]);
+
+    // Vision Events
+    [self.eventsManager createAndPushEventBasedOnName:@"vision.viewed" attributes:@{}];
+    XCTAssertEqualObjects(self.eventsManager.eventQueue.lastObject.attributes[MMEEventKeyEvent], @"vision.viewed");
+    XCTAssertNotNil(self.eventsManager.eventQueue.lastObject.attributes[MMEEventKeyCreated]);
+
+    // Search Events
+    [self.eventsManager createAndPushEventBasedOnName:@"search.searched" attributes:@{}];
+    XCTAssertEqualObjects(self.eventsManager.eventQueue.lastObject.attributes[MMEEventKeyEvent], @"search.searched");
+    XCTAssertNotNil(self.eventsManager.eventQueue.lastObject.attributes[MMEEventKeyCreated]);
+
+    // Unsupported Event, expect to queue up as generic event
+    [self.eventsManager createAndPushEventBasedOnName:@"millions.of.peaches" attributes:@{
+        @"peaches": @"for me"
+    }];
+    NSDictionary *attributes = [self.eventsManager.eventQueue.lastObject attributes];
+    XCTAssertEqualObjects(attributes[MMEEventKeyEvent], @"millions.of.peaches");
+    XCTAssertNotNil(attributes[MMEEventKeyCreated]);
+
 }
 
 @end
