@@ -3,7 +3,7 @@
 #import "MMEConstants.h"
 #import "MMEDate.h"
 #import "MMEEvent.h"
-#import "MMEEventConfigProviding.h"
+#import "MMEConfigurationProviding.h"
 #import "MMENSURLRequestFactory.h"
 #import "MMENSURLSessionWrapper.h"
 
@@ -16,7 +16,7 @@
 
 @property (nonatomic) id<MMENSURLSessionWrapper> sessionWrapper;
 @property (nonatomic) NSBundle *applicationBundle;
-@property (nonatomic, strong) id<MMEEventConfigProviding> config;
+@property (nonatomic, strong) id<MMEConfigurationProviding> config;
 
 // Factory for building URLRequests with shared components provided by Config
 @property (nonatomic, strong) MMENSURLRequestFactory *requestFactory;
@@ -37,7 +37,7 @@ int const kMMEMaxRequestCount = 1000;
 
 // MARK: - Initializers
 
-- (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config {
+- (instancetype)initWithConfig:(id <MMEConfigurationProviding>)config {
 
     MMENSURLSessionWrapper* session = [[MMENSURLSessionWrapper alloc] initWithSessionConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]
                                                                                 eventConfiguration:config];
@@ -47,7 +47,7 @@ int const kMMEMaxRequestCount = 1000;
                         session:session];
 }
 
-- (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config
+- (instancetype)initWithConfig:(id <MMEConfigurationProviding>)config
                        session:(MMENSURLSessionWrapper*)session {
 
     return [self initWithConfig:config
@@ -55,7 +55,7 @@ int const kMMEMaxRequestCount = 1000;
                         session:session];
 }
 
-- (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config
+- (instancetype)initWithConfig:(id <MMEConfigurationProviding>)config
                 requestFactory:(MMENSURLRequestFactory*)requestFactory
                        session:(MMENSURLSessionWrapper*)session {
 

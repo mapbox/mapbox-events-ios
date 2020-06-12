@@ -16,7 +16,7 @@
 
 @implementation MMEAPIClientCallCounter
 
-- (instancetype)initWithConfig:(id<MMEEventConfigProviding>)config
+- (instancetype)initWithConfig:(id<MMEConfigurationProviding>)config
 {
     self = [super initWithConfig:config];
     if (self) {

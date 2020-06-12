@@ -3,7 +3,7 @@
 #import "MMEConstants.h"
 #import "MMEDate.h"
 #import "NSProcessInfo+SystemInfo.h"
-#import "MMEEventConfigProviding.h"
+#import "MMEConfigurationProviding.h"
 #import "MMEEvent.h"
 #import "MMELogger.h"
 #import "NSError+APIClient.h"
@@ -13,7 +13,7 @@
 @interface MMEMetricsManager ()
 
 @property (nonatomic, strong) MMEMetrics *metrics;
-@property (nonatomic, strong) id <MMEEventConfigProviding> config;
+@property (nonatomic, strong) id <MMEConfigurationProviding> config;
 @property (nonatomic, copy) NSURL *pendingMetricsFileURL;
 @property (nonatomic, copy) OnMetricsError onMetricsError;
 @property (nonatomic, copy) OnMetricsException onMetricsException;
@@ -26,7 +26,7 @@
 
 // MARK: - Initializers
 
-- (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config
+- (instancetype)initWithConfig:(id <MMEConfigurationProviding>)config
          pendingMetricsFileURL:(NSURL*)pendingMetricsFileURL {
 
 
@@ -39,7 +39,7 @@
     }];
 }
 
-- (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config
+- (instancetype)initWithConfig:(id <MMEConfigurationProviding>)config
          pendingMetricsFileURL:(NSURL*)pendingMetricsFileURL
                 onMetricsError:(OnMetricsError)onMetricsError
             onMetricsException:(OnMetricsException)onMetricsException

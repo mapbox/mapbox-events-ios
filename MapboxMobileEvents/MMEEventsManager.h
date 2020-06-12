@@ -9,7 +9,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class MMEAPIClient;
 @class MMEPreferences;
 @protocol MMEAPIClient;
-@protocol MMEEventConfigProviding;
+@protocol MMEConfigurationProviding;
 @protocol MMEEventsManagerDelegate;
 
 /** Mapbox Mobile Events Manager

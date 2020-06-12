@@ -1,5 +1,5 @@
 #import <Foundation/Foundation.h>
-#import "MMEEventConfigProviding.h"
+#import "MMEConfigurationProviding.h"
 @import CoreLocation;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
  @Discussion MMEPreferences provides an interface to define default values, as well as provide support
     for loading values from Bundle plist, or loaded Remote Config.
  */
-@interface MMEPreferences : NSObject <MMEEventConfigProviding>
+@interface MMEPreferences : NSObject <MMEConfigurationProviding>
 
 // MARK: - Initializer
 

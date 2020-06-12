@@ -1,5 +1,5 @@
 #import "MMENSURLRequestFactory.h"
-#import "MMEEventConfigProviding.h"
+#import "MMEConfigurationProviding.h"
 #import "MMEConstants.h"
 #import "NSData+MMEGZIP.h"
 #import "MMEEvent.h"
@@ -13,7 +13,7 @@ static NSString * const MMEMapboxAgent = @"X-Mapbox-Agent";
 // Factory for building Requests with shared components
 @implementation MMENSURLRequestFactory
 
-- (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config {
+- (instancetype)initWithConfig:(id <MMEConfigurationProviding>)config {
     self = [super init];
     if (self) {
         _config = config;

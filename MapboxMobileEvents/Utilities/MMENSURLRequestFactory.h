@@ -1,14 +1,14 @@
 #import <Foundation/Foundation.h>
 
 @class MMEEvent;
-@protocol MMEEventConfigProviding;
+@protocol MMEConfigurationProviding;
 
 NS_ASSUME_NONNULL_BEGIN
 
 /*! @brief Factory for building URLRequests with shared components provided by Config */
 @interface MMENSURLRequestFactory : NSObject
 
-@property (nonatomic, strong, readonly) id <MMEEventConfigProviding> config;
+@property (nonatomic, strong, readonly) id <MMEConfigurationProviding> config;
 
 // MARK: - Initializers
 
@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * @param config A datasource providing shared values to configure URLRequests such as accessToken
  */
-- (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config;
+- (instancetype)initWithConfig:(id <MMEConfigurationProviding>)config;
 
 // MARK: - Requests
 

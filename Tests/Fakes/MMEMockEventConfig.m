@@ -2,7 +2,7 @@
 #import "NSUserDefaults+MMEConfiguration_Private.h"
 #import "MMEConstants.h"
 #import "MMEDate.h"
-#import "MMEEventConfigProviding.h"
+#import "MMEConfigurationProviding.h"
 
 @implementation MMEMockEventConfig
 

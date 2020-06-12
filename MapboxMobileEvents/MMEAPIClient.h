@@ -7,7 +7,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class MMEEvent;
 @class MMENSURLRequestFactory;
 @class MMENSURLSessionWrapper;
-@protocol MMEEventConfigProviding;
+@protocol MMEConfigurationProviding;
 
 // MARK: - Types
 
@@ -26,7 +26,7 @@ typedef void(^OnGenerateTelemetryEvent)(void);
 // MARK: - Properties
 
 /*! @brief Configuration Providing Shared Values for constructing Requests */
-@property (nonatomic, readonly) id<MMEEventConfigProviding> config;
+@property (nonatomic, readonly) id<MMEConfigurationProviding> config;
 
 
 // MARK: - Initializers
@@ -34,13 +34,13 @@ typedef void(^OnGenerateTelemetryEvent)(void);
 - (instancetype)init NS_UNAVAILABLE;
 
 /*! @Brief Default Client Setup */
-- (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config;
+- (instancetype)initWithConfig:(id <MMEConfigurationProviding>)config;
 
 /*! @Brief Initializes a Client with a custom session wrapper without event hooks
  @param config Provider of Shared Client Model Information
  @param session Session responsible for owning URLSession and Cert pinning
  */
-- (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config
+- (instancetype)initWithConfig:(id <MMEConfigurationProviding>)config
                        session:(MMENSURLSessionWrapper*)session;
 
 /*!
@@ -48,7 +48,7 @@ typedef void(^OnGenerateTelemetryEvent)(void);
  @param config Provider of Shared Client Model Information
  @param session Session responsible for owning URLSession and Cert pinning
  */
-- (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config
+- (instancetype)initWithConfig:(id <MMEConfigurationProviding>)config
                 requestFactory:(MMENSURLRequestFactory*)requestFactory
                        session:(MMENSURLSessionWrapper*)session NS_DESIGNATED_INITIALIZER;
 

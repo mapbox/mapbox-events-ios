@@ -222,8 +222,8 @@
 		F4726566246633CD00BD7055 /* MMEConfigService.m in Sources */ = {isa = PBXBuildFile; fileRef = F4726563246633CD00BD7055 /* MMEConfigService.m */; };
 		F4726567246633CD00BD7055 /* MMEConfigService.m in Sources */ = {isa = PBXBuildFile; fileRef = F4726563246633CD00BD7055 /* MMEConfigService.m */; };
 		F47265692466872200BD7055 /* MMEConfigServiceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F47265682466872200BD7055 /* MMEConfigServiceTests.m */; };
-		F4913F452453610800C28338 /* MMEEventConfigProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = F4913F442453610800C28338 /* MMEEventConfigProviding.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		F4913F462453610800C28338 /* MMEEventConfigProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = F4913F442453610800C28338 /* MMEEventConfigProviding.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F4913F452453610800C28338 /* MMEConfigurationProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = F4913F442453610800C28338 /* MMEConfigurationProviding.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F4913F462453610800C28338 /* MMEConfigurationProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = F4913F442453610800C28338 /* MMEConfigurationProviding.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F49675E224620F4300F8914D /* NSError+APIClient.h in Headers */ = {isa = PBXBuildFile; fileRef = F49675E024620F4300F8914D /* NSError+APIClient.h */; };
 		F49675E324620F4300F8914D /* NSError+APIClient.h in Headers */ = {isa = PBXBuildFile; fileRef = F49675E024620F4300F8914D /* NSError+APIClient.h */; };
 		F49675E424620F4300F8914D /* NSError+APIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = F49675E124620F4300F8914D /* NSError+APIClient.m */; };
@@ -507,7 +507,7 @@
 		F4726562246633CD00BD7055 /* MMEConfigService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEConfigService.h; sourceTree = "<group>"; };
 		F4726563246633CD00BD7055 /* MMEConfigService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEConfigService.m; sourceTree = "<group>"; };
 		F47265682466872200BD7055 /* MMEConfigServiceTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEConfigServiceTests.m; sourceTree = "<group>"; };
-		F4913F442453610800C28338 /* MMEEventConfigProviding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEEventConfigProviding.h; sourceTree = "<group>"; };
+		F4913F442453610800C28338 /* MMEConfigurationProviding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEConfigurationProviding.h; sourceTree = "<group>"; };
 		F49675E024620F4300F8914D /* NSError+APIClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSError+APIClient.h"; sourceTree = "<group>"; };
 		F49675E124620F4300F8914D /* NSError+APIClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSError+APIClient.m"; sourceTree = "<group>"; };
 		F497A820247897A9008F5937 /* CLLocationManagerTests+MMEMobileEvents.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "CLLocationManagerTests+MMEMobileEvents.m"; sourceTree = "<group>"; };
@@ -858,7 +858,7 @@
 		F4EAFDFA24538B3F00D2B17B /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
-				F4913F442453610800C28338 /* MMEEventConfigProviding.h */,
+				F4913F442453610800C28338 /* MMEConfigurationProviding.h */,
 				F45DB3722485C6DE0000E644 /* MMELocationManaging.h */,
 			);
 			path = Protocols;
@@ -880,7 +880,7 @@
 				40AE58561EA932DB0046B437 /* MMEConstants.h in Headers */,
 				F45DB3732485C6DE0000E644 /* MMELocationManaging.h in Headers */,
 				40AE586D1EA95EDD0046B437 /* MMEEvent.h in Headers */,
-				F4913F452453610800C28338 /* MMEEventConfigProviding.h in Headers */,
+				F4913F452453610800C28338 /* MMEConfigurationProviding.h in Headers */,
 				F4726564246633CD00BD7055 /* MMEConfigService.h in Headers */,
 				40C9E27B1EA542BC00744FE7 /* MMEEventsManager.h in Headers */,
 				F4D48A82248EE162004A7517 /* MMELogLevel.h in Headers */,
@@ -924,7 +924,7 @@
 				F45DB3742485C6DE0000E644 /* MMELocationManaging.h in Headers */,
 				9CA7538A240EF2DD005C26C9 /* MMEEventsManager.h in Headers */,
 				9CA7538B240EF2DD005C26C9 /* MMELocationManager.h in Headers */,
-				F4913F462453610800C28338 /* MMEEventConfigProviding.h in Headers */,
+				F4913F462453610800C28338 /* MMEConfigurationProviding.h in Headers */,
 				9CA7539D240EF2DD005C26C9 /* MMEEventsManager_Private.h in Headers */,
 				F4D48A83248EE162004A7517 /* MMELogLevel.h in Headers */,
 				9CA753A2240EF2DD005C26C9 /* MMEAPIClient_Private.h in Headers */,

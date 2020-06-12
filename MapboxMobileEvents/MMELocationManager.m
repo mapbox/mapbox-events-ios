@@ -1,7 +1,7 @@
 #import <CoreLocation/CoreLocation.h>
 #import "MMELocationManager.h"
 #import "MMEUIApplicationWrapper.h"
-#import "MMEEventConfigProviding.h"
+#import "MMEConfigurationProviding.h"
 
 static const NSTimeInterval MMELocationManagerHibernationTimeout = 300.0;
 static const NSTimeInterval MMELocationManagerHibernationPollInterval = 5.0;
@@ -20,7 +20,7 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
 @property (nonatomic, strong) NSDate *backgroundLocationServiceTimeoutAllowedDate;
 @property (nonatomic, strong) NSTimer *backgroundLocationServiceTimeoutTimer;
 @property (nonatomic) BOOL hostAppHasBackgroundCapability;
-@property (nonatomic, strong) id <MMEEventConfigProviding> config;
+@property (nonatomic, strong) id <MMEConfigurationProviding> config;
 @property (nonatomic, strong) NSMutableArray<OnDidExitRegion>* onDidExitRegionListeners;
 @property (nonatomic, strong) NSMutableArray<OnDidUpdateCoordinate>* onDidUpdateCoordinateListeners;
 
@@ -34,12 +34,12 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
     _locationManager.delegate = nil;
 }
 
-- (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config {
+- (instancetype)initWithConfig:(id <MMEConfigurationProviding>)config {
     return [self initWithConfig:config
                 locationManager:CLLocationManager.new];
 }
 
-- (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config
+- (instancetype)initWithConfig:(id <MMEConfigurationProviding>)config
                locationManager:(CLLocationManager*)locationManager {
 
     return [self initWithConfig:config
@@ -47,7 +47,7 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
                          bundle:[NSBundle mainBundle]];
 }
 
-- (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config
+- (instancetype)initWithConfig:(id <MMEConfigurationProviding>)config
                locationManager:(CLLocationManager*)locationManager
                         bundle:(NSBundle*)bundle {
 
@@ -57,7 +57,7 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
                     application:[[MMEUIApplicationWrapper alloc] init]];
 }
 
-- (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config
+- (instancetype)initWithConfig:(id <MMEConfigurationProviding>)config
                locationManager:(CLLocationManager*)locationManager
                         bundle:(NSBundle*)bundle
                    application:(id <MMEUIApplicationWrapper>)application {

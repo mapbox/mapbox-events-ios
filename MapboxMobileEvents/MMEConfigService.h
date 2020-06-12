@@ -2,7 +2,7 @@
 
 @class MMEAPIClient;
 @class MMEConfig;
-@protocol MMEEventConfigProviding;
+@protocol MMEConfigurationProviding;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -12,7 +12,7 @@ typedef void(^OnConfigLoad)(MMEConfig *config);
 @interface MMEConfigService : NSObject
 
 /*! Configuration describing differentiated config fetching behaviors */
-@property (nonatomic, readonly) id <MMEEventConfigProviding> config;
+@property (nonatomic, readonly) id <MMEConfigurationProviding> config;
 
 /*! Block Called on Each Config Load (On Main Thread) */
 @property (nonatomic, copy, readonly) OnConfigLoad onConfigLoad;
@@ -27,7 +27,7 @@ typedef void(^OnConfigLoad)(MMEConfig *config);
  @param client Client used to make API calls
  @param onConfigLoad Block for reacting to Configuration update responses
  */
-- (instancetype)init:(id <MMEEventConfigProviding>)config
+- (instancetype)init:(id <MMEConfigurationProviding>)config
               client:(MMEAPIClient*)client
         onConfigLoad:(OnConfigLoad)onConfigLoad;
 

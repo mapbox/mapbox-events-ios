@@ -37,7 +37,7 @@
 // MARK: - Lifecycle
 
 - (instancetype)initWithSessionConfiguration:(NSURLSessionConfiguration*)sessionConfiguration
-                          eventConfiguration:(id <MMEEventConfigProviding>)eventConfiguration {
+                          eventConfiguration:(id <MMEConfigurationProviding>)eventConfiguration {
 
     return [self initWithConfiguration:sessionConfiguration
                        completionQueue:[MMENSURLSessionWrapper makeDispatchQueue]

@@ -4,7 +4,7 @@
 #import "MMELocationManaging.h"
 
 @protocol MMELocationManagerDelegate;
-@protocol MMEEventConfigProviding;
+@protocol MMEConfigurationProviding;
 @protocol MMEUIApplicationWrapper;
 @protocol MMELocationManaging;
 
@@ -32,12 +32,12 @@ extern NSString * const MMELocationManagerRegionIdentifier;
 
 - (instancetype)init NS_UNAVAILABLE;
 
-- (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config;
+- (instancetype)initWithConfig:(id <MMEConfigurationProviding>)config;
 
-- (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config
+- (instancetype)initWithConfig:(id <MMEConfigurationProviding>)config
                locationManager:(CLLocationManager*)locationManager;
 
-- (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config
+- (instancetype)initWithConfig:(id <MMEConfigurationProviding>)config
                locationManager:(CLLocationManager*)locationManager
                         bundle:(NSBundle*)bundle;
 /*!
@@ -47,7 +47,7 @@ extern NSString * const MMELocationManagerRegionIdentifier;
  @param bundle Source of Info Dictionary Key/Values
  @param application Application Wrapper (State/background task interface)
  */
-- (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config
+- (instancetype)initWithConfig:(id <MMEConfigurationProviding>)config
                locationManager:(CLLocationManager*)locationManager
                         bundle:(NSBundle*)bundle
                    application:(id <MMEUIApplicationWrapper>)application NS_DESIGNATED_INITIALIZER;

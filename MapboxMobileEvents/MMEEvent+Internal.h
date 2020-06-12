@@ -1,6 +1,6 @@
 #import "MMEEvent.h"
 
-@protocol MMEEventConfigProviding;
+@protocol MMEConfigurationProviding;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -78,7 +78,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param skuID Active SKU Identifier to add to event
  @param error Error Reference for feedback on any missing requirements to initialize
  */
-+ (nullable instancetype)turnstileEventWithConfiguration:(id <MMEEventConfigProviding>)config
++ (nullable instancetype)turnstileEventWithConfiguration:(id <MMEConfigurationProviding>)config
                                                    skuID:(nullable NSString*)skuID
                                                    error:(NSError**)error;
 

@@ -58,7 +58,7 @@ NS_ASSUME_NONNULL_BEGIN
  @returns Returns a new ConfigurationsService configured to update preferences on load
  */
 -(MMEConfigService*)makeConfigServiceWithClient:(MMEAPIClient*)client
-                                         config:(id <MMEEventConfigProviding>)config;
+                                         config:(id <MMEConfigurationProviding>)config;
 
 
 

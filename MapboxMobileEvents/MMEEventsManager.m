@@ -70,7 +70,7 @@ NS_ASSUME_NONNULL_BEGIN
  @returns Returns a new ConfigurationsService configured to update preferences on load
  */
 -(MMEConfigService*)makeConfigServiceWithClient:(MMEAPIClient*)client
-                                         config:(id <MMEEventConfigProviding>)config;
+                                         config:(id <MMEConfigurationProviding>)config;
 
 @end
 
@@ -144,7 +144,7 @@ NS_ASSUME_NONNULL_BEGIN
     [self pauseMetricsCollection];
 }
 
--(id <MMEEventConfigProviding>)configuration {
+-(id <MMEConfigurationProviding>)configuration {
     return self.preferences;
 }
 
@@ -260,7 +260,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 -(MMEConfigService*)makeConfigServiceWithClient:(MMEAPIClient*)client
-                                         config:(id <MMEEventConfigProviding>)config {
+                                         config:(id <MMEConfigurationProviding>)config {
     __weak __typeof__(self) weakSelf = self;
     return [[MMEConfigService alloc] init:config
                                    client:client

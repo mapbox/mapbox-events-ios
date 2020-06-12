@@ -1,13 +1,13 @@
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CLLocation.h>
-#import "MMEEventConfigProviding.h"
+#import "MMEConfigurationProviding.h"
 
 @class MMEDate;
 
 NS_ASSUME_NONNULL_BEGIN
 
 /*! @brief Mock Immutable Config */
-@interface MMEMockEventConfig : NSObject <MMEEventConfigProviding>
+@interface MMEMockEventConfig : NSObject <MMEConfigurationProviding>
 
 /// Interval to wait before starting up when the application launches
 @property (nonatomic, assign) NSTimeInterval startupDelay;

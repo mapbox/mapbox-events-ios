@@ -6,7 +6,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class MMEDate;
 
 /// Provides the necessary readonly config values for determining behaviors
-@protocol MMEEventConfigProviding <NSObject>
+@protocol MMEConfigurationProviding <NSObject>
 
 // MARK: - Event Manager Configuration
 

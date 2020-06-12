@@ -2,20 +2,20 @@
 #import "MMECertPin.h"
 #import "MMEConstants.h"
 #import "MMELogger.h"
-#import "MMEEventConfigProviding.h"
+#import "MMEConfigurationProviding.h"
 
 @interface MMECertPin()
 
 @property (nonatomic, strong) NSMutableDictionary<NSData *, NSData *> *publicKeyInfoHashesCache;
 @property (nonatomic) NSURLSessionAuthChallengeDisposition lastAuthChallengeDisposition;
-@property (nonatomic, strong) id <MMEEventConfigProviding> config;
+@property (nonatomic, strong) id <MMEConfigurationProviding> config;
 @property (nonatomic) dispatch_queue_t lockQueue;
 
 @end
 
 @implementation MMECertPin
 
-- (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config {
+- (instancetype)initWithConfig:(id <MMEConfigurationProviding>)config {
     if (self = [super init]) {
         self.publicKeyInfoHashesCache = [NSMutableDictionary dictionary];
         _lockQueue = dispatch_queue_create("MMECertHashLock", DISPATCH_QUEUE_CONCURRENT);

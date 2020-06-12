@@ -1,5 +1,5 @@
 #import "MMEConfigService.h"
-#import "MMEEventConfigProviding.h"
+#import "MMEConfigurationProviding.h"
 #import "MMEDate.h"
 
 @interface MMEConfigService ()
@@ -12,7 +12,7 @@
 
 @implementation MMEConfigService
 
-- (instancetype)init:(id <MMEEventConfigProviding>)config
+- (instancetype)init:(id <MMEConfigurationProviding>)config
               client:(MMEAPIClient*)client
         onConfigLoad:(OnConfigLoad)onConfigLoad {
 

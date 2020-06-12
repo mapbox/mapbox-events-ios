@@ -5,7 +5,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class MMEEvent;
 @class MMELogger;
-@protocol MMEEventConfigProviding;
+@protocol MMEConfigurationProviding;
 
 typedef void(^OnMetricsError)(NSError* error);
 typedef void(^OnMetricsException)(NSException* exception);
@@ -30,7 +30,7 @@ typedef BOOL(^IsReachableViaWifi)(void);
  @param config Differentiated Config
  @param pendingMetricsFileURL File url for creating/archiving events
  */
-- (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config
+- (instancetype)initWithConfig:(id <MMEConfigurationProviding>)config
          pendingMetricsFileURL:(NSURL*)pendingMetricsFileURL;
 
 /*!
@@ -41,7 +41,7 @@ typedef BOOL(^IsReachableViaWifi)(void);
  @param onMetricsException Block called with MMEEvent for Exception debug logging
  @param isReachableViaWifi Block caleld to check if Wifi is reachable
  */
-- (instancetype)initWithConfig:(id <MMEEventConfigProviding>)config
+- (instancetype)initWithConfig:(id <MMEConfigurationProviding>)config
          pendingMetricsFileURL:(NSURL*)pendingMetricsFileURL
                 onMetricsError:(OnMetricsError)onMetricsError
             onMetricsException:(OnMetricsException)onMetricsException

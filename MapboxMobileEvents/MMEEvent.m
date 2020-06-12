@@ -1,7 +1,7 @@
 #import <CommonCrypto/CommonDigest.h>
 #import <CoreLocation/CoreLocation.h>
 #import "MMEEvent.h"
-#import "MMEEventConfigProviding.h"
+#import "MMEConfigurationProviding.h"
 #import "MMEConstants.h"
 #import "MMEDate.h"
 #import "MMEEventsManager.h"
@@ -85,7 +85,7 @@
 // MARK: - Custom Events
 
 /*! TurnstileEvent Convenience Initializer */
-+ (nullable instancetype)turnstileEventWithConfiguration:(id <MMEEventConfigProviding>)config
++ (nullable instancetype)turnstileEventWithConfiguration:(id <MMEConfigurationProviding>)config
                                                    skuID:(nullable NSString*)skuID
                                                    error:(NSError**)error {
 

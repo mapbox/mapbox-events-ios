@@ -3,7 +3,7 @@
 #import "MMEEvent.h"
 #import "MMEConstants.h"
 #import "MMELogger.h"
-#import "MMEEventConfigProviding.h"
+#import "MMEConfigurationProviding.h"
 #import "NSURL+Files.h"
 #import "MMEMetrics.h"
 #import "MMEDate.h"
