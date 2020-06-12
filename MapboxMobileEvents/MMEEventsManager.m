@@ -352,11 +352,7 @@ NS_ASSUME_NONNULL_BEGIN
             __weak __typeof__(self) weakSelf = self;
             _backgroundTaskIdentifier = [self.application beginBackgroundTaskWithExpirationHandler:^{
 
-                MMELog(
-                       MMELogInfo,
-                       MMEDebugEventTypeBackgroundTask,
-                       ([NSString stringWithFormat:@"Ending background task: %@, instance: %@", @(weakSelf.backgroundTaskIdentifier) ?: @"nil", weakSelf.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"])
-                       );
+                MMELog(MMELogInfo, MMEDebugEventTypeBackgroundTask, ([NSString stringWithFormat:@"Ending background task: %@, instance: %@", @(weakSelf.backgroundTaskIdentifier) ?: @"nil", weakSelf.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
                 
                 [weakSelf.application endBackgroundTask:self.backgroundTaskIdentifier];
                 weakSelf.backgroundTaskIdentifier = UIBackgroundTaskInvalid;
@@ -561,12 +557,10 @@ NS_ASSUME_NONNULL_BEGIN
             [self.apiClient postEvent:telemetryMetricsEvent completionHandler:^(NSError * _Nullable error) {
                 [[weakSelf metricsManager] resetMetrics];
                 if (error) {
-                    MMELog(MMELogInfo, MMEDebugEventTypeTelemetryMetrics, ([NSString stringWithFormat:@"Could not send telemetryMetrics event: %@, instance: %@",
-                        [error localizedDescription], [[weakSelf uniqueIdentifer] rollingInstanceIdentifer] ?: @"nil"]));
+                    MMELog(MMELogInfo, MMEDebugEventTypeTelemetryMetrics, ([NSString stringWithFormat:@"Could not send telemetryMetrics event: %@, instance: %@", [error localizedDescription], [[weakSelf uniqueIdentifer] rollingInstanceIdentifer] ?: @"nil"]));
                     return;
                 }
-                MMELog(MMELogInfo, MMEDebugEventTypeTelemetryMetrics, ([NSString stringWithFormat:@"Sent telemetryMetrics event, instance: %@",
-                    [[weakSelf uniqueIdentifer] rollingInstanceIdentifer] ?: @"nil"]));
+                MMELog(MMELogInfo, MMEDebugEventTypeTelemetryMetrics, ([NSString stringWithFormat:@"Sent telemetryMetrics event, instance: %@", [[weakSelf uniqueIdentifer] rollingInstanceIdentifer] ?: @"nil"]));
             }];
         }
     }
@@ -641,12 +635,10 @@ NS_ASSUME_NONNULL_BEGIN
 // MARK: - Internal API
 
 - (void)pauseMetricsCollection {
-    MMELog(MMELogInfo, MMEDebugEventTypeMetricCollection, ([NSString stringWithFormat:@"Pausing metrics collection..., instance: %@",
-        self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
+    MMELog(MMELogInfo, MMEDebugEventTypeMetricCollection, ([NSString stringWithFormat:@"Pausing metrics collection..., instance: %@", self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
 
     if (self.isPaused) {
-        MMELog(MMELogInfo, MMEDebugEventTypeMetricCollection, ([NSString stringWithFormat:@"Already paused, instance: %@",
-            self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
+        MMELog(MMELogInfo, MMEDebugEventTypeMetricCollection, ([NSString stringWithFormat:@"Already paused, instance: %@", self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
         return;
     }
     
@@ -655,17 +647,14 @@ NS_ASSUME_NONNULL_BEGIN
     
     [self.locationManager stopUpdatingLocation];
 
-    MMELog(MMELogInfo, MMEDebugEventTypeLocationManager, ([NSString stringWithFormat:@"Paused and location manager stopped, instance: %@",
-        self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
+    MMELog(MMELogInfo, MMEDebugEventTypeLocationManager, ([NSString stringWithFormat:@"Paused and location manager stopped, instance: %@", self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
 }
 
 - (void)resumeMetricsCollection {
-    MMELog(MMELogInfo, MMEDebugEventTypeMetricCollection, ([NSString stringWithFormat:@"Resuming metrics collection..., instance: %@",
-        self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
+    MMELog(MMELogInfo, MMEDebugEventTypeMetricCollection, ([NSString stringWithFormat:@"Resuming metrics collection..., instance: %@", self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
 
     if (!self.isPaused || !self.preferences.isCollectionEnabled) {
-        MMELog(MMELogInfo, MMEDebugEventTypeMetricCollection, ([NSString stringWithFormat:@"Already running, instance: %@",
-            self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
+        MMELog(MMELogInfo, MMEDebugEventTypeMetricCollection, ([NSString stringWithFormat:@"Already running, instance: %@", self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
         return;
     }
     
@@ -674,8 +663,7 @@ NS_ASSUME_NONNULL_BEGIN
     if (self.preferences.isCollectionEnabled) {
         [self.locationManager startUpdatingLocation];
     }
-    MMELog(MMELogInfo, MMEDebugEventTypeLocationManager, ([NSString stringWithFormat:@"Resumed and location manager started, instance: %@",
-        self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
+    MMELog(MMELogInfo, MMEDebugEventTypeLocationManager, ([NSString stringWithFormat:@"Resumed and location manager started, instance: %@", self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
 }
 
 - (void)updateNextTurnstileSendDate {
@@ -695,8 +683,7 @@ NS_ASSUME_NONNULL_BEGIN
     
     [self.eventQueue addObject:event];
 
-    MMELog(MMELogInfo, MMEDebugEventTypePush, ([NSString stringWithFormat:@"Added event to event queue; event queue now has %ld events, instance: %@",
-        (long)self.eventQueue.count, self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
+    MMELog(MMELogInfo, MMEDebugEventTypePush, ([NSString stringWithFormat:@"Added event to event queue; event queue now has %ld events, instance: %@", (long)self.eventQueue.count, self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
 
     if (self.eventQueue.count >= self.preferences.eventFlushCount) {
         [self flush];
@@ -816,28 +803,23 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void)locationManagerDidStartLocationUpdates:(MMELocationManager *)locationManager {
-    MMELog(MMELogInfo, MMEDebugEventTypeLocationManager, ([NSString stringWithFormat:@"Location manager started location updates, instance: %@",
-        self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
+    MMELog(MMELogInfo, MMEDebugEventTypeLocationManager, ([NSString stringWithFormat:@"Location manager started location updates, instance: %@", self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
 }
 
 - (void)locationManagerBackgroundLocationUpdatesDidTimeout:(MMELocationManager *)locationManager {
-    MMELog(MMELogInfo, MMEDebugEventTypeLocationManager, ([NSString stringWithFormat:@"Location manager timed out, instance: %@",
-        self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
+    MMELog(MMELogInfo, MMEDebugEventTypeLocationManager, ([NSString stringWithFormat:@"Location manager timed out, instance: %@", self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
 }
 
 - (void)locationManagerBackgroundLocationUpdatesDidAutomaticallyPause:(MMELocationManager *)locationManager {
-    MMELog(MMELogInfo, MMEDebugEventTypeLocationManager, ([NSString stringWithFormat:@"Location manager automatically paused, instance: %@",
-        self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
+    MMELog(MMELogInfo, MMEDebugEventTypeLocationManager, ([NSString stringWithFormat:@"Location manager automatically paused, instance: %@", self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
 }
 
 - (void)locationManagerDidStopLocationUpdates:(MMELocationManager *)locationManager {
-    MMELog(MMELogInfo, MMEDebugEventTypeLocationManager, ([NSString stringWithFormat:@"Location manager stopped location updates, instance: %@",
-        self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
+    MMELog(MMELogInfo, MMEDebugEventTypeLocationManager, ([NSString stringWithFormat:@"Location manager stopped location updates, instance: %@", self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
 }
 
 - (void)locationManager:(MMELocationManager *)locationManager didVisit:(CLVisit *)visit {
-    MMELog(MMELogInfo, MMEDebugEventTypeLocationManager, ([NSString stringWithFormat:@"Location manager visit %@, instance: %@",
-        visit, self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
+    MMELog(MMELogInfo, MMEDebugEventTypeLocationManager, ([NSString stringWithFormat:@"Location manager visit %@, instance: %@", visit, self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
         
     MMEEvent *event = [MMEEvent visitEventWithVisit:visit];
     [self pushEvent:event];
