@@ -5,4 +5,3 @@
 #import <MapboxMobileEvents/MMEEventsManager.h>
 #import <MapboxMobileEvents/MMEConfigation.h>
 #import <MapboxMobileEvents/NSUserDefaults+MMEConfiguration.h>
-#import <MapboxMobileEvents/MMELogLevel.h>
