@@ -4,6 +4,7 @@
 #if TARGET_OS_IOS || TARGET_OS_TVOS
 #import <UIKit/UIKit.h>
 #import "NSBundle+MMEMobileEvents.h"
+#import "MMEUIApplicationWrapper.h"
 #endif
 #include <sys/sysctl.h>
 
@@ -77,7 +78,7 @@ NSString * const MMEApplicationStateExtension = @"Extension";
     if (NSBundle.mme_isExtension) {
         return MMEApplicationStateExtension;
     } else {
-        switch (UIApplication.sharedApplication.applicationState) {
+        switch (MMEUIApplicationWrapper.new.applicationState) {
             case UIApplicationStateActive:
                 return MMEApplicationStateForeground;
             case UIApplicationStateInactive:

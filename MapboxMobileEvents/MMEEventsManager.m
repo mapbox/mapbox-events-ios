@@ -22,6 +22,7 @@
 #import "MMEUIApplicationWrapper.h"
 #import "MMEUniqueIdentifier.h"
 #import "MMEEventLogger.h"
+#import "NSBundle+MMEMobileEvents.h"
 
 #import "CLLocation+MMEMobileEvents.h"
 #import "CLLocationManager+MMEMobileEvents.h"

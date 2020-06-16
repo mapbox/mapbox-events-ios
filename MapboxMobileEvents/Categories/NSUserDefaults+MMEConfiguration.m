@@ -3,7 +3,7 @@
 #import "MMEConstants.h"
 #import "MMEDate.h"
 #import "MMEEventLogger.h"
-
+#import "NSBundle+MMEMobileEvents.h"
 #import "NSString+MMEVersions.h"
 #import "NSUserDefaults+MMEConfiguration.h"
 #import "NSUserDefaults+MMEConfiguration_Private.h"
@@ -379,6 +379,13 @@ NS_ASSUME_NONNULL_BEGIN
         if (collectionEnabled && [NSProcessInfo instancesRespondToSelector:@selector(isLowPowerModeEnabled)]) {
                 collectionEnabled = !NSProcessInfo.processInfo.isLowPowerModeEnabled;
         }
+    }
+
+    // Currently storage between App/Extension (AppGroup) is not shared meaning some values such as
+    // privacy review consent are not shared between both. Default collection to OFF until shared support
+    // is implemented
+    if (NSBundle.mme_isExtension) {
+        collectionEnabled = NO;
     }
 
     return collectionEnabled;
