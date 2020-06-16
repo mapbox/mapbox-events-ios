@@ -1,11 +1,3 @@
-//
-//  TodayViewController.m
-//  TodayWidget
-//
-//  Created by Dane Miluski on 6/9/20.
-//  Copyright © 2020 Mapbox. All rights reserved.
-//
-
 #import "TodayViewController.h"
 #import <NotificationCenter/NotificationCenter.h>
 #import <MapboxMobileEvents/MapboxMobileEvents.h>
@@ -56,11 +48,6 @@
 
 
 - (void)widgetPerformUpdateWithCompletionHandler:(void (^)(NCUpdateResult))completionHandler {
-    // Perform any setup necessary in order to update the view.
-    
-    // If an error is encountered, use NCUpdateResultFailed
-    // If there's no update required, use NCUpdateResultNoData
-    // If there's an update, use NCUpdateResultNewData
 
     // For Demo Purposes, assume new data
     completionHandler(NCUpdateResultNewData);
