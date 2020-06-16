@@ -285,11 +285,14 @@ NS_ASSUME_NONNULL_BEGIN
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
 
-        userAgent = [NSString stringWithFormat:@"%@/%@ (%@; v%@)",
+        userAgent = [NSString stringWithFormat:@"%@/%@ (%@; v%@; %@ %@)",
             NSBundle.mme_mainBundle.infoDictionary[(id)kCFBundleNameKey] ?: NSBundle.mme_mainBundle.bundlePath.lastPathComponent.stringByDeletingPathExtension,
             NSBundle.mme_mainBundle.mme_bundleVersionString,
             NSBundle.mme_mainBundle.bundleIdentifier,
-            NSBundle.mme_mainBundle.infoDictionary[(id)kCFBundleVersionKey]];
+            NSBundle.mme_mainBundle.infoDictionary[(id)kCFBundleVersionKey],
+            UIDevice.currentDevice.systemName,
+            UIDevice.currentDevice.systemVersion
+            ];
         
         // check all loaded frameworks for mapbox frameworks, record their bundleIdentifier
         NSMutableSet *loadedMapboxBundleIds = NSMutableSet.new;
