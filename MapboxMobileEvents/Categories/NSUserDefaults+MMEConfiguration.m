@@ -306,7 +306,7 @@ NS_ASSUME_NONNULL_BEGIN
         for (NSString *bundleId in sortedBundleIds) {
             NSBundle *loaded = [NSBundle bundleWithIdentifier:bundleId];
             NSString *uaFragment = [NSString stringWithFormat:@" %@/%@ (%@; v%@)",
-                loaded.infoDictionary[(id)kCFBundleNameKey],
+                loaded.infoDictionary[(id)kCFBundleNameKey] ?: loaded.bundlePath.lastPathComponent.stringByDeletingPathExtension,
                 loaded.mme_bundleVersionString,
                 loaded.bundleIdentifier,
                 loaded.infoDictionary[(id)kCFBundleVersionKey]];
