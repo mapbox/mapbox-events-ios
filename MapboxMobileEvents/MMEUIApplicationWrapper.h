@@ -13,12 +13,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, readonly) UIApplicationState applicationState;
 
 /*!
- Integer Dynamic Font Scale Representation
- @note Used for metrics gethering
- */
-//@property(nonatomic, readonly) NSInteger contentSizeScale;
-
-/*!
  @Brief Mark the start of a task that should continue if the app enters the background.
  @param handler A handler to be called shortly before the app’s remaining background time reaches 0. Use this handler to clean up and mark
  the end of the background task. Failure to end the task explicitly will result in the termination of the app. The system calls the handler
