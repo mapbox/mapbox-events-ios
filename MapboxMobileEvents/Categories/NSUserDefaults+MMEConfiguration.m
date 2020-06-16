@@ -290,8 +290,10 @@ NS_ASSUME_NONNULL_BEGIN
             NSBundle.mme_mainBundle.mme_bundleVersionString,
             NSBundle.mme_mainBundle.bundleIdentifier,
             NSBundle.mme_mainBundle.infoDictionary[(id)kCFBundleVersionKey]];
+            NSBundle.mme_mainBundle.infoDictionary[(id)kCFBundleNameKey] ?: NSBundle.mme_mainBundle.bundlePath.lastPathComponent.stringByDeletingPathExtension,
         
         // check all loaded frameworks for mapbox frameworks, record thier bundleIdentifier
+        // check all loaded frameworks for mapbox frameworks, record their bundleIdentifier
         NSMutableSet *loadedMapboxBundleIds = NSMutableSet.new;
         for (NSBundle *loaded in [NSBundle.allFrameworks arrayByAddingObjectsFromArray:NSBundle.allBundles]) {
             if (loaded.bundleIdentifier
