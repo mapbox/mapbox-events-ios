@@ -1,0 +1,6 @@
+
+framework module MapboxMobileEvents_Private {
+    header "MMEAPIClient_Private.h"
+    header "MMEEventsManager_Private.h"
+    header "NSUserDefaults+MMEConfiguration_Private.h"
+}
