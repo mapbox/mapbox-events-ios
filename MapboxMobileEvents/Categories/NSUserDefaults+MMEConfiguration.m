@@ -1,9 +1,11 @@
 #import <CommonCrypto/CommonDigest.h>
 
+
 #import "MMEConstants.h"
 #import "MMEDate.h"
 #import "MMEEventLogger.h"
 #import "NSBundle+MMEMobileEvents.h"
+#import "NSProcessInfo+SystemInfo.h"
 #import "NSString+MMEVersions.h"
 #import "NSUserDefaults+MMEConfiguration.h"
 #import "NSUserDefaults+MMEConfiguration_Private.h"
@@ -285,14 +287,15 @@ NS_ASSUME_NONNULL_BEGIN
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
 
-        userAgent = [NSString stringWithFormat:@"%@/%@ (%@; v%@; %@ %@)",
+        userAgent = [NSString stringWithFormat:@"%@/%@ (%@; v%@; %@ %@; %@)",
             NSBundle.mme_mainBundle.infoDictionary[(id)kCFBundleNameKey] ?: NSBundle.mme_mainBundle.bundlePath.lastPathComponent.stringByDeletingPathExtension,
             NSBundle.mme_mainBundle.mme_bundleVersionString,
             NSBundle.mme_mainBundle.bundleIdentifier,
             NSBundle.mme_mainBundle.infoDictionary[(id)kCFBundleVersionKey],
             UIDevice.currentDevice.systemName,
-            UIDevice.currentDevice.systemVersion
-            ];
+            UIDevice.currentDevice.systemVersion,
+            [NSProcessInfo mme_processorTypeDescription]
+        ];
         
         // check all loaded frameworks for mapbox frameworks, record their bundleIdentifier
         NSMutableSet *loadedMapboxBundleIds = NSMutableSet.new;
