@@ -1,9 +1,9 @@
 #ifndef MMEEventsManager_Private_h
 #define MMEEventsManager_Private_h
 
-NS_ASSUME_NONNULL_BEGIN
+#import <MapboxMobileEvents/MapboxMobileEvents.h>
 
-@class MMEAPIClient;
+NS_ASSUME_NONNULL_BEGIN
 
 @interface MMEEventsManager (Private)
 
