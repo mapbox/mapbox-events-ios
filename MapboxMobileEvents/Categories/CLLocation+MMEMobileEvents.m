@@ -33,14 +33,14 @@ void mme_linkCLLocationCategory(){}
 }
 
 - (CLLocationDegrees)mme_latitudeRoundedWithPrecision:(NSUInteger)precision {
-    return [self value:self.coordinate.latitude withPrecision:precision];
+    return [self mme_value:self.coordinate.latitude withPrecision:precision];
 }
 
 - (CLLocationDegrees)mme_longitudeRoundedWithPrecision:(NSUInteger)precision {
-    return [self value:self.coordinate.longitude withPrecision:precision];
+    return [self mme_value:self.coordinate.longitude withPrecision:precision];
 }
 
-- (CLLocationDegrees)value:(CLLocationDegrees)value withPrecision:(NSUInteger)precision {
+- (CLLocationDegrees)mme_value:(CLLocationDegrees)value withPrecision:(NSUInteger)precision {
     double accuracy = pow(10.0, precision);
     return floor(value * accuracy) / accuracy;
 }
