@@ -40,6 +40,26 @@
          </BuildableReference>
       </MacroExpansion>
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "9CDC34C223502F8700852FF0"
+               BuildableName = "MMECedarTests.xctest"
+               BlueprintName = "MMECedarTests"
+               ReferencedContainer = "container:MapboxMobileEvents.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "404807C11EA186D8008A6D50"
+               BuildableName = "MMEXCTests.xctest"
+               BlueprintName = "MMEXCTests"
+               ReferencedContainer = "container:MapboxMobileEvents.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction
@@ -85,6 +105,6 @@
    </AnalyzeAction>
    <ArchiveAction
       buildConfiguration = "Release"
-      revealArchiveInOrganizer = "YES">
+      revealArchiveInOrganizer = "NO">
    </ArchiveAction>
 </Scheme>
