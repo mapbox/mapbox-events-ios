@@ -50,7 +50,7 @@ in this repository with details.
 
 ### 💣 Debugging
 
-Usualy when running the Mobile Events SDK in the Emulator it does not send events or emit debug
+Usually when running the Mobile Events SDK in the Emulator it does not send events or emit debug
 messages, you can enable these by setting properties on the `sharedManager`:
 
 ```objc
