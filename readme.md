@@ -17,7 +17,7 @@ the map and device location to continuously update and improve your maps.
 
 ### 🏎 Quick Start
 
-If you are using another Mapbox SDK, you should not need to do any spcial setup to use Mapbox Mobile Events.
+If you are using another Mapbox SDK, you should not need to do any special setup to use Mapbox Mobile Events.
 
 If you are integrating Mapbox Mobile Events into an application which does not use another Mapbox SDK you 
 will need to include `MapboxMobileEvents.framework` in your application, and in the application delegate's 
