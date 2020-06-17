@@ -63,7 +63,7 @@ if (DEBUG) {
 ### 🗺 Foreground and Background Location Collection
 
 The MapboxMobileEvents frameworks collect location data to help us improve the map. We strive to maintain a 
-low power and network  usage profile for this collection and take great care to anonymize all data in accordance 
+low power and network usage profile for this collection and take great care to anonymize all data in accordance 
 with our [privacy policy](https://www.mapbox.com/legal/privacy).
 
 The use of Mapbox SDKs and APIs on mobile devices are governed by our  
