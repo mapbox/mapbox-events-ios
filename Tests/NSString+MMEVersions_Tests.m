@@ -132,4 +132,11 @@
     XCTAssertFalse([fakeBundle.mme_bundleVersionString mme_isSemverString]);
 }
 
+- (void)test011_invalidDelimitersInString {
+    NSString *badString = @"user-agent-base (),/:;<=>?@[]{}\"\\";
+    NSString *goodString = @"user-agent-base";
+    XCTAssert([badString.mme_stringByRemovingNonUserAgentTokenCharacters
+              isEqualToString:goodString]);
+}
+
 @end

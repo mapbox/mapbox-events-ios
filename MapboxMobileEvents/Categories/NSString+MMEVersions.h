@@ -10,6 +10,9 @@ extern NSInteger const MMESemverInvalidVersion;
 ///
 @interface NSString (MMEVersions)
 
+/// filters out set of US-ASCII visual characters not allowed in user agent
+- (NSString *)mme_stringByRemovingNonUserAgentTokenCharacters;
+
 /// YES if this string complies with the semver specification
 - (BOOL) mme_isSemverString;
 
