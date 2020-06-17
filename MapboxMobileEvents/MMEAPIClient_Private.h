@@ -1,6 +1,8 @@
 #ifndef MMEAPIClient_Private_h
 #define MMEAPIClient_Private_h
 
+@import Foundation;
+
 NS_ASSUME_NONNULL_BEGIN
 
 @class MMEEvent;

@@ -61,9 +61,17 @@ docindex:
 	$(MARKDOWN_TOOL) $(MARKDOWN_ARGS) $(DOCS_LICENSE) >> $(DOCS_INDEX)
 	echo "</tt></body></html>" >> $(DOCS_INDEX)
 
+.PHONY: build
+build: create-static
+	xcodebuild -project MapboxMobileEvents.xcodeproj -scheme "MapboxMobileEvents (Development)" build
+
+.PHONY: test
+test:
+	xcodebuild -project MapboxMobileEvents.xcodeproj -scheme "MMETestHost" test
+
 .PHONY: docs
 docs: $(DOCS_DIR) headerdoc docindex
 	open $(DOCS_INDEX)
 
 .PHONY: ci-run
-ci-run: create-static
+ci-run: build
