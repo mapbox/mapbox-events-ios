@@ -33,7 +33,6 @@
 		405172DD1EAFFA9400F8CDA1 /* MMENSURLSessionWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 405172DB1EAFFA9400F8CDA1 /* MMENSURLSessionWrapper.h */; };
 		405172DE1EAFFA9400F8CDA1 /* MMENSURLSessionWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 405172DC1EAFFA9400F8CDA1 /* MMENSURLSessionWrapper.m */; };
 		4052C4F31EFB4A740044E2FF /* MMETimerManagerFake.m in Sources */ = {isa = PBXBuildFile; fileRef = 4052C4F21EFB4A740044E2FF /* MMETimerManagerFake.m */; platformFilter = ios; };
-		40834B9F1FDF62C900C1BD0D /* MMENamespacedDependencies.h in Headers */ = {isa = PBXBuildFile; fileRef = 40834B9E1FDF62C900C1BD0D /* MMENamespacedDependencies.h */; };
 		4085965C1ED086D3003BD29D /* MMEConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AE58551EA932DB0046B437 /* MMEConstants.m */; platformFilter = ios; };
 		4085965E1ED086D9003BD29D /* MMEEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AE586C1EA95EDD0046B437 /* MMEEvent.m */; platformFilter = ios; };
 		4085965F1ED086DC003BD29D /* MMEEventsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 40C9E27A1EA542BC00744FE7 /* MMEEventsManager.m */; platformFilter = ios; };
@@ -357,7 +356,6 @@
 		405172E41EB13C6D00F8CDA1 /* MMENSURLSessionWrapperFake.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMENSURLSessionWrapperFake.m; sourceTree = "<group>"; };
 		4052C4F11EFB4A740044E2FF /* MMETimerManagerFake.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMETimerManagerFake.h; sourceTree = "<group>"; };
 		4052C4F21EFB4A740044E2FF /* MMETimerManagerFake.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMETimerManagerFake.m; sourceTree = "<group>"; };
-		40834B9E1FDF62C900C1BD0D /* MMENamespacedDependencies.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMENamespacedDependencies.h; sourceTree = "<group>"; };
 		408596531ED084C0003BD29D /* libMapboxMobileEvents.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libMapboxMobileEvents.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		409115331F16BCD200F4250B /* MMECategoryLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMECategoryLoader.h; sourceTree = "<group>"; };
 		409115341F16BCD200F4250B /* MMECategoryLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMECategoryLoader.m; sourceTree = "<group>"; };
@@ -623,7 +621,6 @@
 				40C9E27E1EA5473F00744FE7 /* MMELocationManager.m */,
 				AC86FE1B2169250000D1B89C /* MMEMetricsManager.h */,
 				AC86FE1C2169250000D1B89C /* MMEMetricsManager.m */,
-				40834B9E1FDF62C900C1BD0D /* MMENamespacedDependencies.h */,
 				40FB437A1EFAFAE900EC5BC0 /* MMETimerManager.h */,
 				40FB437B1EFAFAE900EC5BC0 /* MMETimerManager.m */,
 				40AE584C1EA926710046B437 /* MMETypes.h */,
@@ -911,7 +908,6 @@
 				9C3F930D235128F500F99907 /* MMEEventsManager_Private.h in Headers */,
 				9C65A28B225D41F2006E3FED /* UIKit+MMEMobileEvents.h in Headers */,
 				AC86FE1D2169250000D1B89C /* MMEMetricsManager.h in Headers */,
-				40834B9F1FDF62C900C1BD0D /* MMENamespacedDependencies.h in Headers */,
 				40F16C961F04514100DF338D /* MMEReachability.h in Headers */,
 				9C3F930B2351180A00F99907 /* MMEAPIClient_Private.h in Headers */,
 			);
