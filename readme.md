@@ -86,7 +86,7 @@ errors from directly impacting the end users of applications which use the frame
 to report them to our backend, in a redacted form, for analysis by Mapbox.
 
 Applications and frameworks which embed `MapboxMobileEvents.framework` can implement the 
- `MMEEventsManagerDelegate` method:
+ `MMEEventsManagerDelegate` method after setting `MMEEVentsManager.sharedManager.delegate`:
 
 ```objc
 - (void)eventsManager:(MMEEventsManager *)eventsManager 
