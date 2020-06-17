@@ -286,10 +286,10 @@ NS_ASSUME_NONNULL_BEGIN
     dispatch_once(&onceToken, ^{
 
         userAgent = [NSString stringWithFormat:@"%@/%@ (%@; v%@)",
-            NSBundle.mme_mainBundle.infoDictionary[(id)kCFBundleNameKey],
-            NSBundle.mme_mainBundle.mme_bundleVersionString,
-            NSBundle.mme_mainBundle.bundleIdentifier,
-            NSBundle.mme_mainBundle.infoDictionary[(id)kCFBundleVersionKey]];
+            [self mme_reformatString:NSBundle.mme_mainBundle.infoDictionary[(id)kCFBundleNameKey]],
+            [self mme_reformatString:NSBundle.mme_mainBundle.mme_bundleVersionString],
+            [self mme_reformatString:NSBundle.mme_mainBundle.bundleIdentifier],
+            [self mme_reformatString:NSBundle.mme_mainBundle.infoDictionary[(id)kCFBundleVersionKey]]];
         
         // check all loaded frameworks for mapbox frameworks
         for (NSBundle *loaded in NSBundle.allFrameworks) {
@@ -297,10 +297,10 @@ NS_ASSUME_NONNULL_BEGIN
             && loaded.bundleIdentifier
             && [loaded.bundleIdentifier rangeOfString:@"mapbox" options:NSCaseInsensitiveSearch].location != NSNotFound) {
                 NSString *uaFragment = [NSString stringWithFormat:@" %@/%@ (%@; v%@)",
-                    loaded.infoDictionary[(id)kCFBundleNameKey],
-                    loaded.mme_bundleVersionString,
-                    loaded.bundleIdentifier,
-                    loaded.infoDictionary[(id)kCFBundleVersionKey]];
+                    [self mme_reformatString:loaded.infoDictionary[(id)kCFBundleNameKey]],
+                    [self mme_reformatString:loaded.mme_bundleVersionString],
+                    [self mme_reformatString:loaded.bundleIdentifier],
+                    [self mme_reformatString:loaded.infoDictionary[(id)kCFBundleVersionKey]]];
                 userAgent = [userAgent stringByAppendingString:uaFragment];
             }
         }
@@ -313,11 +313,11 @@ NS_ASSUME_NONNULL_BEGIN
     NSString *legacyUAString = (NSString *)[self mme_objectForVolatileKey:MMELegacyUserAgent];
     if (!legacyUAString) {
         legacyUAString= [NSString stringWithFormat:@"%@/%@/%@ %@/%@",
-            NSBundle.mme_mainBundle.bundleIdentifier,
-            NSBundle.mme_mainBundle.mme_bundleVersionString,
-            [NSBundle.mme_mainBundle objectForInfoDictionaryKey:(id)kCFBundleVersionKey],
-            self.mme_legacyUserAgentBase,
-            self.mme_legacyHostSDKVersion];
+            [self mme_reformatString:NSBundle.mme_mainBundle.bundleIdentifier],
+            [self mme_reformatString:NSBundle.mme_mainBundle.mme_bundleVersionString],
+            [self mme_reformatString:[NSBundle.mme_mainBundle objectForInfoDictionaryKey:(id)kCFBundleVersionKey]],
+            [self mme_reformatString:self.mme_legacyUserAgentBase],
+            [self mme_reformatString:self.mme_legacyHostSDKVersion]];
         [self mme_setObject:legacyUAString forVolatileKey:MMELegacyUserAgent];
     }
     return legacyUAString;
@@ -652,6 +652,13 @@ NS_ASSUME_NONNULL_BEGIN
     return success;
 }
 
+// MARK: -
+
+- (NSString *)mme_reformatString:(NSString *)string {
+return [[string componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"(),/:;<=>?@[]{}\"\\"]]
+                       componentsJoinedByString:@""];
+}
+
 @end
 
 // MARK: -
@@ -679,7 +686,6 @@ static NSBundle *MMEMainBundle = nil;
 
 // MARK: -
 
-
 - (NSString *)mme_bundleVersionString {
     NSString *bundleVersion = @"0.0.0";
 
@@ -694,7 +700,7 @@ static NSBundle *MMEMainBundle = nil;
     if (![bundleVersion mme_isSemverString]) {
         NSLog(@"WARNING bundle %@ version string (%@) is not a valid semantic version string: http://semver.org", self, bundleVersion);
     }
-    
+
     return bundleVersion;
 }
 
