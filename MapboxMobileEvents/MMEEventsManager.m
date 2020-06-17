@@ -457,12 +457,16 @@ NS_ASSUME_NONNULL_BEGIN
     }];
 }
 
+- (void)setDebugLoggingEnabled:(BOOL)debugLoggingEnabled {
+    MMEEventLogger.sharedLogger.enabled = debugLoggingEnabled;
+}
+
 - (BOOL)isDebugLoggingEnabled {
-    return [MMEEventLogger.sharedLogger isEnabled];
+    return MMEEventLogger.sharedLogger.enabled;
 }
 
 - (void)setDebugHandler:(void (^)(NSUInteger, NSString *, NSString *))handler {
-    [MMEEventLogger.sharedLogger setHandler:handler];
+    MMEEventLogger.sharedLogger.handler = handler;
 }
 
 #pragma mark - Error & Exception Reporting
