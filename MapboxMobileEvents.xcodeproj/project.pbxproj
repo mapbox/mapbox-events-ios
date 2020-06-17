@@ -80,31 +80,9 @@
 		9C3F931323512F1A00F99907 /* MMETestStub.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C3F930E23512F1900F99907 /* MMETestStub.m */; platformFilter = ios; };
 		9C3F931423512F1A00F99907 /* MMEServiceFixture.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C3F931123512F1A00F99907 /* MMEServiceFixture.m */; platformFilter = ios; };
 		9C3F931523512F1A00F99907 /* MMEServiceFixture.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C3F931123512F1A00F99907 /* MMEServiceFixture.m */; platformFilter = ios; };
-		9C3F934423512FD300F99907 /* config-10s-bso.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933523512FD200F99907 /* config-10s-bso.json */; };
-		9C3F934523512FD300F99907 /* config-10000m-gfo.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933623512FD200F99907 /* config-10000m-gfo.json */; };
-		9C3F934623512FD300F99907 /* config-null.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933723512FD200F99907 /* config-null.json */; };
-		9C3F934723512FD300F99907 /* config-100s-bso.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933823512FD300F99907 /* config-100s-bso.json */; };
-		9C3F934823512FD300F99907 /* config-type1-tto.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933923512FD300F99907 /* config-type1-tto.json */; };
-		9C3F934923512FD300F99907 /* config-number-tag.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933A23512FD300F99907 /* config-number-tag.json */; };
-		9C3F934A23512FD300F99907 /* config-all.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933B23512FD300F99907 /* config-all.json */; };
-		9C3F934B23512FD300F99907 /* events-201.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933C23512FD300F99907 /* events-201.json */; };
-		9C3F934C23512FD300F99907 /* config-type2-tto.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933D23512FD300F99907 /* config-type2-tto.json */; };
-		9C3F934D23512FD300F99907 /* config-null-tag.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933E23512FD300F99907 /* config-null-tag.json */; };
-		9C3F934E23512FD300F99907 /* config-1s-bso.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933F23512FD300F99907 /* config-1s-bso.json */; };
-		9C3F934F23512FD300F99907 /* config-100m-gfo.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F934023512FD300F99907 /* config-100m-gfo.json */; };
-		9C3F935023512FD300F99907 /* config-all-wrong.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F934123512FD300F99907 /* config-all-wrong.json */; };
-		9C3F935123512FD300F99907 /* config-1000m-gfo.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F934223512FD300F99907 /* config-1000m-gfo.json */; };
-		9C3F935223512FD300F99907 /* config-test-tag.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F934323512FD300F99907 /* config-test-tag.json */; };
 		9C3F93552351300F00F99907 /* MMEExceptionalDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C3F93532351300F00F99907 /* MMEExceptionalDictionary.m */; platformFilter = ios; };
 		9C3F93562351300F00F99907 /* MMEExceptionalDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C3F93532351300F00F99907 /* MMEExceptionalDictionary.m */; platformFilter = ios; };
 		9C3F93582351317F00F99907 /* MMEAPIConfigTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C3F93572351317F00F99907 /* MMEAPIConfigTests.m */; platformFilter = ios; };
-		9C3F935B235138FD00F99907 /* MMETestDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C3F9359235138FD00F99907 /* MMETestDelegate.m */; };
-		9C5B4CD7237104D000FB283C /* libMapboxMobileEvents.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 408596531ED084C0003BD29D /* libMapboxMobileEvents.a */; };
-		9C65A2702256C110006E3FED /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9C65A26E2256C110006E3FED /* Main.storyboard */; };
-		9C65A2722256C112006E3FED /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9C65A2712256C112006E3FED /* Assets.xcassets */; };
-		9C65A2752256C112006E3FED /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9C65A2732256C112006E3FED /* LaunchScreen.storyboard */; };
-		9C65A27F2256C1CF006E3FED /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 404807B91EA186D8008A6D50 /* MapboxMobileEvents.framework */; };
-		9C65A2802256C1CF006E3FED /* MapboxMobileEvents.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 404807B91EA186D8008A6D50 /* MapboxMobileEvents.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9C65A28B225D41F2006E3FED /* UIKit+MMEMobileEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = 9C65A289225D41F2006E3FED /* UIKit+MMEMobileEvents.h */; };
 		9C65A28C225D41F2006E3FED /* UIKit+MMEMobileEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C65A28A225D41F2006E3FED /* UIKit+MMEMobileEvents.m */; };
 		9C65A28D225D41F2006E3FED /* UIKit+MMEMobileEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C65A28A225D41F2006E3FED /* UIKit+MMEMobileEvents.m */; platformFilter = ios; };
@@ -133,41 +111,14 @@
 		9CDC34E323502F8700852FF0 /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 404807B91EA186D8008A6D50 /* MapboxMobileEvents.framework */; platformFilter = ios; };
 		9CDC34E423502F8700852FF0 /* Cedar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40A7F9911F79A743002B931F /* Cedar.framework */; platformFilter = ios; };
 		9CDC34F12350FD1E00852FF0 /* MMETimerManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CDC34F02350FD1E00852FF0 /* MMETimerManagerTests.m */; platformFilter = ios; };
-		9CE132C42358EC25005E23F1 /* config-long-ago.json in Resources */ = {isa = PBXBuildFile; fileRef = 9CE132C32358EC25005E23F1 /* config-long-ago.json */; };
 		9CE132C5235926B3005E23F1 /* MMECertPinTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CF93A66222488A4500BBA199 /* MMECertPinTests.m */; };
-		9CE132C72359296B005E23F1 /* config-crl.json in Resources */ = {isa = PBXBuildFile; fileRef = 9CE132C62359296A005E23F1 /* config-crl.json */; };
 		9CE132CA235A5296005E23F1 /* MMERunningLock.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CE132C9235A5296005E23F1 /* MMERunningLock.m */; };
 		9CE132CB235A5296005E23F1 /* MMERunningLock.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CE132C9235A5296005E23F1 /* MMERunningLock.m */; };
 		9CE132CC235A7F8B005E23F1 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C794C85235505340027B9D4 /* XCTest.framework */; };
-		9CF00039236FDD67009A2700 /* Cedar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40A7F9911F79A743002B931F /* Cedar.framework */; };
-		9CF0003A236FDD6D009A2700 /* Cedar.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 40A7F9911F79A743002B931F /* Cedar.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9CF000402370D674009A2700 /* NSString+MMEVersions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CF0003D2370D674009A2700 /* NSString+MMEVersions.m */; };
 		9CF000412370D674009A2700 /* NSString+MMEVersions.h in Headers */ = {isa = PBXBuildFile; fileRef = 9CF0003E2370D674009A2700 /* NSString+MMEVersions.h */; };
 		9CF000432370D7B2009A2700 /* NSString+MMEVersions_Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CF000422370D7B2009A2700 /* NSString+MMEVersions_Tests.m */; };
 		9CF00044237102B8009A2700 /* NSUserDefaults+MMEConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CDC34B7234FD35800852FF0 /* NSUserDefaults+MMEConfiguration.m */; platformFilter = ios; };
-		9CF000492371037E009A2700 /* MMETestDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C3F9359235138FD00F99907 /* MMETestDelegate.m */; };
-		9CF0004C2371037E009A2700 /* Cedar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40A7F9911F79A743002B931F /* Cedar.framework */; };
-		9CF0004E2371037E009A2700 /* events-201.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933C23512FD300F99907 /* events-201.json */; };
-		9CF0004F2371037E009A2700 /* config-10000m-gfo.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933623512FD200F99907 /* config-10000m-gfo.json */; };
-		9CF000502371037E009A2700 /* config-test-tag.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F934323512FD300F99907 /* config-test-tag.json */; };
-		9CF000512371037E009A2700 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9C65A2732256C112006E3FED /* LaunchScreen.storyboard */; };
-		9CF000522371037E009A2700 /* config-1000m-gfo.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F934223512FD300F99907 /* config-1000m-gfo.json */; };
-		9CF000532371037E009A2700 /* config-all-wrong.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F934123512FD300F99907 /* config-all-wrong.json */; };
-		9CF000542371037E009A2700 /* config-100s-bso.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933823512FD300F99907 /* config-100s-bso.json */; };
-		9CF000552371037E009A2700 /* config-long-ago.json in Resources */ = {isa = PBXBuildFile; fileRef = 9CE132C32358EC25005E23F1 /* config-long-ago.json */; };
-		9CF000562371037E009A2700 /* config-null-tag.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933E23512FD300F99907 /* config-null-tag.json */; };
-		9CF000572371037E009A2700 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9C65A2712256C112006E3FED /* Assets.xcassets */; };
-		9CF000582371037E009A2700 /* config-1s-bso.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933F23512FD300F99907 /* config-1s-bso.json */; };
-		9CF000592371037E009A2700 /* config-crl.json in Resources */ = {isa = PBXBuildFile; fileRef = 9CE132C62359296A005E23F1 /* config-crl.json */; };
-		9CF0005A2371037E009A2700 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9C65A26E2256C110006E3FED /* Main.storyboard */; };
-		9CF0005B2371037E009A2700 /* config-null.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933723512FD200F99907 /* config-null.json */; };
-		9CF0005C2371037E009A2700 /* config-10s-bso.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933523512FD200F99907 /* config-10s-bso.json */; };
-		9CF0005D2371037E009A2700 /* config-type2-tto.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933D23512FD300F99907 /* config-type2-tto.json */; };
-		9CF0005E2371037E009A2700 /* config-all.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933B23512FD300F99907 /* config-all.json */; };
-		9CF0005F2371037E009A2700 /* config-number-tag.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933A23512FD300F99907 /* config-number-tag.json */; };
-		9CF000602371037E009A2700 /* config-type1-tto.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F933923512FD300F99907 /* config-type1-tto.json */; };
-		9CF000612371037E009A2700 /* config-100m-gfo.json in Resources */ = {isa = PBXBuildFile; fileRef = 9C3F934023512FD300F99907 /* config-100m-gfo.json */; };
-		9CF000642371037E009A2700 /* Cedar.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 40A7F9911F79A743002B931F /* Cedar.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AC03B2C423A851160043271D /* MMEUniqueIdentifierFake.m in Sources */ = {isa = PBXBuildFile; fileRef = 40031E5D1EFC5CA1009EAB33 /* MMEUniqueIdentifierFake.m */; };
 		AC03B2C523A851410043271D /* MMEUIApplicationWrapperFake.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AE58461EA6C9F10046B437 /* MMEUIApplicationWrapperFake.m */; };
 		AC03B2C623AB05F00043271D /* MMENSURLSessionWrapperFake.m in Sources */ = {isa = PBXBuildFile; fileRef = 405172E41EB13C6D00F8CDA1 /* MMENSURLSessionWrapperFake.m */; };
@@ -203,37 +154,13 @@
 		F44600AF249023A6003B297C /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F446009924902382003B297C /* NotificationCenter.framework */; };
 		F44600B3249023A6003B297C /* TodayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F44600B2249023A6003B297C /* TodayViewController.m */; };
 		F44600B6249023A6003B297C /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F44600B4249023A6003B297C /* MainInterface.storyboard */; };
-		F44600BA249023A6003B297C /* TodayWidget.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = F44600AE249023A6003B297C /* TodayWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		F44600C3249031A2003B297C /* MMEUIApplicationWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = F44600C2249031A2003B297C /* MMEUIApplicationWrapper.m */; };
-		F450766E2491A50200FAE290 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F450766D2491A50200FAE290 /* ViewController.m */; };
-		F450766F2491A50200FAE290 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F450766D2491A50200FAE290 /* ViewController.m */; };
 		F4684FF42432A1610079B389 /* NSBundle+MMEMobileEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = F4684FF22432A1610079B389 /* NSBundle+MMEMobileEvents.h */; };
 		F4684FF52432A1610079B389 /* NSBundle+MMEMobileEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = F4684FF32432A1610079B389 /* NSBundle+MMEMobileEvents.m */; };
 		F4684FF62432A2770079B389 /* NSBundle+MMEMobileEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = F4684FF32432A1610079B389 /* NSBundle+MMEMobileEvents.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		9C16238C23577E13005DB983 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 404807B01EA186D8008A6D50 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 9C65A2652256C110006E3FED;
-			remoteInfo = MMETestHost;
-		};
-		9C16238E23577E17005DB983 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 404807B01EA186D8008A6D50 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 9C65A2652256C110006E3FED;
-			remoteInfo = MMETestHost;
-		};
-		9C16239023577E66005DB983 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 404807B01EA186D8008A6D50 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 404807B81EA186D8008A6D50;
-			remoteInfo = MapboxMobileEvents;
-		};
 		9C63226A221377C900653792 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 404807B01EA186D8008A6D50 /* Project object */;
@@ -248,26 +175,12 @@
 			remoteGlobalIDString = 408596521ED084C0003BD29D;
 			remoteInfo = MapboxMobileEventsStatic;
 		};
-		9CF0006A23710389009A2700 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 404807B01EA186D8008A6D50 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 408596521ED084C0003BD29D;
-			remoteInfo = libMapboxMobileEvents;
-		};
 		AC881B1423FDEDBF00E614B7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 404807B01EA186D8008A6D50 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 404807B81EA186D8008A6D50;
 			remoteInfo = MapboxMobileEvents;
-		};
-		F44600B8249023A6003B297C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 404807B01EA186D8008A6D50 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = F44600AD249023A6003B297C;
-			remoteInfo = TodayWidget;
 		};
 		F44600BF249026CE003B297C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -292,40 +205,6 @@
 				408596D91ED0B1F6003BD29D /* MMEEventsManager.h in CopyFiles */,
 				40F16C901F042F2A00DF338D /* MMETypes.h in CopyFiles */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		9C65A2832256C1CF006E3FED /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				9C65A2802256C1CF006E3FED /* MapboxMobileEvents.framework in Embed Frameworks */,
-				9CF0003A236FDD6D009A2700 /* Cedar.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		9CF000622371037E009A2700 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				9CF000642371037E009A2700 /* Cedar.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		F44600A924902382003B297C /* Embed App Extensions */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 13;
-			files = (
-				F44600BA249023A6003B297C /* TodayWidget.appex in Embed App Extensions */,
-			);
-			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -422,7 +301,6 @@
 		9C3F935A235138FD00F99907 /* MMETestDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMETestDelegate.h; sourceTree = "<group>"; };
 		9C6322622213530A00653792 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		9C6322632213530A00653792 /* readme.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = readme.md; sourceTree = "<group>"; };
-		9C65A2662256C110006E3FED /* MMETestHost.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MMETestHost.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9C65A26F2256C110006E3FED /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		9C65A2712256C112006E3FED /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9C65A2742256C112006E3FED /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -458,7 +336,6 @@
 		9CF0003D2370D674009A2700 /* NSString+MMEVersions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+MMEVersions.m"; sourceTree = "<group>"; };
 		9CF0003E2370D674009A2700 /* NSString+MMEVersions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+MMEVersions.h"; sourceTree = "<group>"; };
 		9CF000422370D7B2009A2700 /* NSString+MMEVersions_Tests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+MMEVersions_Tests.m"; sourceTree = "<group>"; };
-		9CF000682371037E009A2700 /* MMETestHost (Static).app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "MMETestHost (Static).app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AC03B2C723AC477A0043271D /* MMEMetricsManagerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEMetricsManagerTests.m; sourceTree = "<group>"; };
 		AC03B2C923AD55A10043271D /* MMEEventTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEEventTests.m; sourceTree = "<group>"; };
 		AC03B2F323B1A74B0043271D /* MMEDateTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEDateTests.m; sourceTree = "<group>"; };
@@ -522,15 +399,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		9C65A2632256C110006E3FED /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				9C65A27F2256C1CF006E3FED /* MapboxMobileEvents.framework in Frameworks */,
-				9CF00039236FDD67009A2700 /* Cedar.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		9CDC34E223502F8700852FF0 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -538,15 +406,6 @@
 				9CE132CC235A7F8B005E23F1 /* XCTest.framework in Frameworks */,
 				9CDC34E423502F8700852FF0 /* Cedar.framework in Frameworks */,
 				9CDC34E323502F8700852FF0 /* MapboxMobileEvents.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		9CF0004A2371037E009A2700 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				9C5B4CD7237104D000FB283C /* libMapboxMobileEvents.a in Frameworks */,
-				9CF0004C2371037E009A2700 /* Cedar.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -594,9 +453,7 @@
 				404807B91EA186D8008A6D50 /* MapboxMobileEvents.framework */,
 				404807C21EA186D8008A6D50 /* MMEXCTests.xctest */,
 				408596531ED084C0003BD29D /* libMapboxMobileEvents.a */,
-				9C65A2662256C110006E3FED /* MMETestHost.app */,
 				9CDC34ED23502F8700852FF0 /* MMECedarTests.xctest */,
-				9CF000682371037E009A2700 /* MMETestHost (Static).app */,
 				F44600AE249023A6003B297C /* TodayWidget.appex */,
 			);
 			name = Products;
@@ -950,7 +807,6 @@
 			);
 			dependencies = (
 				AC881B1523FDEDBF00E614B7 /* PBXTargetDependency */,
-				9C16238D23577E13005DB983 /* PBXTargetDependency */,
 			);
 			name = MMEXCTests;
 			productName = MapboxMobileMetricsTests;
@@ -974,27 +830,6 @@
 			productReference = 408596531ED084C0003BD29D /* libMapboxMobileEvents.a */;
 			productType = "com.apple.product-type.library.static";
 		};
-		9C65A2652256C110006E3FED /* MMETestHost */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 9C65A2792256C112006E3FED /* Build configuration list for PBXNativeTarget "MMETestHost" */;
-			buildPhases = (
-				9C65A2622256C110006E3FED /* Sources */,
-				9C65A2632256C110006E3FED /* Frameworks */,
-				9C65A2642256C110006E3FED /* Resources */,
-				9C65A2832256C1CF006E3FED /* Embed Frameworks */,
-				F44600A924902382003B297C /* Embed App Extensions */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				9C16239123577E66005DB983 /* PBXTargetDependency */,
-				F44600B9249023A6003B297C /* PBXTargetDependency */,
-			);
-			name = MMETestHost;
-			productName = MMETestHost;
-			productReference = 9C65A2662256C110006E3FED /* MMETestHost.app */;
-			productType = "com.apple.product-type.application";
-		};
 		9CDC34C223502F8700852FF0 /* MMECedarTests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9CDC34EA23502F8700852FF0 /* Build configuration list for PBXNativeTarget "MMECedarTests" */;
@@ -1007,31 +842,11 @@
 			buildRules = (
 			);
 			dependencies = (
-				9C16238F23577E17005DB983 /* PBXTargetDependency */,
 			);
 			name = MMECedarTests;
 			productName = MapboxMobileMetricsTests;
 			productReference = 9CDC34ED23502F8700852FF0 /* MMECedarTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		9CF000452371037E009A2700 /* MMETestHost (Static) */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 9CF000652371037E009A2700 /* Build configuration list for PBXNativeTarget "MMETestHost (Static)" */;
-			buildPhases = (
-				9CF000482371037E009A2700 /* Sources */,
-				9CF0004A2371037E009A2700 /* Frameworks */,
-				9CF0004D2371037E009A2700 /* Resources */,
-				9CF000622371037E009A2700 /* Embed Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				9CF0006B23710389009A2700 /* PBXTargetDependency */,
-			);
-			name = "MMETestHost (Static)";
-			productName = MMETestHost;
-			productReference = 9CF000682371037E009A2700 /* MMETestHost (Static).app */;
-			productType = "com.apple.product-type.application";
 		};
 		F44600AD249023A6003B297C /* TodayWidget */ = {
 			isa = PBXNativeTarget;
@@ -1080,16 +895,6 @@
 						CreatedOnToolsVersion = 10.1;
 						ProvisioningStyle = Automatic;
 					};
-					9C65A2652256C110006E3FED = {
-						CreatedOnToolsVersion = 10.2;
-						DevelopmentTeam = GJZR2MEM28;
-						ProvisioningStyle = Automatic;
-						SystemCapabilities = {
-							com.apple.Keychain = {
-								enabled = 1;
-							};
-						};
-					};
 					9CDC34C223502F8700852FF0 = {
 						DevelopmentTeam = GJZR2MEM28;
 						TestTargetID = 9C65A2652256C110006E3FED;
@@ -1117,8 +922,6 @@
 				408596521ED084C0003BD29D /* libMapboxMobileEvents */,
 				404807C11EA186D8008A6D50 /* MMEXCTests */,
 				9CDC34C223502F8700852FF0 /* MMECedarTests */,
-				9C65A2652256C110006E3FED /* MMETestHost */,
-				9CF000452371037E009A2700 /* MMETestHost (Static) */,
 				F44600AD249023A6003B297C /* TodayWidget */,
 			);
 		};
@@ -1139,64 +942,10 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		9C65A2642256C110006E3FED /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				9C3F934B23512FD300F99907 /* events-201.json in Resources */,
-				9C3F934523512FD300F99907 /* config-10000m-gfo.json in Resources */,
-				9C3F935223512FD300F99907 /* config-test-tag.json in Resources */,
-				9C65A2752256C112006E3FED /* LaunchScreen.storyboard in Resources */,
-				9C3F935123512FD300F99907 /* config-1000m-gfo.json in Resources */,
-				9C3F935023512FD300F99907 /* config-all-wrong.json in Resources */,
-				9C3F934723512FD300F99907 /* config-100s-bso.json in Resources */,
-				9CE132C42358EC25005E23F1 /* config-long-ago.json in Resources */,
-				9C3F934D23512FD300F99907 /* config-null-tag.json in Resources */,
-				9C65A2722256C112006E3FED /* Assets.xcassets in Resources */,
-				9C3F934E23512FD300F99907 /* config-1s-bso.json in Resources */,
-				9CE132C72359296B005E23F1 /* config-crl.json in Resources */,
-				9C65A2702256C110006E3FED /* Main.storyboard in Resources */,
-				9C3F934623512FD300F99907 /* config-null.json in Resources */,
-				9C3F934423512FD300F99907 /* config-10s-bso.json in Resources */,
-				9C3F934C23512FD300F99907 /* config-type2-tto.json in Resources */,
-				9C3F934A23512FD300F99907 /* config-all.json in Resources */,
-				9C3F934923512FD300F99907 /* config-number-tag.json in Resources */,
-				9C3F934823512FD300F99907 /* config-type1-tto.json in Resources */,
-				9C3F934F23512FD300F99907 /* config-100m-gfo.json in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		9CDC34E523502F8700852FF0 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		9CF0004D2371037E009A2700 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				9CF0004E2371037E009A2700 /* events-201.json in Resources */,
-				9CF0004F2371037E009A2700 /* config-10000m-gfo.json in Resources */,
-				9CF000502371037E009A2700 /* config-test-tag.json in Resources */,
-				9CF000512371037E009A2700 /* LaunchScreen.storyboard in Resources */,
-				9CF000522371037E009A2700 /* config-1000m-gfo.json in Resources */,
-				9CF000532371037E009A2700 /* config-all-wrong.json in Resources */,
-				9CF000542371037E009A2700 /* config-100s-bso.json in Resources */,
-				9CF000552371037E009A2700 /* config-long-ago.json in Resources */,
-				9CF000562371037E009A2700 /* config-null-tag.json in Resources */,
-				9CF000572371037E009A2700 /* Assets.xcassets in Resources */,
-				9CF000582371037E009A2700 /* config-1s-bso.json in Resources */,
-				9CF000592371037E009A2700 /* config-crl.json in Resources */,
-				9CF0005A2371037E009A2700 /* Main.storyboard in Resources */,
-				9CF0005B2371037E009A2700 /* config-null.json in Resources */,
-				9CF0005C2371037E009A2700 /* config-10s-bso.json in Resources */,
-				9CF0005D2371037E009A2700 /* config-type2-tto.json in Resources */,
-				9CF0005E2371037E009A2700 /* config-all.json in Resources */,
-				9CF0005F2371037E009A2700 /* config-number-tag.json in Resources */,
-				9CF000602371037E009A2700 /* config-type1-tto.json in Resources */,
-				9CF000612371037E009A2700 /* config-100m-gfo.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1318,15 +1067,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		9C65A2622256C110006E3FED /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				F450766E2491A50200FAE290 /* ViewController.m in Sources */,
-				9C3F935B235138FD00F99907 /* MMETestDelegate.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		9CDC34C723502F8700852FF0 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1356,15 +1096,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		9CF000482371037E009A2700 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				F450766F2491A50200FAE290 /* ViewController.m in Sources */,
-				9CF000492371037E009A2700 /* MMETestDelegate.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		F44600AA249023A6003B297C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1376,23 +1107,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		9C16238D23577E13005DB983 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			platformFilter = ios;
-			target = 9C65A2652256C110006E3FED /* MMETestHost */;
-			targetProxy = 9C16238C23577E13005DB983 /* PBXContainerItemProxy */;
-		};
-		9C16238F23577E17005DB983 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			platformFilter = ios;
-			target = 9C65A2652256C110006E3FED /* MMETestHost */;
-			targetProxy = 9C16238E23577E17005DB983 /* PBXContainerItemProxy */;
-		};
-		9C16239123577E66005DB983 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 404807B81EA186D8008A6D50 /* MapboxMobileEvents */;
-			targetProxy = 9C16239023577E66005DB983 /* PBXContainerItemProxy */;
-		};
 		9C63226B221377C900653792 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 404807B81EA186D8008A6D50 /* MapboxMobileEvents */;
@@ -1403,21 +1117,11 @@
 			target = 408596521ED084C0003BD29D /* libMapboxMobileEvents */;
 			targetProxy = 9C63226C221377CD00653792 /* PBXContainerItemProxy */;
 		};
-		9CF0006B23710389009A2700 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 408596521ED084C0003BD29D /* libMapboxMobileEvents */;
-			targetProxy = 9CF0006A23710389009A2700 /* PBXContainerItemProxy */;
-		};
 		AC881B1523FDEDBF00E614B7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			platformFilter = ios;
 			target = 404807B81EA186D8008A6D50 /* MapboxMobileEvents */;
 			targetProxy = AC881B1423FDEDBF00E614B7 /* PBXContainerItemProxy */;
-		};
-		F44600B9249023A6003B297C /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = F44600AD249023A6003B297C /* TodayWidget */;
-			targetProxy = F44600B8249023A6003B297C /* PBXContainerItemProxy */;
 		};
 		F44600C0249026CE003B297C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1734,63 +1438,6 @@
 			};
 			name = Release;
 		};
-		9C65A27A2256C112006E3FED /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CODE_SIGN_ENTITLEMENTS = MMETestHost/MMETestHost.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = GJZR2MEM28;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = "MMETestHost/MMETestHost-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MMETestHost;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		9C65A27B2256C112006E3FED /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CODE_SIGN_ENTITLEMENTS = MMETestHost/MMETestHost.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = GJZR2MEM28;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = "MMETestHost/MMETestHost-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MMETestHost;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
 		9CDC34EB23502F8700852FF0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1842,63 +1489,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MMECedarTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MMETestHost.app/MMETestHost";
-			};
-			name = Release;
-		};
-		9CF000662371037E009A2700 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CODE_SIGN_ENTITLEMENTS = MMETestHost/MMETestHost.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = GJZR2MEM28;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = "MMETestHost/MMETestHost-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MMETestHost;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		9CF000672371037E009A2700 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CODE_SIGN_ENTITLEMENTS = MMETestHost/MMETestHost.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = GJZR2MEM28;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = "MMETestHost/MMETestHost-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MMETestHost;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -2066,62 +1656,6 @@
 			};
 			name = RelWithDebInfo;
 		};
-		CAB36C362374A1BA00592F74 /* RelWithDebInfo */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CODE_SIGN_ENTITLEMENTS = MMETestHost/MMETestHost.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = GJZR2MEM28;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = "MMETestHost/MMETestHost-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MMETestHost;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = RelWithDebInfo;
-		};
-		CAB36C372374A1BA00592F74 /* RelWithDebInfo */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CODE_SIGN_ENTITLEMENTS = MMETestHost/MMETestHost.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = GJZR2MEM28;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = "MMETestHost/MMETestHost-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MMETestHost;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = RelWithDebInfo;
-		};
 		F44600BC249023A6003B297C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2251,32 +1785,12 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		9C65A2792256C112006E3FED /* Build configuration list for PBXNativeTarget "MMETestHost" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				9C65A27A2256C112006E3FED /* Debug */,
-				9C65A27B2256C112006E3FED /* Release */,
-				CAB36C362374A1BA00592F74 /* RelWithDebInfo */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		9CDC34EA23502F8700852FF0 /* Build configuration list for PBXNativeTarget "MMECedarTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9CDC34EB23502F8700852FF0 /* Debug */,
 				9CDC34EC23502F8700852FF0 /* Release */,
 				CAB36C352374A1BA00592F74 /* RelWithDebInfo */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		9CF000652371037E009A2700 /* Build configuration list for PBXNativeTarget "MMETestHost (Static)" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				9CF000662371037E009A2700 /* Debug */,
-				9CF000672371037E009A2700 /* Release */,
-				CAB36C372374A1BA00592F74 /* RelWithDebInfo */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
