@@ -4,11 +4,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface NSProcessInfo (SystemInfo)
 
-/*! Human Readable Description of the of device processor */
+/*! Human readable description of the Operating system and version */
++ (NSString *)mme_operatingSystemVersion;
+
+/*! Human readable Description of the of device processor */
 + (NSString *)mme_processorTypeDescription;
 
 /*!
- @brief Human Readable Description of the CPU
+ @brief Human readable Description of the CPU
  @param type Type of the processor
  @param subtype Subtype of the processor
  @returns Human readable Descriptin of the device processor

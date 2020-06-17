@@ -1,9 +1,26 @@
 #import "NSProcessInfo+SystemInfo.h"
+#if TARGET_OS_IOS || TARGET_OS_TVOS
+#import <UIKit/UIKit.h>
+#elif TARGET_OS_MACOS
+#import <AppKit/AppKit.h>
+#endif
 #include <sys/types.h>
 #include <sys/sysctl.h>
 #include <mach/machine.h>
 
 @implementation NSProcessInfo (SystemInfo)
+
++ (NSString *)mme_operatingSystemVersion {
+    NSString *osVersion = nil;
+
+#if TARGET_OS_IOS || TARGET_OS_TVOS
+    osVersion = [NSString stringWithFormat:@"%@ %@", UIDevice.currentDevice.systemName, UIDevice.currentDevice.systemVersion];
+#elif TARGET_OS_MACOS
+    osVersion = NSProcessInfo.processInfo.operatingSystemVersionString;
+#endif
+
+    return osVersion;
+}
 
 + (NSString*)mme_stringForProcessorType:(NSInteger)type subtype:(NSInteger)subtype {
 
