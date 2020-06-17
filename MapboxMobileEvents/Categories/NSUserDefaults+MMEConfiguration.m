@@ -286,23 +286,31 @@ NS_ASSUME_NONNULL_BEGIN
     dispatch_once(&onceToken, ^{
 
         userAgent = [NSString stringWithFormat:@"%@/%@ (%@; v%@)",
-            NSBundle.mme_mainBundle.infoDictionary[(id)kCFBundleNameKey],
+            NSBundle.mme_mainBundle.infoDictionary[(id)kCFBundleNameKey] ?: NSBundle.mme_mainBundle.bundlePath.lastPathComponent.stringByDeletingPathExtension,
             NSBundle.mme_mainBundle.mme_bundleVersionString,
             NSBundle.mme_mainBundle.bundleIdentifier,
             NSBundle.mme_mainBundle.infoDictionary[(id)kCFBundleVersionKey]];
         
-        // check all loaded frameworks for mapbox frameworks
-        for (NSBundle *loaded in NSBundle.allFrameworks) {
-            if (loaded != NSBundle.mme_mainBundle
-            && loaded.bundleIdentifier
-            && [loaded.bundleIdentifier rangeOfString:@"mapbox" options:NSCaseInsensitiveSearch].location != NSNotFound) {
-                NSString *uaFragment = [NSString stringWithFormat:@" %@/%@ (%@; v%@)",
-                    loaded.infoDictionary[(id)kCFBundleNameKey],
-                    loaded.mme_bundleVersionString,
-                    loaded.bundleIdentifier,
-                    loaded.infoDictionary[(id)kCFBundleVersionKey]];
-                userAgent = [userAgent stringByAppendingString:uaFragment];
+        // check all loaded frameworks for mapbox frameworks, record their bundleIdentifier
+        NSMutableSet *loadedMapboxBundleIds = NSMutableSet.new;
+        for (NSBundle *loaded in [NSBundle.allFrameworks arrayByAddingObjectsFromArray:NSBundle.allBundles]) {
+            if (loaded.bundleIdentifier
+             && loaded.bundleIdentifier != NSBundle.mme_mainBundle.bundleIdentifier
+             && [loaded.bundleIdentifier rangeOfString:@"mapbox" options:NSCaseInsensitiveSearch].location != NSNotFound) {
+                [loadedMapboxBundleIds addObject:loaded.bundleIdentifier];
             }
+        }
+        
+        // sort the bundleIdentifiers, then use them to build the User-Agent string
+        NSArray *sortedBundleIds = [loadedMapboxBundleIds sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:nil ascending:YES]]];
+        for (NSString *bundleId in sortedBundleIds) {
+            NSBundle *loaded = [NSBundle bundleWithIdentifier:bundleId];
+            NSString *uaFragment = [NSString stringWithFormat:@" %@/%@ (%@; v%@)",
+                loaded.infoDictionary[(id)kCFBundleNameKey] ?: loaded.bundlePath.lastPathComponent.stringByDeletingPathExtension,
+                loaded.mme_bundleVersionString,
+                loaded.bundleIdentifier,
+                loaded.infoDictionary[(id)kCFBundleVersionKey]];
+            userAgent = [userAgent stringByAppendingString:uaFragment];
         }
     });
     
