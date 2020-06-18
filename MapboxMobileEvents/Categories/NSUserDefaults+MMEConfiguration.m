@@ -1,9 +1,11 @@
 #import <CommonCrypto/CommonDigest.h>
 
+
 #import "MMEConstants.h"
 #import "MMEDate.h"
 #import "MMEEventLogger.h"
 #import "NSBundle+MMEMobileEvents.h"
+#import "NSProcessInfo+SystemInfo.h"
 #import "NSString+MMEVersions.h"
 #import "NSUserDefaults+MMEConfiguration.h"
 #import "NSUserDefaults+MMEConfiguration_Private.h"
