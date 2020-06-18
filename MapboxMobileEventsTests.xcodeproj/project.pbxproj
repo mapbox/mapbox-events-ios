@@ -12,6 +12,7 @@
 		9C27F7BF249AB7580018E7A9 /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C27F7B5249AB5550018E7A9 /* MapboxMobileEvents.framework */; };
 		9C27F7C2249AB7680018E7A9 /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C27F7B5249AB5550018E7A9 /* MapboxMobileEvents.framework */; };
 		9C27F7C5249AB7770018E7A9 /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C27F7B5249AB5550018E7A9 /* MapboxMobileEvents.framework */; };
+		9C27F7D1249BF2920018E7A9 /* NSProcessInfoTests+SystemInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C27F7CD249BF2920018E7A9 /* NSProcessInfoTests+SystemInfo.m */; };
 		9C3F931223512F1A00F99907 /* MMETestStub.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C3F930E23512F1900F99907 /* MMETestStub.m */; platformFilter = ios; };
 		9C3F931323512F1A00F99907 /* MMETestStub.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C3F930E23512F1900F99907 /* MMETestStub.m */; platformFilter = ios; };
 		9C3F931423512F1A00F99907 /* MMEServiceFixture.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C3F931123512F1A00F99907 /* MMEServiceFixture.m */; platformFilter = ios; };
@@ -187,6 +188,7 @@
 		40F16C7D1F01DF5700DF338D /* MMELocationManagerFake.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMELocationManagerFake.m; sourceTree = "<group>"; };
 		40FB437F1EFAFDCF00EC5BC0 /* MMEXCTests-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "MMEXCTests-Info.plist"; sourceTree = "<group>"; };
 		9C27F7AB249AB5550018E7A9 /* MapboxMobileEvents.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = MapboxMobileEvents.xcodeproj; sourceTree = "<group>"; };
+		9C27F7CD249BF2920018E7A9 /* NSProcessInfoTests+SystemInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSProcessInfoTests+SystemInfo.m"; sourceTree = "<group>"; };
 		9C3F930E23512F1900F99907 /* MMETestStub.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMETestStub.m; path = Utilities/MMETestStub.m; sourceTree = "<group>"; };
 		9C3F930F23512F1A00F99907 /* MMETestStub.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMETestStub.h; path = Utilities/MMETestStub.h; sourceTree = "<group>"; };
 		9C3F931023512F1A00F99907 /* MMEServiceFixture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMEServiceFixture.h; path = Utilities/MMEServiceFixture.h; sourceTree = "<group>"; };
@@ -435,20 +437,21 @@
 		9CDC34C123502F4A00852FF0 /* XCTest */ = {
 			isa = PBXGroup;
 			children = (
+				40FB437F1EFAFDCF00EC5BC0 /* MMEXCTests-Info.plist */,
+				ACAF8D26238DDED20033745A /* MMEAPIClientTests.m */,
 				9C3F93572351317F00F99907 /* MMEAPIConfigTests.m */,
 				CF93A66222488A4500BBA199 /* MMECertPinTests.m */,
-				9CDC34F02350FD1E00852FF0 /* MMETimerManagerTests.m */,
+				AC03B2F323B1A74B0043271D /* MMEDateTests.m */,
 				ACBD2E5823709F920082F037 /* MMEEventsManagerTests.m */,
-				40FB437F1EFAFDCF00EC5BC0 /* MMEXCTests-Info.plist */,
-				9CF000422370D7B2009A2700 /* NSString+MMEVersions_Tests.m */,
-				9CDC34BA234FD36E00852FF0 /* NSUserDefaults+MMEConfigurationTests.m */,
-				ACAF8D26238DDED20033745A /* MMEAPIClientTests.m */,
+				AC03B2C923AD55A10043271D /* MMEEventTests.m */,
 				AC69502C238E000C00D095EB /* MMELocationManagerTests.m */,
 				AC03B2C723AC477A0043271D /* MMEMetricsManagerTests.m */,
-				AC03B2C923AD55A10043271D /* MMEEventTests.m */,
-				AC03B2F323B1A74B0043271D /* MMEDateTests.m */,
-				AC03B2F523B1AEE60043271D /* MMEUniqueIdentifierTests.m */,
+				9CDC34F02350FD1E00852FF0 /* MMETimerManagerTests.m */,
 				F44600C2249031A2003B297C /* MMEUIApplicationWrapper.m */,
+				AC03B2F523B1AEE60043271D /* MMEUniqueIdentifierTests.m */,
+				9C27F7CD249BF2920018E7A9 /* NSProcessInfoTests+SystemInfo.m */,
+				9CF000422370D7B2009A2700 /* NSString+MMEVersions_Tests.m */,
+				9CDC34BA234FD36E00852FF0 /* NSUserDefaults+MMEConfigurationTests.m */,
 			);
 			name = XCTest;
 			sourceTree = "<group>";
@@ -676,6 +679,7 @@
 				AC03B2CA23AD55A10043271D /* MMEEventTests.m in Sources */,
 				9C3F93582351317F00F99907 /* MMEAPIConfigTests.m in Sources */,
 				AC03B2F423B1A74B0043271D /* MMEDateTests.m in Sources */,
+				9C27F7D1249BF2920018E7A9 /* NSProcessInfoTests+SystemInfo.m in Sources */,
 				9CE132CA235A5296005E23F1 /* MMERunningLock.m in Sources */,
 				F44600C3249031A2003B297C /* MMEUIApplicationWrapper.m in Sources */,
 				9CDC34F12350FD1E00852FF0 /* MMETimerManagerTests.m in Sources */,

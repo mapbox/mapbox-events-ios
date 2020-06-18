@@ -1,4 +1,7 @@
 #import <Foundation/Foundation.h>
+#include <sys/types.h>
+#include <sys/sysctl.h>
+#include <mach/machine.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -17,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
  @returns Human readable Descriptin of the device processor
  @discussion Source Types provided by document https://opensource.apple.com/source/xnu/xnu-792/osfmk/mach/machine.h.auto.html
  */
-+ (NSString*)mme_stringForProcessorType:(NSInteger)type subtype:(NSInteger)subtype;
++ (NSString*)mme_stringForProcessorType:(cpu_type_t)type subtype:(cpu_subtype_t)subtype;
 
 @end
 

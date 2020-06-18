@@ -129,6 +129,8 @@
 		9C27F7612499B1F50018E7A9 /* MMEReachability.h in Headers */ = {isa = PBXBuildFile; fileRef = 40F16C941F04514100DF338D /* MMEReachability.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		9C27F7622499B1F50018E7A9 /* MMEAPIClient_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 9C3F930A2351180A00F99907 /* MMEAPIClient_Private.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		9C27F7702499B32F0018E7A9 /* NSUserDefaults+MMEConfiguration_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 9CDC34BF234FD78200852FF0 /* NSUserDefaults+MMEConfiguration_Private.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		9C27F7D2249BF2BF0018E7A9 /* NSProcessInfo+SystemInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = F43A8821249ACC030055C04F /* NSProcessInfo+SystemInfo.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		9C27F7D3249BF2D30018E7A9 /* NSProcessInfo+SystemInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = F43A8822249ACC030055C04F /* NSProcessInfo+SystemInfo.m */; };
 		9C3F930B2351180A00F99907 /* MMEAPIClient_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 9C3F930A2351180A00F99907 /* MMEAPIClient_Private.h */; };
 		9C3F930D235128F500F99907 /* MMEEventsManager_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 9C3F930C235128F500F99907 /* MMEEventsManager_Private.h */; };
 		9C65A28B225D41F2006E3FED /* UIKit+MMEMobileEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = 9C65A289225D41F2006E3FED /* UIKit+MMEMobileEvents.h */; };
@@ -331,8 +333,8 @@
 		404807AF1EA186D8008A6D50 = {
 			isa = PBXGroup;
 			children = (
-				9C6322632213530A00653792 /* readme.md */,
 				9CCB47E922976B5E00DF551B /* LICENSE.md */,
+				9C6322632213530A00653792 /* readme.md */,
 				404807BB1EA186D8008A6D50 /* MapboxMobileEvents */,
 				4032F47C1F1FEDC6001C1FBD /* Frameworks */,
 				9C6D9882221F37A200679292 /* Packaging */,
@@ -355,25 +357,25 @@
 			children = (
 				404807BD1EA186D8008A6D50 /* Info.plist */,
 				404807BC1EA186D8008A6D50 /* MapboxMobileEvents.h */,
-				40AE586F1EAA87960046B437 /* MMEAPIClient.h */,
 				9C3F930A2351180A00F99907 /* MMEAPIClient_Private.h */,
-				40AE58701EAA87960046B437 /* MMEAPIClient.m */,
+				40AE586F1EAA87960046B437 /* MMEAPIClient.h */,
 				40AE58541EA932DB0046B437 /* MMEConstants.h */,
-				40AE58551EA932DB0046B437 /* MMEConstants.m */,
 				40AE586B1EA95EDD0046B437 /* MMEEvent.h */,
-				40AE586C1EA95EDD0046B437 /* MMEEvent.m */,
 				4036EFBC1ED37D56009C40BA /* MMEEventLogger.h */,
-				4036EFBD1ED37D56009C40BA /* MMEEventLogger.m */,
-				40C9E2791EA542BC00744FE7 /* MMEEventsManager.h */,
 				9C3F930C235128F500F99907 /* MMEEventsManager_Private.h */,
-				40C9E27A1EA542BC00744FE7 /* MMEEventsManager.m */,
+				40C9E2791EA542BC00744FE7 /* MMEEventsManager.h */,
 				40C9E27D1EA5473F00744FE7 /* MMELocationManager.h */,
-				40C9E27E1EA5473F00744FE7 /* MMELocationManager.m */,
 				AC86FE1B2169250000D1B89C /* MMEMetricsManager.h */,
-				AC86FE1C2169250000D1B89C /* MMEMetricsManager.m */,
 				40FB437A1EFAFAE900EC5BC0 /* MMETimerManager.h */,
-				40FB437B1EFAFAE900EC5BC0 /* MMETimerManager.m */,
 				40AE584C1EA926710046B437 /* MMETypes.h */,
+				40AE58701EAA87960046B437 /* MMEAPIClient.m */,
+				40AE58551EA932DB0046B437 /* MMEConstants.m */,
+				40AE586C1EA95EDD0046B437 /* MMEEvent.m */,
+				4036EFBD1ED37D56009C40BA /* MMEEventLogger.m */,
+				40C9E27A1EA542BC00744FE7 /* MMEEventsManager.m */,
+				40C9E27E1EA5473F00744FE7 /* MMELocationManager.m */,
+				AC86FE1C2169250000D1B89C /* MMEMetricsManager.m */,
+				40FB437B1EFAFAE900EC5BC0 /* MMETimerManager.m */,
 				40AE58601EA94E4A0046B437 /* Categories */,
 				40F16C931F04514100DF338D /* Reachability */,
 				40C9E2841EA5615900744FE7 /* Utilities */,
@@ -468,7 +470,6 @@
 			name = Packaging;
 			sourceTree = "<group>";
 		};
-
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -520,6 +521,7 @@
 				9C27F7492499B1F50018E7A9 /* MMEEvent.h in Headers */,
 				9C27F74A2499B1F50018E7A9 /* MMEEventsManager.h in Headers */,
 				9C27F7582499B1F50018E7A9 /* MMECertPin.h in Headers */,
+				9C27F7D2249BF2BF0018E7A9 /* NSProcessInfo+SystemInfo.h in Headers */,
 				9C27F7612499B1F50018E7A9 /* MMEReachability.h in Headers */,
 				9C27F75D2499B1F50018E7A9 /* MMEDependencyManager.h in Headers */,
 				9C27F75C2499B1F50018E7A9 /* CLLocation+MMEMobileEvents.h in Headers */,
@@ -759,6 +761,7 @@
 				9C27F7402499B1F50018E7A9 /* MMEUniqueIdentifier.m in Sources */,
 				9C27F7412499B1F50018E7A9 /* NSData+MMEGZIP.m in Sources */,
 				9C27F7422499B1F50018E7A9 /* UIKit+MMEMobileEvents.m in Sources */,
+				9C27F7D3249BF2D30018E7A9 /* NSProcessInfo+SystemInfo.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
