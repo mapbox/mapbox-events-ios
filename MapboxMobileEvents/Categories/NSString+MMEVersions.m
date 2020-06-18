@@ -47,8 +47,8 @@ typedef enum {
 @implementation NSString (MMEVersions)
 
 - (NSString *)mme_stringByRemovingNonUserAgentTokenCharacters {
-return [[self componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"(),/:;<=>?@[]{}\"\\"]]
-                       componentsJoinedByString:@""];
+    return [[self componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"(),/:;<=>?@[]{}\"\\"]]
+        componentsJoinedByString:@""];
 }
 
 + (NSRegularExpression *)mme_semverExpression {

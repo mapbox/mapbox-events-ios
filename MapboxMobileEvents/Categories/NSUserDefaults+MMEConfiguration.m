@@ -287,11 +287,15 @@ NS_ASSUME_NONNULL_BEGIN
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
 
-        userAgent = [NSString stringWithFormat:@"%@/%@ (%@; v%@)",
-                     [[NSBundle.mme_mainBundle objectForInfoDictionaryKey:(id)kCFBundleNameKey] mme_stringByRemovingNonUserAgentTokenCharacters] ?: NSBundle.mme_mainBundle.bundlePath.lastPathComponent.stringByDeletingPathExtension.mme_stringByRemovingNonUserAgentTokenCharacters,
-                     NSBundle.mme_mainBundle.mme_bundleVersionString.mme_stringByRemovingNonUserAgentTokenCharacters,
-                     NSBundle.mme_mainBundle.bundleIdentifier.mme_stringByRemovingNonUserAgentTokenCharacters,
-                     [[NSBundle.mme_mainBundle objectForInfoDictionaryKey:(id)kCFBundleVersionKey] mme_stringByRemovingNonUserAgentTokenCharacters]];
+        userAgent = [NSString stringWithFormat:@"%@/%@ (%@; v%@; %@; %@)",
+             [[NSBundle.mme_mainBundle objectForInfoDictionaryKey:(id)kCFBundleNameKey] mme_stringByRemovingNonUserAgentTokenCharacters]
+                ?: NSBundle.mme_mainBundle.bundlePath.lastPathComponent.stringByDeletingPathExtension.mme_stringByRemovingNonUserAgentTokenCharacters,
+             NSBundle.mme_mainBundle.mme_bundleVersionString.mme_stringByRemovingNonUserAgentTokenCharacters,
+             NSBundle.mme_mainBundle.bundleIdentifier.mme_stringByRemovingNonUserAgentTokenCharacters,
+             [[NSBundle.mme_mainBundle objectForInfoDictionaryKey:(id)kCFBundleVersionKey] mme_stringByRemovingNonUserAgentTokenCharacters],
+             [NSProcessInfo mme_operatingSystemVersion],
+             [NSProcessInfo mme_processorTypeDescription]
+        ];
         
         // check all loaded frameworks for mapbox frameworks, record their bundleIdentifier
         NSMutableSet *loadedMapboxBundleIds = NSMutableSet.new;
