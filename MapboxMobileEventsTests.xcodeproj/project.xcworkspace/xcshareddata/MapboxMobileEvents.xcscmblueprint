@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "EB3FFFD8D391E01C26232C24A5CC1FBC0533915E",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "EB3FFFD8D391E01C26232C24A5CC1FBC0533915E" : 9223372036854775807,
+    "E302059AEA03412BDA59789695F25F6B3B3F4EE6" : 9223372036854775807
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "425FFF1D-5901-4758-A7C6-500F97C8A95F",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "EB3FFFD8D391E01C26232C24A5CC1FBC0533915E" : "mapbox-events-ios\/",
+    "E302059AEA03412BDA59789695F25F6B3B3F4EE6" : "mapbox-events-ios\/vendor\/TrustKit\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "MapboxMobileEvents",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "MapboxMobileEvents.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/boundsj\/TrustKit.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "E302059AEA03412BDA59789695F25F6B3B3F4EE6"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:mapbox\/mapbox-events-ios.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "EB3FFFD8D391E01C26232C24A5CC1FBC0533915E"
+    }
+  ]
+}

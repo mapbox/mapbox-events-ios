@@ -1,12 +1,10 @@
 #import "NSProcessInfo+SystemInfo.h"
+
 #if TARGET_OS_IOS || TARGET_OS_TVOS
 #import <UIKit/UIKit.h>
 #elif TARGET_OS_MACOS
 #import <AppKit/AppKit.h>
 #endif
-#include <sys/types.h>
-#include <sys/sysctl.h>
-#include <mach/machine.h>
 
 @implementation NSProcessInfo (SystemInfo)
 
@@ -22,7 +20,7 @@
     return osVersion;
 }
 
-+ (NSString*)mme_stringForProcessorType:(NSInteger)type subtype:(NSInteger)subtype {
++ (NSString*)mme_stringForProcessorType:(cpu_type_t)type subtype:(cpu_subtype_t)subtype {
 
     // Scratch String to build description. Ensures non-nil
     NSMutableString *processorDescription = [[NSMutableString alloc] init];
@@ -79,6 +77,9 @@
                 [processorDescription appendString:@"e"];
                 break;
         }
+    }
+    else {
+        [processorDescription appendFormat:@"cpu_%i_%i", type, subtype];
     }
 
     return processorDescription;

@@ -1,11 +1,12 @@
 #import <Cedar/Cedar.h>
 #import <CoreLocation/CoreLocation.h>
 
-#import "MMEEvent.h"
-#import "MMECommonEventData.h"
-#import "MMEMetricsManager.h"
-#import "MMEConstants.h"
-#import "MMEReachability.h"
+#import <MapboxMobileEvents/MMEEvent.h>
+#import <MapboxMobileEvents/MMECommonEventData.h>
+#import <MapboxMobileEvents/MMEMetricsManager.h>
+#import <MapboxMobileEvents/MMEConstants.h>
+#import <MapboxMobileEvents/MMEReachability.h>
+
 #import "MMEEventFake.h"
 
 @interface MMEMetricsManager (Private)

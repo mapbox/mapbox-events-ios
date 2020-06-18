@@ -1,7 +1,7 @@
 #import <Cedar/Cedar.h>
-#import "MMEConstants.h"
-#import "MMEEvent.h"
-#import "MMEEventsManager.h"
+#import <MapboxMobileEvents/MMEConstants.h>
+#import <MapboxMobileEvents/MMEEvent.h>
+#import <MapboxMobileEvents/MMEEventsManager.h>
 
 using namespace Cedar::Matchers;
 using namespace Cedar::Doubles;

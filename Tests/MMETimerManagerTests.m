@@ -1,6 +1,6 @@
 @import XCTest;
 
-#import "MMETimerManager.h"
+#import <MapboxMobileEvents/MMETimerManager.h>
 
 @interface MMETimerManager (Test)
 @property (nonatomic) NSTimer *timer;

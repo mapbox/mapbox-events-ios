@@ -1,13 +1,14 @@
 #import <XCTest/XCTest.h>
 
-#import "MMEAPIClient.h"
-#import "MMEEventsManager.h"
-#import "MMEEventsManager_Private.h"
-#import "NSUserDefaults+MMEConfiguration.h"
-#import "NSUserDefaults+MMEConfiguration_Private.h"
+#import <MapboxMobileEvents/MMEAPIClient.h>
+#import <MapboxMobileEvents/MMEDate.h>
+#import <MapboxMobileEvents/MMEEventsManager.h>
+#import <MapboxMobileEvents/MMEEventsManager_Private.h>
+#import <MapboxMobileEvents/NSUserDefaults+MMEConfiguration.h>
+#import <MapboxMobileEvents/NSUserDefaults+MMEConfiguration_Private.h>
+
 #import "MMEServiceFixture.h"
 #import "MMEBundleInfoFake.h"
-#import "MMEDate.h"
 
 @interface MMEAPIClientConfigTests : XCTestCase <MMEEventsManagerDelegate>
 @property(nonatomic) MMEAPIClient<MMEAPIClient> *apiClient;

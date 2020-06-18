@@ -1,28 +1,31 @@
 @import Cedar;
 
-#import "MMEEvent.h"
-#import "MMEEventsManager.h"
-#import "MMEConstants.h"
-#import "MMEUniqueIdentifier.h"
-#import "MMEDate.h"
-#import "MMELocationManager.h"
-#import "MMEAPIClient.h"
-#import "MMEAPIClient_Private.h"
-#import "MMETimerManager.h"
+
+#import <MapboxMobileEvents/MMEEvent.h>
+#import <MapboxMobileEvents/MMEEventsManager.h>
+#import <MapboxMobileEvents/MMEConstants.h>
+#import <MapboxMobileEvents/MMEUniqueIdentifier.h>
+#import <MapboxMobileEvents/MMEDate.h>
+#import <MapboxMobileEvents/MMELocationManager.h>
+#import <MapboxMobileEvents/MMEAPIClient.h>
+#import <MapboxMobileEvents/MMEAPIClient_Private.h>
+#import <MapboxMobileEvents/MMETimerManager.h>
+#import <MapboxMobileEvents/MMECommonEventData.h>
+#import <MapboxMobileEvents/MMEUIApplicationWrapper.h>
+#import <MapboxMobileEvents/MMEMetricsManager.h>
+
+#import <MapboxMobileEvents/CLLocation+MMEMobileEvents.h>
+#import <MapboxMobileEvents/CLLocationManager+MMEMobileEvents.h>
+#import <MapboxMobileEvents/NSUserDefaults+MMEConfiguration.h>
+#import <MapboxMobileEvents/NSUserDefaults+MMEConfiguration_Private.h>
+
+#import "MMEAPIClientFake.h"
+#import "MMEBundleInfoFake.h"
+#import "MMEDateFakes.h"
 #import "MMEDispatchManagerFake.h"
 #import "MMETimerManagerFake.h"
-#import "MMEAPIClientFake.h"
-#import "MMECommonEventData.h"
 #import "MMEUIApplicationWrapperFake.h"
-#import "MMEUIApplicationWrapper.h"
-#import "MMEMetricsManager.h"
-#import "MMEDateFakes.h"
-#import "MMEBundleInfoFake.h"
 
-#import "CLLocation+MMEMobileEvents.h"
-#import "CLLocationManager+MMEMobileEvents.h"
-#import "NSUserDefaults+MMEConfiguration.h"
-#import "NSUserDefaults+MMEConfiguration_Private.h"
 
 using namespace Cedar::Matchers;
 using namespace Cedar::Doubles;

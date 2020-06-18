@@ -1,6 +1,7 @@
 #import <Cedar/Cedar.h>
-#import "MMEDependencyManager.h"
 #import <CoreLocation/CoreLocation.h>
+
+#import <MapboxMobileEvents/MMEDependencyManager.h>
 
 using namespace Cedar::Matchers;
 using namespace Cedar::Doubles;

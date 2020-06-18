@@ -1,17 +1,17 @@
 #import <XCTest/XCTest.h>
 
-#import "MMEEventsManager.h"
-#import "MMEConstants.h"
-#import "MMEDate.h"
-#import "MMEEvent.h"
-#import "MMEUniqueIdentifier.h"
-#import "MMECommonEventData.h"
-#import "MMEUIApplicationWrapper.h"
+#import <MapboxMobileEvents/MMEEventsManager.h>
+#import <MapboxMobileEvents/MMEConstants.h>
+#import <MapboxMobileEvents/MMEDate.h>
+#import <MapboxMobileEvents/MMEEvent.h>
+#import <MapboxMobileEvents/MMEUniqueIdentifier.h>
+#import <MapboxMobileEvents/MMECommonEventData.h>
+#import <MapboxMobileEvents/MMEUIApplicationWrapper.h>
 
-#import "NSUserDefaults+MMEConfiguration.h"
-#import "NSUserDefaults+MMEConfiguration_Private.h"
-#import "CLLocation+MMEMobileEvents.h"
-#import "CLLocationManager+MMEMobileEvents.h"
+#import <MapboxMobileEvents/NSUserDefaults+MMEConfiguration.h>
+#import <MapboxMobileEvents/NSUserDefaults+MMEConfiguration_Private.h>
+#import <MapboxMobileEvents/CLLocation+MMEMobileEvents.h>
+#import <MapboxMobileEvents/CLLocationManager+MMEMobileEvents.h>
 
 #import "MMEAPIClientFake.h"
 #import "MMETimerManagerFake.h"

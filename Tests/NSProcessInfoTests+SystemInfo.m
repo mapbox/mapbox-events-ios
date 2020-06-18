@@ -1,8 +1,10 @@
 #import <XCTest/XCTest.h>
-#import "NSProcessInfo+SystemInfo.h"
+#import <MapboxMobileEvents/NSProcessInfo+SystemInfo.h>
+
 #include <sys/types.h>
 #include <sys/sysctl.h>
 #include <mach/machine.h>
+
 
 
 @interface NSProcessInfoTests : XCTestCase
@@ -32,6 +34,9 @@
     XCTAssertEqualObjects([NSProcessInfo mme_stringForProcessorType:CPU_TYPE_ARM64 subtype:CPU_SUBTYPE_ARM64_ALL], @"arm64");
     XCTAssertEqualObjects([NSProcessInfo mme_stringForProcessorType:CPU_TYPE_ARM64 subtype:CPU_SUBTYPE_ARM64_V8], @"arm64v8");
     XCTAssertEqualObjects([NSProcessInfo mme_stringForProcessorType:CPU_TYPE_ARM64 subtype:CPU_SUBTYPE_ARM64E], @"arm64e");
+    
+    // HAL 9000
+    XCTAssertEqualObjects([NSProcessInfo mme_stringForProcessorType:9000 subtype:2001], @"cpu_9000_2001");
 }
 
 

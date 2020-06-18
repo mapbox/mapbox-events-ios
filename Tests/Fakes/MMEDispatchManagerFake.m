@@ -1,5 +1,7 @@
 #import "MMEDispatchManagerFake.h"
 
+@import Foundation;
+
 @implementation MMEDispatchManagerFake
 
 - (void)scheduleBlock:(void (^)(void))block afterDelay:(NSTimeInterval)delay {

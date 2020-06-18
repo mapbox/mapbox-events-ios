@@ -1,5 +1,5 @@
 #import <XCTest/XCTest.h>
-#import "MMEUIApplicationWrapper.h"
+#import <MapboxMobileEvents/MMEUIApplicationWrapper.h>
 
 // MARK: - Mock Class
 @interface MockApplicationWrapper: NSObject <MMEUIApplicationWrapper>

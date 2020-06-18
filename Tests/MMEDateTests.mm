@@ -1,5 +1,5 @@
 #import <Cedar/Cedar.h>
-#import "MMEDate.h"
+#import <MapboxMobileEvents/MMEDate.h>
 
 using namespace Cedar::Matchers;
 using namespace Cedar::Doubles;
