@@ -287,14 +287,11 @@ NS_ASSUME_NONNULL_BEGIN
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
 
-        userAgent = [NSString stringWithFormat:@"%@/%@ (%@; v%@; %@; %@)",
-            NSBundle.mme_mainBundle.infoDictionary[(id)kCFBundleNameKey] ?: NSBundle.mme_mainBundle.bundlePath.lastPathComponent.stringByDeletingPathExtension,
-            NSBundle.mme_mainBundle.mme_bundleVersionString,
-            NSBundle.mme_mainBundle.bundleIdentifier,
-            NSBundle.mme_mainBundle.infoDictionary[(id)kCFBundleVersionKey],
-            [NSProcessInfo mme_operatingSystemVersion],
-            [NSProcessInfo mme_processorTypeDescription]
-        ];
+        userAgent = [NSString stringWithFormat:@"%@/%@ (%@; v%@)",
+                     [[NSBundle.mme_mainBundle objectForInfoDictionaryKey:(id)kCFBundleNameKey] mme_stringByRemovingNonUserAgentTokenCharacters] ?: NSBundle.mme_mainBundle.bundlePath.lastPathComponent.stringByDeletingPathExtension.mme_stringByRemovingNonUserAgentTokenCharacters,
+                     NSBundle.mme_mainBundle.mme_bundleVersionString.mme_stringByRemovingNonUserAgentTokenCharacters,
+                     NSBundle.mme_mainBundle.bundleIdentifier.mme_stringByRemovingNonUserAgentTokenCharacters,
+                     [[NSBundle.mme_mainBundle objectForInfoDictionaryKey:(id)kCFBundleVersionKey] mme_stringByRemovingNonUserAgentTokenCharacters]];
         
         // check all loaded frameworks for mapbox frameworks, record their bundleIdentifier
         NSMutableSet *loadedMapboxBundleIds = NSMutableSet.new;
@@ -311,10 +308,10 @@ NS_ASSUME_NONNULL_BEGIN
         for (NSString *bundleId in sortedBundleIds) {
             NSBundle *loaded = [NSBundle bundleWithIdentifier:bundleId];
             NSString *uaFragment = [NSString stringWithFormat:@" %@/%@ (%@; v%@)",
-                loaded.infoDictionary[(id)kCFBundleNameKey] ?: loaded.bundlePath.lastPathComponent.stringByDeletingPathExtension,
-                loaded.mme_bundleVersionString,
-                loaded.bundleIdentifier,
-                loaded.infoDictionary[(id)kCFBundleVersionKey]];
+                [[loaded objectForInfoDictionaryKey:(id)kCFBundleNameKey] mme_stringByRemovingNonUserAgentTokenCharacters] ?: NSBundle.mme_mainBundle.bundlePath.lastPathComponent.stringByDeletingPathExtension.mme_stringByRemovingNonUserAgentTokenCharacters,
+                loaded.mme_bundleVersionString.mme_stringByRemovingNonUserAgentTokenCharacters,
+                loaded.bundleIdentifier.mme_stringByRemovingNonUserAgentTokenCharacters,
+                [[loaded objectForInfoDictionaryKey:(id)kCFBundleVersionKey] mme_stringByRemovingNonUserAgentTokenCharacters]];
             userAgent = [userAgent stringByAppendingString:uaFragment];
         }
     });
@@ -326,11 +323,11 @@ NS_ASSUME_NONNULL_BEGIN
     NSString *legacyUAString = (NSString *)[self mme_objectForVolatileKey:MMELegacyUserAgent];
     if (!legacyUAString) {
         legacyUAString= [NSString stringWithFormat:@"%@/%@/%@ %@/%@",
-            NSBundle.mme_mainBundle.bundleIdentifier,
-            NSBundle.mme_mainBundle.mme_bundleVersionString,
-            [NSBundle.mme_mainBundle objectForInfoDictionaryKey:(id)kCFBundleVersionKey],
-            self.mme_legacyUserAgentBase,
-            self.mme_legacyHostSDKVersion];
+            NSBundle.mme_mainBundle.bundleIdentifier.mme_stringByRemovingNonUserAgentTokenCharacters,
+            NSBundle.mme_mainBundle.mme_bundleVersionString.mme_stringByRemovingNonUserAgentTokenCharacters,
+            [[NSBundle.mme_mainBundle objectForInfoDictionaryKey:(id)kCFBundleVersionKey] mme_stringByRemovingNonUserAgentTokenCharacters],
+            self.mme_legacyUserAgentBase.mme_stringByRemovingNonUserAgentTokenCharacters,
+            self.mme_legacyHostSDKVersion.mme_stringByRemovingNonUserAgentTokenCharacters];
         [self mme_setObject:legacyUAString forVolatileKey:MMELegacyUserAgent];
     }
     return legacyUAString;

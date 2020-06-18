@@ -46,6 +46,11 @@ typedef enum {
 
 @implementation NSString (MMEVersions)
 
+- (NSString *)mme_stringByRemovingNonUserAgentTokenCharacters {
+return [[self componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"(),/:;<=>?@[]{}\"\\"]]
+                       componentsJoinedByString:@""];
+}
+
 + (NSRegularExpression *)mme_semverExpression {
     static NSRegularExpression *semverExpression = nil;
     static dispatch_once_t onceToken;
