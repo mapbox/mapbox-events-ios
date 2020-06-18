@@ -1,12 +1,11 @@
 #import <Cedar/Cedar.h>
 #import <CoreLocation/CoreLocation.h>
 
-#import "MMELocationManager.h"
-#import "MMEDependencyManager.h"
-#import "MMEUIApplicationWrapper.h"
-
-#import "NSUserDefaults+MMEConfiguration.h"
-#import "NSUserDefaults+MMEConfiguration_Private.h"
+#import <MapboxMobileEvents/MMELocationManager.h>
+#import <MapboxMobileEvents/MMEDependencyManager.h>
+#import <MapboxMobileEvents/MMEUIApplicationWrapper.h>
+#import <MapboxMobileEvents/NSUserDefaults+MMEConfiguration.h>
+#import <MapboxMobileEvents/NSUserDefaults+MMEConfiguration_Private.h>
 
 using namespace Cedar::Matchers;
 using namespace Cedar::Doubles;

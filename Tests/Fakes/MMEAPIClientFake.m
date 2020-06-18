@@ -1,5 +1,6 @@
+#import <MapboxMobileEvents/MMEEvent.h>
+
 #import "MMEAPIClientFake.h"
-#import "MMEEvent.h"
 
 @implementation MMEAPIClientFake
 

@@ -1,10 +1,11 @@
 #import <Cedar/Cedar.h>
 
-#import "MMEDate.h"
-#import "MMEEvent.h"
-#import "MMEConstants.h"
+#import <MapboxMobileEvents/MMEDate.h>
+#import <MapboxMobileEvents/MMEEvent.h>
+#import <MapboxMobileEvents/MMEConstants.h>
+#import <MapboxMobileEvents/MMEMetricsManager.h>
+
 #import "MMEExceptionalDictionary.h"
-#import "MMEMetricsManager.h"
 #import "MMEEventFake.h"
 
 using namespace Cedar::Matchers;

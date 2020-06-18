@@ -1,5 +1,7 @@
 #import "MMEUniqueIdentifierFake.h"
 
+@import Foundation;
+
 @implementation MMEUniqueIdentifierFake
 
 - (NSString *)rollingInstanceIdentifer {

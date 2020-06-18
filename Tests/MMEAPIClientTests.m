@@ -1,15 +1,15 @@
 #import <XCTest/XCTest.h>
 
-#import "MMEAPIClient.h"
-#import "MMENSURLSessionWrapper.h"
-#import "MMENSURLSessionWrapperFake.h"
-#import "MMEEvent.h"
-#import "MMECommonEventData.h"
-#import "MMEConstants.h"
+#import <MapboxMobileEvents/MMEAPIClient.h>
+#import <MapboxMobileEvents/MMENSURLSessionWrapper.h>
+#import <MapboxMobileEvents/MMEEvent.h>
+#import <MapboxMobileEvents/MMECommonEventData.h>
+#import <MapboxMobileEvents/MMEConstants.h>
+#import <MapboxMobileEvents/NSUserDefaults+MMEConfiguration.h>
+#import <MapboxMobileEvents/NSUserDefaults+MMEConfiguration_Private.h>
+#import <MapboxMobileEvents/NSData+MMEGZIP.h>
 
-#import "NSUserDefaults+MMEConfiguration.h"
-#import "NSUserDefaults+MMEConfiguration_Private.h"
-#import "NSData+MMEGZIP.h"
+#import "MMENSURLSessionWrapperFake.h"
 
 @interface MMENSURLSessionWrapper (Private)
 @property (nonatomic) NSURLSession *session;

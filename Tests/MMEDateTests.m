@@ -1,6 +1,6 @@
 #import <XCTest/XCTest.h>
 
-#import "MMEDate.h"
+#import <MapboxMobileEvents/MMEDate.h>
 
 @interface MMEDateTests : XCTestCase
 

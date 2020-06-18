@@ -1,16 +1,16 @@
 @import Cedar;
 @import Foundation;
 
-#import "MMEAPIClient.h"
-#import "MMEConstants.h"
-#import "MMEEvent.h"
-#import "MMECommonEventData.h"
-#import "MMENSURLSessionWrapperFake.h"
-#import "MMEAPIClientFake.h"
-#import "MMECertPin.h"
-#import "MMERunningLock.h"
+#import <MapboxMobileEvents/MMEAPIClient.h>
+#import <MapboxMobileEvents/MMEConstants.h>
+#import <MapboxMobileEvents/MMEEvent.h>
+#import <MapboxMobileEvents/MMECommonEventData.h>
+#import <MapboxMobileEvents/MMECertPin.h>
+#import <MapboxMobileEvents/NSUserDefaults+MMEConfiguration.h>
 
-#import "NSUserDefaults+MMEConfiguration.h"
+#import "MMERunningLock.h"
+#import "MMEAPIClientFake.h"
+#import "MMENSURLSessionWrapperFake.h"
 
 @interface MMENSURLSessionWrapper (Private)
 @property (nonatomic) NSURLSession *session;

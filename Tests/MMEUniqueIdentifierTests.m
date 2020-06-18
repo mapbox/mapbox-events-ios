@@ -1,6 +1,6 @@
 #import <XCTest/XCTest.h>
 
-#import "MMEUniqueIdentifier.h"
+#import <MapboxMobileEvents/MMEUniqueIdentifier.h>
 
 @interface MMEUniqueIdentifier (Spec)
 @property (nonatomic) NSDate *instanceIDRotationDate;
