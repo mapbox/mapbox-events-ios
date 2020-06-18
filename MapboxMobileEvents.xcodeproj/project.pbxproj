@@ -6,22 +6,6 @@
 	objectVersion = 52;
 	objects = {
 
-/* Begin PBXAggregateTarget section */
-		9C632266221377BF00653792 /* MapboxMobileEvents (All Targets) */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = 9C632267221377BF00653792 /* Build configuration list for PBXAggregateTarget "MapboxMobileEvents (All Targets)" */;
-			buildPhases = (
-			);
-			dependencies = (
-				9C63226D221377CD00653792 /* PBXTargetDependency */,
-				9C63226B221377C900653792 /* PBXTargetDependency */,
-				9C27F791249AB4790018E7A9 /* PBXTargetDependency */,
-			);
-			name = "MapboxMobileEvents (All Targets)";
-			productName = "MapboxMobileEvents (All Targets)";
-		};
-/* End PBXAggregateTarget section */
-
 /* Begin PBXBuildFile section */
 		4036EFBE1ED37D56009C40BA /* MMEEventLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 4036EFBC1ED37D56009C40BA /* MMEEventLogger.h */; };
 		4036EFBF1ED37D56009C40BA /* MMEEventLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 4036EFBD1ED37D56009C40BA /* MMEEventLogger.m */; };
@@ -167,30 +151,6 @@
 		F4684FF52432A1610079B389 /* NSBundle+MMEMobileEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = F4684FF32432A1610079B389 /* NSBundle+MMEMobileEvents.m */; };
 		F4684FF62432A2770079B389 /* NSBundle+MMEMobileEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = F4684FF32432A1610079B389 /* NSBundle+MMEMobileEvents.m */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		9C27F790249AB4790018E7A9 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 404807B01EA186D8008A6D50 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 9C27F7272499B1F50018E7A9;
-			remoteInfo = "MapboxMobileEvents (Development)";
-		};
-		9C63226A221377C900653792 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 404807B01EA186D8008A6D50 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 404807B81EA186D8008A6D50;
-			remoteInfo = MapboxMobileEvents;
-		};
-		9C63226C221377CD00653792 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 404807B01EA186D8008A6D50 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 408596521ED084C0003BD29D;
-			remoteInfo = MapboxMobileEventsStatic;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		408596511ED084C0003BD29D /* CopyFiles */ = {
@@ -625,10 +585,6 @@
 						CreatedOnToolsVersion = 8.3.2;
 						ProvisioningStyle = Automatic;
 					};
-					9C632266221377BF00653792 = {
-						CreatedOnToolsVersion = 10.1;
-						ProvisioningStyle = Automatic;
-					};
 				};
 			};
 			buildConfigurationList = 404807B31EA186D8008A6D50 /* Build configuration list for PBXProject "MapboxMobileEvents" */;
@@ -644,7 +600,6 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				9C632266221377BF00653792 /* MapboxMobileEvents (All Targets) */,
 				404807B81EA186D8008A6D50 /* MapboxMobileEvents */,
 				9C27F7272499B1F50018E7A9 /* MapboxMobileEvents (Development) */,
 				408596521ED084C0003BD29D /* libMapboxMobileEvents */,
@@ -766,24 +721,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		9C27F791249AB4790018E7A9 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 9C27F7272499B1F50018E7A9 /* MapboxMobileEvents (Development) */;
-			targetProxy = 9C27F790249AB4790018E7A9 /* PBXContainerItemProxy */;
-		};
-		9C63226B221377C900653792 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 404807B81EA186D8008A6D50 /* MapboxMobileEvents */;
-			targetProxy = 9C63226A221377C900653792 /* PBXContainerItemProxy */;
-		};
-		9C63226D221377CD00653792 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 408596521ED084C0003BD29D /* libMapboxMobileEvents */;
-			targetProxy = 9C63226C221377CD00653792 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		404807CB1EA186D8008A6D50 /* Debug */ = {
@@ -1116,22 +1053,6 @@
 			};
 			name = RelWithDebInfo;
 		};
-		9C632268221377BF00653792 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		9C632269221377BF00653792 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
 		CAB36C302374A1BA00592F74 /* RelWithDebInfo */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1188,14 +1109,6 @@
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
-			};
-			name = RelWithDebInfo;
-		};
-		CAB36C312374A1BA00592F74 /* RelWithDebInfo */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = RelWithDebInfo;
 		};
@@ -1284,16 +1197,6 @@
 				9C27F7652499B1F50018E7A9 /* Debug */,
 				9C27F7662499B1F50018E7A9 /* Release */,
 				9C27F7672499B1F50018E7A9 /* RelWithDebInfo */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		9C632267221377BF00653792 /* Build configuration list for PBXAggregateTarget "MapboxMobileEvents (All Targets)" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				9C632268221377BF00653792 /* Debug */,
-				9C632269221377BF00653792 /* Release */,
-				CAB36C312374A1BA00592F74 /* RelWithDebInfo */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
