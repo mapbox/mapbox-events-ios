@@ -27,5 +27,4 @@ comment:
 
 ignore:
   - "MMETestHost"
-  - "Tests"
   - "scripts"
