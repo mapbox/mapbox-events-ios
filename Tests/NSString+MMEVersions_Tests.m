@@ -133,8 +133,17 @@
 }
 
 - (void)test011_invalidDelimitersInString {
-    NSString *badString = @"user-agent-base (),/:;<=>?@[]{}\"\\";
-    NSString *goodString = @"user-agent-base";
+    NSString *badString = @"user agent base(),/:;<=>?@[]{}\"\\";
+    NSString *goodString = @"user agent base";
+    XCTAssert([badString.mme_stringByRemovingNonUserAgentTokenCharacters
+              isEqualToString:goodString]);
+    
+//    com.conduent.mrparking.debug.dev/1.0-development dev-api -build 03112020 35144 PM/1 mapbox-android-location/4.5.1
+}
+
+- (void)test012_invalidUserAgent {
+    NSString *badString = @"1.0-development (dev-api) -build 03/11/2020 3:51:44 PM";
+    NSString *goodString = @"1.0-development dev-api -build 03112020 35144 PM";
     XCTAssert([badString.mme_stringByRemovingNonUserAgentTokenCharacters
               isEqualToString:goodString]);
 }
