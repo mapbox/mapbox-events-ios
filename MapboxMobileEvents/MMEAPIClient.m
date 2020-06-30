@@ -58,8 +58,8 @@ int const kMMEMaxRequestCount = 1000;
 
 - (NSArray *)batchFromEvents:(NSArray *)events {
     NSMutableArray *eventBatches = [[NSMutableArray alloc] init];
-    int eventsRemaining = (int)[events count];
-    int i = 0;
+    NSUInteger eventsRemaining = [events count];
+    NSUInteger i = 0;
     
     while (eventsRemaining) {
         NSRange range = NSMakeRange(i, MIN(kMMEMaxRequestCount, eventsRemaining));
@@ -80,22 +80,26 @@ int const kMMEMaxRequestCount = 1000;
     for (NSArray *batch in eventBatches) {
         NSURLRequest *request = [self requestForEvents:batch];
         if (request) {
-            [self.sessionWrapper processRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+            [self.sessionWrapper processRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable requestError) {
                 [MMEMetricsManager.sharedManager updateReceivedBytes:data.length];
                 
-                NSError *statusError = nil;
-                if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
+                NSError *responseError = nil;
+                if ([response isKindOfClass:NSHTTPURLResponse.class]) {
                     NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-                    statusError = [self statusErrorFromRequest:request andHTTPResponse:httpResponse];
+                    responseError = [self statusErrorFromRequest:request andHTTPResponse:httpResponse];
                 } else {
-                    statusError = [self unexpectedResponseErrorFromRequest:request andResponse:response];
+                    responseError = [self unexpectedResponseError:requestError fromRequest:request andResponse:response];
                 }
-                error = error ?: statusError;
                 
-                [MMEMetricsManager.sharedManager updateMetricsFromEventCount:events.count request:request error:error];
+                [MMEMetricsManager.sharedManager updateMetricsFromEventCount:events.count request:request error:(responseError ? responseError : requestError)];
                 
                 if (completionHandler) {
-                    completionHandler(error);
+                    if (responseError) {
+                        completionHandler(responseError);
+                    }
+                    else {
+                        completionHandler(requestError);
+                    }
                 }
             }];
         }
@@ -155,7 +159,7 @@ int const kMMEMaxRequestCount = 1000;
                         httpResponse = (NSHTTPURLResponse *)response;
                         statusError = [self statusErrorFromRequest:request andHTTPResponse:httpResponse];
                     } else {
-                        statusError = [self unexpectedResponseErrorFromRequest:request andResponse:response];
+                        statusError = [self unexpectedResponseError:error fromRequest:request andResponse:response];
                     }
                     
                     if (statusError) {
@@ -225,14 +229,16 @@ int const kMMEMaxRequestCount = 1000;
     return statusError;
 }
 
-- (NSError *)unexpectedResponseErrorFromRequest:(nonnull NSURLRequest *)request andResponse:(NSURLResponse *)response {
-    NSString *descriptionFormat = @"The session data task failed. Original request was: %@";
-    NSString *description = [NSString stringWithFormat:descriptionFormat, request ?: [NSNull null]];
+- (NSError *)unexpectedResponseError:(NSError*) error fromRequest:(nonnull NSURLRequest *)request andResponse:(id)response {
+    NSString *description = [NSString stringWithFormat:@"The session data task failed eith error: %@ request: %@ response: %@", error, request, response];
     NSString *reason = @"Unexpected response";
-    NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
+    NSMutableDictionary *userInfo = NSMutableDictionary.new;
     [userInfo setValue:description forKey:NSLocalizedDescriptionKey];
     [userInfo setValue:reason forKey:NSLocalizedFailureReasonErrorKey];
     [userInfo setValue:response forKey:MMEResponseKey];
+    if (error) {
+        [userInfo setValue:error forKey:NSUnderlyingErrorKey];
+    }
     
     NSError *statusError = [NSError errorWithDomain:MMEErrorDomain code:MMEUnexpectedResponseError userInfo:userInfo];
     return statusError;
