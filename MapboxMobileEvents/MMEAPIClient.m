@@ -91,7 +91,7 @@ int const kMMEMaxRequestCount = 1000;
                     responseError = [self unexpectedResponseError:requestError fromRequest:request andResponse:response];
                 }
                 
-                [MMEMetricsManager.sharedManager updateMetricsFromEventCount:events.count request:request error:(responseError ? responseError : requestError)];
+                [MMEMetricsManager.sharedManager updateMetricsFromEventCount:events.count request:request error:(responseError ?: requestError)];
                 
                 if (completionHandler) {
                     if (responseError) {
