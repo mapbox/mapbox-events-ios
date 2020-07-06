@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @optional
 
 - (nullable NSError *)statusErrorFromRequest:(NSURLRequest *)request andHTTPResponse:(NSHTTPURLResponse *)httpResponse;
-- (NSError *)unexpectedResponseErrorFromRequest:(NSURLRequest *)request andResponse:(NSURLResponse *)response;
+- (NSError *)unexpectedResponseError:(NSError*) error fromRequest:(nonnull NSURLRequest *)request andResponse:(id)response;
 
 @end
 

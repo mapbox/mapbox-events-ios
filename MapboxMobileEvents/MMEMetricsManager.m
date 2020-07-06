@@ -121,7 +121,7 @@
 
 - (void)updateMetricsFromEventQueue:(NSArray *)eventQueue {
     if (eventQueue.count > 0) {
-        self.metrics.eventCountTotal += (int)eventQueue.count;
+        self.metrics.eventCountTotal += eventQueue.count;
         
         for (MMEEvent *event in eventQueue) {
             NSNumber *eventCount = [self.metrics.eventCountPerType objectForKey:event.name];
