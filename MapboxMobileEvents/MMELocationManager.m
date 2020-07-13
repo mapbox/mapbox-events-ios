@@ -224,7 +224,7 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
 - (void)locationManager:(CLLocationManager *)locationManager didExitRegion:(CLRegion *)region {
     [self startBackgroundTimeoutTimer];
     [self.locationManager startUpdatingLocation];
-    [[MMEMetricsManager sharedManager] incrementAppWakeUpCount];
+    [MMEMetricsManager.sharedManager incrementAppWakeUpCount];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didVisit:(CLVisit *)visit {
@@ -240,4 +240,3 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
 }
 
 @end
-
