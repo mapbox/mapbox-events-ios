@@ -1,7 +1,6 @@
 #import <CommonCrypto/CommonDigest.h>
+#import <MapboxMobileEvents/MMEConstants.h>
 
-
-#import "MMEConstants.h"
 #import "MMEDate.h"
 #import "MMEEventLogger.h"
 #import "NSBundle+MMEMobileEvents.h"
@@ -224,7 +223,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSURL *)mme_APIServiceURL {
     NSURL *serviceURL = nil;
-    id infoPlistObject = [NSBundle.mme_mainBundle objectForInfoDictionaryKey:MMEEventsServiceURL];
+    id infoPlistObject = [NSBundle.mme_mainBundle objectForInfoDictionaryKey:MMEGLMapboxAPIBaseURL];
 
     if ([infoPlistObject isKindOfClass:NSURL.class]) {
         serviceURL = infoPlistObject;
