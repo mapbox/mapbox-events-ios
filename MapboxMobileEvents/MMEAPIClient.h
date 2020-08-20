@@ -25,10 +25,6 @@ NS_ASSUME_NONNULL_BEGIN
 /// Stop the Configuration update process
 - (void)stopGettingConfigUpdates;
 
-// MARK: - Deprecated
-
-- (nullable NSError *)statusErrorFromRequest:(NSURLRequest *)request andHTTPResponse:(NSHTTPURLResponse *)httpResponse MME_DEPRECATED;
-
 @end
 
 NS_ASSUME_NONNULL_END

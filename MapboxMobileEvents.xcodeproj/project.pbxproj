@@ -517,9 +517,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 404807CD1EA186D8008A6D50 /* Build configuration list for PBXNativeTarget "MapboxMobileEvents" */;
 			buildPhases = (
+				404807B61EA186D8008A6D50 /* Headers */,
 				404807B41EA186D8008A6D50 /* Sources */,
 				404807B51EA186D8008A6D50 /* Frameworks */,
-				404807B61EA186D8008A6D50 /* Headers */,
 				404807B71EA186D8008A6D50 /* Resources */,
 			);
 			buildRules = (
@@ -552,9 +552,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9C27F7642499B1F50018E7A9 /* Build configuration list for PBXNativeTarget "MapboxMobileEvents (Development)" */;
 			buildPhases = (
+				9C27F7442499B1F50018E7A9 /* Headers */,
 				9C27F7282499B1F50018E7A9 /* Sources */,
 				9C27F7432499B1F50018E7A9 /* Frameworks */,
-				9C27F7442499B1F50018E7A9 /* Headers */,
 				9C27F7632499B1F50018E7A9 /* Resources */,
 			);
 			buildRules = (
