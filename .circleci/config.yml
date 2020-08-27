@@ -7,8 +7,11 @@ jobs:
   build:
 
     macos:
-      xcode: 11.4.1
+      xcode: 11.6.0
 
     steps:
       - checkout
       - run: make ci-run
+      - run: make create-static
+      - store_artifacts:
+          path: build/mapbox-events-ios-static.zip
