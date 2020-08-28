@@ -11,7 +11,6 @@ jobs:
 
     steps:
       - checkout
-      - run: make ci-run
-      - run: make create-static
+      - run: make build
       - store_artifacts:
           path: build/mapbox-events-ios-static.zip
