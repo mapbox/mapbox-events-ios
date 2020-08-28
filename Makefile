@@ -72,6 +72,3 @@ test:
 .PHONY: docs
 docs: $(DOCS_DIR) headerdoc docindex
 	open $(DOCS_INDEX)
-
-.PHONY: ci-run
-ci-run: build
