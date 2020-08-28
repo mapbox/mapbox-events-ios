@@ -76,12 +76,12 @@
 
 - (void)test001_checkCNHashCount {
     NSArray *cnHashes = NSUserDefaults.mme_configuration.mme_certificatePinningConfig[@"events.mapbox.cn"];
-    XCTAssert(cnHashes.count == 54);
+    XCTAssert(cnHashes.count == 4);
 }
 
 -(void)test002_checkCOMHashCount {
     NSArray *comHashes = NSUserDefaults.mme_configuration.mme_certificatePinningConfig[@"events.mapbox.com"];
-    XCTAssert(comHashes.count == 54);
+    XCTAssert(comHashes.count == 4);
 }
     
 -(void)test003_countCNHashesWithBlacklist {
@@ -92,7 +92,7 @@
     XCTAssertNil(configError);
 
     NSArray *cnHashes = NSUserDefaults.mme_configuration.mme_certificatePinningConfig[@"events.mapbox.cn"];
-    XCTAssert(cnHashes.count == 53);
+    XCTAssert(cnHashes.count == 3);
 }
             
 -(void)test004_countCOMHashesWithBlacklist {
@@ -103,7 +103,7 @@
     XCTAssertNil(configError);
 
     NSArray *comHashes = NSUserDefaults.mme_configuration.mme_certificatePinningConfig[@"events.mapbox.com"];
-    XCTAssert(comHashes.count == 53);
+    XCTAssert(comHashes.count == 3);
 }
 
 -(void)test005_validateCNHashes {
