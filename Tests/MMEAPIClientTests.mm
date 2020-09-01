@@ -104,13 +104,14 @@ describe(@"MMEAPIClient", ^{
                 __block NSError *error;
                 
                 beforeEach(^{
-                    error = [NSError errorWithDomain:@"test" code:42 userInfo:nil];
+                    error = [NSError errorWithDomain:MMEErrorDomain code:0 userInfo:nil];
                     NSHTTPURLResponse *responseFake = [[NSHTTPURLResponse alloc] initWithURL:NSUserDefaults.mme_configuration.mme_eventsServiceURL statusCode:400 HTTPVersion:nil headerFields:nil];
                     [sessionWrapperFake completeProcessingWithData:nil response:responseFake error:error];
                 });
                 
                 it(@"should equal completed process error", ^{
-                    capturedError should equal(error);
+                    capturedError.code should equal(error.code);
+                    capturedError.domain should equal(error.domain);
                 });
             });
             
