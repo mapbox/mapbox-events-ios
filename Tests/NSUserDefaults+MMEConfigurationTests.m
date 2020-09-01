@@ -302,7 +302,7 @@
     MMEBundleInfoFake *fakeBundle = MMEBundleInfoFake.new;
     NSMutableDictionary *testInfoPlist = NSBundle.mainBundle.infoDictionary.mutableCopy;
     
-    testInfoPlist[MMEEventsServiceURL]  = @"https://test.com";
+    testInfoPlist[MMEGLMapboxAPIBaseURL]  = @"https://test.com";
     fakeBundle.infoDictionaryFake = testInfoPlist;
     [NSBundle mme_setMainBundle:fakeBundle];
     
@@ -313,7 +313,7 @@
     MMEBundleInfoFake *fakeBundle = MMEBundleInfoFake.new;
     NSMutableDictionary *testInfoPlist = NSBundle.mainBundle.infoDictionary.mutableCopy;
     
-    testInfoPlist[MMEEventsServiceURL]  = [NSURL URLWithString:@"https://test.com"];
+    testInfoPlist[MMEGLMapboxAPIBaseURL]  = [NSURL URLWithString:@"https://test.com"];
     fakeBundle.infoDictionaryFake = testInfoPlist;
     [NSBundle mme_setMainBundle:fakeBundle];
     
