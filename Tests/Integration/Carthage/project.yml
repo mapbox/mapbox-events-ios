@@ -1,0 +1,13 @@
+name: CarthageTest
+options:
+  bundleIdPrefix: com.mapbox.common.events.carthage
+targets:
+  CarthageTest:
+    type: application
+    platform: iOS
+    deploymentTarget: "9.0"
+    sources: [Sources]
+    dependencies:
+      - framework: Carthage/Build/iOS/MapboxMobileEvents.framework
+    settings:
+        DEVELOPMENT_TEAM: "GJZR2MEM28"
