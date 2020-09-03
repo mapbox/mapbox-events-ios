@@ -5,6 +5,10 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ROOT_DIR="${DIR}/../.."
 pushd "${ROOT_DIR}/Tests/Integration/CocoaPods"
 
+if [ -z `which xcodegen` ]; then
+    brew install xcodegen
+fi
+
 xcodegen generate
 bundle install
 bundle exec pod install
