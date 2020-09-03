@@ -26,3 +26,9 @@ jobs:
       - run:
           name: Test
           command: xcodebuild -project MapboxMobileEventsTests.xcodeproj -scheme MMETestHost build test -destination 'platform=iOS Simulator,name=iPhone 11,OS=latest' GCC_INSTRUMENT_PROGRAM_FLOW_ARCS=YES GCC_GENERATE_TEST_COVERAGE_FILES=YES
+      - run:
+          name: Test CocoaPods
+          command: Tests/Integration/test_cocoapods.sh
+      - run:
+          name: Test Carthage
+          command: Tests/Integration/test_carthage.sh
