@@ -1,5 +1,5 @@
 #import <CommonCrypto/CommonDigest.h>
-#import <MapboxMobileEvents/MMEConstants.h>
+#import "MMEConstants.h"
 
 #import "MMEDate.h"
 #import "MMEEventLogger.h"

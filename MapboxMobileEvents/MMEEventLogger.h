@@ -1,4 +1,4 @@
-#import <MapboxMobileEvents/MMETypes.h>
+#import "MMETypes.h"
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
