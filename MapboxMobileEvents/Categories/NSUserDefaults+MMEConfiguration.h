@@ -87,6 +87,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// Distance to set for the background collection geo-fence
 @property (nonatomic, readonly) CLLocationDistance mme_backgroundGeofence;
 
+/// Horizontal accuracy value set for filtering locations
+@property (nonatomic, readonly) CLLocationAccuracy mme_horizontalAccuracy;
+
 // MARK: - Certificate Pinning and Revocation
 
 /// An array of revoked public key hashes
