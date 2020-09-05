@@ -6,5 +6,6 @@ Connection: close
     "tto": "two",
     "bso": "ten",
     "gfo": "one hundred",
-    "tag": ["not","two"]
+    "tag": ["not","two"],
+    "hao": "hundred"
 }

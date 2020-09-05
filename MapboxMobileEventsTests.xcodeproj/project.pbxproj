@@ -81,6 +81,9 @@
 		ACAF8D27238DDED20033745A /* MMEAPIClientTests.m in Sources */ = {isa = PBXBuildFile; fileRef = ACAF8D26238DDED20033745A /* MMEAPIClientTests.m */; };
 		ACBD2E5923709F920082F037 /* MMEEventsManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = ACBD2E5823709F920082F037 /* MMEEventsManagerTests.m */; };
 		ACD1B2B423889BC000C0F0B6 /* MMEAPIClientFake.m in Sources */ = {isa = PBXBuildFile; fileRef = 4036EFBA1ED36F06009C40BA /* MMEAPIClientFake.m */; };
+		C15F6A51250270D100726D13 /* config-hao-negative.json in Resources */ = {isa = PBXBuildFile; fileRef = C15F6A4E250270D000726D13 /* config-hao-negative.json */; };
+		C15F6A52250270D100726D13 /* config-hao-null.json in Resources */ = {isa = PBXBuildFile; fileRef = C15F6A4F250270D000726D13 /* config-hao-null.json */; };
+		C15F6A53250270D100726D13 /* config-hao-10m.json in Resources */ = {isa = PBXBuildFile; fileRef = C15F6A50250270D000726D13 /* config-hao-10m.json */; };
 		F44600C3249031A2003B297C /* MMEUIApplicationWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = F44600C2249031A2003B297C /* MMEUIApplicationWrapper.m */; };
 /* End PBXBuildFile section */
 
@@ -249,6 +252,9 @@
 		ACB6F21D1F7BF71B0032A916 /* MMELocationManagerTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MMELocationManagerTests.mm; sourceTree = "<group>"; };
 		ACBD2E5823709F920082F037 /* MMEEventsManagerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEEventsManagerTests.m; sourceTree = "<group>"; };
 		ACD86D9F1F96A77700DD2A8D /* MMEAPIClientTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MMEAPIClientTests.mm; sourceTree = "<group>"; };
+		C15F6A4E250270D000726D13 /* config-hao-negative.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "config-hao-negative.json"; sourceTree = "<group>"; };
+		C15F6A4F250270D000726D13 /* config-hao-null.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "config-hao-null.json"; sourceTree = "<group>"; };
+		C15F6A50250270D000726D13 /* config-hao-10m.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "config-hao-10m.json"; sourceTree = "<group>"; };
 		CF93A66222488A4500BBA199 /* MMECertPinTests.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = MMECertPinTests.m; sourceTree = "<group>"; };
 		F446009924902382003B297C /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
 		F44600C2249031A2003B297C /* MMEUIApplicationWrapper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEUIApplicationWrapper.m; sourceTree = "<group>"; };
@@ -391,6 +397,9 @@
 				9C3F933823512FD300F99907 /* config-100s-bso.json */,
 				9C3F934223512FD300F99907 /* config-1000m-gfo.json */,
 				9C3F933623512FD200F99907 /* config-10000m-gfo.json */,
+				C15F6A50250270D000726D13 /* config-hao-10m.json */,
+				C15F6A4E250270D000726D13 /* config-hao-negative.json */,
+				C15F6A4F250270D000726D13 /* config-hao-null.json */,
 				9C3F934123512FD300F99907 /* config-all-wrong.json */,
 				9C3F933B23512FD300F99907 /* config-all.json */,
 				9C3F933E23512FD300F99907 /* config-null-tag.json */,
@@ -614,6 +623,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C15F6A53250270D100726D13 /* config-hao-10m.json in Resources */,
 				9C3F934B23512FD300F99907 /* events-201.json in Resources */,
 				9C3F934523512FD300F99907 /* config-10000m-gfo.json in Resources */,
 				9C3F935223512FD300F99907 /* config-test-tag.json in Resources */,
@@ -629,9 +639,11 @@
 				9C65A2702256C110006E3FED /* Main.storyboard in Resources */,
 				9C3F934623512FD300F99907 /* config-null.json in Resources */,
 				9C3F934423512FD300F99907 /* config-10s-bso.json in Resources */,
+				C15F6A52250270D100726D13 /* config-hao-null.json in Resources */,
 				9C3F934C23512FD300F99907 /* config-type2-tto.json in Resources */,
 				9C3F934A23512FD300F99907 /* config-all.json in Resources */,
 				9C3F934923512FD300F99907 /* config-number-tag.json in Resources */,
+				C15F6A51250270D100726D13 /* config-hao-negative.json in Resources */,
 				9C3F934823512FD300F99907 /* config-type1-tto.json in Resources */,
 				9C3F934F23512FD300F99907 /* config-100m-gfo.json in Resources */,
 			);
