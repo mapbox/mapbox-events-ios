@@ -23,6 +23,7 @@
     NSDictionary *testDefaults = @{ // alternate defaults
         MMEStartupDelay: @(MMEStartupDelayDefault), // seconds
         MMEBackgroundGeofence: @(MMEBackgroundGeofenceDefault), // meters
+        MMEHorizontalAccuracy: @(MMEHorizontalAccuracyDefault), // meters
         MMEEventFlushCount: @(MMEEventFlushCountDefault), // events
         MMEEventFlushInterval: @(MMEEventFlushIntervalDefault), // seconds
         MMEIdentifierRotationInterval: @(MMEIdentifierRotationIntervalDefault), // 24 hours
@@ -224,6 +225,10 @@
     XCTAssert(NSUserDefaults.mme_configuration.mme_backgroundGeofence == 300);
 }
 
+- (void)testEventHorizontalAccuracyDefault {
+    XCTAssert(NSUserDefaults.mme_configuration.mme_horizontalAccuracy == 300);
+}
+
 // MARK: - Certificate Revocation List
 
 - (void)testCertificateRevocationList {
@@ -255,6 +260,7 @@
                                MMEConfigTTOKey: @2,
                                MMEConfigGFOKey: @500,
                                MMEConfigBSOKey: @10,
+                               MMEConfigHAOKey: @30,
                                MMEConfigTagKey: @"TAG"
     };
     NSError *updateError = nil;
@@ -267,18 +273,30 @@
     XCTAssert(NSUserDefaults.mme_configuration.mme_certificateRevocationList.count == 0);
     XCTAssertFalse(NSUserDefaults.mme_configuration.mme_isCollectionEnabledInBackground);
     XCTAssert(NSUserDefaults.mme_configuration.mme_backgroundStartupDelay == 10);
+    XCTAssert(NSUserDefaults.mme_configuration.mme_horizontalAccuracy == 30);
     XCTAssert([NSUserDefaults.mme_configuration.mme_eventTag isEqualToString:@"TAG"]);
 }
 
 - (void)testUpdateFromConfigServiceDataAlternatives {
     NSDictionary *jsonDict = @{MMEConfigTTOKey: @1,
                                MMEConfigGFOKey: @90000, //over 9,000
+                               MMEConfigHAOKey: @0
     };
     NSData *data = [NSJSONSerialization dataWithJSONObject:jsonDict options:NSJSONWritingPrettyPrinted error:nil];
     
     [NSUserDefaults.mme_configuration mme_updateFromConfigServiceData:data];
     XCTAssert(NSUserDefaults.mme_configuration.mme_backgroundGeofence == 300);
+    XCTAssert(NSUserDefaults.mme_configuration.mme_horizontalAccuracy == 300);
     XCTAssertFalse(NSUserDefaults.mme_configuration.mme_isCollectionEnabled);
+}
+
+- (void)testUpdateFromConfigServiceHAOAlternatives {
+    NSDictionary *jsonDict = @{MMEConfigHAOKey: @-1
+    };
+    NSData *data = [NSJSONSerialization dataWithJSONObject:jsonDict options:NSJSONWritingPrettyPrinted error:nil];
+
+    [NSUserDefaults.mme_configuration mme_updateFromConfigServiceData:data];
+    XCTAssert(NSUserDefaults.mme_configuration.mme_horizontalAccuracy == -1);
 }
 
 - (void)testSetAccessToken {
@@ -399,6 +417,20 @@
     [NSUserDefaults.mme_configuration registerDefaults:self.mutableDomain];
     
     XCTAssert(NSUserDefaults.mme_configuration.mme_backgroundGeofence == 48);
+}
+
+- (void)testHorizontalAccuracyNegativeChange {
+    [self.mutableDomain setValue:@-1 forKey:MMEHorizontalAccuracy];
+    [NSUserDefaults.mme_configuration registerDefaults:self.mutableDomain];
+
+    XCTAssert(NSUserDefaults.mme_configuration.mme_horizontalAccuracy == -1);
+}
+
+- (void)testHorizontalAccuracyPositiveChange {
+    [self.mutableDomain setValue:@75 forKey:MMEHorizontalAccuracy];
+    [NSUserDefaults.mme_configuration registerDefaults:self.mutableDomain];
+
+    XCTAssert(NSUserDefaults.mme_configuration.mme_horizontalAccuracy == 75);
 }
 
 - (void)testConfigEventTagChange {
