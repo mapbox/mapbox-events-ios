@@ -7,14 +7,20 @@ workflows:
   default:
     jobs:
       - build:
+          matrix:
+            parameters:
+              xcode: ["11.7.0", "12.0.0"]
           filters:
             tags:
               only: /.*/
 
 jobs:
   build:
+    parameters:
+      xcode:
+        type: string
     macos:
-      xcode: 11.6.0
+      xcode: << parameters.xcode >>
     steps:
       - checkout
       - run: make build
@@ -22,7 +28,9 @@ jobs:
           path: build/mapbox-events-ios-static.zip
       - run:
           name: Install dependencies
-          command: carthage bootstrap --platform ios --cache-builds --configuration Debug --no-use-binaries
+          command: |
+            if [ "<< parameters.xcode >>" = "12.0.0" ]; then export XCODE_XCCONFIG_FILE=~/project/xcode-12-fix.xcconfig; fi
+            carthage bootstrap --platform ios --cache-builds --configuration Debug --no-use-binaries --verbose
       - run:
           name: Test
           command: xcodebuild -project MapboxMobileEventsTests.xcodeproj -scheme MMETestHost build test -destination 'platform=iOS Simulator,name=iPhone 11,OS=latest' GCC_INSTRUMENT_PROGRAM_FLOW_ARCS=YES GCC_GENERATE_TEST_COVERAGE_FILES=YES
@@ -31,4 +39,6 @@ jobs:
           command: Tests/Integration/test_cocoapods.sh
       - run:
           name: Test Carthage
-          command: Tests/Integration/test_carthage.sh
+          command: |
+            if [ "<< parameters.xcode >>" = "12.0.0" ]; then export XCODE_XCCONFIG_FILE=~/project/xcode-12-fix.xcconfig; fi
+            Tests/Integration/test_carthage.sh
