@@ -250,6 +250,7 @@
     XCTAssertNil(self.eventsError);
     XCTAssert(NSUserDefaults.mme_configuration.mme_backgroundStartupDelay == 44);
     XCTAssert(NSUserDefaults.mme_configuration.mme_backgroundGeofence == 444);
+    XCTAssert(NSUserDefaults.mme_configuration.mme_horizontalAccuracy == 400);
     XCTAssert([NSUserDefaults.mme_configuration.mme_eventTag isEqualToString:@"all"]);
 }
 
@@ -265,6 +266,7 @@
     XCTAssertNil(self.eventsError);
     XCTAssert(NSUserDefaults.mme_configuration.mme_backgroundStartupDelay == 15); // default
     XCTAssert(NSUserDefaults.mme_configuration.mme_backgroundGeofence == 300); // default
+    XCTAssert(NSUserDefaults.mme_configuration.mme_horizontalAccuracy == 300); // default
     XCTAssertNil(NSUserDefaults.mme_configuration.mme_eventTag); // default
 }
 
@@ -296,6 +298,39 @@
     XCTAssert(self.apiClient.isGettingConfigUpdates);
     XCTAssert([configFixture waitForConnectionWithTimeout:MME10sTimeout error:&configError]);
     XCTAssert(fabs(MMEDate.recordedTimeOffsetFromServer) - fabs(MMEDate.date.timeIntervalSince1970) < MME10sTimeout);
+}
+
+- (void) test020_10mHAO {
+    NSError *configError = nil;
+    MMEServiceFixture *configFixture = [MMEServiceFixture serviceFixtureWithResource:@"config-hao-10m"];
+    [self.apiClient startGettingConfigUpdates];
+
+    XCTAssert([configFixture waitForConnectionWithTimeout:MME10sTimeout error:&configError]);
+    XCTAssertNil(configError);
+    XCTAssertNil(self.eventsError);
+    XCTAssert(NSUserDefaults.mme_configuration.mme_horizontalAccuracy == 10);
+}
+
+- (void) test021_negativeHAO {
+    NSError *configError = nil;
+    MMEServiceFixture *configFixture = [MMEServiceFixture serviceFixtureWithResource:@"config-hao-negative"];
+    [self.apiClient startGettingConfigUpdates];
+
+    XCTAssert([configFixture waitForConnectionWithTimeout:MME10sTimeout error:&configError]);
+    XCTAssertNil(configError);
+    XCTAssertNil(self.eventsError);
+    XCTAssert(NSUserDefaults.mme_configuration.mme_horizontalAccuracy == -1);
+}
+
+- (void) test022_nullHAO {
+    NSError *configError = nil;
+    MMEServiceFixture *configFixture = [MMEServiceFixture serviceFixtureWithResource:@"config-hao-null"];
+    [self.apiClient startGettingConfigUpdates];
+
+    XCTAssert([configFixture waitForConnectionWithTimeout:MME10sTimeout error:&configError]);
+    XCTAssertNil(configError);
+    XCTAssertNil(self.eventsError);
+    XCTAssert(NSUserDefaults.mme_configuration.mme_horizontalAccuracy == 300); // default value
 }
 
 // MARK: - MMEEventsManagerDelegate
