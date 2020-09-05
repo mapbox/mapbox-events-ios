@@ -520,7 +520,109 @@ describe(@"MMELocationManager", ^{
                     
                     locationManager.locationManager should have_received(@selector(startMonitoringForRegion:)).with(expectedRegion);
                 });
+
+                it(@"start monitoring with default horizontal accuracy filter when there is already a monitored region and an inaccurate location is received", ^{
+                    NSDictionary *jsonDict = @{MMEConfigHAOKey: @0};
+                    NSData *data = [NSJSONSerialization dataWithJSONObject:jsonDict options:NSJSONWritingPrettyPrinted error:nil];
+                    [NSUserDefaults.mme_configuration mme_updateFromConfigServiceData:data];
+
+                    NSSet *newSet = [NSSet setWithObject:[[CLCircularRegion alloc] init]];
+                    locationManager.locationManager stub_method(@selector(monitoredRegions)).and_return(newSet);
+                    [locationManager locationManager:locationManagerInstance didUpdateLocations:@[inaccurateLocation]];
+
+                    locationManager.locationManager should_not have_received(@selector(startMonitoringForRegion:));
+                });
+
+                it(@"start monitoring with horizontal accuracy filter when there is already a monitored region and an inaccurate location is received", ^{
+                    NSDictionary *jsonDict = @{MMEConfigHAOKey: @50};
+                    NSData *data = [NSJSONSerialization dataWithJSONObject:jsonDict options:NSJSONWritingPrettyPrinted error:nil];
+                    [NSUserDefaults.mme_configuration mme_updateFromConfigServiceData:data];
+
+                    NSSet *newSet = [NSSet setWithObject:[[CLCircularRegion alloc] init]];
+                    locationManager.locationManager stub_method(@selector(monitoredRegions)).and_return(newSet);
+                    [locationManager locationManager:locationManagerInstance didUpdateLocations:@[inaccurateLocation]];
+
+                    locationManager.locationManager should_not have_received(@selector(startMonitoringForRegion:));
+                });
+
+                it(@"start monitoring with default horizontal accuracy filter for region when there are no monitored regions and an accurate location is received", ^{
+                    NSDictionary *jsonDict = @{MMEConfigHAOKey: @0};
+                    NSData *data = [NSJSONSerialization dataWithJSONObject:jsonDict options:NSJSONWritingPrettyPrinted error:nil];
+                    [NSUserDefaults.mme_configuration mme_updateFromConfigServiceData:data];
+
+                    locationManager.locationManager stub_method(@selector(monitoredRegions)).and_return([NSSet set]);
+                    expectedRegion.notifyOnEntry = NO;
+                    expectedRegion.notifyOnExit = YES;
+                    [locationManager locationManager:locationManagerInstance didUpdateLocations:@[accurateLocation]];
+
+                    locationManager.locationManager should have_received(@selector(startMonitoringForRegion:)).with(expectedRegion);
+                });
+
+                it(@"start monitoring without horizontal accuracy filter for region when there are no monitored regions and an accurate location is received", ^{
+                    NSDictionary *jsonDict = @{MMEConfigHAOKey: @-1};
+                    NSData *data = [NSJSONSerialization dataWithJSONObject:jsonDict options:NSJSONWritingPrettyPrinted error:nil];
+                    [NSUserDefaults.mme_configuration mme_updateFromConfigServiceData:data];
+
+                    locationManager.locationManager stub_method(@selector(monitoredRegions)).and_return([NSSet set]);
+                    expectedRegion.notifyOnEntry = NO;
+                    expectedRegion.notifyOnExit = YES;
+                    [locationManager locationManager:locationManagerInstance didUpdateLocations:@[accurateLocation]];
+
+                    locationManager.locationManager should have_received(@selector(startMonitoringForRegion:)).with(expectedRegion);
+                });
+
+                it(@"start monitoring with horizontal accuracy filter for region when there are no monitored regions and an accurate location is received", ^{
+                    NSDictionary *jsonDict = @{MMEConfigHAOKey: @50};
+                    NSData *data = [NSJSONSerialization dataWithJSONObject:jsonDict options:NSJSONWritingPrettyPrinted error:nil];
+                    [NSUserDefaults.mme_configuration mme_updateFromConfigServiceData:data];
+
+                    locationManager.locationManager stub_method(@selector(monitoredRegions)).and_return([NSSet set]);
+                    expectedRegion.notifyOnEntry = NO;
+                    expectedRegion.notifyOnExit = YES;
+                    [locationManager locationManager:locationManagerInstance didUpdateLocations:@[accurateLocation]];
+
+                    locationManager.locationManager should have_received(@selector(startMonitoringForRegion:)).with(expectedRegion);
+                });
+
+                it(@"start monitoring with default horizontal accuracy filter for region when there are no monitored regions and an inaccurate location is received", ^{
+                    NSDictionary *jsonDict = @{MMEConfigHAOKey: @0};
+                    NSData *data = [NSJSONSerialization dataWithJSONObject:jsonDict options:NSJSONWritingPrettyPrinted error:nil];
+                    [NSUserDefaults.mme_configuration mme_updateFromConfigServiceData:data];
+
+                    locationManager.locationManager stub_method(@selector(monitoredRegions)).and_return([NSSet set]);
+                    expectedRegion.notifyOnEntry = NO;
+                    expectedRegion.notifyOnExit = YES;
+                    [locationManager locationManager:locationManagerInstance didUpdateLocations:@[inaccurateLocation]];
+
+                    locationManager.locationManager should have_received(@selector(startMonitoringForRegion:)).with(expectedRegion);
+                });
                 
+                it(@"start monitoring without horizontal accuracy filter for region when there are no monitored regions and an inaccurate location is received", ^{
+                    NSDictionary *jsonDict = @{MMEConfigHAOKey: @-1};
+                    NSData *data = [NSJSONSerialization dataWithJSONObject:jsonDict options:NSJSONWritingPrettyPrinted error:nil];
+                    [NSUserDefaults.mme_configuration mme_updateFromConfigServiceData:data];
+
+                    locationManager.locationManager stub_method(@selector(monitoredRegions)).and_return([NSSet set]);
+                    expectedRegion.notifyOnEntry = NO;
+                    expectedRegion.notifyOnExit = YES;
+                    [locationManager locationManager:locationManagerInstance didUpdateLocations:@[inaccurateLocation]];
+
+                    locationManager.locationManager should have_received(@selector(startMonitoringForRegion:)).with(expectedRegion);
+                });
+
+                it(@"start monitoring with horizontal accuracy filter for region when there are no monitored regions and an inaccurate location is received", ^{
+                    NSDictionary *jsonDict = @{MMEConfigHAOKey: @50};
+                    NSData *data = [NSJSONSerialization dataWithJSONObject:jsonDict options:NSJSONWritingPrettyPrinted error:nil];
+                    [NSUserDefaults.mme_configuration mme_updateFromConfigServiceData:data];
+
+                    locationManager.locationManager stub_method(@selector(monitoredRegions)).and_return([NSSet set]);
+                    expectedRegion.notifyOnEntry = NO;
+                    expectedRegion.notifyOnExit = YES;
+                    [locationManager locationManager:locationManagerInstance didUpdateLocations:@[inaccurateLocation]];
+
+                    locationManager.locationManager should have_received(@selector(startMonitoringForRegion:)).with(expectedRegion);
+                });
+
                 it(@"informs the location manager's delegate", ^{
                     [locationManager locationManager:locationManagerInstance didUpdateLocations:@[accurateLocation]];
                     locationManager.delegate should have_received(@selector(locationManager:didUpdateLocations:)).with(locationManager).and_with(@[accurateLocation]);

@@ -190,6 +190,10 @@ describe(@"MMEEventsManager", ^{
             it(@"should revert custom geofence radius to default", ^{
                 NSUserDefaults.mme_configuration.mme_backgroundGeofence should equal(300);
             });
+
+            it(@"should have the default horizontal accuracy value", ^{
+                NSUserDefaults.mme_configuration.mme_horizontalAccuracy should equal(300);
+            });
         });
 
         context(@"when no profile is set", ^{
@@ -213,6 +217,10 @@ describe(@"MMEEventsManager", ^{
             
             it(@"should revert custom geofence radius to default", ^{
                 NSUserDefaults.mme_configuration.mme_backgroundGeofence should equal(300);
+            });
+
+            it(@"should have the default horizontal accuracy value", ^{
+                NSUserDefaults.mme_configuration.mme_horizontalAccuracy should equal(300);
             });
         });
     });
