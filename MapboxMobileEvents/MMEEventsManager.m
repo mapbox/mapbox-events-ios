@@ -88,58 +88,58 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void)initializeWithAccessToken:(NSString *)accessToken userAgentBase:(NSString *)userAgentBase hostSDKVersion:(NSString *)hostSDKVersion {
-    @try {
-        if (self.apiClient) {
-            [NSUserDefaults.mme_configuration mme_setAccessToken:accessToken];
-            return;
-        }
-
-        self.apiClient = [[MMEAPIClient alloc] initWithAccessToken:accessToken
-            userAgentBase:userAgentBase
-            hostSDKVersion:hostSDKVersion];
-
-        [self sendPendingTelemetryMetricsEvent];
-
-        __weak __typeof__(self) weakSelf = self;
-        void(^initialization)(void) = ^{
-            __strong __typeof__(weakSelf) strongSelf = weakSelf;
-
-            if (strongSelf == nil) {
+        @try {
+            if (self.apiClient) {
+                [NSUserDefaults.mme_configuration mme_setAccessToken:accessToken];
                 return;
             }
 
-            [NSNotificationCenter.defaultCenter addObserver:strongSelf
-                selector:@selector(pauseOrResumeMetricsCollectionIfRequired)
-                name:UIApplicationDidEnterBackgroundNotification
-                object:nil];
-            [NSNotificationCenter.defaultCenter addObserver:strongSelf
-                selector:@selector(pauseOrResumeMetricsCollectionIfRequired)
-                name:UIApplicationDidBecomeActiveNotification
-                object:nil];
+            self.apiClient = [[MMEAPIClient alloc] initWithAccessToken:accessToken
+                                                         userAgentBase:userAgentBase
+                                                        hostSDKVersion:hostSDKVersion];
 
-            if (@available(iOS 9.0, *)) {
+            [self sendPendingTelemetryMetricsEvent];
+
+            __weak __typeof__(self) weakSelf = self;
+            void(^initialization)(void) = ^{
+                __strong __typeof__(weakSelf) strongSelf = weakSelf;
+
+                if (strongSelf == nil) {
+                    return;
+                }
+
                 [NSNotificationCenter.defaultCenter addObserver:strongSelf
-                    selector:@selector(powerStateDidChange:)
-                    name:NSProcessInfoPowerStateDidChangeNotification
-                    object:nil];
-            }
+                                                       selector:@selector(pauseOrResumeMetricsCollectionIfRequired)
+                                                           name:UIApplicationDidEnterBackgroundNotification
+                                                         object:nil];
+                [NSNotificationCenter.defaultCenter addObserver:strongSelf
+                                                       selector:@selector(pauseOrResumeMetricsCollectionIfRequired)
+                                                           name:UIApplicationDidBecomeActiveNotification
+                                                         object:nil];
 
-            strongSelf.paused = YES;
-            strongSelf.locationManager = [[MMELocationManager alloc] init];
-            strongSelf.locationManager.delegate = strongSelf;
-            [strongSelf resumeMetricsCollection];
+                if (@available(iOS 9.0, *)) {
+                    [NSNotificationCenter.defaultCenter addObserver:strongSelf
+                                                           selector:@selector(powerStateDidChange:)
+                                                               name:NSProcessInfoPowerStateDidChangeNotification
+                                                             object:nil];
+                }
 
-            strongSelf.timerManager = [[MMETimerManager alloc]
-                initWithTimeInterval:NSUserDefaults.mme_configuration.mme_eventFlushInterval
-                target:strongSelf
-                selector:@selector(flush)];
-        };
+                strongSelf.paused = YES;
+                strongSelf.locationManager = [[MMELocationManager alloc] init];
+                strongSelf.locationManager.delegate = strongSelf;
+                [strongSelf resumeMetricsCollection];
 
-        [self.dispatchManager scheduleBlock:initialization afterDelay:NSUserDefaults.mme_configuration.mme_startupDelay];
-    }
-    @catch(NSException *except) {
-        [self reportException:except];
-    }
+                strongSelf.timerManager = [[MMETimerManager alloc]
+                                           initWithTimeInterval:NSUserDefaults.mme_configuration.mme_eventFlushInterval
+                                           target:strongSelf
+                                           selector:@selector(flush)];
+            };
+
+            [self.dispatchManager scheduleBlock:initialization afterDelay:NSUserDefaults.mme_configuration.mme_startupDelay];
+        }
+        @catch(NSException *except) {
+            [self reportException:except];
+        }
 }
 
 #pragma mark - Enable/Disable
