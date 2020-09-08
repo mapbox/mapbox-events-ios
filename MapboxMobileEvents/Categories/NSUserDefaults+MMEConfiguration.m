@@ -1,6 +1,6 @@
 #import <CommonCrypto/CommonDigest.h>
-#import <MapboxMobileEvents/MMEConstants.h>
 
+#import "MMEConstants.h"
 #import "MMEDate.h"
 #import "MMEEventLogger.h"
 #import "NSBundle+MMEMobileEvents.h"
@@ -203,6 +203,15 @@ NS_ASSUME_NONNULL_BEGIN
 
     [self mme_setObject:legacyHostSDKVersion forVolatileKey:MMELegacyHostSDKVersion];
     [self mme_deleteObjectForVolatileKey:MMELegacyUserAgent];
+}
+
+- (NSString *)mme_clientId {
+    NSString *clientId = [self stringForKey:MMEClientId];
+    if (!clientId) {
+        clientId = NSUUID.UUID.UUIDString;
+        [self mme_setObject:clientId forPersistentKey:MMEClientId];
+    }
+    return clientId;
 }
 
 // MARK: - Service Configuration
