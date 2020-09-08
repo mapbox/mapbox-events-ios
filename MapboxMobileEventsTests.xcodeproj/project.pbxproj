@@ -187,6 +187,7 @@
 		40F16C7C1F01DF5700DF338D /* MMELocationManagerFake.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMELocationManagerFake.h; sourceTree = "<group>"; };
 		40F16C7D1F01DF5700DF338D /* MMELocationManagerFake.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMELocationManagerFake.m; sourceTree = "<group>"; };
 		40FB437F1EFAFDCF00EC5BC0 /* MMEXCTests-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "MMEXCTests-Info.plist"; sourceTree = "<group>"; };
+		9C04D16525084F2F006DAFF2 /* readme.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = readme.md; sourceTree = "<group>"; };
 		9C27F7AB249AB5550018E7A9 /* MapboxMobileEvents.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = MapboxMobileEvents.xcodeproj; sourceTree = "<group>"; };
 		9C27F7CD249BF2920018E7A9 /* NSProcessInfoTests+SystemInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSProcessInfoTests+SystemInfo.m"; sourceTree = "<group>"; };
 		9C3F930E23512F1900F99907 /* MMETestStub.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMETestStub.m; path = Utilities/MMETestStub.m; sourceTree = "<group>"; };
@@ -288,7 +289,6 @@
 		4032F47C1F1FEDC6001C1FBD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				9C27F7AB249AB5550018E7A9 /* MapboxMobileEvents.xcodeproj */,
 				9C794C85235505340027B9D4 /* XCTest.framework */,
 				40A7F9911F79A743002B931F /* Cedar.framework */,
 				F446009924902382003B297C /* NotificationCenter.framework */,
@@ -299,6 +299,8 @@
 		404807AF1EA186D8008A6D50 = {
 			isa = PBXGroup;
 			children = (
+				9C04D16525084F2F006DAFF2 /* readme.md */,
+				9C27F7AB249AB5550018E7A9 /* MapboxMobileEvents.xcodeproj */,
 				404807C61EA186D8008A6D50 /* Tests */,
 				9C65A2672256C110006E3FED /* MMETestHost */,
 				4032F47C1F1FEDC6001C1FBD /* Frameworks */,
