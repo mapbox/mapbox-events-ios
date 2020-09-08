@@ -89,6 +89,27 @@
     XCTAssert([NSUserDefaults.mme_configuration.mme_eventTag isEqual:@"tag"]);
 }
 
+// MARK: - Client Id Tests
+
+- (void)testClientIdDefault {
+    XCTAssertNotNil(NSUserDefaults.mme_configuration.mme_clientId); // must not be nil
+    NSString *uuidString = NSUUID.new.UUIDString; // must be the length of a UUID String
+    XCTAssertEqual(NSUserDefaults.mme_configuration.mme_clientId.length, uuidString.length);
+}
+
+- (void)testClientIdPersistance {
+    NSString *clientId = NSUserDefaults.mme_configuration.mme_clientId;
+    XCTAssertEqual(clientId, NSUserDefaults.mme_configuration.mme_clientId);
+}
+
+- (void)testClientIdReset {
+    NSString *clientId = NSUserDefaults.mme_configuration.mme_clientId;
+    [NSUserDefaults mme_resetConfiguration]; // ressting the configuration should produce a new clientId
+    XCTAssertNotEqual(clientId, NSUserDefaults.mme_configuration.mme_clientId);
+}
+
+// MARK: -
+
 - (void)testCustomProfileOverMaxValues {
     NSBundle.mme_mainBundle = [MMEBundleInfoFake bundleWithFakeInfo:@{
         MMEEventsProfile: MMECustomProfile,
