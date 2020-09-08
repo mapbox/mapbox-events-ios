@@ -1,0 +1,25 @@
+platform :ios, '13.0'
+inhibit_all_warnings!
+use_frameworks!
+
+def shared_pods
+  pod 'MapboxMobileEvents', :path => '../../../'
+  pod 'MapboxAccounts'
+  pod 'MapboxCommon'
+  pod 'MapboxDirections'
+  pod 'MapboxGeocoder.swift'
+  pod 'MapboxSpeech'
+  pod 'MapboxStatic.swift'
+  pod 'Fingertips'
+  pod 'Turf'
+  pod 'Alamofire'
+  pod 'SwiftyJSON'
+  pod 'FacebookSDK'
+end
+
+target 'PodInstall' do
+  shared_pods
+  target 'PodInstallTests' do
+    inherit! :search_paths
+  end
+end
