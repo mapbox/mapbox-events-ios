@@ -53,9 +53,25 @@
 
     NSError *configError = nil;
     MMEServiceFixture *configFixture = [MMEServiceFixture serviceFixtureWithResource:@"config-null"];
-    
     [self.apiClient startGettingConfigUpdates];
-    XCTAssert(self.apiClient.isGettingConfigUpdates);
+
+    XCTestExpectation *expectation = nil;
+    expectation = [self expectationWithDescription:@"apiClient should be getting config updates"];
+
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_async(queue, ^{
+        for (int i=0; i<50; i++) {
+            if (self.apiClient.isGettingConfigUpdates) {
+                [expectation fulfill];
+                break;
+            } else {
+                [NSThread sleepForTimeInterval:0.1];
+            }
+        }
+    });
+
+    [self waitForExpectations:@[expectation] timeout:5];
+
     XCTAssert([configFixture waitForConnectionWithTimeout:MME10sTimeout error:&configError]);
     XCTAssertNil(configError);
 }
