@@ -301,6 +301,8 @@
 }
 
 - (void) test020_10mHAO {
+    XCTSkipIf(([[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){.majorVersion = 14, .minorVersion = 0, .patchVersion = 0}]), @"Skip, since CFSocketInvalidate crashes with EXC_GUARD on iOS 14");
+
     NSError *configError = nil;
     MMEServiceFixture *configFixture = [MMEServiceFixture serviceFixtureWithResource:@"config-hao-10m"];
     [self.apiClient startGettingConfigUpdates];
@@ -312,6 +314,8 @@
 }
 
 - (void) test021_negativeHAO {
+    XCTSkipIf(([[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){.majorVersion = 14, .minorVersion = 0, .patchVersion = 0}]), @"Skip, since CFSocketInvalidate crashes with EXC_GUARD on iOS 14");
+
     NSError *configError = nil;
     MMEServiceFixture *configFixture = [MMEServiceFixture serviceFixtureWithResource:@"config-hao-negative"];
     [self.apiClient startGettingConfigUpdates];
@@ -323,6 +327,8 @@
 }
 
 - (void) test022_nullHAO {
+    XCTSkipIf(([[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){.majorVersion = 14, .minorVersion = 0, .patchVersion = 0}]), @"Skip, since CFSocketInvalidate crashes with EXC_GUARD on iOS 14");
+
     NSError *configError = nil;
     MMEServiceFixture *configFixture = [MMEServiceFixture serviceFixtureWithResource:@"config-hao-null"];
     [self.apiClient startGettingConfigUpdates];
