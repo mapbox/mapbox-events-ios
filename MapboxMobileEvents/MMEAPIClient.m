@@ -266,6 +266,16 @@ void MMEDispatchMainIfNeeded(void (^block)(void))
     [request setValue:MMEAPIClientHeaderFieldContentTypeValue forHTTPHeaderField:MMEAPIClientHeaderFieldContentTypeKey];
     [request setHTTPMethod:MMEAPIClientHTTPMethodPost];
     
+    NSDictionary *jsonDict = @{MMEClientId: NSUserDefaults.mme_configuration.mme_clientId};
+    NSError* jsonError = nil;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&jsonError];
+    if (jsonData) {
+        [request setHTTPBody:jsonData];
+    } else if (jsonError) {
+        [MMEEventsManager.sharedManager reportError:jsonError];
+        return nil;
+    }
+
     return request;
 }
 
