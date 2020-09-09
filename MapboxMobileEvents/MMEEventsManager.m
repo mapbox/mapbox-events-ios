@@ -335,9 +335,11 @@ NS_ASSUME_NONNULL_BEGIN
         turnstileEventAttributes[MMEEventKeyLocationAuthorization] = [self.locationManager locationAuthorizationString];
         turnstileEventAttributes[MMEEventKeySkuId] = self.skuId ?: NSNull.null;
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 140000
         if (@available(iOS 14, macOS 11.0, watchOS 7.0, tvOS 14.0, *)) {
             turnstileEventAttributes[MMEEventKeyAccuracyAuthorization] = [self.locationManager accuracyAuthorizationString];
         }
+#endif
 
         MMEEvent *turnstileEvent = [MMEEvent turnstileEventWithAttributes:turnstileEventAttributes];
         

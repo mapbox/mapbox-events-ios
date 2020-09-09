@@ -48,10 +48,10 @@ void mme_linkCLLocationManagerCategory(){}
     return statusString;
 }
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 140000
 - (NSString *)mme_accuracyAutorizationString {
-    NSString *statusString = @"";
+    NSString *statusString;
 
-    #if __IPHONE_OS_VERSION_MIN_REQUIRED >= 140000
     CLAccuracyAuthorization accuracy = [self accuracyAuthorization];
 
     switch (accuracy) {
@@ -62,9 +62,9 @@ void mme_linkCLLocationManagerCategory(){}
             statusString = MMEAccuracyAuthorizationReduced;
             break;
     }
-    #endif
 
     return statusString;
 }
+#endif
 
 @end

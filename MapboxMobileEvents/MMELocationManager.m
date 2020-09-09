@@ -79,6 +79,7 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
     return [self.locationManager mme_authorizationStatus];
 }
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 140000
 - (NSString *)accuracyAuthorizationString {
     if (@available(iOS 14.0, *)) {
         return [self.locationManager mme_accuracyAutorizationString];
@@ -86,6 +87,7 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
         return @"";
     }
 }
+#endif
 
 - (void)setLocationManager:(CLLocationManager *)locationManager {
     id<CLLocationManagerDelegate> delegate = _locationManager.delegate;
