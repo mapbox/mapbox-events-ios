@@ -95,11 +95,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark -
+// MARK: -
 
-/*! @brief delegate methods for MMEEventsManager */
+/// Events Manager Delegate
 @protocol MMEEventsManagerDelegate <NSObject>
-
 @optional
 
 /*! @brief eventsManager:didUpdateLocations: reports location updates to the delegate
@@ -108,6 +107,24 @@ NS_ASSUME_NONNULL_BEGIN
 */
 - (void)eventsManager:(MMEEventsManager *)eventsManager didUpdateLocations:(NSArray<CLLocation *> *)locations;
 
+/*! @brief reports errors encountered by the Events Manager to the delegate
+    @param eventsManager the shared events manager
+    @param error the encountered NSError object
+*/
+- (void)eventsManager:(MMEEventsManager *)eventsManager didEncounterError:(NSError *)error;
+
+/*! @brief reports to the delegate when an event is added to the queue
+    @param eventsManager the shared events manager
+    @param enqueued the event that will be sent when the queue is flushed
+*/
+- (void)eventsManager:(MMEEventsManager *)eventsManager didEnqueueEvent:(MMEEvent *)enqueued;
+
+/*! @brief reports to the delegate when events are successfully sent
+    @param eventsManager the shared events manager
+    @param events an array of events which were sent to the events service
+*/
+- (void)eventsManager:(MMEEventsManager *)eventsManager didSendEvents:(NSArray<MMEEvent *>*)events;
+
 #if TARGET_OS_IOS
 /*! @brief eventsManager:didVisit: reports visits to the delegate
     @param eventsManager shared manager
@@ -115,12 +132,6 @@ NS_ASSUME_NONNULL_BEGIN
 */
 - (void)eventsManager:(MMEEventsManager *)eventsManager didVisit:(CLVisit *)visit;
 #endif
-
-/*! @brief reports errors encountered by the Events Manager to the delegate
-    @param eventsManager the shared events manager
-    @param error the encountered NSError object
-*/
-- (void)eventsManager:(MMEEventsManager *)eventsManager didEncounterError:(NSError *)error;
 
 @end
 
