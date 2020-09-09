@@ -1,7 +1,7 @@
-#import <MapboxMobileEvents/MMETypes.h>
-
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+
+#import "MMETypes.h"
 
 typedef NS_ENUM(NSUInteger, MMELoglevel) {
     MMELogFatal,

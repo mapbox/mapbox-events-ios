@@ -69,3 +69,5 @@ fastlane/test_output
 test_output/
 docs/
 .DS_Store
+
+.swiftpm

@@ -1,6 +1,7 @@
-#import "MMETestStub.h"
+@import MapboxMobileEvents;
 
-#import <MapboxMobileEvents/MMENSURLSessionWrapper.h>
+#import "MMETestStub.h"
+#import "MMENSURLSessionWrapper.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

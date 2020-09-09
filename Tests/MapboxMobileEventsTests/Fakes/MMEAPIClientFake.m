@@ -1,4 +1,4 @@
-#import <MapboxMobileEvents/MMEEvent.h>
+@import MapboxMobileEvents;
 
 #import "MMEAPIClientFake.h"
 

@@ -83,7 +83,8 @@
     NSArray *comHashes = NSUserDefaults.mme_configuration.mme_certificatePinningConfig[@"events.mapbox.com"];
     XCTAssert(comHashes.count == 4);
 }
-    
+
+#if !SWIFT_PACKAGE
 -(void)test003_countCNHashesWithBlacklist {
     XCTSkipIf(([[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){.majorVersion = 14, .minorVersion = 0, .patchVersion = 0}]), @"Skip, since CFSocketInvalidate crashes with EXC_GUARD on iOS 14");
 
@@ -109,6 +110,7 @@
     NSArray *comHashes = NSUserDefaults.mme_configuration.mme_certificatePinningConfig[@"events.mapbox.com"];
     XCTAssert(comHashes.count == 3);
 }
+#endif
 
 -(void)test005_validateCNHashes {
     NSArray *cnHashes = NSUserDefaults.mme_configuration.mme_certificatePinningConfig[@"events.mapbox.cn"];

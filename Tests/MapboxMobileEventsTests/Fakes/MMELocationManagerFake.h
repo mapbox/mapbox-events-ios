@@ -1,6 +1,7 @@
-#import <MapboxMobileEvents/MMELocationManager.h>
+@import MapboxMobileEvents;
 
 #import "MMETestStub.h"
+#import "MMELocationManager.h"
 
 @interface MMELocationManagerFake : MMETestStub <MMELocationManager>
 

@@ -1,4 +1,4 @@
-#import <MapboxMobileEvents/MMEDispatchManager.h>
+@import MapboxMobileEvents;
 
 @interface MMEDispatchManagerFake : MMEDispatchManager
 

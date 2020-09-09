@@ -95,6 +95,7 @@
     XCTAssertNil(configError);
 }
 
+#if !SWIFT_PACKAGE
 - (void) test005_1sBSO {
     XCTSkipIf(([[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){.majorVersion = 14, .minorVersion = 0, .patchVersion = 0}]), @"Skip, since CFSocketInvalidate crashes with EXC_GUARD on iOS 14");
 
@@ -269,6 +270,7 @@
     XCTAssert(NSUserDefaults.mme_configuration.mme_horizontalAccuracy == 300); // default
     XCTAssertNil(NSUserDefaults.mme_configuration.mme_eventTag); // default
 }
+#endif
 
 - (void) test017_configShouldNotAcceptFutureDate {
     [NSUserDefaults.mme_configuration mme_setConfigUpdateDate:(MMEDate *)[MMEDate distantFuture]];

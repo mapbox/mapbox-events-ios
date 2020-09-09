@@ -75,6 +75,7 @@
     XCTAssert(self.eventsManager.paused == YES);
 }
 
+#if !SWIFT_PACKAGE
 - (void)testUnpausesWithWhenInUseAuthAndAppActive {
     self.eventsManager.paused = YES;
     
@@ -95,6 +96,7 @@
     [self.eventsManager processAuthorizationStatus:kCLAuthorizationStatusAuthorizedAlways andApplicationState:UIApplicationStateActive];
     XCTAssert(self.eventsManager.paused == NO);
 }
+#endif
 
 - (void)testRemainsPausedWithDeniedAuthAndAppActive {
     self.eventsManager.paused = YES;
