@@ -1,6 +1,7 @@
 #import <Foundation/Foundation.h>
+@import MapboxMobileEvents;
 
-#import <MapboxMobileEvents/MMEUIApplicationWrapper.h>
+#import "MMEUIApplicationWrapper.h"
 
 @interface MMEUIApplicationWrapperFake : NSObject <MMEUIApplicationWrapper>
 

@@ -28,7 +28,7 @@
 #import <Foundation/Foundation.h>
 #import <SystemConfiguration/SystemConfiguration.h>
 
-#import <MapboxMobileEvents/MMETypes.h>
+#import "MMETypes.h"
 
 /**
  * Create NS_ENUM macro if it does not exist on the targeted version of iOS or OS X.

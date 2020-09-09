@@ -1,4 +1,5 @@
-#import <MapboxMobileEvents/MMEDate.h>
+@import MapboxMobileEvents;
+
 
 NS_ASSUME_NONNULL_BEGIN
 

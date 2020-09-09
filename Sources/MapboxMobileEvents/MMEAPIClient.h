@@ -1,5 +1,6 @@
 #import <Foundation/Foundation.h>
-#import <MapboxMobileEvents/MMETypes.h>
+
+#import "MMETypes.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

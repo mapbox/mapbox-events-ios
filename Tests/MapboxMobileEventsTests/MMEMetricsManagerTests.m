@@ -1,7 +1,7 @@
 #import <XCTest/XCTest.h>
+@import MapboxMobileEvents;
 
-#import <MapboxMobileEvents/MapboxMobileEvents.h>
-#import <MapboxMobileEvents/MMEMetricsManager.h>
+#import "MMEMetricsManager.h"
 
 @interface MMEMetricsManager (Tests)
 

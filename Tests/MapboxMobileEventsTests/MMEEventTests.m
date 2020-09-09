@@ -1,5 +1,6 @@
 #import <XCTest/XCTest.h>
-#import <MapboxMobileEvents/MMEEvent.h>
+//#import <MapboxMobileEvents/MMEEvent.h>
+@import MapboxMobileEvents;
 
 @interface MMEEventTests : XCTestCase
 

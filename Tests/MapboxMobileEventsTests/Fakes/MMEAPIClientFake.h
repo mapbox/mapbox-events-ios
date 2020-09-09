@@ -1,5 +1,7 @@
 #import "MMETestStub.h"
-#import <MapboxMobileEvents/MMEAPIClient.h>
+//#import <MapboxMobileEvents/MMEAPIClient.h>
+@import MapboxMobileEvents;
+
 #import <MapboxMobileEvents/MMEAPIClient_Private.h>
 
 NS_ASSUME_NONNULL_BEGIN
