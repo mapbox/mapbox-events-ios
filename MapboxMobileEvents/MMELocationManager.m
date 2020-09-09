@@ -79,6 +79,14 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
     return [self.locationManager mme_authorizationStatus];
 }
 
+- (NSString *)accuracyAuthorizationString {
+    if (@available(iOS 14.0, *)) {
+        return [self.locationManager mme_accuracyAutorizationString];
+    } else {
+        return @"";
+    }
+}
+
 - (void)setLocationManager:(CLLocationManager *)locationManager {
     id<CLLocationManagerDelegate> delegate = _locationManager.delegate;
     _locationManager.delegate = nil;

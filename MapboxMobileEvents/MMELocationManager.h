@@ -14,6 +14,7 @@
 - (void)stopUpdatingLocation;
 - (NSString *)locationAuthorizationString;
 - (CLAuthorizationStatus)locationAuthorization;
+- (NSString *)accuracyAuthorizationString API_AVAILABLE(ios(14.0), macos(11.0), watchos(7.0), tvos(14.0));
 
 @end
 
@@ -28,9 +29,6 @@ extern NSString *const MMELocationManagerRegionIdentifier;
 @property (nonatomic, weak) id<MMELocationManagerDelegate> delegate;
 @property (nonatomic, getter=isUpdatingLocation, readonly) BOOL updatingLocation;
 @property (nonatomic, getter=isMetricsEnabledForInUsePermissions) BOOL metricsEnabledForInUsePermissions;
-
-- (void)startUpdatingLocation;
-- (void)stopUpdatingLocation;
 
 @end
 
