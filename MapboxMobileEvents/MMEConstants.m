@@ -88,6 +88,7 @@ NSString * const MMEEventKeyPlatform = @"platform";
 NSString * const MMEEventKeyUserAgent = @"userAgent";
 NSString * const MMEEventKeyiOS = @"iOS";
 NSString * const MMEEventKeyMac = @"macOS";
+NSString * const MMEEventKeyApproximate = @"approximate";
 NSString * const MMEEventSDKIdentifier = @"sdkIdentifier";
 NSString * const MMEEventSDKVersion = @"sdkVersion";
 NSString * const MMEEventDateUTC = @"dateUTC";

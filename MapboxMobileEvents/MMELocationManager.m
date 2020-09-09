@@ -79,6 +79,19 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
     return [self.locationManager mme_authorizationStatus];
 }
 
+- (BOOL)isReducedAccuracy {
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 140000
+    if (@available(iOS 14.0, *)) {
+        CLAccuracyAuthorization status = [self.locationManager mme_accuracyStatus];
+        return status == CLAccuracyAuthorizationReducedAccuracy;
+    } else {
+        return NO;
+    }
+#else
+    return NO;
+#endif
+}
+
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 140000
 - (NSString *)accuracyAuthorizationString {
     if (@available(iOS 14.0, *)) {

@@ -596,7 +596,13 @@ NS_ASSUME_NONNULL_BEGIN
                 MMEEventKeyCourseAccuracy: @([location courseAccuracy])
             }];
         }
-        
+
+        if ([self.locationManager isReducedAccuracy]) {
+            [eventAttributes addEntriesFromDictionary:@{
+                MMEEventKeyApproximate: @(true)
+            }];
+        }
+
         if ([location floor]) {
             [eventAttributes setValue:@([location floor].level) forKey:MMEEventKeyFloor];
         }
