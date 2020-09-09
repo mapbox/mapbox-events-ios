@@ -12,6 +12,8 @@
 
 - (void)startUpdatingLocation;
 - (void)stopUpdatingLocation;
+- (NSString *)locationAuthorizationString;
+- (CLAuthorizationStatus)locationAuthorization;
 
 @end
 
@@ -19,7 +21,7 @@
 
 extern const CLLocationDistance MMELocationManagerDistanceFilter;
 extern const CLLocationDistance MMELocationManagerHibernationRadius;
-extern NSString * const MMELocationManagerRegionIdentifier;
+extern NSString *const MMELocationManagerRegionIdentifier;
 
 @interface MMELocationManager : NSObject <MMELocationManager>
 
