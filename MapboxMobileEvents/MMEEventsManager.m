@@ -321,20 +321,23 @@ NS_ASSUME_NONNULL_BEGIN
             return;
         }
 
-        NSDictionary *turnstileEventAttributes = @{
-            MMEEventKeyEvent: MMEEventTypeAppUserTurnstile,
-            MMEEventKeyCreated: [MMEDate.iso8601DateFormatter stringFromDate:[NSDate date]],
-            MMEEventKeyVendorID: self.commonEventData.vendorId,
-            // MMEEventKeyDevice is synonomous with MMEEventKeyModel but the server will only accept "device" in turnstile events
-            MMEEventKeyDevice: self.commonEventData.model,
-            MMEEventKeyOperatingSystem: self.commonEventData.osVersion,
-            MMEEventSDKIdentifier: NSUserDefaults.mme_configuration.mme_legacyUserAgentBase,
-            MMEEventSDKVersion: NSUserDefaults.mme_configuration.mme_legacyHostSDKVersion,
-            MMEEventKeyEnabledTelemetry: @(NSUserDefaults.mme_configuration.mme_isCollectionEnabled),
-            MMEEventKeyLocationEnabled: @(CLLocationManager.locationServicesEnabled),
-            MMEEventKeyLocationAuthorization: [self.locationManager locationAuthorizationString],
-            MMEEventKeySkuId: self.skuId ?: NSNull.null
-       };
+        NSMutableDictionary *turnstileEventAttributes = [[NSMutableDictionary alloc] init];
+        turnstileEventAttributes[MMEEventKeyEvent] = MMEEventTypeAppUserTurnstile;
+        turnstileEventAttributes[MMEEventKeyCreated] = [MMEDate.iso8601DateFormatter stringFromDate:[NSDate date]];
+        turnstileEventAttributes[MMEEventKeyVendorID] = self.commonEventData.vendorId;
+        // MMEEventKeyDevice is synonomous with MMEEventKeyModel but the server will only accept "device" in turnstile events
+        turnstileEventAttributes[MMEEventKeyDevice] = self.commonEventData.model;
+        turnstileEventAttributes[MMEEventKeyOperatingSystem] = self.commonEventData.osVersion;
+        turnstileEventAttributes[MMEEventSDKIdentifier] = NSUserDefaults.mme_configuration.mme_legacyUserAgentBase;
+        turnstileEventAttributes[MMEEventSDKVersion] = NSUserDefaults.mme_configuration.mme_legacyHostSDKVersion;
+        turnstileEventAttributes[MMEEventKeyEnabledTelemetry] = @(NSUserDefaults.mme_configuration.mme_isCollectionEnabled);
+        turnstileEventAttributes[MMEEventKeyLocationEnabled] = @(CLLocationManager.locationServicesEnabled);
+        turnstileEventAttributes[MMEEventKeyLocationAuthorization] = [self.locationManager locationAuthorizationString];
+        turnstileEventAttributes[MMEEventKeySkuId] = self.skuId ?: NSNull.null;
+
+        if (@available(iOS 14, macOS 11.0, watchOS 7.0, tvOS 14.0, *)) {
+            turnstileEventAttributes[MMEEventKeyAccuracyAuthorization] = [self.locationManager accuracyAuthorizationString];
+        }
 
         MMEEvent *turnstileEvent = [MMEEvent turnstileEventWithAttributes:turnstileEventAttributes];
         
