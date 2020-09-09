@@ -43,8 +43,13 @@ describe(@"MMELocationManager", ^{
         
         context(@"when the host app has when in use permissions", ^{
             beforeEach(^{
-                spy_on([CLLocationManager class]);
-                [CLLocationManager class] stub_method(@selector(authorizationStatus)).and_return(kCLAuthorizationStatusAuthorizedWhenInUse);
+                if (@available(iOS 14, macOS 11.0, watchOS 7.0, tvOS 14.0, *)) {
+                    spy_on(locationManagerInstance);
+                    locationManagerInstance stub_method(@selector(authorizationStatus)).and_return(kCLAuthorizationStatusAuthorizedWhenInUse);
+                } else {
+                    spy_on([CLLocationManager class]);
+                    [CLLocationManager class] stub_method(@selector(authorizationStatus)).and_return(kCLAuthorizationStatusAuthorizedWhenInUse);
+                }
             });
             
             context(@"when the host application has background capability", ^{
@@ -106,9 +111,14 @@ describe(@"MMELocationManager", ^{
                 spy_on([NSBundle mainBundle]);
                 [NSBundle mainBundle] stub_method(@selector(objectForInfoDictionaryKey:)).with(@"UIBackgroundModes").and_return(@[@"location"]);
                 
-                spy_on([CLLocationManager class]);
-                [CLLocationManager class] stub_method(@selector(authorizationStatus)).and_return(kCLAuthorizationStatusAuthorizedAlways);
-                
+                if (@available(iOS 14, macOS 11.0, watchOS 7.0, tvOS 14.0, *)) {
+                    spy_on(locationManagerInstance);
+                    locationManagerInstance stub_method(@selector(authorizationStatus)).and_return(kCLAuthorizationStatusAuthorizedAlways);
+                } else {
+                    spy_on([CLLocationManager class]);
+                    [CLLocationManager class] stub_method(@selector(authorizationStatus)).and_return(kCLAuthorizationStatusAuthorizedAlways);
+                }
+
                 locationManager = [[MMELocationManager alloc] init];
                 locationManager.delegate = nice_fake_for(@protocol(MMELocationManagerDelegate));
                 locationManager.backgroundLocationServiceTimeoutTimer should be_nil;
@@ -159,9 +169,14 @@ describe(@"MMELocationManager", ^{
                 spy_on([NSBundle mainBundle]);
                 [NSBundle mainBundle] stub_method(@selector(objectForInfoDictionaryKey:)).with(@"UIBackgroundModes").and_return(@[]);
                 
-                spy_on([CLLocationManager class]);
-                [CLLocationManager class] stub_method(@selector(authorizationStatus)).and_return(kCLAuthorizationStatusAuthorizedAlways);
-                
+                if (@available(iOS 14, macOS 11.0, watchOS 7.0, tvOS 14.0, *)) {
+                    spy_on(locationManagerInstance);
+                    locationManagerInstance stub_method(@selector(authorizationStatus)).and_return(kCLAuthorizationStatusAuthorizedAlways);
+                } else {
+                    spy_on([CLLocationManager class]);
+                    [CLLocationManager class] stub_method(@selector(authorizationStatus)).and_return(kCLAuthorizationStatusAuthorizedAlways);
+                }
+
                 locationManager = [[MMELocationManager alloc] init];
                 locationManager.delegate = nice_fake_for(@protocol(MMELocationManagerDelegate));
                 locationManager.backgroundLocationServiceTimeoutTimer should be_nil;
@@ -209,9 +224,14 @@ describe(@"MMELocationManager", ^{
                 spy_on([NSBundle mainBundle]);
                 [NSBundle mainBundle] stub_method(@selector(objectForInfoDictionaryKey:)).with(@"UIBackgroundModes").and_return(@[]);
                 
-                spy_on([CLLocationManager class]);
-                [CLLocationManager class] stub_method(@selector(authorizationStatus)).and_return(kCLAuthorizationStatusAuthorizedWhenInUse);
-                
+                if (@available(iOS 14, macOS 11.0, watchOS 7.0, tvOS 14.0, *)) {
+                    spy_on(locationManagerInstance);
+                    locationManagerInstance stub_method(@selector(authorizationStatus)).and_return(kCLAuthorizationStatusAuthorizedWhenInUse);
+                } else {
+                    spy_on([CLLocationManager class]);
+                    [CLLocationManager class] stub_method(@selector(authorizationStatus)).and_return(kCLAuthorizationStatusAuthorizedWhenInUse);
+                }
+
                 locationManager = [[MMELocationManager alloc] init];
                 locationManager.delegate = nice_fake_for(@protocol(MMELocationManagerDelegate));
                 locationManager.backgroundLocationServiceTimeoutTimer should be_nil;
@@ -260,9 +280,14 @@ describe(@"MMELocationManager", ^{
     describe(@"- stopUpdatingLocation", ^{
         
         beforeEach(^{
-            spy_on([CLLocationManager class]);
-            [CLLocationManager class] stub_method(@selector(authorizationStatus)).and_return(kCLAuthorizationStatusAuthorizedAlways);
-            
+            if (@available(iOS 14, macOS 11.0, watchOS 7.0, tvOS 14.0, *)) {
+                spy_on(locationManagerInstance);
+                locationManagerInstance stub_method(@selector(authorizationStatus)).and_return(kCLAuthorizationStatusAuthorizedAlways);
+            } else {
+                spy_on([CLLocationManager class]);
+                [CLLocationManager class] stub_method(@selector(authorizationStatus)).and_return(kCLAuthorizationStatusAuthorizedAlways);
+            }
+
             locationManager = [[MMELocationManager alloc] init];
             locationManager.delegate = nice_fake_for(@protocol(MMELocationManagerDelegate));
             locationManager.backgroundLocationServiceTimeoutTimer should be_nil;
@@ -287,9 +312,14 @@ describe(@"MMELocationManager", ^{
         
         context(@"when the host app is in the background, has always location permissions, and after startUpdatingLocation has been called", ^{
             beforeEach(^{
-                spy_on([CLLocationManager class]);
-                [CLLocationManager class] stub_method(@selector(authorizationStatus)).and_return(kCLAuthorizationStatusAuthorizedAlways);
-                
+                if (@available(iOS 14, macOS 11.0, watchOS 7.0, tvOS 14.0, *)) {
+                    spy_on(locationManagerInstance);
+                    locationManagerInstance stub_method(@selector(authorizationStatus)).and_return(kCLAuthorizationStatusAuthorizedAlways);
+                } else {
+                    spy_on([CLLocationManager class]);
+                    [CLLocationManager class] stub_method(@selector(authorizationStatus)).and_return(kCLAuthorizationStatusAuthorizedAlways);
+                }
+
                 locationManager = [[MMELocationManager alloc] init];
                 locationManager.delegate = nice_fake_for(@protocol(MMELocationManagerDelegate));
                 
@@ -340,9 +370,14 @@ describe(@"MMELocationManager", ^{
         
         context(@"when the host app is in the foreground, has always location permissions, and after startUpdatingLocation has been called", ^{
             beforeEach(^{
-                spy_on([CLLocationManager class]);
-                [CLLocationManager class] stub_method(@selector(authorizationStatus)).and_return(kCLAuthorizationStatusAuthorizedAlways);
-                
+                if (@available(iOS 14, macOS 11.0, watchOS 7.0, tvOS 14.0, *)) {
+                    spy_on(locationManagerInstance);
+                    locationManagerInstance stub_method(@selector(authorizationStatus)).and_return(kCLAuthorizationStatusAuthorizedAlways);
+                } else {
+                    spy_on([CLLocationManager class]);
+                    [CLLocationManager class] stub_method(@selector(authorizationStatus)).and_return(kCLAuthorizationStatusAuthorizedAlways);
+                }
+
                 locationManager = [[MMELocationManager alloc] init];
                 locationManager.delegate = nice_fake_for(@protocol(MMELocationManagerDelegate));
                 locationManager.backgroundLocationServiceTimeoutTimer should be_nil;
@@ -393,10 +428,14 @@ describe(@"MMELocationManager", ^{
             CLRegion *expectedRegion = [[CLCircularRegion alloc] initWithCenter:CLLocationCoordinate2DMake(0, 0) radius: NSUserDefaults.mme_configuration.mme_backgroundGeofence identifier:MMELocationManagerRegionIdentifier];
             
             beforeEach(^{
-                spy_on([CLLocationManager class]);
-                [CLLocationManager class] stub_method(@selector(authorizationStatus)).and_return(kCLAuthorizationStatusAuthorizedAlways);
-                
-                
+                if (@available(iOS 14, macOS 11.0, watchOS 7.0, tvOS 14.0, *)) {
+                    spy_on(locationManagerInstance);
+                    locationManagerInstance stub_method(@selector(authorizationStatus)).and_return(kCLAuthorizationStatusAuthorizedAlways);
+                } else {
+                    spy_on([CLLocationManager class]);
+                    [CLLocationManager class] stub_method(@selector(authorizationStatus)).and_return(kCLAuthorizationStatusAuthorizedAlways);
+                }
+
                 locationManager = [[MMELocationManager alloc] init];
                 locationManager.delegate = nice_fake_for(@protocol(MMELocationManagerDelegate));
                 locationManager.backgroundLocationServiceTimeoutTimer should be_nil;
