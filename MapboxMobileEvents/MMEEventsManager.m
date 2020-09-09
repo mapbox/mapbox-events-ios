@@ -185,7 +185,7 @@ NS_ASSUME_NONNULL_BEGIN
             [self flush];
         }
                 
-        [self processAuthorizationStatus:[CLLocationManager authorizationStatus] andApplicationState:self.application.applicationState];
+        [self processAuthorizationStatus:[self.locationManager locationAuthorization] andApplicationState:self.application.applicationState];
     }
     @catch(NSException *except) {
         [self reportException:except];
@@ -332,7 +332,7 @@ NS_ASSUME_NONNULL_BEGIN
             MMEEventSDKVersion: NSUserDefaults.mme_configuration.mme_legacyHostSDKVersion,
             MMEEventKeyEnabledTelemetry: @(NSUserDefaults.mme_configuration.mme_isCollectionEnabled),
             MMEEventKeyLocationEnabled: @(CLLocationManager.locationServicesEnabled),
-            MMEEventKeyLocationAuthorization: CLLocationManager.mme_authorizationStatusString,
+            MMEEventKeyLocationAuthorization: [self.locationManager locationAuthorizationString],
             MMEEventKeySkuId: self.skuId ?: NSNull.null
        };
 
