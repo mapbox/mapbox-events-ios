@@ -93,6 +93,7 @@ extern NSString * const MMEEventKeyPlatform;
 extern NSString * const MMEEventKeyUserAgent;
 extern NSString * const MMEEventKeyiOS;
 extern NSString * const MMEEventKeyMac;
+extern NSString * const MMEEventKeyApproximate;
 extern NSString * const MMENavigationEventPrefix;
 extern NSString * const MMEVisionEventPrefix;
 extern NSString * const MMEEventTypeNavigationDepart;
