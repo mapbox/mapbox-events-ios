@@ -21,6 +21,13 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)incrementAppWakeUpCount;
 - (void)resetMetrics;
 
+- (void)incrementLocationsInForeground;
+- (void)incrementLocationsInBackground;
+- (void)incrementLocationsWithApproximateValues;
+- (void)incrementLocationsDroppedBecauseOfHAF;
+- (void)incrementLocationsDroppedDueTimeout;
+- (void)incrementLocationsConvertedIntoEvents;
+
 /*! @brief loads any pending telemetry metrics events from ~/Library/Caches */
 - (MMEEvent *)loadPendingTelemetryMetricsEvent;
 

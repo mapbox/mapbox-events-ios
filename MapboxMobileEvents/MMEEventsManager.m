@@ -575,16 +575,25 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)locationManager:(MMELocationManager *)locationManager didUpdateLocations:(NSArray *)locations {
     MMELOG(MMELogInfo, MMEDebugEventTypeLocationManager, ([NSString stringWithFormat:@"Location manager sent %ld locations, instance: %@", (long)locations.count, self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
-    
+
+    const BOOL appIsInBackground = (self.application.applicationState == UIApplicationStateBackground);
+
     for (CLLocation *location in locations) {
         // Post events based on the `hao` config value.
         // 1. `hao` config value is negative - No HA Filter. Always send the event.
         // 2. `hao` value is smaller than the Location Horizontal Accuracy - Skip the event.
         CLLocationAccuracy mmeHorizontalAccuracy = NSUserDefaults.mme_configuration.mme_horizontalAccuracy;
         if (mmeHorizontalAccuracy >= 0 && location.horizontalAccuracy > mmeHorizontalAccuracy) {
+            [MMEMetricsManager.sharedManager incrementLocationsDroppedBecauseOfHAF];
             continue;
         }
-        
+
+        if (appIsInBackground) {
+            [MMEMetricsManager.sharedManager incrementLocationsInBackground];
+        } else {
+            [MMEMetricsManager.sharedManager incrementLocationsInForeground];
+        }
+
         MMEMutableMapboxEventAttributes *eventAttributes = [[MMEMutableMapboxEventAttributes alloc] init];
         [eventAttributes addEntriesFromDictionary:@{
             MMEEventKeyCreated: [MMEDate.iso8601DateFormatter stringFromDate:[location timestamp]],
@@ -608,11 +617,14 @@ NS_ASSUME_NONNULL_BEGIN
             [eventAttributes addEntriesFromDictionary:@{
                 MMEEventKeyApproximate: @(YES)
             }];
+            [MMEMetricsManager.sharedManager incrementLocationsWithApproximateValues];
         }
 
         if ([location floor]) {
             [eventAttributes setValue:@([location floor].level) forKey:MMEEventKeyFloor];
         }
+
+        [MMEMetricsManager.sharedManager incrementLocationsConvertedIntoEvents];
 
         [self pushEvent:[MMEEvent locationEventWithAttributes:eventAttributes
                                             instanceIdentifer:self.uniqueIdentifer.rollingInstanceIdentifer

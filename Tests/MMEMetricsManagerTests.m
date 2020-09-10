@@ -68,4 +68,23 @@
     XCTAssert([self.metricsManager.attributes[MMEEventDeviceLon] isEqualToNumber:@0.2]);
 }
 
+- (void)testLocatiosCountersAfterRestoringFromTheDisk {
+    [self.metricsManager incrementLocationsInBackground];
+    [self.metricsManager incrementLocationsInForeground];
+    [self.metricsManager incrementLocationsWithApproximateValues];
+    [self.metricsManager incrementLocationsDroppedBecauseOfHAF];
+    [self.metricsManager incrementLocationsDroppedDueTimeout];
+    [self.metricsManager incrementLocationsConvertedIntoEvents];
+
+    [self.metricsManager generateTelemetryMetricsEvent];
+
+    MMEEvent *event = [self.metricsManager loadPendingTelemetryMetricsEvent];
+    XCTAssertEqual([[event.attributes objectForKey:@"locationsFG"] longValue], 1);
+    XCTAssertEqual([[event.attributes objectForKey:@"locationsBG"] longValue], 1);
+    XCTAssertEqual([[event.attributes objectForKey:@"locationsAX"] longValue], 1);
+    XCTAssertEqual([[event.attributes objectForKey:@"locationsHF"] longValue], 1);
+    XCTAssertEqual([[event.attributes objectForKey:@"locationsTO"] longValue], 1);
+    XCTAssertEqual([[event.attributes objectForKey:@"locationsTX"] longValue], 1);
+}
+
 @end
