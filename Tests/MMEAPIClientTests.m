@@ -142,4 +142,19 @@
     XCTAssert(data.mme_gunzippedData.length == uncompressedData.length);
 }
 
+- (void)testDigestHeaderParser {
+    [MMEAPIClient parseDigestHeader:@"test"];
+
+    // Fallback to the value received from the config service assuming that the Digest: header comes from a 1.0 config service has just a hash value.
+    XCTAssert([[MMEAPIClient parseDigestHeader:@"IEU/qC6Su+rB4L46hheNt9cDd4lyNBlCEU9ZADl38rg="] isEqualToString:@"IEU/qC6Su+rB4L46hheNt9cDd4lyNBlCEU9ZADl38rg="]);
+    // Expect the hash for SHA-256
+    XCTAssert([[MMEAPIClient parseDigestHeader:@"SHA-256=IEU/qC6Su+rB4L46hheNt9cDd4lyNBlCEU9ZADl38rg="] isEqualToString:@"IEU/qC6Su+rB4L46hheNt9cDd4lyNBlCEU9ZADl38rg="]);
+    // Expect the hash for SHA-256
+    XCTAssert([[MMEAPIClient parseDigestHeader:@"SHA-512=EU/qC6,SHA-256=CEU9ZADl38rg"] isEqualToString:@"CEU9ZADl38rg"]);
+    // null in case of no SHA-256 hash
+    XCTAssertNil([MMEAPIClient parseDigestHeader:@"SHA-512=EU/qC6,SHA-2=CEU9ZADl38rg"]);
+    // null in case of no SHA-256 hash
+    XCTAssertNil([MMEAPIClient parseDigestHeader:@"SHA-512=EU/qC6,SHA-2=CEU9ZADl38rg,IEU/qC6Su+rB4L46hheNt9cDd4lyNBlCEU9ZADl38rg="]);
+}
+
 @end

@@ -33,6 +33,7 @@
         MMECollectionEnabledInSimulator: @YES,
         MMECollectionDisabledInBackground: @YES,
         MMEConfigEventTag: @"tag",
+        MMEConfigDigestHeaderValue: @"Dd4lyNBlCEU9ZADl38rg=",
         MMECertificateRevocationList:@[
             @"T4XyKSRwZ5icOqGmJUXiDYGa+SaXKTGQXZwhqpwNTEo=",
             @"KlV7emqpeM6V2MtDEzSDzcIob6VwkdWHiVsNQQzTIeo="]
@@ -88,6 +89,10 @@
 
 - (void)testConfigEventTagDefault {
     XCTAssert([NSUserDefaults.mme_configuration.mme_eventTag isEqual:@"tag"]);
+}
+
+- (void)testConfigDigestValueDefault {
+    XCTAssert([NSUserDefaults.mme_configuration.mme_configDigestValue isEqual:@"Dd4lyNBlCEU9ZADl38rg="]);
 }
 
 // MARK: - Client Id Tests
@@ -503,6 +508,11 @@
     MMEDate *date = [NSUserDefaults.mme_configuration mme_configUpdateDate];
     
     XCTAssert(date);
+}
+
+- (void)testConfigDigestChange {
+    [NSUserDefaults.mme_configuration mme_setConfigDigestValue:@"IEU/qC6Su+rB4L46hheNt9cDd4lyNBlCEU9ZADl38rg="];
+    XCTAssert([NSUserDefaults.mme_configuration.mme_configDigestValue isEqualToString:@"IEU/qC6Su+rB4L46hheNt9cDd4lyNBlCEU9ZADl38rg="]);
 }
 
 @end

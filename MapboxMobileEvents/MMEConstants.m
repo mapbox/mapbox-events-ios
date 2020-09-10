@@ -66,6 +66,7 @@ NSString * const MMEEventKeyCreated = @"created";
 NSString * const MMEEventKeyVendorId = @"userId";
 NSString * const MMEEventKeyModel = @"model";
 NSString * const MMEEventKeyDevice = @"device";
+NSString * const MMEEventKeyConfig = @"config";
 NSString * const MMEEventKeySkuId = @"skuId";
 NSString * const MMEEventKeyEnabledTelemetry = @"enabled.telemetry";
 NSString * const MMEEventKeyOperatingSystem = @"operatingSystem";

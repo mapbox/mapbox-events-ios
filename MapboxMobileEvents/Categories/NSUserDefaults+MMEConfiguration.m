@@ -215,6 +215,14 @@ NS_ASSUME_NONNULL_BEGIN
     return clientId;
 }
 
+- (nullable NSString *)mme_configDigestValue {
+    return (NSString *)[self stringForKey:MMEConfigDigestHeaderValue];
+}
+
+- (void)mme_setConfigDigestValue:(nullable NSString *)digestHeader {
+    [self mme_setObject:digestHeader forPersistentKey:MMEConfigDigestHeaderValue];
+}
+
 // MARK: - Service Configuration
 
 - (BOOL)mme_isCNRegion {
