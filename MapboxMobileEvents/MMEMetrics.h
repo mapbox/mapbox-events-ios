@@ -25,6 +25,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) NSDictionary *configResponseDict;
 @property (nonatomic) NSMutableDictionary *eventCountPerType;
 @property (nonatomic) NSMutableDictionary *failedRequestsDict;
+@property (nonatomic) NSUInteger locationsInForeground;
+@property (nonatomic) NSUInteger locationsInBackground;
+@property (nonatomic) NSUInteger locationsWithApproximateValues;
+@property (nonatomic) NSUInteger locationsDroppedBecauseOfHAF;
+@property (nonatomic) NSUInteger locationsDroppedDueTimeout;
+@property (nonatomic) NSUInteger locationsConvertedIntoEvents;
 
 @end
 

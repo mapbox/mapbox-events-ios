@@ -208,6 +208,28 @@
     self.metrics = [MMEMetrics new];
 }
 
+- (void)incrementLocationsInForeground {
+    self.metrics.locationsInForeground++;
+}
+- (void)incrementLocationsInBackground {
+    self.metrics.locationsInBackground++;
+}
+- (void)incrementLocationsWithApproximateValues {
+    self.metrics.locationsWithApproximateValues++;
+}
+
+- (void)incrementLocationsDroppedBecauseOfHAF {
+    self.metrics.locationsDroppedBecauseOfHAF++;
+}
+
+- (void)incrementLocationsDroppedDueTimeout {
+    self.metrics.locationsDroppedDueTimeout++;
+}
+
+- (void)incrementLocationsConvertedIntoEvents {
+    self.metrics.locationsConvertedIntoEvents++;
+}
+
 - (NSDictionary *)attributes {
     MMEMutableMapboxEventAttributes *attributes = [MMEMutableMapboxEventAttributes dictionary];
     if (self.metrics.recordingStarted) {
@@ -232,6 +254,13 @@
         attributes[MMEEventDeviceLat] = @(self.metrics.deviceLat);
         attributes[MMEEventDeviceLon] = @(self.metrics.deviceLon);
     }
+    attributes[MMEEventKeyLocationsForeground] = @(self.metrics.locationsInForeground);
+    attributes[MMEEventKeyLocationsBackground] = @(self.metrics.locationsInBackground);
+    attributes[MMEEventKeyLocationsWithApproximateValues] = @(self.metrics.locationsWithApproximateValues);
+    attributes[MMEEventKeyLocationsDroppedBecauseOfHAF] = @(self.metrics.locationsDroppedBecauseOfHAF);
+    attributes[MMEEventKeyLocationsDroppedDueTimeout] = @(self.metrics.locationsDroppedDueTimeout);
+    attributes[MMEEventKeyLocationsConvertedIntoEvents] = @(self.metrics.locationsConvertedIntoEvents);
+
     attributes[MMEEventKeyModel] = [MMEEventsManager sharedManager].commonEventData.model;
     attributes[MMEEventKeyOperatingSystem] = [MMEEventsManager sharedManager].commonEventData.osVersion;
     attributes[MMEEventKeyPlatform] = [MMEEventsManager sharedManager].commonEventData.platform;

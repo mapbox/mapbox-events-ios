@@ -20,6 +20,12 @@
         _deviceLat = 0;
         _deviceLon = 0;
         _requests = 0;
+        _locationsInForeground = 0;
+        _locationsInBackground = 0;
+        _locationsWithApproximateValues = 0;
+        _locationsDroppedBecauseOfHAF = 0;
+        _locationsDroppedDueTimeout = 0;
+        _locationsConvertedIntoEvents = 0;
     }
     return self;
 }
