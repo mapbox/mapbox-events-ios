@@ -577,8 +577,15 @@ NS_ASSUME_NONNULL_BEGIN
     MMELOG(MMELogInfo, MMEDebugEventTypeLocationManager, ([NSString stringWithFormat:@"Location manager sent %ld locations, instance: %@", (long)locations.count, self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
     
     for (CLLocation *location in locations) {
-        MMEMutableMapboxEventAttributes *eventAttributes = [[MMEMutableMapboxEventAttributes alloc] init];
+        // Post events based on the `hao` config value.
+        // 1. `hao` config value is negative - No HA Filter. Always send the event.
+        // 2. `hao` value is smaller than the Location Horizontal Accuracy - Skip the event.
+        CLLocationAccuracy mmeHorizontalAccuracy = NSUserDefaults.mme_configuration.mme_horizontalAccuracy;
+        if (mmeHorizontalAccuracy >= 0 && location.horizontalAccuracy > mmeHorizontalAccuracy) {
+            continue;
+        }
         
+        MMEMutableMapboxEventAttributes *eventAttributes = [[MMEMutableMapboxEventAttributes alloc] init];
         [eventAttributes addEntriesFromDictionary:@{
             MMEEventKeyCreated: [MMEDate.iso8601DateFormatter stringFromDate:[location timestamp]],
             MMEEventKeyLatitude: @([location mme_latitudeRoundedWithPrecision:7]),
@@ -599,7 +606,7 @@ NS_ASSUME_NONNULL_BEGIN
 
         if ([self.locationManager isReducedAccuracy]) {
             [eventAttributes addEntriesFromDictionary:@{
-                MMEEventKeyApproximate: @(true)
+                MMEEventKeyApproximate: @(YES)
             }];
         }
 

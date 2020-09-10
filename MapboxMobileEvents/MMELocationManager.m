@@ -251,8 +251,8 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
     }
     [[MMEMetricsManager sharedManager] updateCoordinate:location.coordinate];
     
-    CLLocationDistance haoAccuracy = NSUserDefaults.mme_configuration.mme_horizontalAccuracy;
-    if (haoAccuracy < 0 || location.horizontalAccuracy < haoAccuracy) {
+    // Fix: https://github.com/mapbox/mapbox-events-ios/issues/148
+    if (location.horizontalAccuracy < MMERadiusAccuracyMax) {
         for(CLRegion *region in self.locationManager.monitoredRegions) {
             if([region.identifier isEqualToString:MMELocationManagerRegionIdentifier]) {
                 CLCircularRegion *circularRegion = (CLCircularRegion *)region;
