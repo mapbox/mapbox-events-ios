@@ -175,6 +175,29 @@ void MMEDispatchMainIfNeeded(void (^block)(void))
     }
 }
 
++ (nullable NSString *)parseDigestHeader:(NSString *)digestHeader {
+    NSString *digest = nil;
+    if (digestHeader) {
+        // Look for 'SHA-256' hash in case of multiple different digest values
+        NSArray *kvs = [digestHeader componentsSeparatedByString:@","];
+        if (kvs.count >= 2) {
+            for (NSString *field in kvs) {
+                NSArray *keyValue = [field componentsSeparatedByString:@"SHA-256="];
+                if (keyValue.count == 2) {
+                    digest = keyValue[1];
+                }
+            }
+        } else {
+            // In case of single digest value, look for the 'SHA-256' hash, and
+            // fallback to the value received from the config service assuming
+            // that the Digest: header comes from a 1.0 config service has just
+            // a hash value.
+            digest = [digestHeader componentsSeparatedByString:@"SHA-256="].lastObject;
+        }
+    }
+    return digest;
+}
+
 - (void)processRequest:(NSURLRequest *)request {
     [self.sessionWrapper processRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         [MMEMetricsManager.sharedManager updateReceivedBytes:data.length];
@@ -207,6 +230,9 @@ void MMEDispatchMainIfNeeded(void (^block)(void))
             }
 
             NSUserDefaults.mme_configuration.mme_configUpdateDate = MMEDate.date;
+
+            NSString* digest = [self.class parseDigestHeader:httpResponse.allHeaderFields[@"Digest"]];
+            [NSUserDefaults.mme_configuration mme_setConfigDigestValue:digest];
         }
 
         [MMEMetricsManager.sharedManager updateMetricsFromEventCount:0 request:request error:error];

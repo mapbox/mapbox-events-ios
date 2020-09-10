@@ -25,6 +25,7 @@ static MMEPersistentKey * const MMEHorizontalAccuracy = @"MMEHorizontalAccuracy"
 static MMEPersistentKey * const MMECertificateRevocationList = @"MMECertificateRevocationList";
 static MMEPersistentKey * const MMEConfigEventTag = @"MMEConfigEventTag";
 static MMEPersistentKey * const MMEConfigUpdateData = @"MMEConfigUpdateData";
+static MMEPersistentKey * const MMEConfigDigestHeaderValue = @"MMEConfigDigestHeaderValue";
 
 // MARK: - MMEConfigurationVolatileDomain
 
@@ -103,6 +104,7 @@ static NSTimeInterval const MMEStartupDelayMaximum = 100;
 
 @interface NSUserDefaults (MMEConfiguration_Private)
 @property(nonatomic,readonly) NSString *mme_clientId;
+@property (nonatomic, nullable, setter=mme_setConfigDigestValue:) NSString *mme_configDigestValue;
 
 + (void)mme_resetConfiguration;
 

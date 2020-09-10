@@ -61,6 +61,7 @@ extern NSString * const MMEEventKeyFloor;
 extern NSString * const MMEEventKeyVendorId;
 extern NSString * const MMEEventKeyModel;
 extern NSString * const MMEEventKeyDevice;
+extern NSString * const MMEEventKeyConfig;
 extern NSString * const MMEEventKeySkuId;
 extern NSString * const MMEEventKeyEnabledTelemetry;
 extern NSString * const MMEEventKeyOperatingSystem;

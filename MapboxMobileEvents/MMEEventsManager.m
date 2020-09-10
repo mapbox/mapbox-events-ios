@@ -27,6 +27,7 @@
 #import "CLLocation+MMEMobileEvents.h"
 #import "CLLocationManager+MMEMobileEvents.h"
 #import "NSUserDefaults+MMEConfiguration.h"
+#import "NSUserDefaults+MMEConfiguration_Private.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -605,6 +606,13 @@ NS_ASSUME_NONNULL_BEGIN
             MMEEventKeySpeed: @([location mme_roundedSpeed]),
             MMEEventKeyCourse: @([location mme_roundedCourse])
         }];
+
+        NSString *digest = NSUserDefaults.mme_configuration.mme_configDigestValue;
+        if (digest) {
+            [eventAttributes addEntriesFromDictionary:@{
+                MMEEventKeyConfig: digest
+            }];
+        }
         
         if (@available(iOS 13.4, *)) {
             [eventAttributes addEntriesFromDictionary:@{
