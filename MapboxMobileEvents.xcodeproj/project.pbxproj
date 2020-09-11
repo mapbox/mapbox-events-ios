@@ -135,6 +135,9 @@
 		35DD3E04250A58E900513CA7 /* MMEAPIConfigTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 35DD3DF7250A58E900513CA7 /* MMEAPIConfigTests.m */; };
 		35DD3E05250A58E900513CA7 /* NSProcessInfoTests+SystemInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 35DD3DF8250A58E900513CA7 /* NSProcessInfoTests+SystemInfo.m */; };
 		35DD3E06250A58E900513CA7 /* NSString+MMEVersions_Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 35DD3DF9250A58E900513CA7 /* NSString+MMEVersions_Tests.m */; };
+		35E77B05250C1E2F00C16B73 /* config-hao-10m.json in Resources */ = {isa = PBXBuildFile; fileRef = 35E77B03250C1E2900C16B73 /* config-hao-10m.json */; };
+		35E77B07250C1E4C00C16B73 /* config-hao-negative.json in Resources */ = {isa = PBXBuildFile; fileRef = 35E77B06250C1E4B00C16B73 /* config-hao-negative.json */; };
+		35E77B09250C1E5900C16B73 /* config-hao-null.json in Resources */ = {isa = PBXBuildFile; fileRef = 35E77B08250C1E5900C16B73 /* config-hao-null.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -308,6 +311,9 @@
 		35DD3E21250A61F300513CA7 /* config-all-wrong.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = "config-all-wrong.json"; path = "Tests/Fixtures/config-all-wrong.json"; sourceTree = SOURCE_ROOT; };
 		35DD3E22250A61F500513CA7 /* config-null-tag.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = "config-null-tag.json"; path = "Tests/Fixtures/config-null-tag.json"; sourceTree = SOURCE_ROOT; };
 		35DD3E45250A63ED00513CA7 /* config-1s-bso.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = "config-1s-bso.json"; path = "Tests/Fixtures/config-1s-bso.json"; sourceTree = SOURCE_ROOT; };
+		35E77B03250C1E2900C16B73 /* config-hao-10m.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = "config-hao-10m.json"; path = "Tests/Fixtures/config-hao-10m.json"; sourceTree = SOURCE_ROOT; };
+		35E77B06250C1E4B00C16B73 /* config-hao-negative.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = "config-hao-negative.json"; path = "Tests/Fixtures/config-hao-negative.json"; sourceTree = SOURCE_ROOT; };
+		35E77B08250C1E5900C16B73 /* config-hao-null.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = "config-hao-null.json"; path = "Tests/Fixtures/config-hao-null.json"; sourceTree = SOURCE_ROOT; };
 		402F02A41F7DA28700E7FF06 /* Cartfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cartfile; sourceTree = "<group>"; };
 		402F02A51F7DA28700E7FF06 /* MapboxMobileEvents.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MapboxMobileEvents.podspec; sourceTree = "<group>"; };
 		4032F47D1F1FEDC6001C1FBD /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
@@ -531,6 +537,9 @@
 		35DD3E11250A61D200513CA7 /* Fixtures */ = {
 			isa = PBXGroup;
 			children = (
+				35E77B06250C1E4B00C16B73 /* config-hao-negative.json */,
+				35E77B03250C1E2900C16B73 /* config-hao-10m.json */,
+				35E77B08250C1E5900C16B73 /* config-hao-null.json */,
 				35DD3E1B250A61F200513CA7 /* config-1s-bso.json */,
 				35DD3E1A250A61F200513CA7 /* config-10s-bso.json */,
 				35DD3E14250A61F200513CA7 /* config-100m-gfo.json */,
@@ -793,7 +802,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				35E77B09250C1E5900C16B73 /* config-hao-null.json in Resources */,
 				356DFB40250A70970035D854 /* events-201.json in Resources */,
+				35E77B07250C1E4C00C16B73 /* config-hao-negative.json in Resources */,
 				356DFB26250A6CC90035D854 /* LaunchScreen.storyboard in Resources */,
 				356DFB23250A6CC90035D854 /* Assets.xcassets in Resources */,
 				356DFB33250A70970035D854 /* config-100s-bso.json in Resources */,
@@ -808,6 +819,7 @@
 				356DFB3A250A70970035D854 /* config-null-tag.json in Resources */,
 				356DFB31250A70970035D854 /* config-10s-bso.json in Resources */,
 				356DFB36250A70970035D854 /* config-all-wrong.json in Resources */,
+				35E77B05250C1E2F00C16B73 /* config-hao-10m.json in Resources */,
 				356DFB35250A70970035D854 /* config-10000m-gfo.json in Resources */,
 				356DFB3D250A70970035D854 /* config-test-tag.json in Resources */,
 				356DFB37250A70970035D854 /* config-all.json in Resources */,
