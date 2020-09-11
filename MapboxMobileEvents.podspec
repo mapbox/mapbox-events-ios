@@ -30,9 +30,9 @@ Pod::Spec.new do |s|
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
-  s.source_files = ["MapboxMobileEvents/**/*.{h,m}"]
-  s.resources = "MapboxMobileEvents/Resources/*"
-  s.exclude_files = "MapboxMobileEvents/MMENamespacedDependencies.h"
+  s.source_files = ["Sources/MapboxMobileEvents/**/*.{h,m}"]
+  s.resources = "Sources/MapboxMobileEvents/Resources/*"
+  s.exclude_files = "Sources/MapboxMobileEvents/MMENamespacedDependencies.h"
 
   # ――― Project Settings ――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 

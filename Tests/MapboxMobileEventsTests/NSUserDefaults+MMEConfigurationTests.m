@@ -1,10 +1,10 @@
 #import <XCTest/XCTest.h>
 
-#import <MapboxMobileEvents/MMEConstants.h>
-#import <MapboxMobileEvents/MMEDate.h>
-#import <MapboxMobileEvents/MMEEventLogger.h>
-#import <MapboxMobileEvents/NSUserDefaults+MMEConfiguration.h>
-#import <MapboxMobileEvents/NSUserDefaults+MMEConfiguration_Private.h>
+#import "MMEConstants.h"
+#import "MMEDate.h"
+#import "MMEEventLogger.h"
+#import "NSUserDefaults+MMEConfiguration.h"
+#import "NSUserDefaults+MMEConfiguration_Private.h"
 
 #import "MMEBundleInfoFake.h"
 

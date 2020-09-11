@@ -1,7 +1,7 @@
 #ifndef MMEEventsManager_Private_h
 #define MMEEventsManager_Private_h
 
-#import "MapboxMobileEvents.h"
+#import "MMEEventsManager.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

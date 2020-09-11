@@ -1,5 +1,4 @@
-@import Cedar;
-
+#import <Cedar/Cedar.h>
 
 #import <MapboxMobileEvents/MMEEvent.h>
 #import <MapboxMobileEvents/MMEEventsManager.h>

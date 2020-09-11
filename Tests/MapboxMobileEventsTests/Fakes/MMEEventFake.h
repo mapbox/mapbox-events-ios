@@ -1,5 +1,5 @@
 #import <Foundation/Foundation.h>
-@import MapboxMobileEvents;
+#import "MMEEvent.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

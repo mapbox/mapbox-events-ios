@@ -1,7 +1,7 @@
 #ifndef MMEAPIClient_Private_h
 #define MMEAPIClient_Private_h
 
-@import Foundation;
+#import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

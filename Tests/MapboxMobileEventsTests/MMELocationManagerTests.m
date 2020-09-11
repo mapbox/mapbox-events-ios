@@ -1,8 +1,8 @@
 #import <XCTest/XCTest.h>
 
-#import <MapboxMobileEvents/MMELocationManager.h>
-#import <MapboxMobileEvents/NSUserDefaults+MMEConfiguration.h>
-#import <MapboxMobileEvents/NSUserDefaults+MMEConfiguration_Private.h>
+#import "MMELocationManager.h"
+#import "NSUserDefaults+MMEConfiguration.h"
+#import "NSUserDefaults+MMEConfiguration_Private.h"
 
 @interface MMELocationManagerTests : XCTestCase <MMELocationManagerDelegate>
 

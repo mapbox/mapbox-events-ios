@@ -1,5 +1,5 @@
-@import Cedar;
-@import Foundation;
+#import <Foundation/Foundation.h>
+#import <Cedar/Cedar.h>
 
 #import <MapboxMobileEvents/MMEAPIClient.h>
 #import <MapboxMobileEvents/MMEConstants.h>

@@ -1,5 +1,5 @@
-@import Foundation;
-@import MapboxMobileEvents;
+#import <Foundation/Foundation.h>
+#import "MMETimerManager.h"
 
 @interface MMETimerManagerFake : MMETimerManager
 
