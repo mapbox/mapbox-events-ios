@@ -1,5 +1,4 @@
 #import <Foundation/Foundation.h>
-@import MapboxMobileEvents;
 
 #import "MMEUIApplicationWrapper.h"
 

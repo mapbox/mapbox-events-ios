@@ -4,15 +4,15 @@
 
 #import <CommonCrypto/CommonDigest.h>
 
-#import <MapboxMobileEvents/MMEAPIClient.h>
-#import <MapboxMobileEvents/MMEAPIClient_Private.h>
-#import <MapboxMobileEvents/MMECertPin.h>
-#import <MapboxMobileEvents/MMECommonEventData.h>
-#import <MapboxMobileEvents/MMEEvent.h>
-#import <MapboxMobileEvents/MMEEventsManager.h>
-#import <MapboxMobileEvents/MMENSURLSessionWrapper.h>
-#import <MapboxMobileEvents/NSUserDefaults+MMEConfiguration.h>
-#import <MapboxMobileEvents/NSUserDefaults+MMEConfiguration_Private.h>
+#import "MMEAPIClient.h"
+#import "MMEAPIClient_Private.h"
+#import "MMECertPin.h"
+#import "MMECommonEventData.h"
+#import "MMEEvent.h"
+#import "MMEEventsManager.h"
+#import "MMENSURLSessionWrapper.h"
+#import "NSUserDefaults+MMEConfiguration.h"
+#import "NSUserDefaults+MMEConfiguration_Private.h"
 
 #import "MMEAPIClientFake.h"
 #import "MMERunningLock.h"

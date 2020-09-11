@@ -1,5 +1,6 @@
 @import Foundation;
-@import MapboxMobileEvents;
+
+#import "MMEUniqueIdentifier.h"
 
 @interface MMEUniqueIdentifierFake : NSObject <MMEUniqueIdentifer>
 

@@ -56,7 +56,7 @@
             buildForAnalyzing = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "9C65A2652256C110006E3FED"
+               BlueprintIdentifier = "35DD3D93250A52B300513CA7"
                BuildableName = "MMETestHost.app"
                BlueprintName = "MMETestHost"
                ReferencedContainer = "container:MapboxMobileEvents.xcodeproj">
@@ -87,19 +87,9 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "404807C11EA186D8008A6D50"
-               BuildableName = "MMEXCTests.xctest"
-               BlueprintName = "MMEXCTests"
-               ReferencedContainer = "container:MapboxMobileEvents.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "9CDC34C223502F8700852FF0"
-               BuildableName = "MMECedarTests.xctest"
-               BlueprintName = "MMECedarTests"
+               BlueprintIdentifier = "35DD3DB4250A545D00513CA7"
+               BuildableName = "MapboxMobileEventsTests.xctest"
+               BlueprintName = "MapboxMobileEventsTests"
                ReferencedContainer = "container:MapboxMobileEvents.xcodeproj">
             </BuildableReference>
          </TestableReference>

@@ -1,5 +1,5 @@
 #import <XCTest/XCTest.h>
-#import <MapboxMobileEvents/NSProcessInfo+SystemInfo.h>
+#import "NSProcessInfo+SystemInfo.h"
 
 #include <sys/types.h>
 #include <sys/sysctl.h>

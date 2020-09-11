@@ -1,5 +1,3 @@
-@import MapboxMobileEvents;
-
 #import "MMETestStub.h"
 #import "MMENSURLSessionWrapper.h"
 
