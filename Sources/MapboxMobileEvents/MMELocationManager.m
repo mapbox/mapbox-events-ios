@@ -6,7 +6,8 @@
 #import "MMEUIApplicationWrapper.h"
 #import "NSUserDefaults+MMEConfiguration.h"
 #import "NSBundle+MMEMobileEvents.h"
-#import "Categories/CLLocationManager+MMEMobileEvents.h"
+#import "CLLocation+MMEMobileEvents.h"
+#import "CLLocationManager+MMEMobileEvents.h"
 
 static const NSTimeInterval MMELocationManagerHibernationTimeout = 300.0;
 static const NSTimeInterval MMELocationManagerHibernationPollInterval = 5.0;

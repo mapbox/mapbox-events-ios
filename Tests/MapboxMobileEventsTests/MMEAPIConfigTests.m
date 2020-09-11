@@ -302,6 +302,8 @@
     XCTAssert(fabs(MMEDate.recordedTimeOffsetFromServer) - fabs(MMEDate.date.timeIntervalSince1970) < MME10sTimeout);
 }
 
+// TODO: Fix SPM resources
+#if !SWIFT_PACKAGE
 - (void) test020_10mHAO {
     XCTSkipIf(([[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){.majorVersion = 14, .minorVersion = 0, .patchVersion = 0}]), @"Skip, since CFSocketInvalidate crashes with EXC_GUARD on iOS 14");
 
@@ -340,6 +342,7 @@
     XCTAssertNil(self.eventsError);
     XCTAssert(NSUserDefaults.mme_configuration.mme_horizontalAccuracy == 300); // default value
 }
+#endif
 
 // MARK: - MMEEventsManagerDelegate
 
