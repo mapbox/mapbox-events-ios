@@ -48,4 +48,5 @@ jobs:
             Tests/Integration/test_carthage.sh
       - run:
           name: Codecov
-          command: bash <(curl -s https://codecov.io/bash) -Z -C $CIRCLE_SHA1
+          command: |
+            if [ "<< parameters.xcode >>" = "12.0.0" ]; then bash <(curl -s https://codecov.io/bash) -Z -C $CIRCLE_SHA1; fi
