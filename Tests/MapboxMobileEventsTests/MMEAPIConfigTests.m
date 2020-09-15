@@ -95,6 +95,7 @@
     XCTAssertNil(configError);
 }
 
+// Disabled when testing as a Swift Package because resources was introduced in Swift 5.3 and we only require 5.2
 #if !SWIFT_PACKAGE
 - (void) test005_1sBSO {
     XCTSkipIf(([[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){.majorVersion = 14, .minorVersion = 0, .patchVersion = 0}]), @"Skip, since CFSocketInvalidate crashes with EXC_GUARD on iOS 14");
@@ -302,7 +303,7 @@
     XCTAssert(fabs(MMEDate.recordedTimeOffsetFromServer) - fabs(MMEDate.date.timeIntervalSince1970) < MME10sTimeout);
 }
 
-// TODO: Fix SPM resources
+// Disabled when testing as a Swift Package because resources was introduced in Swift 5.3 and we only require 5.2
 #if !SWIFT_PACKAGE
 - (void) test020_10mHAO {
     XCTSkipIf(([[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){.majorVersion = 14, .minorVersion = 0, .patchVersion = 0}]), @"Skip, since CFSocketInvalidate crashes with EXC_GUARD on iOS 14");
