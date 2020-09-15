@@ -85,6 +85,7 @@
 }
 
 #if !SWIFT_PACKAGE
+// Disabled when testing as a Swift Package because resources was introduced in Swift 5.3 and we only require 5.2
 -(void)test003_countCNHashesWithBlacklist {
     XCTSkipIf(([[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){.majorVersion = 14, .minorVersion = 0, .patchVersion = 0}]), @"Skip, since CFSocketInvalidate crashes with EXC_GUARD on iOS 14");
 

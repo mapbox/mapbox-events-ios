@@ -75,6 +75,7 @@
     XCTAssert(self.eventsManager.paused == YES);
 }
 
+// Disabled when testing as a Swift Package because resources was introduced in Swift 5.3 and we only require 5.2
 #if !SWIFT_PACKAGE
 - (void)testUnpausesWithWhenInUseAuthAndAppActive {
     self.eventsManager.paused = YES;
