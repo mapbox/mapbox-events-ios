@@ -623,12 +623,14 @@ NS_ASSUME_NONNULL_BEGIN
             }];
         }
         
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130400
         if (@available(iOS 13.4, *)) {
             [eventAttributes addEntriesFromDictionary:@{
                 MMEEventKeySpeedAccuracy: @([location speedAccuracy]),
                 MMEEventKeyCourseAccuracy: @([location courseAccuracy])
             }];
         }
+#endif
 
         if ([self.locationManager isReducedAccuracy]) {
             [eventAttributes addEntriesFromDictionary:@{
