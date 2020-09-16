@@ -299,7 +299,7 @@ describe(@"MMELocationManager", ^{
         });
         
         it(@"tells location manager to stop updating location", ^{
-            locationManager.locationManager should be_nil;
+            locationManager.isUpdatingLocation should be_falsy;
         });
         
         it(@"tells the location manager to stopMonitoringSignificantLocationChanges", ^{

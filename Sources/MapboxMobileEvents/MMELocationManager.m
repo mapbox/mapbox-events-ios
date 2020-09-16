@@ -31,8 +31,17 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
 
 @implementation MMELocationManager
 
+@synthesize locationManager = _locationManager;
+
 - (void)dealloc {
     _locationManager.delegate = nil;
+}
+
+- (CLLocationManager *)locationManager  {
+    if (_locationManager == nil) {
+        _locationManager = [[MMEDependencyManager sharedManager] locationManagerInstance];
+    }
+    return _locationManager;
 }
 
 - (instancetype)init {
@@ -53,7 +62,6 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
         return;
     }
 
-    self.locationManager = [[MMEDependencyManager sharedManager] locationManagerInstance];
     [self configurePassiveLocationManager];
     [self startLocationServices];
 }
@@ -68,7 +76,6 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
             [self.delegate locationManagerDidStopLocationUpdates:self];
         }
         [self stopMonitoringRegions];
-        self.locationManager = nil;
     }
 }
 
@@ -104,10 +111,14 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
 #endif
 
 - (void)setLocationManager:(CLLocationManager *)locationManager {
-    id<CLLocationManagerDelegate> delegate = _locationManager.delegate;
-    _locationManager.delegate = nil;
-    _locationManager = locationManager;
-    _locationManager.delegate = delegate;
+    if (locationManager == nil) {
+        _locationManager = locationManager;
+    } else {
+        id<CLLocationManagerDelegate> delegate = _locationManager.delegate;
+        _locationManager.delegate = nil;
+        _locationManager = locationManager;
+        _locationManager.delegate = delegate;
+    }
 }
 
 - (void)stopMonitoringRegions {
