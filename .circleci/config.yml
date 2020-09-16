@@ -23,22 +23,12 @@ jobs:
       xcode: << parameters.xcode >>
     steps:
       - checkout
-      - run: make build
-      - store_artifacts:
-          path: build/mapbox-events-ios-static.zip
       - run:
-          name: Install dependencies
+          name: Unzip bundled Cedar
           command: |
-            if [ "<< parameters.xcode >>" = "12.0.0" ]; then export XCODE_XCCONFIG_FILE=~/project/xcode-12-fix.xcconfig; fi
-            carthage bootstrap --platform ios --cache-builds --configuration Debug --no-use-binaries --verbose
+            pushd Carthage/Build/iOS
+            unzip -u Cedar.framework.zip
+            popd
       - run:
           name: Test
           command: xcodebuild -project MapboxMobileEventsTests.xcodeproj -scheme MMETestHost build test -destination 'platform=iOS Simulator,name=iPhone 11,OS=latest' GCC_INSTRUMENT_PROGRAM_FLOW_ARCS=YES GCC_GENERATE_TEST_COVERAGE_FILES=YES
-      - run:
-          name: Test CocoaPods
-          command: Tests/Integration/test_cocoapods.sh
-      - run:
-          name: Test Carthage
-          command: |
-            if [ "<< parameters.xcode >>" = "12.0.0" ]; then export XCODE_XCCONFIG_FILE=~/project/xcode-12-fix.xcconfig; fi
-            Tests/Integration/test_carthage.sh
