@@ -465,7 +465,8 @@
 				35DD3D18250A4F7B00513CA7 /* UIKit+MMEMobileEvents.m */,
 				35DD3D74250A4FB400513CA7 /* Info.plist */,
 			);
-			path = MapboxMobileEvents;
+			name = MapboxMobileEvents;
+			path = Sources/MapboxMobileEvents;
 			sourceTree = "<group>";
 		};
 		35DD3DB6250A545D00513CA7 /* MapboxMobileEventsTests */ = {
