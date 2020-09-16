@@ -30,6 +30,9 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
 
 @implementation MMELocationManager
 
+// Add this
+@synthesize locationManager = _locationManager;
+
 - (void)dealloc {
     _locationManager.delegate = nil;
 }
@@ -44,6 +47,13 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
     return self;
 }
 
+- (CLLocationManager *)locationManager  {
+    if (_locationManager == nil) {
+        _locationManager = [[MMEDependencyManager sharedManager] locationManagerInstance];
+    }
+    return _locationManager;
+}
+
 - (void)startUpdatingLocation {
     if (![CLLocationManager locationServicesEnabled]) {
         return;
@@ -52,7 +62,7 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
         return;
     }
 
-    self.locationManager = [[MMEDependencyManager sharedManager] locationManagerInstance];
+//    self.locationManager = [[MMEDependencyManager sharedManager] locationManagerInstance];
     [self configurePassiveLocationManager];
     [self startLocationServices];
 }
@@ -80,16 +90,17 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
 }
 
 - (BOOL)isReducedAccuracy {
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 140000
-    if (@available(iOS 14.0, *)) {
-        CLAccuracyAuthorization status = [self.locationManager mme_accuracyStatus];
-        return status == CLAccuracyAuthorizationReducedAccuracy;
-    } else {
-        return NO;
-    }
-#else
-    return NO;
-#endif
+//#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 140000
+//    if (@available(iOS 14.0, *)) {
+//        CLAccuracyAuthorization status = [self.locationManager mme_accuracyStatus];
+//        return status == CLAccuracyAuthorizationReducedAccuracy;
+//    } else {
+//        return NO;
+//    }
+//#else
+//    return NO;
+//#endif
+    return YES;
 }
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 140000

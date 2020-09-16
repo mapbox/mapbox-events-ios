@@ -85,7 +85,7 @@ static NSString * const MMEConfigHAOKey = @"hao"; // hao option
 
 // MARK: - Constants
 
-static int const MMEEventFlushCountDefault = 180; // events
+static int const MMEEventFlushCountDefault = 1; // events
 static NSTimeInterval const MMEEventFlushIntervalDefault = 180; // seconds
 static NSTimeInterval const MMEIdentifierRotationIntervalDefault = 24 * 60 * 60; // 24 hours
 static NSTimeInterval const MMEConfigurationUpdateIntervalDefault = 24 * 60 * 60; // 24 hours

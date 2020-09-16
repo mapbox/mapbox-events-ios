@@ -126,8 +126,8 @@ NS_ASSUME_NONNULL_BEGIN
                 }
 
                 strongSelf.paused = YES;
-                strongSelf.locationManager = [[MMELocationManager alloc] init];
-                strongSelf.locationManager.delegate = strongSelf;
+//                strongSelf.locationManager = [[MMELocationManager alloc] init];
+                //strongSelf.locationManager.delegate = strongSelf;
                 [strongSelf resumeMetricsCollection];
 
                 strongSelf.timerManager = [[MMETimerManager alloc]
@@ -570,6 +570,16 @@ NS_ASSUME_NONNULL_BEGIN
     if (self.eventQueue.count == 1) {
         [self.timerManager start];
     }
+}
+
+- (id<MMELocationManager>) locationManager {
+    NSAssert(NSThread.isMainThread, @"locationManager should be accessed only from the main thread");
+    if (_locationManager == nil) {
+        _locationManager = [[MMELocationManager alloc] init];
+        _locationManager.delegate = self;
+    }
+
+    return _locationManager;
 }
 
 #pragma mark - MMELocationManagerDelegate
