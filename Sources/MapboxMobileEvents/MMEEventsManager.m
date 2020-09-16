@@ -126,7 +126,6 @@ NS_ASSUME_NONNULL_BEGIN
                 }
 
                 strongSelf.paused = YES;
-                strongSelf.locationManager = [[MMELocationManager alloc] init];
                 strongSelf.locationManager.delegate = strongSelf;
                 [strongSelf resumeMetricsCollection];
 
@@ -570,6 +569,16 @@ NS_ASSUME_NONNULL_BEGIN
     if (self.eventQueue.count == 1) {
         [self.timerManager start];
     }
+}
+
+- (id<MMELocationManager>) locationManager {
+    static dispatch_once_t onceToken;
+
+    dispatch_once(&onceToken, ^{
+        _locationManager = [[MMELocationManager alloc] init];
+    });
+
+    return _locationManager;
 }
 
 #pragma mark - MMELocationManagerDelegate
