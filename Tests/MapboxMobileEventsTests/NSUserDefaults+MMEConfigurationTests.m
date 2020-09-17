@@ -110,8 +110,10 @@
 
 - (void)testClientIdReset {
     NSString *clientId = NSUserDefaults.mme_configuration.mme_clientId;
-    [NSUserDefaults mme_resetConfiguration]; // ressting the configuration should produce a new clientId
-    XCTAssertNotEqual(clientId, NSUserDefaults.mme_configuration.mme_clientId);
+    [NSUserDefaults mme_resetConfiguration]; // resetting the configuration should produce a new clientId
+    NSLog(@"clientId: %@", clientId);
+    NSLog(@"newClientId: %@", NSUserDefaults.mme_configuration.mme_clientId);
+    XCTAssertFalse([clientId isEqualToString:NSUserDefaults.mme_configuration.mme_clientId]);
 }
 
 // MARK: -
