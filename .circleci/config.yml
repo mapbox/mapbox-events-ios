@@ -24,16 +24,18 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Unzip bundled Cedar
+          command: |
+            pushd Carthage/Build/iOS
+            unzip -u Cedar.framework.zip
+            popd
+      - run:
           name: Test SPM
           command: |
             # xcodebuild will try to use the Package manifest if it cannot find a project 
             mkdir temp && mv MapboxMobileEvents.xcodeproj temp
             xcodebuild -scheme MapboxMobileEvents test -destination "platform=iOS Simulator,name=iPhone 11,OS=latest"
             mv temp/MapboxMobileEvents.xcodeproj . && rm -rf temp
-      - run:
-          name: Install dependencies
-          command: |
-            carthage bootstrap --platform ios --cache-builds --configuration Debug --no-use-binaries --verbose
       - run:
           name: Test
           command: xcodebuild -project MapboxMobileEvents.xcodeproj -scheme MMETestHost build test -destination 'platform=iOS Simulator,name=iPhone 11,OS=latest' GCC_INSTRUMENT_PROGRAM_FLOW_ARCS=YES GCC_GENERATE_TEST_COVERAGE_FILES=YES
