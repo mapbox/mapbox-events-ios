@@ -1,0 +1,13 @@
+name: PodInstall
+options:
+  bundleIdPrefix: com.mapbox.common.events.PodInstall
+targets:
+  PodInstall:
+    type: application
+    platform: iOS
+    deploymentTarget: "9.0"
+    sources: [Sources]
+    settings:
+        DEVELOPMENT_TEAM: "GJZR2MEM28"
+        SUPPORTS_MACCATALYST: YES
+        DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER: YES

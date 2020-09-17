@@ -1,0 +1,5 @@
+Pods
+Podfile.lock
+Gemfile.lock
+*.xcodeproj
+*.xcworkspace
