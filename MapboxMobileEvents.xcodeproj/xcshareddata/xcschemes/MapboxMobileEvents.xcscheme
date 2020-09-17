@@ -56,7 +56,7 @@
             buildForAnalyzing = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "356DFB13250A6CC80035D854"
+               BlueprintIdentifier = "35DD3D93250A52B300513CA7"
                BuildableName = "MMETestHost.app"
                BlueprintName = "MMETestHost"
                ReferencedContainer = "container:MapboxMobileEvents.xcodeproj">
