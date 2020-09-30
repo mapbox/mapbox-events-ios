@@ -27,8 +27,9 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 + (void)mme_resetConfiguration {
-    [NSUserDefaults.mme_configuration setPersistentDomain:@{} forName:MMEConfigurationDomain];
-    [NSUserDefaults.mme_configuration setVolatileDomain:@{} forName:MMEConfigurationVolatileDomain];
+    [NSUserDefaults.mme_configuration removePersistentDomainForName:MMEConfigurationDomain];
+    [NSUserDefaults.mme_configuration removeVolatileDomainForName:MMEConfigurationVolatileDomain];
+    [NSUserDefaults.standardUserDefaults synchronize];
 }
 
 // MARK: - Register Defaults
@@ -117,9 +118,10 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void)mme_setObject:(NSObject *)value forVolatileKey:(MMEVolatileKey *)key {
-    NSMutableDictionary *volatileDomain = self.mme_volatileDomain.mutableCopy;
-    volatileDomain[key] = value;
-    [self setVolatileDomain:volatileDomain forName:MMEConfigurationVolatileDomain];
+    NSMutableDictionary *mutatedDomain = self.mme_volatileDomain.mutableCopy;
+    mutatedDomain[key] = value;
+    [self removeVolatileDomainForName:MMEConfigurationVolatileDomain];
+    [self setVolatileDomain:mutatedDomain forName:MMEConfigurationVolatileDomain];
 }
 
 - (NSObject *)mme_objectForVolatileKey:(MMEVolatileKey *)key {
@@ -127,27 +129,28 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void)mme_deleteObjectForVolatileKey:(MMEVolatileKey *)key {
-    NSMutableDictionary *volatileDomain = self.mme_volatileDomain.mutableCopy;
-    [volatileDomain removeObjectForKey:key];
-    [self setVolatileDomain:volatileDomain forName:MMEConfigurationVolatileDomain];
+    NSMutableDictionary *mutatedDomain = self.mme_volatileDomain.mutableCopy;
+    [mutatedDomain removeObjectForKey:key];
+    [self removeVolatileDomainForName:MMEConfigurationVolatileDomain];
+    [self setVolatileDomain:mutatedDomain forName:MMEConfigurationVolatileDomain];
 }
 
 // MARK: - Persistent Domain
 
-- (NSDictionary*)mme_PersistentDomain {
+- (NSDictionary*)mme_persistentDomain {
     return [self persistentDomainForName:MMEConfigurationDomain] ?: NSDictionary.new;
 }
 
 - (void)mme_setObject:(id)value forPersistentKey:(MMEPersistentKey *)key {
-    NSMutableDictionary *PersistentDomain = self.mme_PersistentDomain.mutableCopy;
-    PersistentDomain[key] = value;
-    [self setPersistentDomain:PersistentDomain forName:MMEConfigurationDomain];
+    NSMutableDictionary *persistentDomain = self.mme_persistentDomain.mutableCopy;
+    persistentDomain[key] = value;
+    [self setPersistentDomain:persistentDomain forName:MMEConfigurationDomain];
 }
 
 - (void)mme_deleteObjectForPersistentKey:(MMEPersistentKey *)key {
-    NSMutableDictionary *PersistentDomain = self.mme_PersistentDomain.mutableCopy;
-    [PersistentDomain removeObjectForKey:key];
-    [self setPersistentDomain:PersistentDomain forName:MMEConfigurationDomain];
+    NSMutableDictionary *persistentDomain = self.mme_persistentDomain.mutableCopy;
+    [persistentDomain removeObjectForKey:key];
+    [self setPersistentDomain:persistentDomain forName:MMEConfigurationDomain];
 }
 
 // MARK: - Event Manager Configuration

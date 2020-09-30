@@ -42,6 +42,8 @@
 
 @end
 
+// MARK: -
+
 @interface MMEEventsManagerTests : XCTestCase
 @property (nonatomic) MMEEventsManager *eventsManager;
 

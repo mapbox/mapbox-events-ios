@@ -14,8 +14,14 @@ if [ $# -eq 0 ]; then
 fi
 
 SEM_VERSION=$1
-SEM_VERSION=${SEM_VERSION/#v}
-SHORT_VERSION=${SEM_VERSION%-*}
+SEMVER_REGEX="^v([0-9]*)\.([0-9]*)\.([0-9]*)-?(.?)[a-zA-Z]*\.?([0-9]*)"
+
+if [[ ! $SEM_VERSION =~ $SEMVER_REGEX ]]; then
+    echo "${SEM_VERSION} is not a valid semantic version"
+    exit 1
+fi
+
+SHORT_VERSION="${BASH_REMATCH[1]}.${BASH_REMATCH[2]}.${BASH_REMATCH[3]}${BASH_REMATCH[4]:-}${BASH_REMATCH[5]:-}"
 
 step "Version ${SEM_VERSION}"
 
