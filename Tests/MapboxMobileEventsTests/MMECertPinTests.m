@@ -15,7 +15,6 @@
 #import "NSUserDefaults+MMEConfiguration_Private.h"
 
 #import "MMEAPIClientFake.h"
-#import "MMERunningLock.h"
 #import "MMEServiceFixture.h"
 #import "MMEBundleInfoFake.h"
 

@@ -51,13 +51,11 @@ in this repository with details.
 ### 💣 Debugging
 
 Usually when running the Mobile Events SDK in the Emulator it does not send events or emit debug
-messages, you can enable these by setting properties on the `sharedManager`:
+messages, you can enable these by setting keys in the `Info.plist` of your application:
 
-```objc
-if (DEBUG) {
-    MMEventsManager.sharedManager.isMetricsEnabledInSimulator = YES;
-    MMEventsManager.sharedManager.isDebugLoggingEnabled = YES;
-}
+```
+MMEDebugLogging: YES
+MMECollectionEnabledInSimulator: YES
 ```
 
 ### 🗺 Foreground and Background Location Collection
@@ -115,14 +113,5 @@ NSError *reportableError = nil;
 
 ### 🧪 Testing
 
-Test cases are written using [Cedar](https://github.com/cedarbdd/cedar), to run the test in `Xcode` using 
-`Command-U` you'll need to install the framework:
-
-```bash
-# install carthage
-brew install carthage
-
-# bootstrap the project
-cd $PROJECT_DIR
-carthage bootstrap
-```
+Some legacy test cases are written using [Cedar](https://github.com/cedarbdd/cedar), to run the test in `Xcode` using 
+`Command-U` you'll need to unzip the framework located in the `Carthage/Build/iOS/` to run these tests.

@@ -8,7 +8,6 @@
 #import <MapboxMobileEvents/MMECertPin.h>
 #import <MapboxMobileEvents/NSUserDefaults+MMEConfiguration.h>
 
-#import "MMERunningLock.h"
 #import "MMEAPIClientFake.h"
 #import "MMENSURLSessionWrapperFake.h"
 
