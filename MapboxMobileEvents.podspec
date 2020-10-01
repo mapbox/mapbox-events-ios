@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
   # ―――  Spec Metadata  ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
   s.name = 'MapboxMobileEvents'
-  s.version = "0.11.0-beta.1"
+  s.version = "0.10.5-beta.2"
   s.summary = "Mapbox Mobile Events"
 
   s.description  = "Collects usage information to help Mapbox improve its products."
