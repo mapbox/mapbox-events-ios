@@ -8,10 +8,11 @@
 @interface MMEUIApplicationExtensionWrapper : NSObject <MMEUIApplicationWrapper>
 @end
 
+// MARK: -
 
 @implementation MMEUIApplicationExtensionWrapper
 
-// MARK: - Properties
+// MARK: Properties
 
 - (NSInteger)mme_contentSizeScale {
     return NSExtensionContext.mme_contentSizeScale;
@@ -36,13 +37,17 @@
 
 @end
 
+// MARK: -
+
 @interface MMEUIApplicationWrapper ()
 @property (nonatomic, strong) id <MMEUIApplicationWrapper> application;
 @end
 
+// MARK: -
+
 @implementation MMEUIApplicationWrapper
 
-// MARK: - Initializers
+// MARK: Initializers
 
 - (instancetype)init {
 

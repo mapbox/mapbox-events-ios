@@ -178,8 +178,9 @@ NS_ASSUME_NONNULL_BEGIN
             _backgroundTaskIdentifier = [self.application beginBackgroundTaskWithExpirationHandler:^{
                 MMELOG(MMELogInfo, MMEDebugEventTypeBackgroundTask, ([NSString stringWithFormat:@"Ending background task: %@, instance: %@",@(self.backgroundTaskIdentifier),self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
                 
-                [self.application endBackgroundTask:self.backgroundTaskIdentifier];
+                UIBackgroundTaskIdentifier taskId = self.backgroundTaskIdentifier;
                 self.backgroundTaskIdentifier = UIBackgroundTaskInvalid;
+                [self.application endBackgroundTask:taskId];
             }];
             
             [self flush];
