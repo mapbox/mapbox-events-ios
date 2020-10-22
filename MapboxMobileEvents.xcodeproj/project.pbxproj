@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		354CBBE525417DAF00E66C7F /* MMEUIApplicationWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 354CBBE325417DAF00E66C7F /* MMEUIApplicationWrapper.h */; };
+		354CBBE625417DAF00E66C7F /* MMEUIApplicationWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 354CBBE425417DAF00E66C7F /* MMEUIApplicationWrapper.m */; };
 		3565E3DC250BCA1E0013D549 /* MapboxMobileEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = 3565E3DB250BCA1E0013D549 /* MapboxMobileEvents.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		356DFB21250A6CC80035D854 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 356DFB1F250A6CC80035D854 /* Main.storyboard */; };
 		356DFB23250A6CC90035D854 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 356DFB22250A6CC90035D854 /* Assets.xcassets */; };
@@ -53,7 +55,7 @@
 		35DD3D06250A4F7000513CA7 /* CLLocationManager+MMEMobileEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = 35DD3D02250A4F7000513CA7 /* CLLocationManager+MMEMobileEvents.m */; };
 		35DD3D07250A4F7000513CA7 /* CLLocation+MMEMobileEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = 35DD3D03250A4F7000513CA7 /* CLLocation+MMEMobileEvents.m */; };
 		35DD3D3E250A4F8300513CA7 /* MMECategoryLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 35DD3D08250A4F7B00513CA7 /* MMECategoryLoader.m */; };
-		35DD3D3F250A4F8300513CA7 /* MMEUIApplicationWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 35DD3D09250A4F7B00513CA7 /* MMEUIApplicationWrapper.m */; };
+		35DD3D3F250A4F8300513CA7 /* MMENSURLSessionWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 35DD3D09250A4F7B00513CA7 /* MMENSURLSessionWrapper.m */; };
 		35DD3D40250A4F8300513CA7 /* UIKit+MMEMobileEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = 35DD3D0A250A4F7B00513CA7 /* UIKit+MMEMobileEvents.h */; };
 		35DD3D41250A4F8300513CA7 /* MMEEventsManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 35DD3D0B250A4F7B00513CA7 /* MMEEventsManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		35DD3D42250A4F8300513CA7 /* NSBundle+MMEMobileEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = 35DD3D0C250A4F7B00513CA7 /* NSBundle+MMEMobileEvents.m */; };
@@ -84,7 +86,6 @@
 		35DD3D5B250A4F8300513CA7 /* MMEEventsManager_Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 35DD3D25250A4F7F00513CA7 /* MMEEventsManager_Private.h */; };
 		35DD3D5C250A4F8300513CA7 /* MMEEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 35DD3D26250A4F7F00513CA7 /* MMEEvent.m */; };
 		35DD3D5D250A4F8300513CA7 /* MMECertPin.m in Sources */ = {isa = PBXBuildFile; fileRef = 35DD3D27250A4F7F00513CA7 /* MMECertPin.m */; };
-		35DD3D5E250A4F8300513CA7 /* MMEUIApplicationWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 35DD3D28250A4F7F00513CA7 /* MMEUIApplicationWrapper.h */; };
 		35DD3D5F250A4F8300513CA7 /* MMEDependencyManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 35DD3D29250A4F7F00513CA7 /* MMEDependencyManager.m */; };
 		35DD3D60250A4F8300513CA7 /* MMEEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 35DD3D2A250A4F7F00513CA7 /* MMEEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		35DD3D61250A4F8300513CA7 /* MMEReachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 35DD3D2B250A4F7F00513CA7 /* MMEReachability.m */; };
@@ -173,6 +174,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		354CBBE325417DAF00E66C7F /* MMEUIApplicationWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMEUIApplicationWrapper.h; path = include/MapboxMobileEvents/MMEUIApplicationWrapper.h; sourceTree = "<group>"; };
+		354CBBE425417DAF00E66C7F /* MMEUIApplicationWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMEUIApplicationWrapper.m; path = include/MapboxMobileEvents/MMEUIApplicationWrapper.m; sourceTree = "<group>"; };
 		3565E3DB250BCA1E0013D549 /* MapboxMobileEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MapboxMobileEvents.h; path = Sources/MapboxMobileEvents/include/MapboxMobileEvents.h; sourceTree = SOURCE_ROOT; };
 		356DFB14250A6CC80035D854 /* MMETestHost.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MMETestHost.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		356DFB20250A6CC80035D854 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -192,64 +195,63 @@
 		3579B95F250BB1C200AF88BD /* MapboxMobileEventsCedarTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MapboxMobileEventsCedarTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3579B963250BB1C200AF88BD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3579B973250BB45C00AF88BD /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/CoreLocation.framework; sourceTree = DEVELOPER_DIR; };
-		35DD3D00250A4F7000513CA7 /* CLLocation+MMEMobileEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "CLLocation+MMEMobileEvents.h"; path = "Sources/MapboxMobileEvents/CLLocation+MMEMobileEvents.h"; sourceTree = SOURCE_ROOT; };
-		35DD3D01250A4F7000513CA7 /* CLLocationManager+MMEMobileEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "CLLocationManager+MMEMobileEvents.h"; path = "Sources/MapboxMobileEvents/CLLocationManager+MMEMobileEvents.h"; sourceTree = SOURCE_ROOT; };
-		35DD3D02250A4F7000513CA7 /* CLLocationManager+MMEMobileEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "CLLocationManager+MMEMobileEvents.m"; path = "Sources/MapboxMobileEvents/CLLocationManager+MMEMobileEvents.m"; sourceTree = SOURCE_ROOT; };
-		35DD3D03250A4F7000513CA7 /* CLLocation+MMEMobileEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "CLLocation+MMEMobileEvents.m"; path = "Sources/MapboxMobileEvents/CLLocation+MMEMobileEvents.m"; sourceTree = SOURCE_ROOT; };
-		35DD3D08250A4F7B00513CA7 /* MMECategoryLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMECategoryLoader.m; path = Sources/MapboxMobileEvents/MMECategoryLoader.m; sourceTree = SOURCE_ROOT; };
-		35DD3D09250A4F7B00513CA7 /* MMEUIApplicationWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMEUIApplicationWrapper.m; path = Sources/MapboxMobileEvents/MMEUIApplicationWrapper.m; sourceTree = SOURCE_ROOT; };
-		35DD3D0A250A4F7B00513CA7 /* UIKit+MMEMobileEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIKit+MMEMobileEvents.h"; path = "Sources/MapboxMobileEvents/UIKit+MMEMobileEvents.h"; sourceTree = SOURCE_ROOT; };
-		35DD3D0B250A4F7B00513CA7 /* MMEEventsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMEEventsManager.h; path = Sources/MapboxMobileEvents/MMEEventsManager.h; sourceTree = SOURCE_ROOT; };
-		35DD3D0C250A4F7B00513CA7 /* NSBundle+MMEMobileEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSBundle+MMEMobileEvents.m"; path = "Sources/MapboxMobileEvents/NSBundle+MMEMobileEvents.m"; sourceTree = SOURCE_ROOT; };
-		35DD3D0D250A4F7B00513CA7 /* MMEMetricsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMEMetricsManager.h; path = Sources/MapboxMobileEvents/MMEMetricsManager.h; sourceTree = SOURCE_ROOT; };
-		35DD3D0E250A4F7B00513CA7 /* MMEDate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMEDate.h; path = Sources/MapboxMobileEvents/MMEDate.h; sourceTree = SOURCE_ROOT; };
-		35DD3D0F250A4F7B00513CA7 /* MMEReachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMEReachability.h; path = Sources/MapboxMobileEvents/MMEReachability.h; sourceTree = SOURCE_ROOT; };
-		35DD3D10250A4F7B00513CA7 /* NSData+MMEGZIP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSData+MMEGZIP.m"; path = "Sources/MapboxMobileEvents/NSData+MMEGZIP.m"; sourceTree = SOURCE_ROOT; };
-		35DD3D11250A4F7B00513CA7 /* MMELocationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMELocationManager.m; path = Sources/MapboxMobileEvents/MMELocationManager.m; sourceTree = SOURCE_ROOT; };
-		35DD3D12250A4F7B00513CA7 /* MMEDispatchManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMEDispatchManager.h; path = Sources/MapboxMobileEvents/MMEDispatchManager.h; sourceTree = SOURCE_ROOT; };
-		35DD3D13250A4F7B00513CA7 /* MMETimerManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMETimerManager.h; path = Sources/MapboxMobileEvents/MMETimerManager.h; sourceTree = SOURCE_ROOT; };
-		35DD3D14250A4F7B00513CA7 /* MMEDependencyManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMEDependencyManager.h; path = Sources/MapboxMobileEvents/MMEDependencyManager.h; sourceTree = SOURCE_ROOT; };
-		35DD3D15250A4F7B00513CA7 /* MMEDate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMEDate.m; path = Sources/MapboxMobileEvents/MMEDate.m; sourceTree = SOURCE_ROOT; };
-		35DD3D16250A4F7B00513CA7 /* MMENSURLSessionWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMENSURLSessionWrapper.m; path = Sources/MapboxMobileEvents/MMENSURLSessionWrapper.m; sourceTree = SOURCE_ROOT; };
-		35DD3D17250A4F7B00513CA7 /* MMEConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMEConstants.m; path = Sources/MapboxMobileEvents/MMEConstants.m; sourceTree = SOURCE_ROOT; };
-		35DD3D18250A4F7B00513CA7 /* UIKit+MMEMobileEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIKit+MMEMobileEvents.m"; path = "Sources/MapboxMobileEvents/UIKit+MMEMobileEvents.m"; sourceTree = SOURCE_ROOT; };
-		35DD3D19250A4F7B00513CA7 /* MMELocationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMELocationManager.h; path = Sources/MapboxMobileEvents/MMELocationManager.h; sourceTree = SOURCE_ROOT; };
-		35DD3D1A250A4F7B00513CA7 /* NSUserDefaults+MMEConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSUserDefaults+MMEConfiguration.h"; path = "Sources/MapboxMobileEvents/NSUserDefaults+MMEConfiguration.h"; sourceTree = SOURCE_ROOT; };
-		35DD3D1B250A4F7B00513CA7 /* NSBundle+MMEMobileEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSBundle+MMEMobileEvents.h"; path = "Sources/MapboxMobileEvents/NSBundle+MMEMobileEvents.h"; sourceTree = SOURCE_ROOT; };
-		35DD3D1C250A4F7B00513CA7 /* NSUserDefaults+MMEConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSUserDefaults+MMEConfiguration.m"; path = "Sources/MapboxMobileEvents/NSUserDefaults+MMEConfiguration.m"; sourceTree = SOURCE_ROOT; };
-		35DD3D1D250A4F7B00513CA7 /* MMEUniqueIdentifier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMEUniqueIdentifier.m; path = Sources/MapboxMobileEvents/MMEUniqueIdentifier.m; sourceTree = SOURCE_ROOT; };
-		35DD3D1E250A4F7B00513CA7 /* MMEAPIClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMEAPIClient.h; path = Sources/MapboxMobileEvents/MMEAPIClient.h; sourceTree = SOURCE_ROOT; };
-		35DD3D1F250A4F7B00513CA7 /* MMETypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMETypes.h; path = Sources/MapboxMobileEvents/MMETypes.h; sourceTree = SOURCE_ROOT; };
-		35DD3D20250A4F7C00513CA7 /* MMEMetrics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMEMetrics.h; path = Sources/MapboxMobileEvents/MMEMetrics.h; sourceTree = SOURCE_ROOT; };
-		35DD3D21250A4F7C00513CA7 /* MMECommonEventData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMECommonEventData.m; path = Sources/MapboxMobileEvents/MMECommonEventData.m; sourceTree = SOURCE_ROOT; };
-		35DD3D22250A4F7C00513CA7 /* MMENSURLSessionWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMENSURLSessionWrapper.h; path = Sources/MapboxMobileEvents/MMENSURLSessionWrapper.h; sourceTree = SOURCE_ROOT; };
-		35DD3D23250A4F7F00513CA7 /* MMECategoryLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMECategoryLoader.h; path = Sources/MapboxMobileEvents/MMECategoryLoader.h; sourceTree = SOURCE_ROOT; };
-		35DD3D24250A4F7F00513CA7 /* MMEMetrics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMEMetrics.m; path = Sources/MapboxMobileEvents/MMEMetrics.m; sourceTree = SOURCE_ROOT; };
-		35DD3D25250A4F7F00513CA7 /* MMEEventsManager_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMEEventsManager_Private.h; path = Sources/MapboxMobileEvents/MMEEventsManager_Private.h; sourceTree = SOURCE_ROOT; };
-		35DD3D26250A4F7F00513CA7 /* MMEEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMEEvent.m; path = Sources/MapboxMobileEvents/MMEEvent.m; sourceTree = SOURCE_ROOT; };
-		35DD3D27250A4F7F00513CA7 /* MMECertPin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMECertPin.m; path = Sources/MapboxMobileEvents/MMECertPin.m; sourceTree = SOURCE_ROOT; };
-		35DD3D28250A4F7F00513CA7 /* MMEUIApplicationWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMEUIApplicationWrapper.h; path = Sources/MapboxMobileEvents/MMEUIApplicationWrapper.h; sourceTree = SOURCE_ROOT; };
-		35DD3D29250A4F7F00513CA7 /* MMEDependencyManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMEDependencyManager.m; path = Sources/MapboxMobileEvents/MMEDependencyManager.m; sourceTree = SOURCE_ROOT; };
-		35DD3D2A250A4F7F00513CA7 /* MMEEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMEEvent.h; path = Sources/MapboxMobileEvents/MMEEvent.h; sourceTree = SOURCE_ROOT; };
-		35DD3D2B250A4F7F00513CA7 /* MMEReachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMEReachability.m; path = Sources/MapboxMobileEvents/MMEReachability.m; sourceTree = SOURCE_ROOT; };
-		35DD3D2C250A4F7F00513CA7 /* MMEEventLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMEEventLogger.m; path = Sources/MapboxMobileEvents/MMEEventLogger.m; sourceTree = SOURCE_ROOT; };
-		35DD3D2D250A4F7F00513CA7 /* NSProcessInfo+SystemInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSProcessInfo+SystemInfo.h"; path = "Sources/MapboxMobileEvents/NSProcessInfo+SystemInfo.h"; sourceTree = SOURCE_ROOT; };
-		35DD3D2E250A4F7F00513CA7 /* NSString+MMEVersions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+MMEVersions.m"; path = "Sources/MapboxMobileEvents/NSString+MMEVersions.m"; sourceTree = SOURCE_ROOT; };
-		35DD3D2F250A4F7F00513CA7 /* MMEDispatchManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMEDispatchManager.m; path = Sources/MapboxMobileEvents/MMEDispatchManager.m; sourceTree = SOURCE_ROOT; };
-		35DD3D30250A4F8000513CA7 /* MMETimerManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMETimerManager.m; path = Sources/MapboxMobileEvents/MMETimerManager.m; sourceTree = SOURCE_ROOT; };
-		35DD3D31250A4F8100513CA7 /* NSUserDefaults+MMEConfiguration_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSUserDefaults+MMEConfiguration_Private.h"; path = "Sources/MapboxMobileEvents/NSUserDefaults+MMEConfiguration_Private.h"; sourceTree = SOURCE_ROOT; };
-		35DD3D32250A4F8100513CA7 /* MMECertPin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMECertPin.h; path = Sources/MapboxMobileEvents/MMECertPin.h; sourceTree = SOURCE_ROOT; };
-		35DD3D33250A4F8200513CA7 /* MMECommonEventData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMECommonEventData.h; path = Sources/MapboxMobileEvents/MMECommonEventData.h; sourceTree = SOURCE_ROOT; };
-		35DD3D34250A4F8200513CA7 /* MMEConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMEConstants.h; path = Sources/MapboxMobileEvents/MMEConstants.h; sourceTree = SOURCE_ROOT; };
-		35DD3D35250A4F8200513CA7 /* NSString+MMEVersions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+MMEVersions.h"; path = "Sources/MapboxMobileEvents/NSString+MMEVersions.h"; sourceTree = SOURCE_ROOT; };
-		35DD3D36250A4F8200513CA7 /* NSData+MMEGZIP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSData+MMEGZIP.h"; path = "Sources/MapboxMobileEvents/NSData+MMEGZIP.h"; sourceTree = SOURCE_ROOT; };
-		35DD3D37250A4F8200513CA7 /* MMEUniqueIdentifier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMEUniqueIdentifier.h; path = Sources/MapboxMobileEvents/MMEUniqueIdentifier.h; sourceTree = SOURCE_ROOT; };
-		35DD3D38250A4F8200513CA7 /* MMEMetricsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMEMetricsManager.m; path = Sources/MapboxMobileEvents/MMEMetricsManager.m; sourceTree = SOURCE_ROOT; };
-		35DD3D39250A4F8200513CA7 /* MMEAPIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMEAPIClient.m; path = Sources/MapboxMobileEvents/MMEAPIClient.m; sourceTree = SOURCE_ROOT; };
-		35DD3D3A250A4F8200513CA7 /* NSProcessInfo+SystemInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSProcessInfo+SystemInfo.m"; path = "Sources/MapboxMobileEvents/NSProcessInfo+SystemInfo.m"; sourceTree = SOURCE_ROOT; };
-		35DD3D3B250A4F8200513CA7 /* MMEEventLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMEEventLogger.h; path = Sources/MapboxMobileEvents/MMEEventLogger.h; sourceTree = SOURCE_ROOT; };
-		35DD3D3C250A4F8200513CA7 /* MMEAPIClient_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMEAPIClient_Private.h; path = Sources/MapboxMobileEvents/MMEAPIClient_Private.h; sourceTree = SOURCE_ROOT; };
-		35DD3D3D250A4F8200513CA7 /* MMEEventsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMEEventsManager.m; path = Sources/MapboxMobileEvents/MMEEventsManager.m; sourceTree = SOURCE_ROOT; };
+		35DD3D00250A4F7000513CA7 /* CLLocation+MMEMobileEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "CLLocation+MMEMobileEvents.h"; path = "Sources/MapboxMobileEvents/include/MapboxMobileEvents/CLLocation+MMEMobileEvents.h"; sourceTree = SOURCE_ROOT; };
+		35DD3D01250A4F7000513CA7 /* CLLocationManager+MMEMobileEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "CLLocationManager+MMEMobileEvents.h"; path = "Sources/MapboxMobileEvents/include/MapboxMobileEvents/CLLocationManager+MMEMobileEvents.h"; sourceTree = SOURCE_ROOT; };
+		35DD3D02250A4F7000513CA7 /* CLLocationManager+MMEMobileEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "CLLocationManager+MMEMobileEvents.m"; path = "Sources/MapboxMobileEvents/include/MapboxMobileEvents/CLLocationManager+MMEMobileEvents.m"; sourceTree = SOURCE_ROOT; };
+		35DD3D03250A4F7000513CA7 /* CLLocation+MMEMobileEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "CLLocation+MMEMobileEvents.m"; path = "Sources/MapboxMobileEvents/include/MapboxMobileEvents/CLLocation+MMEMobileEvents.m"; sourceTree = SOURCE_ROOT; };
+		35DD3D08250A4F7B00513CA7 /* MMECategoryLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMECategoryLoader.m; path = Sources/MapboxMobileEvents/include/MapboxMobileEvents/MMECategoryLoader.m; sourceTree = SOURCE_ROOT; };
+		35DD3D09250A4F7B00513CA7 /* MMENSURLSessionWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMENSURLSessionWrapper.m; path = Sources/MapboxMobileEvents/include/MapboxMobileEvents/MMENSURLSessionWrapper.m; sourceTree = SOURCE_ROOT; };
+		35DD3D0A250A4F7B00513CA7 /* UIKit+MMEMobileEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIKit+MMEMobileEvents.h"; path = "Sources/MapboxMobileEvents/include/MapboxMobileEvents/UIKit+MMEMobileEvents.h"; sourceTree = SOURCE_ROOT; };
+		35DD3D0B250A4F7B00513CA7 /* MMEEventsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMEEventsManager.h; path = Sources/MapboxMobileEvents/include/MapboxMobileEvents/MMEEventsManager.h; sourceTree = SOURCE_ROOT; };
+		35DD3D0C250A4F7B00513CA7 /* NSBundle+MMEMobileEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSBundle+MMEMobileEvents.m"; path = "Sources/MapboxMobileEvents/include/MapboxMobileEvents/NSBundle+MMEMobileEvents.m"; sourceTree = SOURCE_ROOT; };
+		35DD3D0D250A4F7B00513CA7 /* MMEMetricsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMEMetricsManager.h; path = Sources/MapboxMobileEvents/include/MapboxMobileEvents/MMEMetricsManager.h; sourceTree = SOURCE_ROOT; };
+		35DD3D0E250A4F7B00513CA7 /* MMEDate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMEDate.h; path = Sources/MapboxMobileEvents/include/MapboxMobileEvents/MMEDate.h; sourceTree = SOURCE_ROOT; };
+		35DD3D0F250A4F7B00513CA7 /* MMEReachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMEReachability.h; path = Sources/MapboxMobileEvents/include/MapboxMobileEvents/MMEReachability.h; sourceTree = SOURCE_ROOT; };
+		35DD3D10250A4F7B00513CA7 /* NSData+MMEGZIP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSData+MMEGZIP.m"; path = "Sources/MapboxMobileEvents/include/MapboxMobileEvents/NSData+MMEGZIP.m"; sourceTree = SOURCE_ROOT; };
+		35DD3D11250A4F7B00513CA7 /* MMELocationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMELocationManager.m; path = Sources/MapboxMobileEvents/include/MapboxMobileEvents/MMELocationManager.m; sourceTree = SOURCE_ROOT; };
+		35DD3D12250A4F7B00513CA7 /* MMEDispatchManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMEDispatchManager.h; path = Sources/MapboxMobileEvents/include/MapboxMobileEvents/MMEDispatchManager.h; sourceTree = SOURCE_ROOT; };
+		35DD3D13250A4F7B00513CA7 /* MMETimerManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMETimerManager.h; path = Sources/MapboxMobileEvents/include/MapboxMobileEvents/MMETimerManager.h; sourceTree = SOURCE_ROOT; };
+		35DD3D14250A4F7B00513CA7 /* MMEDependencyManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMEDependencyManager.h; path = Sources/MapboxMobileEvents/include/MapboxMobileEvents/MMEDependencyManager.h; sourceTree = SOURCE_ROOT; };
+		35DD3D15250A4F7B00513CA7 /* MMEDate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMEDate.m; path = Sources/MapboxMobileEvents/include/MapboxMobileEvents/MMEDate.m; sourceTree = SOURCE_ROOT; };
+		35DD3D16250A4F7B00513CA7 /* MMENSURLSessionWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMENSURLSessionWrapper.m; path = Sources/MapboxMobileEvents/include/MapboxMobileEvents/MMENSURLSessionWrapper.m; sourceTree = SOURCE_ROOT; };
+		35DD3D17250A4F7B00513CA7 /* MMEConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMEConstants.m; path = Sources/MapboxMobileEvents/include/MapboxMobileEvents/MMEConstants.m; sourceTree = SOURCE_ROOT; };
+		35DD3D18250A4F7B00513CA7 /* UIKit+MMEMobileEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIKit+MMEMobileEvents.m"; path = "Sources/MapboxMobileEvents/include/MapboxMobileEvents/UIKit+MMEMobileEvents.m"; sourceTree = SOURCE_ROOT; };
+		35DD3D19250A4F7B00513CA7 /* MMELocationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMELocationManager.h; path = Sources/MapboxMobileEvents/include/MapboxMobileEvents/MMELocationManager.h; sourceTree = SOURCE_ROOT; };
+		35DD3D1A250A4F7B00513CA7 /* NSUserDefaults+MMEConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSUserDefaults+MMEConfiguration.h"; path = "Sources/MapboxMobileEvents/include/MapboxMobileEvents/NSUserDefaults+MMEConfiguration.h"; sourceTree = SOURCE_ROOT; };
+		35DD3D1B250A4F7B00513CA7 /* NSBundle+MMEMobileEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSBundle+MMEMobileEvents.h"; path = "Sources/MapboxMobileEvents/include/MapboxMobileEvents/NSBundle+MMEMobileEvents.h"; sourceTree = SOURCE_ROOT; };
+		35DD3D1C250A4F7B00513CA7 /* NSUserDefaults+MMEConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSUserDefaults+MMEConfiguration.m"; path = "Sources/MapboxMobileEvents/include/MapboxMobileEvents/NSUserDefaults+MMEConfiguration.m"; sourceTree = SOURCE_ROOT; };
+		35DD3D1D250A4F7B00513CA7 /* MMEUniqueIdentifier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMEUniqueIdentifier.m; path = Sources/MapboxMobileEvents/include/MapboxMobileEvents/MMEUniqueIdentifier.m; sourceTree = SOURCE_ROOT; };
+		35DD3D1E250A4F7B00513CA7 /* MMEAPIClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMEAPIClient.h; path = Sources/MapboxMobileEvents/include/MapboxMobileEvents/MMEAPIClient.h; sourceTree = SOURCE_ROOT; };
+		35DD3D1F250A4F7B00513CA7 /* MMETypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMETypes.h; path = Sources/MapboxMobileEvents/include/MapboxMobileEvents/MMETypes.h; sourceTree = SOURCE_ROOT; };
+		35DD3D20250A4F7C00513CA7 /* MMEMetrics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMEMetrics.h; path = Sources/MapboxMobileEvents/include/MapboxMobileEvents/MMEMetrics.h; sourceTree = SOURCE_ROOT; };
+		35DD3D21250A4F7C00513CA7 /* MMECommonEventData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMECommonEventData.m; path = Sources/MapboxMobileEvents/include/MapboxMobileEvents/MMECommonEventData.m; sourceTree = SOURCE_ROOT; };
+		35DD3D22250A4F7C00513CA7 /* MMENSURLSessionWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMENSURLSessionWrapper.h; path = Sources/MapboxMobileEvents/include/MapboxMobileEvents/MMENSURLSessionWrapper.h; sourceTree = SOURCE_ROOT; };
+		35DD3D23250A4F7F00513CA7 /* MMECategoryLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMECategoryLoader.h; path = Sources/MapboxMobileEvents/include/MapboxMobileEvents/MMECategoryLoader.h; sourceTree = SOURCE_ROOT; };
+		35DD3D24250A4F7F00513CA7 /* MMEMetrics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMEMetrics.m; path = Sources/MapboxMobileEvents/include/MapboxMobileEvents/MMEMetrics.m; sourceTree = SOURCE_ROOT; };
+		35DD3D25250A4F7F00513CA7 /* MMEEventsManager_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMEEventsManager_Private.h; path = Sources/MapboxMobileEvents/include/MapboxMobileEvents/MMEEventsManager_Private.h; sourceTree = SOURCE_ROOT; };
+		35DD3D26250A4F7F00513CA7 /* MMEEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMEEvent.m; path = Sources/MapboxMobileEvents/include/MapboxMobileEvents/MMEEvent.m; sourceTree = SOURCE_ROOT; };
+		35DD3D27250A4F7F00513CA7 /* MMECertPin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMECertPin.m; path = Sources/MapboxMobileEvents/include/MapboxMobileEvents/MMECertPin.m; sourceTree = SOURCE_ROOT; };
+		35DD3D29250A4F7F00513CA7 /* MMEDependencyManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMEDependencyManager.m; path = Sources/MapboxMobileEvents/include/MapboxMobileEvents/MMEDependencyManager.m; sourceTree = SOURCE_ROOT; };
+		35DD3D2A250A4F7F00513CA7 /* MMEEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMEEvent.h; path = Sources/MapboxMobileEvents/include/MapboxMobileEvents/MMEEvent.h; sourceTree = SOURCE_ROOT; };
+		35DD3D2B250A4F7F00513CA7 /* MMEReachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMEReachability.m; path = Sources/MapboxMobileEvents/include/MapboxMobileEvents/MMEReachability.m; sourceTree = SOURCE_ROOT; };
+		35DD3D2C250A4F7F00513CA7 /* MMEEventLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMEEventLogger.m; path = Sources/MapboxMobileEvents/include/MapboxMobileEvents/MMEEventLogger.m; sourceTree = SOURCE_ROOT; };
+		35DD3D2D250A4F7F00513CA7 /* NSProcessInfo+SystemInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSProcessInfo+SystemInfo.h"; path = "Sources/MapboxMobileEvents/include/MapboxMobileEvents/NSProcessInfo+SystemInfo.h"; sourceTree = SOURCE_ROOT; };
+		35DD3D2E250A4F7F00513CA7 /* NSString+MMEVersions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+MMEVersions.m"; path = "Sources/MapboxMobileEvents/include/MapboxMobileEvents/NSString+MMEVersions.m"; sourceTree = SOURCE_ROOT; };
+		35DD3D2F250A4F7F00513CA7 /* MMEDispatchManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMEDispatchManager.m; path = Sources/MapboxMobileEvents/include/MapboxMobileEvents/MMEDispatchManager.m; sourceTree = SOURCE_ROOT; };
+		35DD3D30250A4F8000513CA7 /* MMETimerManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMETimerManager.m; path = Sources/MapboxMobileEvents/include/MapboxMobileEvents/MMETimerManager.m; sourceTree = SOURCE_ROOT; };
+		35DD3D31250A4F8100513CA7 /* NSUserDefaults+MMEConfiguration_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSUserDefaults+MMEConfiguration_Private.h"; path = "Sources/MapboxMobileEvents/include/MapboxMobileEvents/NSUserDefaults+MMEConfiguration_Private.h"; sourceTree = SOURCE_ROOT; };
+		35DD3D32250A4F8100513CA7 /* MMECertPin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMECertPin.h; path = Sources/MapboxMobileEvents/include/MapboxMobileEvents/MMECertPin.h; sourceTree = SOURCE_ROOT; };
+		35DD3D33250A4F8200513CA7 /* MMECommonEventData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMECommonEventData.h; path = Sources/MapboxMobileEvents/include/MapboxMobileEvents/MMECommonEventData.h; sourceTree = SOURCE_ROOT; };
+		35DD3D34250A4F8200513CA7 /* MMEConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMEConstants.h; path = Sources/MapboxMobileEvents/include/MapboxMobileEvents/MMEConstants.h; sourceTree = SOURCE_ROOT; };
+		35DD3D35250A4F8200513CA7 /* NSString+MMEVersions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+MMEVersions.h"; path = "Sources/MapboxMobileEvents/include/MapboxMobileEvents/NSString+MMEVersions.h"; sourceTree = SOURCE_ROOT; };
+		35DD3D36250A4F8200513CA7 /* NSData+MMEGZIP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSData+MMEGZIP.h"; path = "Sources/MapboxMobileEvents/include/MapboxMobileEvents/NSData+MMEGZIP.h"; sourceTree = SOURCE_ROOT; };
+		35DD3D37250A4F8200513CA7 /* MMEUniqueIdentifier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMEUniqueIdentifier.h; path = Sources/MapboxMobileEvents/include/MapboxMobileEvents/MMEUniqueIdentifier.h; sourceTree = SOURCE_ROOT; };
+		35DD3D38250A4F8200513CA7 /* MMEMetricsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMEMetricsManager.m; path = Sources/MapboxMobileEvents/include/MapboxMobileEvents/MMEMetricsManager.m; sourceTree = SOURCE_ROOT; };
+		35DD3D39250A4F8200513CA7 /* MMEAPIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMEAPIClient.m; path = Sources/MapboxMobileEvents/include/MapboxMobileEvents/MMEAPIClient.m; sourceTree = SOURCE_ROOT; };
+		35DD3D3A250A4F8200513CA7 /* NSProcessInfo+SystemInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSProcessInfo+SystemInfo.m"; path = "Sources/MapboxMobileEvents/include/MapboxMobileEvents/NSProcessInfo+SystemInfo.m"; sourceTree = SOURCE_ROOT; };
+		35DD3D3B250A4F8200513CA7 /* MMEEventLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMEEventLogger.h; path = Sources/MapboxMobileEvents/include/MapboxMobileEvents/MMEEventLogger.h; sourceTree = SOURCE_ROOT; };
+		35DD3D3C250A4F8200513CA7 /* MMEAPIClient_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMEAPIClient_Private.h; path = Sources/MapboxMobileEvents/include/MapboxMobileEvents/MMEAPIClient_Private.h; sourceTree = SOURCE_ROOT; };
+		35DD3D3D250A4F8200513CA7 /* MMEEventsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMEEventsManager.m; path = Sources/MapboxMobileEvents/include/MapboxMobileEvents/MMEEventsManager.m; sourceTree = SOURCE_ROOT; };
 		35DD3D74250A4FB400513CA7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		35DD3DB5250A545D00513CA7 /* MapboxMobileEventsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MapboxMobileEventsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		35DD3DB9250A545D00513CA7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -418,6 +420,8 @@
 				35DD3D3C250A4F8200513CA7 /* MMEAPIClient_Private.h */,
 				35DD3D1E250A4F7B00513CA7 /* MMEAPIClient.h */,
 				35DD3D39250A4F8200513CA7 /* MMEAPIClient.m */,
+				354CBBE325417DAF00E66C7F /* MMEUIApplicationWrapper.h */,
+				354CBBE425417DAF00E66C7F /* MMEUIApplicationWrapper.m */,
 				35DD3D23250A4F7F00513CA7 /* MMECategoryLoader.h */,
 				35DD3D08250A4F7B00513CA7 /* MMECategoryLoader.m */,
 				35DD3D32250A4F8100513CA7 /* MMECertPin.h */,
@@ -452,8 +456,7 @@
 				35DD3D13250A4F7B00513CA7 /* MMETimerManager.h */,
 				35DD3D30250A4F8000513CA7 /* MMETimerManager.m */,
 				35DD3D1F250A4F7B00513CA7 /* MMETypes.h */,
-				35DD3D28250A4F7F00513CA7 /* MMEUIApplicationWrapper.h */,
-				35DD3D09250A4F7B00513CA7 /* MMEUIApplicationWrapper.m */,
+				35DD3D09250A4F7B00513CA7 /* MMENSURLSessionWrapper.m */,
 				35DD3D37250A4F8200513CA7 /* MMEUniqueIdentifier.h */,
 				35DD3D1D250A4F7B00513CA7 /* MMEUniqueIdentifier.m */,
 				35DD3D1B250A4F7B00513CA7 /* NSBundle+MMEMobileEvents.h */,
@@ -654,6 +657,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				35DD3D04250A4F7000513CA7 /* CLLocation+MMEMobileEvents.h in Headers */,
+				354CBBE525417DAF00E66C7F /* MMEUIApplicationWrapper.h in Headers */,
 				35DD3D49250A4F8300513CA7 /* MMETimerManager.h in Headers */,
 				35DD3D6D250A4F8300513CA7 /* MMEUniqueIdentifier.h in Headers */,
 				35DD3D6B250A4F8300513CA7 /* NSString+MMEVersions.h in Headers */,
@@ -680,7 +684,6 @@
 				35DD3D41250A4F8300513CA7 /* MMEEventsManager.h in Headers */,
 				35DD3D50250A4F8300513CA7 /* NSUserDefaults+MMEConfiguration.h in Headers */,
 				35DD3D55250A4F8300513CA7 /* MMETypes.h in Headers */,
-				35DD3D5E250A4F8300513CA7 /* MMEUIApplicationWrapper.h in Headers */,
 				35DD3D58250A4F8300513CA7 /* MMENSURLSessionWrapper.h in Headers */,
 				35DD3D63250A4F8300513CA7 /* NSProcessInfo+SystemInfo.h in Headers */,
 				3565E3DC250BCA1E0013D549 /* MapboxMobileEvents.h in Headers */,
@@ -955,6 +958,7 @@
 				35DD3D4D250A4F8300513CA7 /* MMEConstants.m in Sources */,
 				35DD3D5C250A4F8300513CA7 /* MMEEvent.m in Sources */,
 				35DD3D66250A4F8300513CA7 /* MMETimerManager.m in Sources */,
+				354CBBE625417DAF00E66C7F /* MMEUIApplicationWrapper.m in Sources */,
 				35DD3D57250A4F8300513CA7 /* MMECommonEventData.m in Sources */,
 				35DD3D46250A4F8300513CA7 /* NSData+MMEGZIP.m in Sources */,
 				35DD3D07250A4F7000513CA7 /* CLLocation+MMEMobileEvents.m in Sources */,
@@ -962,7 +966,7 @@
 				35DD3D53250A4F8300513CA7 /* MMEUniqueIdentifier.m in Sources */,
 				35DD3D06250A4F7000513CA7 /* CLLocationManager+MMEMobileEvents.m in Sources */,
 				35DD3D5D250A4F8300513CA7 /* MMECertPin.m in Sources */,
-				35DD3D3F250A4F8300513CA7 /* MMEUIApplicationWrapper.m in Sources */,
+				35DD3D3F250A4F8300513CA7 /* MMENSURLSessionWrapper.m in Sources */,
 				35DD3D3E250A4F8300513CA7 /* MMECategoryLoader.m in Sources */,
 				35DD3D42250A4F8300513CA7 /* NSBundle+MMEMobileEvents.m in Sources */,
 				35DD3D4E250A4F8300513CA7 /* UIKit+MMEMobileEvents.m in Sources */,
@@ -1067,7 +1071,10 @@
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu11;
-				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/Sources";
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/Sources",
+					"$(PROJECT_DIR)/Sources/MapboxMobileEvents/include",
+				);
 				INFOPLIST_FILE = Tests/MapboxMobileEventsCedarTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.7;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -1092,7 +1099,10 @@
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu11;
-				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/Sources";
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/Sources",
+					"$(PROJECT_DIR)/Sources/MapboxMobileEvents/include",
+				);
 				INFOPLIST_FILE = Tests/MapboxMobileEventsCedarTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.7;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -1117,7 +1127,10 @@
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu11;
-				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/Sources/**";
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/Sources/**",
+					"$(PROJECT_DIR)/Sources/MapboxMobileEvents/include",
+				);
 				INFOPLIST_FILE = Tests/MapboxMobileEventsTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.7;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -1146,7 +1159,10 @@
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu11;
-				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/Sources/**";
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/Sources/**",
+					"$(PROJECT_DIR)/Sources/MapboxMobileEvents/include",
+				);
 				INFOPLIST_FILE = Tests/MapboxMobileEventsTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.7;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
