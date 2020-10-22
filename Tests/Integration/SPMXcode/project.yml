@@ -1,0 +1,16 @@
+name: SPMXcode
+options:
+  bundleIdPrefix: com.mapbox.common.events.spmxcode
+packages:
+  MapboxMobileEvents:
+    path: ../../.. 
+targets:
+  SPMXcode:
+    type: application
+    platform: iOS
+    deploymentTarget: "9.0"
+    sources: [Sources]
+    dependencies:
+      - package: MapboxMobileEvents 
+    settings:
+        DEVELOPMENT_TEAM: "GJZR2MEM28"

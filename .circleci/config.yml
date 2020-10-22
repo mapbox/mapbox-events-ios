@@ -49,6 +49,10 @@ jobs:
           command: |
             if [ "<< parameters.xcode >>" = "12.0.0" ]; then export XCODE_XCCONFIG_FILE=~/project/xcode-12-fix.xcconfig; fi
             Tests/Integration/test_carthage.sh
+      - run:
+          name: Test SPMXcode
+          command: |
+            Tests/Integration/test_spm_xcode.sh
       - when:
           condition:
             equal: [ "11.7.0", << parameters.xcode >> ]
