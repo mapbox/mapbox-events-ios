@@ -598,6 +598,17 @@ NS_ASSUME_NONNULL_BEGIN
     const BOOL appIsInBackground = (self.application.applicationState == UIApplicationStateBackground);
 
     for (CLLocation *location in locations) {
+        // Apply all counter beforing checking the HA filter
+        if (appIsInBackground) {
+            [MMEMetricsManager.sharedManager incrementLocationsInBackground];
+        } else {
+            [MMEMetricsManager.sharedManager incrementLocationsInForeground];
+        }
+
+        if ([self.locationManager isReducedAccuracy]) {
+            [MMEMetricsManager.sharedManager incrementLocationsWithApproximateValues];
+        }
+        
         // Post events based on the `hao` config value.
         // 1. `hao` config value is negative - No HA Filter. Always send the event.
         // 2. `hao` value is smaller than the Location Horizontal Accuracy - Skip the event.
@@ -605,12 +616,6 @@ NS_ASSUME_NONNULL_BEGIN
         if (mmeHorizontalAccuracy >= 0 && location.horizontalAccuracy > mmeHorizontalAccuracy) {
             [MMEMetricsManager.sharedManager incrementLocationsDroppedBecauseOfHAF];
             continue;
-        }
-
-        if (appIsInBackground) {
-            [MMEMetricsManager.sharedManager incrementLocationsInBackground];
-        } else {
-            [MMEMetricsManager.sharedManager incrementLocationsInForeground];
         }
 
         MMEMutableMapboxEventAttributes *eventAttributes = [[MMEMutableMapboxEventAttributes alloc] init];
@@ -645,7 +650,6 @@ NS_ASSUME_NONNULL_BEGIN
             [eventAttributes addEntriesFromDictionary:@{
                 MMEEventKeyApproximate: @(YES)
             }];
-            [MMEMetricsManager.sharedManager incrementLocationsWithApproximateValues];
         }
 
         if ([location floor]) {
