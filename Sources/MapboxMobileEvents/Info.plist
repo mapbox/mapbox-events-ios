@@ -15,8 +15,10 @@
 	<key>CFBundlePackageType</key>
 	<string>FMWK</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.10.5</string>
+	<string>0.10.6</string>
 	<key>CFBundleVersion</key>
-	<string>10</string>
+	<string>11</string>
+	<key>MGLSemanticVersionString</key>
+	<string>v0.10.6-alpha.1</string>
 </dict>
 </plist>
