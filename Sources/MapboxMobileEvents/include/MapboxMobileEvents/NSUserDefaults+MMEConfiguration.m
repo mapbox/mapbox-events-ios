@@ -638,13 +638,12 @@ static NSBundle *MMEMainBundle = nil;
     // check for MGLSemanticVersionString in Mapbox.framework
     if ([self.infoDictionary.allKeys containsObject:@"MGLSemanticVersionString"]) {
         bundleVersion = self.infoDictionary[@"MGLSemanticVersionString"];
+        if (![bundleVersion mme_isSemverString]) { // issue a warning in debug builds
+            NSLog(@"WARNING bundle %@ MGLSemanticVersionString string (%@) is not a valid semantic version string: http://semver.org", self, bundleVersion);
+        }
     }
     else if ([self.infoDictionary.allKeys containsObject:@"CFBundleShortVersionString"]) {
         bundleVersion = self.infoDictionary[@"CFBundleShortVersionString"];
-    }
-
-    if (![bundleVersion mme_isSemverString]) {
-        NSLog(@"WARNING bundle %@ version string (%@) is not a valid semantic version string: http://semver.org", self, bundleVersion);
     }
     
     return bundleVersion;
