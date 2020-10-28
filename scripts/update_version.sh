@@ -21,7 +21,7 @@ if [[ ! $SEM_VERSION =~ $SEMVER_REGEX ]]; then
     exit 1
 fi
 
-SHORT_VERSION="${BASH_REMATCH[1]}.${BASH_REMATCH[2]}.${BASH_REMATCH[3]}${BASH_REMATCH[4]:-}${BASH_REMATCH[5]:-}"
+SHORT_VERSION="${BASH_REMATCH[1]}.${BASH_REMATCH[2]}.${BASH_REMATCH[3]}"
 
 step "Version ${SEM_VERSION}"
 
@@ -29,3 +29,10 @@ step "Updating Xcode targets to version ${SHORT_VERSION}…"
 
 xcrun agvtool bump -all
 xcrun agvtool new-marketing-version "${SHORT_VERSION}"
+
+FRAMEWORK_PLIST=Sources/MapboxMobileEvents/Info.plist
+
+step "Adding ${SEM_VERSION} to ${FRAMEWORK_PLIST}"
+
+plutil -insert "MGLSemanticVersionString" -string "${SEM_VERSION}" "${FRAMEWORK_PLIST}"
+
