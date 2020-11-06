@@ -31,8 +31,6 @@
 		356DFB3E250A70970035D854 /* config-type1-tto.json in Resources */ = {isa = PBXBuildFile; fileRef = 35DD3E15250A61F200513CA7 /* config-type1-tto.json */; };
 		356DFB3F250A70970035D854 /* config-type2-tto.json in Resources */ = {isa = PBXBuildFile; fileRef = 35DD3E16250A61F200513CA7 /* config-type2-tto.json */; };
 		356DFB40250A70970035D854 /* events-201.json in Resources */ = {isa = PBXBuildFile; fileRef = 35DD3E1E250A61F300513CA7 /* events-201.json */; };
-		3579B958250BB11500AF88BD /* Cedar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40A7F9911F79A743002B931F /* Cedar.framework */; };
-		3579B959250BB11500AF88BD /* Cedar.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 40A7F9911F79A743002B931F /* Cedar.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3579B964250BB1C200AF88BD /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 404807B91EA186D8008A6D50 /* MapboxMobileEvents.framework */; };
 		3579B96A250BB1D000AF88BD /* MMEAPIClientTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3579B948250BB08000AF88BD /* MMEAPIClientTests.mm */; };
 		3579B96B250BB1D000AF88BD /* MMECrashTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3579B94A250BB08000AF88BD /* MMECrashTests.mm */; };
@@ -137,6 +135,8 @@
 		35E77B05250C1E2F00C16B73 /* config-hao-10m.json in Resources */ = {isa = PBXBuildFile; fileRef = 35E77B03250C1E2900C16B73 /* config-hao-10m.json */; };
 		35E77B07250C1E4C00C16B73 /* config-hao-negative.json in Resources */ = {isa = PBXBuildFile; fileRef = 35E77B06250C1E4B00C16B73 /* config-hao-negative.json */; };
 		35E77B09250C1E5900C16B73 /* config-hao-null.json in Resources */ = {isa = PBXBuildFile; fileRef = 35E77B08250C1E5900C16B73 /* config-hao-null.json */; };
+		9C1DA94D2554D90D00E57879 /* Cedar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40A7F9911F79A743002B931F /* Cedar.framework */; };
+		9C1DA94E2554D90D00E57879 /* Cedar.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 40A7F9911F79A743002B931F /* Cedar.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9CAB6C06252508A100E8BCD5 /* MMELocationManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3579B94C250BB08100AF88BD /* MMELocationManagerTests.m */; };
 		9CAB6C11252508B000E8BCD5 /* MMELocationManagerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9CAB6C10252508B000E8BCD5 /* MMELocationManagerTests.mm */; };
 		9CAB6C5B25254DD700E8BCD5 /* MMERunningLockTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CAB6C5A25254DD700E8BCD5 /* MMERunningLockTests.m */; };
@@ -160,13 +160,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		3579B95A250BB11500AF88BD /* Embed Frameworks */ = {
+		9C1DA94F2554D90D00E57879 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				3579B959250BB11500AF88BD /* Cedar.framework in Embed Frameworks */,
+				9C1DA94E2554D90D00E57879 /* Cedar.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -346,7 +346,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3579B958250BB11500AF88BD /* Cedar.framework in Frameworks */,
+				9C1DA94D2554D90D00E57879 /* Cedar.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -701,7 +701,7 @@
 				356DFB10250A6CC80035D854 /* Sources */,
 				356DFB11250A6CC80035D854 /* Frameworks */,
 				356DFB12250A6CC80035D854 /* Resources */,
-				3579B95A250BB11500AF88BD /* Embed Frameworks */,
+				9C1DA94F2554D90D00E57879 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1021,6 +1021,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
+					"$(PROJECT_DIR)/Frameworks",
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = MMETestHost/Info.plist;
@@ -1046,6 +1047,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
+					"$(PROJECT_DIR)/Frameworks",
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = MMETestHost/Info.plist;
