@@ -320,7 +320,7 @@
 		4032F47D1F1FEDC6001C1FBD /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		404807B91EA186D8008A6D50 /* MapboxMobileEvents.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MapboxMobileEvents.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		404C5E221F85809400C026DD /* Scanfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Scanfile; sourceTree = "<group>"; };
-		40A7F9911F79A743002B931F /* Cedar.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cedar.framework; path = Carthage/Build/iOS/Cedar.framework; sourceTree = "<group>"; };
+		40A7F9911F79A743002B931F /* Cedar.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Cedar.framework; sourceTree = "<group>"; };
 		9C27F7262499B0E20018E7A9 /* module.private.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = module.private.modulemap; sourceTree = "<group>"; };
 		9C6322632213530A00653792 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		9C65A2CC2282081A006E3FED /* check_binary_size.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = check_binary_size.sh; sourceTree = "<group>"; };
@@ -582,7 +582,7 @@
 				4032F47D1F1FEDC6001C1FBD /* libz.tbd */,
 				F446009924902382003B297C /* NotificationCenter.framework */,
 			);
-			name = Frameworks;
+			path = Frameworks;
 			sourceTree = "<group>";
 		};
 		404807AF1EA186D8008A6D50 = {
