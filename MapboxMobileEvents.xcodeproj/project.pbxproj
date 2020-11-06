@@ -41,7 +41,6 @@
 		3579B971250BB1D000AF88BD /* MMEMetricsManagerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3579B94D250BB08100AF88BD /* MMEMetricsManagerTests.mm */; };
 		3579B972250BB3A200AF88BD /* MMEExceptionalDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 35DD3DE5250A58C900513CA7 /* MMEExceptionalDictionary.m */; };
 		3579B974250BB45C00AF88BD /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3579B973250BB45C00AF88BD /* CoreLocation.framework */; };
-		3579B975250BB47600AF88BD /* Cedar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40A7F9911F79A743002B931F /* Cedar.framework */; };
 		3579B976250BB48600AF88BD /* MMEBundleInfoFake.m in Sources */ = {isa = PBXBuildFile; fileRef = 35DD3DC7250A58B200513CA7 /* MMEBundleInfoFake.m */; };
 		3579B977250BB49000AF88BD /* MMEEventFake.m in Sources */ = {isa = PBXBuildFile; fileRef = 35DD3DCF250A58B300513CA7 /* MMEEventFake.m */; };
 		3579B978250BB49900AF88BD /* MMEDispatchManagerFake.m in Sources */ = {isa = PBXBuildFile; fileRef = 35DD3DD4250A58B300513CA7 /* MMEDispatchManagerFake.m */; };
@@ -137,6 +136,7 @@
 		35E77B09250C1E5900C16B73 /* config-hao-null.json in Resources */ = {isa = PBXBuildFile; fileRef = 35E77B08250C1E5900C16B73 /* config-hao-null.json */; };
 		9C1DA94D2554D90D00E57879 /* Cedar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40A7F9911F79A743002B931F /* Cedar.framework */; };
 		9C1DA94E2554D90D00E57879 /* Cedar.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 40A7F9911F79A743002B931F /* Cedar.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		9C1DA9532554DA4400E57879 /* Cedar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40A7F9911F79A743002B931F /* Cedar.framework */; };
 		9CAB6C06252508A100E8BCD5 /* MMELocationManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3579B94C250BB08100AF88BD /* MMELocationManagerTests.m */; };
 		9CAB6C11252508B000E8BCD5 /* MMELocationManagerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9CAB6C10252508B000E8BCD5 /* MMELocationManagerTests.mm */; };
 		9CAB6C5B25254DD700E8BCD5 /* MMERunningLockTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CAB6C5A25254DD700E8BCD5 /* MMERunningLockTests.m */; };
@@ -356,7 +356,7 @@
 			files = (
 				3579B974250BB45C00AF88BD /* CoreLocation.framework in Frameworks */,
 				3579B964250BB1C200AF88BD /* MapboxMobileEvents.framework in Frameworks */,
-				3579B975250BB47600AF88BD /* Cedar.framework in Frameworks */,
+				9C1DA9532554DA4400E57879 /* Cedar.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1071,6 +1071,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
+					"$(PROJECT_DIR)/Frameworks",
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				HEADER_SEARCH_PATHS = (
@@ -1099,6 +1100,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
+					"$(PROJECT_DIR)/Frameworks",
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				HEADER_SEARCH_PATHS = (
