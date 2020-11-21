@@ -32,7 +32,7 @@ xcrun agvtool new-marketing-version "${SHORT_VERSION}"
 
 FRAMEWORK_PLIST=Sources/MapboxMobileEvents/Info.plist
 
-step "Adding ${SEM_VERSION} to ${FRAMEWORK_PLIST}"
+# remove the leading 'v' from the SEM_VERSION
+step "Adding ${SEM_VERSION:1} to ${FRAMEWORK_PLIST}"
 
-plutil -insert "MGLSemanticVersionString" -string "${SEM_VERSION}" "${FRAMEWORK_PLIST}"
-
+plutil -replace "MGLSemanticVersionString" -string "${SEM_VERSION:1}" "${FRAMEWORK_PLIST}"
