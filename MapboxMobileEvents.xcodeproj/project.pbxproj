@@ -40,7 +40,6 @@
 		3579B96F250BB1D000AF88BD /* MMEEventTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3579B949250BB08000AF88BD /* MMEEventTests.mm */; };
 		3579B971250BB1D000AF88BD /* MMEMetricsManagerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3579B94D250BB08100AF88BD /* MMEMetricsManagerTests.mm */; };
 		3579B972250BB3A200AF88BD /* MMEExceptionalDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 35DD3DE5250A58C900513CA7 /* MMEExceptionalDictionary.m */; };
-		3579B974250BB45C00AF88BD /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3579B973250BB45C00AF88BD /* CoreLocation.framework */; };
 		3579B976250BB48600AF88BD /* MMEBundleInfoFake.m in Sources */ = {isa = PBXBuildFile; fileRef = 35DD3DC7250A58B200513CA7 /* MMEBundleInfoFake.m */; };
 		3579B977250BB49000AF88BD /* MMEEventFake.m in Sources */ = {isa = PBXBuildFile; fileRef = 35DD3DCF250A58B300513CA7 /* MMEEventFake.m */; };
 		3579B978250BB49900AF88BD /* MMEDispatchManagerFake.m in Sources */ = {isa = PBXBuildFile; fileRef = 35DD3DD4250A58B300513CA7 /* MMEDispatchManagerFake.m */; };
@@ -134,12 +133,17 @@
 		35E77B05250C1E2F00C16B73 /* config-hao-10m.json in Resources */ = {isa = PBXBuildFile; fileRef = 35E77B03250C1E2900C16B73 /* config-hao-10m.json */; };
 		35E77B07250C1E4C00C16B73 /* config-hao-negative.json in Resources */ = {isa = PBXBuildFile; fileRef = 35E77B06250C1E4B00C16B73 /* config-hao-negative.json */; };
 		35E77B09250C1E5900C16B73 /* config-hao-null.json in Resources */ = {isa = PBXBuildFile; fileRef = 35E77B08250C1E5900C16B73 /* config-hao-null.json */; };
+		9C0DA9FF257A9AF9008175E2 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C0DA9FE257A9AF9008175E2 /* CoreLocation.framework */; };
+		9C0DAA04257A9B09008175E2 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C0DAA03257A9B09008175E2 /* CoreLocation.framework */; };
+		9C0DAA05257A9B79008175E2 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C0DA9FE257A9AF9008175E2 /* CoreLocation.framework */; };
+		9C0DAA06257A9B81008175E2 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C0DA9FE257A9AF9008175E2 /* CoreLocation.framework */; };
 		9C1DA94D2554D90D00E57879 /* Cedar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40A7F9911F79A743002B931F /* Cedar.framework */; };
 		9C1DA94E2554D90D00E57879 /* Cedar.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 40A7F9911F79A743002B931F /* Cedar.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9C1DA9532554DA4400E57879 /* Cedar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40A7F9911F79A743002B931F /* Cedar.framework */; };
 		9CAB6C06252508A100E8BCD5 /* MMELocationManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3579B94C250BB08100AF88BD /* MMELocationManagerTests.m */; };
 		9CAB6C11252508B000E8BCD5 /* MMELocationManagerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9CAB6C10252508B000E8BCD5 /* MMELocationManagerTests.mm */; };
 		9CAB6C5B25254DD700E8BCD5 /* MMERunningLockTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CAB6C5A25254DD700E8BCD5 /* MMERunningLockTests.m */; };
+		9CCF18982579AAA50039FA5C /* MapboxMobileEvents.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 404807B91EA186D8008A6D50 /* MapboxMobileEvents.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -166,6 +170,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				9CCF18982579AAA50039FA5C /* MapboxMobileEvents.framework in Embed Frameworks */,
 				9C1DA94E2554D90D00E57879 /* Cedar.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -194,7 +199,6 @@
 		3579B94D250BB08100AF88BD /* MMEMetricsManagerTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MMEMetricsManagerTests.mm; sourceTree = "<group>"; };
 		3579B95F250BB1C200AF88BD /* MapboxMobileEventsCedarTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MapboxMobileEventsCedarTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3579B963250BB1C200AF88BD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		3579B973250BB45C00AF88BD /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/CoreLocation.framework; sourceTree = DEVELOPER_DIR; };
 		35DD3D00250A4F7000513CA7 /* CLLocation+MMEMobileEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "CLLocation+MMEMobileEvents.h"; path = "Sources/MapboxMobileEvents/include/MapboxMobileEvents/CLLocation+MMEMobileEvents.h"; sourceTree = SOURCE_ROOT; };
 		35DD3D01250A4F7000513CA7 /* CLLocationManager+MMEMobileEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "CLLocationManager+MMEMobileEvents.h"; path = "Sources/MapboxMobileEvents/include/MapboxMobileEvents/CLLocationManager+MMEMobileEvents.h"; sourceTree = SOURCE_ROOT; };
 		35DD3D02250A4F7000513CA7 /* CLLocationManager+MMEMobileEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "CLLocationManager+MMEMobileEvents.m"; path = "Sources/MapboxMobileEvents/include/MapboxMobileEvents/CLLocationManager+MMEMobileEvents.m"; sourceTree = SOURCE_ROOT; };
@@ -321,6 +325,8 @@
 		404807B91EA186D8008A6D50 /* MapboxMobileEvents.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MapboxMobileEvents.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		404C5E221F85809400C026DD /* Scanfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Scanfile; sourceTree = "<group>"; };
 		40A7F9911F79A743002B931F /* Cedar.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Cedar.framework; sourceTree = "<group>"; };
+		9C0DA9FE257A9AF9008175E2 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/CoreLocation.framework; sourceTree = DEVELOPER_DIR; };
+		9C0DAA03257A9B09008175E2 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		9C27F7262499B0E20018E7A9 /* module.private.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = module.private.modulemap; sourceTree = "<group>"; };
 		9C6322632213530A00653792 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		9C65A2CC2282081A006E3FED /* check_binary_size.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = check_binary_size.sh; sourceTree = "<group>"; };
@@ -346,6 +352,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9C0DAA04257A9B09008175E2 /* CoreLocation.framework in Frameworks */,
 				9C1DA94D2554D90D00E57879 /* Cedar.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -354,7 +361,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3579B974250BB45C00AF88BD /* CoreLocation.framework in Frameworks */,
+				9C0DAA06257A9B81008175E2 /* CoreLocation.framework in Frameworks */,
 				3579B964250BB1C200AF88BD /* MapboxMobileEvents.framework in Frameworks */,
 				9C1DA9532554DA4400E57879 /* Cedar.framework in Frameworks */,
 			);
@@ -364,6 +371,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9C0DAA05257A9B79008175E2 /* CoreLocation.framework in Frameworks */,
 				35DD3DBA250A545D00513CA7 /* MapboxMobileEvents.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -372,6 +380,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9C0DA9FF257A9AF9008175E2 /* CoreLocation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -576,7 +585,8 @@
 		4032F47C1F1FEDC6001C1FBD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				3579B973250BB45C00AF88BD /* CoreLocation.framework */,
+				9C0DA9FE257A9AF9008175E2 /* CoreLocation.framework */,
+				9C0DAA03257A9B09008175E2 /* CoreLocation.framework */,
 				9C794C85235505340027B9D4 /* XCTest.framework */,
 				40A7F9911F79A743002B931F /* Cedar.framework */,
 				4032F47D1F1FEDC6001C1FBD /* libz.tbd */,

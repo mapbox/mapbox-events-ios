@@ -99,8 +99,6 @@ NS_ASSUME_NONNULL_BEGIN
                                                          userAgentBase:userAgentBase
                                                         hostSDKVersion:hostSDKVersion];
 
-            [self sendPendingTelemetryMetricsEvent];
-
             __weak __typeof__(self) weakSelf = self;
             void(^initialization)(void) = ^{
                 __strong __typeof__(weakSelf) strongSelf = weakSelf;
@@ -109,6 +107,11 @@ NS_ASSUME_NONNULL_BEGIN
                     return;
                 }
 
+                // Issue: https://github.com/mapbox/mapbox-events-ios/issues/271
+#if !TARGET_OS_SIMULATOR // don't send pending metrics from the simulator
+                [strongSelf sendPendingMetricsEvent];
+#endif
+                
                 [NSNotificationCenter.defaultCenter addObserver:strongSelf
                                                        selector:@selector(pauseOrResumeMetricsCollectionIfRequired)
                                                            name:UIApplicationDidEnterBackgroundNotification
@@ -374,7 +377,7 @@ NS_ASSUME_NONNULL_BEGIN
     }
 }
 
-- (void)sendPendingTelemetryMetricsEvent {
+- (void)sendPendingMetricsEvent {
     MMEEvent *pendingMetricsEvent = [MMEMetricsManager.sharedManager loadPendingTelemetryMetricsEvent];
 
     if (pendingMetricsEvent) {
