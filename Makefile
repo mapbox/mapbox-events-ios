@@ -44,6 +44,10 @@ clean:
 
 .PHONY: lint
 lint:
+	pod lib lint
+	
+.PHONY: preflight-checks
+preflight-checks: lint
 
 # local and ci build Targets
 
