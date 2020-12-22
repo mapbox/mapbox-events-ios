@@ -320,9 +320,8 @@ NS_ASSUME_NONNULL_BEGIN
         // check all loaded frameworks for mapbox frameworks, record their bundleIdentifier
         NSMutableSet *loadedMapboxBundleIds = NSMutableSet.new;
         for (NSBundle *loaded in [NSBundle.allFrameworks arrayByAddingObjectsFromArray:NSBundle.allBundles]) {
-            if (loaded.bundleIdentifier
-             && loaded.bundleIdentifier != NSBundle.mme_mainBundle.bundleIdentifier
-             && [loaded.bundleIdentifier rangeOfString:@"mapbox" options:NSCaseInsensitiveSearch].location != NSNotFound) {
+            if ([loaded.bundleIdentifier hasPrefix:@"com.mapbox"]
+                && loaded.bundleIdentifier != NSBundle.mme_mainBundle.bundleIdentifier) {
                 [loadedMapboxBundleIds addObject:loaded.bundleIdentifier];
             }
         }
