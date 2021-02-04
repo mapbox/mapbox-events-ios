@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
   # ――― Author Metadata  ――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
   s.author = { "Mapbox" => "mobile@mapbox.com" }
-  s.social_media_url = "https://twitter.com/mapbox"
+  # s.social_media_url = "https://twitter.com/mapbox"
 
   # ――― Platform Specifics ――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 

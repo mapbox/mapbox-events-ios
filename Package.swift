@@ -26,9 +26,7 @@ let package = Package(
                 .headerSearchPath("Fakes"),
                 .headerSearchPath("Utilities"),
                 .headerSearchPath("../../Sources"),
-                .headerSearchPath("../../Sources/MapboxMobileEvents"),
-                .headerSearchPath("../../Sources/MapboxMobileEvents/include"),
-                .headerSearchPath("../../Sources/MapboxMobileEvents/include/MapboxMobileEvents")
+                .headerSearchPath("../../Sources/MapboxMobileEvents")
             ]
         ),
         .testTarget(

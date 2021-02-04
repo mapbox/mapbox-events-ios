@@ -2,12 +2,12 @@
 
 #import <MapboxMobileEvents/MMEAPIClient.h>
 #import <MapboxMobileEvents/MMENSURLSessionWrapper.h>
-#import <MapboxMobileEvents/MMEEvent.h>
 #import <MapboxMobileEvents/MMECommonEventData.h>
-#import <MapboxMobileEvents/MMEConstants.h>
-#import <MapboxMobileEvents/NSUserDefaults+MMEConfiguration.h>
 #import <MapboxMobileEvents/NSUserDefaults+MMEConfiguration_Private.h>
 #import <MapboxMobileEvents/NSData+MMEGZIP.h>
+#import "NSUserDefaults+MMEConfiguration.h"
+#import "MMEConstants.h"
+#import "MMEEvent.h"
 
 #import "MMENSURLSessionWrapperFake.h"
 

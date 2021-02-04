@@ -1,8 +1,8 @@
 #import <CoreLocation/CoreLocation.h>
 #import <CoreFoundation/CoreFoundation.h>
-#if TARGET_OS_MACOS
+#if TARGET_OS_OSX
 #import <Cocoa/Cocoa.h>
-#elif TARGET_OS_IOS || TARGET_OS_TVOS
+#elif TARGET_OS_IOS || TARGET_OS_TV
 #import <UIKit/UIKit.h>
 #endif
 
