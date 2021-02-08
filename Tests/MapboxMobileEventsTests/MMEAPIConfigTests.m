@@ -2,10 +2,10 @@
 
 #import <MapboxMobileEvents/MMEAPIClient.h>
 #import <MapboxMobileEvents/MMEDate.h>
-#import <MapboxMobileEvents/MMEEventsManager.h>
 #import <MapboxMobileEvents/MMEEventsManager_Private.h>
-#import <MapboxMobileEvents/NSUserDefaults+MMEConfiguration.h>
 #import <MapboxMobileEvents/NSUserDefaults+MMEConfiguration_Private.h>
+#import "NSUserDefaults+MMEConfiguration.h"
+#import "MMEEventsManager.h"
 
 #import "MMEServiceFixture.h"
 #import "MMEBundleInfoFake.h"

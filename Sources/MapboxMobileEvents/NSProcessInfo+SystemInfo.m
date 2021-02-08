@@ -1,8 +1,8 @@
 #import "NSProcessInfo+SystemInfo.h"
 
-#if TARGET_OS_IOS || TARGET_OS_TVOS
+#if TARGET_OS_IOS || TARGET_OS_TV
 #import <UIKit/UIKit.h>
-#elif TARGET_OS_MACOS
+#elif TARGET_OS_OSX
 #import <AppKit/AppKit.h>
 #endif
 
@@ -11,9 +11,9 @@
 + (NSString *)mme_operatingSystemVersion {
     NSString *osVersion = nil;
 
-#if TARGET_OS_IOS || TARGET_OS_TVOS
+#if TARGET_OS_IOS || TARGET_OS_TV
     osVersion = [NSString stringWithFormat:@"%@ %@", UIDevice.currentDevice.systemName, UIDevice.currentDevice.systemVersion];
-#elif TARGET_OS_MACOS
+#elif TARGET_OS_OSX
     osVersion = NSProcessInfo.processInfo.operatingSystemVersionString;
 #endif
 

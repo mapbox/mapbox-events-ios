@@ -9,7 +9,7 @@
 #import "MMEUIApplicationWrapper.h"
 
 #import "NSUserDefaults+MMEConfiguration.h"
-#if TARGET_OS_IOS || TARGET_OS_TVOS
+#if TARGET_OS_IOS || TARGET_OS_TV
 #import "UIKit+MMEMobileEvents.h"
 #import "NSBundle+MMEMobileEvents.h"
 #endif
@@ -115,7 +115,7 @@
         crashAttributes[MMEEventKeyOSVersion] = NSProcessInfo.processInfo.operatingSystemVersionString;
     }
 
-#if TARGET_OS_MACOS
+#if TARGET_OS_OSX
     if (NSRunningApplication.currentApplicaiton.launchDate) {
         crashAttributes[MMEEventKeyAppStartDate] = [MMEDate.iso8601DateFormatter stringFromDate:NSRunningApplication.currentApplicaiton.launchDate];
     }
@@ -232,7 +232,7 @@
     eventAttributes[MMEEventKeyModel] = commonEventData.model;
     eventAttributes[MMEEventKeyOperatingSystem] = commonEventData.osVersion;
     eventAttributes[MMEEventKeyResolution] = @(commonEventData.scale);
-#if TARGET_OS_IOS || TARGET_OS_TVOS
+#if TARGET_OS_IOS || TARGET_OS_TV
 
     eventAttributes[MMEEventKeyAccessibilityFontScale] = @(MMEUIApplicationWrapper.new.mme_contentSizeScale);
     eventAttributes[MMEEventKeyOrientation] = UIDevice.currentDevice.mme_deviceOrientation;
@@ -246,7 +246,7 @@
     NSMutableDictionary *eventAttributes = attributes.mutableCopy;
     eventAttributes[MMEEventKeyEvent] = MMEEventTypeMapTap;
     eventAttributes[MMEEventKeyCreated] = dateString;
-#if TARGET_OS_IOS || TARGET_OS_TVOS
+#if TARGET_OS_IOS || TARGET_OS_TV
     eventAttributes[MMEEventKeyOrientation] = UIDevice.currentDevice.mme_deviceOrientation;
 #endif
     eventAttributes[MMEEventKeyWifi] = @(MMEReachability.reachabilityForLocalWiFi.isReachableViaWiFi);
@@ -258,7 +258,7 @@
     NSMutableDictionary *eventAttributes = attributes.mutableCopy;
     eventAttributes[MMEEventKeyEvent] = MMEEventTypeMapDragEnd;
     eventAttributes[MMEEventKeyCreated] = dateString;
-#if TARGET_OS_IOS || TARGET_OS_TVOS
+#if TARGET_OS_IOS || TARGET_OS_TV
     eventAttributes[MMEEventKeyOrientation] = UIDevice.currentDevice.mme_deviceOrientation;
 #endif
     eventAttributes[MMEEventKeyWifi] = @(MMEReachability.reachabilityForLocalWiFi.isReachableViaWiFi);

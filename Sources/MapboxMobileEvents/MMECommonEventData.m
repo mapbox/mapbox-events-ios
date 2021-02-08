@@ -1,7 +1,7 @@
 #import "MMECommonEventData.h"
 #import "MMEConstants.h"
 
-#if TARGET_OS_IOS || TARGET_OS_TVOS
+#if TARGET_OS_IOS || TARGET_OS_TV
 #import <UIKit/UIKit.h>
 #import "NSBundle+MMEMobileEvents.h"
 #import "MMEUIApplicationWrapper.h"
@@ -54,7 +54,7 @@ NSString * const MMEApplicationStateExtension = @"Extension";
     if (self = [super init]) {
         _model = [MMECommonEventData sysInfoByName:"hw.machine"];
         _platform = [MMECommonEventData platformInfo];
-#if TARGET_OS_IOS || TARGET_OS_TVOS
+#if TARGET_OS_IOS || TARGET_OS_TV
         _vendorId = UIDevice.currentDevice.identifierForVendor.UUIDString;
         _osVersion = [NSString stringWithFormat:@"%@ %@", UIDevice.currentDevice.systemName, UIDevice.currentDevice.systemVersion];
         _device = UIDevice.currentDevice.model;
@@ -73,7 +73,7 @@ NSString * const MMEApplicationStateExtension = @"Extension";
 }
 
 + (NSString *)applicationState {
-#if TARGET_OS_IOS || TARGET_OS_TVOS
+#if TARGET_OS_IOS || TARGET_OS_TV
 
     if (NSBundle.mme_isExtension) {
         return MMEApplicationStateExtension;
@@ -99,7 +99,7 @@ NSString * const MMEApplicationStateExtension = @"Extension";
     NSString *result;
     #if TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR
         result = MMEEventKeyiOS;
-    #elif TARGET_OS_MACOS
+    #elif TARGET_OS_OSX
         result = MMEEventKeyMac;
     #else
         result = MMEEventUnknown;
