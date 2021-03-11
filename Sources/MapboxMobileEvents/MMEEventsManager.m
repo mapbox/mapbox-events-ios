@@ -109,7 +109,9 @@ NS_ASSUME_NONNULL_BEGIN
 
                 // Issue: https://github.com/mapbox/mapbox-events-ios/issues/271
 #if !TARGET_OS_SIMULATOR // don't send pending metrics from the simulator
-                [strongSelf sendPendingMetricsEvent];
+                if (NSUserDefaults.mme_configuration.mme_isCollectionEnabled) {
+                    [strongSelf sendPendingMetricsEvent];
+                }
 #endif
                 
                 [NSNotificationCenter.defaultCenter addObserver:strongSelf
@@ -392,6 +394,10 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void)sendTelemetryMetricsEvent {
+    if (!NSUserDefaults.mme_configuration.mme_isCollectionEnabled) {
+        return;
+    }
+
     @try {
         MMEEvent *telemetryMetricsEvent = [MMEMetricsManager.sharedManager generateTelemetryMetricsEvent];
         
