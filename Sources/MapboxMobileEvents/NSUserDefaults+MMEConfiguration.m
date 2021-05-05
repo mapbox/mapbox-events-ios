@@ -496,7 +496,15 @@ NS_ASSUME_NONNULL_BEGIN
         MMEEventsMapboxCom: comPublicKeys,
         MMEEventsMapboxCN: cnPublicKeys,
 #if DEBUG
-        MMEEventsTilestreamNet: @[@"f0eq9TvzcjRVgNZjisBA1sVrQ9b0pJA5ESWg6hVpK2c="]
+        MMEEventsTilestreamNet: @[
+            @"f0eq9TvzcjRVgNZjisBA1sVrQ9b0pJA5ESWg6hVpK2c=",
+            // new 2048 bit staging keys generated in April 2021
+            @"8apXPecP7X3vUGqi/B42cig4O1BjQUM4dng5gMVOiK0=",
+            @"MxGjtNVZ0mEdjhhfvAcTNZd+lC8WY8vKkkaSFE2azXQ=",
+            @"i/5fi5jB13JKeiZJMFNu4XSIaaCNmxAWsWvmMsI7t5s=",
+            @"4YJLMcE66WP2/FRID2HT0QpQRNjG7zqz/dJzP3BGct8=",
+            @"H1YTKuZacKUYyGnQFVPcarkqYxvGJ7QKb9dFz2TssKw="
+        ]
 #endif
     };
 }
