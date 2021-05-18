@@ -47,3 +47,10 @@ jobs:
           name: Test SPMXcode
           command: |
             Tests/Integration/test_spm_xcode.sh
+      - run:
+          name: Prepare release artifacts
+          command: |
+            scripts/prepare_release_artifacts.sh
+      - store_artifacts:
+          path: build/artifacts/zip
+
