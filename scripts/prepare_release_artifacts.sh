@@ -59,8 +59,11 @@ xcodebuild archive \
 xcodebuild \
     -create-xcframework \
     -framework "${ROOT_DIR}/build/artifacts/frameworks/iOS.xcarchive/Products/Library/Frameworks/MapboxMobileEvents.framework" \
+        -debug-symbols "${ROOT_DIR}/build/artifacts/frameworks/iOS.xcarchive/dSYMs/MapboxMobileEvents.framework.dSYM" \
     -framework "${ROOT_DIR}/build/artifacts/frameworks/iOS-Catalyst.xcarchive/Products/Library/Frameworks/MapboxMobileEvents.framework" \
+        -debug-symbols "${ROOT_DIR}/build/artifacts/frameworks/iOS-Catalyst.xcarchive/dSYMs/MapboxMobileEvents.framework.dSYM" \
     -framework "${ROOT_DIR}/build/artifacts/frameworks/iOS-Simulator.xcarchive/Products/Library/Frameworks/MapboxMobileEvents.framework" \
+        -debug-symbols "${ROOT_DIR}/build/artifacts/frameworks/iOS-Simulator.xcarchive/dSYMs/MapboxMobileEvents.framework.dSYM" \
     -output "${ROOT_DIR}/build/artifacts/frameworks/MapboxMobileEvents.xcframework"
 
 # zip artifacts
