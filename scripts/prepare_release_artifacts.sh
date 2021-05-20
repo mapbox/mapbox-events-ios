@@ -13,8 +13,8 @@ rm -rf $ROOT_DIR/build/artifacts
 
 # build iOS .frameworks
 xcodebuild archive \
-        -archivePath ${ROOT_DIR}/build/artifacts/frameworks/iOS \
-        -project ${ROOT_DIR}/MapboxMobileEvents.xcodeproj \
+        -archivePath "${ROOT_DIR}/build/artifacts/frameworks/iOS" \
+        -project "${ROOT_DIR}/MapboxMobileEvents.xcodeproj" \
         -scheme MapboxMobileEvents \
         -destination "generic/platform=iOS"\
         BUILD_LIBRARY_FOR_DISTRIBUTION=YES \
@@ -22,8 +22,8 @@ xcodebuild archive \
 
 # build Catalyst .framework
 xcodebuild archive \
-        -archivePath ${ROOT_DIR}/build/artifacts/frameworks/iOS-Catalyst \
-        -project ${ROOT_DIR}/MapboxMobileEvents.xcodeproj \
+        -archivePath "${ROOT_DIR}/build/artifacts/frameworks/iOS-Catalyst" \
+        -project "${ROOT_DIR}/MapboxMobileEvents.xcodeproj" \
         -scheme MapboxMobileEvents \
         -destination "platform=macOS,variant=Mac Catalyst" \
         BUILD_LIBRARY_FOR_DISTRIBUTION=YES \
@@ -31,8 +31,8 @@ xcodebuild archive \
 
 # build iOS Simulator .framework
 xcodebuild archive \
-        -archivePath ${ROOT_DIR}/build/artifacts/frameworks/iOS-Simulator \
-        -project ${ROOT_DIR}/MapboxMobileEvents.xcodeproj \
+        -archivePath "${ROOT_DIR}/build/artifacts/frameworks/iOS-Simulator" \
+        -project "${ROOT_DIR}/MapboxMobileEvents.xcodeproj" \
         -scheme MapboxMobileEvents \
         -destination "generic/platform=iOS Simulator" \
         BUILD_LIBRARY_FOR_DISTRIBUTION=YES \
@@ -50,8 +50,8 @@ xcodebuild \
     -output "${ROOT_DIR}/build/artifacts/frameworks/MapboxMobileEvents.xcframework"
 
 # zip artifacts
-mkdir -p ${ROOT_DIR}/build/artifacts/zip
-ZIPDIR=${ROOT_DIR}/build/artifacts/zip
+mkdir -p "${ROOT_DIR}/build/artifacts/zip"
+ZIPDIR="${ROOT_DIR}/build/artifacts/zip"
 
 pushd ${ROOT_DIR}/build/artifacts/frameworks/iOS.xcarchive/Products/Library/Frameworks
 zip --symlinks -r "${ZIPDIR}/MapboxMobileEvents-ios.zip" MapboxMobileEvents.framework
