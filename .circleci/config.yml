@@ -13,6 +13,8 @@ workflows:
           filters:
             tags:
               only: /.*/
+      - prepare_release:
+         xcode: "12.0.0"
 
 jobs:
   build:
@@ -47,10 +49,17 @@ jobs:
           name: Test SPMXcode
           command: |
             Tests/Integration/test_spm_xcode.sh
+  prepare_release:
+    parameters:
+      xcode:
+        type: string
+    macos:
+      xcode: << parameters.xcode >>
+    steps:
+      - checkout
       - run:
           name: Prepare release artifacts
           command: |
             scripts/prepare_release_artifacts.sh
       - store_artifacts:
           path: build/artifacts/zip
-
