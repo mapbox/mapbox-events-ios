@@ -406,8 +406,8 @@ static void TMReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
 #pragma mark - Debug Description
 
 - (NSString *) description {
-    NSString *description = [NSString stringWithFormat:@"<%@: %#x (%@)>",
-        NSStringFromClass([self class]), (unsigned int) self, [self currentReachabilityFlags]];
+    NSString *description = [NSString stringWithFormat:@"<%@: %p (%@)>",
+        NSStringFromClass([self class]), self, [self currentReachabilityFlags]];
     return description;
 }
 
