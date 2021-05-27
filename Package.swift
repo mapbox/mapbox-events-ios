@@ -18,10 +18,6 @@ let package = Package(
     ],
     targets: [
         registry.mapboxEventsTarget(version: version, checksum: checksum),
-        .testTarget(
-            name: "MapboxMobileEvents",
-            dependencies: []
-        )
     ],
     cxxLanguageStandard: .cxx14
 )
