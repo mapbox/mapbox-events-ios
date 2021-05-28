@@ -1,5 +1,5 @@
 platform :ios, '9.0'
 
 target 'PodInstall' do
-  pod 'MapboxMobileEvents', :path => '../../../'
+  pod 'MapboxMobileEvents', :podspec => '../../../MapboxMobileEvents.podspec'
 end

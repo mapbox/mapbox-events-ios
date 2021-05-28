@@ -14,7 +14,10 @@ workflows:
             tags:
               only: /.*/
       - prepare_release:
-         xcode: "12.2.0"
+          xcode: "12.2.0"
+          filters:
+            tags:
+              only: /.*/
 
 jobs:
   build:
@@ -26,29 +29,16 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Test SPM
-          command: |
-            # xcodebuild will try to use the Package manifest if it cannot find a project 
-            mkdir temp && mv MapboxMobileEvents.xcodeproj temp
-            xcodebuild -scheme MapboxMobileEvents test -destination "platform=iOS Simulator,name=iPhone 11,OS=latest"
-            mv temp/MapboxMobileEvents.xcodeproj . && rm -rf temp
+          name: Ensure netrc
+          command: Tests/Integration/ensure_netrc.sh
       - run:
           name: Test
           command: xcodebuild -project MapboxMobileEvents.xcodeproj -scheme MMETestHost build test -destination 'platform=iOS Simulator,name=iPhone 11,OS=latest' GCC_INSTRUMENT_PROGRAM_FLOW_ARCS=YES GCC_GENERATE_TEST_COVERAGE_FILES=YES
-      - run:
-          name: Test CocoaPods
-          command: |
-            pod lib lint MapboxMobileEvents.podspec
-            Tests/Integration/test_cocoapods.sh
       - run:
           name: Test Carthage
           command: |
             if [ "<< parameters.xcode >>" = "12.0.0" ]; then export XCODE_XCCONFIG_FILE=~/project/xcode-12-fix.xcconfig; fi
             Tests/Integration/test_carthage.sh
-      - run:
-          name: Test SPMXcode
-          command: |
-            Tests/Integration/test_spm_xcode.sh
   prepare_release:
     parameters:
       xcode:
@@ -58,8 +48,26 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Ensure netrc
+          command: Tests/Integration/ensure_netrc.sh
+      - run:
           name: Prepare release artifacts
           command: |
             scripts/prepare_release_artifacts.sh
+      - run:
+          name: Calculate checksum of Mapbox.zip
+          command: |
+              pushd build/artifacts/zip
+              swift package compute-checksum MapboxMobileEvents.zip > MapboxMobileEvents.zip.checksum
+              cat MapboxMobileEvents.zip.checksum
+              popd
+      - run:
+          name: Test CocoaPods
+          command: |
+            Tests/Integration/test_cocoapods.sh
+      - run:
+          name: Test SPMXcode
+          command: |
+            Tests/Integration/test_spm_xcode.sh
       - store_artifacts:
           path: build/artifacts/zip

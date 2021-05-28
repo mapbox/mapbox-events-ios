@@ -54,9 +54,11 @@ mkdir -p "${ROOT_DIR}/build/artifacts/zip"
 ZIPDIR="${ROOT_DIR}/build/artifacts/zip"
 
 pushd ${ROOT_DIR}/build/artifacts/frameworks/iOS.xcarchive/Products/Library/Frameworks
-zip --symlinks -r "${ZIPDIR}/MapboxMobileEvents-ios.zip" MapboxMobileEvents.framework
+cp "${ROOT_DIR}/LICENSE.md" .
+zip --symlinks -r "${ZIPDIR}/MapboxMobileEvents-ios.zip" MapboxMobileEvents.framework LICENSE.md
 popd
 
 pushd ${ROOT_DIR}/build/artifacts/frameworks
-zip --symlinks -r "${ZIPDIR}/MapboxMobileEvents.zip" MapboxMobileEvents.xcframework
+cp "${ROOT_DIR}/LICENSE.md" .
+zip --symlinks -r "${ZIPDIR}/MapboxMobileEvents.zip" MapboxMobileEvents.xcframework LICENSE.md
 popd
