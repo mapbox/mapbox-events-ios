@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # This script deploys MapboxMobileEvents SDK for iOS to SDK Registry
-# <artifacts_dir>/MapboxMobileEvents.xcframework.zip (archive containing MapboxMobileEvents.xcframework)
-# <artifacts_dir>/MapboxMobileEvents.zip (archive containing MapboxMobileEvents.framework)
+# <artifacts_dir>/MapboxMobileEvents.zip (archive containing MapboxMobileEvents.xcframework)
+# <artifacts_dir>/MapboxMobileEvents-ios.zip (archive containing MapboxMobileEvents.framework)
 
 set -eo pipefail
 
@@ -22,8 +22,8 @@ VERSION=${VERSION_TAG#v}
 
 ARTIFACTS_DIR="$2"
 
-ZIP_XCFRAMEWORK_FILE="MapboxMobileEvents.xcframework.zip"
-ZIP_FRAMEWORK_FILE="MapboxMobileEvents.zip"
+ZIP_XCFRAMEWORK_FILE="MapboxMobileEvents.zip"
+ZIP_FRAMEWORK_FILE="MapboxMobileEvents-ios.zip"
 
 ZIP_XCFRAMEWORK="${ARTIFACTS_DIR}/${ZIP_XCFRAMEWORK_FILE}"
 ZIP_FRAMEWORK="${ARTIFACTS_DIR}/${ZIP_FRAMEWORK_FILE}"

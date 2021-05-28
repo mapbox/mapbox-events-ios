@@ -23,20 +23,16 @@ Pod::Spec.new do |s|
 
   s.ios.deployment_target = "9.0"
 
-
   # ――― Source Location ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
-  s.source = { :git => "https://github.com/mapbox/mapbox-events-ios.git", :tag => "v#{s.version.to_s}" }
-
-  # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
-
-  s.source_files = ["Sources/MapboxMobileEvents/**/*.{h,m}"]
+  s.source = {
+    :http => "https://api.mapbox.com/downloads/v2/mapbox-events-ios/releases/ios/packages/#{s.version.to_s}/MapboxMobileEvents.zip"
+  }
 
   # ――― Project Settings ――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
   s.requires_arc = true
-  s.module_name = 'MapboxMobileEvents'
-  s.library = 'z'
-  s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES' }
+  s.vendored_frameworks = 'MapboxMobileEvents.xcframework'
+  s.module_name = s.name
 
 end
