@@ -9,7 +9,6 @@
 @interface MMECertPin()
 
 @property (nonatomic) NSMutableDictionary<NSData *, NSData *> *publicKeyInfoHashesCache;
-@property (nonatomic) NSURLSessionAuthChallengeDisposition lastAuthChallengeDisposition;
 
 @property (nonatomic) dispatch_queue_t lockQueue;
 
@@ -29,11 +28,23 @@
 - (void) handleChallenge:(NSURLAuthenticationChallenge * _Nonnull)challenge completionHandler:(void (^ _Nonnull)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential * _Nullable credential))completionHandler{
     
     if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
-        
+        NSString* hostName = challenge.protectionSpace.host;
+
+        // check if hostName is a subdomain of one of the pinned domains
+        __block NSString* pinnedHost = nil;
+        [NSUserDefaults.mme_configuration.mme_certificatePinningConfig.allKeys enumerateObjectsUsingBlock:^(NSString* obj, NSUInteger index, BOOL *stop) {
+            if ([hostName isEqualToString:obj]) {
+                pinnedHost = obj;
+                *stop = YES;
+            } else if ([hostName hasSuffix:[NSString stringWithFormat:@".%@", obj]]) {
+                pinnedHost = obj;
+                *stop = YES;
+            }
+        }];
+
         //Domain should be included
-        if (![NSUserDefaults.mme_configuration.mme_certificatePinningConfig.allKeys containsObject:challenge.protectionSpace.host]) {
+        if (!pinnedHost) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                self.lastAuthChallengeDisposition = NSURLSessionAuthChallengePerformDefaultHandling;
                 completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
             });
             
@@ -59,11 +70,10 @@
                 SecCertificateRef remoteCertificate = SecTrustGetCertificateAtIndex(serverTrust, lc);
                 NSData *remoteCertificatePublicKeyHash = [self hashSubjectPublicKeyInfoFromCertificate:remoteCertificate];
                 NSString *publicKeyHashString = [remoteCertificatePublicKeyHash base64EncodedStringWithOptions:0];
-                NSArray *pinnedHashStrings = NSUserDefaults.mme_configuration.mme_certificatePinningConfig[challenge.protectionSpace.host];
+                NSArray *pinnedHashStrings = NSUserDefaults.mme_configuration.mme_certificatePinningConfig[pinnedHost];
                 
                 if ([pinnedHashStrings containsObject:publicKeyHashString]) {
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        self.lastAuthChallengeDisposition = NSURLSessionAuthChallengeUseCredential;
                         completionHandler(NSURLSessionAuthChallengeUseCredential, [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust]);
                     });
                     
@@ -78,7 +88,6 @@
 
             if (!found) {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    self.lastAuthChallengeDisposition = NSURLSessionAuthChallengeCancelAuthenticationChallenge;
                     completionHandler(NSURLSessionAuthChallengeCancelAuthenticationChallenge, [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust]);
                 });
                 
@@ -88,7 +97,6 @@
         }
         else if (trustResult == kSecTrustResultProceed) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                self.lastAuthChallengeDisposition = NSURLSessionAuthChallengePerformDefaultHandling;
                 completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust]);
             });
             
@@ -97,7 +105,6 @@
         }
         else {
             dispatch_async(dispatch_get_main_queue(), ^{
-                self.lastAuthChallengeDisposition = NSURLSessionAuthChallengeCancelAuthenticationChallenge;
                 completionHandler(NSURLSessionAuthChallengeCancelAuthenticationChallenge, [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust]);
             });
             
@@ -107,7 +114,6 @@
     }
     else {
         dispatch_async(dispatch_get_main_queue(), ^{
-            self.lastAuthChallengeDisposition = NSURLSessionAuthChallengePerformDefaultHandling;
             completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
         });
         
@@ -115,6 +121,39 @@
                                                                     MMEEventKeyLocalDebugDescription: @"Ignoring credentials; default handling for challenge"}];
     }
     
+}
+
++ (SecTrustResultType) trustEvaluate:(SecTrustRef)trust {
+    SecTrustResultType trustResult;
+    if (@available(iOS 12.0, macOS 10.14, *)) {
+        (void)SecTrustEvaluateWithError(trust, NULL);
+        SecTrustGetTrustResult(trust, &trustResult);
+    } else {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        // no other function available on earlier OSes
+        SecTrustEvaluate(trust, &trustResult);
+#pragma clang diagnostic pop
+    }
+    return trustResult;
+}
+
++ (SecKeyRef) trustCopyKey:(SecTrustRef)trust {
+    SecKeyRef key;
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 140400 || __MAC_OS_X_VERSION_MAX_ALLOWED >= 110000
+    if (@available(iOS 14.0, macOS 11.0, *)) {
+        key = SecTrustCopyKey(trust);
+    } else {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        key = SecTrustCopyPublicKey(trust);
+#pragma clang diagnostic pop
+    }
+#else
+    key = SecTrustCopyPublicKey(trust);
+#endif
+    
+    return key;
 }
 
 - (NSData *)hashSubjectPublicKeyInfoFromCertificate:(SecCertificateRef)certificate{
@@ -132,26 +171,52 @@
     if (cachedSubjectPublicKeyInfo) {
         return cachedSubjectPublicKeyInfo;
     }
-    
+
+    SecTrustRef trust;
+    SecPolicyRef policy = SecPolicyCreateBasicX509();
+    SecTrustCreateWithCertificates(certificate, policy, &trust);
+    [self.class trustEvaluate:trust];
+    SecKeyRef publicKey = [self.class trustCopyKey:trust];
+    CFRelease(policy);
+    CFRelease(trust);
+
     // We didn't have this certificate in the cache
     // First extract the public key bytes
     NSData *publicKeyData = [self getPublicKeyDataFromCertificate:certificate];
     if (publicKeyData == nil) {
         return nil;
     }
+
+    size_t publicKeySize = SecKeyGetBlockSize(publicKey) * 8; // get size in bits
+
+    char *asn1Header = 0;
+    CC_LONG asn1HeaderSize = 0;
+    switch (publicKeySize) {
+        case 2048:
+            asn1Header = (char *)rsa2048Asn1Header;
+            asn1HeaderSize = sizeof(rsa2048Asn1Header);
+            break;
+        case 4096:
+            asn1Header = (char *)rsa4096Asn1Header;
+            asn1HeaderSize = sizeof(rsa4096Asn1Header);
+            break;
+    }
     
+    if (asn1Header == 0) {
+        return nil;
+    }
+
     // Generate a hash of the subject public key info
     NSMutableData *subjectPublicKeyInfoHash = [NSMutableData dataWithLength:CC_SHA256_DIGEST_LENGTH];
     CC_SHA256_CTX shaCtx;
     CC_SHA256_Init(&shaCtx);
     
     // Add the missing ASN1 header for public keys to re-create the subject public key info
-    CC_SHA256_Update(&shaCtx, rsa2048Asn1Header, sizeof(rsa2048Asn1Header));
+    CC_SHA256_Update(&shaCtx, asn1Header, asn1HeaderSize);
     
     // Add the public key
     CC_SHA256_Update(&shaCtx, [publicKeyData bytes], (unsigned int)[publicKeyData length]);
     CC_SHA256_Final((unsigned char *)[subjectPublicKeyInfoHash bytes], &shaCtx);
-    
     
     // Store the hash in our memory cache
     dispatch_barrier_sync(_lockQueue, ^{
@@ -170,6 +235,11 @@ static const NSString *kMMEKeychainPublicKeyTag = @"MMEKeychainPublicKeyTag"; //
 static const unsigned char rsa2048Asn1Header[] = {
     0x30, 0x82, 0x01, 0x22, 0x30, 0x0d, 0x06, 0x09, 0x2a, 0x86, 0x48, 0x86,
     0xf7, 0x0d, 0x01, 0x01, 0x01, 0x05, 0x00, 0x03, 0x82, 0x01, 0x0f, 0x00
+};
+static const unsigned char rsa4096Asn1Header[] =
+{
+    0x30, 0x82, 0x02, 0x22, 0x30, 0x0d, 0x06, 0x09, 0x2a, 0x86, 0x48, 0x86,
+    0xf7, 0x0d, 0x01, 0x01, 0x01, 0x05, 0x00, 0x03, 0x82, 0x02, 0x0f, 0x00
 };
 
 - (NSData *)getPublicKeyDataFromCertificate:(SecCertificateRef)certificate{
@@ -209,7 +279,6 @@ static const unsigned char rsa2048Asn1Header[] = {
     publicKey = SecTrustCopyPublicKey(tempTrust);
     CFRelease(policy);
     CFRelease(tempTrust);
-    
     
     /// Extract the actual bytes from the key reference using the Keychain
     // Prepare the dictionary to add the key
