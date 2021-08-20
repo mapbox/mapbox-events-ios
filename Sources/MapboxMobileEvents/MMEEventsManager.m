@@ -173,9 +173,11 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)pauseOrResumeMetricsCollectionIfRequired {
     @try {
         BOOL appIsInBackground = (self.application.applicationState == UIApplicationStateBackground);
+        BOOL collectionIsEnabled = NSUserDefaults.mme_configuration.mme_isCollectionEnabled ||
+            (appIsInBackground && NSUserDefaults.mme_configuration.mme_isCollectionEnabledInBackground);
 
         // check for existing background task status, flush the event queue if needed
-        if (appIsInBackground && _backgroundTaskIdentifier == UIBackgroundTaskInvalid) {
+        if (collectionIsEnabled && appIsInBackground && _backgroundTaskIdentifier == UIBackgroundTaskInvalid) {
             MMELOG(MMELogInfo, MMEDebugEventTypeBackgroundTask, ([NSString stringWithFormat:@"Initiated background task: %@, instance: %@",@(self.backgroundTaskIdentifier),self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
             
             _backgroundTaskIdentifier = [self.application beginBackgroundTaskWithExpirationHandler:^{
