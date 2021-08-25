@@ -355,24 +355,27 @@ NS_ASSUME_NONNULL_BEGIN
         
         MMELOG(MMELogInfo, MMEDebugEventTypeTurnstile, ([NSString stringWithFormat:@"Sending turnstile event: %@, instance: %@", turnstileEvent , self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
 
-        __weak __typeof__(self) weakSelf = self;
-        [self.apiClient postEvent:turnstileEvent completionHandler:^(NSError * _Nullable error) {
-            @try {
-                __strong __typeof__(weakSelf) strongSelf = weakSelf;
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        dispatch_async(queue, ^{
+           __weak __typeof__(self) weakSelf = self;
+                [self.apiClient postEvent:turnstileEvent completionHandler:^(NSError * _Nullable error) {
+                @try {
+                    __strong __typeof__(weakSelf) strongSelf = weakSelf;
 
-                if (error) {
-                    MMELOG(MMELogInfo, MMEDebugEventTypeTurnstileFailed, ([NSString stringWithFormat:@"Could not send turnstile event: %@, instance: %@", [error localizedDescription] , self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
-                    return;
+                    if (error) {
+                        MMELOG(MMELogInfo, MMEDebugEventTypeTurnstileFailed, ([NSString stringWithFormat:@"Could not send turnstile event: %@, instance: %@", [error localizedDescription] , self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
+                        return;
+                    }
+
+                    [strongSelf updateNextTurnstileSendDate];
+
+                    MMELOG(MMELogInfo, MMEDebugEventTypeTurnstile, ([NSString stringWithFormat:@"Sent turnstile event, instance: %@", self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
                 }
-
-                [strongSelf updateNextTurnstileSendDate];
-                
-                MMELOG(MMELogInfo, MMEDebugEventTypeTurnstile, ([NSString stringWithFormat:@"Sent turnstile event, instance: %@", self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
-            }
-            @catch(NSException *except) {
-                [self reportException:except];
-            }
-        }];
+                @catch(NSException *except) {
+                    [self reportException:except];
+                }
+            }];
+        });
     }
     @catch(NSException *except) {
         [self reportException:except];
@@ -380,39 +383,45 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void)sendPendingMetricsEvent {
-    MMEEvent *pendingMetricsEvent = [MMEMetricsManager.sharedManager loadPendingTelemetryMetricsEvent];
-
-    if (pendingMetricsEvent) {
-        [self.apiClient postEvent:pendingMetricsEvent completionHandler:^(NSError * _Nullable error) {
-            if (error) {
-                [MMEEventLogger.sharedLogger logEvent:[MMEEvent debugEventWithError:error]];
-                return;
-            }
-            MMELOG(MMELogInfo, MMEDebugEventTypeTelemetryMetrics, ([NSString stringWithFormat:@"Sent pendingTelemetryMetrics event, instance: %@", self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
-        }];
-    }
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_async(queue, ^{
+        MMEEvent *pendingMetricsEvent = [MMEMetricsManager.sharedManager loadPendingTelemetryMetricsEvent];
+        
+        if (pendingMetricsEvent) {
+            [self.apiClient postEvent:pendingMetricsEvent completionHandler:^(NSError * _Nullable error) {
+                if (error) {
+                    [MMEEventLogger.sharedLogger logEvent:[MMEEvent debugEventWithError:error]];
+                    return;
+                }
+                MMELOG(MMELogInfo, MMEDebugEventTypeTelemetryMetrics, ([NSString stringWithFormat:@"Sent pendingTelemetryMetrics event, instance: %@", self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
+            }];
+        }
+    });
 }
 
 - (void)sendTelemetryMetricsEvent {
-    @try {
-        MMEEvent *telemetryMetricsEvent = [MMEMetricsManager.sharedManager generateTelemetryMetricsEvent];
-        
-        MMELOG(MMELogInfo, MMEDebugEventTypeTelemetryMetrics, ([NSString stringWithFormat:@"Sending telemetryMetrics event: %@, instance: %@", telemetryMetricsEvent, self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
-        
-        if (telemetryMetricsEvent) {
-            [self.apiClient postEvent:telemetryMetricsEvent completionHandler:^(NSError * _Nullable error) {
-                [MMEMetricsManager.sharedManager resetMetrics];
-                if (error) {
-                    MMELOG(MMELogInfo, MMEDebugEventTypeTelemetryMetrics, ([NSString stringWithFormat:@"Could not send telemetryMetrics event: %@, instance: %@", [error localizedDescription], self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
-                    return;
-                }
-                MMELOG(MMELogInfo, MMEDebugEventTypeTelemetryMetrics, ([NSString stringWithFormat:@"Sent telemetryMetrics event, instance: %@", self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
-            }];
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_async(queue, ^{
+        @try {
+            MMEEvent *telemetryMetricsEvent = [MMEMetricsManager.sharedManager generateTelemetryMetricsEvent];
+
+            MMELOG(MMELogInfo, MMEDebugEventTypeTelemetryMetrics, ([NSString stringWithFormat:@"Sending telemetryMetrics event: %@, instance: %@", telemetryMetricsEvent, self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
+
+            if (telemetryMetricsEvent) {
+                [self.apiClient postEvent:telemetryMetricsEvent completionHandler:^(NSError * _Nullable error) {
+                    [MMEMetricsManager.sharedManager resetMetrics];
+                    if (error) {
+                        MMELOG(MMELogInfo, MMEDebugEventTypeTelemetryMetrics, ([NSString stringWithFormat:@"Could not send telemetryMetrics event: %@, instance: %@", [error localizedDescription], self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
+                        return;
+                    }
+                    MMELOG(MMELogInfo, MMEDebugEventTypeTelemetryMetrics, ([NSString stringWithFormat:@"Sent telemetryMetrics event, instance: %@", self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
+                }];
+            }
         }
-    }
-    @catch(NSException *except) {
-        [self reportException:except];
-    }
+        @catch(NSException *except) {
+            [self reportException:except];
+        }
+    });
 }
 
 - (void)enqueueEventWithName:(NSString *)name {

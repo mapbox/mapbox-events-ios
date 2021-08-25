@@ -449,17 +449,6 @@ describe(@"MMEEventsManager", ^{
                     eventsManager.apiClient should_not have_received(@selector(postEvent:completionHandler:));
                 });
             });
-            
-            context(@"when the current time is after the next telemetryMetrics send date", ^{
-                beforeEach(^{
-                    [MMEMetricsManager sharedManager].metrics stub_method(@selector(recordingStarted)).and_return(NSDate.distantPast);
-                    [eventsManager sendTelemetryMetricsEvent];
-                });
-                
-                it(@"tells its api client to post events", ^{
-                    eventsManager.apiClient should have_received(@selector(postEvent:completionHandler:));
-                });
-            });
         });
     });
     
