@@ -323,6 +323,15 @@
     self.eventsManager.nextTurnstileSendDate = MMEDate.distantPast;
     
     [self.eventsManager sendTurnstileEvent];
+
+    XCTestExpectation *expectation = [self expectationWithDescription:@"apiClient should be getting postEvent request."];
+
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_async(queue, ^{
+        [expectation fulfill];
+    });
+
+    [self waitForExpectations:@[expectation] timeout:5];
     
     XCTAssert([(MMETestStub*)self.eventsManager.apiClient received:@selector(postEvent:completionHandler:)]);
     XCTAssert(self.eventsManager.eventQueue.count == 0);
@@ -344,7 +353,17 @@
     self.eventsManager.nextTurnstileSendDate = MMEDate.distantPast;
     
     [self.eventsManager sendTurnstileEvent];
-    
+
+    XCTestExpectation *expectation = [self expectationWithDescription:@"apiClient should be getting postEvent request."];
+
+    //waiting a bit
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_async(queue, ^{
+        [expectation fulfill];
+    });
+
+    [self waitForExpectations:@[expectation] timeout:5];
+
     XCTAssert([(MMETestStub*)self.eventsManager.apiClient received:@selector(postEvent:completionHandler:)]);
     XCTAssert(self.eventsManager.eventQueue.count == 0);
 }
