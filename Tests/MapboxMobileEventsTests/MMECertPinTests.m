@@ -19,29 +19,6 @@
 #import "MMEBundleInfoFake.h"
 
 
-@interface MMENSURLSessionWrapper (MMECertPinTests)
-
-@property (nonatomic) MMECertPin *certPin;
-
-@end
-
-// MARK: -
-
-@interface MMECertPin (Tests)
-@property (nonatomic) NSURLSessionAuthChallengeDisposition lastAuthChallengeDisposition;
-
-- (NSData *)getPublicKeyDataFromCertificate_legacy_ios:(SecCertificateRef)certificate;
-
-@end
-
-// MARK: -
-
-@interface MMEAPIClient ()
-@property (nonatomic) id<MMENSURLSessionWrapper> sessionWrapper;
-
-@end
-
-
 // MARK: -
 
 @interface MMECertPinTests : XCTestCase
@@ -71,6 +48,7 @@
     NSBundle.mme_mainBundle = fakeBundle;
 
     self.apiClient = MMEEventsManager.sharedManager.apiClient;
+    self.sessionWrapper = [[MMENSURLSessionWrapper alloc] init];
 }
 
 - (void)test001_checkCNHashCount {
@@ -80,7 +58,7 @@
 
 -(void)test002_checkCOMHashCount {
     NSArray *comHashes = NSUserDefaults.mme_configuration.mme_certificatePinningConfig[@"events.mapbox.com"];
-    XCTAssert(comHashes.count == 4);
+    XCTAssert(comHashes.count == 5);
 }
 
 #if !SWIFT_PACKAGE
@@ -108,7 +86,7 @@
     XCTAssertNil(configError);
 
     NSArray *comHashes = NSUserDefaults.mme_configuration.mme_certificatePinningConfig[@"events.mapbox.com"];
-    XCTAssert(comHashes.count == 3);
+    XCTAssert(comHashes.count == 4);
 }
 #endif
 
@@ -138,6 +116,22 @@
         }
     }
     XCTAssert(invalidHashes.count == 0);
+}
+
+-(void)test007_pinEventsMapboxCom {
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Request should have status 200 and pass pin validation."];
+        
+    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"https://events.mapbox.com"]];
+
+    [self.sessionWrapper processRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        if (error) {
+            XCTFail(@"NSURLRequest failed with error: %@", error);
+        } else {
+            [expectation fulfill];
+        }
+    }];
+
+    [self waitForExpectations:@[expectation] timeout:30];
 }
 
 @end

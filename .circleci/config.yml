@@ -47,10 +47,3 @@ jobs:
           name: Test SPMXcode
           command: |
             Tests/Integration/test_spm_xcode.sh
-      - when:
-          condition:
-            equal: [ "11.7.0", << parameters.xcode >> ]
-          steps:
-            - run:
-                name: Codecov
-                command: bash <(curl https://codecov.io/bash) -Z -t $CODECOV_TOKEN

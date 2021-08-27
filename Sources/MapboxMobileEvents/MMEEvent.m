@@ -443,7 +443,7 @@ static NSString * const MMEEventAttributesKey = @"MMEEventAttributes";
             return nil;
         }
         
-        _attributesStorage = [aDecoder decodeObjectOfClass:NSDictionary.class forKey:MMEEventAttributesKey];
+        _attributesStorage = [aDecoder decodeObjectOfClasses:[NSSet setWithObjects:NSArray.class, NSDictionary.class, NSString.class, NSNumber.class, NSNull.class, nil] forKey:MMEEventAttributesKey];
         _dateStorage = [aDecoder decodeObjectOfClass:MMEDate.class forKey:MMEEventDateKey];
     }
 

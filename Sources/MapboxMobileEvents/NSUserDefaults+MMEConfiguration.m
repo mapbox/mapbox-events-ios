@@ -470,6 +470,8 @@ NS_ASSUME_NONNULL_BEGIN
        // SHA1=E2:8E:94:45:E0:B7:2F:28:62:D3:82:70:1F:C9:62:17:F2:9D:78:68
        @"yGp2XoimPmIK24X3bNV1IaK+HqvbGEgqar5nauDdC5E=",
        // SHA1=1A:62:1C:B8:1F:05:DD:02:A9:24:77:94:6C:B4:1B:53:BF:1D:73:6C
+       @"Xw7GYmoUa7YVrYJj7t7RnqYcO58dRFLYEL7UEOuIlX8=",
+       // SHA1=20:3D:45:9A:83:4D:80:56:84:CA:B0:BA:1F:24:36:6B:D6:AF:D5:6E
        @"BhynraKizavqoC5U26qgYuxLZst6pCu9J5stfL6RSYY=",
        // SHA1=20:CE:AB:72:3C:51:08:B2:8A:AA:AB:B9:EE:9A:9B:E8:FD:C5:7C:F6
        @"yJLOJQLNTPNSOh3Btyg9UA1icIoZZssWzG0UmVEJFfA=",
@@ -496,7 +498,15 @@ NS_ASSUME_NONNULL_BEGIN
         MMEEventsMapboxCom: comPublicKeys,
         MMEEventsMapboxCN: cnPublicKeys,
 #if DEBUG
-        MMEEventsTilestreamNet: @[@"f0eq9TvzcjRVgNZjisBA1sVrQ9b0pJA5ESWg6hVpK2c="]
+        MMEEventsTilestreamNet: @[
+            @"f0eq9TvzcjRVgNZjisBA1sVrQ9b0pJA5ESWg6hVpK2c=",
+            // new 2048 bit staging keys generated in April 2021
+            @"8apXPecP7X3vUGqi/B42cig4O1BjQUM4dng5gMVOiK0=",
+            @"MxGjtNVZ0mEdjhhfvAcTNZd+lC8WY8vKkkaSFE2azXQ=",
+            @"i/5fi5jB13JKeiZJMFNu4XSIaaCNmxAWsWvmMsI7t5s=",
+            @"4YJLMcE66WP2/FRID2HT0QpQRNjG7zqz/dJzP3BGct8=",
+            @"H1YTKuZacKUYyGnQFVPcarkqYxvGJ7QKb9dFz2TssKw="
+        ]
 #endif
     };
 }
