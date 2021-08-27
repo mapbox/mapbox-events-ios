@@ -3,7 +3,7 @@
 
 @implementation CLLocationManager (MMEMobileEvents)
 
-void mme_linkCLLocationManagerCategory(){}
+void mme_linkCLLocationManagerCategory(void){}
 
 - (CLAuthorizationStatus)mme_authorizationStatus {
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 140000
