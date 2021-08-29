@@ -2,7 +2,7 @@
 
 @implementation CLLocation (MMEMobileEvents)
 
-void mme_linkCLLocationCategory(){}
+void mme_linkCLLocationCategory(void){}
 
 - (CLLocationSpeed)mme_roundedSpeed {
     return round(self.speed);
