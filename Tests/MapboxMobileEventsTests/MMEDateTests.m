@@ -20,12 +20,13 @@
 
 - (void)testNSSecureCoding {
     MMEDate *now = [MMEDate new];
-    NSKeyedArchiver *archiver = [NSKeyedArchiver new];
-    archiver.requiresSecureCoding = YES;
+    NSKeyedArchiver *archiver = [[NSKeyedArchiver alloc] initRequiringSecureCoding:true];
     [archiver encodeObject:now forKey:NSKeyedArchiveRootObjectKey];
-    NSData *nowData = archiver.encodedData;
+    NSData *nowData = [archiver encodedData];
     
-    NSKeyedUnarchiver *unarchiver = [NSKeyedUnarchiver.alloc initForReadingWithData:nowData];
+    NSError *errorUnarchiver = nil;
+    NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingFromData:nowData
+                                                                                error:&errorUnarchiver];
     unarchiver.requiresSecureCoding = YES;
     MMEDate *then = [unarchiver decodeObjectOfClass:MMEDate.class forKey:NSKeyedArchiveRootObjectKey];
     
