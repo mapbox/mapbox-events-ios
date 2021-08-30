@@ -42,7 +42,7 @@
 
 @implementation NSData (GZIP)
 
-void mme_linkNSDataCategory(){};
+void mme_linkNSDataCategory(void){};
 
 - (NSData *)mme_gzippedDataWithCompressionLevel:(float)level
 {
