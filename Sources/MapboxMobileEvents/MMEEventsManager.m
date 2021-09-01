@@ -107,6 +107,8 @@ NS_ASSUME_NONNULL_BEGIN
                     return;
                 }
 
+                [self.apiClient startGettingConfigUpdates];
+
                 // Issue: https://github.com/mapbox/mapbox-events-ios/issues/271
 #if !TARGET_OS_SIMULATOR // don't send pending metrics from the simulator
                 [strongSelf sendPendingMetricsEvent];
@@ -296,86 +298,97 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)sendTurnstileEvent {
     @try {
-        if (self.nextTurnstileSendDate && ([NSDate.date timeIntervalSinceDate:self.nextTurnstileSendDate] < 0)) {
-            MMELOG(MMELogInfo, MMEDebugEventTypeTurnstile, ([NSString stringWithFormat:@"Turnstile event already sent; waiting until %@ to send another one, instance: %@", self.nextTurnstileSendDate, self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
-            return;
-        }
+        __weak __typeof__(self) weakSelf = self;
+        void(^initialization)(void) = ^{
+            __strong __typeof__(weakSelf) strongSelf = weakSelf;
 
-        if (!NSUserDefaults.mme_configuration.mme_accessToken) {
-            MMELOG(MMELogInfo, MMEDebugEventTypeTurnstileFailed, ([NSString stringWithFormat:@"No access token sent - can not send turntile event, instance: %@", self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
-            return;
-        }
+            if (strongSelf == nil) {
+                return;
+            }
+            
+            if (self.nextTurnstileSendDate && ([NSDate.date timeIntervalSinceDate:self.nextTurnstileSendDate] < 0)) {
+                MMELOG(MMELogInfo, MMEDebugEventTypeTurnstile, ([NSString stringWithFormat:@"Turnstile event already sent; waiting until %@ to send another one, instance: %@", self.nextTurnstileSendDate, self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
+                return;
+            }
 
-        if (!NSUserDefaults.mme_configuration.mme_legacyUserAgentBase) {
-            MMELOG(MMELogInfo, MMEDebugEventTypeTurnstileFailed, ([NSString stringWithFormat:@"No user agent base set - can not send turntile event, instance: %@", self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
-            return;
-        }
+            if (!NSUserDefaults.mme_configuration.mme_accessToken) {
+                MMELOG(MMELogInfo, MMEDebugEventTypeTurnstileFailed, ([NSString stringWithFormat:@"No access token sent - can not send turntile event, instance: %@", self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
+                return;
+            }
 
-        if (!NSUserDefaults.mme_configuration.mme_legacyHostSDKVersion) {
-            MMELOG(MMELogInfo, MMEDebugEventTypeTurnstileFailed, ([NSString stringWithFormat:@"No host SDK version set - can not send turntile event, instance: %@", self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
-            return;
-        }
+            if (!NSUserDefaults.mme_configuration.mme_legacyUserAgentBase) {
+                MMELOG(MMELogInfo, MMEDebugEventTypeTurnstileFailed, ([NSString stringWithFormat:@"No user agent base set - can not send turntile event, instance: %@", self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
+                return;
+            }
 
-        if (!self.commonEventData.vendorId) {
-            MMELOG(MMELogInfo, MMEDebugEventTypeTurnstileFailed, ([NSString stringWithFormat:@"No vendor id available - can not send turntile event, instance: %@", self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
-            return;
-        }
+            if (!NSUserDefaults.mme_configuration.mme_legacyHostSDKVersion) {
+                MMELOG(MMELogInfo, MMEDebugEventTypeTurnstileFailed, ([NSString stringWithFormat:@"No host SDK version set - can not send turntile event, instance: %@", self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
+                return;
+            }
 
-        if (!self.commonEventData.model) {
-            MMELOG(MMELogInfo, MMEDebugEventTypeTurnstileFailed, ([NSString stringWithFormat:@"No model available - can not send turntile event, instance: %@", self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
-            return;
-        }
+            if (!self.commonEventData.vendorId) {
+                MMELOG(MMELogInfo, MMEDebugEventTypeTurnstileFailed, ([NSString stringWithFormat:@"No vendor id available - can not send turntile event, instance: %@", self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
+                return;
+            }
 
-        if (!self.commonEventData.osVersion) {
-            MMELOG(MMELogInfo, MMEDebugEventTypeTurnstileFailed, ([NSString stringWithFormat:@"No iOS version available - can not send turntile event, instance: %@", self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
-            return;
-        }
+            if (!self.commonEventData.model) {
+                MMELOG(MMELogInfo, MMEDebugEventTypeTurnstileFailed, ([NSString stringWithFormat:@"No model available - can not send turntile event, instance: %@", self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
+                return;
+            }
 
-        NSMutableDictionary *turnstileEventAttributes = [[NSMutableDictionary alloc] init];
-        turnstileEventAttributes[MMEEventKeyEvent] = MMEEventTypeAppUserTurnstile;
-        turnstileEventAttributes[MMEEventKeyCreated] = [MMEDate.iso8601DateFormatter stringFromDate:[NSDate date]];
-        turnstileEventAttributes[MMEEventKeyVendorID] = self.commonEventData.vendorId;
-        // MMEEventKeyDevice is synonomous with MMEEventKeyModel but the server will only accept "device" in turnstile events
-        turnstileEventAttributes[MMEEventKeyDevice] = self.commonEventData.model;
-        turnstileEventAttributes[MMEEventKeyOperatingSystem] = self.commonEventData.osVersion;
-        turnstileEventAttributes[MMEEventSDKIdentifier] = NSUserDefaults.mme_configuration.mme_legacyUserAgentBase;
-        turnstileEventAttributes[MMEEventSDKVersion] = NSUserDefaults.mme_configuration.mme_legacyHostSDKVersion;
-        turnstileEventAttributes[MMEEventKeyEnabledTelemetry] = @(NSUserDefaults.mme_configuration.mme_isCollectionEnabled);
-        turnstileEventAttributes[MMEEventKeyLocationEnabled] = @(CLLocationManager.locationServicesEnabled);
-        turnstileEventAttributes[MMEEventKeyLocationAuthorization] = [self.locationManager locationAuthorizationString];
-        turnstileEventAttributes[MMEEventKeySkuId] = self.skuId ?: NSNull.null;
+            if (!self.commonEventData.osVersion) {
+                MMELOG(MMELogInfo, MMEDebugEventTypeTurnstileFailed, ([NSString stringWithFormat:@"No iOS version available - can not send turntile event, instance: %@", self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
+                return;
+            }
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 140000
-        if (@available(iOS 14, macOS 11.0, watchOS 7.0, tvOS 14.0, *)) {
-            turnstileEventAttributes[MMEEventKeyAccuracyAuthorization] = [self.locationManager accuracyAuthorizationString];
-        }
-#endif
+            NSMutableDictionary *turnstileEventAttributes = [[NSMutableDictionary alloc] init];
+            turnstileEventAttributes[MMEEventKeyEvent] = MMEEventTypeAppUserTurnstile;
+            turnstileEventAttributes[MMEEventKeyCreated] = [MMEDate.iso8601DateFormatter stringFromDate:[NSDate date]];
+            turnstileEventAttributes[MMEEventKeyVendorID] = self.commonEventData.vendorId;
+            // MMEEventKeyDevice is synonomous with MMEEventKeyModel but the server will only accept "device" in turnstile events
+            turnstileEventAttributes[MMEEventKeyDevice] = self.commonEventData.model;
+            turnstileEventAttributes[MMEEventKeyOperatingSystem] = self.commonEventData.osVersion;
+            turnstileEventAttributes[MMEEventSDKIdentifier] = NSUserDefaults.mme_configuration.mme_legacyUserAgentBase;
+            turnstileEventAttributes[MMEEventSDKVersion] = NSUserDefaults.mme_configuration.mme_legacyHostSDKVersion;
+            turnstileEventAttributes[MMEEventKeyEnabledTelemetry] = @(NSUserDefaults.mme_configuration.mme_isCollectionEnabled);
+            turnstileEventAttributes[MMEEventKeyLocationEnabled] = @(CLLocationManager.locationServicesEnabled);
+            turnstileEventAttributes[MMEEventKeyLocationAuthorization] = [self.locationManager locationAuthorizationString];
+            turnstileEventAttributes[MMEEventKeySkuId] = self.skuId ?: NSNull.null;
 
-        MMEEvent *turnstileEvent = [MMEEvent turnstileEventWithAttributes:turnstileEventAttributes];
-        
-        MMELOG(MMELogInfo, MMEDebugEventTypeTurnstile, ([NSString stringWithFormat:@"Sending turnstile event: %@, instance: %@", turnstileEvent , self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
+    #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 140000
+            if (@available(iOS 14, macOS 11.0, watchOS 7.0, tvOS 14.0, *)) {
+                turnstileEventAttributes[MMEEventKeyAccuracyAuthorization] = [self.locationManager accuracyAuthorizationString];
+            }
+    #endif
 
-        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-        dispatch_async(queue, ^{
-           __weak __typeof__(self) weakSelf = self;
-                [self.apiClient postEvent:turnstileEvent completionHandler:^(NSError * _Nullable error) {
-                @try {
-                    __strong __typeof__(weakSelf) strongSelf = weakSelf;
+            MMEEvent *turnstileEvent = [MMEEvent turnstileEventWithAttributes:turnstileEventAttributes];
+            
+            MMELOG(MMELogInfo, MMEDebugEventTypeTurnstile, ([NSString stringWithFormat:@"Sending turnstile event: %@, instance: %@", turnstileEvent , self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
 
-                    if (error) {
-                        MMELOG(MMELogInfo, MMEDebugEventTypeTurnstileFailed, ([NSString stringWithFormat:@"Could not send turnstile event: %@, instance: %@", [error localizedDescription] , self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
-                        return;
+            dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+            dispatch_async(queue, ^{
+               __weak __typeof__(self) weakSelf = self;
+                    [self.apiClient postEvent:turnstileEvent completionHandler:^(NSError * _Nullable error) {
+                    @try {
+                        __strong __typeof__(weakSelf) strongSelf = weakSelf;
+
+                        if (error) {
+                            MMELOG(MMELogInfo, MMEDebugEventTypeTurnstileFailed, ([NSString stringWithFormat:@"Could not send turnstile event: %@, instance: %@", [error localizedDescription] , self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
+                            return;
+                        }
+
+                        [strongSelf updateNextTurnstileSendDate];
+
+                        MMELOG(MMELogInfo, MMEDebugEventTypeTurnstile, ([NSString stringWithFormat:@"Sent turnstile event, instance: %@", self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
                     }
+                    @catch(NSException *except) {
+                        [self reportException:except];
+                    }
+                }];
+            });
+        };
 
-                    [strongSelf updateNextTurnstileSendDate];
-
-                    MMELOG(MMELogInfo, MMEDebugEventTypeTurnstile, ([NSString stringWithFormat:@"Sent turnstile event, instance: %@", self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
-                }
-                @catch(NSException *except) {
-                    [self reportException:except];
-                }
-            }];
-        });
+        [self.dispatchManager scheduleBlock:initialization afterDelay:NSUserDefaults.mme_configuration.mme_startupDelay];
     }
     @catch(NSException *except) {
         [self reportException:except];

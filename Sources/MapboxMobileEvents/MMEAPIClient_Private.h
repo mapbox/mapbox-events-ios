@@ -13,6 +13,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)postEvent:(MMEEvent *)event completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler;
 - (void)postMetadata:(NSArray *)metadata filePaths:(NSArray *)filePaths completionHandler:(nullable void (^)(NSError * _Nullable error))completionHandler;
 
+/// Start the Configuration update process
+- (void)startGettingConfigUpdates;
+
 @optional
 
 - (nullable NSError *)statusErrorFromRequest:(NSURLRequest *)request andHTTPResponse:(NSHTTPURLResponse *)httpResponse;

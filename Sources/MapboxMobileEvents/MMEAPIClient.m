@@ -44,7 +44,6 @@ int const kMMEMaxRequestCount = 1000;
         [NSUserDefaults.mme_configuration mme_setLegacyUserAgentBase:userAgentBase];
         [NSUserDefaults.mme_configuration mme_setLegacyHostSDKVersion:hostSDKVersion];
         _sessionWrapper = [[MMENSURLSessionWrapper alloc] init];
-        [self startGettingConfigUpdates];
     }
     return self;
 }
