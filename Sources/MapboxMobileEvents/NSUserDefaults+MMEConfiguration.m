@@ -1,4 +1,5 @@
 #import <CommonCrypto/CommonDigest.h>
+#import <mach-o/dyld_images.h>
 
 #import "MMEConstants.h"
 #import "MMEDate.h"
@@ -317,12 +318,38 @@ NS_ASSUME_NONNULL_BEGIN
              [NSProcessInfo mme_processorTypeDescription]
         ];
         
+        // try to get a list of loaded dylibs
+        struct task_dyld_info tdi;
+        mach_msg_type_number_t count = TASK_DYLD_INFO_COUNT;
+        if (KERN_SUCCESS != task_info(mach_task_self_, TASK_DYLD_INFO, (task_info_t)&tdi, &count)) {
+            return;
+        }
+
+        struct dyld_all_image_infos *infos = (struct dyld_all_image_infos *)tdi.all_image_info_addr;
+        struct dyld_image_info *infoArray = (struct dyld_image_info *)infos->infoArray;
+
+        NSString* mainBundleIdentifier = NSBundle.mme_mainBundle.bundleIdentifier;
+
         // check all loaded frameworks for mapbox frameworks, record their bundleIdentifier
         NSMutableSet *loadedMapboxBundleIds = NSMutableSet.new;
-        for (NSBundle *loaded in [NSBundle.allFrameworks arrayByAddingObjectsFromArray:NSBundle.allBundles]) {
-            if ([loaded.bundleIdentifier hasPrefix:@"com.mapbox"]
-                && loaded.bundleIdentifier != NSBundle.mme_mainBundle.bundleIdentifier) {
-                [loadedMapboxBundleIds addObject:loaded.bundleIdentifier];
+        for (uint32_t i = 0; i < infos->infoArrayCount; ++i) {
+            struct dyld_image_info *imageInfo = infoArray + i;
+
+            NSString* path = [NSString stringWithCString:imageInfo->imageFilePath encoding:NSUTF8StringEncoding];
+            // check if a framework located inside app's bundle, only those can be ours
+#if !TARGET_OS_SIMULATOR
+            NSString* mainBundlePath = NSBundle.mainBundle.bundlePath;
+            if ([path hasPrefix:mainBundlePath]) {
+#else
+            if (path) {
+#endif
+                NSBundle* bdl = [NSBundle bundleWithPath:[path stringByDeletingLastPathComponent]];
+                NSString* loadedBundleIdentifier = bdl.bundleIdentifier;
+
+                if ([loadedBundleIdentifier hasPrefix:@"com.mapbox"]
+                    && loadedBundleIdentifier != mainBundleIdentifier) {
+                    [loadedMapboxBundleIds addObject:loadedBundleIdentifier];
+                }
             }
         }
         
