@@ -279,7 +279,12 @@
     if ([NSFileManager.defaultManager fileExistsAtPath:MMEMetricsManager.pendingMetricsEventPath]) {
         @try {
             NSData *thenData = [NSData dataWithContentsOfFile:MMEMetricsManager.pendingMetricsEventPath];
-            NSKeyedUnarchiver* unarchiver = [NSKeyedUnarchiver.alloc initForReadingWithData:thenData];
+            NSKeyedUnarchiver* unarchiver;
+            if (@available(iOS 11.0, *)) {
+                unarchiver = [NSKeyedUnarchiver.alloc initForReadingFromData:thenData error:nil];
+            } else {
+                unarchiver = [NSKeyedUnarchiver.alloc initForReadingWithData:thenData];
+            }
             unarchiver.requiresSecureCoding = YES;
             pending = [unarchiver decodeObjectOfClass:MMEEvent.class forKey:NSKeyedArchiveRootObjectKey];
         }

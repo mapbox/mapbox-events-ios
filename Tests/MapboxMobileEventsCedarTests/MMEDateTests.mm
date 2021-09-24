@@ -109,7 +109,12 @@ describe(@"MMEDate", ^{
         }
         [NSKeyedArchiver archiveRootObject:now toFile:tempFile];
         NSData *thenData = [NSData dataWithContentsOfFile:tempFile];
-        NSKeyedUnarchiver* unarchiver = [NSKeyedUnarchiver.alloc initForReadingWithData:thenData];
+        NSKeyedUnarchiver* unarchiver;
+        if (@available(iOS 11.0, *)) {
+            unarchiver = [NSKeyedUnarchiver.alloc initForReadingFromData:thenData error:nil];
+        } else {
+            unarchiver = [NSKeyedUnarchiver.alloc initForReadingWithData:thenData];
+        }
         unarchiver.requiresSecureCoding = YES;
         MMEDate *then = [unarchiver decodeObjectOfClass:MMEDate.class forKey:NSKeyedArchiveRootObjectKey];
 
