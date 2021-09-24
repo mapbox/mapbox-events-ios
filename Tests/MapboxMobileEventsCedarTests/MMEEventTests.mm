@@ -103,7 +103,12 @@ describe(@"MMEEvent", ^{
 
         it(@"should read encoded data from a file", ^{
             NSData *thenData = [NSData dataWithContentsOfFile:tempFile];
-            NSKeyedUnarchiver* unarchiver = [NSKeyedUnarchiver.alloc initForReadingWithData:thenData];
+            NSKeyedUnarchiver* unarchiver;
+            if (@available(iOS 11.0, *)) {
+                unarchiver = [NSKeyedUnarchiver.alloc initForReadingFromData:thenData error:nil];
+            } else {
+                unarchiver = [NSKeyedUnarchiver.alloc initForReadingWithData:thenData];
+            }
             unarchiver.requiresSecureCoding = YES;
             MMEEvent *unarchived = [unarchiver decodeObjectOfClass:MMEEvent.class forKey:NSKeyedArchiveRootObjectKey];
 
