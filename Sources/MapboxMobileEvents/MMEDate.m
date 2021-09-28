@@ -22,42 +22,44 @@ static NSTimeInterval _timeOffsetFromServer = 0.0; // TODO maintain a list of MM
 }
 
 + (NSDateFormatter *)iso8601DateFormatter {
+    static dispatch_once_t onceToken;
     static NSDateFormatter *_iso8601DateFormatter;
 
-    if (!_iso8601DateFormatter) {
+    dispatch_once(&onceToken, ^{
         _iso8601DateFormatter = [NSDateFormatter new];
         NSLocale *enUSPOSIXLocale = [NSLocale.alloc initWithLocaleIdentifier:@"en_US_POSIX"];
         [_iso8601DateFormatter setLocale:enUSPOSIXLocale];
         [_iso8601DateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSSZ"];
         [_iso8601DateFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
-    }
+    });
 
     return _iso8601DateFormatter;
 }
 
 + (NSDateFormatter *)iso8601DateOnlyFormatter {
+    static dispatch_once_t onceToken;
     static NSDateFormatter *_iso8601ShortDateFormatter;
 
-    if (!_iso8601ShortDateFormatter) {
+    dispatch_once(&onceToken, ^{
         _iso8601ShortDateFormatter = [NSDateFormatter new];
         NSLocale *enUSPOSIXLocale = [NSLocale.alloc initWithLocaleIdentifier:@"en_US_POSIX"];
         [_iso8601ShortDateFormatter setLocale:enUSPOSIXLocale];
         [_iso8601ShortDateFormatter setDateFormat:@"yyyy-MM-dd"];
         [_iso8601ShortDateFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
-    }
+    });
 
     return _iso8601ShortDateFormatter;
 }
 
 + (NSDateFormatter *)HTTPDateFormatter {
+    static dispatch_once_t onceToken;
     static NSDateFormatter *_httpDateFormatter;
-    
-    if (!_httpDateFormatter) {
+
+    dispatch_once(&onceToken, ^{
         _httpDateFormatter = [[NSDateFormatter alloc] init];
         [_httpDateFormatter setDateFormat:@"E, d MMM yyyy HH:mm:ss Z"];
         [_httpDateFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
-
-    }
+    });
 
     return _httpDateFormatter;
 }

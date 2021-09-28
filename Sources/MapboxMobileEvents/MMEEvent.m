@@ -26,10 +26,11 @@
 @implementation MMEEvent
 
 + (NSDictionary *)nilAttributes {
-    static NSDictionary *nilAttributes = nil;
-    if (!nilAttributes) {
+    static dispatch_once_t onceToken;
+    static NSDictionary *nilAttributes;
+    dispatch_once(&onceToken, ^{
         nilAttributes = @{};
-    }
+    });
     return nilAttributes;
 }
 
