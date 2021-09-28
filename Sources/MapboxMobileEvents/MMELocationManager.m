@@ -21,7 +21,7 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
 @interface MMELocationManager () <CLLocationManagerDelegate>
 
 @property (nonatomic) id<MMEUIApplicationWrapper> application;
-@property (nonatomic) CLLocationManager *locationManager;
+@property (nonatomic, readonly) CLLocationManager *locationManager;
 @property (nonatomic, getter=isUpdatingLocation, readwrite) BOOL updatingLocation;
 @property (nonatomic) NSDate *backgroundLocationServiceTimeoutAllowedDate;
 @property (nonatomic) NSTimer *backgroundLocationServiceTimeoutTimer;
@@ -38,10 +38,12 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
 }
 
 - (CLLocationManager *)locationManager  {
-    if (_locationManager == nil) {
-        _locationManager = [[MMEDependencyManager sharedManager] locationManagerInstance];
+    @synchronized (self) {
+        if (!_locationManager) {
+            _locationManager = [[MMEDependencyManager sharedManager] locationManagerInstance];
+        }
+        return _locationManager;
     }
-    return _locationManager;
 }
 
 - (instancetype)init {
@@ -111,13 +113,15 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
 #endif
 
 - (void)setLocationManager:(CLLocationManager *)locationManager {
-    if (locationManager == nil) {
-        _locationManager = locationManager;
-    } else {
-        id<CLLocationManagerDelegate> delegate = _locationManager.delegate;
-        _locationManager.delegate = nil;
-        _locationManager = locationManager;
-        _locationManager.delegate = delegate;
+    @synchronized (self) {
+        if (locationManager == nil) {
+            _locationManager = locationManager;
+        } else {
+            id<CLLocationManagerDelegate> delegate = _locationManager.delegate;
+            _locationManager.delegate = nil;
+            _locationManager = locationManager;
+            _locationManager.delegate = delegate;
+        }
     }
 }
 
