@@ -25,6 +25,7 @@
 
 @interface MMEMetricsManager ()
 
+@property (nonatomic, readonly, strong) NSRecursiveLock *lock;
 @property (nonatomic) MMEMetrics *metrics;
 
 @end
@@ -115,12 +116,14 @@
 - (instancetype)init {
     if (self = [super init]) {
         [self resetMetrics];
+        _lock = [[NSRecursiveLock alloc] init];
     }
     return self;
 }
 
 - (void)updateMetricsFromEventQueue:(NSArray *)eventQueue {
     if (eventQueue.count > 0) {
+        [self.lock lock];
         self.metrics.eventCountTotal += eventQueue.count;
         
         for (MMEEvent *event in eventQueue) {
@@ -128,10 +131,12 @@
             eventCount = [NSNumber numberWithInteger:[eventCount integerValue] + 1];
             [self.metrics.eventCountPerType setObject:eventCount forKey:event.name];
         }
+        [self.lock unlock];
     }
 }
 
 - (void)updateMetricsFromEventCount:(NSUInteger)eventCount request:(nullable NSURLRequest *)request error:(nullable NSError *)error {
+    [self.lock lock];
     if (request.HTTPBody) {
         [self updateSentBytes:request.HTTPBody.length];
     }
@@ -165,72 +170,100 @@
         
         [self.metrics.failedRequestsDict setObject:failedRequests forKey:MMEEventKeyFailedRequests];
     }
+    [self.lock unlock];
 }
 
 - (void)updateEventsFailedCount:(NSUInteger)eventCount {
+    [self.lock lock];
     self.metrics.eventCountFailed += eventCount;
+    [self.lock unlock];
 }
 
 - (void)updateSentBytes:(NSUInteger)bytes {
+    [self.lock lock];
     if ([[MMEReachability reachabilityForLocalWiFi] isReachableViaWiFi]) {
         self.metrics.wifiBytesSent += bytes;
     } else {
         self.metrics.cellBytesSent += bytes;
     }
+    [self.lock unlock];
 }
 
 - (void)updateReceivedBytes:(NSUInteger)bytes {
+    [self.lock lock];
     if ([[MMEReachability reachabilityForLocalWiFi] isReachableViaWiFi]) {
         self.metrics.wifiBytesReceived += bytes;
     } else {
         self.metrics.cellBytesReceived += bytes;
     }
+    [self.lock unlock];
 }
 
 - (void)incrementAppWakeUpCount {
+    [self.lock lock];
     self.metrics.appWakeups++;
+    [self.lock unlock];
 }
 
 - (void)updateConfigurationJSON:(NSDictionary *)configuration {
     if (configuration) {
+        [self.lock lock];
         self.metrics.configResponseDict = configuration;
+        [self.lock unlock];
     }
 }
 
 - (void)updateCoordinate:(CLLocationCoordinate2D)coordinate {
+    [self.lock lock];
     if (!self.metrics.deviceLat && !self.metrics.deviceLon) {
         self.metrics.deviceLat = round(coordinate.latitude*1000)/1000;
         self.metrics.deviceLon = round(coordinate.longitude*1000)/1000;
     }
+    [self.lock unlock];
 }
 
 - (void)resetMetrics {
+    [self.lock lock];
     self.metrics = [MMEMetrics new];
+    [self.lock unlock];
 }
 
 - (void)incrementLocationsInForeground {
+    [self.lock lock];
     self.metrics.locationsInForeground++;
+    [self.lock unlock];
 }
 - (void)incrementLocationsInBackground {
+    [self.lock lock];
     self.metrics.locationsInBackground++;
+    [self.lock unlock];
 }
 - (void)incrementLocationsWithApproximateValues {
+    [self.lock lock];
     self.metrics.locationsWithApproximateValues++;
+    [self.lock unlock];
 }
 
 - (void)incrementLocationsDroppedBecauseOfHAF {
+    [self.lock lock];
     self.metrics.locationsDroppedBecauseOfHAF++;
+    [self.lock unlock];
 }
 
 - (void)incrementLocationsDroppedDueTimeout {
+    [self.lock lock];
     self.metrics.locationsDroppedDueTimeout++;
+    [self.lock unlock];
 }
 
 - (void)incrementLocationsConvertedIntoEvents {
+    [self.lock lock];
     self.metrics.locationsConvertedIntoEvents++;
+    [self.lock unlock];
 }
 
 - (NSDictionary *)attributes {
+    [self.lock lock];
     MMEMutableMapboxEventAttributes *attributes = [MMEMutableMapboxEventAttributes dictionary];
     if (self.metrics.recordingStarted) {
         attributes[MMEEventDateUTC] = [MMEDate.iso8601DateOnlyFormatter stringFromDate:self.metrics.recordingStarted];
@@ -269,6 +302,7 @@
     attributes[MMEEventSDKIdentifier] = NSUserDefaults.mme_configuration.mme_legacyUserAgentBase;
     attributes[MMEEventSDKVersion] = NSUserDefaults.mme_configuration.mme_legacyHostSDKVersion;
     attributes[MMEEventKeyUserAgent] = NSUserDefaults.mme_configuration.mme_userAgentString;
+    [self.lock unlock];
 
     return attributes;
 }
@@ -295,7 +329,9 @@
 }
 
 - (MMEEvent *)generateTelemetryMetricsEvent {
+    [self.lock lock];
     NSDate *zeroHour = [self.metrics.recordingStarted mme_startOfTomorrow];
+    [self.lock unlock];
     NSString *metricsDate = [MMEDate.iso8601DateFormatter stringFromDate:NSDate.date];
     MMEEvent *telemetryMetrics = [MMEEvent telemetryMetricsEventWithDateString:metricsDate attributes:self.attributes];
 
