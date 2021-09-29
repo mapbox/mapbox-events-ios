@@ -48,7 +48,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, getter=isPaused) BOOL paused;
 @property (nonatomic) id<MMEUIApplicationWrapper> application;
 @property (nonatomic) UIBackgroundTaskIdentifier backgroundTaskIdentifier;
-
+@property (nonatomic) dispatch_queue_t eventsDispatchQueue;
 @end
 
 // MARK: -
@@ -79,6 +79,7 @@ NS_ASSUME_NONNULL_BEGIN
         _uniqueIdentifer = [[MMEUniqueIdentifier alloc] initWithTimeInterval:NSUserDefaults.mme_configuration.mme_identifierRotationInterval];
         _application = [[MMEUIApplicationWrapper alloc] init];
         _dispatchManager = [[MMEDispatchManager alloc] init];
+        _eventsDispatchQueue = dispatch_queue_create("com.mapbox.mme.events", DISPATCH_QUEUE_SERIAL);
     }
     return self;
 }
@@ -355,8 +356,7 @@ NS_ASSUME_NONNULL_BEGIN
         
         MMELOG(MMELogInfo, MMEDebugEventTypeTurnstile, ([NSString stringWithFormat:@"Sending turnstile event: %@, instance: %@", turnstileEvent , self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
 
-        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-        dispatch_async(queue, ^{
+        dispatch_async(_eventsDispatchQueue, ^{
            __weak __typeof__(self) weakSelf = self;
                 [self.apiClient postEvent:turnstileEvent completionHandler:^(NSError * _Nullable error) {
                 @try {
@@ -383,8 +383,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void)sendPendingMetricsEvent {
-    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-    dispatch_async(queue, ^{
+    dispatch_async(_eventsDispatchQueue, ^{
         MMEEvent *pendingMetricsEvent = [MMEMetricsManager.sharedManager loadPendingTelemetryMetricsEvent];
         
         if (pendingMetricsEvent) {
@@ -400,8 +399,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void)sendTelemetryMetricsEvent {
-    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-    dispatch_async(queue, ^{
+    dispatch_async(_eventsDispatchQueue, ^{
         @try {
             MMEEvent *telemetryMetricsEvent = [MMEMetricsManager.sharedManager generateTelemetryMetricsEvent];
 
