@@ -5,8 +5,8 @@ import PackageDescription
 import Foundation
 
 let registry = SDKRegistry()
-let version = "1.0.4"
-let checksum = "7a9267be83edeca90605e233bfd54cbc27855c4c004ccebe7efed5f40990fd33"
+let version = "1.0.5"
+let checksum = "6aafe3d501966eacd7b3737b2aa81109e64541e25468c79c8892c0b7df7b9749"
 
 let package = Package(
     name: "MapboxMobileEvents",
