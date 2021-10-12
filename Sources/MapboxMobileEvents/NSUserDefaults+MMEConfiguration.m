@@ -335,6 +335,10 @@ NS_ASSUME_NONNULL_BEGIN
         for (uint32_t i = 0; i < infos->infoArrayCount; ++i) {
             struct dyld_image_info *imageInfo = infoArray + i;
 
+            if (imageInfo == NULL || imageInfo->imageFilePath == NULL) {
+                continue;
+            }
+
             NSString* path = [NSString stringWithCString:imageInfo->imageFilePath encoding:NSUTF8StringEncoding];
             // check if a framework located inside app's bundle, only those can be ours
 #if !TARGET_OS_SIMULATOR
