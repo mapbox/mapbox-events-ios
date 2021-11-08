@@ -48,6 +48,7 @@ static NSString * const MMEGLMapboxAPIBaseURL = @"MGLMapboxAPIBaseURL";
 static NSString * const MMEEventsServiceURL = @"MMEEventsServiceURL";
 static NSString * const MMEConfigServiceURL = @"MMEConfigServiceURL";
 static NSString * const MMECollectionEnabledInSimulator = @"MMECollectionEnabledInSimulator";
+static NSString * const MMECollectionEnabledInLowPowerMode = @"MMECollectionEnabledInLowPowerMode";
 static NSString * const MMEDebugLogging = @"MMEDebugLogging";
 
 // MARK: - Info.plist Values

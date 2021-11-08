@@ -74,6 +74,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// This property is volatile
 @property (nonatomic, readonly) BOOL mme_isCollectionEnabledInSimulator;
+@property (nonatomic, readonly) BOOL mme_isCollectionEnabledInLowPowerMode;
 
 // MARK: - Background Collection
 
