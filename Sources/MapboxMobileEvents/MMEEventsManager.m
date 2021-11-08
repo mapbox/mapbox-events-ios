@@ -123,10 +123,12 @@ NS_ASSUME_NONNULL_BEGIN
                                                          object:nil];
 
                 if (@available(iOS 9.0, *)) {
-                    [NSNotificationCenter.defaultCenter addObserver:strongSelf
-                                                           selector:@selector(powerStateDidChange:)
-                                                               name:NSProcessInfoPowerStateDidChangeNotification
-                                                             object:nil];
+                    if (!NSUserDefaults.mme_configuration.mme_isCollectionEnabledInLowPowerMode) {
+                        [NSNotificationCenter.defaultCenter addObserver:strongSelf
+                                                               selector:@selector(powerStateDidChange:)
+                                                                   name:NSProcessInfoPowerStateDidChangeNotification
+                                                                 object:nil];
+                    }
                 }
 
                 strongSelf.paused = YES;

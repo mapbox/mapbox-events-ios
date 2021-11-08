@@ -432,7 +432,7 @@ NS_ASSUME_NONNULL_BEGIN
 
     // if not explicitly disabled, or in simulator, check for low power mode
     if (@available(iOS 9.0, *)) {
-        if (collectionEnabled && [NSProcessInfo instancesRespondToSelector:@selector(isLowPowerModeEnabled)]) {
+        if (!self.mme_isCollectionEnabledInLowPowerMode && collectionEnabled && [NSProcessInfo instancesRespondToSelector:@selector(isLowPowerModeEnabled)]) {
                 collectionEnabled = !NSProcessInfo.processInfo.isLowPowerModeEnabled;
         }
     }
@@ -453,6 +453,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (BOOL)mme_isCollectionEnabledInSimulator {
     return [self boolForKey:MMECollectionEnabledInSimulator];
+}
+
+- (BOOL)mme_isCollectionEnabledInLowPowerMode {
+    return [self boolForKey:MMECollectionEnabledInLowPowerMode];
 }
 
 // MARK: - Background Collection
