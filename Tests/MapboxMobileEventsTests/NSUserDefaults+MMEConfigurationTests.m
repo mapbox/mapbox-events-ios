@@ -88,6 +88,12 @@
     XCTAssert(NSUserDefaults.mme_configuration.mme_userAgentString != nil);
 }
 
+- (void)testUserAgentHasMapboxFrameworks {
+    if ([NSBundle.mainBundle.bundleIdentifier isEqualToString: @"Mapbox.MMETestHost"]) {
+        XCTAssertTrue([NSUserDefaults.mme_configuration.mme_userAgentString containsString:@"com.mapbox.MapboxMobileEvents"]);
+    }
+}
+
 - (void)testConfigEventTagDefault {
     XCTAssert([NSUserDefaults.mme_configuration.mme_eventTag isEqual:@"tag"]);
 }

@@ -1,5 +1,5 @@
 #import <CommonCrypto/CommonDigest.h>
-#import <mach-o/dyld_images.h>
+#import <objc/runtime.h>
 
 #import "MMEConstants.h"
 #import "MMEDate.h"
@@ -318,28 +318,16 @@ NS_ASSUME_NONNULL_BEGIN
              [NSProcessInfo mme_processorTypeDescription]
         ];
         
-        // try to get a list of loaded dylibs
-        struct task_dyld_info tdi;
-        mach_msg_type_number_t count = TASK_DYLD_INFO_COUNT;
-        if (KERN_SUCCESS != task_info(mach_task_self_, TASK_DYLD_INFO, (task_info_t)&tdi, &count)) {
-            return;
-        }
-
-        struct dyld_all_image_infos *infos = (struct dyld_all_image_infos *)tdi.all_image_info_addr;
-        struct dyld_image_info *infoArray = (struct dyld_image_info *)infos->infoArray;
+        // try to get a list of loaded obj-c dylibs
+        uint32_t dylibCount = 0;
+        const char** dylibPaths = objc_copyImageNames(&dylibCount);
 
         NSString* mainBundleIdentifier = NSBundle.mme_mainBundle.bundleIdentifier;
 
         // check all loaded frameworks for mapbox frameworks, record their bundleIdentifier
         NSMutableSet *loadedMapboxBundleIds = NSMutableSet.new;
-        for (uint32_t i = 0; i < infos->infoArrayCount; ++i) {
-            struct dyld_image_info *imageInfo = infoArray + i;
-
-            if (imageInfo == NULL || imageInfo->imageFilePath == NULL) {
-                continue;
-            }
-
-            NSString* path = [NSString stringWithCString:imageInfo->imageFilePath encoding:NSUTF8StringEncoding];
+        for (uint32_t i = 0; i < dylibCount; ++i) {
+            NSString* path = [NSString stringWithCString:dylibPaths[i] encoding:NSUTF8StringEncoding];
             // check if a framework located inside app's bundle, only those can be ours
 #if !TARGET_OS_SIMULATOR
             NSString* mainBundlePath = NSBundle.mainBundle.bundlePath;
@@ -356,7 +344,9 @@ NS_ASSUME_NONNULL_BEGIN
                 }
             }
         }
-        
+
+        free(dylibPaths);
+
         // sort the bundleIdentifiers, then use them to build the User-Agent string
         NSArray *sortedBundleIds = [loadedMapboxBundleIds sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:nil ascending:YES]]];
         for (NSString *bundleId in sortedBundleIds) {
@@ -369,7 +359,6 @@ NS_ASSUME_NONNULL_BEGIN
             userAgent = [userAgent stringByAppendingString:uaFragment];
         }
     });
-    
     return userAgent;
 }
 
