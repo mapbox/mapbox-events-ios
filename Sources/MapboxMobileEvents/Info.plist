@@ -18,7 +18,7 @@
 	<string>1.0.7</string>
 	<key>CFBundleVersion</key>
 	<string>27</string>
-	<key>MGLSemanticVersionString</key>
+	<key>MBXBundleVersion</key>
 	<string>1.0.7</string>
 </dict>
 </plist>
