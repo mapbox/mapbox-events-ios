@@ -644,6 +644,12 @@ NS_ASSUME_NONNULL_BEGIN
             MMEEventKeyCourse: @([location mme_roundedCourse])
         }];
 
+        if (locationManager != nil) {
+            [eventAttributes addEntriesFromDictionary:@{
+                MMEEventKeyPermissionStatus: locationManager.locationPermissionStatusString,
+            }];
+        }
+
         NSString *digest = NSUserDefaults.mme_configuration.mme_configDigestValue;
         if (digest) {
             [eventAttributes addEntriesFromDictionary:@{

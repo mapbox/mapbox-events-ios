@@ -9,6 +9,7 @@ void mme_linkCLLocationManagerCategory();
 
 - (CLAuthorizationStatus)mme_authorizationStatus;
 - (NSString *)mme_authorizationStatusString;
+- (NSString *)mme_permissionStatusString;
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 140000
 - (CLAccuracyAuthorization)mme_accuracyStatus API_AVAILABLE(ios(14.0), macos(11.0), watchos(7.0), tvos(14.0));

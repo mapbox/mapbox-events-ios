@@ -13,6 +13,7 @@
 - (void)startUpdatingLocation;
 - (void)stopUpdatingLocation;
 - (NSString *)locationAuthorizationString;
+- (NSString *)locationPermissionStatusString;
 - (CLAuthorizationStatus)locationAuthorization;
 
 - (BOOL)isReducedAccuracy;
