@@ -48,6 +48,25 @@ void mme_linkCLLocationManagerCategory(void){}
     return statusString;
 }
 
+- (NSString *)mme_permissionStatusString {
+    // this method should be called when generation a location event, so the authorization should be granted
+    CLAuthorizationStatus status = [self mme_authorizationStatus];
+    NSString *statusString;
+
+    switch (status) {
+        case kCLAuthorizationStatusAuthorizedAlways:
+            statusString = MMEEventAuthStatusAllowAlways;
+            break;
+        case kCLAuthorizationStatusAuthorizedWhenInUse:
+            statusString = MMEEventAuthStatusAllowWhenInUse;
+            break;
+        default:
+            statusString = @"";
+            break;
+    }
+    return statusString;
+}
+
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 140000
 - (CLAccuracyAuthorization)mme_accuracyStatus {
     return [self accuracyAuthorization];

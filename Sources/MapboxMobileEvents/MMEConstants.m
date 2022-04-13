@@ -52,6 +52,7 @@ NSString * const MMEEventKeyCourse = @"course";
 NSString * const MMEEventKeySpeedAccuracy = @"speedAccuracy";
 NSString * const MMEEventKeyCourseAccuracy = @"courseAccuracy";
 NSString * const MMEEventKeyVerticalAccuracy = @"verticalAccuracy";
+NSString * const MMEEventKeyPermissionStatus = @"permissionStatus";
 NSString * const MMEEventKeyFloor = @"floor";
 NSString * const MMEEventHorizontalAccuracy = @"horizontalAccuracy";
 NSString * const MMEEventKeyLocalDebugDescription = @"debug.description";
@@ -121,6 +122,8 @@ NSString * const MMEEventStatusNotDetermined = @"notDetermined";
 NSString * const MMEEventStatusAuthorizedAlways = @"always";
 NSString * const MMEEventStatusAuthorizedWhenInUse = @"whenInUse";
 NSString * const MMEEventUnknown = @"unknown";
+NSString * const MMEEventAuthStatusAllowWhenInUse = @"AllowWhenInUse";
+NSString * const MMEEventAuthStatusAllowAlways = @"AllowAlways";
 
 NSString * const MMEAccuracyAuthorizationFull = @"full";
 NSString * const MMEAccuracyAuthorizationReduced = @"reduced";

@@ -85,6 +85,10 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
     return [self.locationManager mme_authorizationStatusString];
 }
 
+- (NSString *)locationPermissionStatusString {
+    return [self.locationManager mme_permissionStatusString];
+}
+
 - (CLAuthorizationStatus)locationAuthorization {
     return [self.locationManager mme_authorizationStatus];
 }
