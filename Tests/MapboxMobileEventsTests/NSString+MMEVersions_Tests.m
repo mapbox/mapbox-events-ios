@@ -115,6 +115,7 @@
 - (void)test007_bundleVersionString {
     NSBundle *fakeBundle = [MMEBundleInfoFake bundleWithFakeInfo:@{@"CFBundleShortVersionString": @"1.2.3"}];
     XCTAssertTrue([fakeBundle.mme_bundleVersionString mme_isSemverString]);
+    XCTAssertEqualObjects(fakeBundle.mme_bundleVersionString, @"1.2.3");
 }
 
 - (void)test008_invalidBundleVersionString {
@@ -125,6 +126,7 @@
 - (void)test009_bundleSemanticVersionString {
     NSBundle *fakeBundle = [MMEBundleInfoFake bundleWithFakeInfo:@{@"MGLSemanticVersionString": @"1.2.3"}];
     XCTAssertTrue([fakeBundle.mme_bundleVersionString mme_isSemverString]);
+    XCTAssertEqualObjects(fakeBundle.mme_bundleVersionString, @"1.2.3");
 }
 
 - (void)test010_invalidSementicBundleVersionString {
@@ -132,7 +134,18 @@
     XCTAssertFalse([fakeBundle.mme_bundleVersionString mme_isSemverString]);
 }
 
-- (void)test011_invalidDelimitersInString {
+- (void)test011_bundleSemanticVersionString {
+    NSBundle *fakeBundle = [MMEBundleInfoFake bundleWithFakeInfo:@{@"MBXBundleVersion": @"1.2.3", @"MGLSemanticVersionString": @"0.0.1"}];
+    XCTAssertTrue([fakeBundle.mme_bundleVersionString mme_isSemverString]);
+    XCTAssertEqualObjects(fakeBundle.mme_bundleVersionString, @"1.2.3");
+}
+
+- (void)test012_invalidSementicBundleVersionString {
+    NSBundle *fakeBundle = [MMEBundleInfoFake bundleWithFakeInfo:@{@"MBXBundleVersion": @"1.2.3.4"}];
+    XCTAssertFalse([fakeBundle.mme_bundleVersionString mme_isSemverString]);
+}
+
+- (void)test013_invalidDelimitersInString {
     NSString *badString = @"user agent base(),/:;<=>?@[]{}\"\\";
     NSString *goodString = @"user agent base";
     XCTAssert([badString.mme_stringByRemovingNonUserAgentTokenCharacters
@@ -141,7 +154,7 @@
 //    com.conduent.mrparking.debug.dev/1.0-development dev-api -build 03112020 35144 PM/1 mapbox-android-location/4.5.1
 }
 
-- (void)test012_invalidUserAgent {
+- (void)test014_invalidUserAgent {
     NSString *badString = @"1.0-development (dev-api) -build 03/11/2020 3:51:44 PM";
     NSString *goodString = @"1.0-development dev-api -build 03112020 35144 PM";
     XCTAssert([badString.mme_stringByRemovingNonUserAgentTokenCharacters

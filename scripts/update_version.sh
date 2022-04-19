@@ -35,4 +35,4 @@ FRAMEWORK_PLIST=Sources/MapboxMobileEvents/Info.plist
 # remove the leading 'v' from the SEM_VERSION
 step "Adding ${SEM_VERSION:1} to ${FRAMEWORK_PLIST}"
 
-plutil -replace "MGLSemanticVersionString" -string "${SEM_VERSION:1}" "${FRAMEWORK_PLIST}"
+plutil -replace "MBXBundleVersion" -string "${SEM_VERSION:1}" "${FRAMEWORK_PLIST}"
