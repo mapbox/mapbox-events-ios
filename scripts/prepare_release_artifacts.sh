@@ -6,14 +6,16 @@ set -eo pipefail
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ROOT_DIR="${DIR}/.."
 
-echo ${ROOT_DIR}
+ARTIFACTS_DIR="$ROOT_DIR/build/artifacts"
+echo ${ARTIFACTS_DIR}
 
 # cleanup artifacts folder
-rm -rf $ROOT_DIR/build/artifacts
+rm -rf $ARTIFACTS_DIR
 
 # build iOS .frameworks
+IOS_ARCHIVE_DIR="${ARTIFACTS_DIR}/frameworks/iOS.xcarchive"
 xcodebuild archive \
-        -archivePath "${ROOT_DIR}/build/artifacts/frameworks/iOS" \
+        -archivePath "${IOS_ARCHIVE_DIR}" \
         -project "${ROOT_DIR}/MapboxMobileEvents.xcodeproj" \
         -scheme MapboxMobileEvents \
         -destination "generic/platform=iOS"\
@@ -21,8 +23,9 @@ xcodebuild archive \
         SKIP_INSTALL=NO
 
 # build Catalyst .framework
+IOS_CATALYST_ARCHIVE_DIR="${ARTIFACTS_DIR}/frameworks/iOS-Catalyst.xcarchive"
 xcodebuild archive \
-        -archivePath "${ROOT_DIR}/build/artifacts/frameworks/iOS-Catalyst" \
+        -archivePath "${IOS_CATALYST_ARCHIVE_DIR}" \
         -project "${ROOT_DIR}/MapboxMobileEvents.xcodeproj" \
         -scheme MapboxMobileEvents \
         -destination "platform=macOS,variant=Mac Catalyst" \
@@ -30,35 +33,47 @@ xcodebuild archive \
         SKIP_INSTALL=NO
 
 # build iOS Simulator .framework
+IOS_SIMULATOR_ARCHIVE_DIR="${ARTIFACTS_DIR}/frameworks/iOS-Simulator.xcarchive"
 xcodebuild archive \
-        -archivePath "${ROOT_DIR}/build/artifacts/frameworks/iOS-Simulator" \
+        -archivePath "${IOS_SIMULATOR_ARCHIVE_DIR}" \
         -project "${ROOT_DIR}/MapboxMobileEvents.xcodeproj" \
         -scheme MapboxMobileEvents \
         -destination "generic/platform=iOS Simulator" \
         BUILD_LIBRARY_FOR_DISTRIBUTION=YES \
         SKIP_INSTALL=NO
 
+XCBUILD_ARGS="-create-xcframework"
+
+function appendFrameworkArgs() {
+    ARCHIVE_DIR=$1
+
+    XCBUILD_ARGS+=" -framework ${ARCHIVE_DIR}/Products/Library/Frameworks/MapboxMobileEvents.framework"
+    XCBUILD_ARGS+=" -debug-symbols ${ARCHIVE_DIR}/dSYMs/MapboxMobileEvents.framework.dSYM"
+    for BCSYMBOLMAP in $(find ${ARCHIVE_DIR}/BCSymbolMaps -type f -name "*.bcsymbolmap")
+    do 
+        XCBUILD_ARGS+=" -debug-symbols ${BCSYMBOLMAP}"
+    done
+}
+
+appendFrameworkArgs "${IOS_ARCHIVE_DIR}"
+appendFrameworkArgs "${IOS_CATALYST_ARCHIVE_DIR}"
+appendFrameworkArgs "${IOS_SIMULATOR_ARCHIVE_DIR}"
+
+XCBUILD_ARGS+=" -output ${ARTIFACTS_DIR}/frameworks/MapboxMobileEvents.xcframework"
+
 # build .xcframework
-xcodebuild \
-    -create-xcframework \
-    -framework "${ROOT_DIR}/build/artifacts/frameworks/iOS.xcarchive/Products/Library/Frameworks/MapboxMobileEvents.framework" \
-        -debug-symbols "${ROOT_DIR}/build/artifacts/frameworks/iOS.xcarchive/dSYMs/MapboxMobileEvents.framework.dSYM" \
-    -framework "${ROOT_DIR}/build/artifacts/frameworks/iOS-Catalyst.xcarchive/Products/Library/Frameworks/MapboxMobileEvents.framework" \
-        -debug-symbols "${ROOT_DIR}/build/artifacts/frameworks/iOS-Catalyst.xcarchive/dSYMs/MapboxMobileEvents.framework.dSYM" \
-    -framework "${ROOT_DIR}/build/artifacts/frameworks/iOS-Simulator.xcarchive/Products/Library/Frameworks/MapboxMobileEvents.framework" \
-        -debug-symbols "${ROOT_DIR}/build/artifacts/frameworks/iOS-Simulator.xcarchive/dSYMs/MapboxMobileEvents.framework.dSYM" \
-    -output "${ROOT_DIR}/build/artifacts/frameworks/MapboxMobileEvents.xcframework"
+xcodebuild ${XCBUILD_ARGS[@]}
 
 # zip artifacts
-mkdir -p "${ROOT_DIR}/build/artifacts/zip"
-ZIPDIR="${ROOT_DIR}/build/artifacts/zip"
+mkdir -p "${ARTIFACTS_DIR}/zip"
+ZIPDIR="${ARTIFACTS_DIR}/zip"
 
-pushd ${ROOT_DIR}/build/artifacts/frameworks/iOS.xcarchive/Products/Library/Frameworks
+pushd ${ARTIFACTS_DIR}/frameworks/iOS.xcarchive/Products/Library/Frameworks
 cp "${ROOT_DIR}/LICENSE.md" .
 zip --symlinks -r "${ZIPDIR}/MapboxMobileEvents-ios.zip" MapboxMobileEvents.framework LICENSE.md
 popd
 
-pushd ${ROOT_DIR}/build/artifacts/frameworks
+pushd ${ARTIFACTS_DIR}/frameworks
 cp "${ROOT_DIR}/LICENSE.md" .
 zip --symlinks -r "${ZIPDIR}/MapboxMobileEvents.zip" MapboxMobileEvents.xcframework LICENSE.md
 popd
