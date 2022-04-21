@@ -173,33 +173,38 @@ NS_ASSUME_NONNULL_BEGIN
     });
 }
 
-- (void)endBackgroundTaskIfNeeded {
-    if (_backgroundTaskIdentifier != UIBackgroundTaskInvalid) {
-        MMELOG(MMELogInfo, MMEDebugEventTypeBackgroundTask, ([NSString stringWithFormat:@"Ending background task: %@, instance: %@",@(self.backgroundTaskIdentifier),self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
+- (BOOL)startBackgroundTaskIfNeeded {
+    BOOL appIsInBackground = (self.application.applicationState == UIApplicationStateBackground);
 
-        UIBackgroundTaskIdentifier taskId = self.backgroundTaskIdentifier;
-        self.backgroundTaskIdentifier = UIBackgroundTaskInvalid;
-        [self.application endBackgroundTask:taskId];
+    @synchronized (self) {
+        BOOL shouldStartBGTask = appIsInBackground && (self.backgroundTaskIdentifier == UIBackgroundTaskInvalid);
+
+        if (shouldStartBGTask) {
+            MMELOG(MMELogInfo, MMEDebugEventTypeBackgroundTask, ([NSString stringWithFormat:@"Initiating background task: %@, instance: %@",@(self.backgroundTaskIdentifier),self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
+            
+            self.backgroundTaskIdentifier = [self.application beginBackgroundTaskWithExpirationHandler:^{
+                [self endBackgroundTaskIfNeeded];
+            }];
+        }
+
+        return shouldStartBGTask;
+    }
+}
+
+- (void)endBackgroundTaskIfNeeded {
+    @synchronized(self) {
+        if (self.backgroundTaskIdentifier != UIBackgroundTaskInvalid) {
+            MMELOG(MMELogInfo, MMEDebugEventTypeBackgroundTask, ([NSString stringWithFormat:@"Ending background task: %@, instance: %@",@(self.backgroundTaskIdentifier),self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
+
+            UIBackgroundTaskIdentifier taskId = self.backgroundTaskIdentifier;
+            self.backgroundTaskIdentifier = UIBackgroundTaskInvalid;
+            [self.application endBackgroundTask:taskId];
+        }
     }
 }
 
 - (void)pauseOrResumeMetricsCollectionIfRequired {
     @try {
-        BOOL appIsInBackground = (self.application.applicationState == UIApplicationStateBackground);
-        BOOL collectionIsEnabled = NSUserDefaults.mme_configuration.mme_isCollectionEnabled ||
-            (appIsInBackground && NSUserDefaults.mme_configuration.mme_isCollectionEnabledInBackground);
-
-        // check for existing background task status, flush the event queue if needed
-        if (collectionIsEnabled && appIsInBackground && _backgroundTaskIdentifier == UIBackgroundTaskInvalid) {
-            MMELOG(MMELogInfo, MMEDebugEventTypeBackgroundTask, ([NSString stringWithFormat:@"Initiated background task: %@, instance: %@",@(self.backgroundTaskIdentifier),self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
-            
-            _backgroundTaskIdentifier = [self.application beginBackgroundTaskWithExpirationHandler:^{
-                [self endBackgroundTaskIfNeeded];
-            }];
-            
-            [self flush];
-        }
-                
         [self processAuthorizationStatus:[self.locationManager locationAuthorization] andApplicationState:self.application.applicationState];
     }
     @catch(NSException *except) {
@@ -246,6 +251,9 @@ NS_ASSUME_NONNULL_BEGIN
             [self endBackgroundTaskIfNeeded];
             return;
         }
+
+        // sending events might take time, so we start bg task
+        [self startBackgroundTaskIfNeeded];
 
         [self sendTelemetryMetricsEvent];
         NSArray *events = [self.eventQueue copy];
