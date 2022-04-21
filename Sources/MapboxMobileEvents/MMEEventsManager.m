@@ -173,6 +173,16 @@ NS_ASSUME_NONNULL_BEGIN
     });
 }
 
+- (void)endBackgroundTaskIfNeeded {
+    if (_backgroundTaskIdentifier != UIBackgroundTaskInvalid) {
+        MMELOG(MMELogInfo, MMEDebugEventTypeBackgroundTask, ([NSString stringWithFormat:@"Ending background task: %@, instance: %@",@(self.backgroundTaskIdentifier),self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
+
+        UIBackgroundTaskIdentifier taskId = self.backgroundTaskIdentifier;
+        self.backgroundTaskIdentifier = UIBackgroundTaskInvalid;
+        [self.application endBackgroundTask:taskId];
+    }
+}
+
 - (void)pauseOrResumeMetricsCollectionIfRequired {
     @try {
         BOOL appIsInBackground = (self.application.applicationState == UIApplicationStateBackground);
@@ -184,11 +194,7 @@ NS_ASSUME_NONNULL_BEGIN
             MMELOG(MMELogInfo, MMEDebugEventTypeBackgroundTask, ([NSString stringWithFormat:@"Initiated background task: %@, instance: %@",@(self.backgroundTaskIdentifier),self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
             
             _backgroundTaskIdentifier = [self.application beginBackgroundTaskWithExpirationHandler:^{
-                MMELOG(MMELogInfo, MMEDebugEventTypeBackgroundTask, ([NSString stringWithFormat:@"Ending background task: %@, instance: %@",@(self.backgroundTaskIdentifier),self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
-                
-                UIBackgroundTaskIdentifier taskId = self.backgroundTaskIdentifier;
-                self.backgroundTaskIdentifier = UIBackgroundTaskInvalid;
-                [self.application endBackgroundTask:taskId];
+                [self endBackgroundTaskIfNeeded];
             }];
             
             [self flush];
@@ -237,6 +243,7 @@ NS_ASSUME_NONNULL_BEGIN
         }
 
         if (self.eventQueue.count == 0) {
+            [self endBackgroundTaskIfNeeded];
             return;
         }
 
@@ -279,13 +286,7 @@ NS_ASSUME_NONNULL_BEGIN
                 } else {
                     MMELOG(MMELogInfo, MMEDebugEventTypePost, ([NSString stringWithFormat:@"post: %@, instance: %@", @(events.count),self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
                 }
-
-                if (strongSelf.backgroundTaskIdentifier != UIBackgroundTaskInvalid) {
-                    MMELOG(MMELogInfo, MMEDebugEventTypeBackgroundTask, ([NSString stringWithFormat:@"Ending background task: %@, instance: %@",@(self.backgroundTaskIdentifier),self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
-                    
-                    [strongSelf.application endBackgroundTask:strongSelf.backgroundTaskIdentifier];
-                    strongSelf.backgroundTaskIdentifier = UIBackgroundTaskInvalid;
-                }
+                [strongSelf endBackgroundTaskIfNeeded];
             }
             @catch(NSException *except) {
                 [self reportException:except];
