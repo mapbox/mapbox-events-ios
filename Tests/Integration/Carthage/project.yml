@@ -8,6 +8,6 @@ targets:
     deploymentTarget: "9.0"
     sources: [Sources]
     dependencies:
-      - framework: Carthage/Build/iOS/MapboxMobileEvents.framework
+      - framework: Carthage/Build/MapboxMobileEvents.xcframework
     settings:
         DEVELOPMENT_TEAM: "GJZR2MEM28"

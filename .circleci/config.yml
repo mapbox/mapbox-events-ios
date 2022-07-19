@@ -9,12 +9,12 @@ workflows:
       - build:
           matrix:
             parameters:
-              xcode: ["11.7.0", "12.0.0"]
+              xcode: ["11.7.0", "12.5.1"]
           filters:
             tags:
               only: /.*/
       - prepare_release:
-          xcode: "12.2.0"
+          xcode: "12.5.1"
           filters:
             tags:
               only: /.*/
@@ -34,11 +34,6 @@ jobs:
       - run:
           name: Test
           command: xcodebuild -project MapboxMobileEvents.xcodeproj -scheme MMETestHost build test -destination 'platform=iOS Simulator,name=iPhone 11,OS=latest' GCC_INSTRUMENT_PROGRAM_FLOW_ARCS=YES GCC_GENERATE_TEST_COVERAGE_FILES=YES
-      - run:
-          name: Test Carthage
-          command: |
-            if [ "<< parameters.xcode >>" = "12.0.0" ]; then export XCODE_XCCONFIG_FILE=~/project/xcode-12-fix.xcconfig; fi
-            Tests/Integration/test_carthage.sh
   prepare_release:
     parameters:
       xcode:

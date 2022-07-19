@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -73,12 +73,12 @@
 		35E77B05250C1E2F00C16B73 /* config-hao-10m.json in Resources */ = {isa = PBXBuildFile; fileRef = 35E77B03250C1E2900C16B73 /* config-hao-10m.json */; };
 		35E77B07250C1E4C00C16B73 /* config-hao-negative.json in Resources */ = {isa = PBXBuildFile; fileRef = 35E77B06250C1E4B00C16B73 /* config-hao-negative.json */; };
 		35E77B09250C1E5900C16B73 /* config-hao-null.json in Resources */ = {isa = PBXBuildFile; fileRef = 35E77B08250C1E5900C16B73 /* config-hao-null.json */; };
+		5E05FEA32886F7A7009DBFE1 /* Cedar.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E05FEA22886F7A7009DBFE1 /* Cedar.xcframework */; };
+		5E05FEA42886F7A7009DBFE1 /* Cedar.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5E05FEA22886F7A7009DBFE1 /* Cedar.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9C0DA9FF257A9AF9008175E2 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C0DA9FE257A9AF9008175E2 /* CoreLocation.framework */; };
 		9C0DAA04257A9B09008175E2 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C0DAA03257A9B09008175E2 /* CoreLocation.framework */; };
 		9C0DAA05257A9B79008175E2 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C0DA9FE257A9AF9008175E2 /* CoreLocation.framework */; };
 		9C0DAA06257A9B81008175E2 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C0DA9FE257A9AF9008175E2 /* CoreLocation.framework */; };
-		9C1DA94D2554D90D00E57879 /* Cedar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40A7F9911F79A743002B931F /* Cedar.framework */; };
-		9C1DA94E2554D90D00E57879 /* Cedar.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 40A7F9911F79A743002B931F /* Cedar.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9C1DA9532554DA4400E57879 /* Cedar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40A7F9911F79A743002B931F /* Cedar.framework */; };
 		9CAB6C06252508A100E8BCD5 /* MMELocationManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3579B94C250BB08100AF88BD /* MMELocationManagerTests.m */; };
 		9CAB6C11252508B000E8BCD5 /* MMELocationManagerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9CAB6C10252508B000E8BCD5 /* MMELocationManagerTests.mm */; };
@@ -170,7 +170,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				9CCF18982579AAA50039FA5C /* MapboxMobileEvents.framework in Embed Frameworks */,
-				9C1DA94E2554D90D00E57879 /* Cedar.framework in Embed Frameworks */,
+				5E05FEA42886F7A7009DBFE1 /* Cedar.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -264,6 +264,8 @@
 		404807B91EA186D8008A6D50 /* MapboxMobileEvents.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MapboxMobileEvents.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		404C5E221F85809400C026DD /* Scanfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Scanfile; sourceTree = "<group>"; };
 		40A7F9911F79A743002B931F /* Cedar.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Cedar.framework; sourceTree = "<group>"; };
+		5E05FE9F2886F372009DBFE1 /* Cedar.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Cedar.xcframework; path = Carthage/Build/iOS/Cedar.xcframework; sourceTree = SOURCE_ROOT; };
+		5E05FEA22886F7A7009DBFE1 /* Cedar.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = Cedar.xcframework; sourceTree = "<group>"; };
 		9C0DA9FE257A9AF9008175E2 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/CoreLocation.framework; sourceTree = DEVELOPER_DIR; };
 		9C0DAA03257A9B09008175E2 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		9C27F7262499B0E20018E7A9 /* module.private.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = module.private.modulemap; sourceTree = "<group>"; };
@@ -352,7 +354,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9C0DAA04257A9B09008175E2 /* CoreLocation.framework in Frameworks */,
-				9C1DA94D2554D90D00E57879 /* Cedar.framework in Frameworks */,
+				5E05FEA32886F7A7009DBFE1 /* Cedar.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -579,6 +581,8 @@
 		4032F47C1F1FEDC6001C1FBD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				5E05FE9F2886F372009DBFE1 /* Cedar.xcframework */,
+				5E05FEA22886F7A7009DBFE1 /* Cedar.xcframework */,
 				9C0DA9FE257A9AF9008175E2 /* CoreLocation.framework */,
 				9C0DAA03257A9B09008175E2 /* CoreLocation.framework */,
 				9C794C85235505340027B9D4 /* XCTest.framework */,
@@ -1042,7 +1046,10 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = MMETestHost/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.7;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = Mapbox.MMETestHost;
@@ -1067,7 +1074,10 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = MMETestHost/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.7;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = Mapbox.MMETestHost;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1094,7 +1104,11 @@
 				);
 				INFOPLIST_FILE = Tests/MapboxMobileEventsCedarTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.7;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = Mapbox.MapboxMobileEventsCedarTests;
@@ -1123,7 +1137,11 @@
 				);
 				INFOPLIST_FILE = Tests/MapboxMobileEventsCedarTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.7;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = Mapbox.MapboxMobileEventsCedarTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1151,7 +1169,11 @@
 				);
 				INFOPLIST_FILE = Tests/MapboxMobileEventsTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.7;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = Mapbox.MapboxMobileEventsTests;
@@ -1183,7 +1205,11 @@
 				);
 				INFOPLIST_FILE = Tests/MapboxMobileEventsTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.7;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = Mapbox.MapboxMobileEventsTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1330,7 +1356,11 @@
 				DYLIB_CURRENT_VERSION = 28;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = Sources/MapboxMobileEvents/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				LLVM_LTO = NO;
 				OTHER_LDFLAGS = "-lz";
 				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MapboxMobileEvents;
@@ -1358,7 +1388,11 @@
 				DYLIB_CURRENT_VERSION = 28;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = Sources/MapboxMobileEvents/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				LLVM_LTO = YES;
 				OTHER_LDFLAGS = "-lz";
 				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MapboxMobileEvents;
