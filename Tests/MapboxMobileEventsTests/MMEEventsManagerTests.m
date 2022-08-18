@@ -324,17 +324,15 @@
     
     [self.eventsManager sendTurnstileEvent];
 
-    XCTestExpectation *expectation = [self expectationWithDescription:@"apiClient should be getting postEvent request."];
+    NSPredicate* condition = [NSPredicate predicateWithBlock:^BOOL(id  _Nullable evaluatedObject, NSDictionary<NSString *,id> * _Nullable bindings) {
+        return [evaluatedObject received:@selector(postEvent:completionHandler:)];
+    }];
 
-    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-    dispatch_async(queue, ^{
-        [expectation fulfill];
-    });
-
-    [self waitForExpectations:@[expectation] timeout:5];
+    XCTestExpectation *expectation = [self expectationForPredicate:condition evaluatedWithObject:self.eventsManager.apiClient handler:^BOOL{
+        return TRUE;
+    }];
     
-    XCTAssert([(MMETestStub*)self.eventsManager.apiClient received:@selector(postEvent:completionHandler:)]);
-    XCTAssert(self.eventsManager.eventQueue.count == 0);
+    [self waitForExpectations:@[expectation] timeout:5];    XCTAssert(self.eventsManager.eventQueue.count == 0);
 }
 
 - (void)testSendsTurnstileWhenCollectionEnabled {
@@ -354,17 +352,16 @@
     
     [self.eventsManager sendTurnstileEvent];
 
-    XCTestExpectation *expectation = [self expectationWithDescription:@"apiClient should be getting postEvent request."];
+    NSPredicate* condition = [NSPredicate predicateWithBlock:^BOOL(id  _Nullable evaluatedObject, NSDictionary<NSString *,id> * _Nullable bindings) {
+        return [evaluatedObject received:@selector(postEvent:completionHandler:)];
+    }];
 
-    //waiting a bit
-    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-    dispatch_async(queue, ^{
-        [expectation fulfill];
-    });
-
+    XCTestExpectation *expectation = [self expectationForPredicate:condition evaluatedWithObject:self.eventsManager.apiClient handler:^BOOL{
+        return TRUE;
+    }];
+    
     [self waitForExpectations:@[expectation] timeout:5];
 
-    XCTAssert([(MMETestStub*)self.eventsManager.apiClient received:@selector(postEvent:completionHandler:)]);
     XCTAssert(self.eventsManager.eventQueue.count == 0);
 }
 
