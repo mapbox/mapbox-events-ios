@@ -343,33 +343,35 @@ NS_ASSUME_NONNULL_BEGIN
             return;
         }
 
-        NSMutableDictionary *turnstileEventAttributes = [[NSMutableDictionary alloc] init];
-        turnstileEventAttributes[MMEEventKeyEvent] = MMEEventTypeAppUserTurnstile;
-        turnstileEventAttributes[MMEEventKeyCreated] = [MMEDate.iso8601DateFormatter stringFromDate:[NSDate date]];
-        turnstileEventAttributes[MMEEventKeyVendorID] = self.commonEventData.vendorId;
-        // MMEEventKeyDevice is synonomous with MMEEventKeyModel but the server will only accept "device" in turnstile events
-        turnstileEventAttributes[MMEEventKeyDevice] = self.commonEventData.model;
-        turnstileEventAttributes[MMEEventKeyOperatingSystem] = self.commonEventData.osVersion;
-        turnstileEventAttributes[MMEEventSDKIdentifier] = NSUserDefaults.mme_configuration.mme_legacyUserAgentBase;
-        turnstileEventAttributes[MMEEventSDKVersion] = NSUserDefaults.mme_configuration.mme_legacyHostSDKVersion;
-        turnstileEventAttributes[MMEEventKeyEnabledTelemetry] = @(NSUserDefaults.mme_configuration.mme_isCollectionEnabled);
-        turnstileEventAttributes[MMEEventKeyLocationEnabled] = @(CLLocationManager.locationServicesEnabled);
-        turnstileEventAttributes[MMEEventKeyLocationAuthorization] = [self.locationManager locationAuthorizationString];
-        turnstileEventAttributes[MMEEventKeySkuId] = self.skuId ?: NSNull.null;
+        __weak __typeof__(self) weakSelf = self;
+        dispatch_async(_eventsDispatchQueue, ^{
+
+            NSMutableDictionary *turnstileEventAttributes = [[NSMutableDictionary alloc] init];
+            turnstileEventAttributes[MMEEventKeyEvent] = MMEEventTypeAppUserTurnstile;
+            turnstileEventAttributes[MMEEventKeyCreated] = [MMEDate.iso8601DateFormatter stringFromDate:[NSDate date]];
+            turnstileEventAttributes[MMEEventKeyVendorID] = self.commonEventData.vendorId;
+            // MMEEventKeyDevice is synonomous with MMEEventKeyModel but the server will only accept "device" in turnstile events
+            turnstileEventAttributes[MMEEventKeyDevice] = self.commonEventData.model;
+            turnstileEventAttributes[MMEEventKeyOperatingSystem] = self.commonEventData.osVersion;
+            turnstileEventAttributes[MMEEventSDKIdentifier] = NSUserDefaults.mme_configuration.mme_legacyUserAgentBase;
+            turnstileEventAttributes[MMEEventSDKVersion] = NSUserDefaults.mme_configuration.mme_legacyHostSDKVersion;
+            turnstileEventAttributes[MMEEventKeyEnabledTelemetry] = @(NSUserDefaults.mme_configuration.mme_isCollectionEnabled);
+            turnstileEventAttributes[MMEEventKeyLocationEnabled] = @(CLLocationManager.locationServicesEnabled);
+            turnstileEventAttributes[MMEEventKeyLocationAuthorization] = [self.locationManager locationAuthorizationString];
+            turnstileEventAttributes[MMEEventKeySkuId] = self.skuId ?: NSNull.null;
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 140000
-        if (@available(iOS 14, macOS 11.0, watchOS 7.0, tvOS 14.0, *)) {
-            turnstileEventAttributes[MMEEventKeyAccuracyAuthorization] = [self.locationManager accuracyAuthorizationString];
-        }
+            if (@available(iOS 14, macOS 11.0, watchOS 7.0, tvOS 14.0, *)) {
+                turnstileEventAttributes[MMEEventKeyAccuracyAuthorization] = [self.locationManager accuracyAuthorizationString];
+            }
 #endif
 
-        MMEEvent *turnstileEvent = [MMEEvent turnstileEventWithAttributes:turnstileEventAttributes];
-        
-        MMELOG(MMELogInfo, MMEDebugEventTypeTurnstile, ([NSString stringWithFormat:@"Sending turnstile event: %@, instance: %@", turnstileEvent , self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
+            MMEEvent *turnstileEvent = [MMEEvent turnstileEventWithAttributes:turnstileEventAttributes];
+            
+            MMELOG(MMELogInfo, MMEDebugEventTypeTurnstile, ([NSString stringWithFormat:@"Sending turnstile event: %@, instance: %@", turnstileEvent , self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
 
-        dispatch_async(_eventsDispatchQueue, ^{
-           __weak __typeof__(self) weakSelf = self;
-                [self.apiClient postEvent:turnstileEvent completionHandler:^(NSError * _Nullable error) {
+
+            [self.apiClient postEvent:turnstileEvent completionHandler:^(NSError * _Nullable error) {
                 @try {
                     __strong __typeof__(weakSelf) strongSelf = weakSelf;
 
