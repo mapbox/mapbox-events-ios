@@ -1,4 +1,9 @@
+#import <Foundation/Foundation.h>
+#if TARGET_OS_IOS
 #import <UIKit/UIKit.h>
+#else
+#import <AppKit/AppKit.h>
+#endif
 
 //! Project version number for MapboxMobileEvents.
 FOUNDATION_EXPORT double MapboxMobileEventsVersionNumber;

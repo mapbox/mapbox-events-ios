@@ -47,7 +47,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) MMEDispatchManager *dispatchManager;
 @property (nonatomic, getter=isPaused) BOOL paused;
 @property (nonatomic) id<MMEUIApplicationWrapper> application;
+#if TARGET_OS_IPHONE
 @property (nonatomic) UIBackgroundTaskIdentifier backgroundTaskIdentifier;
+#endif
 @property (nonatomic) dispatch_queue_t eventsDispatchQueue;
 @end
 
@@ -112,7 +114,7 @@ NS_ASSUME_NONNULL_BEGIN
 #if !TARGET_OS_SIMULATOR // don't send pending metrics from the simulator
                 [strongSelf sendPendingMetricsEvent];
 #endif
-                
+#if !TARGET_OS_OSX
                 [NSNotificationCenter.defaultCenter addObserver:strongSelf
                                                        selector:@selector(pauseOrResumeMetricsCollectionIfRequired)
                                                            name:UIApplicationDidEnterBackgroundNotification
@@ -121,6 +123,7 @@ NS_ASSUME_NONNULL_BEGIN
                                                        selector:@selector(pauseOrResumeMetricsCollectionIfRequired)
                                                            name:UIApplicationDidBecomeActiveNotification
                                                          object:nil];
+#endif
 
                 if (@available(iOS 9.0, *)) {
                     if (!NSUserDefaults.mme_configuration.mme_isCollectionEnabledInLowPowerMode) {
@@ -166,13 +169,16 @@ NS_ASSUME_NONNULL_BEGIN
     // From https://github.com/mapbox/mapbox-events-ios/issues/44 it looks like
     // `NSProcessInfoPowerStateDidChangeNotification` can be sent from a thread other than the main
     // thread.
-    
+
+#if TARGET_OS_IPHONE
     __weak __typeof__(self) weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
         [weakSelf pauseOrResumeMetricsCollectionIfRequired];
     });
+#endif
 }
 
+#if TARGET_OS_IPHONE
 - (BOOL)startBackgroundTaskIfNeeded {
     BOOL appIsInBackground = (self.application.applicationState == UIApplicationStateBackground);
 
@@ -236,6 +242,7 @@ NS_ASSUME_NONNULL_BEGIN
         [self pauseMetricsCollection];
     }
 }
+#endif
 
 - (void)flush {
     @try {
@@ -248,12 +255,16 @@ NS_ASSUME_NONNULL_BEGIN
         }
 
         if (self.eventQueue.count == 0) {
+#if TARGET_OS_IPHONE
             [self endBackgroundTaskIfNeeded];
+#endif
             return;
         }
 
         // sending events might take time, so we start bg task
+#if TARGET_OS_IPHONE
         [self startBackgroundTaskIfNeeded];
+#endif
 
         [self sendTelemetryMetricsEvent];
         NSArray *events = [self.eventQueue copy];
@@ -294,7 +305,9 @@ NS_ASSUME_NONNULL_BEGIN
                 } else {
                     MMELOG(MMELogInfo, MMEDebugEventTypePost, ([NSString stringWithFormat:@"post: %@, instance: %@", @(events.count),self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
                 }
+#if TARGET_OS_IPHONE
                 [strongSelf endBackgroundTaskIfNeeded];
+#endif
             }
             @catch(NSException *except) {
                 [self reportException:except];
@@ -620,7 +633,11 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)locationManager:(MMELocationManager *)locationManager didUpdateLocations:(NSArray *)locations {
     MMELOG(MMELogInfo, MMEDebugEventTypeLocationManager, ([NSString stringWithFormat:@"Location manager sent %ld locations, instance: %@", (long)locations.count, self.uniqueIdentifer.rollingInstanceIdentifer ?: @"nil"]));
 
+#if TARGET_OS_IPHONE
     const BOOL appIsInBackground = (self.application.applicationState == UIApplicationStateBackground);
+#else
+    const BOOL appIsInBackground = false;
+#endif
 
     for (CLLocation *location in locations) {
         // Apply all counter beforing checking the HA filter
@@ -737,10 +754,11 @@ NS_ASSUME_NONNULL_BEGIN
     }
 
     [self pushEvent:[MMEEvent visitEventWithAttributes:eventAttributes]];
-
+#if TARGET_OS_IOS
     if ([self.delegate respondsToSelector:@selector(eventsManager:didVisit:)]) {
         [self.delegate eventsManager:self didVisit:visit];
     }
+#endif
 }
 
 @end

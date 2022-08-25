@@ -18,6 +18,7 @@
     return NSExtensionContext.mme_contentSizeScale;
 }
 
+#if TARGET_OS_IPHONE
 - (UIApplicationState)applicationState {
     return UIApplicationStateActive;
 }
@@ -34,6 +35,7 @@
 - (void)endBackgroundTask:(UIBackgroundTaskIdentifier)identifier {
     // no-op
 }
+#endif
 
 @end
 
@@ -54,11 +56,13 @@
     // Check if Extension
     if (NSBundle.mme_isExtension) {
         return [self initWithApplication:MMEUIApplicationExtensionWrapper.new];
+#if TARGET_OS_IPHONE
     }else if ([[UIApplication class] respondsToSelector:@selector(sharedApplication)]) {
 
         // If UIApplication is available use it
         // This is second as UIApplication may be available for paired extensions
         return [self initWithApplication:[[UIApplication class] performSelector:@selector(sharedApplication)]];
+#endif
     } else {
 
         // Otherwise default to the general Fallback pulling information from Non UIApplication Sources
@@ -80,6 +84,7 @@
     return self.application.mme_contentSizeScale;
 }
 
+#if TARGET_OS_IPHONE
 - (UIApplicationState)applicationState {
     return self.application.applicationState;
 }
@@ -93,5 +98,6 @@
 - (void)endBackgroundTask:(UIBackgroundTaskIdentifier)identifier {
     [self.application endBackgroundTask:identifier];
 }
+#endif
 
 @end

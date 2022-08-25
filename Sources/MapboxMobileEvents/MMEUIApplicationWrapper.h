@@ -1,4 +1,9 @@
+#import <TargetConditionals.h>
+#if TARGET_OS_IOS
 #import <UIKit/UIKit.h>
+#elif TARGET_OS_MAC
+#import <AppKit/AppKit.h>
+#endif
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -9,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 /*! Integer Representation of content size scale (for  metrics) */
 @property (nonatomic, readonly) NSInteger mme_contentSizeScale;
 
+#if TARGET_OS_IPHONE
 /*! The runtime state of the app. */
 @property(nonatomic, readonly) UIApplicationState applicationState;
 
@@ -27,11 +33,13 @@ NS_ASSUME_NONNULL_BEGIN
  @param identifier An identifier returned by the beginBackgroundTaskWithExpirationHandler: method.
  */
 - (void)endBackgroundTask:(UIBackgroundTaskIdentifier)identifier;
-
+#endif
 @end
 
+#if TARGET_OS_IPHONE
 @interface UIApplication (MMEUIApplicationWrapperConformance) <MMEUIApplicationWrapper>
 @end
+#endif
 
 // MARK: - UIApplication Support
 

@@ -1,4 +1,9 @@
+#import <TargetConditionals.h>
+#if TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
+#elif TARGET_OS_MAC
+#import <AppKit/AppKit.h>
+#endif
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -13,6 +18,7 @@ void mme_linkUIKitCategories();
 
 #pragma mark -
 
+#if TARGET_OS_IPHONE
 @interface UIDevice (MMEMobileEvents)
 
 - (NSString *)mme_deviceOrientation;
@@ -26,6 +32,7 @@ void mme_linkUIKitCategories();
 - (NSInteger)mme_contentSizeScale;
 
 @end
+#endif
 
 @interface NSExtensionContext (MMEMobileEvents)
 

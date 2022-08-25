@@ -35,9 +35,11 @@ NS_ASSUME_NONNULL_BEGIN
 */
 - (void)initializeWithAccessToken:(NSString *)accessToken userAgentBase:(NSString *)userAgentBase hostSDKVersion:(NSString *)hostSDKVersion;
 
+#if TARGET_OS_IPHONE
 /*! @brief pauseOrResumeMetricsCollectionIfRequired
     @throws no exceptions */
 - (void)pauseOrResumeMetricsCollectionIfRequired;
+#endif
 
 /*! @brief flush the events pipeline, sending any pending events
     @throws no exceptions */

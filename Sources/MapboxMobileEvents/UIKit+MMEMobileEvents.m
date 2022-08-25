@@ -7,7 +7,7 @@ void mme_linkUIKitCategories(void){}
 @end
 
 #pragma mark -
-
+#if TARGET_OS_IPHONE
 @implementation UIDevice (MMEMobileEvents)
 
 - (NSString *)mme_deviceOrientation {
@@ -80,15 +80,15 @@ void mme_linkUIKitCategories(void){}
 
     return result;
 }
-
 @end
+#endif
 
 @implementation NSExtensionContext (MMEMobileEvents)
 
 + (NSInteger)mme_contentSizeScale {
 
     NSInteger result = -9999;
-
+#if TARGET_OS_IPHONE
     if (@available(iOS 10, *)) {
         NSString *sc = UIScreen.mainScreen.traitCollection.preferredContentSizeCategory;
 
@@ -120,7 +120,7 @@ void mme_linkUIKitCategories(void){}
     } else {
         // No-Op
     }
-
+#endif
     return result;
 }
 

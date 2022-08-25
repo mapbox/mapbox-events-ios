@@ -12,6 +12,8 @@
 #if TARGET_OS_IOS || TARGET_OS_TV
 #import "UIKit+MMEMobileEvents.h"
 #import "NSBundle+MMEMobileEvents.h"
+#elif TARGET_OS_OSX
+#import <AppKit/AppKit.h>
 #endif
 
 
@@ -117,8 +119,9 @@
     }
 
 #if TARGET_OS_OSX
-    if (NSRunningApplication.currentApplicaiton.launchDate) {
-        crashAttributes[MMEEventKeyAppStartDate] = [MMEDate.iso8601DateFormatter stringFromDate:NSRunningApplication.currentApplicaiton.launchDate];
+    NSDate* launchDate = NSRunningApplication.currentApplication.launchDate;
+    if (launchDate) {
+        crashAttributes[MMEEventKeyAppStartDate] = [MMEDate.iso8601DateFormatter stringFromDate:launchDate];
     }
 #endif
 

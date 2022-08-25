@@ -38,9 +38,11 @@ void mme_linkCLLocationManagerCategory(void){}
         case kCLAuthorizationStatusAuthorizedAlways:
             statusString = MMEEventStatusAuthorizedAlways;
             break;
+#if TARGET_OS_IPHONE
         case kCLAuthorizationStatusAuthorizedWhenInUse:
             statusString = MMEEventStatusAuthorizedWhenInUse;
             break;
+#endif
         default:
             statusString = MMEEventUnknown;
             break;
@@ -57,9 +59,11 @@ void mme_linkCLLocationManagerCategory(void){}
         case kCLAuthorizationStatusAuthorizedAlways:
             statusString = MMEEventAuthStatusAllowAlways;
             break;
+#if TARGET_OS_IPHONE
         case kCLAuthorizationStatusAuthorizedWhenInUse:
             statusString = MMEEventAuthStatusAllowWhenInUse;
             break;
+#endif
         default:
             statusString = @"";
             break;

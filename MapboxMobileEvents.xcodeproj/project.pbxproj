@@ -1367,6 +1367,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos macosx";
 				WARNING_CFLAGS = (
 					"-Wunused-property-ivar",
 					"-Wsemicolon-before-method-body",
@@ -1399,6 +1400,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos macosx";
 				WARNING_CFLAGS = (
 					"-Wunused-property-ivar",
 					"-Wsemicolon-before-method-body",

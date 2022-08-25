@@ -1,5 +1,9 @@
 #import <Foundation/Foundation.h>
+#if TARGET_OS_IOS
 #import <UIKit/UIKit.h>
+#elif TARGET_OS_MAC
+#import <AppKit/AppKit.h>
+#endif
 
 #import "MMETypes.h"
 

@@ -20,7 +20,8 @@ typedef NS_ENUM(NSInteger, MMEErrorCode) {
     MMEUnexpectedResponseError
 };
 
-@import MobileCoreServices;
+@import CoreServices;
+//@import MobileCoreServices;
 
 #pragma mark -
 

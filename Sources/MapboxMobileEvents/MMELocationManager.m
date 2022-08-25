@@ -141,11 +141,13 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
     _metricsEnabledForInUsePermissions = metricsEnabledForInUsePermissions;
     
     CLAuthorizationStatus authorizationStatus = [self.locationManager mme_authorizationStatus];
+#if TARGET_OS_IPHONE
     if (authorizationStatus == kCLAuthorizationStatusAuthorizedWhenInUse && self.hostAppHasBackgroundCapability) {
         if (@available(iOS 9.0, *)) {
             self.locationManager.allowsBackgroundLocationUpdates = self.isMetricsEnabledForInUsePermissions;
         }
     }
+#endif
 }
 
 #pragma mark - Utilities
@@ -160,8 +162,12 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
     CLAuthorizationStatus authorizationStatus = [self.locationManager mme_authorizationStatus];
     
     BOOL authorizedAlways = authorizationStatus == kCLAuthorizationStatusAuthorizedAlways;
-    
+
+#if TARGET_OS_IPHONE
     if (authorizedAlways || authorizationStatus == kCLAuthorizationStatusAuthorizedWhenInUse) {
+#else
+    if (authorizedAlways) {
+#endif
         
         // If the host app can run in the background with `always` location permissions then allow background
         // updates and start the significant location change service and background timeout timer
@@ -178,11 +184,13 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
         // background timer (just above) since all use cases for background collection with in use only
         // permissions involve navigation where a user would want and expect the app to be running / navigating
         // even if it is not in the foreground
+#if TARGET_OS_IPHONE
         if (authorizationStatus == kCLAuthorizationStatusAuthorizedWhenInUse && self.hostAppHasBackgroundCapability) {
             if (@available(iOS 9.0, *)) {
                 self.locationManager.allowsBackgroundLocationUpdates = self.isMetricsEnabledForInUsePermissions;
             }
         }
+#endif
         
         if (authorizedAlways) {
             [self.locationManager startMonitoringVisits];
@@ -201,12 +209,14 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
     if (!self.isUpdatingLocation) {
         return;
     }
-    
+
+#if TARGET_OS_IPHONE
     if (self.application.applicationState == UIApplicationStateActive ||
         self.application.applicationState == UIApplicationStateInactive ) {
         [self startBackgroundTimeoutTimer];
         return;
     }
+#endif
     
     NSTimeInterval timeIntervalSinceTimeoutAllowed = [[NSDate date] timeIntervalSinceDate:self.backgroundLocationServiceTimeoutAllowedDate];
     if (timeIntervalSinceTimeoutAllowed > 0) {
@@ -239,8 +249,12 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
 
 #if __IPHONE_OS_VERSION_MIN_REQUIRED < 140000
 - (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
-    if (status == kCLAuthorizationStatusAuthorizedAlways ||
-        status == kCLAuthorizationStatusAuthorizedWhenInUse) {
+    if (status == kCLAuthorizationStatusAuthorizedAlways
+#if TARGET_OS_IPHONE
+        || status == kCLAuthorizationStatusAuthorizedWhenInUse) {
+#else
+        ) {
+#endif
         [self startUpdatingLocation];
     } else {
         [self stopUpdatingLocation];
