@@ -40,9 +40,29 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
 - (CLLocationManager *)locationManager  {
     @synchronized (self) {
         if (!_locationManager) {
-            _locationManager = [[MMEDependencyManager sharedManager] locationManagerInstance];
+            dispatch_block_t instantiateLocationManager = ^{
+                _locationManager = [[MMEDependencyManager sharedManager] locationManagerInstance];
+            };
+            if ([NSThread isMainThread]) {
+                instantiateLocationManager();
+            } else {
+                dispatch_sync(dispatch_get_main_queue(), instantiateLocationManager);
+            }
         }
         return _locationManager;
+    }
+}
+
+- (void)setLocationManager:(CLLocationManager *)locationManager {
+    @synchronized (self) {
+        if (locationManager == nil) {
+            _locationManager = locationManager;
+        } else {
+            id<CLLocationManagerDelegate> delegate = _locationManager.delegate;
+            _locationManager.delegate = nil;
+            _locationManager = locationManager;
+            _locationManager.delegate = delegate;
+        }
     }
 }
 
@@ -115,19 +135,6 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
     }
 }
 #endif
-
-- (void)setLocationManager:(CLLocationManager *)locationManager {
-    @synchronized (self) {
-        if (locationManager == nil) {
-            _locationManager = locationManager;
-        } else {
-            id<CLLocationManagerDelegate> delegate = _locationManager.delegate;
-            _locationManager.delegate = nil;
-            _locationManager = locationManager;
-            _locationManager.delegate = delegate;
-        }
-    }
-}
 
 - (void)stopMonitoringRegions {
     for(CLRegion *region in self.locationManager.monitoredRegions) {

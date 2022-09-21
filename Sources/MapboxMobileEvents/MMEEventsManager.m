@@ -356,7 +356,7 @@ NS_ASSUME_NONNULL_BEGIN
             turnstileEventAttributes[MMEEventSDKIdentifier] = NSUserDefaults.mme_configuration.mme_legacyUserAgentBase;
             turnstileEventAttributes[MMEEventSDKVersion] = NSUserDefaults.mme_configuration.mme_legacyHostSDKVersion;
             turnstileEventAttributes[MMEEventKeyEnabledTelemetry] = @(NSUserDefaults.mme_configuration.mme_isCollectionEnabled);
-            turnstileEventAttributes[MMEEventKeyLocationEnabled] = @(CLLocationManager.locationServicesEnabled);
+            turnstileEventAttributes[MMEEventKeyLocationEnabled] = @([CLLocationManager locationServicesEnabled]);
             turnstileEventAttributes[MMEEventKeyLocationAuthorization] = [self.locationManager locationAuthorizationString];
             turnstileEventAttributes[MMEEventKeySkuId] = self.skuId ?: NSNull.null;
 
@@ -398,7 +398,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)sendPendingMetricsEvent {
     dispatch_async(_eventsDispatchQueue, ^{
         MMEEvent *pendingMetricsEvent = [MMEMetricsManager.sharedManager loadPendingTelemetryMetricsEvent];
-        
+
         if (pendingMetricsEvent) {
             [self.apiClient postEvent:pendingMetricsEvent completionHandler:^(NSError * _Nullable error) {
                 if (error) {
