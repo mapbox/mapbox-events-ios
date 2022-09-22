@@ -77,9 +77,6 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
 }
 
 - (void)startUpdatingLocation {
-    if (![CLLocationManager locationServicesEnabled]) {
-        return;
-    }
     if ([self isUpdatingLocation]) {
         return;
     }

@@ -14,6 +14,7 @@ static MMEDependencyManager *_sharedInstance;
 }
 
 - (CLLocationManager *)locationManagerInstance {
+    NSAssert([NSThread isMainThread], @"CLLocationManager should be created only on the main thread");
     return [[CLLocationManager alloc] init];
 }
 
