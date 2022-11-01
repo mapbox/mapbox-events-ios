@@ -80,6 +80,7 @@ describe(@"MMEEventsManager", ^{
     beforeEach(^{
         dispatchManager = [[MMEDispatchManagerFake alloc] init];
         eventsManager = [MMEEventsManager.alloc initShared];
+        [eventsManager initializeWithAccessToken:@"foo" userAgentBase:@"bar" hostSDKVersion:@"baz"];
 
         eventsManager.dispatchManager = dispatchManager;
         eventsManager.locationManager = nice_fake_for(@protocol(MMELocationManager));
