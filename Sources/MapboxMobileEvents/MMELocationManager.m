@@ -37,32 +37,46 @@ NSString * const MMELocationManagerRegionIdentifier = @"MMELocationManagerRegion
     _locationManager.delegate = nil;
 }
 
-- (CLLocationManager *)locationManager  {
-    @synchronized (self) {
-        if (!_locationManager) {
-            dispatch_block_t instantiateLocationManager = ^{
-                _locationManager = [[MMEDependencyManager sharedManager] locationManagerInstance];
-            };
-            if ([NSThread isMainThread]) {
-                instantiateLocationManager();
-            } else {
-                dispatch_sync(dispatch_get_main_queue(), instantiateLocationManager);
-            }
-        }
-        return _locationManager;
+- (CLLocationManager *)locationManager {
+    // Always reschedule to main queue to avoid race condition
+    if (![NSThread isMainThread]) {
+        __block CLLocationManager* manager = nil;
+        // Avoid other synhronization methods like @synchronized
+        // since the access to locationManager might happen in
+        // main thread after this function call but before
+        // mainQueue async.
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            manager = [self locationManager];
+        });
+        return manager;
     }
+
+    NSAssert([NSThread isMainThread], @"LocationManager initialization must be done on main queue");
+
+    if (!_locationManager) {
+        _locationManager = [[MMEDependencyManager sharedManager] locationManagerInstance];
+    }
+    return _locationManager;
 }
 
 - (void)setLocationManager:(CLLocationManager *)locationManager {
-    @synchronized (self) {
-        if (locationManager == nil) {
-            _locationManager = locationManager;
-        } else {
-            id<CLLocationManagerDelegate> delegate = _locationManager.delegate;
-            _locationManager.delegate = nil;
-            _locationManager = locationManager;
-            _locationManager.delegate = delegate;
-        }
+    if (![NSThread isMainThread]) {
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            [self setLocationManager:locationManager];
+        });
+        return;
+    }
+
+    NSAssert([NSThread isMainThread],
+             @"LocationManager requires main queue for acceess synchronization");
+
+    if (locationManager == nil) {
+        _locationManager = locationManager;
+    } else {
+        id<CLLocationManagerDelegate> delegate = _locationManager.delegate;
+        _locationManager.delegate = nil;
+        _locationManager = locationManager;
+        _locationManager.delegate = delegate;
     }
 }
 
