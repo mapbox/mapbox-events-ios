@@ -99,6 +99,10 @@ NS_ASSUME_NONNULL_BEGIN
             self.apiClient = [[MMEAPIClient alloc] initWithAccessToken:accessToken
                                                          userAgentBase:userAgentBase
                                                         hostSDKVersion:hostSDKVersion];
+            self.timerManager = [[MMETimerManager alloc]
+                                 initWithTimeInterval:NSUserDefaults.mme_configuration.mme_eventFlushInterval
+                                 target:self
+                                 selector:@selector(flush)];
 
             __weak __typeof__(self) weakSelf = self;
             void(^initialization)(void) = ^{
@@ -134,11 +138,6 @@ NS_ASSUME_NONNULL_BEGIN
                 strongSelf.paused = YES;
                 strongSelf.locationManager.delegate = strongSelf;
                 [strongSelf resumeMetricsCollection];
-
-                strongSelf.timerManager = [[MMETimerManager alloc]
-                                           initWithTimeInterval:NSUserDefaults.mme_configuration.mme_eventFlushInterval
-                                           target:strongSelf
-                                           selector:@selector(flush)];
             };
 
             [self.dispatchManager scheduleBlock:initialization afterDelay:NSUserDefaults.mme_configuration.mme_startupDelay];
@@ -597,6 +596,7 @@ NS_ASSUME_NONNULL_BEGIN
     }
     
     if (self.eventQueue.count == 1) {
+        NSAssert(_timerManager, @"Timer manager must exist");
         [self.timerManager start];
     }
     
