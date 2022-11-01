@@ -90,61 +90,61 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void)initializeWithAccessToken:(NSString *)accessToken userAgentBase:(NSString *)userAgentBase hostSDKVersion:(NSString *)hostSDKVersion {
-        @try {
-            if (self.apiClient) {
-                [NSUserDefaults.mme_configuration mme_setAccessToken:accessToken];
+    @try {
+        if (self.apiClient) {
+            [NSUserDefaults.mme_configuration mme_setAccessToken:accessToken];
+            return;
+        }
+
+        self.apiClient = [[MMEAPIClient alloc] initWithAccessToken:accessToken
+                                                     userAgentBase:userAgentBase
+                                                    hostSDKVersion:hostSDKVersion];
+        self.timerManager = [[MMETimerManager alloc]
+                             initWithTimeInterval:NSUserDefaults.mme_configuration.mme_eventFlushInterval
+                             target:self
+                             selector:@selector(flush)];
+
+        __weak __typeof__(self) weakSelf = self;
+        void(^initialization)(void) = ^{
+            __strong __typeof__(weakSelf) strongSelf = weakSelf;
+
+            if (strongSelf == nil) {
                 return;
             }
 
-            self.apiClient = [[MMEAPIClient alloc] initWithAccessToken:accessToken
-                                                         userAgentBase:userAgentBase
-                                                        hostSDKVersion:hostSDKVersion];
-            self.timerManager = [[MMETimerManager alloc]
-                                 initWithTimeInterval:NSUserDefaults.mme_configuration.mme_eventFlushInterval
-                                 target:self
-                                 selector:@selector(flush)];
-
-            __weak __typeof__(self) weakSelf = self;
-            void(^initialization)(void) = ^{
-                __strong __typeof__(weakSelf) strongSelf = weakSelf;
-
-                if (strongSelf == nil) {
-                    return;
-                }
-
-                // Issue: https://github.com/mapbox/mapbox-events-ios/issues/271
+            // Issue: https://github.com/mapbox/mapbox-events-ios/issues/271
 #if !TARGET_OS_SIMULATOR // don't send pending metrics from the simulator
-                [strongSelf sendPendingMetricsEvent];
+            [strongSelf sendPendingMetricsEvent];
 #endif
-                
-                [NSNotificationCenter.defaultCenter addObserver:strongSelf
-                                                       selector:@selector(pauseOrResumeMetricsCollectionIfRequired)
-                                                           name:UIApplicationDidEnterBackgroundNotification
-                                                         object:nil];
-                [NSNotificationCenter.defaultCenter addObserver:strongSelf
-                                                       selector:@selector(pauseOrResumeMetricsCollectionIfRequired)
-                                                           name:UIApplicationDidBecomeActiveNotification
-                                                         object:nil];
 
-                if (@available(iOS 9.0, *)) {
-                    if (!NSUserDefaults.mme_configuration.mme_isCollectionEnabledInLowPowerMode) {
-                        [NSNotificationCenter.defaultCenter addObserver:strongSelf
-                                                               selector:@selector(powerStateDidChange:)
-                                                                   name:NSProcessInfoPowerStateDidChangeNotification
-                                                                 object:nil];
-                    }
+            [NSNotificationCenter.defaultCenter addObserver:strongSelf
+                                                   selector:@selector(pauseOrResumeMetricsCollectionIfRequired)
+                                                       name:UIApplicationDidEnterBackgroundNotification
+                                                     object:nil];
+            [NSNotificationCenter.defaultCenter addObserver:strongSelf
+                                                   selector:@selector(pauseOrResumeMetricsCollectionIfRequired)
+                                                       name:UIApplicationDidBecomeActiveNotification
+                                                     object:nil];
+
+            if (@available(iOS 9.0, *)) {
+                if (!NSUserDefaults.mme_configuration.mme_isCollectionEnabledInLowPowerMode) {
+                    [NSNotificationCenter.defaultCenter addObserver:strongSelf
+                                                           selector:@selector(powerStateDidChange:)
+                                                               name:NSProcessInfoPowerStateDidChangeNotification
+                                                             object:nil];
                 }
+            }
 
-                strongSelf.paused = YES;
-                strongSelf.locationManager.delegate = strongSelf;
-                [strongSelf resumeMetricsCollection];
-            };
+            strongSelf.paused = YES;
+            strongSelf.locationManager.delegate = strongSelf;
+            [strongSelf resumeMetricsCollection];
+        };
 
-            [self.dispatchManager scheduleBlock:initialization afterDelay:NSUserDefaults.mme_configuration.mme_startupDelay];
-        }
-        @catch(NSException *except) {
-            [self reportException:except];
-        }
+        [self.dispatchManager scheduleBlock:initialization afterDelay:NSUserDefaults.mme_configuration.mme_startupDelay];
+    }
+    @catch(NSException *except) {
+        [self reportException:except];
+    }
 }
 
 #pragma mark - Enable/Disable
