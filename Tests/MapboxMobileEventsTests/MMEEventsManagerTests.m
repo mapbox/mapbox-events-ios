@@ -53,6 +53,7 @@
 
 - (void)setUp {
     self.eventsManager = [MMEEventsManager.alloc initShared];
+    [self.eventsManager initializeWithAccessToken:@"" userAgentBase:@"" hostSDKVersion:@""];
     self.eventsManager.application = [[MMEUIApplicationWrapperFake alloc] init];
     
     MMECommonEventData *commonEventData = [[MMECommonEventData alloc] init];
