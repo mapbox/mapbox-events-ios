@@ -1,6 +1,6 @@
 {
   "name": "@mapbox/mapbox-events-ios",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "Telemetry and Location Services",
   "keywords": [
     "mapbox",
