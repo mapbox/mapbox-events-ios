@@ -8,7 +8,7 @@ if grep -q $SDK_HOST $FILE; then
 else
     echo "machine api.mapbox.com" >> ~/.netrc
     echo "login mapbox" >> ~/.netrc
-    echo "password ${MAPBOX_DOWNLOAD_TOKEN}" >> ~/.netrc
+    echo "password ${SDK_REGISTRY_TOKEN}" >> ~/.netrc
     chmod 0600 ~/.netrc
     echo "Entry added to netrc"
 fi
