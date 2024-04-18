@@ -115,3 +115,4 @@ NSError *reportableError = nil;
 
 Some legacy test cases are written using [Cedar](https://github.com/cedarbdd/cedar), to run the test in `Xcode` using 
 `Command-U` you'll need to unzip the framework located in the `Carthage/Build/iOS/` to run these tests.
+
