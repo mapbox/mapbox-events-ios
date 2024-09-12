@@ -3,18 +3,17 @@
 version: 2.1
 
 workflows:
-  version: 2
   default:
     jobs:
       - build:
           matrix:
             parameters:
-              xcode: ["11.7.0", "12.5.1"]
+              xcode: ["13.4.1", "14.3.1"]
           filters:
             tags:
               only: /.*/
       - prepare_release:
-          xcode: "12.5.1"
+          xcode: "13.4.1"
           filters:
             tags:
               only: /.*/
@@ -27,13 +26,18 @@ jobs:
     macos:
       xcode: << parameters.xcode >>
     steps:
+      - run:
+          name: Allow cloning from github.com via HTTPS
+          command: | 
+            git config --global url."https://github.com/".insteadOf git@github.com:
+            git config --global url."https://".insteadOf git://
       - checkout
       - run:
           name: Ensure netrc
           command: Tests/Integration/ensure_netrc.sh
       - run:
           name: Test
-          command: xcodebuild -project MapboxMobileEvents.xcodeproj -scheme MMETestHost build test -destination 'platform=iOS Simulator,name=iPhone 11,OS=latest' GCC_INSTRUMENT_PROGRAM_FLOW_ARCS=YES GCC_GENERATE_TEST_COVERAGE_FILES=YES
+          command: xcodebuild -project MapboxMobileEvents.xcodeproj -scheme MMETestHost build-for-testing test-without-building -destination 'platform=iOS Simulator,name=iPhone 13,OS=15.5' GCC_INSTRUMENT_PROGRAM_FLOW_ARCS=YES GCC_GENERATE_TEST_COVERAGE_FILES=YES CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
   prepare_release:
     parameters:
       xcode:
@@ -41,6 +45,11 @@ jobs:
     macos:
       xcode: << parameters.xcode >>
     steps:
+      - run:
+          name: Allow cloning from github.com via HTTPS
+          command: | 
+            git config --global url."https://github.com/".insteadOf git@github.com:
+            git config --global url."https://".insteadOf git://
       - checkout
       - run:
           name: Ensure netrc
