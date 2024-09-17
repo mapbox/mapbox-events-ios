@@ -17,7 +17,7 @@ extern const __nullable CDRSpecBlock PENDING;
 extern "C" {
 #endif
 
-    void beforeEach(CDRSpecBlock);
+void beforeEach(CDRSpecBlock);
 void afterEach(CDRSpecBlock);
 void subjectAction(CDRSpecBlock);
 
