@@ -10,6 +10,6 @@ if [ -z `which xcodegen` ]; then
 fi
 
 xcodegen
-xcodebuild -project SPMXcode.xcodeproj -scheme SPMXcode build -destination='platform=iOS Simulator,name=iPhone 11,OS=latest' CODE_SIGNING_ALLOWED=NO
+xcodebuild -project SPMXcode.xcodeproj -scheme SPMXcode build -destination='platform=iOS Simulator,name=iPhone 13,OS=15.5' CODE_SIGNING_ALLOWED=NO
 
 popd
