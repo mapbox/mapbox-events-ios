@@ -22,7 +22,7 @@ pushd "${ROOT_DIR}/Tests/Integration/CocoaPods"
 xcodegen generate
 bundle install
 bundle exec pod install
-xcodebuild -workspace PodInstall.xcworkspace -scheme PodInstall -destination 'platform=iOS Simulator,name=iPhone 11,OS=latest' build
+xcodebuild -workspace PodInstall.xcworkspace -scheme PodInstall -destination 'platform=iOS Simulator,name=iPhone 13,OS=15.5' build
 
 git restore "${ROOT_DIR}/${PODSPEC_FILE}"
 
