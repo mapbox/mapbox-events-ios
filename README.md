@@ -1,3 +1,6 @@
+**⚠️ ARCHIVED:** This repository is no longer maintained and has been archived. No further updates, bug fixes, or support will be provided.
+
+
 # 🎟 Mapbox Mobile Events
 
 [![Bitrise](https://app.bitrise.io/app/63d52d847cdb36db/status.svg?token=DDdEMfpVR8emhdGSgToskA&branch=master)](https://www.bitrise.io/app/63d52d847cdb36db)
